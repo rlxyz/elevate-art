@@ -1,0 +1,59 @@
+.button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 32px;
+    position: relative;
+
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.button::before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 1000px;
+    top: -0.1em;
+    bottom: -0.1em;
+    right: -0.1em;
+    left: -0.1em;
+    z-index: -1;
+    background: linear-gradient(to right, #343434 0%, #ffffff 20%, #343434 80%);
+    background-size: 140%;
+    background-position: 100% 0;
+    transition: background .3s;
+}
+
+.button:hover::before {
+  background: #F9B7DD;
+}
+
+.button:hover {
+  color: #F9B7DD;
+}
+
+.button:hover::before {
+  background: #F9B7DD;
+}
+
+.button:disabled::before {
+    opacity: 0.2;
+}
+
+.button:disabled {
+  pointer-events: none;
+  color: rgb(71 85 105);
+}
+
+.button:hover:enabled {
+  color: #F9B7DD;
+}
+
+.button:hover:enabled::before {
+  background: #F9B7DD;
+}

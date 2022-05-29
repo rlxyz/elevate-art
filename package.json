@@ -1,0 +1,74 @@
+{
+  "name": "@rhapsodylabs/reflections-mint-client",
+  "common": {
+    "ethereum": "template.rhapsodylabs.eth"
+  },
+  "version": "0.1.0",
+  "description": "Mint client for Reflections by DreamLab",
+  "author": "Rhapsody Labs",
+  "contributors": [
+    {
+      "name": "John Doe <johndoe.eth>",
+      "email": "johndoe@rhapsodylabs.xyz",
+      "url": "https://twitter.com/johndoe"
+    }
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ethersproject/providers": "^5.5.3",
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
+    "@rhapsodylabs/whitelist-merkler": "^0.0.5",
+    "@tailwindcss/forms": "^0.4.0",
+    "@zeit/next-source-maps": "^0.0.3",
+    "bnc-notify": "^1.9.4",
+    "bnc-onboard": "^1.38.2",
+    "classnames": "^2.3.1",
+    "ethers": "^5.5.4",
+    "flowbite": "^1.3.4",
+    "framer-motion": "^6.2.9",
+    "fs": "^0.0.1-security",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.2.30",
+    "next": "12.1.4",
+    "nookies": "^2.5.2",
+    "nuka-carousel": "^5.0.13",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hot-toast": "^2.2.0",
+    "react-medium-image-zoom": "^4.3.7",
+    "react-multi-carousel": "^2.8.0",
+    "react-query": "^3.34.19",
+    "react-use-refs": "^1.0.1",
+    "rollbar": "^2.24.1",
+    "rollbar-sourcemap-webpack-plugin": "^3.3.0",
+    "sass": "^1.49.9",
+    "tailwindcss": "3.0.23",
+    "unstated-next": "^1.1.0",
+    "use-onboard": "^0.2.8",
+    "zustand": "^3.7.2"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^12.1.4",
+    "@types/react": "^17.0.39",
+    "autoprefixer": "^10.4.4",
+    "eslint": "8.13.0",
+    "eslint-config-next": "12.1.4",
+    "file-loader": "^6.2.0",
+    "next-compose-plugins": "^2.2.1",
+    "next-offline": "^5.0.5",
+    "postcss": "^8.4.12",
+    "raw-loader": "^4.0.2",
+    "typescript": "^4.6.3",
+    "url-loader": "^4.1.1"
+  },
+  "engines": {
+    "node": "14.19.0",
+    "npm": "8.5.1"
+  }
+}

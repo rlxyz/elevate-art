@@ -1,0 +1,39 @@
+.box {
+  position: relative;
+  z-index: 0;
+  background: linear-gradient(148.48deg, rgba(255, 255, 255, 0.032) 9.52%, rgba(255, 255, 255, 0.056) 32.75%, rgba(255, 255, 255, 0.038) 55.49%, rgba(255, 255, 255, 0.06) 75.55%, rgba(255, 255, 255, 0.01) 95.13%);
+}
+
+.button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    position: relative;
+    background: #191b23;
+
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.button::before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    top: -0.1em;
+    bottom: -0.1em;
+    right: -0.1em;
+    left: -0.1em;
+    z-index: -1;
+    background: linear-gradient(to right, #343434 0%, #ffffff 20%, #343434 80%);
+    background-size: 140%;
+    background-position: 100% 0;
+    transition: background .3s;
+}
