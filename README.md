@@ -1,4 +1,4 @@
-# REFLECTION - Mint Client
+# RLXYZ - Mint Client Template
 
 ## Getting Started
 First, run the development server:

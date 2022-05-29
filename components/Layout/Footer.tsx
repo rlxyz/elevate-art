@@ -29,7 +29,7 @@ export const Footer = () => {
           </div>
           <img src="/images/divider.svg" alt="Divider" className="w-full" />
           <div className="pt-2 font-kiona-regular text-xs text-white text-center z-50">
-            A <span className="text-blend-pink">DREAM LAB</span> PRODUCTION
+            A <span className="text-blend-pink">RLXYZ</span> PRODUCTION
           </div>
         </div>
       </div>

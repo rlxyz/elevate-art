@@ -28,10 +28,6 @@ function CustomApp({
     useStore.setState({ router, rollbar });
   }, [router]);
 
-  useEffect(() => {
-    import("flowbite");
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
