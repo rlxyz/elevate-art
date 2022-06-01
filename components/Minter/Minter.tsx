@@ -7,7 +7,6 @@ import {
 import { COLLECTION_DISTRIBUTION } from "@utils/constant";
 import styles from "./Minter.module.scss";
 import { Token } from "state/token";
-import { useWallet } from "@hooks/useWallet";
 import { useNotify } from "@hooks/useNotify";
 import { TopEdgeBorder, BottomEdgeBorder } from "./Icons";
 import { motion } from "framer-motion";
@@ -19,6 +18,7 @@ import Carousel from "nuka-carousel";
 import Zoom from "react-medium-image-zoom";
 import { LooksRare, OpenSea } from "@components/Layout/Socials/Icons";
 import SocialButton from "@components/Layout/Socials/SocialButton";
+import { useConnect, useAccount } from "wagmi";
 
 const mainBox = {
   hidden: { opacity: 0 },
@@ -44,7 +44,8 @@ const mainComponent = {
 
 export const Minter = () => {
   const [amount, setAmount] = useState(1);
-  const { isWalletConnected, address } = useWallet();
+  const { isConnected } = useConnect();
+  const { data: account } = useAccount();
   const { notifyError } = useNotify();
   const [slideIndex, setSlideIndex] = useState(0);
   const {
@@ -63,11 +64,11 @@ export const Minter = () => {
   const [mintInProgress, setMintInProgress] = useState<boolean>(false);
 
   const { data: tokenIds, isLoading: fetchingTokenIds } = useGetTokenIds(
-    address,
+    account?.address,
     mintPhase
   );
   const { data: assets, isLoading: fetchingImages } = useAssetReveal(
-    address,
+    account?.address,
     tokenIds
   );
 
@@ -97,11 +98,15 @@ export const Minter = () => {
 
   const mintCallback = (txHash: string) => {
     if (mintPhase === "claim") {
-      setSuccessfulTransactionHash(address, txHash);
+      setSuccessfulTransactionHash(account?.address, txHash);
     }
 
     if (mintPhase === "presale" || mintPhase === "public") {
-      setSuccessfulTransactionHashWithPhase(address, txHash, mintPhase);
+      setSuccessfulTransactionHashWithPhase(
+        account?.address,
+        txHash,
+        mintPhase
+      );
     }
   };
 
@@ -127,7 +132,7 @@ export const Minter = () => {
   };
 
   const helperText = useMemo(() => {
-    if (!isWalletConnected) {
+    if (!isConnected) {
       return "Connect your wallet to mint";
     }
 
@@ -180,7 +185,7 @@ export const Minter = () => {
           userCanMintCount > 1 ? "s" : ""
         }`
       : "Sorry, you may have minted max allocation or collection has sold out";
-  }, [isWalletConnected, mintPhase, userCanMintCount, mintCount]);
+  }, [isConnected, mintPhase, userCanMintCount, mintCount]);
 
   const renderMainComponent = () => {
     if (dataLoading || mintInProgress) {

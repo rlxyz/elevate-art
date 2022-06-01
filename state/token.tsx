@@ -6,18 +6,21 @@ import {
   generateLeaf,
 } from "@utils/merkle_roots";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createContainer } from "unstated-next";
-import { useWallet } from "@hooks/useWallet";
+import { useProvider, useAccount, useSigner } from "wagmi";
 import { useNotify } from "@hooks/useNotify";
 import { COLLECTION_DISTRIBUTION } from "@utils/constant";
 
 export type MintPhase = "none" | "claim" | "presale" | "public";
 
 function useToken() {
-  const { address, provider } = useWallet();
+  const { data: account } = useAccount();
+  const provider = useProvider();
+  const { data: signer } = useSigner();
 
   const { notifyError, notifySuccess, notifySubmitted } = useNotify();
+  const address = useMemo(() => account?.address, [account]);
 
   // Local state
   const [mintPhase, setMintPhase] = useState<MintPhase>("none");
@@ -57,7 +60,7 @@ function useToken() {
         "function presaleMerkleRoot() public view returns (bytes32)",
       ],
       // Get signer from authed provider
-      provider?.getSigner()
+      signer
     );
   };
 

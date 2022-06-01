@@ -3,7 +3,7 @@ import { useStore } from "@hooks/useStore";
 import { Cross } from "./Burger";
 import { NavItem } from "./NavItem";
 import { MenuList } from "./MenuList";
-import { WalletButton } from "./WalletButton";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const variants = {
   open: { opacity: 1, y: "0" },
@@ -34,7 +34,7 @@ export const NavDropdown = () => {
         );
       })}
       <div className="mt-4">
-        <WalletButton />
+        <ConnectButton />
       </div>
     </motion.nav>
   );
