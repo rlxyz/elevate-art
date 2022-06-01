@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "@components/Button";
 import { ButtonLink } from "@components/ButtonLink";
-import { useWallet } from "@hooks/useWallet";
+import { useConnect } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface MintSectionProps {
   mintPhase: string;
   amount: number;
-  helperText: string | React.ReactFragment;
+  helperText: string | React.ReactFragment | React.ReactNode;
   userMaxMintCount: number;
   setAmount: Function;
   overrideMintCount?: boolean;
@@ -24,10 +25,9 @@ export const MintSection: React.FC<MintSectionProps> = ({
   handleMint,
   soldOut,
 }) => {
-  const { isWalletConnected, connect } = useWallet();
-
+  const { isConnected } = useConnect();
   const allButtonDisabled =
-    !isWalletConnected || mintPhase === "none" || userMaxMintCount <= 0;
+    !isConnected || mintPhase === "none" || userMaxMintCount <= 0;
 
   if (soldOut) {
     return (
@@ -53,7 +53,7 @@ export const MintSection: React.FC<MintSectionProps> = ({
     <div>
       <div className="text-white  pt-10 5xl:pt-36 text-center">
         <span className="text-2xl font-bold font-kiona">
-          {isWalletConnected && mintPhase === "claim"
+          {isConnected && mintPhase === "claim"
             ? "Free Claim Window"
             : mintPhase === "presale"
             ? "Presale Window"
@@ -92,7 +92,7 @@ export const MintSection: React.FC<MintSectionProps> = ({
         )}
       </div>
       <div className="flex justify-center">
-        {isWalletConnected ? (
+        {isConnected ? (
           <Button
             disabled={allButtonDisabled}
             className="py-2 px-16 text-base bg-[#191b23] text-white"
@@ -100,11 +100,7 @@ export const MintSection: React.FC<MintSectionProps> = ({
             onClick={handleMint}
           />
         ) : (
-          <Button
-            className="py-2 px-16 text-base bg-[#191b23] text-white"
-            label="Connect"
-            onClick={connect}
-          />
+          <ConnectButton />
         )}
       </div>
       <div className="text-center text-white mt-5 font-gilroy-light">

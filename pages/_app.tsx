@@ -1,15 +1,60 @@
 import "../styles/globals.scss";
+import "@rainbow-me/rainbowkit/styles.css";
 import "react-medium-image-zoom/dist/styles.css";
 import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useRouter } from "next/router";
 import { useStore } from "@hooks/useStore";
-import { WalletProvider } from "@hooks/useWallet";
 import { Layout } from "@components/Layout/Layout";
-import { Token } from "state/token"; // Token state provider
 import { rollbar } from "@utils/rollbar";
 import { Toaster } from "react-hot-toast";
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  connectorsForWallets,
+  wallet,
+} from "@rainbow-me/rainbowkit";
+import { chain, createClient, configureChains, WagmiConfig } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
+
+const { chains, provider, webSocketProvider } = configureChains(
+  [
+    chain.rinkeby,
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+      ? [chain.rinkeby]
+      : []),
+  ],
+  [
+    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    publicProvider(),
+  ]
+);
+
+const { wallets } = getDefaultWallets({
+  appName: "RainbowKit Mint NFT Demo",
+  chains,
+});
+
+const appInfo = {
+  appName: "RLXYZ Mint Client",
+};
+
+const connectors = connectorsForWallets([
+  ...wallets,
+  {
+    groupName: "Other",
+    wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
+  },
+]);
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider,
+});
 
 const queryClient = new QueryClient();
 
@@ -30,14 +75,14 @@ function CustomApp({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>
-        <Token.Provider>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider appInfo={appInfo} chains={chains}>
           <Layout>
             <Component {...pageProps} err={err} />
             <Toaster />
           </Layout>
-        </Token.Provider>
-      </WalletProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
     </QueryClientProvider>
   );
 }

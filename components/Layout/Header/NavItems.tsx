@@ -1,6 +1,6 @@
 import { NavItem } from "./NavItem";
 import { MenuList } from "./MenuList";
-import { WalletButton } from "./WalletButton";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
 
 const header = {
@@ -30,7 +30,7 @@ export const NavItems = () => {
         );
       })}
       <div className="ml-4 md:block flex justify-center space-x-6 md:order-2">
-        <WalletButton />
+        <ConnectButton />
       </div>
     </motion.nav>
   );
