@@ -1,7 +1,5 @@
-import { Minter } from "@components/Minter";
-
 export const HomePage = () => {
-  return <Minter />;
+  return <div>Home Page</div>;
 };
 
 export default HomePage;
