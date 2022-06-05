@@ -1,45 +1,38 @@
-import { rollbar } from "@utils/rollbar";
-import type { NextPageContext } from "next";
-import NextErrorComponent from "next/error";
+import { rollbar } from '@utils/rollbar'
+import type { NextPageContext } from 'next'
+import NextErrorComponent from 'next/error'
 
 type ErrorPageProps = {
-  err?: unknown;
-  hasGetInitialPropsRun?: boolean;
-  statusCode: number;
-};
+  err?: Error
+  hasGetInitialPropsRun?: boolean
+  statusCode: number
+}
 
-function CustomError({
-  statusCode,
-  hasGetInitialPropsRun,
-  err,
-}: ErrorPageProps) {
+function CustomError({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
   if (!hasGetInitialPropsRun && err) {
-    // @ts-ignore
-    rollbar.error(err);
+    rollbar.error(err)
   }
 
-  return <NextErrorComponent statusCode={statusCode} />;
+  return <NextErrorComponent statusCode={statusCode} />
 }
 
 CustomError.getInitialProps = async (props: NextPageContext) => {
-  const { err, asPath } = props;
+  const { err, asPath } = props
 
-  const errorInitialProps = await NextErrorComponent.getInitialProps(props);
+  const errorInitialProps = await NextErrorComponent.getInitialProps(props)
 
-  // @ts-ignore
-  errorInitialProps.hasGetInitialPropsRun = true;
+  // @ts-expect-error this is inject the method directly
+  errorInitialProps.hasGetInitialPropsRun = true
 
   if (err) {
-    rollbar.error(err);
+    rollbar.error(err)
 
-    return errorInitialProps;
+    return errorInitialProps
   }
 
-  rollbar.error(
-    new Error(`_error.js getInitialProps missing data at path: ${asPath}`)
-  );
+  rollbar.error(new Error(`_error.js getInitialProps missing data at path: ${asPath}`))
 
-  return errorInitialProps;
-};
+  return errorInitialProps
+}
 
-export default CustomError;
+export default CustomError

@@ -1,7 +1,8 @@
-import { NavItem } from "./NavItem";
-import { MenuList } from "./MenuList";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { motion } from "framer-motion";
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { motion } from 'framer-motion'
+
+import { MenuList } from './MenuList'
+import { NavItem } from './NavItem'
 
 const header = {
   hidden: { opacity: 0 },
@@ -12,7 +13,7 @@ const header = {
       staggerChildren: 0.2,
     },
   },
-};
+}
 
 export const NavItems = () => {
   return (
@@ -27,11 +28,11 @@ export const NavItems = () => {
           <NavItem key={i} href={menu.href} active={menu.active}>
             {menu.name}
           </NavItem>
-        );
+        )
       })}
       <div className="ml-4 md:block flex justify-center space-x-6 md:order-2">
         <ConnectButton />
       </div>
     </motion.nav>
-  );
-};
+  )
+}

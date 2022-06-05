@@ -1,77 +1,73 @@
-import "../styles/globals.scss";
-import "@rainbow-me/rainbowkit/styles.css";
-import "react-medium-image-zoom/dist/styles.css";
-import { useEffect } from "react";
-import type { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { useRouter } from "next/router";
-import { useStore } from "@hooks/useStore";
-import { Layout } from "@components/Layout/Layout";
-import { rollbar } from "@utils/rollbar";
-import { Toaster } from "react-hot-toast";
+import '../styles/globals.scss'
+import '@rainbow-me/rainbowkit/styles.css'
+import 'react-medium-image-zoom/dist/styles.css'
+
+import { Layout } from '@components/Layout/Layout'
+import { useStore } from '@hooks/useStore'
 import {
-  RainbowKitProvider,
-  getDefaultWallets,
   connectorsForWallets,
+  getDefaultWallets,
+  RainbowKitProvider,
   wallet,
-} from "@rainbow-me/rainbowkit";
-import { chain, createClient, configureChains, WagmiConfig } from "wagmi";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+} from '@rainbow-me/rainbowkit'
+import { rollbar } from '@utils/rollbar'
+import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
     chain.rinkeby,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [chain.rinkeby]
-      : []),
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [chain.rinkeby] : []),
   ],
-  [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
-    publicProvider(),
-  ]
-);
+  [alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()],
+)
 
 const { wallets } = getDefaultWallets({
-  appName: "RainbowKit Mint NFT Demo",
+  appName: 'RainbowKit Mint NFT Demo',
   chains,
-});
+})
 
 const appInfo = {
-  appName: "RLXYZ Mint Client",
-};
+  appName: 'RLXYZ Mint Client',
+}
 
 const connectors = connectorsForWallets([
   ...wallets,
   {
-    groupName: "Other",
+    groupName: 'Other',
     wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
   },
-]);
+])
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider,
   webSocketProvider,
-});
+})
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 interface AppPropsWithError extends AppProps {
-  err: unknown;
+  err: unknown
 }
 
 function CustomApp({
   Component,
-  pageProps = { title: "index" },
+  pageProps = { title: 'index' },
   err,
 }: AppPropsWithError) {
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
-    useStore.setState({ router, rollbar });
-  }, [router]);
+    useStore.setState({ router, rollbar })
+  }, [router])
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -84,7 +80,7 @@ function CustomApp({
         </RainbowKitProvider>
       </WagmiConfig>
     </QueryClientProvider>
-  );
+  )
 }
 
-export default CustomApp;
+export default CustomApp

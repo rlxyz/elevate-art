@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react'
 
 interface Props {
-  children: React.ReactNode;
-  id: string;
-  type: "success" | "error";
+  children: React.ReactNode
+  id: string
+  type: 'success' | 'error'
 }
 
 export const Notification = ({ children, id, type }: Props) => {
-  const color = type === "success" ? "border-blend-pink" : "border-x-red-700";
+  const color = type === 'success' ? 'border-blend-pink' : 'border-x-red-700'
   return (
     <div
       id={id}
@@ -19,5 +19,5 @@ export const Notification = ({ children, id, type }: Props) => {
       ></div>
       <div className="w-full flex items-center">{children}</div>
     </div>
-  );
-};
+  )
+}

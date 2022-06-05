@@ -1,3 +1,3 @@
-export * from "./claim";
-export * from "./presale";
-export * from "./utils";
+export * from './claim'
+export * from './presale'
+export * from './utils'

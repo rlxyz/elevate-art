@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
-import { NavItems } from "./NavItems";
-import { Burger } from "./Burger";
-import { NavDropdown } from "./NavDropdown";
+import { motion } from 'framer-motion'
+
+import { Burger } from './Burger'
+import { NavDropdown } from './NavDropdown'
+import { NavItems } from './NavItems'
 
 const header = {
   hidden: { opacity: 0 },
@@ -12,7 +13,7 @@ const header = {
       staggerChildren: 0.2,
     },
   },
-};
+}
 
 export const Header = () => {
   return (
@@ -20,7 +21,7 @@ export const Header = () => {
       <motion.h1 variants={header} initial="hidden" animate="visible">
         <div className="uppercase z-[1000]">
           <h1 className="text-white text-xl">
-            <span className="font-kiona-bold lg:text-xl text-sm">RLXYZ</span>{" "}
+            <span className="font-kiona-bold lg:text-xl text-sm">RLXYZ</span>{' '}
             <span className="font-kiona-light lg:text-lg text-xs ml-1">
               <span className="text-blend-pink">Mint Client</span>
             </span>
@@ -31,5 +32,5 @@ export const Header = () => {
       <Burger />
       <NavDropdown />
     </header>
-  );
-};
+  )
+}

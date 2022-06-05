@@ -1,15 +1,15 @@
-import Head from "next/head";
+import Head from 'next/head'
 
 export const NAMINGS = {
-  title: "REFLECTIONS",
+  title: 'REFLECTIONS',
   description:
-    "Reflections is a first of its kind generative photography project that harnesses the serendipity of on-chain mechanics to compose 1,111 unique one of a kind NFTs.",
+    'Reflections is a first of its kind generative photography project that harnesses the serendipity of on-chain mechanics to compose 1,111 unique one of a kind NFTs.',
   author: {
-    DREAMLAB: "Dream Lab",
-    RLXYZ: "RLXYZ",
+    DREAMLAB: 'Dream Lab',
+    RLXYZ: 'RLXYZ',
   },
-  keywords: "nft,crypto,generative art,photography,cryptoart",
-};
+  keywords: 'nft,crypto,generative art,photography,cryptoart',
+}
 
 export const Seo = () => {
   return (
@@ -18,7 +18,7 @@ export const Seo = () => {
       <meta charSet="utf-8" />
       <meta name="language" content="english" />
       <meta httpEquiv="content-type" content="text/html" />
-      <meta name="author" content={"Jacob Riglin"} />
+      <meta name="author" content={'Jacob Riglin'} />
       <meta name="designer" content={NAMINGS.author.RLXYZ} />
       <meta name="publisher" content={NAMINGS.author.DREAMLAB} />
 
@@ -59,5 +59,5 @@ export const Seo = () => {
       <meta name="theme-color" content="#000" />
       <link rel="shortcut icon" href="/favicon.ico" />
     </Head>
-  );
-};
+  )
+}

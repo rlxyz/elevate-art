@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment } from 'react'
 
 export const MenuList = [
   {
@@ -7,7 +7,7 @@ export const MenuList = [
         <span>Mint</span>
       </Fragment>
     ),
-    href: "/",
+    href: '/',
     active: true,
   },
-];
+]

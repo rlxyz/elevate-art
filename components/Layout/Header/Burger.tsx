@@ -1,22 +1,22 @@
-import { useStore } from "@hooks/useStore";
-import classNames from "classnames";
+import { useStore } from '@hooks/useStore'
+import classNames from 'classnames'
 
 export const Burger = () => {
-  const isDropdownOpen = useStore((state) => state.isDropdownOpen);
-  const setIsDropdownOpen = useStore((state) => state.setIsDropdownOpen);
+  const isDropdownOpen = useStore(state => state.isDropdownOpen)
+  const setIsDropdownOpen = useStore(state => state.setIsDropdownOpen)
 
   const handleClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+    setIsDropdownOpen(!isDropdownOpen)
+  }
 
   return (
     <button
       onClick={handleClick}
       className={classNames(
-        "flex md:hidden h-6 w-6 justify-center items-center mt-1 ml-1",
+        'flex md:hidden h-6 w-6 justify-center items-center mt-1 ml-1',
         {
           hidden: isDropdownOpen,
-        }
+        },
       )}
     >
       <svg
@@ -30,18 +30,18 @@ export const Burger = () => {
         <path d="M0 16.2H32.175" stroke="white" strokeWidth="0.95" />
       </svg>
     </button>
-  );
-};
+  )
+}
 
 export const Cross = () => {
-  const isDropdownOpen = useStore((state) => state.isDropdownOpen);
-  const setIsDropdownOpen = useStore((state) => state.setIsDropdownOpen);
+  const isDropdownOpen = useStore(state => state.isDropdownOpen)
+  const setIsDropdownOpen = useStore(state => state.setIsDropdownOpen)
 
   const handleClick = () => {
     if (isDropdownOpen) {
-      setIsDropdownOpen(!isDropdownOpen);
+      setIsDropdownOpen(!isDropdownOpen)
     }
-  };
+  }
 
   return (
     <button
@@ -54,17 +54,9 @@ export const Cross = () => {
         viewBox="0 0 24 24"
         fill="none"
       >
-        <path
-          d="M23.4629 23.3757L0.711731 0.624572"
-          stroke="white"
-          strokeWidth="0.95"
-        />
-        <path
-          d="M0.711914 23.3757L23.4631 0.624572"
-          stroke="white"
-          strokeWidth="0.95"
-        />
+        <path d="M23.4629 23.3757L0.711731 0.624572" stroke="white" strokeWidth="0.95" />
+        <path d="M0.711914 23.3757L23.4631 0.624572" stroke="white" strokeWidth="0.95" />
       </svg>
     </button>
-  );
-};
+  )
+}
