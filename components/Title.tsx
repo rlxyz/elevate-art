@@ -1,4 +1,4 @@
-import { NAMINGS } from "@utils/constant";
+import { NAMINGS } from '@utils/constant'
 
 export const Title = () => {
   return (
@@ -13,5 +13,5 @@ export const Title = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}

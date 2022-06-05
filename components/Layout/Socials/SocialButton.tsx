@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 const SocialButton = ({ children, href }) => {
   return (
@@ -7,7 +7,7 @@ const SocialButton = ({ children, href }) => {
         {children}
       </a>
     </Link>
-  );
-};
+  )
+}
 
-export default SocialButton;
+export default SocialButton

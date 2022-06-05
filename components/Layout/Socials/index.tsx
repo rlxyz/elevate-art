@@ -1,7 +1,8 @@
-import React from "react";
-import { Discord, Instagram, Twitter } from "./Icons";
-import SocialButton from "./SocialButton";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
+import React from 'react'
+
+import { Discord, Instagram, Twitter } from './Icons'
+import SocialButton from './SocialButton'
 
 const header = {
   hidden: { opacity: 0 },
@@ -12,7 +13,7 @@ const header = {
       staggerChildren: 0.2,
     },
   },
-};
+}
 
 const Socials = () => {
   return (
@@ -32,7 +33,7 @@ const Socials = () => {
         <Instagram />
       </SocialButton>
     </motion.div>
-  );
-};
+  )
+}
 
-export default Socials;
+export default Socials

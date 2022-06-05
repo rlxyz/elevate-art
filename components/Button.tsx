@@ -1,13 +1,14 @@
-import * as React from "react";
-import styles from "./Button.module.css";
+import * as React from 'react'
 
-interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
-  label?: string;
+import styles from './Button.module.css'
+
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+  label?: string
 }
 
 export const Button = ({
   label,
-  type = "button",
+  type = 'button',
   className,
   children,
   ...props
@@ -16,5 +17,5 @@ export const Button = ({
     <button className={`${styles.button} ${className}`} type={type} {...props}>
       {label || children}
     </button>
-  );
-};
+  )
+}

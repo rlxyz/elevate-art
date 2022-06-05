@@ -1,19 +1,15 @@
-import * as React from "react";
-import styles from "./Button.module.css";
+import * as React from 'react'
+
+import styles from './Button.module.css'
 
 interface ButtonLinkProps {
-  label: string;
-  href: string;
-  className?: string;
-  children?: React.ReactChild;
+  label: string
+  href: string
+  className?: string
+  children?: React.ReactChild
 }
 
-export const ButtonLink = ({
-  label,
-  href,
-  className,
-  children,
-}: ButtonLinkProps) => {
+export const ButtonLink = ({ label, href, className, children }: ButtonLinkProps) => {
   return (
     <a
       href={href}
@@ -23,5 +19,5 @@ export const ButtonLink = ({
     >
       {label || children}
     </a>
-  );
-};
+  )
+}

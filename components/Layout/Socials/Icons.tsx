@@ -11,7 +11,7 @@ export const Discord = () => (
       fill="white"
     />
   </svg>
-);
+)
 
 export const LooksRare = () => (
   <svg
@@ -34,7 +34,7 @@ export const LooksRare = () => (
       fill="white"
     />
   </svg>
-);
+)
 
 export const OpenSea = () => (
   <svg
@@ -49,7 +49,7 @@ export const OpenSea = () => (
       fill="white"
     />
   </svg>
-);
+)
 
 export const Twitter = () => (
   <svg
@@ -63,7 +63,7 @@ export const Twitter = () => (
       fill="white"
     />
   </svg>
-);
+)
 
 export const Instagram = () => (
   <svg
@@ -85,4 +85,4 @@ export const Instagram = () => (
       fill="white"
     />
   </svg>
-);
+)
