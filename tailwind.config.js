@@ -12,9 +12,7 @@ module.exports = {
       },
       white: colors.white,
       primary: colors.red,
-      black: '#1C1C20',
-      'blend-pink': '#F9B7DD',
-      gray: '#AAABAC',
+      gray: '#E7E7E7',
     },
     screens: {
       sm: '640px',
@@ -27,19 +25,12 @@ module.exports = {
       '5xl': '2560px',
     },
     fontFamily: {
-      'kiona-bold': ['"Kiona-Bold"', 'sans-serif'],
-      'kiona-regular': ['"Kiona-Regular"', 'sans-serif'],
-      'kiona-light': ['"Kiona-light"', 'sans-serif'],
-      sans: ['Kiona', 'sans-serif'],
-      normal: ['Kiona', 'sans-serif'],
-      light: ['Kiona', 'sans-serif'],
-      'gilroy-ultra-light': ['"Gilroy-UltraLight"', 'sans-serif'],
-      'gilroy-light': ['"Gilroy-Light"', 'sans-serif'],
+      sans: ['Plus Jakarta Sans', 'sans-serif'],
+      normal: ['Plus Jakarta Sans', 'sans-serif'],
       'gilroy-extra-bold': ['"Gilroy-ExtraBold"', 'sans-serif'],
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
 }

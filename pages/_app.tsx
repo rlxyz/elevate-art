@@ -22,14 +22,14 @@ import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    chain.rinkeby,
+    chain.mainnet,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [chain.rinkeby] : []),
   ],
   [alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()],
 )
 
 const { wallets } = getDefaultWallets({
-  appName: 'RainbowKit Mint NFT Demo',
+  appName: 'RLXYZ Mint Client',
   chains,
 })
 
