@@ -10,6 +10,7 @@ import {
   RainbowKitProvider,
   wallet,
 } from '@rainbow-me/rainbowkit'
+import { config } from '@utils/config'
 import { rollbar } from '@utils/rollbar'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
@@ -18,23 +19,25 @@ import { Toaster } from 'react-hot-toast'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider, webSocketProvider } = configureChains(
+  [chain.mainnet, ...(config.testnetEnabled ? [chain.rinkeby] : [])],
   [
-    chain.mainnet,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [chain.rinkeby] : []),
+    alchemyProvider({ alchemyId: config.alchemyId }),
+    infuraProvider({ infuraId: config.infuraId }),
+    publicProvider(),
   ],
-  [alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()],
 )
 
 const { wallets } = getDefaultWallets({
-  appName: 'RLXYZ Mint Client',
+  appName: config.projectName,
   chains,
 })
 
 const appInfo = {
-  appName: 'RLXYZ Mint Client',
+  appName: config.projectName,
 }
 
 const connectors = connectorsForWallets([
