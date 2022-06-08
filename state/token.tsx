@@ -1,4 +1,3 @@
-import { useNotify } from '@hooks/useNotify'
 import { COLLECTION_DISTRIBUTION } from '@utils/constant'
 import {
   claimConfig,
@@ -19,7 +18,6 @@ function useToken() {
   const provider = useProvider()
   const { data: signer } = useSigner()
 
-  const { notifyError, notifySuccess, notifySubmitted } = useNotify()
   const address = useMemo(() => account?.address, [account])
 
   // Local state
@@ -161,26 +159,26 @@ function useToken() {
 
   const captureError = err => {
     if (err.code === 'UNPREDICTABLE_GAS_LIMIT') {
-      notifyError({
-        message:
-          'Gas is expensive right now, and you do not have enough gas for the transaction. Please try again later.',
-        err,
-      })
+      // notifyError({
+      // message:
+      // 'Gas is expensive right now, and you do not have enough gas for the transaction. Please try again later.',
+      // err,
+      // })
     } else if (err.code === 'INSUFFICIENT_FUNDS') {
-      notifyError({
-        message: 'You do not have the required ETH to purchase your Reflection',
-        err,
-      })
+      // notifyError({
+      // message: 'You do not have the required ETH to purchase your Reflection',
+      // err,
+      // })
     } else if (err.code === 4001 || err.code === -32603) {
-      notifyError({
-        message: err.message,
-      })
+      // notifyError({
+      // message: err.message,
+      // })
     } else {
-      notifyError({
-        message:
-          'Something went wrong with the transaction. Please submit a support ticket in our Discord.',
-        err,
-      })
+      // notifyError({
+      // message:
+      // 'Something went wrong with the transaction. Please submit a support ticket in our Discord.',
+      // err,
+      // })
     }
   }
 
@@ -204,14 +202,14 @@ function useToken() {
 
     // Get tokens for address
     if (invocations > maxInvocation) {
-      notifyError({
-        message: 'Trying to mint too many.',
-      })
+      // notifyError({
+      // message: 'Trying to mint too many.',
+      // })
       return
     } else if (invocations < maxInvocation) {
-      notifyError({
-        message: 'Trying to mint too little.',
-      })
+      // notifyError({
+      // message: 'Trying to mint too little.',
+      // })
       return
     }
 
@@ -229,12 +227,12 @@ function useToken() {
       // Try to claim airdrop and refresh sync status
       const tx = await token.claimMint(invocations, proof, overrides)
       const txHash = tx.hash
-      notifySubmitted(txHash, 10000)
+      //notifySubmitted(txHash, 10000)
 
       const txResponse = await tx.wait()
 
       if (txResponse !== null && callbackFn) {
-        notifySuccess()
+        //notifySuccess()
         callbackFn(txHash)
       }
     } catch (err) {
@@ -263,7 +261,7 @@ function useToken() {
 
     // Get tokens for address
     if (invocations > maxInvocation) {
-      notifyError({ message: 'Trying to mint too many' })
+      //notifyError({ message: 'Trying to mint too many' })
       return
     }
 
@@ -289,12 +287,12 @@ function useToken() {
       // Try to claim airdrop and refresh sync status
       const tx = await token.presaleMint(invocations, maxInvocation, proof, overrides)
       const txHash = tx.hash
-      notifySubmitted(txHash)
+      //notifySubmitted(txHash)
 
       const txResponse = await tx.wait()
 
       if (txResponse !== null && callbackFn) {
-        notifySuccess()
+        //notifySuccess()
         callbackFn(txHash)
       }
     } catch (err) {
@@ -315,7 +313,7 @@ function useToken() {
     const maxInvocation: number = await getPublicMaxInvocation(address)
 
     if (invocations > maxInvocation) {
-      notifyError({ message: 'Trying to mint too many.' })
+      //notifyError({ message: 'Trying to mint too many.' })
       return
     }
 
@@ -336,12 +334,12 @@ function useToken() {
     try {
       const tx = await token.publicMint(invocations, overrides)
       const txHash = tx.hash
-      notifySubmitted(txHash)
+      //notifySubmitted(txHash)
 
       const txResponse = await tx.wait()
 
       if (txResponse !== null && callbackFn) {
-        notifySuccess()
+        //notifySuccess()
         callbackFn(txHash)
       }
     } catch (err) {

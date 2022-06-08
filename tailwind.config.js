@@ -15,6 +15,7 @@ module.exports = {
       gray: '#E7E7E7',
       redDot: '#FF5555',
       greenDot: '#86D893',
+      black: '#2C2C2C',
     },
     screens: {
       sm: '640px',

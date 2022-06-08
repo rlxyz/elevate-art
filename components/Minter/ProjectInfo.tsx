@@ -26,10 +26,10 @@ export const ProjectInfo = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center lg:justify-between">
       <div className="flex">
-        <img src={config.projectProfileImage} />
+        <img src={config.projectProfileImage} alt={config.projectOwner} />
         <div className="flex flex-col ml-3">
           <div className="mb-1">
-            <span className="text-2xl font-bold">{config.projectName}</span>
+            <h1 className="text-2xl font-bold">{config.projectName}</h1>
           </div>
           <div className="flex items-center mb-1">
             <img

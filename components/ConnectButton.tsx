@@ -1,7 +1,12 @@
+import { Button } from '@components/Button'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import React from 'react'
 
-export const ConnectButton = () => {
+interface ConnectButtonProps {
+  normalButton?: boolean
+}
+
+export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) => {
   return (
     <RbConnectButton.Custom>
       {({
@@ -25,6 +30,9 @@ export const ConnectButton = () => {
           >
             {(() => {
               if (!mounted || !account || !chain) {
+                if (normalButton) {
+                  return <Button onClick={openConnectModal}>Connect Wallet</Button>
+                }
                 return (
                   <>
                     <button onClick={openConnectModal} type="button">
