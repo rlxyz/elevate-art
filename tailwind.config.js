@@ -13,6 +13,8 @@ module.exports = {
       white: colors.white,
       primary: colors.red,
       gray: '#E7E7E7',
+      redDot: '#FF5555',
+      greenDot: '#86D893',
     },
     screens: {
       sm: '640px',

@@ -11,14 +11,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Seo />
-      <div className="absolute top-0 left-0 h-full w-full pointer-events-auto">
-        <main className="w-full h-full flex justify-center items-center">
-          <div className={`w-full h-full relative flex justify-center items-center`}>
+      <main className="max-h-screen">
+        <div className="p-0 2xl:px-32 2xl:mt-14 4xl:p-48">
+          <div className="shadow-none 2xl:shadow-md 4xl:shadow-lg">
             <Header />
             {children}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </>
   )
 }
