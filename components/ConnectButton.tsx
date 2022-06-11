@@ -31,7 +31,11 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
             {(() => {
               if (!mounted || !account || !chain) {
                 if (normalButton) {
-                  return <Button onClick={openConnectModal}>Connect Wallet</Button>
+                  return (
+                    <div className="flex justify-center">
+                      <Button onClick={openConnectModal}>Connect Wallet</Button>
+                    </div>
+                  )
                 }
                 return (
                   <>

@@ -2,7 +2,7 @@ import { ConnectButton } from '@components/ConnectButton'
 
 export const Header = () => {
   return (
-    <header className="w-full flex justify-between py-8 px-4 lg:py-8 lg:px-8 pointer-events-auto border-b border-b-gray">
+    <header className="w-full flex justify-between h-[7rem] px-4 lg:py-8 lg:px-8 pointer-events-auto border-b border-b-gray">
       <h1 className="lg:text-xl">
         <span className="text-[#9C9C9C] font-medium">Powered by</span>{' '}
         <span className="font-gilroy-extra-bold line-through">RLXYZ</span>

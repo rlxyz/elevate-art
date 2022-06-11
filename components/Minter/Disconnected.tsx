@@ -2,7 +2,7 @@ import { ConnectButton } from '@components/ConnectButton'
 
 export const Disconnected = () => {
   return (
-    <div className="mt-10 p-24 lg:py-32 lg:px-24 3xl:p-64 border border-gray rounded-lg">
+    <div className="mt-10 py-32 2xl:py-24 3xl:py-40 4xl:py-52 border border-gray rounded-lg">
       <ConnectButton normalButton />
     </div>
   )

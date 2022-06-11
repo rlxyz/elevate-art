@@ -28,9 +28,10 @@ module.exports = {
       '5xl': '2560px',
     },
     fontFamily: {
-      sans: ['Plus Jakarta Sans', 'sans-serif'],
-      normal: ['Plus Jakarta Sans', 'sans-serif'],
+      sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+      normal: ['"Plus Jakarta Sans"', 'sans-serif'],
       'gilroy-extra-bold': ['"Gilroy-ExtraBold"', 'sans-serif'],
+      'plus-jakarta-sans': ['"Plus Jakarta Sans"', 'sans-serif'],
     },
   },
   variants: {

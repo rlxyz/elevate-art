@@ -1,5 +1,5 @@
-import { Button } from '@components/Button'
 import { Disconnected } from '@components/Minter/Disconnected'
+import { MintButton } from '@components/Minter/MintButton'
 import { MintRequirements } from '@components/Minter/MintRequirements'
 import { config } from '@utils/config'
 import dynamic from 'next/dynamic'
@@ -25,7 +25,7 @@ export const HomePage = () => {
         <ProjectInfo />
         {isConnected ? <MintRequirements /> : <Disconnected />}
         <div className="mt-6">
-          <Button disabled>Mint 10 NFTs</Button>
+          <MintButton mintCount={10} />
         </div>
       </div>
     </div>
