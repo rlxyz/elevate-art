@@ -1,7 +1,7 @@
 import { CheckIcon } from '@components/Icons/Check'
 import { CopyIcon } from '@components/Icons/Copy'
 import { truncateWalletAddress } from '@utils/helpers'
-import { useCallback,useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAccount, useConnect, useNetwork } from 'wagmi'
 
 export const AccountClipboardCopy = () => {

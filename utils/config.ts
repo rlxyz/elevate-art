@@ -15,6 +15,7 @@ interface Config {
   discordUrl: string
   twitterUrl: string
   openseaUrl: string
+  logrocketKey: string
 }
 
 export const config: Config = {
@@ -34,4 +35,5 @@ export const config: Config = {
   discordUrl: process.env.NEXT_PUBLIC_DISCORD_URL as string,
   twitterUrl: process.env.NEXT_PUBLIC_TWITTER_URL as string,
   openseaUrl: process.env.NEXT_PUBLIC_OPENSEA_URL as string,
+  logrocketKey: process.env.NEXT_PUBLIC_LOG_ROCKET_KEY as string,
 }

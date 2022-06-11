@@ -2,8 +2,8 @@ import '../styles/globals.scss'
 import '@rainbow-me/rainbowkit/styles.css'
 import 'react-medium-image-zoom/dist/styles.css'
 
+import ErrorBoundary from '@components/ErrorBoundary'
 import { Layout } from '@components/Layout/Layout'
-import { useStore } from '@hooks/useStore'
 import {
   connectorsForWallets,
   getDefaultWallets,
@@ -11,9 +11,8 @@ import {
   wallet,
 } from '@rainbow-me/rainbowkit'
 import { config } from '@utils/config'
-import { rollbar } from '@utils/rollbar'
+import LogRocket from 'logrocket'
 import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -66,23 +65,23 @@ function CustomApp({
   pageProps = { title: 'index' },
   err,
 }: AppPropsWithError) {
-  const router = useRouter()
-
   useEffect(() => {
-    useStore.setState({ router, rollbar })
-  }, [router])
+    LogRocket.init(config.logrocketKey)
+  }, [])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider appInfo={appInfo} chains={chains}>
-          <Layout>
-            <Component {...pageProps} err={err} />
-            <Toaster />
-          </Layout>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider appInfo={appInfo} chains={chains}>
+            <Layout>
+              <Component {...pageProps} err={err} />
+              <Toaster />
+            </Layout>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 

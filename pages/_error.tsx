@@ -1,4 +1,4 @@
-import { rollbar } from '@utils/rollbar'
+import { useStore } from '@hooks/useStore'
 import type { NextPageContext } from 'next'
 import NextErrorComponent from 'next/error'
 
@@ -9,6 +9,7 @@ type ErrorPageProps = {
 }
 
 function CustomError({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
+  const { rollbar } = useStore()
   if (!hasGetInitialPropsRun && err) {
     rollbar.error(err)
   }
@@ -18,6 +19,7 @@ function CustomError({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps)
 
 CustomError.getInitialProps = async (props: NextPageContext) => {
   const { err, asPath } = props
+  const { rollbar } = useStore.getState()
 
   const errorInitialProps = await NextErrorComponent.getInitialProps(props)
 

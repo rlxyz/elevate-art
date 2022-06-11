@@ -27,6 +27,7 @@
     "ethers": "^5.5.4",
     "framer-motion": "^6.3.11",
     "keccak256": "^1.0.6",
+    "logrocket": "^3.0.0",
     "merkletreejs": "^0.2.30",
     "next": "12.1.6",
     "nookies": "^2.5.2",

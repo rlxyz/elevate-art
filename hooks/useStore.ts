@@ -1,23 +1,27 @@
-import { NextRouter } from 'next/router'
+import LogRocket from 'logrocket'
 import Rollbar from 'rollbar'
 import create from 'zustand'
 
+export const rollbar = new Rollbar({
+  accessToken: process.env.NEXT_PUBLIC_ROLLBAR_CLIENT_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  environment: process.env.NEXT_PUBLIC_APP_ENV,
+})
+
+rollbar.configure({
+  transform: function (obj) {
+    // @ts-expect-error
+    obj.sessionURL = LogRocket.sessionURL
+  },
+})
+
 interface Store {
-  router?: NextRouter
-  dom: any
-  onboarded: any
   rollbar: Rollbar
-  isDropdownOpen: boolean
-  setIsDropdownOpen: (isOpen: boolean) => void
 }
 
-export const useStore = create<Store>(set => {
+export const useStore = create<Store>(() => {
   return {
-    router: null,
-    dom: null,
-    onboarded: false,
-    rollbar: null,
-    isDropdownOpen: false,
-    setIsDropdownOpen: (isOpen: boolean) => set(() => ({ isDropdownOpen: isOpen })),
+    rollbar,
   }
 })
