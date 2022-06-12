@@ -1,4 +1,4 @@
-import { Button } from '@components/Button'
+import { Button } from '@components/UI/Button'
 import React from 'react'
 
 interface MintButtonProps {

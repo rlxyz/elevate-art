@@ -1,4 +1,4 @@
-import { ControlTextbox } from '@components/ControlTextbox'
+import { ControlTextbox } from '@components/UI/ControlTextbox'
 
 export const MintRequirements = () => {
   return (
