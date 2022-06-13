@@ -35,7 +35,7 @@ export const HomePage = () => {
         <ProjectInfo />
         {isConnected ? <MintRequirements /> : <Disconnected />}
         <div className="mt-6">
-          <MintButton mintCount={10} />
+          <MintButton mintCount={10} disabled={!isConnected} />
         </div>
       </div>
     </div>

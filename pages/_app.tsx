@@ -22,7 +22,7 @@ import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.mainnet, ...(config.testnetEnabled ? [chain.rinkeby] : [])],
+  [chain.mainnet, chain.localhost, ...(config.testnetEnabled ? [chain.rinkeby] : [])],
   [
     alchemyProvider({ alchemyId: config.alchemyId }),
     infuraProvider({ infuraId: config.infuraId }),
