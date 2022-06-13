@@ -16,6 +16,8 @@ interface Config {
   twitterUrl: string
   openseaUrl: string
   logrocketKey: string
+  contractAddress: string
+  maxPublicAllocationPerAddress: number
 }
 
 export const config: Config = {
@@ -36,4 +38,8 @@ export const config: Config = {
   twitterUrl: process.env.NEXT_PUBLIC_TWITTER_URL as string,
   openseaUrl: process.env.NEXT_PUBLIC_OPENSEA_URL as string,
   logrocketKey: process.env.NEXT_PUBLIC_LOG_ROCKET_KEY as string,
+  contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+  maxPublicAllocationPerAddress: Number(
+    process.env.NEXT_PUBLIC_MAX_PUBLIC_ALLOCATION_PER_ADDRESS || 0,
+  ),
 }
