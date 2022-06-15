@@ -1,20 +1,18 @@
-import { usePresaleMaxAllocation } from '@hooks/contractsRead'
-import { useAccount } from 'wagmi'
+import React from 'react'
 
 import { Container } from './Container'
 import { RequirementStatus } from './RequirementStatus'
 
-export const UserInAllowList = () => {
-  const { data: account } = useAccount()
-  const maxAllocation = usePresaleMaxAllocation(account?.address)
+interface UserInAllowListProps {
+  isEligible: boolean
+}
 
-  const userIsEligible = maxAllocation > 0
-
+export const UserInAllowList: React.FC<UserInAllowListProps> = ({ isEligible }) => {
   return (
     <Container>
-      <RequirementStatus passed={userIsEligible} />
+      <RequirementStatus passed={isEligible} />
       <span>
-        You are {userIsEligible ? '' : <strong>not</strong>} on the
+        You are {isEligible ? '' : <strong>not</strong>} on the
         <strong> Allowlist</strong>
       </span>
     </Container>

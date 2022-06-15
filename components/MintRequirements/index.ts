@@ -1,3 +1,4 @@
+export * from './NFTAmount'
 export * from './PresaleAllocation'
 export * from './PresaleRequirements'
 export * from './PresaleTiming'

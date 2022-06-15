@@ -1,17 +1,18 @@
-import { useTotalSupply } from '@hooks/contractsRead'
 import { config } from '@utils/config'
+import React from 'react'
 
 import { Container } from './Container'
 import { RequirementStatus } from './RequirementStatus'
 
-export const TotalMinted = () => {
-  const totalMinted = useTotalSupply()
+interface TotalMintedProps {
+  totalMinted: number
+  isEligible: boolean
+}
 
-  const userIsEligible = totalMinted < config.totalSupply
-
+export const TotalMinted: React.FC<TotalMintedProps> = ({ totalMinted, isEligible }) => {
   return (
     <Container>
-      <RequirementStatus passed={userIsEligible} />
+      <RequirementStatus passed={isEligible} />
       <span>
         This collection has minted{' '}
         <strong>{`${totalMinted}/${config.totalSupply} NFTs`}</strong>

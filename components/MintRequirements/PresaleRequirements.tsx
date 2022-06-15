@@ -4,14 +4,24 @@ import {
   TotalMinted,
   UserInAllowList,
 } from '@components/MintRequirements'
+import { usePresaleRequirements } from '@hooks/usePresaleRequirements'
+import { useAccount } from 'wagmi'
 
 export const PresaleRequirements = () => {
+  const { data: account } = useAccount()
+  const {
+    inAllowlist,
+    collectionNotSoldOut,
+    maxAllocation,
+    hasMintAllocation,
+    totalMinted,
+  } = usePresaleRequirements(account?.address)
   return (
     <>
-      <UserInAllowList />
-      <TotalMinted />
+      <UserInAllowList isEligible={inAllowlist} />
+      <TotalMinted totalMinted={totalMinted} isEligible={collectionNotSoldOut} />
       <PresaleTiming />
-      <PresaleAllocation />
+      <PresaleAllocation isEligible={hasMintAllocation} maxAllocation={maxAllocation} />
     </>
   )
 }

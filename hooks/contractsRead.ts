@@ -2,7 +2,7 @@ import { config } from '@utils/config'
 import { presaleConfig } from '@utils/merkle_roots'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
-import { useContractRead } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 
 import ContractAbi from '../contracts/Rhapsody.json'
 
@@ -44,11 +44,14 @@ interface UseMintPeriod {
 }
 
 export const useMintPeriod = (): UseMintPeriod => {
+  const { data: account } = useAccount()
   const { data: contractPresaleTime } = useContractRead(contractConfig, 'presaleTime', {
     watch: true,
+    enabled: !!account?.address,
   })
   const { data: contractPublicTime } = useContractRead(contractConfig, 'publicTime', {
     watch: true,
+    enabled: !!account?.address,
   })
 
   const presaleTime = useMemo(

@@ -1,11 +1,9 @@
-import { Disconnected } from '@components/Minter/Disconnected'
-import { MintButton } from '@components/Minter/MintButton'
-import { MintRequirements } from '@components/Minter/MintRequirements'
+import { MintSection } from '@components/Minter/MintSection'
 import { config } from '@utils/config'
 import LogRocket from 'logrocket'
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
-import { useAccount, useConnect } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 const ProjectInfo = dynamic(
   () => import('@components/Minter/ProjectInfo').then(mod => mod.ProjectInfo),
@@ -13,7 +11,6 @@ const ProjectInfo = dynamic(
 )
 
 export const HomePage = () => {
-  const { isConnected } = useConnect()
   const { data: account } = useAccount()
 
   useEffect(() => {
@@ -33,10 +30,7 @@ export const HomePage = () => {
       </div>
       <div className="w-full p-8">
         <ProjectInfo />
-        {isConnected ? <MintRequirements /> : <Disconnected />}
-        <div className="mt-6">
-          <MintButton mintCount={10} disabled={!isConnected} />
-        </div>
+        <MintSection />
       </div>
     </div>
   )
