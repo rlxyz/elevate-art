@@ -4,18 +4,21 @@ interface DecrementIncrementInputProps {
   maxValue: number
   onChange: (value: number) => void
   value: number
+  disabled?: boolean
 }
 
 export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = ({
   maxValue,
   onChange,
   value,
+  disabled,
 }) => {
   return (
     <div>
       <div className="mt-1 relative rounded-md shadow-sm w-[150px]">
         <div className="absolute inset-y-0 left-0 flex items-center px-4">
           <button
+            disabled={disabled}
             className="text-2xl flex items-center"
             onClick={() => {
               if (value > 1) {
@@ -38,6 +41,7 @@ export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = (
         />
         <div className="absolute inset-y-0 right-0 flex items-center px-4">
           <button
+            disabled={disabled}
             className="text-2xl flex items-center"
             onClick={() => {
               if (value < maxValue) {

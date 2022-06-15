@@ -6,9 +6,8 @@ import { useAccount } from 'wagmi'
 
 export const PresaleMintSection: React.FC = () => {
   const { data: account } = useAccount()
-  const { maxAllocation, hasMintAllocation, allowToMint } = usePresaleRequirements(
-    account?.address,
-  )
+  const { maxAllocation, hasMintAllocation, allowToMint, presaleIsActive } =
+    usePresaleRequirements(account?.address)
   const [mintCount, setMintCount] = useState(1)
 
   const handleNFTAmountOnChange = useCallback(
@@ -28,7 +27,7 @@ export const PresaleMintSection: React.FC = () => {
             maxValue={maxAllocation}
             value={mintCount}
             onChange={handleNFTAmountOnChange}
-            disabled={!hasMintAllocation}
+            disabled={!hasMintAllocation || !presaleIsActive}
           />
         </div>
       </div>

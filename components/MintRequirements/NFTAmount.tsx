@@ -21,7 +21,12 @@ export const NFTAmount: React.FC<NFTAmountProps> = ({
     <>
       <div className="flex items-center p-4">
         <RequirementStatus passed={!disabled} />
-        <DecrementIncrementInput maxValue={maxValue} onChange={onChange} value={value} />
+        <DecrementIncrementInput
+          maxValue={maxValue}
+          onChange={onChange}
+          value={value}
+          disabled={disabled}
+        />
         <span className="ml-3 mt-2 font-bold inline-block">{`${(
           value * config.ethPrice
         ).toFixed(2)} ETH`}</span>
