@@ -27,9 +27,9 @@ export const NFTAmount: React.FC<NFTAmountProps> = ({
           value={value}
           disabled={disabled}
         />
-        <span className="ml-3 mt-2 font-bold inline-block">{`${(
-          value * config.ethPrice
-        ).toFixed(2)} ETH`}</span>
+        <span className="ml-3 mt-2 font-bold inline-block">{`${
+          config.totalPriceAllocation[value - 1]
+        } ETH`}</span>
       </div>
     </>
   )

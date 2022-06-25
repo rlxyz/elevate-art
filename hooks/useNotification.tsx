@@ -1,6 +1,8 @@
 import { Notification } from '@components/Notification/Notification'
 import { Button } from '@components/UI/Button'
+import { ButtonLink } from '@components/UI/ButtonLink'
 import { config } from '@utils/config'
+import { NETWORK_NAME } from '@utils/constant'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
@@ -27,8 +29,8 @@ export const useNotification = () => {
         <Notification id={t.id} type="error">
           <div className="flex justify-between w-full items-center">
             <div>
-              <h3 className="font-bold text-lg">Error</h3>
-              <span className="block">{message}</span>
+              <h3 className="font-bold text-base">Error</h3>
+              <span className="block text-sm">{message}</span>
             </div>
             <div>
               <Button
@@ -49,7 +51,11 @@ export const useNotification = () => {
     )
   }
 
-  const notifySubmitted = (duration = 8000) => {
+  const notifySubmitted = (trxHash: string, duration = 8000) => {
+    const transactionEtherscanUrl =
+      config.networkId === 1
+        ? `https://etherscan.io/tx/${trxHash}`
+        : `https://${NETWORK_NAME[config.networkId]}.etherscan.io/tx/${trxHash}`
     return toast.custom(
       t => (
         <Notification id={t.id} type="success">
@@ -59,7 +65,7 @@ export const useNotification = () => {
               <span className="block">View on Etherscan</span>
             </div>
             <div>
-              <Button label="View" />
+              <ButtonLink href={transactionEtherscanUrl}>View</ButtonLink>
             </div>
           </div>
         </Notification>
