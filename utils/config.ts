@@ -18,6 +18,8 @@ interface Config {
   logrocketKey: string
   contractAddress: string
   maxPublicAllocationPerAddress: number
+  totalPriceAllocation: number[]
+  networkId: number
 }
 
 export const config: Config = {
@@ -42,4 +44,8 @@ export const config: Config = {
   maxPublicAllocationPerAddress: Number(
     process.env.NEXT_PUBLIC_MAX_PUBLIC_ALLOCATION_PER_ADDRESS || 0,
   ),
+  totalPriceAllocation: process.env.NEXT_PUBLIC_TOTAL_PRICE_ALLOCATION.split(',').map(
+    val => Number(val),
+  ),
+  networkId: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
 }
