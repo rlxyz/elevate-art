@@ -49,7 +49,7 @@ export const WithToasterTransactionSubmmited = () => {
   const { notifySubmitted } = useNotification()
   return (
     <Wrapper>
-      <Button onClick={() => notifySubmitted()}>Show notification</Button>
+      <Button onClick={() => notifySubmitted('02x')}>Show notification</Button>
     </Wrapper>
   )
 }

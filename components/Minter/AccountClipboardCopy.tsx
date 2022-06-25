@@ -38,6 +38,7 @@ export const AccountClipboardCopy = () => {
       return activeChain.name
     }
   }, [activeChain])
+
   return (
     <div className="p-4 border border-[#F3F3F3] mb-3 rounded-md flex mt-3 lg:mt-0">
       {isConnected ? (

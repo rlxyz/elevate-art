@@ -1,18 +1,12 @@
 import { config } from '@utils/config'
+import { RhapsodyContractConfig } from '@utils/constant'
 import { presaleConfig } from '@utils/merkle_roots'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 
-import ContractAbi from '../contracts/Rhapsody.json'
-
-const contractConfig = {
-  addressOrName: config.contractAddress,
-  contractInterface: ContractAbi,
-}
-
 export const useMintCount = (address: string): number => {
-  const { data } = useContractRead(contractConfig, 'mintOf', {
+  const { data } = useContractRead(RhapsodyContractConfig, 'mintOf', {
     args: address,
     watch: true,
   })
@@ -23,7 +17,7 @@ export const useMintCount = (address: string): number => {
 }
 
 export const useTotalSupply = (): number => {
-  const { data } = useContractRead(contractConfig, 'totalSupply', {
+  const { data } = useContractRead(RhapsodyContractConfig, 'totalSupply', {
     watch: true,
   })
 
@@ -45,14 +39,22 @@ interface UseMintPeriod {
 
 export const useMintPeriod = (): UseMintPeriod => {
   const { data: account } = useAccount()
-  const { data: contractPresaleTime } = useContractRead(contractConfig, 'presaleTime', {
-    watch: true,
-    enabled: !!account?.address,
-  })
-  const { data: contractPublicTime } = useContractRead(contractConfig, 'publicTime', {
-    watch: true,
-    enabled: !!account?.address,
-  })
+  const { data: contractPresaleTime } = useContractRead(
+    RhapsodyContractConfig,
+    'presaleTime',
+    {
+      watch: true,
+      enabled: !!account?.address,
+    },
+  )
+  const { data: contractPublicTime } = useContractRead(
+    RhapsodyContractConfig,
+    'publicTime',
+    {
+      watch: true,
+      enabled: !!account?.address,
+    },
+  )
 
   const presaleTime = useMemo(
     () => contractPresaleTime?.toNumber(),

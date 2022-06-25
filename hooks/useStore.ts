@@ -11,7 +11,7 @@ export const rollbar = new Rollbar({
 
 rollbar.configure({
   transform: function (obj) {
-    // @ts-expect-error
+    // @ts-expect-error Not sure how to typing this
     obj.sessionURL = LogRocket.sessionURL
   },
 })

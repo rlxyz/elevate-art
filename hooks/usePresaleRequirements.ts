@@ -1,4 +1,5 @@
 import {
+  useMintCount,
   useMintPeriod,
   usePresaleMaxAllocation,
   useTotalSupply,
@@ -16,14 +17,16 @@ interface UsePresaleRequirements {
 }
 
 export const usePresaleRequirements = (address: string): UsePresaleRequirements => {
+  const mintCount = useMintCount(address)
   const maxAllocation = usePresaleMaxAllocation(address)
   const totalMinted = useTotalSupply()
   const { mintPhase } = useMintPeriod()
 
+  const totalAvailableToMint = maxAllocation - mintCount
   const inAllowlist = maxAllocation > 0
   const collectionNotSoldOut = totalMinted < config.totalSupply
   const presaleIsActive = mintPhase === 'presale'
-  const hasMintAllocation = maxAllocation > 0
+  const hasMintAllocation = totalAvailableToMint > 0
   const allowToMint =
     inAllowlist && collectionNotSoldOut && presaleIsActive && hasMintAllocation
 
@@ -32,7 +35,7 @@ export const usePresaleRequirements = (address: string): UsePresaleRequirements 
     collectionNotSoldOut,
     presaleIsActive,
     hasMintAllocation,
-    maxAllocation,
+    maxAllocation: totalAvailableToMint,
     totalMinted,
     allowToMint,
   }

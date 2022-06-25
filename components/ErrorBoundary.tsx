@@ -1,7 +1,15 @@
 import { useStore } from '@hooks/useStore'
 import React from 'react'
 
-class ErrorBoundary extends React.Component {
+interface ErrorBoundaryProps {
+  children: React.ReactNode
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: any) {
     super(props)
 
@@ -19,7 +27,6 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
-    // @ts-ignore
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
@@ -32,7 +39,6 @@ class ErrorBoundary extends React.Component {
       )
     }
 
-    // @ts-ignore
     return this.props.children
   }
 }
