@@ -1,7 +1,8 @@
 import { MintButton } from '@components/Minter/MintButton'
 import { NFTAmount, PresaleRequirements } from '@components/MintRequirements'
+import { usePresaleMint } from '@hooks/usePresaleMint'
 import { usePresaleRequirements } from '@hooks/usePresaleRequirements'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
 export const PresaleMintSection: React.FC = () => {
@@ -9,13 +10,7 @@ export const PresaleMintSection: React.FC = () => {
   const { maxAllocation, hasMintAllocation, allowToMint, presaleIsActive } =
     usePresaleRequirements(account?.address)
   const [mintCount, setMintCount] = useState(1)
-
-  const handleNFTAmountOnChange = useCallback(
-    (value: number) => {
-      setMintCount(value)
-    },
-    [setMintCount],
-  )
+  const { mint, isLoading } = usePresaleMint(account?.address)
 
   return (
     <>
@@ -26,13 +21,17 @@ export const PresaleMintSection: React.FC = () => {
           <NFTAmount
             maxValue={maxAllocation}
             value={mintCount}
-            onChange={handleNFTAmountOnChange}
+            onChange={value => setMintCount(value)}
             disabled={!hasMintAllocation || !presaleIsActive}
           />
         </div>
       </div>
       <div className="mt-6">
-        <MintButton mintCount={mintCount} disabled={!allowToMint} />
+        <MintButton
+          mintCount={mintCount}
+          disabled={!allowToMint || isLoading}
+          onClick={() => mint(mintCount)}
+        />
       </div>
     </>
   )
