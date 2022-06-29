@@ -22,5 +22,5 @@ jobs:
       - name: Run Linter
         run: yarn lint
 
-      - name: Run Build
-        run: yarn build
+      - name: Run Type Check
+        run: yarn type:checks
