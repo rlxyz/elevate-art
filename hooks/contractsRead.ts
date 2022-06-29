@@ -6,7 +6,9 @@ import { useMemo } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 
 export const useMintCount = (address: string): number => {
-  const { data } = useContractRead(RhapsodyContractConfig, 'mintOf', {
+  const { data } = useContractRead({
+    ...RhapsodyContractConfig,
+    functionName: 'mintOf',
     args: address,
     watch: true,
   })
@@ -17,7 +19,9 @@ export const useMintCount = (address: string): number => {
 }
 
 export const useTotalSupply = (): number => {
-  const { data } = useContractRead(RhapsodyContractConfig, 'totalSupply', {
+  const { data } = useContractRead({
+    ...RhapsodyContractConfig,
+    functionName: 'totalSupply',
     watch: true,
   })
 
@@ -38,23 +42,19 @@ interface UseMintPeriod {
 }
 
 export const useMintPeriod = (): UseMintPeriod => {
-  const { data: account } = useAccount()
-  const { data: contractPresaleTime } = useContractRead(
-    RhapsodyContractConfig,
-    'presaleTime',
-    {
-      watch: true,
-      enabled: !!account?.address,
-    },
-  )
-  const { data: contractPublicTime } = useContractRead(
-    RhapsodyContractConfig,
-    'publicTime',
-    {
-      watch: true,
-      enabled: !!account?.address,
-    },
-  )
+  const account = useAccount()
+  const { data: contractPresaleTime } = useContractRead({
+    ...RhapsodyContractConfig,
+    functionName: 'presaleTime',
+    watch: true,
+    enabled: !!account?.address,
+  })
+  const { data: contractPublicTime } = useContractRead({
+    ...RhapsodyContractConfig,
+    functionName: 'publicTime',
+    watch: true,
+    enabled: !!account?.address,
+  })
 
   const presaleTime = useMemo(
     () => contractPresaleTime?.toNumber(),

@@ -11,7 +11,7 @@ const ProjectInfo = dynamic(
 )
 
 export const HomePage = () => {
-  const { data: account } = useAccount()
+  const account = useAccount()
 
   useEffect(() => {
     if (account?.address) {

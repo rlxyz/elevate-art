@@ -2,10 +2,10 @@ import { Disconnected } from '@components/Minter/Disconnected'
 import { PresaleMintSection } from '@components/Minter/PresaleMintSection'
 import { PublicSaleMintSection } from '@components/Minter/PublicSaleMintSection'
 import { useMintPeriod } from '@hooks/contractsRead'
-import { useConnect } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 export const MintSection = () => {
-  const { isConnected } = useConnect()
+  const { isConnected } = useAccount()
   const { mintPhase } = useMintPeriod()
 
   if (!isConnected) {

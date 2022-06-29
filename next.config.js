@@ -1,13 +1,16 @@
+/**
+ * @type {import('next').NextConfig}
+ */
+
 const plugins = require('next-compose-plugins')
+
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === true,
 })
 const withSourceMaps = require('@zeit/next-source-maps')({
   devtool: 'nosources-source-map',
 })
 const RollbarSourceMapPlugin = require('rollbar-sourcemap-webpack-plugin')
-
-const withOffline = require('next-offline')
 
 const {
   COMMIT_HASH,
@@ -88,4 +91,4 @@ nextConfig.images = {
   ],
 }
 
-module.exports = plugins([withBundleAnalyzer, withSourceMaps], nextConfig)
+module.exports = plugins([[withBundleAnalyzer], withSourceMaps], nextConfig)
