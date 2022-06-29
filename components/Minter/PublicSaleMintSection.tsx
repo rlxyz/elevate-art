@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
 export const PublicSaleMintSection: React.FC = () => {
-  const { data: account } = useAccount()
+  const account = useAccount()
   const { maxAllocation, hasMintAllocation, allowToMint } = usePublicSaleRequirements(
     account?.address,
   )

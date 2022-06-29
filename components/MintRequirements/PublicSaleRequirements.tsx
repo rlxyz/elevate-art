@@ -3,7 +3,7 @@ import { usePublicSaleRequirements } from '@hooks/usePublicSaleRequirements'
 import { useAccount } from 'wagmi'
 
 export const PublicSaleRequirements = () => {
-  const { data: account } = useAccount()
+  const account = useAccount()
   const { totalMinted, collectionNotSoldOut } = usePublicSaleRequirements(
     account?.address,
   )

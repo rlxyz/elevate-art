@@ -8,7 +8,7 @@ import { usePresaleRequirements } from '@hooks/usePresaleRequirements'
 import { useAccount } from 'wagmi'
 
 export const PresaleRequirements = () => {
-  const { data: account } = useAccount()
+  const account = useAccount()
   const {
     inAllowlist,
     collectionNotSoldOut,

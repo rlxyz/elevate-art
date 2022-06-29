@@ -19,7 +19,9 @@ export const usePresaleMint = (address: string): UsePresaleMint => {
     write,
     isLoading: contractIsLoading,
     data: trx,
-  } = useContractWrite(RhapsodyContractConfig, 'presaleMint', {
+  } = useContractWrite({
+    ...RhapsodyContractConfig,
+    functionName: 'presaleMint',
     onSettled: data => {
       if (data) {
         notifySubmitted(data?.hash)

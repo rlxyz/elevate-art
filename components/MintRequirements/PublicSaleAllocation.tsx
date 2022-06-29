@@ -5,7 +5,7 @@ import { Container } from './Container'
 import { RequirementStatus } from './RequirementStatus'
 
 export const PublicSaleAllocation = () => {
-  const { data: account } = useAccount()
+  const account = useAccount()
   const maxAllocation = usePublicSaleMaxAllocation(account?.address)
 
   const userIsEligible = maxAllocation > 0
