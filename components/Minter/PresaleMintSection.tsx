@@ -1,7 +1,8 @@
-import { MintButton } from '@components/Minter/MintButton'
-import { NFTAmount, PresaleRequirements } from '@components/MintRequirements'
-import { usePresaleMint } from '@hooks/usePresaleMint'
-import { usePresaleRequirements } from '@hooks/usePresaleRequirements'
+import { MintButton } from '@Components/Minter/MintButton'
+import { NFTAmount } from '@Components/Minter/NFTAmount'
+import { PresaleRequirements } from '@Components/MintRequirements'
+import { usePresaleMint } from '@Hooks/usePresaleMint'
+import { usePresaleRequirements } from '@Hooks/usePresaleRequirements'
 import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -16,7 +17,7 @@ export const PresaleMintSection: React.FC = () => {
     <>
       <div className="mt-10">
         <h2 className="text-lg font-bold">Presale Requirements</h2>
-        <div className="flex flex-col border border-gray rounded-lg mt-4">
+        <div className="flex flex-col border border-lightGray rounded-lg mt-4">
           <PresaleRequirements />
           <NFTAmount
             maxValue={maxAllocation}

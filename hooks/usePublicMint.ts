@@ -1,5 +1,5 @@
-import { config } from '@utils/config'
-import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@utils/constant'
+import { config } from '@Utils/config'
+import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@Utils/constant'
 import { ethers } from 'ethers'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 

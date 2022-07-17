@@ -1,5 +1,5 @@
-import { PublicSaleAllocation, TotalMinted } from '@components/MintRequirements'
-import { usePublicSaleRequirements } from '@hooks/usePublicSaleRequirements'
+import { PublicSaleAllocation, TotalMinted } from '@Components/MintRequirements'
+import { usePublicSaleRequirements } from '@Hooks/usePublicSaleRequirements'
 import { useAccount } from 'wagmi'
 
 export const PublicSaleRequirements = () => {

@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import { Button } from '@Components/UI/Button'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import React from 'react'
 

@@ -1,8 +1,5 @@
-import { DecrementIncrementInput } from '@components/UI/DecrementIncrementInput'
-import { config } from '@utils/config'
+import { DecrementIncrementInput } from '@Components/UI/DecrementIncrementInput'
 import React from 'react'
-
-import { RequirementStatus } from './RequirementStatus'
 
 interface NFTAmountProps {
   maxValue: number
@@ -18,19 +15,16 @@ export const NFTAmount: React.FC<NFTAmountProps> = ({
   disabled,
 }) => {
   return (
-    <>
-      <div className="flex items-center p-4">
-        <RequirementStatus passed={!disabled} />
+    <div className="flex justify-between items-center">
+      <span className="block font-plus-jakarta-sans font-bold">Amount</span>
+      <div className="flex items-center py-4">
         <DecrementIncrementInput
           maxValue={maxValue}
           onChange={onChange}
           value={value}
           disabled={disabled}
         />
-        <span className="ml-3 mt-2 font-bold inline-block">{`${
-          config.totalPriceAllocation[value - 1]
-        } ETH`}</span>
       </div>
-    </>
+    </div>
   )
 }

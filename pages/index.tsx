@@ -1,16 +1,18 @@
-import { MintSection } from '@components/Minter/MintSection'
-import { config } from '@utils/config'
+import { MintSection } from '@Components/Minter/MintSection'
+import { ProjectHeader } from '@Components/ProjectHeader'
+import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import LogRocket from 'logrocket'
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 
 const ProjectInfo = dynamic(
-  () => import('@components/Minter/ProjectInfo').then(mod => mod.ProjectInfo),
+  () => import('@Components/Minter/ProjectInfo').then(mod => mod.ProjectInfo),
   { ssr: false },
 )
 
 export const HomePage = () => {
+  const { data } = useGetProjectDetail('rlxyz')
   const account = useAccount()
 
   useEffect(() => {
@@ -20,19 +22,25 @@ export const HomePage = () => {
   }, [account?.address])
 
   return (
-    <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-      <div>
-        <img
-          src={config.projectBannerImage}
-          alt={config.projectName}
-          className="w-full"
+    <>
+      <ProjectHeader
+        bannerImageUrl={data?.projectBanner}
+        profileImageUrl={data?.projectProfileImage}
+        projectOwner={data?.projectOwner}
+      />
+      <div className="px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-2">
+        <ProjectInfo
+          projectName={data?.projectName}
+          bannerImageUrl={data?.projectInfoBanner}
+          discordUrl={data?.discordUrl}
+          twitterUrl={data?.twitterUrl}
+          openseaUrl={data?.openseaUrl}
+          price={data?.ethPrice}
+          supply={data?.totalSupply}
         />
-      </div>
-      <div className="w-full p-8">
-        <ProjectInfo />
         <MintSection />
       </div>
-    </div>
+    </>
   )
 }
 

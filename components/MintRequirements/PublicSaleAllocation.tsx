@@ -1,4 +1,4 @@
-import { usePublicSaleMaxAllocation } from '@hooks/contractsRead'
+import { usePublicSaleMaxAllocation } from '@Hooks/contractsRead'
 import { useAccount } from 'wagmi'
 
 import { Container } from './Container'

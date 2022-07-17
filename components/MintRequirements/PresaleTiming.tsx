@@ -1,5 +1,5 @@
-import { useMintPeriod } from '@hooks/contractsRead'
-import { useCountDown } from '@hooks/useCountDown'
+import { useMintPeriod } from '@Hooks/contractsRead'
+import { useCountDown } from '@Hooks/useCountDown'
 import dayjs from 'dayjs'
 
 import { Container } from './Container'

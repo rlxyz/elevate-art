@@ -1,6 +1,6 @@
-import { config } from '@utils/config'
-import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@utils/constant'
-import { generateLeaf, presaleMerkleTree } from '@utils/merkle_roots'
+import { config } from '@Utils/config'
+import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@Utils/constant'
+import { generateLeaf, presaleMerkleTree } from '@Utils/merkle_roots'
 import { ethers } from 'ethers'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 

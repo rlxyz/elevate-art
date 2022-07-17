@@ -1,6 +1,6 @@
-import { CheckIcon } from '@components/Icons/Check'
-import { CopyIcon } from '@components/Icons/Copy'
-import { truncateWalletAddress } from '@utils/helpers'
+import { CheckIcon } from '@Components/Icons/Check'
+import { CopyIcon } from '@Components/Icons/Copy'
+import { truncateWalletAddress } from '@Utils/helpers'
 import { useCallback, useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 

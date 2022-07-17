@@ -1,4 +1,4 @@
-import { useStore } from '@hooks/useStore'
+import { useStore } from '@Hooks/useStore'
 import React from 'react'
 
 interface ErrorBoundaryProps {

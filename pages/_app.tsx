@@ -2,15 +2,15 @@ import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 import 'react-medium-image-zoom/dist/styles.css'
 
-import ErrorBoundary from '@components/ErrorBoundary'
-import { Layout } from '@components/Layout/Layout'
+import ErrorBoundary from '@Components/ErrorBoundary'
+import { Layout } from '@Components/Layout/Layout'
 import {
   connectorsForWallets,
   getDefaultWallets,
   RainbowKitProvider,
   wallet,
 } from '@rainbow-me/rainbowkit'
-import { config } from '@utils/config'
+import { config } from '@Utils/config'
 import LogRocket from 'logrocket'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
@@ -31,12 +31,12 @@ const { chains, provider, webSocketProvider } = configureChains(
 )
 
 const { wallets } = getDefaultWallets({
-  appName: config.projectName,
+  appName: config.appName,
   chains,
 })
 
 const appInfo = {
-  appName: config.projectName,
+  appName: config.appName,
 }
 
 const connectors = connectorsForWallets([

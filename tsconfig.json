@@ -15,9 +15,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "@components/*": ["components/*"],
-      "@hooks/*": ["hooks/*"],
-      "@utils/*": ["utils/*"]
+      "@Components/*": ["components/*"],
+      "@Hooks/*": ["hooks/*"],
+      "@Utils/*": ["utils/*"],
+      "@Context/*": ["context/*"]
     },
     "incremental": true
   },

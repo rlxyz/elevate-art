@@ -1,5 +1,5 @@
-import { Button } from '@components/UI/Button'
-import { useNotification } from '@hooks/useNotification'
+import { Button } from '@Components/UI/Button'
+import { useNotification } from '@Hooks/useNotification'
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
 import { Toaster } from 'react-hot-toast'

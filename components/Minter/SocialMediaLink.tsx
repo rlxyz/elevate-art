@@ -1,18 +1,34 @@
-import { SocialButton } from '@components/SocialButton'
-import { config } from '@utils/config'
+import { SocialButton } from '@Components/SocialButton'
+import React from 'react'
 
-export const SocialMediaLink = () => {
+interface SocialMediaLinkProps {
+  discordUrl?: string
+  twitterUrl?: string
+  openseaUrl?: string
+}
+
+export const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({
+  discordUrl,
+  twitterUrl,
+  openseaUrl,
+}) => {
   return (
-    <div className="flex w-[120px] items-center">
-      <SocialButton href={config.discordUrl}>
-        <img src="/images/discord.svg" className="w-[25px]" alt="Discord" />
-      </SocialButton>
-      <SocialButton href={config.twitterUrl}>
-        <img src="/images/twitter.svg" className="w-[25px]" alt="Twitter" />
-      </SocialButton>
-      <SocialButton href={config.openseaUrl}>
-        <img src="/images/opensea.svg" className="w-[25px]" alt="Opensea" />
-      </SocialButton>
+    <div className="flex w-[100px] items-center mb-0.5">
+      {discordUrl && (
+        <SocialButton href={discordUrl}>
+          <img src="/images/discord.svg" className="w-[18px]" alt="Discord" />
+        </SocialButton>
+      )}
+      {twitterUrl && (
+        <SocialButton href={twitterUrl}>
+          <img src="/images/twitter.svg" className="w-[18px]" alt="Twitter" />
+        </SocialButton>
+      )}
+      {openseaUrl && (
+        <SocialButton href={openseaUrl}>
+          <img src="/images/opensea.svg" className="w-[18px]" alt="Opensea" />
+        </SocialButton>
+      )}
     </div>
   )
 }

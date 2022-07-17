@@ -1,6 +1,6 @@
-import { config } from '@utils/config'
-import { RhapsodyContractConfig } from '@utils/constant'
-import { presaleConfig } from '@utils/merkle_roots'
+import { useProjectDetail } from '@Context/projectContext'
+import { RhapsodyContractConfig } from '@Utils/constant'
+import { presaleConfig } from '@Utils/merkle_roots'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
@@ -18,21 +18,21 @@ export const useMintCount = (address: string): number => {
   return mintCount
 }
 
-export const useTotalSupply = (): number => {
+export const useTotalMinted = (): number => {
   const { data } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: 'totalSupply',
     watch: true,
   })
 
-  const totalSupply = useMemo(() => {
+  const totalMinted = useMemo(() => {
     if (data) {
       return data.toNumber()
     }
     return 0
   }, [data])
 
-  return totalSupply
+  return totalMinted
 }
 
 interface UseMintPeriod {
@@ -103,15 +103,13 @@ export const usePresaleMaxAllocation = (address = ''): number => {
 }
 
 export const usePublicSaleMaxAllocation = (address: string) => {
-  const totalSupply = useTotalSupply()
+  const { maxAllocationPerAddress, totalSupply } = useProjectDetail()
+  const totalMinted = useTotalMinted()
   const mintCount = useMintCount(address)
-  const totalMintLeft = config.maxPublicAllocationPerAddress - mintCount
+  const totalMintLeft = maxAllocationPerAddress - mintCount
 
-  if (
-    totalSupply + config.maxPublicAllocationPerAddress >
-    config.maxPublicAllocationPerAddress
-  ) {
-    const collectionLeft = config.totalSupply - totalSupply
+  if (totalSupply + maxAllocationPerAddress > maxAllocationPerAddress) {
+    const collectionLeft = totalSupply - totalMinted
     if (totalMintLeft < collectionLeft) {
       return totalMintLeft
     }

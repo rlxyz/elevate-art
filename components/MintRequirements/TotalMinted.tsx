@@ -1,4 +1,4 @@
-import { config } from '@utils/config'
+import { useProjectDetail } from '@Context/projectContext'
 import React from 'react'
 
 import { Container } from './Container'
@@ -10,12 +10,12 @@ interface TotalMintedProps {
 }
 
 export const TotalMinted: React.FC<TotalMintedProps> = ({ totalMinted, isEligible }) => {
+  const { totalSupply } = useProjectDetail()
   return (
     <Container>
       <RequirementStatus passed={isEligible} />
       <span>
-        This collection has minted{' '}
-        <strong>{`${totalMinted}/${config.totalSupply} NFTs`}</strong>
+        This collection has minted <strong>{`${totalMinted}/${totalSupply} NFTs`}</strong>
       </span>
     </Container>
   )

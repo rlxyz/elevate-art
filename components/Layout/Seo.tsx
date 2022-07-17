@@ -1,4 +1,4 @@
-import { config } from '@utils/config'
+import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import Head from 'next/head'
 import React from 'react'
 
@@ -8,39 +8,44 @@ interface SeoProps {
 }
 
 export const Seo: React.FC<SeoProps> = ({ title = 'Home', description }) => {
-  const pageName = `${config.projectName} - ${title}`
+  const { data, isLoading } = useGetProjectDetail('rlxyz')
+  const pageName = `${data?.projectName} - ${title}`
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <Head>
       <meta charSet="utf-8" />
       <meta name="language" content="english" />
       <meta httpEquiv="content-type" content="text/html" />
-      <meta name="author" content={config.projectOwner} />
+      <meta name="author" content={data.projectOwner} />
       <meta name="designer" content="RLXYZ" />
 
       {/* Search Engine Optimization Meta Tags */}
       <title>{pageName}</title>
-      <meta name="description" content={config.projectDescription} />
-      <meta name="keywords" content={`${config.keywords}`} />
+      <meta name="description" content={data.projectDescription} />
+      <meta name="keywords" content={`${data.keywords}`} />
       <meta name="robots" content="index,follow" />
       <meta name="distribution" content="web" />
 
       {/* Facebook Open Graph meta tags */}
       <meta name="og:title" content={pageName} />
-      <meta name="og:description" content={description || config.projectDescription} />
+      <meta name="og:description" content={description || data.projectDescription} />
       <meta name="og:type" content="site" />
-      <meta name="og:image" content={config.projectImage} />
-      <meta name="og:url" content={config.projectWebsiteUrl} />
-      <meta name="og:author" content={config.projectOwner} />
+      <meta name="og:image" content={data.projectInfoBanner} />
+      <meta name="og:url" content={data.websiteUrl} />
+      <meta name="og:author" content={data.projectOwner} />
       <meta name="og:author" content="RLXYZ" />
-      <meta name="og:site_name" content={config.projectName} />
+      <meta name="og:site_name" content={data.projectName} />
 
       {/* Twitter Card meta tags */}
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@rlxyz_eth" />
-      <meta name="twitter:title" content={config.projectName} />
-      <meta name="twitter:description" content={config.projectDescription} />
-      <meta name="twitter:image" content={config.projectImage} />
+      <meta name="twitter:title" content={data.projectName} />
+      <meta name="twitter:description" content={data.projectDescription} />
+      <meta name="twitter:image" content={data.projectInfoBanner} />
 
       <meta
         name="viewport"

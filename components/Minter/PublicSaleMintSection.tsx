@@ -1,7 +1,8 @@
-import { MintButton } from '@components/Minter/MintButton'
-import { NFTAmount, PublicSaleRequirements } from '@components/MintRequirements'
-import { usePublicMint } from '@hooks/usePublicMint'
-import { usePublicSaleRequirements } from '@hooks/usePublicSaleRequirements'
+import { MintButton } from '@Components/Minter/MintButton'
+import { NFTAmount } from '@Components/Minter/NFTAmount'
+import { PublicSaleRequirements } from '@Components/MintRequirements'
+import { usePublicMint } from '@Hooks/usePublicMint'
+import { usePublicSaleRequirements } from '@Hooks/usePublicSaleRequirements'
 import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -17,7 +18,7 @@ export const PublicSaleMintSection: React.FC = () => {
     <>
       <div className="mt-10">
         <h2 className="text-lg font-bold">Public Sale Requirements</h2>
-        <div className="flex flex-col border border-gray rounded-lg mt-4">
+        <div className="flex flex-col border border-lightGray rounded-lg mt-4">
           <PublicSaleRequirements />
           <NFTAmount
             maxValue={maxAllocation}

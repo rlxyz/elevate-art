@@ -147,3 +147,4 @@ yarn-error.log*
 
 # contract type generation
 /contracts/types
+data.ts

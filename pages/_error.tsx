@@ -1,4 +1,4 @@
-import { useStore } from '@hooks/useStore'
+import { useStore } from '@Hooks/useStore'
 import type { NextPageContext } from 'next'
 import NextErrorComponent from 'next/error'
 

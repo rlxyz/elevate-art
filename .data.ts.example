@@ -1,0 +1,17 @@
+export const data = {
+  projectName: '',
+  projectDescription: '',
+  projectOwner: '',
+  keywords: '',
+  projectBanner: '',
+  projectProfileImage: '',
+  projectInfoBanner: '',
+  totalSupply: 0,
+  ethPrice: 0,
+  websiteUrl: '',
+  twitterUrl: '',
+  discordUrl: '',
+  openseaUrl: '',
+  contractAddress: '',
+  maxAllocationPerAddress: 0,
+}

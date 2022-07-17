@@ -1,5 +1,5 @@
-import { usePublicSaleMaxAllocation, useTotalSupply } from '@hooks/contractsRead'
-import { config } from '@utils/config'
+import { useProjectDetail } from '@Context/projectContext'
+import { usePublicSaleMaxAllocation, useTotalMinted } from '@Hooks/contractsRead'
 
 interface UsePresaleRequirements {
   collectionNotSoldOut: boolean
@@ -10,10 +10,11 @@ interface UsePresaleRequirements {
 }
 
 export const usePublicSaleRequirements = (address: string): UsePresaleRequirements => {
+  const { totalSupply } = useProjectDetail()
   const maxAllocation = usePublicSaleMaxAllocation(address)
-  const totalMinted = useTotalSupply()
+  const totalMinted = useTotalMinted()
 
-  const collectionNotSoldOut = totalMinted < config.totalSupply
+  const collectionNotSoldOut = totalMinted < totalSupply
   const hasMintAllocation = maxAllocation > 0
   const allowToMint = collectionNotSoldOut && hasMintAllocation
 

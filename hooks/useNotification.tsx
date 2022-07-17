@@ -1,14 +1,16 @@
-import { Notification } from '@components/Notification/Notification'
-import { Button } from '@components/UI/Button'
-import { ButtonLink } from '@components/UI/ButtonLink'
-import { config } from '@utils/config'
-import { NETWORK_NAME } from '@utils/constant'
+import { Notification } from '@Components/Notification/Notification'
+import { Button } from '@Components/UI/Button'
+import { ButtonLink } from '@Components/UI/ButtonLink'
+import { useProjectDetail } from '@Context/projectContext'
+import { config } from '@Utils/config'
+import { NETWORK_NAME } from '@Utils/constant'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
 import { useStore } from './useStore'
 
 export const useNotification = () => {
+  const { projectName } = useProjectDetail()
   const { rollbar } = useStore()
 
   const notifyError = ({
@@ -85,7 +87,7 @@ export const useNotification = () => {
           <div className="flex justify-between w-full items-center">
             <div className="font-gilroy-light">
               <div className="font-bold mb-4">
-                {`You've successfully minted a ${config.projectName} piece`}
+                {`You've successfully minted a ${projectName} piece`}
               </div>
             </div>
           </div>

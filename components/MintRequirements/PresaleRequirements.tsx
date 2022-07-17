@@ -3,8 +3,8 @@ import {
   PresaleTiming,
   TotalMinted,
   UserInAllowList,
-} from '@components/MintRequirements'
-import { usePresaleRequirements } from '@hooks/usePresaleRequirements'
+} from '@Components/MintRequirements'
+import { usePresaleRequirements } from '@Hooks/usePresaleRequirements'
 import { useAccount } from 'wagmi'
 
 export const PresaleRequirements = () => {

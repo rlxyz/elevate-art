@@ -1,4 +1,4 @@
-import { config } from '@utils/config'
+import { config } from '@Utils/config'
 
 import ContractAbi from '../contracts/Rhapsody.json'
 

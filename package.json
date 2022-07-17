@@ -7,7 +7,7 @@
   "description": "Base template for RLXY mint client",
   "author": "Rhapsody Labs",
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

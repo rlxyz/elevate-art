@@ -1,4 +1,4 @@
-import { Spinner } from '@components/Spinner/Spinner'
+import { Spinner } from '@Components/Spinner/Spinner'
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
 

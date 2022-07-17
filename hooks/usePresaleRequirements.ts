@@ -1,10 +1,10 @@
+import { useProjectDetail } from '@Context/projectContext'
 import {
   useMintCount,
   useMintPeriod,
   usePresaleMaxAllocation,
-  useTotalSupply,
-} from '@hooks/contractsRead'
-import { config } from '@utils/config'
+  useTotalMinted,
+} from '@Hooks/contractsRead'
 
 interface UsePresaleRequirements {
   inAllowlist: boolean
@@ -17,14 +17,15 @@ interface UsePresaleRequirements {
 }
 
 export const usePresaleRequirements = (address: string): UsePresaleRequirements => {
+  const { totalSupply } = useProjectDetail()
   const mintCount = useMintCount(address)
   const maxAllocation = usePresaleMaxAllocation(address)
-  const totalMinted = useTotalSupply()
+  const totalMinted = useTotalMinted()
   const { mintPhase } = useMintPeriod()
 
   const totalAvailableToMint = maxAllocation - mintCount
   const inAllowlist = maxAllocation > 0
-  const collectionNotSoldOut = totalMinted < config.totalSupply
+  const collectionNotSoldOut = totalMinted < totalSupply
   const presaleIsActive = mintPhase === 'presale'
   const hasMintAllocation = totalAvailableToMint > 0
   const allowToMint =

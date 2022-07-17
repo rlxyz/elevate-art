@@ -1,4 +1,4 @@
-import { claimConfig, presaleConfig } from '@utils/merkle_roots'
+import { claimConfig, presaleConfig } from '@Utils/merkle_roots'
 import { ethers } from 'ethers'
 import keccak256 from 'keccak256'
 import MerkleTree from 'merkletreejs'
