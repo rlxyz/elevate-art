@@ -1,7 +1,6 @@
 import { Notification } from '@Components/Notification/Notification'
 import { Button } from '@Components/UI/Button'
-import { ButtonLink } from '@Components/UI/ButtonLink'
-import { useProjectDetail } from '@Context/projectContext'
+import { LinkButton } from '@Components/UI/LinkButton'
 import { config } from '@Utils/config'
 import { NETWORK_NAME } from '@Utils/constant'
 import * as React from 'react'
@@ -9,8 +8,7 @@ import toast from 'react-hot-toast'
 
 import { useStore } from './useStore'
 
-export const useNotification = () => {
-  const { projectName } = useProjectDetail()
+export const useNotification = (projectName: string) => {
   const { rollbar } = useStore()
 
   const notifyError = ({
@@ -67,7 +65,7 @@ export const useNotification = () => {
               <span className="block">View on Etherscan</span>
             </div>
             <div>
-              <ButtonLink href={transactionEtherscanUrl}>View</ButtonLink>
+              <LinkButton href={transactionEtherscanUrl}>View</LinkButton>
             </div>
           </div>
         </Notification>

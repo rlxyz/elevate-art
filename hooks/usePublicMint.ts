@@ -1,24 +1,31 @@
+import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import { config } from '@Utils/config'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@Utils/constant'
 import { ethers } from 'ethers'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 
-import { usePresaleMaxAllocation } from './contractsRead'
+import { usePublicSaleMaxAllocation } from './contractsRead'
 import { useNotification } from './useNotification'
 
 interface UsePublicMint {
   isLoading: boolean
   mint: (invocation: number) => void
+  isError: boolean
 }
 
 export const usePublicMint = (address: string): UsePublicMint => {
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification()
-  const maxInvocation = usePresaleMaxAllocation(address)
+  const { data } = useGetProjectDetail('rlxyz')
+  const { notifyError, notifySubmitted, notifySuccess } = useNotification(
+    data?.projectName,
+  )
+  const maxInvocation = usePublicSaleMaxAllocation(address)
   const {
     write,
     isLoading: contractIsLoading,
     data: trx,
+    isError,
   } = useContractWrite({
+    mode: 'recklesslyUnprepared',
     ...RhapsodyContractConfig,
     functionName: 'publicMint',
     onSettled: data => {
@@ -46,11 +53,11 @@ export const usePublicMint = (address: string): UsePublicMint => {
 
   const mint = (invocations: number) => {
     if (!address) {
-      notifyError({ message: 'Please connect to wallet first.' })
+      return notifyError({ message: 'Please connect to wallet first.' })
     }
 
     if (invocations > maxInvocation) {
-      notifyError({ message: 'Trying to mint too many' })
+      return notifyError({ message: 'Trying to mint too many' })
     }
 
     const mintValue = config.totalPriceAllocation[invocations - 1]
@@ -59,11 +66,15 @@ export const usePublicMint = (address: string): UsePublicMint => {
       gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
     }
 
-    write({ args: [invocations], overrides })
+    write({
+      recklesslySetUnpreparedArgs: [invocations],
+      recklesslySetUnpreparedOverrides: overrides,
+    })
   }
 
   return {
     isLoading: contractIsLoading || trxIsProcessing,
     mint,
+    isError,
   }
 }

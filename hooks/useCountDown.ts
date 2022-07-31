@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
 
+export const formatTime = (value: number) => {
+  return String(value).padStart(2, '0')
+}
+
 export const useCountDown = (targetDate: Date) => {
   const countDownDate = new Date(targetDate).getTime()
 
@@ -16,7 +20,7 @@ export const useCountDown = (targetDate: Date) => {
   return getReturnValues(countDown)
 }
 
-const getReturnValues = countDown => {
+const getReturnValues = (countDown: number) => {
   const days = Math.floor(countDown / (1000 * 60 * 60 * 24))
   const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60))

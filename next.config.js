@@ -1,28 +1,17 @@
-/**
- * @type {import('next').NextConfig}
- */
-
-const plugins = require('next-compose-plugins')
-
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === true,
 })
-const withSourceMaps = require('@zeit/next-source-maps')({
-  devtool: 'nosources-source-map',
-})
 const RollbarSourceMapPlugin = require('rollbar-sourcemap-webpack-plugin')
 
-const {
-  COMMIT_HASH,
-  NEXT_PUBLIC_ROLLBAR_CLIENT_TOKEN,
-  NEXT_PUBLIC_ROLLBAR_SERVER_TOKEN,
-  NEXT_PUBLIC_ASSET_PUBLIC_PATH,
-} = process.env
+const { NEXT_PUBLIC_ROLLBAR_SERVER_TOKEN, NEXT_PUBLIC_ASSET_PUBLIC_PATH } = process.env
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
-  webpack(config, { webpack, dev, isServer, buildId }) {
+  reactStrictMode: true,
+  productionBrowserSourceMaps: true,
+  webpack5: (config, { webpack, dev, isServer, buildId }) => {
     config.plugins.push(
       new webpack.ProvidePlugin({
         React: 'react',
@@ -74,21 +63,15 @@ const nextConfig = {
 
     return config
   },
+  images: {
+    domains: [
+      'rlwxyz.nyc3.cdn.digitaloceanspaces.com',
+      'rlyxz.nyc3.cdn.digitaloceanspaces.com',
+    ],
+  },
 }
 
-// manage i18n
-if (process.env.EXPORT !== 'true') {
-  nextConfig.i18n = {
-    locales: ['en-US'],
-    defaultLocale: 'en-US',
-  }
+module.exports = (_phase, { defaultConfig }) => {
+  const plugins = [withBundleAnalyzer]
+  return plugins.reduce((acc, plugin) => plugin(acc), { ...defaultConfig, ...nextConfig })
 }
-
-nextConfig.images = {
-  domains: [
-    'rlwxyz.nyc3.cdn.digitaloceanspaces.com',
-    'rlyxz.nyc3.cdn.digitaloceanspaces.com',
-  ],
-}
-
-module.exports = plugins([[withBundleAnalyzer], withSourceMaps], nextConfig)

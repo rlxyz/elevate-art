@@ -16,6 +16,7 @@ module.exports = {
       redDot: '#FF5555',
       greenDot: '#86D893',
       black: '#2C2C2C',
+      disabledGray: '#D7D7D7',
     },
     screens: {
       sm: '640px',

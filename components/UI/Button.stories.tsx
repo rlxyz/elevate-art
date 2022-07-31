@@ -11,7 +11,4 @@ const Template: ComponentStory<typeof Button> = args => (
   <Button {...args}>{`I'm a button`}</Button>
 )
 
-export const FullWidth = Template.bind({})
-FullWidth.args = {
-  fullWidth: true,
-}
+export const BasicButton = Template.bind({})

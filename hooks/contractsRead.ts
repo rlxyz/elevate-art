@@ -1,9 +1,10 @@
-import { useProjectDetail } from '@Context/projectContext'
+import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
+import { config } from '@Utils/config'
 import { RhapsodyContractConfig } from '@Utils/constant'
 import { presaleConfig } from '@Utils/merkle_roots'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
-import { useAccount, useContractRead } from 'wagmi'
+import { useContractRead } from 'wagmi'
 
 export const useMintCount = (address: string): number => {
   const { data } = useContractRead({
@@ -23,6 +24,7 @@ export const useTotalMinted = (): number => {
     ...RhapsodyContractConfig,
     functionName: 'totalSupply',
     watch: true,
+    chainId: config.networkId,
   })
 
   const totalMinted = useMemo(() => {
@@ -42,18 +44,17 @@ interface UseMintPeriod {
 }
 
 export const useMintPeriod = (): UseMintPeriod => {
-  const account = useAccount()
   const { data: contractPresaleTime } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: 'presaleTime',
     watch: true,
-    enabled: !!account?.address,
+    chainId: config.networkId,
   })
   const { data: contractPublicTime } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: 'publicTime',
     watch: true,
-    enabled: !!account?.address,
+    chainId: config.networkId,
   })
 
   const presaleTime = useMemo(
@@ -75,6 +76,7 @@ export const useMintPeriod = (): UseMintPeriod => {
     } else {
       return 'none'
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [presaleTime, publicTime])
 
   return {
@@ -84,7 +86,7 @@ export const useMintPeriod = (): UseMintPeriod => {
   }
 }
 
-export const usePresaleMaxAllocation = (address = ''): number => {
+export const usePresaleMaxAllocation = (address: string): number => {
   if (!address) {
     return 0
   }
@@ -103,13 +105,13 @@ export const usePresaleMaxAllocation = (address = ''): number => {
 }
 
 export const usePublicSaleMaxAllocation = (address: string) => {
-  const { maxAllocationPerAddress, totalSupply } = useProjectDetail()
+  const { data } = useGetProjectDetail('rlxyz')
   const totalMinted = useTotalMinted()
   const mintCount = useMintCount(address)
-  const totalMintLeft = maxAllocationPerAddress - mintCount
+  const totalMintLeft = data?.maxAllocationPerAddress - mintCount
 
-  if (totalSupply + maxAllocationPerAddress > maxAllocationPerAddress) {
-    const collectionLeft = totalSupply - totalMinted
+  if (data?.totalSupply + data?.maxAllocationPerAddress > data?.maxAllocationPerAddress) {
+    const collectionLeft = data?.totalSupply - totalMinted
     if (totalMintLeft < collectionLeft) {
       return totalMintLeft
     }

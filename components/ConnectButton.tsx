@@ -40,9 +40,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
                 return (
                   <>
                     <button onClick={openConnectModal} type="button">
-                      <span className="font-bold">Connect Wallet</span>
+                      <img src="/images/wallet.svg" className="w-10 h-10" alt="Wallet" />
                     </button>
-                    <span className="h-[12px] w-[12px] bg-redDot rounded-full inline-block ml-2"></span>
                   </>
                 )
               }
@@ -56,13 +55,18 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
               }
 
               return (
-                <div className="flex items-center">
-                  <button onClick={openAccountModal} type="button">
-                    <span className="block font-light">Connected to:</span>
-                    <span className="font-bold">{account.displayName}</span>
-                  </button>
-                  <span className="h-[12px] w-[12px] bg-greenDot rounded-full inline-block ml-2"></span>
-                </div>
+                <button
+                  onClick={openAccountModal}
+                  type="button"
+                  className="flex items-center"
+                >
+                  <span className="font-bold mr-3">{account.displayName}</span>
+                  <img
+                    src="/images/gray-wallet.svg"
+                    className="w-7 h-7 inline-block"
+                    alt="Wallet"
+                  />
+                </button>
               )
             })()}
           </div>

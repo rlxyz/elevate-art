@@ -37,7 +37,7 @@ export const TransactionSubmitted = () => {
 }
 
 export const WithToasterMintSucceed = () => {
-  const { notifySuccess } = useNotification()
+  const { notifySuccess } = useNotification('RLXYZ Studio')
   return (
     <Wrapper>
       <Button onClick={() => notifySuccess()}>Show notification</Button>
@@ -46,7 +46,7 @@ export const WithToasterMintSucceed = () => {
 }
 
 export const WithToasterTransactionSubmmited = () => {
-  const { notifySubmitted } = useNotification()
+  const { notifySubmitted } = useNotification('RLXYZ Studio')
   return (
     <Wrapper>
       <Button onClick={() => notifySubmitted('02x')}>Show notification</Button>

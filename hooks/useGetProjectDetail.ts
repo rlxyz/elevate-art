@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { data } from '../data'
 
@@ -33,7 +33,7 @@ interface UseGetProjectDetail {
 
 export const useGetProjectDetail = (projectSlug: string): UseGetProjectDetail => {
   const { data, isLoading } = useQuery<ProjectDetail, Error, ProjectDetail>(
-    projectSlug,
+    [projectSlug],
     fetchProjectDetail,
   )
 

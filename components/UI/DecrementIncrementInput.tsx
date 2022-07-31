@@ -14,12 +14,17 @@ export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = (
   disabled,
 }) => {
   return (
-    <div>
-      <div className="mt-1 relative rounded-md shadow-sm w-[150px]">
-        <div className="absolute inset-y-0 left-0 flex items-center px-4">
+    <>
+      <span
+        className={`mr-3 text-xs ${value === maxValue ? 'text-black' : 'text-lightGray'}`}
+      >
+        Max
+      </span>
+      <div className="rounded-md border border-lightGray flex justify-between items-center">
+        <div className="w-[50px] border-r border-r-lightGray">
           <button
-            disabled={disabled}
-            className="text-2xl flex items-center"
+            disabled={disabled || value === 1}
+            className="text-xl w-full font-bold text-center pb-2 disabled:text-lightGray"
             onClick={() => {
               if (value > 1) {
                 onChange && onChange(value - 1)
@@ -29,20 +34,13 @@ export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = (
             -
           </button>
         </div>
-        <input
-          type="number"
-          name="price"
-          id="price"
-          className="focus:ring-indigo-500 focus:border-indigo-500 px-4 sm:text-sm border-lightGray rounded-md text-center w-full h-10"
-          min={1}
-          max={maxValue}
-          value={value}
-          disabled
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center px-4">
+        <div className="w-[50px] text-center">
+          <span>{value}</span>
+        </div>
+        <div className="w-[50px] border-l border-l-lightGray flex items-center">
           <button
-            disabled={disabled}
-            className="text-2xl flex items-center"
+            disabled={disabled || value === maxValue}
+            className="text-xl font-bold w-full text-center disabled:text-lightGray pb-2"
             onClick={() => {
               if (value < maxValue) {
                 onChange(value + 1)
@@ -53,6 +51,6 @@ export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = (
           </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { useProjectDetail } from '@Context/projectContext'
 import { config } from '@Utils/config'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@Utils/constant'
 import { generateLeaf, presaleMerkleTree } from '@Utils/merkle_roots'
@@ -13,13 +14,15 @@ interface UsePresaleMint {
 }
 
 export const usePresaleMint = (address: string): UsePresaleMint => {
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification()
+  const { projectName } = useProjectDetail()
+  const { notifyError, notifySubmitted, notifySuccess } = useNotification(projectName)
   const maxInvocation = usePresaleMaxAllocation(address)
   const {
     write,
     isLoading: contractIsLoading,
     data: trx,
   } = useContractWrite({
+    mode: 'recklesslyUnprepared',
     ...RhapsodyContractConfig,
     functionName: 'presaleMint',
     onSettled: data => {
@@ -67,7 +70,10 @@ export const usePresaleMint = (address: string): UsePresaleMint => {
     // Generate airdrop proof
     const proof: string[] = presaleMerkleTree.getHexProof(leaf)
 
-    write({ args: [invocations, maxInvocation, proof], overrides })
+    write({
+      recklesslySetUnpreparedArgs: [invocations, maxInvocation, proof],
+      recklesslySetUnpreparedOverrides: overrides,
+    })
   }
 
   return {

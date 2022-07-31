@@ -18,6 +18,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
           <div className="block absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border">
             <img
               src={bannerImageUrl}
+              alt="Project Banner"
               className="absolute top-0 left-0 bottom-0 right-0 box-border p-0 m-auto w-0 h-0 min-w-full max-w-full min-h-full max-h-full object-cover"
             />
           </div>

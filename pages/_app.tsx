@@ -10,22 +10,22 @@ import {
   RainbowKitProvider,
   wallet,
 } from '@rainbow-me/rainbowkit'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { config } from '@Utils/config'
 import LogRocket from 'logrocket'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, ...(config.testnetEnabled ? [chain.rinkeby] : [])],
   [
-    alchemyProvider({ alchemyId: config.alchemyId }),
-    infuraProvider({ infuraId: config.infuraId }),
+    alchemyProvider({ apiKey: config.alchemyId }),
+    infuraProvider({ apiKey: config.infuraId }),
     publicProvider(),
   ],
 )
@@ -51,7 +51,6 @@ const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider,
-  webSocketProvider,
 })
 
 const queryClient = new QueryClient()
@@ -73,7 +72,11 @@ function CustomApp({
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider appInfo={appInfo} chains={chains}>
+          <RainbowKitProvider
+            appInfo={appInfo}
+            chains={chains}
+            initialChain={config.networkId}
+          >
             <Layout>
               <Component {...pageProps} err={err} />
               <Toaster />

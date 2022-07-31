@@ -1,4 +1,4 @@
-import { MintSection } from '@Components/Minter/MintSection'
+import { PageContainer } from '@Components/Layout/PageContainer'
 import { ProjectHeader } from '@Components/ProjectHeader'
 import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import LogRocket from 'logrocket'
@@ -8,6 +8,11 @@ import { useAccount } from 'wagmi'
 
 const ProjectInfo = dynamic(
   () => import('@Components/Minter/ProjectInfo').then(mod => mod.ProjectInfo),
+  { ssr: false },
+)
+
+const MintSection = dynamic(
+  () => import('@Components/MintSection/MintSection').then(mod => mod.MintSection),
   { ssr: false },
 )
 
@@ -22,15 +27,18 @@ export const HomePage = () => {
   }, [account?.address])
 
   return (
-    <>
-      <ProjectHeader
-        bannerImageUrl={data?.projectBanner}
-        profileImageUrl={data?.projectProfileImage}
-        projectOwner={data?.projectOwner}
-      />
-      <div className="px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-2">
+    <PageContainer
+      header={
+        <ProjectHeader
+          bannerImageUrl={data?.projectBanner}
+          profileImageUrl={data?.projectProfileImage}
+          projectOwner={data?.projectOwner}
+        />
+      }
+      leftContent={
         <ProjectInfo
           projectName={data?.projectName}
+          projectDescription={data?.projectDescription}
           bannerImageUrl={data?.projectInfoBanner}
           discordUrl={data?.discordUrl}
           twitterUrl={data?.twitterUrl}
@@ -38,9 +46,9 @@ export const HomePage = () => {
           price={data?.ethPrice}
           supply={data?.totalSupply}
         />
-        <MintSection />
-      </div>
-    </>
+      }
+      rightContent={<MintSection />}
+    />
   )
 }
 

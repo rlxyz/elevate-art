@@ -30,7 +30,6 @@ export const PublicSaleMintSection: React.FC = () => {
       </div>
       <div className="mt-6">
         <MintButton
-          mintCount={mintCount}
           disabled={!allowToMint || isLoading}
           onClick={() => mint(mintCount)}
         />

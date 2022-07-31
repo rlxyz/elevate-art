@@ -1,13 +1,9 @@
 import { useMintPeriod } from '@Hooks/contractsRead'
-import { useCountDown } from '@Hooks/useCountDown'
+import { formatTime, useCountDown } from '@Hooks/useCountDown'
 import dayjs from 'dayjs'
 
 import { Container } from './Container'
 import { RequirementStatus } from './RequirementStatus'
-
-const formatTime = (value: number) => {
-  return String(value).padStart(2, '0')
-}
 
 export const PresaleTiming = () => {
   const { presaleTime, publicTime, mintPhase } = useMintPeriod()
