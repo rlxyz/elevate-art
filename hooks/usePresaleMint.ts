@@ -1,4 +1,4 @@
-import { useProjectDetail } from '@Context/projectContext'
+import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import { config } from '@Utils/config'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from '@Utils/constant'
 import { generateLeaf, presaleMerkleTree } from '@Utils/merkle_roots'
@@ -11,16 +11,20 @@ import { useNotification } from './useNotification'
 interface UsePresaleMint {
   isLoading: boolean
   mint: (invocation: number) => void
+  isError: boolean
 }
 
 export const usePresaleMint = (address: string): UsePresaleMint => {
-  const { projectName } = useProjectDetail()
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification(projectName)
+  const { data } = useGetProjectDetail('rlxyz')
+  const { notifyError, notifySubmitted, notifySuccess } = useNotification(
+    data?.projectName,
+  )
   const maxInvocation = usePresaleMaxAllocation(address)
   const {
     write,
     isLoading: contractIsLoading,
     data: trx,
+    isError,
   } = useContractWrite({
     mode: 'recklesslyUnprepared',
     ...RhapsodyContractConfig,
@@ -79,5 +83,6 @@ export const usePresaleMint = (address: string): UsePresaleMint => {
   return {
     isLoading: contractIsLoading || trxIsProcessing,
     mint,
+    isError,
   }
 }
