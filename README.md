@@ -1,5 +1,7 @@
 # RLXYZ - Mint Client Template
 
+RLXYZ Studio Mint Client
+
 ## Getting Started
 
 First, run the development server:
