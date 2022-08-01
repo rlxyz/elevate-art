@@ -3,7 +3,6 @@ import '@rainbow-me/rainbowkit/styles.css'
 import 'react-medium-image-zoom/dist/styles.css'
 
 import ErrorBoundary from '@Components/ErrorBoundary'
-import { Layout } from '@Components/Layout/Layout'
 import {
   connectorsForWallets,
   getDefaultWallets,
@@ -77,10 +76,8 @@ function CustomApp({
             chains={chains}
             initialChain={config.networkId}
           >
-            <Layout>
-              <Component {...pageProps} err={err} />
-              <Toaster />
-            </Layout>
+            <Component {...pageProps} err={err} />
+            <Toaster />
           </RainbowKitProvider>
         </WagmiConfig>
       </QueryClientProvider>

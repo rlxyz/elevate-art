@@ -16,7 +16,7 @@ export const PresaleView = () => {
   const { data } = useGetProjectDetail('rlxyz')
   const { isConnected, isDisconnected, address } = useAccount()
   const [mintCount, setMintCount] = useState(1)
-  const { maxAllocation, hasMintAllocation, allowToMint, userMintCount } =
+  const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } =
     usePresaleRequirements(address)
   const { mint, isLoading, isError } = usePresaleMint(address)
 
@@ -34,12 +34,10 @@ export const PresaleView = () => {
 
   return (
     <RightContentContainer
-      firstHeading={
-        <span>{`Public Sale (${totalMinted}/${data?.totalSupply} Minted)`}</span>
-      }
+      firstHeading={<span>{`Presale (${totalMinted}/${data?.totalSupply} Minted)`}</span>}
       secondHeading={
         isConnected ? (
-          <span>{`You have minted ${userMintCount} out of ${data?.maxAllocationPerAddress} eligible NFTs in Presale`}</span>
+          <span>{`You have minted ${userMintCount} out of ${userAllocation} eligible NFTs in Presale`}</span>
         ) : (
           <span>
             <strong>Connect Wallet</strong> to mint from the RoboGhost collection

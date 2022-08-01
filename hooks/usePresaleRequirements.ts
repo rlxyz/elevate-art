@@ -12,6 +12,7 @@ interface UsePresaleRequirements {
   presaleIsActive: boolean
   hasMintAllocation: boolean
   maxAllocation: number
+  userAllocation: number
   totalMinted: number
   allowToMint: boolean
   userMintCount: number
@@ -20,12 +21,12 @@ interface UsePresaleRequirements {
 export const usePresaleRequirements = (address: string): UsePresaleRequirements => {
   const { data } = useGetProjectDetail('rlxyz')
   const mintCount = useMintCount(address)
-  const maxAllocation = usePresaleMaxAllocation(address)
+  const allocation = usePresaleMaxAllocation(address)
   const totalMinted = useTotalMinted()
   const { mintPhase } = useMintPeriod()
 
-  const totalAvailableToMint = maxAllocation - mintCount
-  const inAllowlist = maxAllocation > 0
+  const totalAvailableToMint = allocation - mintCount
+  const inAllowlist = allocation > 0
   const collectionNotSoldOut = totalMinted < data?.totalSupply
   const presaleIsActive = mintPhase === 'presale'
   const hasMintAllocation = totalAvailableToMint > 0
@@ -37,6 +38,7 @@ export const usePresaleRequirements = (address: string): UsePresaleRequirements 
     collectionNotSoldOut,
     presaleIsActive,
     hasMintAllocation,
+    userAllocation: allocation,
     maxAllocation: totalAvailableToMint,
     totalMinted,
     allowToMint,

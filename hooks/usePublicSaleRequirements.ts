@@ -8,6 +8,7 @@ import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 interface UsePresaleRequirements {
   collectionNotSoldOut: boolean
   hasMintAllocation: boolean
+  userAllocation: number
   maxAllocation: number
   totalMinted: number
   userMintCount: number
@@ -31,5 +32,6 @@ export const usePublicSaleRequirements = (address: string): UsePresaleRequiremen
     totalMinted,
     userMintCount,
     allowToMint,
+    userAllocation: data?.maxAllocationPerAddress,
   }
 }

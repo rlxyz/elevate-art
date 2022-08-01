@@ -17,7 +17,7 @@ export const PublicView = () => {
   const { isConnected, isDisconnected, address } = useAccount()
   const [mintCount, setMintCount] = useState(1)
   const { mint, isLoading, isError } = usePublicMint(address)
-  const { maxAllocation, hasMintAllocation, allowToMint, userMintCount } =
+  const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } =
     usePublicSaleRequirements(address)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const PublicView = () => {
       }
       secondHeading={
         isConnected ? (
-          <span>{`You have minted ${userMintCount} out of ${data?.maxAllocationPerAddress} eligible NFTs in Public Sale`}</span>
+          <span>{`You have minted ${userMintCount} out of ${userAllocation} eligible NFTs in Public Sale`}</span>
         ) : (
           <span>
             <strong>Connect Wallet</strong> to mint from the RoboGhost collection
