@@ -48,11 +48,13 @@ export const useMintPeriod = (): UseMintPeriod => {
     ...RhapsodyContractConfig,
     functionName: 'presaleTime',
     chainId: config.networkId,
+    watch: true,
   })
   const { data: contractPublicTime } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: 'publicTime',
     chainId: config.networkId,
+    watch: true,
   })
 
   const presaleTime = useMemo(
