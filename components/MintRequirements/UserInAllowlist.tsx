@@ -9,7 +9,7 @@ interface UserInAllowListProps {
 
 export const UserInAllowList: React.FC<UserInAllowListProps> = ({ isEligible }) => {
   return (
-    <Container>
+    <Container top>
       <RequirementStatus passed={isEligible} />
       <span>
         You are {isEligible ? '' : <strong>not</strong>} on the

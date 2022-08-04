@@ -13,7 +13,7 @@ export const PresaleAllocation: React.FC<PresaleAllocationProps> = ({
   maxAllocation,
 }) => {
   return (
-    <Container>
+    <Container bottom>
       <RequirementStatus passed={isEligible} />
 
       {isEligible ? (

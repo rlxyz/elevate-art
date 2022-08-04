@@ -11,7 +11,7 @@ export const PublicSaleAllocation = () => {
   const userIsEligible = maxAllocation > 0
 
   return (
-    <Container>
+    <Container top bottom>
       <RequirementStatus passed={userIsEligible} />
 
       {userIsEligible ? (
