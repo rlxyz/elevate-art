@@ -40,7 +40,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
                 return (
                   <>
                     <button onClick={openConnectModal} type="button">
-                      <img src="/images/wallet.svg" className="w-10 h-10" alt="Wallet" />
+                      <img src="/images/wallet.svg" className="w-7 h-7" alt="Wallet" />
                     </button>
                   </>
                 )

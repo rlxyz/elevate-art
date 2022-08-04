@@ -1,15 +1,8 @@
-import { PublicSaleAllocation, TotalMinted } from '@Components/MintRequirements'
-import { usePublicSaleRequirements } from '@Hooks/usePublicSaleRequirements'
-import { useAccount } from 'wagmi'
+import { PublicSaleAllocation } from '@Components/MintRequirements'
 
 export const PublicSaleRequirements = () => {
-  const account = useAccount()
-  const { totalMinted, collectionNotSoldOut } = usePublicSaleRequirements(
-    account?.address,
-  )
   return (
     <>
-      <TotalMinted totalMinted={totalMinted} isEligible={collectionNotSoldOut} />
       <PublicSaleAllocation />
     </>
   )

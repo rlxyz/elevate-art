@@ -4,7 +4,7 @@ import { Textbox } from '@Components/UI/Textbox'
 import { CheckWalletResult, useWalletCheck } from '@Hooks/useWalletCheck'
 import { useDebouncedState } from '@react-hookz/web'
 
-import { CountdownSection } from './CountdownSection'
+import { PresaleCountdown } from './PresaleCountdown'
 
 const CheckResult = ({ result }: { result?: CheckWalletResult }) => {
   if (!result) {
@@ -37,14 +37,14 @@ export const WalletChecker = () => {
   const [address, setAddress] = useDebouncedState<string>('', 300, 500)
   const { result, checkWallet } = useWalletCheck(address)
 
-  const onSubmit = e => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     checkWallet()
   }
 
   return (
     <RightContentContainer
-      firstHeading={<CountdownSection />}
+      firstHeading={<PresaleCountdown />}
       secondHeading={
         <>
           <span>

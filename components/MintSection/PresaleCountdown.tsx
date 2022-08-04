@@ -2,7 +2,7 @@ import { useMintPeriod } from '@Hooks/contractsRead'
 import { formatTime, useCountDown } from '@Hooks/useCountDown'
 import dayjs from 'dayjs'
 
-export const CountdownSection = () => {
+export const PresaleCountdown = () => {
   const { presaleTime } = useMintPeriod()
   const presaleCountDown = useCountDown(dayjs.unix(presaleTime).toDate())
 

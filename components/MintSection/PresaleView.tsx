@@ -1,8 +1,6 @@
 import { RightContentContainer } from '@Components/Layout/RightContentContainer'
 import { MintButton } from '@Components/Minter/MintButton'
 import { NFTAmount } from '@Components/Minter/NFTAmount'
-import { useTotalMinted } from '@Hooks/contractsRead'
-import { useGetProjectDetail } from '@Hooks/useGetProjectDetail'
 import { usePresaleMint } from '@Hooks/usePresaleMint'
 import { usePresaleRequirements } from '@Hooks/usePresaleRequirements'
 import { config } from '@Utils/config'
@@ -10,10 +8,9 @@ import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { ConnectWalletSection } from './ConnectWalletSection'
+import { PublicSaleCountdown } from './PublicSaleCountdown'
 
 export const PresaleView = () => {
-  const totalMinted = useTotalMinted()
-  const { data } = useGetProjectDetail('rlxyz')
   const { isConnected, isDisconnected, address } = useAccount()
   const [mintCount, setMintCount] = useState(1)
   const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } =
@@ -34,7 +31,7 @@ export const PresaleView = () => {
 
   return (
     <RightContentContainer
-      firstHeading={<span>{`Presale (${totalMinted}/${data?.totalSupply} Minted)`}</span>}
+      firstHeading={<PublicSaleCountdown />}
       secondHeading={
         isConnected ? (
           <span>{`You have minted ${userMintCount} out of ${userAllocation} eligible NFTs in Presale`}</span>
