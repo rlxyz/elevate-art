@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  // previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("NEXT_PUBLIC_DATABASE_URL")
+  shadowDatabaseUrl = env("NEXT_PUBLIC_SHADOW_DATABASE_URL")
+  // referentialIntegrity = "prisma"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  address       String         @unique @db.VarChar(255) // eth_address
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  organisations Organisation[]
+
+  @@map(name: "users")
+}
+
+model Organisation {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repositories Repository[]
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @db.VarChar(255)
+
+  @@map(name: "organisations")
+}
+
+model Repository {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  tokenName String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  layers      LayerElement[]
+  collections Collection[]
+
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  organisationId String
+
+  @@map(name: "repositories")
+}
+
+model Collection {
+  id          String @id @default(cuid())
+  name        String @unique @default("main") @db.VarChar(255)
+  totalSupply Int    @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+  repositoryId String
+
+  artElements ArtElement[]
+}
+
+model LayerElement {
+  id       String @id @default(cuid())
+  name     String @db.VarChar(255)
+  priority Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+  repositoryId String
+
+  traitElements TraitElement[]
+}
+
+model ArtElement {
+  id Int @id @default(autoincrement())
+
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  traitElementsObject Json
+}
+
+model TraitElement {
+  id String @id @default(cuid())
+
+  name   String
+  weight Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  layerElement   LayerElement @relation(fields: [layerElementId], references: [id])
+  layerElementId String
+}

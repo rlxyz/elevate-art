@@ -1,0 +1,25 @@
+import { GetStaticProps } from 'next'
+import React from 'react'
+import BasicDomLayout from '@components/Dom/BasicDomLayout'
+import DomIndex from '@components/Dom/DomIndex'
+
+// note: this page hasnt been implemented yet
+const Page = () => {
+  return (
+    <>
+      <BasicDomLayout>
+        <DomIndex />
+      </BasicDomLayout>
+    </>
+  )
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  return {
+    props: {
+      title: 'Index',
+    },
+  }
+}
+
+export default Page
