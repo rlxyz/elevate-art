@@ -1,0 +1,12 @@
+.next/
+# Ignore artifacts:
+build
+coverage
+out/
+
+# Ignore all HTML files:
+*.html
+
+.storybook
+next.config.js
+tailwind.config.js
