@@ -1,11 +1,11 @@
 import {
-  User as PrismaUserModel,
-  Organisation as PrismaOrganisationModel,
-  Repository as PrismaRepositoryModel,
+  ArtElement as PrismaArtModel,
   Collection as PrismaCollectionModel,
   LayerElement as PrismaLayerModel,
+  Organisation as PrismaOrganisationModel,
+  Repository as PrismaRepositoryModel,
   TraitElement as PrismaTraitModel,
-  ArtElement as PrismaArtModel,
+  User as PrismaUserModel,
 } from '@prisma/client'
 
 export type PrismaUser = PrismaUserModel & {

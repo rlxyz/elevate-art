@@ -4,8 +4,8 @@ import {
   Organisation,
   Repository,
 } from '@utils/types'
-import create from 'zustand'
 import Collection from '@utils/x/Collection'
+import create from 'zustand'
 
 interface CompilerViewInterface {
   currentViewSection: number

@@ -1,22 +1,20 @@
-import { TraitElement } from '@utils/types'
+import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { fetcherPost } from '@utils/fetcher'
 import { formatLayerName } from '@utils/format'
-import { useEffect, useState } from 'react'
-import { createCloudinary } from '@utils/cloudinary'
 import {
   calculateTraitQuantityInCollection,
   calculateTraitRarityFromQuantity,
   calculateTraitRarityPercentage,
   calculateTraitRarityScore,
 } from '@utils/math'
+import { TraitElement } from '@utils/types'
+import { Formik } from 'formik'
 import { NextRouter, useRouter } from 'next/router'
-import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { fetcher, fetcherPost } from '@utils/fetcher'
+import { useEffect, useState } from 'react'
+
 import { CollectionViewContent } from './ViewContent'
-import { Textbox } from '@components/UI/Textbox'
-import { Button } from '@components/UI/Button'
-import Image from 'next/image'
 
 const CollectionRulesView = () => {
   const router: NextRouter = useRouter()
@@ -117,22 +115,22 @@ const CollectionRulesView = () => {
                           }, 400)
                         }}
                       >
-                        {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          submitForm,
-                        }) => (
+                        {(
+                          {
+                            // values,
+                            // errors,
+                            // touched,
+                            // handleChange,
+                            // handleBlur,
+                            // handleSubmit,
+                            // isSubmitting,
+                            // submitForm,
+                          }
+                        ) => (
                           <>
                             <tr key={index}>
                               <td className='p-8 pl-0'>
                                 <AdvancedImage
-                                  width={125}
-                                  height={125}
                                   url={`${organisationName}/${repositoryName}/layers/${
                                     currentLayer.name
                                   }/${formatLayerName(trait.name)}.png`}
@@ -210,12 +208,7 @@ const CollectionRulesView = () => {
                     This is an example of how we structure rarities for NFT
                     collections.
                   </p>
-                  <Button
-                    className='text-sm border rounded-[5px] p-2'
-                    onClick={() => {
-                      console.log('todo: implement button')
-                    }}
-                  >
+                  <Button className='text-sm border rounded-[5px] p-2'>
                     Learn More
                   </Button>
                 </div>

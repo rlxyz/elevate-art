@@ -1,9 +1,8 @@
-import dynamic from 'next/dynamic'
-import { GetStaticPaths, GetStaticProps } from 'next'
-import React from 'react'
-import { Layout } from '@components/Layout/Layout'
 import FileUpload from '@components/CloudinaryImage/FileUpload'
+import { Layout } from '@components/Layout/Layout'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { NextRouter, useRouter } from 'next/router'
+import React from 'react'
 
 const Page = () => {
   const router: NextRouter = useRouter()
@@ -26,14 +25,14 @@ const Page = () => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async (_) => {
   return {
-    paths: ['/[organisation]/[repository]/upload'],
+    paths: [],
     fallback: true,
   }
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (_) => {
   return {
     props: {
       title: 'Upload',

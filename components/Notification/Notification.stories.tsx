@@ -1,5 +1,5 @@
-import { Button } from '@Components/UI/Button'
-import { useNotification } from '@Hooks/useNotification'
+import { Button } from '@components/UI/Button'
+import { useNotification } from '@hooks/useNotification'
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -22,11 +22,11 @@ const Wrapper: React.FC<{ children: React.ReactElement }> = ({ children }) => {
 
 export const TransactionSubmitted = () => {
   return (
-    <Notification id="basic-notification" type="error">
-      <div className="flex justify-between w-full items-center">
+    <Notification id='basic-notification' type='error'>
+      <div className='flex justify-between w-full items-center'>
         <div>
-          <h3 className="font-bold text-lg">Transaction Submitted</h3>
-          <span className="block">View on etherscan</span>
+          <h3 className='font-bold text-lg'>Transaction Submitted</h3>
+          <span className='block'>View on etherscan</span>
         </div>
         <div>
           <Button>View</Button>
@@ -45,11 +45,11 @@ export const WithToasterMintSucceed = () => {
   )
 }
 
-export const WithToasterTransactionSubmmited = () => {
-  const { notifySubmitted } = useNotification('RLXYZ Studio')
-  return (
-    <Wrapper>
-      <Button onClick={() => notifySubmitted('02x')}>Show notification</Button>
-    </Wrapper>
-  )
-}
+// export const WithToasterTransactionSubmmited = () => {
+//   const { notifySubmitted } = useNotification('RLXYZ Studio')
+//   return (
+//     <Wrapper>
+//       <Button onClick={() => notifySubmitted('02x')}>Show notification</Button>
+//     </Wrapper>
+//   )
+// }

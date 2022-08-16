@@ -1,5 +1,5 @@
-import { PrismaTraitElement, TraitElement } from '@utils/types'
 import { convertPrismaTraitElement, createPrismaClient } from '@utils/prisma'
+import { PrismaTraitElement, TraitElement } from '@utils/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Response =
@@ -14,7 +14,6 @@ export default async (
 ) => {
   const prisma = createPrismaClient()
   const id: string = request.query.id as string
-
   switch (request.method) {
     case 'GET':
       prisma.traitElement
@@ -32,16 +31,14 @@ export default async (
         })
       break
     case 'POST':
-      const weight: number = Number(request.body.weight as number)
-      console.log('updating', weight)
+      const weight = Number(request.body.weight as number)
       prisma.traitElement
         .update({
           where: { id },
           data: { weight },
         })
-        .then((data: PrismaTraitElement) => {
+        .then((_: PrismaTraitElement) => {
           prisma.$disconnect()
-          console.log(data)
           return response.status(200).json({
             success: true,
           })

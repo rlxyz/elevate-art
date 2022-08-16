@@ -4,21 +4,22 @@ import {
   TraitElement as PrismaTraitModel,
 } from '@prisma/client'
 import { getAddress } from 'ethers/lib/utils'
+
 import {
-  PrismaUser,
-  User,
-  PrismaCollection,
+  ArtElement,
   Collection,
   LayerElement,
+  Organisation,
+  PrismaArtElement,
+  PrismaCollection,
+  PrismaLayerElement,
   PrismaOrganisation,
   PrismaRepository,
-  PrismaLayerElement,
-  Organisation,
-  Repository,
-  PrismaArtElement,
-  ArtElement,
   PrismaTraitElement,
+  PrismaUser,
+  Repository,
   TraitElement,
+  User,
 } from './types'
 
 export const createPrismaClient = (): PrismaClient => {

@@ -1,6 +1,7 @@
 import sha256 from 'crypto-js/sha256'
-import { ElementSource } from './types'
+
 import Layer from './Layer'
+import { ElementSource } from './types'
 
 export abstract class Element {
   sources: ElementSource[]
@@ -40,7 +41,7 @@ abstract class ImageElement extends Element {
   }
 
   toAttributes(): any[] {
-    let attributes: any[] = []
+    const attributes: any[] = []
     this.layers.forEach((layer: Layer, i) => {
       if (this.sources[i]) {
         attributes.push({

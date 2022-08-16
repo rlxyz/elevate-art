@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils'
+
 import { config } from './config'
 
 const provider = new ethers.providers.JsonRpcProvider(config.ethRpcUrl)

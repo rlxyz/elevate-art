@@ -1,15 +1,10 @@
-import { LayerElement, TraitElement } from '@utils/types'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { formatLayerName } from '@utils/format'
-import React, { ReactNode, useEffect, useMemo, useState } from 'react'
-import ordinal from 'ordinal'
-import { NextRouter, useRouter } from 'next/router'
 import { App } from '@utils/x/App'
-import Image from 'next/image'
-import { ArtImageElement, Element } from '@utils/x/Element'
-import mergeImages from 'merge-images'
 import Collection from '@utils/x/Collection'
-import { Button } from '@components/UI/Button'
+import mergeImages from 'merge-images'
+import Image from 'next/image'
+import React, { ReactNode, useEffect, useState } from 'react'
+
 import { CollectionViewContent } from './ViewContent'
 
 const layerConfig = [

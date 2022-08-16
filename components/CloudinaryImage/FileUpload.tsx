@@ -1,15 +1,7 @@
 import { ReactNode, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-const FileUpload = ({
-  id,
-  children,
-  onUpload,
-}: {
-  id: string
-  children?: ReactNode
-  onUpload?: () => void
-}) => {
+const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
   const uploadCollectionLayerImageCloudinary = ({
     id,
     layerName,
@@ -58,8 +50,8 @@ const FileUpload = ({
       const pathArray = String(file.path).split('/')
       const layerName = pathArray[1]
       const fileName = pathArray[2].replace('.png', '')
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
+      // reader.onabort = () => console.log('file reading was aborted')
+      // reader.onerror = () => console.log('file reading has failed')
       reader.onload = async () => {
         uploadCollectionLayerImageCloudinary({
           id: id,
@@ -67,20 +59,20 @@ const FileUpload = ({
           layerName: layerName,
           file: file,
         })
-          .then((response) => {
+          .then((_) => {
             // todo: handle upload success
-            console.log(response)
+            // console.log(response)
           })
-          .catch((err) => {
+          .catch((_) => {
             // todo: handle error
-            console.error(err)
+            // console.error(err)
           })
       }
       reader.readAsArrayBuffer(file)
     })
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],

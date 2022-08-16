@@ -1,7 +1,7 @@
-import { PrismaUser, User } from '@utils/types'
-import { convertPrismaUser, createPrismaClient } from '@utils/prisma'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { getEthereumAddress } from '@utils/ens'
+import { convertPrismaUser, createPrismaClient } from '@utils/prisma'
+import { PrismaUser, User } from '@utils/types'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (
   request: NextApiRequest,
@@ -29,7 +29,7 @@ export default async (
                 layers: {
                   orderBy: { priority: 'asc' }, // guarantee layer order correctness
                   include: {
-                    traits: {
+                    traitElements: {
                       orderBy: { weight: 'asc' }, // guarantee rarest first
                     },
                   },

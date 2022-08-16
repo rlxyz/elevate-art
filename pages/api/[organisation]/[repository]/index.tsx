@@ -1,10 +1,5 @@
-import {
-  Organisation,
-  PrismaOrganisation,
-  PrismaRepository,
-  Repository,
-} from '@utils/types'
 import { convertPrismaRepository, createPrismaClient } from '@utils/prisma'
+import { PrismaOrganisation, PrismaRepository, Repository } from '@utils/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (

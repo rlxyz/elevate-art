@@ -1,9 +1,8 @@
-import { FolderIcon, CubeIcon, SelectorIcon } from '@heroicons/react/outline'
 import FileUpload from '@components/CloudinaryImage/FileUpload'
+import { CubeIcon, FolderIcon, SelectorIcon } from '@heroicons/react/outline'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { NextRouter, useRouter } from 'next/router'
-import { Textbox } from '@components/UI/Textbox'
-import layer from 'pages/api/[organisation]/[repository]/layer'
+
 import { LayerSectionEnum } from './Index'
 
 const LayerFolderSelector = () => {
@@ -48,7 +47,7 @@ const LayerFolderSelector = () => {
                 })
                 .map((layerName: string, index: number) => {
                   return (
-                    <a
+                    <a // eslint-disable-line
                       className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
                         currentLayerPriority === index
                           ? 'bg-lightGray font-semibold'
@@ -85,7 +84,7 @@ const LayerFolderSelector = () => {
                 },
               ].map(({ name, icon }, index) => {
                 return (
-                  <a
+                  <a // eslint-disable-line
                     key={`${name}-${index}`}
                     className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
                       currentLayerPriority === index + layers.length

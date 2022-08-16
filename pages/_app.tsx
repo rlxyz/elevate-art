@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 
-import ErrorBoundary from '@components/ErrorBoundary'
+// import ErrorBoundary from '@components/ErrorBoundary'
 import {
   connectorsForWallets,
   getDefaultWallets,
@@ -65,19 +65,19 @@ function CustomApp({
   useEffect(() => {
     config.logrocketKey && LogRocket.init(config.logrocketKey)
   }, [])
-
+  const App = Component as any
   return (
-    <ErrorBoundary>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          appInfo={appInfo}
-          chains={chains}
-          initialChain={config.networkId}
-        >
-          <Component {...pageProps} err={err} />
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </ErrorBoundary>
+    // <ErrorBoundary>
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider
+        appInfo={appInfo}
+        chains={chains}
+        initialChain={config.networkId}
+      >
+        <App {...pageProps} err={err} />
+      </RainbowKitProvider>
+    </WagmiConfig>
+    // </ErrorBoundary>
   )
 }
 

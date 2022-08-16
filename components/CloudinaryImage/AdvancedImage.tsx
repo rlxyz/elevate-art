@@ -2,15 +2,7 @@ import { fill } from '@cloudinary/url-gen/actions/resize'
 import { createCloudinary } from '@utils/cloudinary'
 import Image from 'next/image'
 
-const AdvancedImage = ({
-  url,
-  height,
-  width,
-}: {
-  url: string
-  height: number
-  width: number
-}) => {
+const AdvancedImage = ({ url }: { url: string }) => {
   const cld = createCloudinary()
   return (
     <div

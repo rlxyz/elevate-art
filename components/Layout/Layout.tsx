@@ -1,13 +1,7 @@
-import dynamic from 'next/dynamic'
 import * as React from 'react'
 
-import { Footer } from './Footer'
+import { Header } from './Header'
 import { Seo } from './Seo'
-
-// todo: unsure why ssr is not working
-const Header = dynamic(() => import('./Header').then((mod) => mod.Header), {
-  ssr: false,
-})
 
 interface LayoutProps {
   children: React.ReactNode

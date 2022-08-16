@@ -1,8 +1,9 @@
-import { ImageFormatConfig, LayerConfig } from './types'
-import { Sequencer } from './Sequencer'
-import { Element } from './Element'
 import { utils } from 'ethers'
+
 import Collection from './Collection'
+import { Element } from './Element'
+import { Sequencer } from './Sequencer'
+import { ImageFormatConfig, LayerConfig } from './types'
 
 // 0v1.0.0
 // Every ArtElement is an array of ImageElement
@@ -53,8 +54,8 @@ export class App {
     const data = []
 
     // for mac: sometimes ds_store can cause issues with Number(files[0].file.slice(0, -4))
-    let startPoint = 0
-    for (var i = startPoint; i < totalSupply + startPoint; ) {
+    const startPoint = 0
+    for (let i = startPoint; i < totalSupply + startPoint; ) {
       const element: Element = this.createElementFromRandomness()
       const hash: string = element.toHex()
       const attributes: any[] = element.toAttributes()

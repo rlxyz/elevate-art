@@ -1,16 +1,17 @@
-import LayerFolderSelector from './LayerFolderSelector'
-import useSWR from 'swr'
-import { fetcher } from '@utils/fetcher'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import GenerateView from '@components/CollectionView/CollectionGenerateView'
-import RulesView from '@components/CollectionView/CollectionRulesView'
 import ImagesView from '@components/CollectionView/CollectionImagesView'
+import RulesView from '@components/CollectionView/CollectionRulesView'
+import { Button } from '@components/UI/Button'
+import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { useNotification } from '@hooks/useNotification'
+import { fetcher } from '@utils/fetcher'
 import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import useSWR from 'swr'
+
+import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
-import { Button } from '@components/UI/Button'
-import { useNotification } from '@hooks/useNotification'
 
 export enum LayerSectionEnum {
   IMAGES = 0,

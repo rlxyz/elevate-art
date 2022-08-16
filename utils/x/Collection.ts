@@ -25,9 +25,9 @@ class Collection {
   }
 
   calculateRarityAttributes = (type: CollectionAnalyticsType) => {
-    let traits: any = {}
-    for (var item of this.data) {
-      for (var attributes of item) {
+    const traits: any = {}
+    for (const item of this.data) {
+      for (const attributes of item) {
         const { trait_type: type, value } = attributes
         !traits[type] && (traits[type] = {})
         !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++
@@ -74,7 +74,7 @@ class Collection {
         return traits
 
       case 'rankings-trait':
-        let allTraitsWithRarity = []
+        const allTraitsWithRarity = []
         for (const [type, value] of Object.entries(traits)) {
           for (const [attribute, attribute_value] of Object.entries(value)) {
             traits[type][attribute] = {
@@ -107,8 +107,8 @@ class Collection {
           }
         }
 
-        let rank = []
-        for (var j = 0; j < this.totalSupply; j++) {
+        const rank = []
+        for (let j = 0; j < this.totalSupply; j++) {
           let rarityValue = 0
           for (const item of this.tokens[j]['attributes']) {
             const { trait_type, value } = item

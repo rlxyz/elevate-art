@@ -1,13 +1,12 @@
-import { LayerElement, TraitElement } from '@utils/types'
+import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { formatLayerName } from '@utils/format'
-import { useEffect, useState } from 'react'
-import ordinal from 'ordinal'
-import { createCloudinary } from '@utils/cloudinary'
+import { TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
-import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import ordinal from 'ordinal'
+import { useEffect } from 'react'
+
 import { CollectionViewContent } from './ViewContent'
-import { Button } from '@components/UI/Button'
 
 const CollectionImagesView = () => {
   const router: NextRouter = useRouter()
@@ -49,8 +48,6 @@ const CollectionImagesView = () => {
                   className='flex flex-col items-center'
                 >
                   <AdvancedImage
-                    height={125}
-                    width={125}
                     url={`${organisationName}/${repositoryName}/layers/${
                       currentLayer.name
                     }/${formatLayerName(trait.name)}.png`}

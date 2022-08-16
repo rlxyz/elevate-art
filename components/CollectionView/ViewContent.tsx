@@ -1,5 +1,4 @@
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import Image from 'next/image'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({

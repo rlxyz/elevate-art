@@ -3,13 +3,13 @@
 @tailwind utilities;
 @layer components {
   #__next {
-      @apply h-full;
+    @apply h-full;
   }
   html,
   body {
-      @apply w-full;
-      @apply h-full;
-      @apply overscroll-none;
+    @apply w-full;
+    @apply h-full;
+    @apply overscroll-none;
   }
 }
 

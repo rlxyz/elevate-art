@@ -1,4 +1,5 @@
 import { LayerConfig, LayerElement } from './types'
+
 class Layer {
   name: string
   elements: LayerElement[]

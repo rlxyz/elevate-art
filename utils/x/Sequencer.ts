@@ -1,6 +1,7 @@
-import { LayerConfig, ElementSource } from './types'
-import { Element, ArtImageElement } from './Element'
+import { ArtImageElement, Element } from './Element'
 import Layer from './Layer'
+import { ElementSource, LayerConfig } from './types'
+
 const random = require('canvas-sketch-util/random')
 
 // Only handles the sequencing of Layers to create Elements
@@ -121,11 +122,11 @@ export class ImageElementRandomizer {
     width: number,
     height: number
   ): ArtImageElement => {
-    let sequences: ElementSource[] = []
+    const sequences: ElementSource[] = []
     random.setSeed(Number(seed))
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements } = layer
-      for (var k = 0; k < iterations; k++) {
+      for (let k = 0; k < iterations; k++) {
         if (random.value() > occuranceRate) {
           continue
         }
