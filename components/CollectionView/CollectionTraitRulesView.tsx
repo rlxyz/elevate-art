@@ -400,7 +400,7 @@ const CollectionRulesView = () => {
   const layers = useCompilerViewStore((state) => state.layers)
   return (
     <CollectionViewContent
-      title={'Trait Rules'}
+      title={'Custom Trait Rules'}
       description='Set how often you want certain images to appear in the generation'
     >
       <div className='p-8 flex flex-col divide-y divide-lightGray space-y-6'>

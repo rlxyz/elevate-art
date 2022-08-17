@@ -72,6 +72,7 @@ export const convertPrismaCollection = (
     name: collection.name,
     totalSupply: collection.totalSupply,
     repositoryId: collection.repositoryId,
+    generations: collection.generations,
     artElement: collection.artElements?.map((artElement: PrismaArtElement) =>
       convertPrismaArtElement(artElement)
     ),

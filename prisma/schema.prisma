@@ -57,6 +57,7 @@ model Collection {
   id          String @id @default(cuid())
   name        String @unique @default("main") @db.VarChar(255)
   totalSupply Int    @default(1)
+  generations Int    @default(1)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

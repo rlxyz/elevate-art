@@ -3,8 +3,7 @@ import { Layout } from '@components/Layout/Layout'
 import { Repository } from '@utils/types'
 import React from 'react'
 import { SWRConfig, unstable_serialize } from 'swr'
-
-import { fetcher } from '../../../../utils/fetcher'
+import { fetcher } from '@utils/fetcher'
 
 const Page = ({ fallback }: { fallback: Repository }) => {
   return (

@@ -28,7 +28,7 @@ export default async (
               },
             },
             collections: {
-              orderBy: { updatedAt: 'asc' }, // get most recent updated organisation first
+              orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
             },
           },
         },

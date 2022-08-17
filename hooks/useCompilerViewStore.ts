@@ -33,14 +33,14 @@ interface CompilerViewInterface {
 const useCompilerViewStore = create<CompilerViewInterface>((set) => ({
   currentViewSection: 0,
   currentLayerPriority: 0,
-  currentCustomRulesViewSection: null,
+  currentCustomRulesViewSection: 0,
   repository: null,
   organisation: null,
   collection: null,
   layers: null,
   currentLayer: null,
   artCollection: null,
-  regenerate: true,
+  regenerate: false,
   setCurrentViewSection: (index: number) =>
     set((_) => ({ currentViewSection: index })),
   setCurrentLayerPriority: (index: number) =>

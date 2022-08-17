@@ -69,6 +69,30 @@ export class App {
     return new Collection({ tokens, data, totalSupply })
   }
 
+  createRandomCollectionFromSeed = async (
+    totalSupply: number,
+    seed: number
+  ): Promise<Collection> => {
+    const allHash = new Set()
+    const tokens = []
+    const data = []
+    const startPoint = 0
+    for (let i = startPoint; i < totalSupply + startPoint; ) {
+      const element: Element = this.createElementFromHash(
+        utils.keccak256(utils.toUtf8Bytes(String((i + 1) * seed)))
+      )
+      const hash: string = element.toHex()
+      const attributes: any[] = element.toAttributes()
+      if (!allHash.has(hash)) {
+        i++
+        allHash.add(hash)
+        tokens.push({ attributes: attributes, token_hash: hash })
+        data.push(attributes)
+      }
+    }
+    return new Collection({ tokens, data, totalSupply })
+  }
+
   createElementFromHash = (tokenHash: string): Element => {
     return this.sequencer.createElement(tokenHash)
   }

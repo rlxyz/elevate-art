@@ -10,7 +10,7 @@ import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-
+import ReactTooltip from 'react-tooltip'
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
 import { CubeIcon, SelectorIcon } from '@heroicons/react/outline'
@@ -165,7 +165,7 @@ const DomView = () => {
                   </aside>
                 )}
                 {currentViewSection === LayerSectionEnum.RULES && (
-                  <aside className='p-8'>
+                  <aside className='p-8 divide-y divide-lightGray'>
                     <div className='mb-8 h-10'>
                       <Button
                         onClick={() => {
@@ -183,31 +183,37 @@ const DomView = () => {
                               name: 'Trait Rules',
                               icon: <CubeIcon width={20} height={20} />,
                               enumRules: CustomRulesEnum.TRAIT_RULES,
+                              disabled: false,
                             },
                             {
                               name: 'Layer Order',
                               icon: <SelectorIcon width={20} height={20} />,
                               enumRules: CustomRulesEnum.LAYER_ORDERING,
+                              disabled: true,
                             },
-                          ].map(({ name, icon, enumRules }, index) => {
-                            return (
-                              <a // eslint-disable-line
-                                key={`${name}-${index}`}
-                                className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
-                                  currentCustomRulesViewSection === enumRules
-                                    ? 'bg-lightGray font-semibold'
-                                    : 'text-darkGrey'
-                                }`}
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  // setCurrent
-                                }}
-                              >
-                                {icon}
-                                <span className='ml-2 text-sm'>{name}</span>
-                              </a>
-                            )
-                          })}
+                          ].map(
+                            ({ name, icon, enumRules, disabled }, index) => {
+                              return (
+                                <button
+                                  key={`${name}-${index}`}
+                                  className={`flex mt-2 flex-row w-full p-[4px] rounded-[5px] ${
+                                    currentCustomRulesViewSection === enumRules
+                                      ? 'bg-lightGray font-semibold'
+                                      : 'text-darkGrey'
+                                  }`}
+                                  disabled={disabled}
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                  }}
+                                  data-tip
+                                  data-for='registerTip'
+                                >
+                                  {icon}
+                                  <span className='ml-2 text-sm'>{name}</span>
+                                </button>
+                              )
+                            }
+                          )}
                         </div>
                       </form>
                     </div>
@@ -228,24 +234,7 @@ const DomView = () => {
                   currentViewSection !== LayerSectionEnum.RARITY ? 'hidden' : ''
                 }
               >
-                <div
-                  className={
-                    currentCustomRulesViewSection === null ? '' : 'hidden'
-                  }
-                >
-                  <CollectionRulesView />
-                </div>
-                {/* <div
-                  className={
-                    !currentCustomRulesViewSection &&
-                    currentCustomRulesViewSection ===
-                      CustomRulesEnum.TRAIT_RULES
-                      ? ''
-                      : 'hidden'
-                  }
-                >
-                  <CollectionTraitRulesView />
-                </div> */}
+                <CollectionRulesView />
               </div>
               <div
                 className={

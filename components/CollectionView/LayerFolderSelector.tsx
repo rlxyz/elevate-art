@@ -55,7 +55,7 @@ const LayerFolderSelector = () => {
           }`}
         >
           <span className='text-xs font-semibold text-darkGrey uppercase'>
-            Layers
+            {layers.length === 1 ? 'Layer' : 'Layers'}
           </span>
           <div className='mt-4'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
@@ -67,8 +67,7 @@ const LayerFolderSelector = () => {
                   return (
                     <a // eslint-disable-line
                       className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
-                        currentLayerPriority === index &&
-                        currentCustomRulesViewSection === null
+                        currentLayerPriority === index
                           ? 'bg-lightGray font-semibold'
                           : 'text-darkGrey'
                       }`}

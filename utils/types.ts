@@ -57,6 +57,7 @@ export type Collection = {
   name: string
   totalSupply: number
   repositoryId: string
+  generations: number
 
   artElement?: ArtElement[]
 }

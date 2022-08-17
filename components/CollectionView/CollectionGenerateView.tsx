@@ -1,6 +1,8 @@
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { fetcher, fetcherPost } from '@utils/fetcher'
 import { App } from '@utils/x/App'
 import Collection from '@utils/x/Collection'
+import { ethers } from 'ethers'
 import mergeImages from 'merge-images'
 import Image from 'next/image'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -960,17 +962,23 @@ const layerConfig = [
 const CollectionGenerateView = () => {
   const [images, setImages] = useState<ReactNode>(null)
   const collectionTotalSupply = 50
-  const { regenerate, repository, setArtCollection, setRegenerateCollection } =
-    useCompilerViewStore((state) => {
-      return {
-        setRegenerateCollection: state.setRegenerateCollection,
-        setArtCollection: state.setArtCollection,
-        regenerate: state.regenerate,
-        repository: state.repository,
-      }
-    })
+  const {
+    collection,
+    regenerate,
+    repository,
+    setArtCollection,
+    setRegenerateCollection,
+  } = useCompilerViewStore((state) => {
+    return {
+      collection: state.collection,
+      regenerate: state.regenerate,
+      repository: state.repository,
+      setArtCollection: state.setArtCollection,
+      setRegenerateCollection: state.setRegenerateCollection,
+    }
+  })
 
-  const handler = async () => {
+  const handler = async (regenerate: boolean) => {
     const app: App = new App({
       configs: layerConfig,
       imageFormat: {
@@ -980,11 +988,24 @@ const CollectionGenerateView = () => {
       },
       basePath: '',
     })
-    const collection: Collection = await app.createRandomCollection(
-      collectionTotalSupply
+    const response = regenerate
+      ? await fetcherPost(`collection/${collection.id}/generate`, {})
+      : await fetcher(`collection/${collection.id}/generate`)
+    const _collection: Collection = await app.createRandomCollectionFromSeed(
+      collectionTotalSupply,
+      parseInt(
+        ethers.utils
+          .keccak256(
+            ethers.utils.toUtf8Bytes(
+              String(`${collection.id}${response.generations}`)
+            )
+          )
+          .toString(),
+        16
+      )
     )
-    setArtCollection(collection)
-    return await collection.tokens.map(
+    setArtCollection(_collection)
+    return await _collection.tokens.map(
       async (token) =>
         await mergeImages(
           token.attributes.map(
@@ -998,7 +1019,7 @@ const CollectionGenerateView = () => {
 
   useEffect(() => {
     regenerate &&
-      handler()
+      handler(true)
         .then((data) => Promise.all(data))
         .then((data: string[]) => {
           setImages(
@@ -1022,6 +1043,28 @@ const CollectionGenerateView = () => {
         })
         .then(() => setRegenerateCollection(false))
   }, [regenerate])
+
+  useEffect(() => {
+    handler(false)
+      .then((data) => Promise.all(data))
+      .then((data: string[]) => {
+        setImages(
+          data.map((src: string, index: number) => {
+            return (
+              <div className='flex flex-col items-center' key={`gen-${index}`}>
+                <Image
+                  width={300}
+                  height={300}
+                  className='rounded-md'
+                  src={src}
+                />
+                <span className='py-2 text-xs'>{`${repository.tokenName} #${index}`}</span>
+              </div>
+            )
+          })
+        )
+      })
+  }, [])
 
   return (
     <CollectionViewContent
