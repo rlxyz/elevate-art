@@ -4,13 +4,12 @@ import toast from 'react-hot-toast'
 
 export const useNotification = (projectName: string) => {
   const notifySuccess = () => {
-    console.log('notifySuccess')
     return toast.custom(
       (t) => (
         <Notification id={t.id} type='success'>
           <div className='flex justify-between w-full items-center'>
             <div className='font-gilroy-light'>
-              <div className='font-bold mb-4'>{`Generate successful`}</div>
+              <div className='font-bold'>{`Generating new collection`}</div>
             </div>
           </div>
         </Notification>

@@ -118,6 +118,7 @@ const DomView = () => {
                       <Button
                         onClick={() => {
                           !regenerate && setRegenerateCollection(true)
+                          notifySuccess()
                         }}
                       >
                         Generate New

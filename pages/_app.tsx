@@ -16,6 +16,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
+import { Toaster } from 'react-hot-toast'
 
 const { chains, provider } = configureChains(
   [
@@ -75,6 +76,7 @@ function CustomApp({
         initialChain={config.networkId}
       >
         <App {...pageProps} err={err} />
+        <Toaster />
       </RainbowKitProvider>
     </WagmiConfig>
     // </ErrorBoundary>
