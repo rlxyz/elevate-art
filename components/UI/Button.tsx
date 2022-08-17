@@ -2,21 +2,15 @@ import React, { ComponentPropsWithRef, forwardRef } from 'react'
 
 type ButtonProps = {
   label?: string
-  fullWidth?: boolean
 } & ComponentPropsWithRef<'button'>
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button(
-    { label, fullWidth, type = 'button', children, ...props },
-    ref
-  ) {
+  function Button({ label, type = 'button', children, ...props }, ref) {
     return (
       <button
         ref={ref}
         className={`
-         disabled:bg-disabledGray disabled:cursor-not-allowed font-semibold text-black disabled:text-white py-3 px-10 rounded-lg border border-lightGray ${
-           fullWidth ? 'w-full' : ''
-         }
+         disabled:bg-disabledGray disabled:cursor-not-allowed font-semibold text-white bg-black min-h-full min-w-[6rem] disabled:text-white w-full h-full rounded-[5px] border border-lightGray shadow-sm
       `}
         type={type}
         {...props}

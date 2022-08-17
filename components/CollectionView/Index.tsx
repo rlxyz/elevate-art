@@ -1,6 +1,7 @@
-import GenerateView from '@components/CollectionView/CollectionGenerateView'
-import ImagesView from '@components/CollectionView/CollectionImagesView'
-import RulesView from '@components/CollectionView/CollectionRulesView'
+import CollectionGenerateView from '@components/CollectionView/CollectionGenerateView'
+import CollectionImagesView from '@components/CollectionView/CollectionImagesView'
+import CollectionTraitRulesView from '@components/CollectionView/CollectionTraitRulesView'
+import CollectionRulesView from '@components/CollectionView/CollectionRulesView'
 import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { useNotification } from '@hooks/useNotification'
@@ -12,12 +13,20 @@ import useSWR from 'swr'
 
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
+import { CubeIcon, SelectorIcon } from '@heroicons/react/outline'
 
 export enum LayerSectionEnum {
-  IMAGES = 0,
-  RULES = 1,
-  GENERATE = 2,
+  PREVIEW = 0,
+  IMAGES = 1,
+  RARITY = 2,
+  RULES = 3,
 }
+
+export enum CustomRulesEnum {
+  TRAIT_RULES = 0,
+  LAYER_ORDERING = 1,
+}
+
 const filters = [
   {
     id: 'rarity',
@@ -60,9 +69,11 @@ const DomView = () => {
   const { notifySuccess } = useNotification(repositoryName)
 
   const {
-    currentViewSection,
     layers,
     regenerate,
+    currentViewSection,
+    currentLayerPriority,
+    currentCustomRulesViewSection,
     setCollection,
     setCurrentLayer,
     setLayers,
@@ -70,9 +81,11 @@ const DomView = () => {
     setRegenerateCollection,
   } = useCompilerViewStore((state) => {
     return {
-      currentViewSection: state.currentViewSection,
       layers: state.layers,
       regenerate: state.regenerate,
+      currentViewSection: state.currentViewSection,
+      currentLayerPriority: state.currentLayerPriority,
+      currentCustomRulesViewSection: state.currentCustomRulesViewSection,
       setLayers: state.setLayers,
       setCurrentLayer: state.setCurrentLayer,
       setCollection: state.setCollection,
@@ -93,30 +106,33 @@ const DomView = () => {
     layers.length > 0 && (
       <>
         <div className='min-w-screen mx-auto'>
-          {/* <main className='min-w-screen min-h-screen'> */}
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2'>
               <CollectionViewLeftbar title='Art'>
-                {[LayerSectionEnum.IMAGES, LayerSectionEnum.RULES].includes(
+                {[LayerSectionEnum.IMAGES, LayerSectionEnum.RARITY].includes(
                   currentViewSection
                 ) && <LayerFolderSelector />}
-                {currentViewSection === LayerSectionEnum.GENERATE && (
+                {currentViewSection === LayerSectionEnum.PREVIEW && (
                   <aside className='p-8'>
+                    <div className='mb-8 h-10'>
+                      <Button
+                        onClick={() => {
+                          !regenerate && setRegenerateCollection(true)
+                        }}
+                      >
+                        Generate New
+                      </Button>
+                    </div>
                     <div className='hidden lg:block'>
                       <form className='divide-y divide-lightGray space-y-8'>
-                        <Button
-                          onClick={() => {
-                            !regenerate && setRegenerateCollection(true)
-                            notifySuccess()
-                          }}
-                          fullWidth
-                        >
-                          Generate New
-                        </Button>
                         {filters.map((section, sectionIdx) => (
                           <div key={`${section.name}-${sectionIdx}`}>
                             <fieldset>
-                              <legend className='block text-xs font-semibold text-darkGrey uppercase pt-8'>
+                              <legend
+                                className={`block text-xs font-semibold text-darkGrey uppercase ${
+                                  sectionIdx !== 0 ? 'pt-8' : ''
+                                }`}
+                              >
                                 {section.name}
                               </legend>
                               <div className='pt-4 space-y-3'>
@@ -148,6 +164,55 @@ const DomView = () => {
                     </div>
                   </aside>
                 )}
+                {currentViewSection === LayerSectionEnum.RULES && (
+                  <aside className='p-8'>
+                    <div className='mb-8 h-10'>
+                      <Button
+                        onClick={() => {
+                          !regenerate && setRegenerateCollection(true)
+                        }}
+                      >
+                        Generate New
+                      </Button>
+                    </div>
+                    <div className='hidden lg:block'>
+                      <form className='divide-y divide-lightGray space-y-8'>
+                        <div className='mt-4'>
+                          {[
+                            {
+                              name: 'Trait Rules',
+                              icon: <CubeIcon width={20} height={20} />,
+                              enumRules: CustomRulesEnum.TRAIT_RULES,
+                            },
+                            {
+                              name: 'Layer Order',
+                              icon: <SelectorIcon width={20} height={20} />,
+                              enumRules: CustomRulesEnum.LAYER_ORDERING,
+                            },
+                          ].map(({ name, icon, enumRules }, index) => {
+                            return (
+                              <a // eslint-disable-line
+                                key={`${name}-${index}`}
+                                className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
+                                  currentCustomRulesViewSection === enumRules
+                                    ? 'bg-lightGray font-semibold'
+                                    : 'text-darkGrey'
+                                }`}
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  // setCurrent
+                                }}
+                              >
+                                {icon}
+                                <span className='ml-2 text-sm'>{name}</span>
+                              </a>
+                            )
+                          })}
+                        </div>
+                      </form>
+                    </div>
+                  </aside>
+                )}
               </CollectionViewLeftbar>
             </div>
             <div className='col-span-8'>
@@ -156,27 +221,50 @@ const DomView = () => {
                   currentViewSection !== LayerSectionEnum.IMAGES ? 'hidden' : ''
                 }
               >
-                <ImagesView />
+                <CollectionImagesView />
+              </div>
+              <div
+                className={
+                  currentViewSection !== LayerSectionEnum.RARITY ? 'hidden' : ''
+                }
+              >
+                <div
+                  className={
+                    currentCustomRulesViewSection === null ? '' : 'hidden'
+                  }
+                >
+                  <CollectionRulesView />
+                </div>
+                {/* <div
+                  className={
+                    !currentCustomRulesViewSection &&
+                    currentCustomRulesViewSection ===
+                      CustomRulesEnum.TRAIT_RULES
+                      ? ''
+                      : 'hidden'
+                  }
+                >
+                  <CollectionTraitRulesView />
+                </div> */}
+              </div>
+              <div
+                className={
+                  currentViewSection !== LayerSectionEnum.PREVIEW
+                    ? 'hidden'
+                    : ''
+                }
+              >
+                <CollectionGenerateView />
               </div>
               <div
                 className={
                   currentViewSection !== LayerSectionEnum.RULES ? 'hidden' : ''
                 }
               >
-                <RulesView />
-              </div>
-              <div
-                className={
-                  currentViewSection !== LayerSectionEnum.GENERATE
-                    ? 'hidden'
-                    : ''
-                }
-              >
-                <GenerateView />
+                <CollectionTraitRulesView />
               </div>
             </div>
           </div>
-          {/* </main> */}
         </div>
       </>
     )

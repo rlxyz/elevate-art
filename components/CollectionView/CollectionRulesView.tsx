@@ -11,6 +11,7 @@ import {
 } from '@utils/math'
 import { TraitElement } from '@utils/types'
 import { Formik } from 'formik'
+import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -217,23 +218,22 @@ const CollectionRulesView = () => {
           </div>
         </div>
       </div>
-      {/* todo: implement when something changes in rarity
       <footer className='fixed bottom-0 h-[10%] w-full bg-hue-light border-t border-t-lightGray'>
         <div className='flex items-center h-full w-full'>
-          <div className='flex justify-end w-3/4'>
+          <div className='flex justify-end h-full w-3/4 p-6'>
             <div className='flex items-center space-x-3 mr-6'>
               <Image src='/images/tooltip.svg' height={15} width={15} />
               <span className='text-redDot text-sm'>
                 You’ve made some changes, please update
               </span>
             </div>
-            <div className='space-x-6'>
+            <div className='space-x-6 flex flex-row'>
               <Button>Update</Button>
               <Button disabled>Save</Button>
             </div>
           </div>
         </div>
-      </footer> */}
+      </footer>
     </CollectionViewContent>
   )
 }

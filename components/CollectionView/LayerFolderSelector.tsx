@@ -1,22 +1,31 @@
 import FileUpload from '@components/CloudinaryImage/FileUpload'
+import { Button } from '@components/UI/Button'
 import { CubeIcon, FolderIcon, SelectorIcon } from '@heroicons/react/outline'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { NextRouter, useRouter } from 'next/router'
 
-import { LayerSectionEnum } from './Index'
+import { CustomRulesEnum, LayerSectionEnum } from './Index'
 
 const LayerFolderSelector = () => {
   const {
-    setCurrentLayerPriority,
+    layers,
+    regenerate,
     currentViewSection,
     currentLayerPriority,
-    layers,
+    setRegenerateCollection,
+    currentCustomRulesViewSection,
+    setCurrentLayerPriority,
+    setCurrentCustomRulesViewSection,
   } = useCompilerViewStore((state) => {
     return {
-      currentViewSection: state.currentViewSection,
-      setCurrentLayerPriority: state.setCurrentLayerPriority,
-      currentLayerPriority: state.currentLayerPriority,
       layers: state.layers,
+      regenerate: state.regenerate,
+      currentViewSection: state.currentViewSection,
+      currentLayerPriority: state.currentLayerPriority,
+      currentCustomRulesViewSection: state.currentCustomRulesViewSection,
+      setCurrentCustomRulesViewSection: state.setCurrentCustomRulesViewSection,
+      setCurrentLayerPriority: state.setCurrentLayerPriority,
+      setRegenerateCollection: state.setRegenerateCollection,
     }
   })
 
@@ -29,6 +38,15 @@ const LayerFolderSelector = () => {
     layers.length > 0 && (
       // calc(100vh-13rem) is the height of the Header & ViewContent
       <main className='p-8'>
+        <div className='mb-8 h-10'>
+          <Button
+            onClick={() => {
+              !regenerate && setRegenerateCollection(true)
+            }}
+          >
+            Generate New
+          </Button>
+        </div>
         <div
           className={`pb-4 mb-4 ${
             currentViewSection === LayerSectionEnum.RULES
@@ -37,7 +55,7 @@ const LayerFolderSelector = () => {
           }`}
         >
           <span className='text-xs font-semibold text-darkGrey uppercase'>
-            Files
+            Layers
           </span>
           <div className='mt-4'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
@@ -49,13 +67,15 @@ const LayerFolderSelector = () => {
                   return (
                     <a // eslint-disable-line
                       className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
-                        currentLayerPriority === index
+                        currentLayerPriority === index &&
+                        currentCustomRulesViewSection === null
                           ? 'bg-lightGray font-semibold'
                           : 'text-darkGrey'
                       }`}
                       key={index}
                       onClick={(e) => {
                         e.preventDefault()
+                        setCurrentCustomRulesViewSection(null)
                         setCurrentLayerPriority(index)
                       }}
                     >
@@ -72,36 +92,6 @@ const LayerFolderSelector = () => {
             <span className='text-xs font-semibold text-darkGrey uppercase'>
               Custom Rules
             </span>
-            <div className='mt-4'>
-              {[
-                {
-                  name: 'Trait Rules',
-                  icon: <CubeIcon width={20} height={20} />,
-                },
-                {
-                  name: 'Layer Order',
-                  icon: <SelectorIcon width={20} height={20} />,
-                },
-              ].map(({ name, icon }, index) => {
-                return (
-                  <a // eslint-disable-line
-                    key={`${name}-${index}`}
-                    className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
-                      currentLayerPriority === index + layers.length
-                        ? 'bg-lightGray font-semibold'
-                        : 'text-darkGrey'
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setCurrentLayerPriority(index + layers.length)
-                    }}
-                  >
-                    {icon}
-                    <span className='ml-2 text-sm'>{name}</span>
-                  </a>
-                )
-              })}
-            </div>
           </div>
         )}
         {/* todo: implement search */}

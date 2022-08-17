@@ -27,8 +27,8 @@ const Page = () => {
 
 export const getStaticPaths: GetStaticPaths = async (_) => {
   return {
-    paths: [],
-    fallback: true,
+    paths: ['/[organisation]/[repository]/upload'],
+    fallback: 'blocking',
   }
 }
 

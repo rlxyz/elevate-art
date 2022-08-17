@@ -1,4 +1,7 @@
+import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { useNotification } from '@hooks/useNotification'
+import { NextRouter, useRouter } from 'next/router'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({
@@ -8,27 +11,34 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const { setCurrentViewSection, currentViewSection } = useCompilerViewStore(
-    (state) => {
-      return {
-        setCurrentViewSection: state.setCurrentViewSection,
-        currentViewSection: state.currentViewSection,
-      }
+  const {
+    currentViewSection,
+    regenerate,
+    setRegenerateCollection,
+    setCurrentViewSection,
+  } = useCompilerViewStore((state) => {
+    return {
+      regenerate: state.regenerate,
+      setRegenerateCollection: state.setRegenerateCollection,
+      currentViewSection: state.currentViewSection,
+      setCurrentViewSection: state.setCurrentViewSection,
     }
-  )
+  })
 
   return (
     <main>
       <div className='border-b border-b-lightGray font-plus-jakarta-sans'>
         <div className='px-8 pt-8'>
-          <h1 className='text-2xl font-bold text-darkGrey'>{title}</h1>
+          <h1 className='grid grid-cols-4 font-bold text-darkGrey flex flex-row'>
+            <span className='col-span-1 text-2xl'>{title}</span>
+          </h1>
           <div className='mt-5 flex'>
-            {['Images', 'Rules', 'Generate'].map(
+            {['Preview', 'Layers', 'Rarity', 'Rules'].map(
               (section: string, index: number) => {
                 return (
                   <div key={`${section}-${index}`}>
                     <button
-                      className={`pr-6 text-sm ${
+                      className={`pr-8 text-sm ${
                         currentViewSection == index
                           ? 'text-black min-h-full font-bold'
                           : 'text-darkGrey'
@@ -75,8 +85,8 @@ export const CollectionViewContent = ({
 }) => {
   return (
     <main className='min-h-[calc(100vh-5rem)] border-l border-l-lightGray'>
-      <div className='border-b border-b-lightGray'>
-        <div className='p-8 font-plus-jakarta-sans'>
+      <div className='grid grid-cols-8 border-b border-b-lightGray flex flex-col'>
+        <div className='col-span-6 p-8 font-plus-jakarta-sans'>
           <h1 className='text-2xl font-bold text-gray-900'>{title}</h1>
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>

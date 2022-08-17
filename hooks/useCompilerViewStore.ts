@@ -10,6 +10,7 @@ import create from 'zustand'
 interface CompilerViewInterface {
   currentViewSection: number
   currentLayerPriority: number
+  currentCustomRulesViewSection: number
   organisation: Organisation
   repository: Repository
   collection: BaseCollection
@@ -17,6 +18,7 @@ interface CompilerViewInterface {
   layers: LayerElement[]
   currentLayer: LayerElement
   regenerate: boolean
+  setCurrentCustomRulesViewSection: (index: number) => void
   setCurrentViewSection: (index: number) => void
   setCurrentLayerPriority: (index: number) => void
   setRegenerateCollection: (regenerate: boolean) => void
@@ -31,6 +33,7 @@ interface CompilerViewInterface {
 const useCompilerViewStore = create<CompilerViewInterface>((set) => ({
   currentViewSection: 0,
   currentLayerPriority: 0,
+  currentCustomRulesViewSection: null,
   repository: null,
   organisation: null,
   collection: null,
@@ -53,6 +56,8 @@ const useCompilerViewStore = create<CompilerViewInterface>((set) => ({
   setLayers: (layers: LayerElement[]) => set((_) => ({ layers })),
   setCurrentLayer: (priority: number) =>
     set((state) => ({ currentLayer: state.layers[priority] })),
+  setCurrentCustomRulesViewSection: (index: number) =>
+    set((_) => ({ currentCustomRulesViewSection: index })),
 }))
 
 export default useCompilerViewStore
