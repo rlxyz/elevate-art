@@ -22,22 +22,17 @@ const CollectionRulesView = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  const { currentLayerPriority, collection, currentLayer, setCurrentLayer } =
-    useCompilerViewStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        collection: state.collection,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
+  const { collection, currentLayer } = useCompilerViewStore((state) => {
+    return {
+      currentLayerPriority: state.currentLayerPriority,
+      currentLayer: state.currentLayer,
+      collection: state.collection,
+      setCurrentLayer: state.setCurrentLayer,
+    }
+  })
 
   const [traits, setTraits] = useState<TraitElement[]>([])
   const [traitsTotalWeight, setTraitsTotalWeight] = useState<number>(0)
-
-  useEffect(() => {
-    setCurrentLayer(currentLayerPriority)
-  }, [currentLayerPriority])
 
   useEffect(() => {
     const { traits } = currentLayer

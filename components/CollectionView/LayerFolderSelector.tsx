@@ -3,8 +3,86 @@ import { Button } from '@components/UI/Button'
 import { CubeIcon, FolderIcon, SelectorIcon } from '@heroicons/react/outline'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { NextRouter, useRouter } from 'next/router'
+import { LayerSectionEnum } from './Index'
+import { AnimatePresence, Reorder, useDragControls } from 'framer-motion'
+import { useState } from 'react'
+import * as React from 'react'
+import { animate, MotionValue, useMotionValue } from 'framer-motion'
+import { useEffect } from 'react'
 
-import { CustomRulesEnum, LayerSectionEnum } from './Index'
+const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
+
+export function useRaisedShadow(value: MotionValue<number>) {
+  const boxShadow = useMotionValue(inactiveShadow)
+
+  useEffect(() => {
+    let isActive = false
+    value.onChange((latest) => {
+      const wasActive = isActive
+      if (latest !== 0) {
+        isActive = true
+        if (isActive !== wasActive) {
+          animate(boxShadow, '5px 5px 10px rgba(0,0,0,0.3)')
+        }
+      } else {
+        isActive = false
+        if (isActive !== wasActive) {
+          animate(boxShadow, inactiveShadow)
+        }
+      }
+    })
+  }, [value, boxShadow])
+
+  return boxShadow
+}
+
+export const ReorderItem = ({
+  item,
+  name,
+  enabled,
+  onClick,
+}: {
+  item: number
+  name: string
+  enabled: boolean
+  onClick: () => void
+}) => {
+  const y = useMotionValue(0)
+  const boxShadow = useRaisedShadow(y)
+  const dragControls = useDragControls()
+
+  return (
+    <Reorder.Item
+      value={item}
+      id={item.toString()}
+      style={{ boxShadow, y }}
+      dragListener={false}
+      dragControls={dragControls}
+    >
+      <a // eslint-disable-line
+        className={`flex flex-row p-[4px] my-2 rounded-[5px] justify-between ${
+          enabled ? 'bg-lightGray font-semibold' : 'text-darkGrey'
+        }`}
+        onClick={(e) => {
+          e.preventDefault()
+          onClick()
+        }}
+      >
+        <div className='flex'>
+          <FolderIcon className='w-5 h-5' />
+          <span className='ml-2 text-sm'>{name}</span>
+        </div>
+        <SelectorIcon
+          className='w-5 h-5'
+          onPointerDown={(e) => {
+            e.preventDefault()
+            dragControls.start(e)
+          }}
+        />
+      </a>
+    </Reorder.Item>
+  )
+}
 
 const LayerFolderSelector = () => {
   const {
@@ -13,17 +91,13 @@ const LayerFolderSelector = () => {
     currentViewSection,
     currentLayerPriority,
     setRegenerateCollection,
-    currentCustomRulesViewSection,
     setCurrentLayerPriority,
-    setCurrentCustomRulesViewSection,
   } = useCompilerViewStore((state) => {
     return {
       layers: state.layers,
       regenerate: state.regenerate,
       currentViewSection: state.currentViewSection,
       currentLayerPriority: state.currentLayerPriority,
-      currentCustomRulesViewSection: state.currentCustomRulesViewSection,
-      setCurrentCustomRulesViewSection: state.setCurrentCustomRulesViewSection,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setRegenerateCollection: state.setRegenerateCollection,
     }
@@ -32,6 +106,7 @@ const LayerFolderSelector = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+  const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 
   return (
     layers &&
@@ -57,42 +132,35 @@ const LayerFolderSelector = () => {
           <span className='text-xs font-semibold text-darkGrey uppercase'>
             {layers.length === 1 ? 'Layer' : 'Layers'}
           </span>
-          <div className='mt-4'>
+          <div className='mt-4 border border-lightGray rounded-[5px] p-2'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
-              {layers
-                .map((layer) => {
-                  return layer.name
-                })
-                .map((layerName: string, index: number) => {
-                  return (
-                    <a // eslint-disable-line
-                      className={`flex mt-2 flex-row p-[4px] rounded-[5px] ${
-                        currentLayerPriority === index
-                          ? 'bg-lightGray font-semibold'
-                          : 'text-darkGrey'
-                      }`}
-                      key={index}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setCurrentCustomRulesViewSection(null)
-                        setCurrentLayerPriority(index)
-                      }}
-                    >
-                      <FolderIcon width={20} height={20} />
-                      <span className='ml-2 text-sm'>{layerName}</span>
-                    </a>
-                  )
-                })}
+              <AnimatePresence>
+                <Reorder.Group axis='y' values={items} onReorder={setItems}>
+                  {items.map((item) => {
+                    return (
+                      <ReorderItem
+                        key={item}
+                        name={layers[item].name}
+                        item={item}
+                        enabled={currentLayerPriority === item}
+                        onClick={() => {
+                          setCurrentLayerPriority(item)
+                        }}
+                      />
+                    )
+                  })}
+                </Reorder.Group>
+              </AnimatePresence>
             </FileUpload>
           </div>
         </div>
-        {currentViewSection === LayerSectionEnum.RULES && (
+        {/* {currentViewSection === LayerSectionEnum.RULES && (
           <div>
             <span className='text-xs font-semibold text-darkGrey uppercase'>
               Custom Rules
             </span>
           </div>
-        )}
+        )} */}
         {/* todo: implement search */}
         {/* <Textbox
           id='search-trait'

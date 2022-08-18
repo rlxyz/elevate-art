@@ -59,20 +59,20 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
           layerName: layerName,
           file: file,
         })
-          .then((_) => {
+          .then((response) => {
             // todo: handle upload success
-            // console.log(response)
+            console.log(response)
           })
-          .catch((_) => {
+          .catch((err) => {
             // todo: handle error
-            // console.error(err)
+            console.error(err)
           })
       }
       reader.readAsArrayBuffer(file)
     })
   }, [])
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],
@@ -85,11 +85,11 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {children}
-      {/* {isDragActive ? (
+      {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
         <p>Drag 'n' drop some files here, or click to select files</p>
-      )} */}
+      )}
     </div>
   )
 }

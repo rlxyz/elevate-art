@@ -13,6 +13,7 @@ export default async (
   )
 
   if (!address || address === null) {
+    console.error('cant find address', request.query.address)
     return response.status(400)
   }
 
@@ -35,7 +36,7 @@ export default async (
                   },
                 },
                 collections: {
-                  orderBy: { updatedAt: 'asc' }, // get most recent updated organisation first
+                  orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
                 },
               },
             },

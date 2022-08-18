@@ -398,6 +398,16 @@ const RuleConditionDisplay = ({
 
 const CollectionRulesView = () => {
   const layers = useCompilerViewStore((state) => state.layers)
+  const { currentLayerPriority, collection, currentLayer } =
+    useCompilerViewStore((state) => {
+      return {
+        currentLayerPriority: state.currentLayerPriority,
+        currentLayer: state.currentLayer,
+        collection: state.collection,
+        setCurrentLayer: state.setCurrentLayer,
+      }
+    })
+
   return (
     <CollectionViewContent
       title={'Custom Trait Rules'}
@@ -409,20 +419,20 @@ const CollectionRulesView = () => {
         </div>
         <div className='pt-6'>
           <RuleConditionDisplay
-            title='Background'
+            title={currentLayer.name}
             condition='only mixes with'
-            traits={layers[0].traits.filter((_) => Math.random() > 0.5)} // todo: fix
+            traits={currentLayer.traits.filter((_) => Math.random() > 0.5)} // todo: fix
             disabled={true}
           />
         </div>
-        <div className='pt-6'>
+        {/* <div className='pt-6'>
           <RuleConditionDisplay
             title='Arms'
             condition='only mixes with'
             traits={layers[0].traits.filter((_) => Math.random() > 0.5)} // todo: fix
             disabled={true}
           />
-        </div>
+        </div> */}
       </div>
     </CollectionViewContent>
   )

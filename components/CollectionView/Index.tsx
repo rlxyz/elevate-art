@@ -22,11 +22,6 @@ export enum LayerSectionEnum {
   RULES = 3,
 }
 
-export enum CustomRulesEnum {
-  TRAIT_RULES = 0,
-  LAYER_ORDERING = 1,
-}
-
 const filters = [
   {
     id: 'rarity',
@@ -109,9 +104,11 @@ const DomView = () => {
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2'>
               <CollectionViewLeftbar title='Art'>
-                {[LayerSectionEnum.IMAGES, LayerSectionEnum.RARITY].includes(
-                  currentViewSection
-                ) && <LayerFolderSelector />}
+                {[
+                  LayerSectionEnum.IMAGES,
+                  LayerSectionEnum.RARITY,
+                  LayerSectionEnum.RULES,
+                ].includes(currentViewSection) && <LayerFolderSelector />}
                 {currentViewSection === LayerSectionEnum.PREVIEW && (
                   <aside className='p-8'>
                     <div className='mb-8 h-10'>
@@ -165,7 +162,7 @@ const DomView = () => {
                     </div>
                   </aside>
                 )}
-                {currentViewSection === LayerSectionEnum.RULES && (
+                {/* {currentViewSection === LayerSectionEnum.RULES && (
                   <aside className='p-8 divide-y divide-lightGray'>
                     <div className='mb-8 h-10'>
                       <Button
@@ -219,7 +216,7 @@ const DomView = () => {
                       </form>
                     </div>
                   </aside>
-                )}
+                )} */}
               </CollectionViewLeftbar>
             </div>
             <div className='col-span-8'>
