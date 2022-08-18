@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const { layerConfig: roboghostData } = require('./data/roboghosts')
-const { layerConfig: reflectionsData } = require('./data/roboghosts')
+const { layerConfig: reflectionsData } = require('./data/reflections')
 const formatLayerName = (name) => {
   return name
     .toLowerCase()
@@ -10,6 +10,7 @@ const formatLayerName = (name) => {
       ($1, $2, $3) => `${$2.toUpperCase() + $3}`
     )
     .replace(new RegExp(/\w/), (s) => s.toUpperCase())
+    .replace('.png', '')
 }
 
 const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })

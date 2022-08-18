@@ -140,29 +140,33 @@ module.exports = {
     {
       name: 'PERSON',
       metadata: true,
-      traits: [{ name: 'WALK.png', weight: 1 }],
+      traits: [
+        { name: 'WALK.png', weight: 1 },
+        { name: 'JUMP.png', weight: 1 },
+        { name: 'STAND.png', weight: 1 },
+      ],
       options: {
         occuranceRate: 1 / 3,
       },
     },
+    // {
+    //   name: 'PERSON',
+    //   metadata: true,
+    //   traits: [{ name: 'JUMP.png', weight: 1 }],
+    //   options: {
+    //     occuranceRate: 1 / 5,
+    //   },
+    // },
+    // {
+    //   name: 'PERSON',
+    //   metadata: true,
+    //   traits: [{ name: 'STAND.png', weight: 1 }],
+    //   options: {
+    //     occuranceRate: 1 / 3,
+    //   },
+    // },
     {
-      name: 'PERSON',
-      metadata: true,
-      traits: [{ name: 'JUMP.png', weight: 1 }],
-      options: {
-        occuranceRate: 1 / 5,
-      },
-    },
-    {
-      name: 'PERSON',
-      metadata: true,
-      traits: [{ name: 'STAND.png', weight: 1 }],
-      options: {
-        occuranceRate: 1 / 3,
-      },
-    },
-    {
-      name: 'SPECIAL TOP - EXCLUSION',
+      name: 'SPECIAL TOP',
       metadata: true,
       traits: [{ name: 'LIGHTS.png', weight: 1 }],
       options: {
@@ -182,7 +186,7 @@ module.exports = {
       },
     },
     {
-      name: 'SPECIAL BOTTOM - EXCLUSION',
+      name: 'SPECIAL BOTTOM',
       metadata: true,
       traits: [
         { name: 'LIGHTS.png', weight: 50 },
@@ -196,6 +200,7 @@ module.exports = {
           weight: 10,
           boundary: { lower: 1, upper: 4, remove: true },
         },
+        { name: 'FROZEN.png', weight: 1 },
       ],
       options: {
         type: 'EXCLUSION',
@@ -215,17 +220,17 @@ module.exports = {
         occuranceRate: 1 / 5,
       },
     },
-    {
-      name: 'SPECIAL BOTTOM - COMBINATION',
-      metadata: true,
-      traits: [{ name: 'FROZEN.png', weight: 1 }],
-      options: {
-        type: 'COMBINATION',
-        combination: {
-          'FROZEN.png': ['SNOWY VILLAGE.png', 'WINTER.png'],
-        },
-        occuranceRate: 1 / 5,
-      },
-    },
+    // {
+    //   name: 'SPECIAL BOTTOM - COMBINATION',
+    //   metadata: true,
+    //   traits: [{ name: 'FROZEN.png', weight: 1 }],
+    //   options: {
+    //     type: 'COMBINATION',
+    //     combination: {
+    //       'FROZEN.png': ['SNOWY VILLAGE.png', 'WINTER.png'],
+    //     },
+    //     occuranceRate: 1 / 5,
+    //   },
+    // },
   ],
 }

@@ -10,10 +10,8 @@ import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import ReactTooltip from 'react-tooltip'
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
-import { CubeIcon, SelectorIcon } from '@heroicons/react/outline'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
@@ -67,8 +65,6 @@ const DomView = () => {
     layers,
     regenerate,
     currentViewSection,
-    currentLayerPriority,
-    currentCustomRulesViewSection,
     setCollection,
     setCurrentLayer,
     setLayers,
@@ -227,7 +223,7 @@ const DomView = () => {
               >
                 <CollectionImagesView />
               </div>
-              <div
+              {/* <div
                 className={
                   currentViewSection !== LayerSectionEnum.RARITY ? 'hidden' : ''
                 }
@@ -249,7 +245,7 @@ const DomView = () => {
                 }
               >
                 <CollectionTraitRulesView />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

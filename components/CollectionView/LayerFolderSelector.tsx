@@ -109,6 +109,10 @@ const LayerFolderSelector = () => {
   const repositoryName: string = router.query.repository as string
   const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 
+  useEffect(() => {
+    setItems(Array.from(Array(layers.length).keys()))
+  }, [layers])
+
   return (
     layers &&
     layers.length > 0 && (
@@ -141,7 +145,7 @@ const LayerFolderSelector = () => {
                     return (
                       <ReorderItem
                         key={item}
-                        name={layers[item].name}
+                        name={layers[item]?.name}
                         item={item}
                         enabled={currentLayerPriority === item}
                         onClick={() => {
