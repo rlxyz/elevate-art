@@ -1,6 +1,6 @@
 import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { formatLayerName } from '@utils/format'
+import { toPascalCaseWithSpace } from '@utils/format'
 import { TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
@@ -50,10 +50,10 @@ const CollectionImagesView = () => {
                   <AdvancedImage
                     url={`${organisationName}/${repositoryName}/layers/${
                       currentLayer.name
-                    }/${formatLayerName(trait.name)}.png`}
+                    }/${toPascalCaseWithSpace(trait.name)}.png`}
                   />
                   <span className='py-2 text-xs'>
-                    {formatLayerName(trait.name)}
+                    {toPascalCaseWithSpace(trait.name)}
                   </span>
                 </div>
               )

@@ -2,7 +2,7 @@ import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { fetcherPost } from '@utils/fetcher'
-import { formatLayerName } from '@utils/format'
+import { toPascalCaseWithSpace } from '@utils/format'
 import {
   calculateTraitQuantityInCollection,
   calculateTraitRarityFromQuantity,
@@ -129,11 +129,11 @@ const CollectionRulesView = () => {
                                 <AdvancedImage
                                   url={`${organisationName}/${repositoryName}/layers/${
                                     currentLayer.name
-                                  }/${formatLayerName(trait.name)}.png`}
+                                  }/${toPascalCaseWithSpace(trait.name)}.png`}
                                 />
                               </td>
                               <td className='whitespace-nowrap text-sm font-medium'>
-                                {formatLayerName(trait.name)}
+                                {toPascalCaseWithSpace(trait.name)}
                               </td>
                               <td className='whitespace-nowrap text-sm font-medium text-gray-900'>
                                 {/* <form>

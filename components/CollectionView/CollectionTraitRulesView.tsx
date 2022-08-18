@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@components/UI/Button'
 import { NextRouter, useRouter } from 'next/router'
 import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
-import { formatLayerName } from '@utils/format'
+import { toPascalCaseWithSpace } from '@utils/format'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { LayerElement, TraitElement } from '@utils/types'
 
@@ -79,7 +79,7 @@ const RuleConditionSelector = ({
                             type='sm'
                             url={`${organisationName}/${repositoryName}/layers/${
                               layer.name
-                            }/${formatLayerName(trait.name)}.png`}
+                            }/${toPascalCaseWithSpace(trait.name)}.png`}
                           />
                           <div className='flex flex-row space-x-2 items-center'>
                             <span
@@ -224,7 +224,7 @@ const RuleConditionSelector = ({
                             type='sm'
                             url={`${organisationName}/${repositoryName}/layers/${
                               layer.name
-                            }/${formatLayerName(trait.name)}.png`}
+                            }/${toPascalCaseWithSpace(trait.name)}.png`}
                           />
                           <div className='flex flex-row space-x-2 items-center'>
                             <span

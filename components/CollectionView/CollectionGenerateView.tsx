@@ -1,5 +1,6 @@
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { fetcher, fetcherPost } from '@utils/fetcher'
+import { toPascalCaseWithSpace } from '@utils/format'
 import { App } from '@utils/x/App'
 import Collection from '@utils/x/Collection'
 import { ethers } from 'ethers'
@@ -1251,7 +1252,11 @@ const CollectionGenerateView = () => {
         await mergeImages(
           token.attributes.map(
             (attribute) =>
-              `https://res.cloudinary.com/rlxyz/image/upload/c_fill,h_300,w_300/v1/${organisationName}/${repositoryName}/layers/${attribute['trait_type']}/${attribute['value']}.png`
+              `${
+                process.env.NEXT_PUBLIC_CLOUDINARY_URL
+              }/image/upload/c_fill,h_300,w_300/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+                attribute['trait_type']
+              )}/${toPascalCaseWithSpace(attribute['value'])}.png`
           ),
           { crossOrigin: 'Anonymous' }
         )
