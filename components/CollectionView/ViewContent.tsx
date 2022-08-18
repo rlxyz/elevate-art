@@ -84,14 +84,14 @@ export const CollectionViewContent = ({
   description: ReactFragment
 }) => {
   return (
-    <main className='min-h-[calc(100vh-5rem)] border-l border-l-lightGray'>
+    <main className='min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] border-l border-l-lightGray'>
       <div className='grid grid-cols-8 border-b border-b-lightGray flex flex-col'>
         <div className='col-span-6 p-8 font-plus-jakarta-sans'>
-          <h1 className='text-2xl font-bold text-gray-900'>{title}</h1>
+          <h1 className='text-2xl font-bold text-black'>{title}</h1>
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      {children}
+      <div className='overflow-y-scroll max-h-[calc(100vh-13rem)]'>{children}</div>
     </main>
   )
 }
