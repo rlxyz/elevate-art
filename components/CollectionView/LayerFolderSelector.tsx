@@ -10,6 +10,7 @@ import * as React from 'react'
 import { animate, MotionValue, useMotionValue } from 'framer-motion'
 import { useEffect } from 'react'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import { CollectionUpload } from './CollectionUpload'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -108,6 +109,7 @@ const LayerFolderSelector = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+  const [openUpload, setOpenUpload] = useState(false)
 
   useEffect(() => {
     setItems(Array.from(Array(layers.length).keys()))
@@ -126,6 +128,16 @@ const LayerFolderSelector = () => {
           >
             Generate New
           </Button>
+        </div>
+        <div className='mb-8 h-10'>
+          <Button
+            onClick={() => {
+              setOpenUpload(true)
+            }}
+          >
+            Upload Files
+          </Button>
+          <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         </div>
         <div
           className={`pb-4 mb-4 ${
