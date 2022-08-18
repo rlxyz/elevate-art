@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
+import { CollectionUpload } from './CollectionUpload'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
