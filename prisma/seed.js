@@ -1,16 +1,17 @@
 const { PrismaClient } = require('@prisma/client')
 const { layerConfig: roboghostData } = require('./data/roboghosts')
 const { layerConfig: reflectionsData } = require('./data/reflections')
-const formatLayerName = (name) => {
+
+const toPascalCaseWithSpace = (name) => {
   return name
     .toLowerCase()
-    .replace(/(\s+)/g, '-')
+    .replace(new RegExp(/[-_]+/, 'g'), ' ')
+    .replace(/\.[^.]*$/, '')
     .replace(
       new RegExp(/\s+(.)(\w*)/, 'g'),
-      ($1, $2, $3) => `${$2.toUpperCase() + $3}`
+      ($1, $2, $3) => ` ${$2.toUpperCase() + $3}`
     )
     .replace(new RegExp(/\w/), (s) => s.toUpperCase())
-    .replace('.png', '')
 }
 
 const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
@@ -68,7 +69,7 @@ const main = async (
       return await prisma.layerElement.create({
         data: {
           priority: index,
-          name: layer.name,
+          name: toPascalCaseWithSpace(layer.name),
           repositoryId: repository.id,
         },
       })
@@ -79,7 +80,7 @@ const main = async (
         await prisma.traitElement.createMany({
           data: layerConfig[element.priority].traits.map((trait) => {
             return {
-              name: formatLayerName(trait.name),
+              name: toPascalCaseWithSpace(trait.name),
               weight: trait.weight,
               layerElementId: element.id,
             }
@@ -116,7 +117,7 @@ cleanDb().then(async () => {
   console.log('adding roboghost')
   await main(
     '0xb21B6a39ae2f164357f8e616E30521baECfd7f87',
-    'sekured.eth',
+    'sekured',
     'roboghosts',
     'RoboGhost',
     5555,
@@ -125,7 +126,7 @@ cleanDb().then(async () => {
   console.log('adding dreamlab')
   await main(
     '0x1fdf89Dd0Eba85603CBdE7f9F5cE5D830ffc7643',
-    'dreamlab.eth',
+    'dreamlab',
     'reflections',
     'Reflection',
     1111,
