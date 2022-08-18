@@ -8,7 +8,7 @@ import { useNotification } from '@hooks/useNotification'
 import { fetcher } from '@utils/fetcher'
 import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
@@ -20,37 +20,6 @@ export enum LayerSectionEnum {
   RULES = 3,
 }
 
-const filters = [
-  {
-    id: 'rarity',
-    name: 'By Rarity',
-    options: [
-      { value: 'Top 10', label: 'Top 10' },
-      { value: 'Middle 10', label: 'Middle 10' },
-      { value: 'Bottom 10', label: 'Bottom 10' },
-    ],
-  },
-  {
-    id: 'trait',
-    name: 'By Trait',
-    options: [
-      { value: 'Background', label: 'Background' },
-      { value: 'Scenery', label: 'Scenery' },
-      { value: 'Clamps', label: 'Clamps' },
-      { value: 'Accessories', label: 'Accessories' },
-      { value: 'Arms', label: 'Arms' },
-      { value: 'Gloves', label: 'Gloves' },
-      { value: 'Shoulder', label: 'Shoulder' },
-      { value: 'Body', label: 'Body' },
-      { value: 'Body Accessories', label: 'Body Accessories' },
-      { value: 'Head Detail', label: 'Head Detail' },
-      { value: 'Mouth', label: 'Mouth' },
-      { value: 'Eyes', label: 'Eyes' },
-      { value: 'Head Accessories', label: 'Head Accessories' },
-    ],
-  },
-]
-
 const DomView = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
@@ -59,6 +28,7 @@ const DomView = () => {
     [organisationName, repositoryName],
     fetcher
   )
+  const [filters, setFilters] = useState(null)
   const { notifySuccess } = useNotification(repositoryName)
 
   const {
@@ -92,6 +62,30 @@ const DomView = () => {
     data.layers.length > 0 && setCurrentLayer(0)
   }, [data])
 
+  useEffect(() => {
+    setFilters([
+      {
+        id: 'rarity',
+        name: 'By Rarity',
+        options: [
+          { value: 'Top 10', label: 'Top 10' },
+          { value: 'Middle 10', label: 'Middle 10' },
+          { value: 'Bottom 10', label: 'Bottom 10' },
+        ],
+      },
+      {
+        id: 'trait',
+        name: 'By Trait',
+        options: layers.map((layer) => {
+          return {
+            value: layer.name,
+            label: layer.name,
+          }
+        }),
+      },
+    ])
+  }, [layers])
+
   return (
     layers &&
     layers.length > 0 && (
@@ -119,41 +113,42 @@ const DomView = () => {
                     </div>
                     <div className='hidden lg:block'>
                       <form className='divide-y divide-lightGray space-y-8'>
-                        {filters.map((section, sectionIdx) => (
-                          <div key={`${section.name}-${sectionIdx}`}>
-                            <fieldset>
-                              <legend
-                                className={`block text-xs font-semibold text-darkGrey uppercase ${
-                                  sectionIdx !== 0 ? 'pt-8' : ''
-                                }`}
-                              >
-                                {section.name}
-                              </legend>
-                              <div className='pt-4 space-y-3'>
-                                {section.options.map((option, optionIdx) => (
-                                  <div
-                                    key={`${option.value}-${option.label}-${sectionIdx}`}
-                                    className='flex items-center justify-between'
-                                  >
-                                    <label
-                                      htmlFor={`${section.id}-${optionIdx}`}
-                                      className='text-sm text-darkGrey'
+                        {filters &&
+                          filters.map((section, sectionIdx) => (
+                            <div key={`${section.name}-${sectionIdx}`}>
+                              <fieldset>
+                                <legend
+                                  className={`block text-xs font-semibold text-darkGrey uppercase ${
+                                    sectionIdx !== 0 ? 'pt-8' : ''
+                                  }`}
+                                >
+                                  {section.name}
+                                </legend>
+                                <div className='pt-4 space-y-3'>
+                                  {section.options.map((option, optionIdx) => (
+                                    <div
+                                      key={`${option.value}-${option.label}-${sectionIdx}`}
+                                      className='flex items-center justify-between'
                                     >
-                                      {option.label}
-                                    </label>
-                                    <input
-                                      id={`${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
-                                      defaultValue={option.value}
-                                      type='checkbox'
-                                      className='h-4 w-4 border-[1px] rounded-sm border-darkGrey bg-hue-light text-indigo-600 focus:ring-indigo-500'
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            </fieldset>
-                          </div>
-                        ))}
+                                      <label
+                                        htmlFor={`${section.id}-${optionIdx}`}
+                                        className='text-sm text-darkGrey'
+                                      >
+                                        {option.label}
+                                      </label>
+                                      <input
+                                        id={`${section.id}-${optionIdx}`}
+                                        name={`${section.id}[]`}
+                                        defaultValue={option.value}
+                                        type='checkbox'
+                                        className='h-4 w-4 border-[1px] rounded-sm border-darkGrey bg-hue-light text-indigo-600 focus:ring-indigo-500'
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              </fieldset>
+                            </div>
+                          ))}
                       </form>
                     </div>
                   </aside>
@@ -223,14 +218,14 @@ const DomView = () => {
               >
                 <CollectionImagesView />
               </div>
-              {/* <div
+              <div
                 className={
                   currentViewSection !== LayerSectionEnum.RARITY ? 'hidden' : ''
                 }
               >
                 <CollectionRulesView />
               </div>
-              <div
+              {/* <div
                 className={
                   currentViewSection !== LayerSectionEnum.PREVIEW
                     ? 'hidden'
@@ -238,14 +233,14 @@ const DomView = () => {
                 }
               >
                 <CollectionGenerateView />
-              </div>
+              </div> */}
               <div
                 className={
                   currentViewSection !== LayerSectionEnum.RULES ? 'hidden' : ''
                 }
               >
                 <CollectionTraitRulesView />
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
