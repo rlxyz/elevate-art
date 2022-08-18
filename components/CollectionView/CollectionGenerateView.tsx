@@ -10,7 +10,7 @@ import React, { ReactNode, useEffect, useState } from 'react'
 
 import { CollectionViewContent } from './ViewContent'
 
-const layerConfig = [
+const roboghostLayerConfig = [
   {
     name: 'Background',
     metadata: true,
@@ -960,6 +960,241 @@ const layerConfig = [
   },
 ]
 
+const reflectionsLayerConfig = [
+  {
+    name: 'SKY',
+    metadata: true,
+    traits: [
+      // Super Rare
+      { name: 'COMBO', weight: 20 },
+      { name: 'STORMY-SUNSET', weight: 24 },
+      { name: 'NORTHERN-LIGHTS', weight: 25 },
+      { name: 'RAINBOW', weight: 28 },
+      { name: 'LIGHTNING', weight: 30 },
+      { name: 'LONELY-CLOUD', weight: 32 },
+      { name: 'MOVING-STARS', weight: 32 },
+      { name: 'ROYAL-ORANGE', weight: 34 },
+      { name: 'MILKY-WAY', weight: 34 },
+      { name: 'CRESENT-MOON', weight: 36 },
+      { name: 'COLLOSAL-CLOUDS', weight: 36 },
+      // Rare
+      { name: 'STORM', weight: 40 },
+      { name: 'FIRE', weight: 41 },
+      { name: 'HIGH-CLOUDS', weight: 42 },
+      { name: 'AFTERGLOW', weight: 43 },
+      { name: 'MORNING-CLOUDS', weight: 44 },
+      { name: 'MOODY-MORNING', weight: 45 },
+      { name: 'GRUNGY', weight: 46 },
+      { name: 'STARRY-NIGHT', weight: 47 },
+      { name: 'BRIGHT-DAY', weight: 48 },
+      { name: 'PEACEFUL-NIGHT', weight: 49 },
+      { name: 'FIRST-LIGHT', weight: 50 },
+      // Common
+      { name: 'PASTEL', weight: 55 },
+      { name: 'EVENING-GLOW', weight: 57 },
+      { name: 'BIG-BLUE', weight: 58 },
+      { name: 'MORNING-RAYS', weight: 60 },
+      { name: 'BIG-SKY', weight: 62 },
+      { name: 'SOFT-PINK', weight: 64 },
+      { name: 'FINAL-GLOW', weight: 64 },
+      { name: 'GOLDEN-SUNSET', weight: 64 },
+      // Very Common
+      { name: 'DAYTIME', weight: 65 },
+      { name: 'RICH-PINK', weight: 66 },
+      { name: 'MIDNIGHT-GLOW', weight: 67 },
+      { name: 'BLOWOUT', weight: 68 },
+      { name: 'MORNING-BLUE', weight: 70 },
+    ],
+  },
+  {
+    name: 'BOTTOM LEFT',
+    metadata: true,
+    traits: [
+      { name: 'WINTER', weight: 65 },
+      { name: 'SPRING', weight: 65 },
+      { name: 'SUMMER', weight: 65 },
+      { name: 'AUTUMN', weight: 65 },
+      { name: 'RED', weight: 45 },
+      { name: 'YELLOW', weight: 45 },
+      { name: 'BLUE', weight: 45 },
+      { name: 'GREEN', weight: 45 },
+      { name: 'CYAN', weight: 35 },
+      { name: 'PURPLE', weight: 35 },
+      { name: 'ORANGE', weight: 35 },
+      { name: 'PINK', weight: 35 },
+      { name: 'SNOWY VILLAGE', weight: 30 },
+      { name: 'ICELAND', weight: 30 },
+      { name: 'DEAD TREES', weight: 25 },
+      { name: 'PALM TREES', weight: 25 },
+      { name: 'VENICE', weight: 20 },
+    ],
+  },
+  {
+    name: 'BOTTOM RIGHT',
+    metadata: true,
+    traits: [
+      { name: 'WINTER', weight: 65 },
+      { name: 'SPRING', weight: 65 },
+      { name: 'SUMMER', weight: 65 },
+      { name: 'AUTUMN', weight: 65 },
+      { name: 'RED', weight: 45 },
+      { name: 'YELLOW', weight: 45 },
+      { name: 'BLUE', weight: 45 },
+      { name: 'GREEN', weight: 45 },
+      { name: 'CYAN', weight: 35 },
+      { name: 'PURPLE', weight: 35 },
+      { name: 'ORANGE', weight: 35 },
+      { name: 'PINK', weight: 35 },
+      { name: 'SNOWY VILLAGE', weight: 30 },
+      { name: 'ICELAND', weight: 30 },
+      { name: 'DEAD TREES', weight: 25 },
+      { name: 'PALM TREES', weight: 25 },
+      { name: 'VENICE', weight: 20 },
+    ],
+  },
+  {
+    name: 'TOP LEFT',
+    metadata: true,
+    traits: [
+      { name: 'WINTER', weight: 65 },
+      { name: 'SPRING', weight: 65 },
+      { name: 'SUMMER', weight: 65 },
+      { name: 'AUTUMN', weight: 65 },
+      { name: 'RED', weight: 45 },
+      { name: 'YELLOW', weight: 45 },
+      { name: 'BLUE', weight: 45 },
+      { name: 'GREEN', weight: 45 },
+      { name: 'CYAN', weight: 35 },
+      { name: 'PURPLE', weight: 35 },
+      { name: 'ORANGE', weight: 35 },
+      { name: 'PINK', weight: 35 },
+      { name: 'SNOWY VILLAGE', weight: 30 },
+      { name: 'ICELAND', weight: 30 },
+      { name: 'DEAD TREES', weight: 25 },
+      { name: 'PALM TREES', weight: 25 },
+      { name: 'VENICE', weight: 20 },
+    ],
+  },
+  {
+    name: 'TOP RIGHT',
+    metadata: true,
+    traits: [
+      { name: 'WINTER', weight: 65 },
+      { name: 'SPRING', weight: 65 },
+      { name: 'SUMMER', weight: 65 },
+      { name: 'AUTUMN', weight: 65 },
+      { name: 'RED', weight: 45 },
+      { name: 'YELLOW', weight: 45 },
+      { name: 'BLUE', weight: 45 },
+      { name: 'GREEN', weight: 45 },
+      { name: 'CYAN', weight: 35 },
+      { name: 'PURPLE', weight: 35 },
+      { name: 'ORANGE', weight: 35 },
+      { name: 'PINK', weight: 35 },
+      { name: 'SNOWY VILLAGE', weight: 30 },
+      { name: 'ICELAND', weight: 30 },
+      { name: 'DEAD TREES', weight: 25 },
+      { name: 'PALM TREES', weight: 25 },
+      { name: 'VENICE', weight: 20 },
+    ],
+  },
+  {
+    name: 'PERSON',
+    metadata: true,
+    traits: [
+      { name: 'WALK', weight: 1 },
+      { name: 'JUMP', weight: 1 },
+      { name: 'STAND', weight: 1 },
+    ],
+    options: {
+      occuranceRate: 1 / 3,
+    },
+  },
+  // {
+  //   name: 'PERSON',
+  //   metadata: true,
+  //   traits: [{ name: 'JUMP', weight: 1 }],
+  //   options: {
+  //     occuranceRate: 1 / 5,
+  //   },
+  // },
+  // {
+  //   name: 'PERSON',
+  //   metadata: true,
+  //   traits: [{ name: 'STAND', weight: 1 }],
+  //   options: {
+  //     occuranceRate: 1 / 3,
+  //   },
+  // },
+  {
+    name: 'SPECIAL TOP',
+    metadata: true,
+    traits: [{ name: 'LIGHTS', weight: 1 }],
+    options: {
+      type: 'EXCLUSION',
+      // remove the metadata for the bottoms
+      exclude: {
+        LIGHTS: [
+          'SPRING',
+          'ICELAND',
+          'SNOWY VILLAGE',
+          'WINTER',
+          'VENICE',
+          'DEAD TREES',
+        ],
+      },
+      occuranceRate: 1 / 8,
+    },
+  },
+  {
+    name: 'SPECIAL BOTTOM',
+    metadata: true,
+    traits: [
+      { name: 'LIGHTS', weight: 50 },
+      {
+        name: 'WATERFALL',
+        weight: 15,
+        boundary: { lower: 3, upper: 4, remove: true },
+      },
+      {
+        name: 'DRY-LAKE',
+        weight: 10,
+        boundary: { lower: 1, upper: 4, remove: true },
+      },
+      { name: 'FROZEN', weight: 1 },
+    ],
+    options: {
+      type: 'EXCLUSION',
+      exclude: {
+        LIGHTS: [
+          'SPRING',
+          'ICELAND',
+          'SNOWY VILLAGE',
+          'WINTER',
+          'VENICE',
+          'DEAD TREES',
+        ],
+        // remove the metadata for the bottoms
+        WATERFALL: ['SNOWY VILLAGE', 'WINTER'], // top right top left
+        'DRY-LAKE': ['SNOWY VILLAGE', 'WINTER'], // top right top left -- bottom left x bottom right
+      },
+      occuranceRate: 1 / 5,
+    },
+  },
+  // {
+  //   name: 'SPECIAL BOTTOM - COMBINATION',
+  //   metadata: true,
+  //   traits: [{ name: 'FROZEN', weight: 1 }],
+  //   options: {
+  //     type: 'COMBINATION',
+  //     combination: {
+  //       'FROZEN': ['SNOWY VILLAGE', 'WINTER'],
+  //     },
+  //     occuranceRate: 1 / 5,
+  //   },
+  // },
+]
+
 const CollectionGenerateView = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
@@ -984,7 +1219,10 @@ const CollectionGenerateView = () => {
 
   const handler = async (regenerate: boolean) => {
     const app: App = new App({
-      configs: layerConfig,
+      configs:
+        repositoryName === 'roboghosts'
+          ? roboghostLayerConfig
+          : reflectionsLayerConfig,
       imageFormat: {
         width: 300,
         height: 300,
@@ -992,6 +1230,7 @@ const CollectionGenerateView = () => {
       },
       basePath: '',
     })
+
     const response = regenerate
       ? await fetcherPost(`collection/${collection.id}/generate`, {})
       : await fetcher(`collection/${collection.id}/generate`)

@@ -63,27 +63,28 @@ const DomView = () => {
   }, [data])
 
   useEffect(() => {
-    setFilters([
-      {
-        id: 'rarity',
-        name: 'By Rarity',
-        options: [
-          { value: 'Top 10', label: 'Top 10' },
-          { value: 'Middle 10', label: 'Middle 10' },
-          { value: 'Bottom 10', label: 'Bottom 10' },
-        ],
-      },
-      {
-        id: 'trait',
-        name: 'By Trait',
-        options: layers.map((layer) => {
-          return {
-            value: layer.name,
-            label: layer.name,
-          }
-        }),
-      },
-    ])
+    layers &&
+      setFilters([
+        {
+          id: 'rarity',
+          name: 'By Rarity',
+          options: [
+            { value: 'Top 10', label: 'Top 10' },
+            { value: 'Middle 10', label: 'Middle 10' },
+            { value: 'Bottom 10', label: 'Bottom 10' },
+          ],
+        },
+        {
+          id: 'trait',
+          name: 'By Trait',
+          options: layers.map((layer) => {
+            return {
+              value: layer.name,
+              label: layer.name,
+            }
+          }),
+        },
+      ])
   }, [layers])
 
   return (
@@ -225,7 +226,7 @@ const DomView = () => {
               >
                 <CollectionRulesView />
               </div>
-              {/* <div
+              <div
                 className={
                   currentViewSection !== LayerSectionEnum.PREVIEW
                     ? 'hidden'
@@ -233,7 +234,7 @@ const DomView = () => {
                 }
               >
                 <CollectionGenerateView />
-              </div> */}
+              </div>
               <div
                 className={
                   currentViewSection !== LayerSectionEnum.RULES ? 'hidden' : ''
