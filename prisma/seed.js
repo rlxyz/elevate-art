@@ -36,6 +36,7 @@ const main = async (
   organisationName,
   repositoryName,
   tokenName,
+  totalSupply,
   layerConfig
 ) => {
   try {
@@ -99,7 +100,7 @@ const main = async (
       data: {
         name: 'development',
         repositoryId: repository.id,
-        totalSupply: 5555,
+        totalSupply: totalSupply,
       },
     })
   } catch (e) {
@@ -111,18 +112,22 @@ const main = async (
 }
 
 cleanDb().then(async () => {
-  // await main(
-  //   '0xb21B6a39ae2f164357f8e616E30521baECfd7f87',
-  //   'sekured.eth',
-  //   'roboghosts',
-  //   'RoboGhost',
-  //   roboghostData
-  // )
+  console.log('adding roboghost')
+  await main(
+    '0xb21B6a39ae2f164357f8e616E30521baECfd7f87',
+    'sekured.eth',
+    'roboghosts',
+    'RoboGhost',
+    5555,
+    roboghostData
+  )
+  console.log('adding dreamlab')
   await main(
     '0x1fdf89Dd0Eba85603CBdE7f9F5cE5D830ffc7643',
     'dreamlab.eth',
     'reflections',
     'Reflection',
+    1111,
     reflectionsData
   )
 })

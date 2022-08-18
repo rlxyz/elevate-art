@@ -85,11 +85,11 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {children}
-      {isDragActive ? (
+      {/* {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
         <p>Drag 'n' drop some files here, or click to select files</p>
-      )}
+      )} */}
     </div>
   )
 }

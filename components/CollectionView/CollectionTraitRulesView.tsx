@@ -14,14 +14,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const layers = [
-  { id: 0, layer: 'Scenery', name: 'Blister-Pack' },
-  { id: 1, layer: 'Background', name: 'Carnage-Dark-Grey' },
-  { id: 1, layer: 'Background', name: 'Carnage-Pink' },
-  { id: 1, layer: 'Background', name: 'Carnage-Purple' },
-  { id: 1, layer: 'Background', name: 'Carnage-Yellow' },
-]
-
 const RuleConditionSelector = ({
   layers,
   title,

@@ -5,6 +5,7 @@ import Collection from '@utils/x/Collection'
 import { ethers } from 'ethers'
 import mergeImages from 'merge-images'
 import Image from 'next/image'
+import { NextRouter, useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState } from 'react'
 
 import { CollectionViewContent } from './ViewContent'
@@ -960,6 +961,9 @@ const layerConfig = [
 ]
 
 const CollectionGenerateView = () => {
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
   const [images, setImages] = useState<ReactNode>(null)
   const collectionTotalSupply = 50
   const {
@@ -996,9 +1000,7 @@ const CollectionGenerateView = () => {
       parseInt(
         ethers.utils
           .keccak256(
-            ethers.utils.toUtf8Bytes(
-              String(`${collection.id}${response.generations}`)
-            )
+            ethers.utils.toUtf8Bytes(`${collection.id}-${response.generations}`)
           )
           .toString(),
         16
@@ -1010,7 +1012,7 @@ const CollectionGenerateView = () => {
         await mergeImages(
           token.attributes.map(
             (attribute) =>
-              `https://res.cloudinary.com/rlxyz/image/upload/c_fill,h_300,w_300/v1/roboghost.eth/roboghost/layers/${attribute['trait_type']}/${attribute['value']}.png`
+              `https://res.cloudinary.com/rlxyz/image/upload/c_fill,h_300,w_300/v1/${organisationName}/${repositoryName}/layers/${attribute['trait_type']}/${attribute['value']}.png`
           ),
           { crossOrigin: 'Anonymous' }
         )

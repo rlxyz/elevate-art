@@ -9,6 +9,7 @@ import { useState } from 'react'
 import * as React from 'react'
 import { animate, MotionValue, useMotionValue } from 'framer-motion'
 import { useEffect } from 'react'
+import { DotsHorizontalIcon } from '@heroicons/react/solid'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -72,7 +73,7 @@ export const ReorderItem = ({
           <FolderIcon className='w-5 h-5' />
           <span className='ml-2 text-sm'>{name}</span>
         </div>
-        <SelectorIcon
+        <DotsHorizontalIcon
           className='w-5 h-5'
           onPointerDown={(e) => {
             e.preventDefault()
