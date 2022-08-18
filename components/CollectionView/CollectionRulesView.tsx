@@ -213,7 +213,7 @@ const CollectionRulesView = () => {
           </div>
         </div>
       </div>
-      <footer className='fixed bottom-0 h-[10%] w-full bg-hue-light border-t border-t-lightGray'>
+      {/* <footer className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-t-lightGray'>
         <div className='flex items-center h-full w-full'>
           <div className='flex justify-end h-full w-3/4 p-6'>
             <div className='flex items-center space-x-3 mr-6'>
@@ -228,7 +228,7 @@ const CollectionRulesView = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </CollectionViewContent>
   )
 }
