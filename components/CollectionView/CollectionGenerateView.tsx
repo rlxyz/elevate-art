@@ -1,4 +1,5 @@
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { useNotification } from '@hooks/useNotification'
 import { createCompilerApp } from '@utils/createCompilerApp'
 import { fetcher, fetcherPost } from '@utils/fetcher'
 import { toPascalCaseWithSpace } from '@utils/format'
@@ -33,6 +34,7 @@ const CollectionGenerateView = () => {
       setRegenerateCollection: state.setRegenerateCollection,
     }
   })
+  const { notifySuccess } = useNotification(repositoryName)
 
   const handler = async (regenerate: boolean) => {
     const app: App = createCompilerApp(repositoryName)
@@ -70,7 +72,8 @@ const CollectionGenerateView = () => {
   }
 
   useEffect(() => {
-    regenerate &&
+    if (regenerate) {
+      notifySuccess()
       handler(true)
         .then((data) => Promise.all(data))
         .then((data: string[]) => {
@@ -94,6 +97,7 @@ const CollectionGenerateView = () => {
           )
         })
         .then(() => setRegenerateCollection(false))
+    }
   }, [regenerate])
 
   useEffect(() => {

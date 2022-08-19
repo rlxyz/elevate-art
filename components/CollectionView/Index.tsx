@@ -13,6 +13,7 @@ import useSWR from 'swr'
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { RefreshIcon } from '@heroicons/react/outline'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
@@ -156,15 +157,22 @@ const DomView = () => {
                 ].includes(currentViewSection) && <LayerFolderSelector />}
                 {currentViewSection === LayerSectionEnum.PREVIEW && (
                   <aside className='p-8'>
-                    <div className='mb-8 h-10'>
-                      <Button
-                        onClick={() => {
-                          !regenerate && setRegenerateCollection(true)
-                          notifySuccess()
-                        }}
-                      >
-                        Generate New
-                      </Button>
+                    <div className='space-y-2 mb-8'>
+                      <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+                        {'Generate'}
+                      </span>
+                      <div>
+                        <Button
+                          onClick={() => {
+                            !regenerate && setRegenerateCollection(true)
+                          }}
+                        >
+                          <span className='p-2 flex items-center justify-center space-x-1'>
+                            <RefreshIcon className='w-5 h-5' />
+                            <span>Generate</span>
+                          </span>
+                        </Button>
+                      </div>
                     </div>
                     <div className='hidden lg:block'>
                       <form className='divide-y divide-lightGray space-y-8'>
@@ -173,7 +181,7 @@ const DomView = () => {
                             <div key={`${section.name}-${sectionIdx}`}>
                               <fieldset>
                                 <legend
-                                  className={`block text-xs font-semibold text-darkGrey uppercase ${
+                                  className={`block text-xs font-normal text-darkGrey uppercase ${
                                     sectionIdx !== 0 ? 'pt-8' : ''
                                   }`}
                                 >
