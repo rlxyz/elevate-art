@@ -9,6 +9,7 @@ export default async (
   const prisma = createPrismaClient()
   const organisationName: string = request.query.organisation as string
   const repositoryName: string = request.query.repository as string
+
   prisma.organisation
     .findFirst({
       where: {
