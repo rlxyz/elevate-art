@@ -138,28 +138,26 @@ const LayerFolderSelector = () => {
     const app: App = createCompilerApp(repositoryName)
     const imageElement: Element = app.createElementFromRandomness()
     return (
-      <div className='flex flex-col items-center'>
-        <Image
-          width={150}
-          height={150}
-          className='rounded-md'
-          src={await mergeImages(
-            imageElement
-              .toAttributes()
-              .map(
-                (attribute) =>
-                  `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
-                    process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
-                      ? 'c_fill,h_300,w_300'
-                      : ''
-                  }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
-                    attribute['trait_type']
-                  )}/${toPascalCaseWithSpace(attribute['value'])}.png`
-              ),
-            { crossOrigin: 'Anonymous' }
-          )}
-        />
-      </div>
+      <Image
+        width={150}
+        height={150}
+        className='rounded-md'
+        src={await mergeImages(
+          imageElement
+            .toAttributes()
+            .map(
+              (attribute) =>
+                `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
+                  process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
+                    ? 'c_fill,h_300,w_300'
+                    : ''
+                }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+                  attribute['trait_type']
+                )}/${toPascalCaseWithSpace(attribute['value'])}.png`
+            ),
+          { crossOrigin: 'Anonymous' }
+        )}
+      />
     )
   }
 
@@ -182,98 +180,104 @@ const LayerFolderSelector = () => {
     layers &&
     layers.length > 0 && (
       <main className='px-8 pt-8 space-y-6'>
-        <div className='space-y-2'>
-          <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-            {'Generate'}
-          </span>
-          <div>
-            <Button
-              onClick={() => {
-                !regenerate && setRegenerateCollection(true)
-              }}
-            >
-              <span className='p-2 flex items-center justify-center space-x-1'>
-                <RefreshIcon className='w-5 h-5' />
-                <span>Generate</span>
+        <div className='flex flex-col space-y-6 justify-between'>
+          <div className='space-y-2'>
+            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+              {'Generate'}
+            </span>
+            <div>
+              <Button
+                onClick={() => {
+                  !regenerate && setRegenerateCollection(true)
+                }}
+              >
+                <span className='p-2 flex items-center justify-center space-x-1'>
+                  <RefreshIcon className='w-5 h-5' />
+                  <span>Generate</span>
+                </span>
+              </Button>
+            </div>
+          </div>
+          <div className='space-y-2'>
+            <div className='flex items-center justify-between'>
+              <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+                {layers.length === 1 ? 'Layer' : 'Layers'}
               </span>
-            </Button>
+              <div className='space-x-1'>
+                <button onClick={() => setOpenReordering(!openReordering)}>
+                  <div className='border rounded-[5px] border-lightGray p-1'>
+                    <SwitchVerticalIcon className='text-darkGrey w-3 h-3' />
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    setOpenUpload(true)
+                  }}
+                >
+                  <div className='border rounded-[5px] border-lightGray p-1'>
+                    <PlusIcon className='text-darkGrey w-3 h-3' />
+                  </div>
+                </button>
+              </div>
+            </div>
+            <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-42.5rem)] overflow-y-scroll'>
+              <FileUpload id={`${organisationName}/${repositoryName}`}>
+                <AnimatePresence>
+                  <Reorder.Group
+                    axis='y'
+                    values={items}
+                    onReorder={setItems}
+                    className='space-y-2 m-2'
+                  >
+                    {items.map((item) => {
+                      return (
+                        <ReorderItem
+                          canReorder={openReordering}
+                          key={item}
+                          name={layers[item]?.name}
+                          item={item}
+                          enabled={currentLayerPriority === item}
+                          onClick={() => {
+                            setCurrentLayerPriority(item)
+                          }}
+                        />
+                      )
+                    })}
+                  </Reorder.Group>
+                </AnimatePresence>
+              </FileUpload>
+            </div>
           </div>
         </div>
-        <div className='space-y-2'>
-          <div className='flex items-center justify-between'>
-            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-              {layers.length === 1 ? 'Layer' : 'Layers'}
-            </span>
-            <div className='space-x-1'>
-              <button onClick={() => setOpenReordering(!openReordering)}>
-                <div className='border rounded-[5px] border-lightGray p-1'>
-                  <SwitchVerticalIcon className='text-darkGrey w-3 h-3' />
-                </div>
-              </button>
+        <div className=''>
+          <div className='space-y-2'>
+            <div className='flex items-center justify-between'>
+              <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+                {'Preview'}
+              </span>
               <button
                 onClick={() => {
-                  setOpenUpload(true)
+                  setRefreshImage(true)
                 }}
               >
                 <div className='border rounded-[5px] border-lightGray p-1'>
-                  <PlusIcon className='text-darkGrey w-3 h-3' />
+                  <RefreshIcon className='text-darkGrey w-3 h-3' />
                 </div>
               </button>
             </div>
-          </div>
-          <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-42.5rem)] overflow-y-scroll'>
-            <FileUpload id={`${organisationName}/${repositoryName}`}>
-              <AnimatePresence>
-                <Reorder.Group
-                  axis='y'
-                  values={items}
-                  onReorder={setItems}
-                  className='space-y-2 m-2'
-                >
-                  {items.map((item) => {
-                    return (
-                      <ReorderItem
-                        canReorder={openReordering}
-                        key={item}
-                        name={layers[item]?.name}
-                        item={item}
-                        enabled={currentLayerPriority === item}
-                        onClick={() => {
-                          setCurrentLayerPriority(item)
-                        }}
-                      />
-                    )
-                  })}
-                </Reorder.Group>
-              </AnimatePresence>
-            </FileUpload>
-          </div>
-        </div>
-        <div className='space-y-2'>
-          <div className='flex items-center justify-between'>
-            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-              {'Preview'}
-            </span>
-            <button
-              onClick={() => {
-                setRefreshImage(true)
-              }}
-            >
-              <div className='border rounded-[5px] border-lightGray p-1'>
-                <RefreshIcon className='text-darkGrey w-3 h-3' />
+            <div className='border border-lightGray p-2 rounded-[5px]'>
+              <div className='flex overflow-x-scroll overflow-x-auto space-x-3'>
+                <div className='border border-lightGray rounded-[5px]'>
+                  {currentImagePreview}
+                </div>
+                <div className='border border-lightGray rounded-[5px]'>
+                  {currentImagePreview}
+                </div>
               </div>
-            </button>
-          </div>
-          <div className='flex justify-between'>
-            <div className='border border-lightGray rounded-[5px] w-[150px] h-[150px]'>
-              {currentImagePreview}
-            </div>
-            <div className='border border-lightGray rounded-[5px] w-[150px] h-[150px]'>
-              {currentImagePreview}
             </div>
           </div>
+          <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         </div>
-        <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         {/* {currentViewSection === LayerSectionEnum.RULES && (
           <div>
             <span className='text-xs font-semibold text-darkGrey uppercase'>
