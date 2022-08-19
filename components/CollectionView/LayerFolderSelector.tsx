@@ -179,7 +179,7 @@ const LayerFolderSelector = () => {
   return (
     layers &&
     layers.length > 0 && (
-      <main className='px-8 pt-8 space-y-6'>
+      <main className='p-8 space-y-6'>
         <div className='flex flex-col space-y-6 justify-between'>
           <div className='space-y-2'>
             <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
@@ -220,7 +220,7 @@ const LayerFolderSelector = () => {
                 </button>
               </div>
             </div>
-            <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-42.5rem)] overflow-y-scroll'>
+            <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-37rem)] overflow-y-scroll'>
               <FileUpload id={`${organisationName}/${repositoryName}`}>
                 <AnimatePresence>
                   <Reorder.Group
@@ -249,30 +249,28 @@ const LayerFolderSelector = () => {
             </div>
           </div>
         </div>
-        <div className=''>
-          <div className='space-y-2'>
-            <div className='flex items-center justify-between'>
-              <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-                {'Preview'}
-              </span>
-              <button
-                onClick={() => {
-                  setRefreshImage(true)
-                }}
-              >
-                <div className='border rounded-[5px] border-lightGray p-1'>
-                  <RefreshIcon className='text-darkGrey w-3 h-3' />
-                </div>
-              </button>
-            </div>
-            <div className='border border-lightGray p-2 rounded-[5px]'>
-              <div className='flex overflow-x-scroll overflow-x-auto space-x-3'>
-                <div className='border border-lightGray rounded-[5px]'>
-                  {currentImagePreview}
-                </div>
-                <div className='border border-lightGray rounded-[5px]'>
-                  {currentImagePreview}
-                </div>
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+              {'Preview'}
+            </span>
+            <button
+              onClick={() => {
+                setRefreshImage(true)
+              }}
+            >
+              <div className='border rounded-[5px] border-lightGray p-1'>
+                <RefreshIcon className='text-darkGrey w-3 h-3' />
+              </div>
+            </button>
+          </div>
+          <div className='border border-lightGray p-2 rounded-[5px]'>
+            <div className='flex overflow-x-scroll overflow-x-auto space-x-3'>
+              <div className='border border-lightGray rounded-[5px]'>
+                {currentImagePreview}
+              </div>
+              <div className='border border-lightGray rounded-[5px]'>
+                {currentImagePreview}
               </div>
             </div>
           </div>

@@ -1,10 +1,11 @@
 import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import { DotsHorizontalIcon, DotsVerticalIcon } from '@heroicons/react/outline'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { CollectionViewContent } from './ViewContent'
 
@@ -42,16 +43,38 @@ const CollectionImagesView = () => {
         <div className='p-8'>
           <div className='grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7'>
             {currentLayer.traits.map((trait: TraitElement, index: number) => {
+              const [show, setShow] = useState(false)
               return (
                 <div
                   key={`${trait.name}-${index}`}
-                  className='flex flex-col items-center z-[-1]'
+                  className='flex flex-col items-center'
                 >
-                  <AdvancedImage
-                    url={`${organisationName}/${repositoryName}/layers/${
-                      currentLayer.name
-                    }/${toPascalCaseWithSpace(trait.name)}.png`}
-                  />
+                  <button
+                    onMouseEnter={() => {
+                      setShow(true)
+                    }}
+                    onMouseLeave={() => {
+                      setShow(false)
+                    }}
+                    className='relative'
+                  >
+                    <div
+                      className={`absolute z-10 right-0 p-1 ${
+                        show ? '' : 'hidden'
+                      }`}
+                    >
+                      <div className='bg-hue-light rounded-[3px] w-5 h-5 flex items-center justify-center'>
+                        <DotsHorizontalIcon className='w-3 h-3 text-lightGray' />
+                      </div>
+                    </div>
+                    <div className='z-1'>
+                      <AdvancedImage
+                        url={`${organisationName}/${repositoryName}/layers/${
+                          currentLayer.name
+                        }/${toPascalCaseWithSpace(trait.name)}.png`}
+                      />
+                    </div>
+                  </button>
                   <span className='py-2 text-xs'>
                     {toPascalCaseWithSpace(trait.name)}
                   </span>
