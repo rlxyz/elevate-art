@@ -1,5 +1,6 @@
 import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
 import { Button } from '@components/UI/Button'
+import { Textbox } from '@components/UI/Textbox'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { fetcherPost } from '@utils/fetcher'
 import { toPascalCaseWithSpace } from '@utils/format'
@@ -110,18 +111,16 @@ const CollectionRulesView = () => {
                           }, 400)
                         }}
                       >
-                        {(
-                          {
-                            // values,
-                            // errors,
-                            // touched,
-                            // handleChange,
-                            // handleBlur,
-                            // handleSubmit,
-                            // isSubmitting,
-                            // submitForm,
-                          }
-                        ) => (
+                        {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          submitForm,
+                        }) => (
                           <>
                             <tr key={index}>
                               <td className='p-8 pl-0'>
@@ -135,35 +134,36 @@ const CollectionRulesView = () => {
                                 {toPascalCaseWithSpace(trait.name)}
                               </td>
                               <td className='whitespace-nowrap text-sm font-medium text-gray-900'>
-                                {/* <form>
-                                  <Textbox
-                                    id=''
-                                    placeholder=''
-                                    type='number'
-                                    name='rarity'
-                                    onChange={(e) => {
-                                      handleChange(e)
-                                      const rarity =
-                                        calculateTraitRarityFromQuantity(
-                                          values.rarity,
-                                          traitsTotalWeight + values.rarity,
-                                          collection.totalSupply
-                                        )
-                                      setTraits([
-                                        ...traits.slice(0, index),
-                                        {
-                                          ...trait,
-                                          weight: rarity,
-                                        },
-                                        ...traits.slice(index + 1),
-                                      ])
-                                      // submitForm()
-                                    }}
-                                    value={values.rarity}
-                                  ></Textbox>
+                                <form className='flex space-x-3 items-center justify-start'>
+                                  <div className='w-24'>
+                                    <Textbox
+                                      id=''
+                                      placeholder=''
+                                      type='number'
+                                      name='rarity'
+                                      onChange={(e) => {
+                                        handleChange(e)
+                                        const rarity =
+                                          calculateTraitRarityFromQuantity(
+                                            values.rarity,
+                                            traitsTotalWeight + values.rarity,
+                                            collection.totalSupply
+                                          )
+                                        setTraits([
+                                          ...traits.slice(0, index),
+                                          {
+                                            ...trait,
+                                            weight: rarity,
+                                          },
+                                          ...traits.slice(index + 1),
+                                        ])
+                                        // submitForm()
+                                      }}
+                                      value={values?.rarity?.toFixed(0)}
+                                    ></Textbox>
+                                  </div>
                                   <span>out of {collection.totalSupply}</span>
-                                </form> */}
-                                Nothing
+                                </form>
                               </td>
                               <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0'>
                                 {calculateTraitRarityScore(

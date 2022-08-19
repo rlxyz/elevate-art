@@ -282,19 +282,6 @@ const LayerFolderSelector = () => {
           </div>
           <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         </div>
-        {/* {currentViewSection === LayerSectionEnum.RULES && (
-          <div>
-            <span className='text-xs font-semibold text-darkGrey uppercase'>
-              Custom Rules
-            </span>
-          </div>
-        )} */}
-        {/* todo: implement search */}
-        {/* <Textbox
-          id='search-trait'
-          name='search-trait'
-          placeholder='Search Trait'
-        /> */}
       </main>
     )
   )
