@@ -10,9 +10,9 @@ import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
@@ -31,15 +31,20 @@ const DomView = () => {
   )
   const [filters, setFilters] = useState(null)
   const { notifySuccess } = useNotification(repositoryName)
+  const [layerInitiailised, setLayerInitiailised] = useState(false)
 
   const {
     layers,
     regenerate,
     currentViewSection,
+    currentLayerPriority,
+    setCurrentViewSection,
     setCollection,
     setCurrentLayer,
     setLayers,
     setRepository,
+    setCurrentLayerPriority,
+    setRegeneratePreview,
     setRegenerateCollection,
   } = useCompilerViewStore((state) => {
     return {
@@ -52,9 +57,53 @@ const DomView = () => {
       setCurrentLayer: state.setCurrentLayer,
       setCollection: state.setCollection,
       setRepository: state.setRepository,
+      setCurrentLayerPriority: state.setCurrentLayerPriority,
+      setCurrentViewSection: state.setCurrentViewSection,
+      setRegeneratePreview: state.setRegeneratePreview,
       setRegenerateCollection: state.setRegenerateCollection,
     }
   })
+
+  useHotkeys('shift+1', () => layers.length > 0 && setCurrentLayerPriority(0))
+  useHotkeys('shift+2', () => layers.length > 1 && setCurrentLayerPriority(1))
+  useHotkeys('shift+3', () => layers.length > 3 && setCurrentLayerPriority(2))
+  useHotkeys('shift+4', () => layers.length > 4 && setCurrentLayerPriority(3))
+  useHotkeys('shift+5', () => layers.length > 5 && setCurrentLayerPriority(4))
+  useHotkeys('shift+6', () => layers.length > 6 && setCurrentLayerPriority(5))
+  useHotkeys('shift+7', () => layers.length > 7 && setCurrentLayerPriority(6))
+  useHotkeys('shift+8', () => layers.length > 8 && setCurrentLayerPriority(7))
+  useHotkeys(
+    'shift+9',
+    () => layers.length > 9 && setCurrentLayerPriority(layers.length - 1)
+  )
+  useHotkeys(
+    'shift+cmd+up',
+    () =>
+      layerInitiailised &&
+      currentLayerPriority > 0 &&
+      setCurrentLayerPriority(currentLayerPriority - 1),
+    {
+      keydown: true,
+    },
+    [currentLayerPriority, setCurrentLayerPriority]
+  )
+  useHotkeys(
+    'shift+cmd+down',
+    () =>
+      layerInitiailised &&
+      currentLayerPriority + 1 < layers.length &&
+      setCurrentLayerPriority(currentLayerPriority + 1),
+    {
+      keydown: true,
+    },
+    [currentLayerPriority, setCurrentLayerPriority]
+  )
+  useHotkeys('ctrl+1', () => setCurrentViewSection(LayerSectionEnum.PREVIEW))
+  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.IMAGES))
+  useHotkeys('ctrl+3', () => setCurrentViewSection(LayerSectionEnum.RARITY))
+  useHotkeys('ctrl+4', () => setCurrentViewSection(LayerSectionEnum.RULES))
+  useHotkeys('ctrl+g', () => setRegenerateCollection(true))
+  useHotkeys('ctrl+r', () => setRegeneratePreview(true))
 
   useEffect(() => {
     data && setRepository(data)
@@ -62,6 +111,10 @@ const DomView = () => {
     data.layers.length > 0 && setLayers(data.layers)
     data.layers.length > 0 && setCurrentLayer(0)
   }, [data])
+
+  useEffect(() => {
+    setLayerInitiailised(true)
+  }, [layers])
 
   useEffect(() => {
     layers &&

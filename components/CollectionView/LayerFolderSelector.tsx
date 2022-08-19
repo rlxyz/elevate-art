@@ -109,16 +109,20 @@ const LayerFolderSelector = () => {
   const {
     layers,
     regenerate,
+    regeneratePreview,
     currentViewSection,
     currentLayerPriority,
+    setRegeneratePreview,
     setRegenerateCollection,
     setCurrentLayerPriority,
   } = useCompilerViewStore((state) => {
     return {
       layers: state.layers,
       regenerate: state.regenerate,
+      regeneratePreview: state.regeneratePreview,
       currentViewSection: state.currentViewSection,
       currentLayerPriority: state.currentLayerPriority,
+      setRegeneratePreview: state.setRegeneratePreview,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setRegenerateCollection: state.setRegenerateCollection,
     }
@@ -165,7 +169,7 @@ const LayerFolderSelector = () => {
   }
 
   useEffect(() => {
-    refreshImage &&
+    ;(refreshImage || regeneratePreview) &&
       generateImageHandler()
         .then((data) => {
           Promise.all(data).then((images) => {
@@ -174,8 +178,9 @@ const LayerFolderSelector = () => {
         })
         .then(() => {
           setRefreshImage(false)
+          setRegeneratePreview(false)
         })
-  }, [refreshImage])
+  }, [refreshImage, regeneratePreview])
 
   useEffect(() => {
     setItems(Array.from(Array(layers.length).keys()))

@@ -18,9 +18,11 @@ interface CompilerViewInterface {
   layers: LayerElement[]
   currentLayer: LayerElement
   regenerate: boolean
+  regeneratePreview: boolean
   setCurrentCustomRulesViewSection: (index: number) => void
   setCurrentViewSection: (index: number) => void
   setCurrentLayerPriority: (index: number) => void
+  setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
   setOrganisation: (organisation: Organisation) => void
   setRepository: (repository: Repository) => void
@@ -41,12 +43,15 @@ const useCompilerViewStore = create<CompilerViewInterface>((set) => ({
   currentLayer: null,
   artCollection: null,
   regenerate: false,
+  regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
   setCurrentViewSection: (index: number) =>
     set((_) => ({ currentViewSection: index })),
   setCurrentLayerPriority: (index: number) =>
     set((_) => ({ currentLayerPriority: index })),
   setOrganisation: (organisation: Organisation) =>
     set((_) => ({ organisation })),
+  setRegeneratePreview: (regenerate: boolean) =>
+    set((_) => ({ regeneratePreview: regenerate })),
   setRegenerateCollection: (regenerate: boolean) =>
     set((_) => ({ regenerate })),
   setRepository: (repository: Repository) => set((_) => ({ repository })),
