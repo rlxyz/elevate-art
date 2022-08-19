@@ -63,7 +63,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
     })
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],

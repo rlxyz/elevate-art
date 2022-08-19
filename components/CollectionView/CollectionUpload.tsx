@@ -103,54 +103,52 @@ export const CollectionUpload = ({ open, setOpen }) => {
                           total: 15,
                           progress: 20,
                         },
-                      ].map(
-                        ({ trait, size, current, total, progress }, index) => {
-                          return (
-                            <div
-                              key={`${trait}-${index}`}
-                              className={`grid grid-cols-10 ${
-                                index !== 0 ? 'pt-3' : ''
-                              }`}
-                            >
-                              <div className='col-span-9 flex space-y-3 flex flex-col'>
-                                <div className='flex space-x-3'>
-                                  <div className='flex items-center'>
-                                    <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
-                                      <Image
-                                        src={'/images/not-found.svg'}
-                                        width={15}
-                                        height={15}
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className='flex flex-col space-y-1'>
-                                    <span className='text-sm font-semibold text-black text-darkGrey'>
-                                      {trait}
-                                    </span>
-                                    <span className='text-xs text-darkGrey'>
-                                      {size.toFixed(1)} MB
-                                    </span>
+                      ].map(({ trait, size, current, total }, index) => {
+                        return (
+                          <div
+                            key={`${trait}-${index}`}
+                            className={`grid grid-cols-10 ${
+                              index !== 0 ? 'pt-3' : ''
+                            }`}
+                          >
+                            <div className='col-span-9 flex space-y-3 flex flex-col'>
+                              <div className='flex space-x-3'>
+                                <div className='flex items-center'>
+                                  <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
+                                    <Image
+                                      src={'/images/not-found.svg'}
+                                      width={15}
+                                      height={15}
+                                    />
                                   </div>
                                 </div>
-                                <div className='w-full rounded-[5px] h-1 bg-lightGray'>
-                                  <div
-                                    className={`bg-blueHighlight h-1 w-[${progress}%]`}
-                                  ></div>
-                                </div>
-                              </div>
-                              <div className='col-span-1 flex flex-col'>
-                                <div className='grid grid-rows-3 justify-items-end'>
-                                  <XCircleIcon className='w-5 h-5 row-span-1' />
-                                  <div />
-                                  <span className='text-sm'>
-                                    {current}/{total}
+                                <div className='flex flex-col space-y-1'>
+                                  <span className='text-sm font-semibold text-black text-darkGrey'>
+                                    {trait}
+                                  </span>
+                                  <span className='text-xs text-darkGrey'>
+                                    {size.toFixed(1)} MB
                                   </span>
                                 </div>
                               </div>
+                              <div className='w-full rounded-[5px] h-1 bg-lightGray'>
+                                <div
+                                  className={`bg-blueHighlight h-1 w-[50%]`}
+                                ></div>
+                              </div>
                             </div>
-                          )
-                        }
-                      )}
+                            <div className='col-span-1 flex flex-col'>
+                              <div className='grid grid-rows-3 justify-items-end'>
+                                <XCircleIcon className='w-5 h-5 row-span-1' />
+                                <div />
+                                <span className='text-sm'>
+                                  {current}/{total}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                   <div className='flex w-full pt-6 space-x-4'>

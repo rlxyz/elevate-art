@@ -2,7 +2,7 @@ import FileUpload from '@components/CloudinaryImage/FileUpload'
 import { CollectionUpload } from '@components/CollectionView/CollectionUpload'
 import { Layout } from '@components/Layout/Layout'
 import { Button } from '@components/UI/Button'
-import { GetStaticPaths, GetStaticProps } from 'next'
+// import { GetStaticPaths, GetStaticProps } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import React, { useState } from 'react'
 
@@ -30,19 +30,19 @@ const Page = () => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async (_) => {
-  return {
-    paths: ['/[organisation]/[repository]/upload'],
-    fallback: 'blocking',
-  }
-}
+// export const getStaticPaths: GetStaticPaths = async (_) => {
+//   return {
+//     paths: ['/[organisation]/[repository]/upload'],
+//     fallback: true,
+//   }
+// }
 
-export const getStaticProps: GetStaticProps = async (_) => {
-  return {
-    props: {
-      title: 'Upload',
-    },
-  }
-}
+// export const getStaticProps: GetStaticProps = async (_) => {
+//   return {
+//     props: {
+//       title: 'Upload',
+//     },
+//   }
+// }
 
 export default Page

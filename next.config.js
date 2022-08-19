@@ -48,11 +48,7 @@ if (process.env.EXPORT !== 'true') {
 }
 
 nextConfig.images = {
-  domains: [
-    'ipfs.rhapsodylabs.xyz',
-    'res.cloudinary.com',
-    'rlxyz.nyc3.cdn.digitaloceanspaces.com',
-  ],
+  domains: ['res.cloudinary.com'],
 }
 
 module.exports = plugins(

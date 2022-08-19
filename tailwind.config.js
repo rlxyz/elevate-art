@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     colors: {
       hue: {
-        light: '#FDFDF9', // example usage
+        light: '#FDFDF9',
         dark: '#0F111A',
       },
       white: colors.white,
@@ -41,11 +41,7 @@ module.exports = {
       '5xl': '2560px',
     },
   },
-  variants: {
-    extend: {},
-  },
   plugins: [
-    // ...
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
   ],
