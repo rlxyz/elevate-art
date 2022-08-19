@@ -9,7 +9,7 @@ export const useNotification = (projectName: string) => {
         <Notification id={t.id} type='success'>
           <div className='flex justify-between w-full items-center'>
             <div className='font-gilroy-light'>
-              <div className='font-bold'>{`Generating new collection`}</div>
+              <div className='font-bold'>{`Generating new ${projectName} collection`}</div>
             </div>
           </div>
         </Notification>

@@ -31,7 +31,10 @@ const AdvancedImage = ({
       className={`rounded-[5px] border-[1px] border-lightGray h-[125px] w-[125px]`}
     >
       <Image
-        src={cld.image(url).resize(fill().width(125).height(125)).toURL()}
+        src={cld
+          .image(url)
+          // .resize(fill().width(125).height(125))
+          .toURL()}
         width={125}
         height={125}
         className='rounded-[5px]'

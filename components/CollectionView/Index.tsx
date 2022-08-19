@@ -1,7 +1,7 @@
 import CollectionGenerateView from '@components/CollectionView/CollectionGenerateView'
 import CollectionImagesView from '@components/CollectionView/CollectionImagesView'
-import CollectionTraitRulesView from '@components/CollectionView/CollectionTraitRulesView'
 import CollectionRulesView from '@components/CollectionView/CollectionRulesView'
+import CollectionTraitRulesView from '@components/CollectionView/CollectionTraitRulesView'
 import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { useNotification } from '@hooks/useNotification'
@@ -10,9 +10,9 @@ import { Repository } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
+
 import LayerFolderSelector from './LayerFolderSelector'
 import { CollectionViewLeftbar } from './ViewContent'
-import { CollectionUpload } from './CollectionUpload'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,

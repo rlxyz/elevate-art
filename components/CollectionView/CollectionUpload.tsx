@@ -1,12 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { ExclamationIcon, XCircleIcon } from '@heroicons/react/outline'
-import { Button } from '@components/UI/Button'
 import FileUpload from '@components/CloudinaryImage/FileUpload'
-import { NextRouter, useRouter } from 'next/router'
-import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import { Button } from '@components/UI/Button'
+import { Dialog, Transition } from '@headlessui/react'
+import { XCircleIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
+import { NextRouter, useRouter } from 'next/router'
+import { Fragment, useRef } from 'react'
 
 export const CollectionUpload = ({ open, setOpen }) => {
   const cancelButtonRef = useRef(null)

@@ -12,11 +12,11 @@ import { config } from '@utils/config'
 import LogRocket from 'logrocket'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import { Toaster } from 'react-hot-toast'
 
 const { chains, provider } = configureChains(
   [

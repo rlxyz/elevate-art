@@ -1,16 +1,22 @@
 import FileUpload from '@components/CloudinaryImage/FileUpload'
 import { Button } from '@components/UI/Button'
-import { CubeIcon, FolderIcon, SelectorIcon } from '@heroicons/react/outline'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { NextRouter, useRouter } from 'next/router'
-import { LayerSectionEnum } from './Index'
-import { AnimatePresence, Reorder, useDragControls } from 'framer-motion'
-import { useState } from 'react'
-import * as React from 'react'
-import { animate, MotionValue, useMotionValue } from 'framer-motion'
-import { useEffect } from 'react'
+import { FolderIcon } from '@heroicons/react/outline'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import {
+  animate,
+  AnimatePresence,
+  MotionValue,
+  Reorder,
+  useDragControls,
+  useMotionValue,
+} from 'framer-motion'
+import { NextRouter, useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import * as React from 'react'
+
 import { CollectionUpload } from './CollectionUpload'
+import { LayerSectionEnum } from './Index'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 

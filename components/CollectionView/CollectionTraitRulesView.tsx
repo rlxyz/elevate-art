@@ -1,14 +1,15 @@
-import { CollectionViewContent } from './ViewContent'
-import { Combobox } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { TrashIcon } from '@heroicons/react/outline'
-import { useEffect, useState } from 'react'
-import { Button } from '@components/UI/Button'
-import { NextRouter, useRouter } from 'next/router'
 import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
-import { toPascalCaseWithSpace } from '@utils/format'
+import { Button } from '@components/UI/Button'
+import { Combobox } from '@headlessui/react'
+import { TrashIcon } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import { toPascalCaseWithSpace } from '@utils/format'
 import { LayerElement, TraitElement } from '@utils/types'
+import { NextRouter, useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+
+import { CollectionViewContent } from './ViewContent'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -32,7 +33,7 @@ const RuleConditionSelector = ({
   const [selectedLayerTraitRight, setSelectedLayerTraitRight] = useState()
 
   return (
-    <div className='w-full flex flex-col space-y-3'>
+    <div key={query} className='w-full flex flex-col space-y-3'>
       <span
         className={`block text-xs font-semibold uppercase ${
           disabled ? 'text-darkGrey' : ''
@@ -269,10 +270,7 @@ const RuleConditionSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
           {disabled ? (
-            <TrashIcon
-              className='h-5 w-5 text-lightGray'
-              onClick={() => console.log('deleting')}
-            />
+            <TrashIcon className='h-5 w-5 text-lightGray' />
           ) : (
             <Button>Add</Button>
           )}
@@ -298,9 +296,9 @@ const RuleConditionDisplay = ({
   const [currentTraits, setCurrentTraits] = useState<TraitElement[]>([])
 
   useEffect(() => {
-    console.log(traits)
+    // console.log(traits)
     setCurrentTraits(traits)
-  }, [title])
+  }, [title, query])
 
   return (
     <div className='w-full flex flex-col space-y-3'>
@@ -312,8 +310,8 @@ const RuleConditionDisplay = ({
         {title}
       </span>
       {currentTraits &&
-        currentTraits.map((trait: TraitElement, index: number) => (
-          <div className='grid grid-cols-10 space-x-3'>
+        currentTraits.map((trait: TraitElement, index) => (
+          <div className='grid grid-cols-10 space-x-3' key={index}>
             <div className='col-span-3 relative mt-1'>
               <Combobox
                 disabled
@@ -378,10 +376,7 @@ const RuleConditionDisplay = ({
             </div>
             <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
               {disabled ? (
-                <TrashIcon
-                  className='h-5 w-5 text-lightGray'
-                  onClick={() => console.log('deleting')}
-                />
+                <TrashIcon className='h-5 w-5 text-lightGray' />
               ) : (
                 <Button>Add</Button>
               )}
@@ -394,15 +389,11 @@ const RuleConditionDisplay = ({
 
 const CollectionRulesView = () => {
   const layers = useCompilerViewStore((state) => state.layers)
-  const { currentLayerPriority, collection, currentLayer } =
-    useCompilerViewStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        collection: state.collection,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
+  const { currentLayer } = useCompilerViewStore((state) => {
+    return {
+      currentLayer: state.currentLayer,
+    }
+  })
 
   // useEffect(() => {
   //   console.log('change', currentLayer, currentLayer.traits)

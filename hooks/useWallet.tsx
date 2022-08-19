@@ -107,7 +107,7 @@ const useInitialWallet = (): WalletMeta => {
       const _onboard = await getOnboard()
       setOnboard(_onboard)
     } catch (error) {
-      console.log({ error })
+      // console.log({ error })
     }
   }
 
@@ -124,7 +124,7 @@ const useInitialWallet = (): WalletMeta => {
           onboard.walletSelect(selectedWallet)
         }
       } catch (error) {
-        console.log({ error })
+        // console.log({ error })
       }
     }
 

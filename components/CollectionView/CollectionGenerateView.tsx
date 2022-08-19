@@ -1252,9 +1252,11 @@ const CollectionGenerateView = () => {
         await mergeImages(
           token.attributes.map(
             (attribute) =>
-              `${
-                process.env.NEXT_PUBLIC_CLOUDINARY_URL
-              }/image/upload/c_fill,h_300,w_300/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+              `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
+                process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
+                  ? 'c_fill,h_300,w_300'
+                  : ''
+              }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
                 attribute['trait_type']
               )}/${toPascalCaseWithSpace(attribute['value'])}.png`
           ),

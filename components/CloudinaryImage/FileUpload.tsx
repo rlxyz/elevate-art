@@ -1,3 +1,4 @@
+import { toPascalCaseWithSpace } from '@utils/format'
 import { ReactNode, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 
@@ -17,17 +18,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
       const key = `${id}/layers/${layerName}`
       const data = new FormData()
       data.append('file', file)
-      data.append(
-        'public_id',
-        `${fileName
-          .toLowerCase()
-          .replace(/(\s+)/g, '-')
-          .replace(
-            new RegExp(/\s+(.)(\w*)/, 'g'),
-            ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-          )
-          .replace(new RegExp(/\w/), (s) => s.toUpperCase())}`
-      )
+      data.append('public_id', toPascalCaseWithSpace(fileName))
       data.append('upload_preset', 'collection-upload')
       data.append('cloud_name', 'rlxyz')
       data.append('folder', key)
@@ -59,13 +50,13 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
           layerName: layerName,
           file: file,
         })
-          .then((response) => {
+          .then((_) => {
             // todo: handle upload success
-            console.log(response)
+            // console.log(response)
           })
-          .catch((err) => {
+          .catch((_) => {
             // todo: handle error
-            console.error(err)
+            // console.error(err)
           })
       }
       reader.readAsArrayBuffer(file)
@@ -88,7 +79,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
       {/* {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Drag and drop some files here, or click to select files</p>
       )} */}
     </div>
   )

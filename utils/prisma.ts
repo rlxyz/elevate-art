@@ -1,8 +1,4 @@
-import {
-  LayerElement as PrismaLayerModel,
-  PrismaClient,
-  TraitElement as PrismaTraitModel,
-} from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
@@ -88,7 +84,7 @@ export const convertPrismaLayers = (
       name: layer.name,
       priority: layer.priority,
       repositoryId: layer.repositoryId,
-      traits: layer.traitElements.map((trait: PrismaTraitModel) =>
+      traits: layer.traitElements.map((trait: PrismaTraitElement) =>
         convertPrismaTraitElement(trait)
       ),
     }

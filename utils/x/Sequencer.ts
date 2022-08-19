@@ -1,8 +1,8 @@
+import random from 'canvas-sketch-util/random'
+
 import { ArtImageElement, Element } from './Element'
 import Layer from './Layer'
 import { ElementSource, LayerConfig } from './types'
-
-const random = require('canvas-sketch-util/random')
 
 // Only handles the sequencing of Layers to create Elements
 // Doesn't handle metadata or other things
@@ -132,7 +132,7 @@ export class ImageElementRandomizer {
         }
         let r = Math.floor(random.value() * weight)
 
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
           if (
             Sequencer.layerElementHasExclusion(
               layers,

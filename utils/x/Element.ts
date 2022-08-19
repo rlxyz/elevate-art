@@ -65,7 +65,7 @@ abstract class ImageElement extends Element {
 }
 
 export class ArtImageElement extends ImageElement {
-  public toFile(output: string): Promise<void> {
+  public toFile(_: string): Promise<void> {
     throw new Error('Method not implemented.')
   }
   public toBuffer(): Promise<Buffer> {

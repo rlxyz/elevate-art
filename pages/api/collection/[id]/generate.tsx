@@ -1,14 +1,5 @@
-import {
-  convertPrismaCollection,
-  convertPrismaTraitElement,
-  createPrismaClient,
-} from '@utils/prisma'
-import {
-  Collection,
-  PrismaCollection,
-  PrismaTraitElement,
-  TraitElement,
-} from '@utils/types'
+import { convertPrismaCollection, createPrismaClient } from '@utils/prisma'
+import { Collection, PrismaCollection } from '@utils/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Response = Collection
@@ -26,10 +17,8 @@ export default async (
           where: { id },
           include: { artElements: true },
         })
-        console.log(data)
         return response.status(200).json(convertPrismaCollection(data))
       } catch (err) {
-        console.error(err)
         return response.status(400)
       }
     case 'POST':
@@ -41,10 +30,8 @@ export default async (
             artElements: true,
           },
         })
-        console.log(data)
         return response.status(200).json(convertPrismaCollection(data))
       } catch (err) {
-        console.error(err)
         return response.status(400)
       }
   }

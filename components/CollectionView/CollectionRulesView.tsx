@@ -11,7 +11,6 @@ import {
 } from '@utils/math'
 import { TraitElement } from '@utils/types'
 import { Formik } from 'formik'
-import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 

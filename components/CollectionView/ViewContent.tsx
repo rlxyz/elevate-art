@@ -1,7 +1,4 @@
-import { Button } from '@components/UI/Button'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { useNotification } from '@hooks/useNotification'
-import { NextRouter, useRouter } from 'next/router'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({
@@ -11,19 +8,16 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const {
-    currentViewSection,
-    regenerate,
-    setRegenerateCollection,
-    setCurrentViewSection,
-  } = useCompilerViewStore((state) => {
-    return {
-      regenerate: state.regenerate,
-      setRegenerateCollection: state.setRegenerateCollection,
-      currentViewSection: state.currentViewSection,
-      setCurrentViewSection: state.setCurrentViewSection,
+  const { currentViewSection, setCurrentViewSection } = useCompilerViewStore(
+    (state) => {
+      return {
+        regenerate: state.regenerate,
+        setRegenerateCollection: state.setRegenerateCollection,
+        currentViewSection: state.currentViewSection,
+        setCurrentViewSection: state.setCurrentViewSection,
+      }
     }
-  })
+  )
 
   return (
     <main>
@@ -91,7 +85,9 @@ export const CollectionViewContent = ({
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      <div className='overflow-y-scroll max-h-[calc(100vh-13rem)]'>{children}</div>
+      <div className='overflow-y-scroll max-h-[calc(100vh-13rem)]'>
+        {children}
+      </div>
     </main>
   )
 }
