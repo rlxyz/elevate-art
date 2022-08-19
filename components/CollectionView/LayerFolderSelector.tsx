@@ -131,41 +131,46 @@ const LayerFolderSelector = () => {
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
-  const [currentImagePreview, setCurrentImagePreview] =
-    useState<React.ReactNode>(null)
+  const [currentImagePreviews, setCurrentImagePreviews] = useState<
+    React.ReactNode[]
+  >([])
 
-  const generateImageHandler = async (): Promise<React.ReactNode> => {
+  const generateImageHandler = async (): Promise<React.ReactNode[]> => {
     const app: App = createCompilerApp(repositoryName)
-    const imageElement: Element = app.createElementFromRandomness()
-    return (
-      <Image
-        width={150}
-        height={150}
-        className='rounded-md'
-        src={await mergeImages(
-          imageElement
-            .toAttributes()
-            .map(
-              (attribute) =>
-                `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
-                  process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
-                    ? 'c_fill,h_300,w_300'
-                    : ''
-                }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
-                  attribute['trait_type']
-                )}/${toPascalCaseWithSpace(attribute['value'])}.png`
-            ),
-          { crossOrigin: 'Anonymous' }
-        )}
-      />
-    )
+    return [1, 2, 3].map(async () => {
+      const imageElement: Element = app.createElementFromRandomness()
+      return (
+        <Image
+          width={150}
+          height={150}
+          className='rounded-md'
+          src={await mergeImages(
+            imageElement
+              .toAttributes()
+              .map(
+                (attribute) =>
+                  `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
+                    process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
+                      ? 'c_fill,h_300,w_300'
+                      : ''
+                  }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+                    attribute['trait_type']
+                  )}/${toPascalCaseWithSpace(attribute['value'])}.png`
+              ),
+            { crossOrigin: 'Anonymous' }
+          )}
+        />
+      )
+    })
   }
 
   useEffect(() => {
     refreshImage &&
       generateImageHandler()
         .then((data) => {
-          setCurrentImagePreview(data)
+          Promise.all(data).then((images) => {
+            setCurrentImagePreviews(images)
+          })
         })
         .then(() => {
           setRefreshImage(false)
@@ -265,13 +270,14 @@ const LayerFolderSelector = () => {
             </button>
           </div>
           <div className='border border-lightGray p-2 rounded-[5px]'>
-            <div className='flex overflow-x-scroll overflow-x-auto space-x-3'>
-              <div className='border border-lightGray rounded-[5px]'>
-                {currentImagePreview}
-              </div>
-              <div className='border border-lightGray rounded-[5px]'>
-                {currentImagePreview}
-              </div>
+            <div className='flex overflow-hidden space-x-3'>
+              {currentImagePreviews?.map((images) => {
+                return (
+                  <div className='border border-lightGray rounded-[5px] w-[100px] h-[100px]'>
+                    {images}
+                  </div>
+                )
+              })}
             </div>
           </div>
           <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
