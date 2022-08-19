@@ -18,7 +18,7 @@ const CollectionGenerateView = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const [images, setImages] = useState<ReactNode>(null)
-  const collectionTotalSupply = 50
+  const collectionTotalSupply = 1000
   const {
     collection,
     regenerate,
