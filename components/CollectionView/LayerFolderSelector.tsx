@@ -1,7 +1,11 @@
 import FileUpload from '@components/CloudinaryImage/FileUpload'
 import { Button } from '@components/UI/Button'
-import { FolderIcon } from '@heroicons/react/outline'
-import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import {
+  FolderIcon,
+  RefreshIcon,
+  SwitchVerticalIcon,
+} from '@heroicons/react/outline'
+import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import {
   animate,
@@ -14,9 +18,14 @@ import {
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import * as React from 'react'
-
+import mergeImages from 'merge-images'
 import { CollectionUpload } from './CollectionUpload'
 import { LayerSectionEnum } from './Index'
+import Image from 'next/image'
+import { createCompilerApp } from '@utils/createCompilerApp'
+import { App } from '@utils/x/App'
+import { Element } from '@utils/x/Element'
+import { toPascalCaseWithSpace } from '@utils/format'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -49,10 +58,12 @@ export const ReorderItem = ({
   name,
   enabled,
   onClick,
+  canReorder,
 }: {
   item: number
   name: string
   enabled: boolean
+  canReorder: boolean
   onClick: () => void
 }) => {
   const y = useMotionValue(0)
@@ -68,7 +79,7 @@ export const ReorderItem = ({
       dragControls={dragControls}
     >
       <a // eslint-disable-line
-        className={`flex flex-row p-[4px] my-2 rounded-[5px] justify-between ${
+        className={`flex flex-row p-[4px] rounded-[5px] justify-between ${
           enabled ? 'bg-lightGray font-semibold' : 'text-darkGrey'
         }`}
         onClick={(e) => {
@@ -80,13 +91,15 @@ export const ReorderItem = ({
           <FolderIcon className='w-5 h-5' />
           <span className='ml-2 text-sm'>{name}</span>
         </div>
-        <DotsHorizontalIcon
-          className='w-5 h-5'
-          onPointerDown={(e) => {
-            e.preventDefault()
-            dragControls.start(e)
-          }}
-        />
+        {canReorder && (
+          <DotsHorizontalIcon
+            className='w-5 h-5'
+            onPointerDown={(e) => {
+              e.preventDefault()
+              dragControls.start(e)
+            }}
+          />
+        )}
       </a>
     </Reorder.Item>
   )
@@ -116,6 +129,50 @@ const LayerFolderSelector = () => {
   const repositoryName: string = router.query.repository as string
   const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   const [openUpload, setOpenUpload] = useState(false)
+  const [openReordering, setOpenReordering] = useState(false)
+  const [refreshImage, setRefreshImage] = useState(true)
+  const [currentImagePreview, setCurrentImagePreview] =
+    useState<React.ReactNode>(null)
+
+  const generateImageHandler = async (): Promise<React.ReactNode> => {
+    const app: App = createCompilerApp(repositoryName)
+    const imageElement: Element = app.createElementFromRandomness()
+    return (
+      <div className='flex flex-col items-center'>
+        <Image
+          width={150}
+          height={150}
+          className='rounded-md'
+          src={await mergeImages(
+            imageElement
+              .toAttributes()
+              .map(
+                (attribute) =>
+                  `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
+                    process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
+                      ? 'c_fill,h_300,w_300'
+                      : ''
+                  }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+                    attribute['trait_type']
+                  )}/${toPascalCaseWithSpace(attribute['value'])}.png`
+              ),
+            { crossOrigin: 'Anonymous' }
+          )}
+        />
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    refreshImage &&
+      generateImageHandler()
+        .then((data) => {
+          setCurrentImagePreview(data)
+        })
+        .then(() => {
+          setRefreshImage(false)
+        })
+  }, [refreshImage])
 
   useEffect(() => {
     setItems(Array.from(Array(layers.length).keys()))
@@ -124,44 +181,59 @@ const LayerFolderSelector = () => {
   return (
     layers &&
     layers.length > 0 && (
-      // calc(100vh-13rem) is the height of the Header & ViewContent
-      <main className='p-8'>
-        <div className='mb-8 h-10'>
-          <Button
-            onClick={() => {
-              !regenerate && setRegenerateCollection(true)
-            }}
-          >
-            Generate New
-          </Button>
-        </div>
-        <div className='mb-8 h-10'>
-          <Button
-            onClick={() => {
-              setOpenUpload(true)
-            }}
-          >
-            Upload Files
-          </Button>
-          <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
-        </div>
-        <div
-          className={`pb-4 mb-4 ${
-            currentViewSection === LayerSectionEnum.RULES
-              ? 'border-b border-b-lightGray'
-              : ''
-          }`}
-        >
-          <span className='text-xs font-semibold text-darkGrey uppercase'>
-            {layers.length === 1 ? 'Layer' : 'Layers'}
+      <main className='px-8 pt-8 space-y-6'>
+        <div className='space-y-2'>
+          <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+            {'Generate'}
           </span>
-          <div className='mt-4 border border-lightGray rounded-[5px] p-2'>
+          <div>
+            <Button
+              onClick={() => {
+                !regenerate && setRegenerateCollection(true)
+              }}
+            >
+              <span className='p-2 flex items-center justify-center space-x-1'>
+                <RefreshIcon className='w-5 h-5' />
+                <span>Generate</span>
+              </span>
+            </Button>
+          </div>
+        </div>
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+              {layers.length === 1 ? 'Layer' : 'Layers'}
+            </span>
+            <div className='space-x-1'>
+              <button onClick={() => setOpenReordering(!openReordering)}>
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <SwitchVerticalIcon className='text-darkGrey w-3 h-3' />
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setOpenUpload(true)
+                }}
+              >
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <PlusIcon className='text-darkGrey w-3 h-3' />
+                </div>
+              </button>
+            </div>
+          </div>
+          <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-42.5rem)] overflow-y-scroll'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
               <AnimatePresence>
-                <Reorder.Group axis='y' values={items} onReorder={setItems}>
+                <Reorder.Group
+                  axis='y'
+                  values={items}
+                  onReorder={setItems}
+                  className='space-y-2 m-2'
+                >
                   {items.map((item) => {
                     return (
                       <ReorderItem
+                        canReorder={openReordering}
                         key={item}
                         name={layers[item]?.name}
                         item={item}
@@ -177,6 +249,31 @@ const LayerFolderSelector = () => {
             </FileUpload>
           </div>
         </div>
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+              {'Preview'}
+            </span>
+            <button
+              onClick={() => {
+                setRefreshImage(true)
+              }}
+            >
+              <div className='border rounded-[5px] border-lightGray p-1'>
+                <RefreshIcon className='text-darkGrey w-3 h-3' />
+              </div>
+            </button>
+          </div>
+          <div className='flex justify-between'>
+            <div className='border border-lightGray rounded-[5px] w-[150px] h-[150px]'>
+              {currentImagePreview}
+            </div>
+            <div className='border border-lightGray rounded-[5px] w-[150px] h-[150px]'>
+              {currentImagePreview}
+            </div>
+          </div>
+        </div>
+        <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         {/* {currentViewSection === LayerSectionEnum.RULES && (
           <div>
             <span className='text-xs font-semibold text-darkGrey uppercase'>

@@ -45,7 +45,7 @@ const CollectionImagesView = () => {
               return (
                 <div
                   key={`${trait.name}-${index}`}
-                  className='flex flex-col items-center'
+                  className='flex flex-col items-center z-[-1]'
                 >
                   <AdvancedImage
                     url={`${organisationName}/${repositoryName}/layers/${

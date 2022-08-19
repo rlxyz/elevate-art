@@ -26,7 +26,7 @@ export const CollectionViewLeftbar = ({
           <h1 className='grid grid-cols-4 font-bold text-darkGrey flex flex-row'>
             <span className='col-span-1 text-2xl'>{title}</span>
           </h1>
-          <div className='mt-5 flex'>
+          <div className='mt-5 flex justify-between'>
             {['Preview', 'Layers', 'Rarity', 'Rules'].map(
               (section: string, index: number) => {
                 return (
