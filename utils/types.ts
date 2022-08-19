@@ -1,5 +1,4 @@
 import {
-  ArtElement as PrismaArtModel,
   Collection as PrismaCollectionModel,
   LayerElement as PrismaLayerModel,
   Organisation as PrismaOrganisationModel,
@@ -18,10 +17,7 @@ export type PrismaRepository = PrismaRepositoryModel & {
   collections: PrismaCollectionModel[]
 } & { layers: PrismaLayerElement[] }
 
-export type PrismaCollection = PrismaCollectionModel & {
-  artElements: PrismaArtModel[]
-}
-export type PrismaArtElement = PrismaArtModel
+export type PrismaCollection = PrismaCollectionModel
 
 export type PrismaLayerElement = PrismaLayerModel & {
   traitElements: PrismaTraitModel[]
@@ -58,8 +54,6 @@ export type Collection = {
   totalSupply: number
   repositoryId: string
   generations: number
-
-  artElement?: ArtElement[]
 }
 
 export type LayerElement = {
@@ -76,10 +70,4 @@ export type TraitElement = {
   name: string
   weight: number
   layerElementId: string
-}
-
-export type ArtElement = {
-  id: number
-  collectionId: string
-  // traitElementsObject: any
 }

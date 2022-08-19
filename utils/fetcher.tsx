@@ -8,4 +8,5 @@ export const fetcherPost = (route: string, body: any) =>
     headers: {
       'Content-Type': 'application/json',
     },
+    mode: 'no-cors',
   }).then((r) => r.json())

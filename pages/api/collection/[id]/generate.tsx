@@ -15,7 +15,6 @@ export default async (
       try {
         const data: PrismaCollection = await prisma.collection.findFirst({
           where: { id },
-          include: { artElements: true },
         })
         return response.status(200).json(convertPrismaCollection(data))
       } catch (err) {
@@ -26,9 +25,6 @@ export default async (
         const data: PrismaCollection = await prisma.collection.update({
           where: { id },
           data: { generations: { increment: 1 } },
-          include: {
-            artElements: true,
-          },
         })
         return response.status(200).json(convertPrismaCollection(data))
       } catch (err) {

@@ -2,11 +2,9 @@ import { PrismaClient } from '@prisma/client'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
-  ArtElement,
   Collection,
   LayerElement,
   Organisation,
-  PrismaArtElement,
   PrismaCollection,
   PrismaLayerElement,
   PrismaOrganisation,
@@ -69,9 +67,6 @@ export const convertPrismaCollection = (
     totalSupply: collection.totalSupply,
     repositoryId: collection.repositoryId,
     generations: collection.generations,
-    artElement: collection.artElements?.map((artElement: PrismaArtElement) =>
-      convertPrismaArtElement(artElement)
-    ),
   }
 }
 
@@ -89,20 +84,6 @@ export const convertPrismaLayers = (
       ),
     }
   })
-}
-
-function convertPrismaArtElement(artElement: PrismaArtElement): ArtElement {
-  console.log(artElement)
-  return {
-    id: artElement.id,
-    collectionId: artElement.collectionId,
-    // traitElement: JSON.parse(artElement.traits.toString()).map(
-    //   (traitElement: PrismaTraitModel) => {
-    //     console.log(traitElement)
-    //     return
-    //   }
-    // ),
-  }
 }
 
 export const convertPrismaTraitElement = (

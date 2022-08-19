@@ -64,8 +64,6 @@ model Collection {
 
   repository   Repository @relation(fields: [repositoryId], references: [id])
   repositoryId String
-
-  artElements ArtElement[]
 }
 
 model LayerElement {
@@ -80,15 +78,6 @@ model LayerElement {
   repositoryId String
 
   traitElements TraitElement[]
-}
-
-model ArtElement {
-  id Int @id @default(autoincrement())
-
-  collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId String
-
-  traitElementsObject Json
 }
 
 model TraitElement {
