@@ -204,8 +204,8 @@ const DomView = () => {
                   LayerSectionEnum.RULES,
                 ].includes(currentViewSection) && <LayerFolderSelector />}
                 {currentViewSection === LayerSectionEnum.PREVIEW && (
-                  <aside className='p-8'>
-                    <div className='space-y-2 mb-8'>
+                  <div className='p-8 space-y-6 min-h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)'>
+                    <div className='space-y-2'>
                       <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
                         {'Generate'}
                       </span>
@@ -222,12 +222,12 @@ const DomView = () => {
                         </Button>
                       </div>
                     </div>
-                    <div className='hidden lg:block'>
-                      <form className='divide-y divide-lightGray space-y-8'>
+                    <div className='hidden lg:block overflow-hidden'>
+                      <form>
                         {filters &&
                           filters.map((section, sectionIdx) => (
                             <div key={`${section.name}-${sectionIdx}`}>
-                              <fieldset>
+                              <fieldset className='space-y-2'>
                                 <legend
                                   className={`block text-xs font-normal text-darkGrey uppercase ${
                                     sectionIdx !== 0 ? 'pt-8' : ''
@@ -235,7 +235,7 @@ const DomView = () => {
                                 >
                                   {section.name}
                                 </legend>
-                                <div className='pt-4 space-y-3'>
+                                <div className='p-2 space-y-3 border border-lightGray rounded-[5px] max-h-[22em] overflow-y-scroll no-scrollbar'>
                                   {section.options.map((option, optionIdx) => (
                                     <div
                                       key={`${option.value}-${option.label}-${sectionIdx}`}
@@ -252,7 +252,7 @@ const DomView = () => {
                                         name={`${section.id}[]`}
                                         defaultValue={option.value}
                                         type='checkbox'
-                                        className='h-4 w-4 border-[1px] rounded-sm border-darkGrey bg-hue-light text-indigo-600 focus:ring-indigo-500'
+                                        className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
                                       />
                                     </div>
                                   ))}
@@ -262,7 +262,7 @@ const DomView = () => {
                           ))}
                       </form>
                     </div>
-                  </aside>
+                  </div>
                 )}
                 {/* {currentViewSection === LayerSectionEnum.RULES && (
                   <aside className='p-8 divide-y divide-lightGray'>
