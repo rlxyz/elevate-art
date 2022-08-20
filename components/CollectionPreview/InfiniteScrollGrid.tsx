@@ -63,7 +63,7 @@ const InfiniteScrollGrid = () => {
   }
 
   const fetchMoreData = (page: number) => {
-    if (page > collection.totalSupply - 1) {
+    if (page * collectionGenerationBatchSize > collection.totalSupply - 1) {
       return
     }
 
