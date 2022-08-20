@@ -63,6 +63,7 @@ const InfiniteScrollGrid = () => {
   }
 
   const fetchMoreData = (page: number) => {
+    // todo: fix. doesnt check all cases.
     if (page * collectionGenerationBatchSize > collection.totalSupply - 1) {
       return
     }

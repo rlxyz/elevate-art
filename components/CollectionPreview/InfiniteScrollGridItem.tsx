@@ -2,6 +2,7 @@ import { toPascalCaseWithSpace } from '@utils/format'
 import React, { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import Image from 'next/image'
 
 const InfiniteScrollGridItem = ({
   token,
@@ -38,7 +39,7 @@ const InfiniteScrollGridItem = ({
 
   return (
     <motion.div
-      className='flex flex-col'
+      className='flex flex-col space-y-2'
       variants={item}
       initial='hidden'
       animate={controls}
@@ -54,7 +55,9 @@ const InfiniteScrollGridItem = ({
               className='absolute w-full h-full flex flex-col items-center'
               key={index}
             >
-              <img
+              <Image
+                width={125}
+                height={125}
                 className='rounded-[5px] border-[1px] border-lightGray'
                 src={`${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
                   process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
@@ -68,7 +71,7 @@ const InfiniteScrollGridItem = ({
           )
         })}
       </div>
-      <span className='text-xs'>{name}</span>
+      <span className='text-xs flex justify-center'>{name}</span>
     </motion.div>
   )
 }
