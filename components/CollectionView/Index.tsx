@@ -28,10 +28,12 @@ const DomView = () => {
   const repositoryName: string = router.query.repository as string
   const { data } = useSWR<Repository>(
     [organisationName, repositoryName],
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 300,
+    }
   )
   const [filters, setFilters] = useState(null)
-  const { notifySuccess } = useNotification(repositoryName)
   const [layerInitiailised, setLayerInitiailised] = useState(false)
 
   const {

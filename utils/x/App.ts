@@ -69,15 +69,16 @@ export class App {
     return new Collection({ tokens, data, totalSupply })
   }
 
-  createRandomCollectionFromSeed = async (
-    totalSupply: number,
-    seed: number
-  ): Promise<Collection> => {
+  createRandomCollectionFromSeed = (
+    seed: number,
+    startPoint: number = 0,
+    endPoint: number
+  ): { tokens: any[] } => {
     const allHash = new Set()
     const tokens = []
     const data = []
-    const startPoint = 0
-    for (let i = startPoint; i < totalSupply + startPoint; ) {
+    console.log(startPoint, endPoint)
+    for (let i = startPoint; i < endPoint; ) {
       const element: Element = this.createElementFromHash(
         utils.keccak256(utils.toUtf8Bytes(String((i + 1) * seed)))
       )
@@ -90,7 +91,7 @@ export class App {
         data.push(attributes)
       }
     }
-    return new Collection({ tokens, data, totalSupply })
+    return { tokens }
   }
 
   createElementFromHash = (tokenHash: string): Element => {
