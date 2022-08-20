@@ -85,7 +85,7 @@ export const CollectionViewContent = ({
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      <div className='overflow-y-scroll max-h-[calc(100vh-13rem)]'>
+      <div className='max-h-[calc(100vh-13rem)]'>
         {children}
       </div>
     </main>

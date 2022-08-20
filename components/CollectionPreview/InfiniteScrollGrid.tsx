@@ -86,7 +86,7 @@ const InfiniteScrollGrid = () => {
       loader={<div className='w-full h-full flex items-center'>...</div>}
     >
       <motion.div
-        className='grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7'
+        className='grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
         initial='hidden'
         animate='show'
         variants={container}
