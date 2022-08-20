@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import FileUpload from '@components/CloudinaryImage/FileUpload'
+import FileUpload from '@components/CollectionHelpers/FileUpload'
 import { Button } from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'

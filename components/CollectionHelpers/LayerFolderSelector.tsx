@@ -1,4 +1,4 @@
-import FileUpload from '@components/CloudinaryImage/FileUpload'
+import FileUpload from '@components/CollectionHelpers/FileUpload'
 import { Button } from '@components/UI/Button'
 import {
   ArrowsExpandIcon,
@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 import * as React from 'react'
 import mergeImages from 'merge-images'
 import { CollectionUpload } from './CollectionUpload'
-import { LayerSectionEnum } from './Index'
+import { LayerSectionEnum } from '../CollectionView/Index'
 import Image from 'next/image'
 import { createCompilerApp } from '@utils/createCompilerApp'
 import { App } from '@utils/x/App'

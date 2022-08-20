@@ -1,4 +1,4 @@
-import FileUpload from '@components/CloudinaryImage/FileUpload'
+import FileUpload from '@components/CollectionHelpers/FileUpload'
 import { Layout } from '@components/Layout/Layout'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { NextRouter, useRouter } from 'next/router'

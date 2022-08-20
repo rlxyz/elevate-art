@@ -1,4 +1,4 @@
-import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
@@ -15,7 +15,7 @@ import { Formik } from 'formik'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import { CollectionViewContent } from './ViewContent'
+import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 
 const CollectionRulesView = () => {
   const router: NextRouter = useRouter()

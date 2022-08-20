@@ -1,21 +1,15 @@
-import AdvancedImage from '@components/CloudinaryImage/AdvancedImage'
+import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { TrashIcon } from '@heroicons/react/outline'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { LayerElement, TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { classNames } from '../../utils/classnames'
 
-import { CollectionViewContent } from './ViewContent'
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const RuleConditionSelector = ({
+export const RuleConditionSelector = ({
   layers,
   title,
   disabled = false,
@@ -279,154 +273,3 @@ const RuleConditionSelector = ({
     </div>
   )
 }
-
-const RuleConditionDisplay = ({
-  title,
-  traits,
-  condition,
-  disabled = false,
-}: {
-  title: string
-  traits: TraitElement[]
-  condition: 'cannot mix with' | 'only mixes with' | 'always mixes with'
-  disabled?: boolean
-}) => {
-  const [query, setQuery] = useState('')
-  const [selectedLayerTrait, setSelectedLayerTrait] = useState()
-  const [currentTraits, setCurrentTraits] = useState<TraitElement[]>([])
-
-  useEffect(() => {
-    // console.log(traits)
-    setCurrentTraits(traits)
-  }, [title, query])
-
-  return (
-    <div className='w-full flex flex-col space-y-3'>
-      <span
-        className={`block text-xs font-semibold uppercase ${
-          disabled ? 'text-darkGrey' : ''
-        }`}
-      >
-        {title}
-      </span>
-      {currentTraits &&
-        currentTraits.map((trait: TraitElement, index) => (
-          <div className='grid grid-cols-10 space-x-3' key={index}>
-            <div className='col-span-3 relative mt-1'>
-              <Combobox
-                disabled
-                as='div'
-                value={selectedLayerTrait}
-                onChange={setSelectedLayerTrait}
-              >
-                <Combobox.Input
-                  className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
-                  onChange={(event) => setQuery(event.target.value)}
-                  displayValue={(_) => trait?.name}
-                  placeholder='Select a Trait or Layer'
-                />
-                <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-                  <SelectorIcon
-                    className='h-5 w-5 text-lightGray'
-                    aria-hidden='true'
-                  />
-                </Combobox.Button>
-              </Combobox>
-            </div>
-            <div className='col-span-2 relative mt-1'>
-              <Combobox
-                disabled
-                as='div'
-                value={selectedLayerTrait}
-                onChange={setSelectedLayerTrait}
-              >
-                <Combobox.Input
-                  className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
-                  onChange={(event) => setQuery(event.target.value)}
-                  displayValue={(_) => condition}
-                  placeholder='cannot mix with'
-                />
-                <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-                  <SelectorIcon
-                    className='h-5 w-5 text-lightGray'
-                    aria-hidden='true'
-                  />
-                </Combobox.Button>
-              </Combobox>
-            </div>
-            <div className='col-span-4 relative mt-1'>
-              <Combobox
-                as='div'
-                value={selectedLayerTrait}
-                onChange={setSelectedLayerTrait}
-              >
-                <Combobox.Input
-                  className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
-                  onChange={(event) => setQuery(event.target.value)}
-                  displayValue={(layer: TraitElement) => layer?.name}
-                  placeholder='Select a Trait or Layer'
-                />
-                <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-                  <SelectorIcon
-                    className='h-5 w-5 text-lightGray'
-                    aria-hidden='true'
-                  />
-                </Combobox.Button>
-              </Combobox>
-            </div>
-            <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
-              {disabled ? (
-                <TrashIcon className='h-5 w-5 text-lightGray' />
-              ) : (
-                <Button>Add</Button>
-              )}
-            </div>
-          </div>
-        ))}
-    </div>
-  )
-}
-
-const CollectionRulesView = () => {
-  const layers = useCompilerViewStore((state) => state.layers)
-  const { currentLayer } = useCompilerViewStore((state) => {
-    return {
-      currentLayer: state.currentLayer,
-    }
-  })
-
-  // useEffect(() => {
-  //   console.log('change', currentLayer, currentLayer.traits)
-  // }, [currentLayer])
-
-  return (
-    <CollectionViewContent
-      title={'Custom Trait Rules'}
-      description='Set how often you want certain images to appear in the generation'
-    >
-      <div className='p-8 flex flex-col divide-y divide-lightGray space-y-6'>
-        <div>
-          <RuleConditionSelector layers={layers} title='Create a condition' />
-        </div>
-        <div className='pt-6'>
-          <RuleConditionDisplay
-            title={currentLayer.name}
-            condition='only mixes with'
-            traits={currentLayer.traits} // todo: fix
-            disabled={true}
-          />
-        </div>
-        {/* <div className='pt-6'>
-          <RuleConditionDisplay
-            title='Arms'
-            condition='only mixes with'
-            traits={layers[0].traits.filter((_) => Math.random() > 0.5)} // todo: fix
-            disabled={true}
-          />
-        </div> */}
-      </div>
-    </CollectionViewContent>
-  )
-}
-
-export default CollectionRulesView
