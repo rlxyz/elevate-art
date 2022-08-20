@@ -1,6 +1,7 @@
 import FileUpload from '@components/CloudinaryImage/FileUpload'
 import { Button } from '@components/UI/Button'
 import {
+  ArrowsExpandIcon,
   FolderIcon,
   RefreshIcon,
   SwitchVerticalIcon,
@@ -136,18 +137,19 @@ const LayerFolderSelector = () => {
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
+  const [expandPreview, setExpandPreview] = useState(false)
   const [currentImagePreviews, setCurrentImagePreviews] = useState<
     React.ReactNode[]
   >([])
 
   const generateImageHandler = async (): Promise<React.ReactNode[]> => {
     const app: App = createCompilerApp(repositoryName)
-    return [1, 2, 3].map(async () => {
+    return Array.from(Array(30).keys()).map(async () => {
       const imageElement: Element = app.createElementFromRandomness()
       return (
         <Image
-          width={150}
-          height={150}
+          width={100}
+          height={100}
           className='rounded-md'
           src={await mergeImages(
             imageElement
@@ -260,34 +262,48 @@ const LayerFolderSelector = () => {
             </div>
           </div>
         </div>
-        <div className='space-y-2'>
+        {/* <footer className='bg-hue-light fixed left-0 bottom-0 pl-8 py-4 space-y-2 border-t border-lightGray'> */}
+        <footer className='space-y-2'>
           <div className='flex items-center justify-between'>
             <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
               {'Preview'}
             </span>
-            <button
-              onClick={() => {
-                setRefreshImage(true)
-              }}
-            >
-              <div className='border rounded-[5px] border-lightGray p-1'>
-                <RefreshIcon className='text-darkGrey w-3 h-3' />
-              </div>
-            </button>
-          </div>
-          <div className='border border-lightGray p-2 rounded-[5px]'>
-            <div className='flex overflow-hidden space-x-3'>
-              {currentImagePreviews?.map((images) => {
-                return (
-                  <div className='border border-lightGray rounded-[5px] w-[100px] h-[100px]'>
-                    {images}
-                  </div>
-                )
-              })}
+            <div className='flex space-x-1'>
+              <button
+                onClick={() => {
+                  setRefreshImage(true)
+                }}
+              >
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <RefreshIcon className='text-darkGrey w-3 h-3' />
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setExpandPreview(!expandPreview)
+                }}
+              >
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <ArrowsExpandIcon className='text-darkGrey w-3 h-3' />
+                </div>
+              </button>
             </div>
           </div>
+          <div
+            className={`flex overflow-x-scroll no-scrollbar border border-lightGray p-2 rounded-[5px] ${
+              expandPreview ? 'w-[calc(100vw-4rem)]' : ''
+            } space-x-2`}
+          >
+            {currentImagePreviews?.map((images) => {
+              return (
+                <div className='border border-lightGray rounded-[5px] min-h-[100px] min-w-[100px] max-h-[100px]'>
+                  {images}
+                </div>
+              )
+            })}
+          </div>
           <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
-        </div>
+        </footer>
       </main>
     )
   )
