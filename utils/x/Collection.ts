@@ -5,14 +5,28 @@ export type ArtCollectionElement = {
   value: string
 }
 
+export type ArtCollectionToken = { attributes: any; token_hash: string }
+
+export type ArtCollectionAttributeMap = {
+  [key: string]: { [key: string]: number }
+}
+
+export type ArtCollectionTokenMap = {
+  [key: string]: { [key: string]: number[] }
+}
+
 class ArtCollection {
+  // Header
   username: string
-  tokens: { attributes: any; token_hash: string }[]
-  filtered: { attributes: any; token_hash: string }[]
-  data: any
   totalSupply: number
-  traitsToTokenId: any
-  filteredTokenIds: number[]
+
+  // Data
+  tokens: ArtCollectionToken[]
+  filtered: ArtCollectionToken[]
+
+  // Maps
+  tokenIdMap: ArtCollectionTokenMap
+  attributeMap: ArtCollectionAttributeMap
 
   constructor({
     tokens,
@@ -26,11 +40,17 @@ class ArtCollection {
     this.tokens = tokens
     this.filtered = tokens
     this.totalSupply = totalSupply
-    this.traitsToTokenId = this.createTraitToTokenIdMapping()
+    const { attributeMap, tokenIdMap } = this.createAttributeMappings()
+    this.tokenIdMap = tokenIdMap
+    this.attributeMap = attributeMap
+  }
+
+  getTraitCount = ({ trait_type, value }: ArtCollectionElement) => {
+    return this.attributeMap[trait_type][value]
   }
 
   getTotalSupply = (): number => {
-    return Number(process.env.COLLECTION_TOTAL_SUPPLY)
+    return this.totalSupply
   }
 
   // todo: make this faster
@@ -39,7 +59,7 @@ class ArtCollection {
     filters.forEach(({ trait_type, value }: ArtCollectionElement) => {
       filteredTokenIds = [
         ...filteredTokenIds,
-        ...(this.traitsToTokenId[trait_type][value] || []),
+        ...(this.tokenIdMap[trait_type][value] || []),
       ]
     })
     filteredTokenIds = filteredTokenIds
@@ -52,9 +72,8 @@ class ArtCollection {
 
   calculateRarityAttributes = (type: CollectionAnalyticsType) => {
     const traits: any = {}
-    for (const item of this.data) {
-      for (const attributes of item) {
-        const { trait_type: type, value } = attributes
+    for (const { attributes } of this.tokens) {
+      for (const { trait_type: type, value } of attributes) {
         !traits[type] && (traits[type] = {})
         !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++
       }
@@ -182,111 +201,117 @@ class ArtCollection {
     }
   }
 
-  filterByRanking = (start: number, end: number): ArtCollection => {
-    const traits: any = {}
-    for (const item of this.data) {
-      for (const attributes of item) {
-        const { trait_type: type, value } = attributes
-        !traits[type] && (traits[type] = {})
-        !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++
-      }
-    }
+  // filterByRanking = (start: number, end: number): ArtCollection => {
+  //   const traits: any = {}
+  //   for (const item of this.data) {
+  //     for (const attributes of item) {
+  //       const { trait_type: type, value } = attributes
+  //       !traits[type] && (traits[type] = {})
+  //       !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++
+  //     }
+  //   }
 
-    let upperBound = 0
-    let total = 0
-    for (const [_, value] of Object.entries(traits)) {
-      for (const [_, entry] of Object.entries(value)) {
-        entry > upperBound && (upperBound = entry) // todo: move to own function
-        total += entry
-      }
-    }
+  //   let upperBound = 0
+  //   let total = 0
+  //   for (const [_, value] of Object.entries(traits)) {
+  //     for (const [_, entry] of Object.entries(value)) {
+  //       entry > upperBound && (upperBound = entry) // todo: move to own function
+  //       total += entry
+  //     }
+  //   }
 
-    for (const [type, value] of Object.entries(traits)) {
-      traits[type] = Object.entries(value)
-        // @ts-ignore
-        .sort(([, v1], [, v2]) => v1 - v2)
-        .reduce(
-          (obj, [k, v]) => ({
-            ...obj,
-            [k]: v,
-          }),
-          {}
-        )
-    }
+  //   for (const [type, value] of Object.entries(traits)) {
+  //     traits[type] = Object.entries(value)
+  //       // @ts-ignore
+  //       .sort(([, v1], [, v2]) => v1 - v2)
+  //       .reduce(
+  //         (obj, [k, v]) => ({
+  //           ...obj,
+  //           [k]: v,
+  //         }),
+  //         {}
+  //       )
+  //   }
 
-    // Get Rarity Rating for each type-attribute
-    for (const [type, value] of Object.entries(traits)) {
-      for (const [attribute, attribute_value] of Object.entries(value)) {
-        traits[type][attribute] = {
-          value: attribute_value,
-          rating: upperBound / attribute_value,
-        }
-      }
-    }
+  //   // Get Rarity Rating for each type-attribute
+  //   for (const [type, value] of Object.entries(traits)) {
+  //     for (const [attribute, attribute_value] of Object.entries(value)) {
+  //       traits[type][attribute] = {
+  //         value: attribute_value,
+  //         rating: upperBound / attribute_value,
+  //       }
+  //     }
+  //   }
 
-    const rank = []
-    for (let j = 0; j < this.totalSupply; j++) {
-      let rarityValue = 0
-      for (const item of this.tokens[j]['attributes']) {
-        const { trait_type, value } = item
-        rarityValue += traits[trait_type][value]['rating']
-      }
-      rank.push(rarityValue)
-    }
+  //   const rank = []
+  //   for (let j = 0; j < this.totalSupply; j++) {
+  //     let rarityValue = 0
+  //     for (const item of this.tokens[j]['attributes']) {
+  //       const { trait_type, value } = item
+  //       rarityValue += traits[trait_type][value]['rating']
+  //     }
+  //     rank.push(rarityValue)
+  //   }
 
-    var mapped = rank
-      .map(function (el, i) {
-        return { token_id: i, rarity: el }
-      })
-      .sort(function (a, b) {
-        return b.rarity - a.rarity
-      })
+  //   var mapped = rank
+  //     .map(function (el, i) {
+  //       return { token_id: i, rarity: el }
+  //     })
+  //     .sort(function (a, b) {
+  //       return b.rarity - a.rarity
+  //     })
 
-    return new ArtCollection({
-      tokens: mapped
-        .slice(start, end)
-        .map((token: { token_id: number; rarity: number }, index) => {
-          const { token_id } = token
-          return {
-            token_hash: this.tokens[token_id]['token_hash'],
-            attributes: this.tokens[token_id]['attributes'].map(
-              (attribute: any) => {
-                const { trait_type, value } = attribute
-                return {
-                  trait_type: trait_type,
-                  value: value,
-                  rating: traits[trait_type][value]['rating'],
-                }
-              }
-            ),
-          }
-        }),
-      totalSupply: end - start,
-      data: null,
-    })
-  }
+  //   return new ArtCollection({
+  //     tokens: mapped
+  //       .slice(start, end)
+  //       .map((token: { token_id: number; rarity: number }, index) => {
+  //         const { token_id } = token
+  //         return {
+  //           token_hash: this.tokens[token_id]['token_hash'],
+  //           attributes: this.tokens[token_id]['attributes'].map(
+  //             (attribute: any) => {
+  //               const { trait_type, value } = attribute
+  //               return {
+  //                 trait_type: trait_type,
+  //                 value: value,
+  //                 rating: traits[trait_type][value]['rating'],
+  //               }
+  //             }
+  //           ),
+  //         }
+  //       }),
+  //     totalSupply: end - start,
+  //     data: null,
+  //   })
+  // }
 
-  // todo: make this faster
-  createTraitToTokenIdMapping = () => {
-    let t = {}
+  createAttributeMappings = () => {
+    let tokenIdMap: ArtCollectionTokenMap = {}
+    let attributeMap: ArtCollectionAttributeMap = {}
+
+    // iterate each token
     this.tokens.forEach(
       (
         { attributes }: { attributes: ArtCollectionElement[] },
         index: number
       ) => {
         attributes.forEach((attribute: ArtCollectionElement) => {
-          const { trait_type, value } = attribute
-          !t[trait_type] && (t[trait_type] = {})
-          if (!t[trait_type][value]) {
-            t[trait_type][value] = [index]
-          } else {
-            t[trait_type][value] &&
-              (t[trait_type][value] = [...t[trait_type][value], index])
-          }
+          // get the trait type and value. e.g Background for t, Blue for v
+          const { trait_type: t, value: v } = attribute
+
+          // build maps if they dont exists
+          !tokenIdMap[t] && ((tokenIdMap[t] = {}), (attributeMap[t] = {}))
+
+          // update tokenIdMap - push to array
+          tokenIdMap[t][v]?.push(index) || (tokenIdMap[t][v] = [index])
+
+          // update attributeMap - increment by 1 each time
+          attributeMap[t][v] = attributeMap[t][v] + 1 || 1
         })
       }
     )
-    return t
+
+    return { tokenIdMap, attributeMap }
   }
 
   filterByPosition = (
