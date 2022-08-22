@@ -14,6 +14,12 @@ import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
 import { CollectionViewLeftbar } from '../CollectionHelpers/ViewContent'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { RefreshIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon } from '@heroicons/react/solid'
+import { createCompilerApp } from '@utils/createCompilerApp'
+import { App } from '@utils/x/App'
+import { ethers } from 'ethers'
+import ArtCollection from '@utils/x/Collection'
+import { SortByRarity } from '@components/CollectionPreview/SortByRarity'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
@@ -37,35 +43,48 @@ const DomView = () => {
   const [layerInitiailised, setLayerInitiailised] = useState(false)
 
   const {
+    collection,
     layers,
     regenerate,
     currentViewSection,
     currentLayerPriority,
+    artCollection,
+    setApp,
+    setRegenerateFilter,
     setCurrentViewSection,
     setCollection,
+    setArtCollection,
     setCurrentLayer,
     setLayers,
     setRepository,
     setCurrentLayerPriority,
     setRegeneratePreview,
     setRegenerateCollection,
+    setRegenerateFilterIndex,
   } = useCompilerViewStore((state) => {
     return {
+      collection: state.collection,
+      artCollection: state.artCollection,
       layers: state.layers,
       regenerate: state.regenerate,
       currentViewSection: state.currentViewSection,
       currentLayerPriority: state.currentLayerPriority,
       currentCustomRulesViewSection: state.currentCustomRulesViewSection,
+      setApp: state.setApp,
       setLayers: state.setLayers,
       setCurrentLayer: state.setCurrentLayer,
+      setArtCollection: state.setArtCollection,
       setCollection: state.setCollection,
       setRepository: state.setRepository,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setCurrentViewSection: state.setCurrentViewSection,
+      setRegenerateFilter: state.setRegenerateFilter,
       setRegeneratePreview: state.setRegeneratePreview,
+      setRegenerateFilterIndex: state.setRegenerateFilterIndex,
       setRegenerateCollection: state.setRegenerateCollection,
     }
   })
+  const [layerDropdown, setLayerDropdown] = useState(null)
 
   useHotkeys(
     'shift+1',
@@ -154,12 +173,37 @@ const DomView = () => {
   useHotkeys('ctrl+g', () => setRegenerateCollection(true))
   useHotkeys('ctrl+r', () => setRegeneratePreview(true))
 
+  const createCollectionSeed = (collectionId: string, generation: number) => {
+    return parseInt(
+      ethers.utils
+        .keccak256(ethers.utils.toUtf8Bytes(`${collectionId}-${generation}`))
+        .toString(),
+      16
+    )
+  }
+
   useEffect(() => {
     data && setRepository(data)
     data.collections.length > 0 && setCollection(data.collections[0])
     data.layers.length > 0 && setLayers(data.layers)
     data.layers.length > 0 && setCurrentLayer(0)
+    setArtCollection(
+      new ArtCollection(
+        createCompilerApp(repositoryName).createRandomCollectionFromSeed(
+          createCollectionSeed(
+            data.collections[0].id,
+            data.collections[0].generations
+          ),
+          0,
+          5555
+        )
+      )
+    )
   }, [data])
+
+  // useEffect(() => {
+  //   console.log(artCollection)
+  // }, [artCollection])
 
   useEffect(() => {
     setLayerInitiailised(true)
@@ -172,21 +216,37 @@ const DomView = () => {
           id: 'rarity',
           name: 'By Rarity',
           options: [
-            { value: 'Top 10', label: 'Top 10' },
-            { value: 'Middle 10', label: 'Middle 10' },
-            { value: 'Bottom 10', label: 'Bottom 10' },
+            { value: 'Top 10', label: 'Top 10', start: 0, end: 10 },
+            {
+              value: 'Middle 10',
+              label: 'Middle 10',
+              start: parseInt((collection.totalSupply / 2 - 5).toFixed(0)),
+              end: parseInt((collection.totalSupply / 2 + 5).toFixed(0)),
+            },
+            {
+              value: 'Bottom 10',
+              label: 'Bottom 10',
+              start: collection.totalSupply - 10,
+              end: collection.totalSupply,
+            },
           ],
         },
-        {
-          id: 'trait',
-          name: 'By Trait',
-          options: layers.map((layer) => {
-            return {
-              value: layer.name,
-              label: layer.name,
-            }
-          }),
-        },
+        // {
+        //   id: 'trait',
+        //   name: 'By Trait',
+        //   options: layers.map((layer) => {
+        //     return {
+        //       value: layer.name,
+        //       label: layer.name,
+        //       dropdown: layer.traits.map((trait) => {
+        //         return {
+        //           value: trait.name,
+        //           label: trait.name,
+        //         }
+        //       }),
+        //     }
+        //   }),
+        // },
       ])
   }, [layers])
 
@@ -223,44 +283,7 @@ const DomView = () => {
                       </div>
                     </div>
                     <div className='hidden lg:block overflow-hidden'>
-                      <form>
-                        {filters &&
-                          filters.map((section, sectionIdx) => (
-                            <div key={`${section.name}-${sectionIdx}`}>
-                              <fieldset className='space-y-2'>
-                                <legend
-                                  className={`block text-xs font-normal text-darkGrey uppercase ${
-                                    sectionIdx !== 0 ? 'pt-8' : ''
-                                  }`}
-                                >
-                                  {section.name}
-                                </legend>
-                                <div className='p-2 space-y-3 border border-lightGray rounded-[5px] max-h-[22em] overflow-y-scroll no-scrollbar'>
-                                  {section.options.map((option, optionIdx) => (
-                                    <div
-                                      key={`${option.value}-${option.label}-${sectionIdx}`}
-                                      className='flex items-center justify-between'
-                                    >
-                                      <label
-                                        htmlFor={`${section.id}-${optionIdx}`}
-                                        className='text-sm text-darkGrey'
-                                      >
-                                        {option.label}
-                                      </label>
-                                      <input
-                                        id={`${section.id}-${optionIdx}`}
-                                        name={`${section.id}[]`}
-                                        defaultValue={option.value}
-                                        type='checkbox'
-                                        className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              </fieldset>
-                            </div>
-                          ))}
-                      </form>
+                      <SortByRarity />
                     </div>
                   </div>
                 )}

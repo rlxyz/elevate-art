@@ -1,7 +1,7 @@
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { useNotification } from '@hooks/useNotification'
 import { fetcher, fetcherPost } from '@utils/fetcher'
-import Collection from '@utils/x/Collection'
+import ArtCollection from '@utils/x/Collection'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import React, { ReactNode, useCallback } from 'react'

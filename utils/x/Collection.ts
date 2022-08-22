@@ -1,8 +1,8 @@
 import { CollectionAnalyticsType } from './types'
 
-class Collection {
+class ArtCollection {
   username: string
-  tokens: any[]
+  tokens: { attributes: any; token_hash: string }[]
   data: any
   totalSupply: number
 
@@ -155,6 +155,97 @@ class Collection {
         return traits
     }
   }
+
+  filterByRanking = (start: number, end: number): ArtCollection => {
+    const traits: any = {}
+    for (const item of this.data) {
+      for (const attributes of item) {
+        const { trait_type: type, value } = attributes
+        !traits[type] && (traits[type] = {})
+        !traits[type][value] ? (traits[type][value] = 1) : traits[type][value]++
+      }
+    }
+
+    let upperBound = 0
+    let total = 0
+    for (const [_, value] of Object.entries(traits)) {
+      for (const [_, entry] of Object.entries(value)) {
+        entry > upperBound && (upperBound = entry) // todo: move to own function
+        total += entry
+      }
+    }
+
+    for (const [type, value] of Object.entries(traits)) {
+      traits[type] = Object.entries(value)
+        // @ts-ignore
+        .sort(([, v1], [, v2]) => v1 - v2)
+        .reduce(
+          (obj, [k, v]) => ({
+            ...obj,
+            [k]: v,
+          }),
+          {}
+        )
+    }
+
+    // Get Rarity Rating for each type-attribute
+    for (const [type, value] of Object.entries(traits)) {
+      for (const [attribute, attribute_value] of Object.entries(value)) {
+        traits[type][attribute] = {
+          value: attribute_value,
+          rating: upperBound / attribute_value,
+        }
+      }
+    }
+
+    const rank = []
+    for (let j = 0; j < this.totalSupply; j++) {
+      let rarityValue = 0
+      for (const item of this.tokens[j]['attributes']) {
+        const { trait_type, value } = item
+        rarityValue += traits[trait_type][value]['rating']
+      }
+      rank.push(rarityValue)
+    }
+
+    var mapped = rank
+      .map(function (el, i) {
+        return { token_id: i, rarity: el }
+      })
+      .sort(function (a, b) {
+        return b.rarity - a.rarity
+      })
+
+    return new ArtCollection({
+      tokens: mapped
+        .slice(start, end)
+        .map((token: { token_id: number; rarity: number }, index) => {
+          const { token_id } = token
+          return {
+            token_hash: this.tokens[token_id]['token_hash'],
+            attributes: this.tokens[token_id]['attributes'].map(
+              (attribute: any) => {
+                const { trait_type, value } = attribute
+                return {
+                  trait_type: trait_type,
+                  value: value,
+                  rating: traits[trait_type][value]['rating'],
+                }
+              }
+            ),
+          }
+        }),
+      totalSupply: end - start,
+      data: null,
+    })
+  }
+
+  filterByPosition = (
+    start: number,
+    end: number
+  ): { token_hash: string; attributes: any }[] => {
+    return this.tokens.slice(start, end)
+  }
 }
 
-export default Collection
+export default ArtCollection

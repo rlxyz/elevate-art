@@ -1,6 +1,6 @@
 import { utils } from 'ethers'
 
-import Collection from './Collection'
+import ArtCollection from './Collection'
 import { Element } from './Element'
 import { Sequencer } from './Sequencer'
 import { ImageFormatConfig, LayerConfig } from './types'
@@ -48,7 +48,7 @@ export class App {
     }
   }
 
-  createRandomCollection = async (totalSupply: number): Promise<Collection> => {
+  createRandomCollection = async (totalSupply: number): Promise<ArtCollection> => {
     const allHash = new Set()
     const tokens = []
     const data = []
@@ -66,14 +66,14 @@ export class App {
         data.push(attributes)
       }
     }
-    return new Collection({ tokens, data, totalSupply })
+    return new ArtCollection({ tokens, data, totalSupply })
   }
 
   createRandomCollectionFromSeed = (
     seed: number,
     startPoint: number = 0,
     endPoint: number
-  ): { tokens: any[] } => {
+  ): { tokens: any[]; data: any; totalSupply: number } => {
     const allHash = new Set()
     const tokens = []
     const data = []
@@ -91,7 +91,7 @@ export class App {
         data.push(attributes)
       }
     }
-    return { tokens }
+    return { tokens, data, totalSupply: endPoint - startPoint }
   }
 
   createElementFromHash = (tokenHash: string): Element => {
