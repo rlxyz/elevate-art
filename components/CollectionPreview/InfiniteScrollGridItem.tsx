@@ -37,8 +37,6 @@ const InfiniteScrollGridItem = ({
       transition: { ease: [0.78, 0.14, 0.15, 0.86] },
     },
   }
-
-  console.log(organisationName, repositoryName)
   return (
     <motion.div
       className='flex flex-col space-y-2'

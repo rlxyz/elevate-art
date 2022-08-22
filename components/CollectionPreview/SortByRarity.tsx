@@ -22,8 +22,6 @@ export const SortByRarity = () => {
       }
     })
 
-  useEffect(() => console.log(traitFilters), [traitFilters])
-
   useEffect(() => {
     layers &&
       setFilters([
