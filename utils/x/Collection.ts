@@ -1,3 +1,7 @@
+import {
+  createCollectionSeed,
+  createCompilerApp,
+} from '@utils/createCompilerApp'
 import { CollectionAnalyticsType } from './types'
 
 export type ArtCollectionElement = {
@@ -43,6 +47,10 @@ class ArtCollection {
     const { attributeMap, tokenIdMap } = this.createAttributeMappings()
     this.tokenIdMap = tokenIdMap
     this.attributeMap = attributeMap
+  }
+
+  getTokens = () => {
+    return this.filtered.length > 0 ? this.filtered : this.tokens
   }
 
   getTraitCount = ({ trait_type, value }: ArtCollectionElement) => {
@@ -325,3 +333,19 @@ class ArtCollection {
 }
 
 export default ArtCollection
+
+export const createArtCollection = (
+  name: string,
+  id: string,
+  seed: number,
+  start: number,
+  end: number
+): ArtCollection => {
+  return new ArtCollection(
+    createCompilerApp(name).createRandomCollectionFromSeed(
+      createCollectionSeed(id, seed),
+      start,
+      end
+    )
+  )
+}

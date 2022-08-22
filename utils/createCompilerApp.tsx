@@ -1,19 +1,32 @@
-import { App } from '@utils/x/App';
+import { App } from '@utils/x/App'
+import { ethers } from 'ethers'
 
+export const createCollectionSeed = (
+  collectionId: string,
+  generation: number
+) => {
+  return parseInt(
+    ethers.utils
+      .keccak256(ethers.utils.toUtf8Bytes(`${collectionId}-${generation}`))
+      .toString(),
+    16
+  )
+}
 
 export const createCompilerApp = (repositoryName: string): App => {
   return new App({
-    configs: repositoryName === 'roboghosts'
-      ? roboghostLayerConfig
-      : reflectionsLayerConfig,
+    configs:
+      repositoryName === 'roboghosts'
+        ? roboghostLayerConfig
+        : reflectionsLayerConfig,
     imageFormat: {
       width: 300,
       height: 300,
       smoothing: false,
     },
     basePath: '',
-  });
-};
+  })
+}
 const roboghostLayerConfig = [
   {
     name: 'Background',
@@ -962,7 +975,7 @@ const roboghostLayerConfig = [
       },
     ],
   },
-];
+]
 const reflectionsLayerConfig = [
   {
     name: 'SKY',
@@ -1196,4 +1209,4 @@ const reflectionsLayerConfig = [
   //     occuranceRate: 1 / 5,
   //   },
   // },
-];
+]

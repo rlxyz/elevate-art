@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import Image from 'next/image'
+import { ArtImageElement } from '@utils/x/Element'
 
 const InfiniteScrollGridItem = ({
   token,
@@ -37,6 +38,7 @@ const InfiniteScrollGridItem = ({
     },
   }
 
+  console.log(organisationName, repositoryName)
   return (
     <motion.div
       className='flex flex-col space-y-2'
@@ -49,7 +51,7 @@ const InfiniteScrollGridItem = ({
         className='h-[120px] overflow-hidden'
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {token.attributes.map((attribute, index) => {
+        {token.map((attribute, index) => {
           return (
             <div
               className='absolute w-full h-full flex flex-col items-center'
@@ -61,7 +63,7 @@ const InfiniteScrollGridItem = ({
                 className='rounded-[5px] border-[1px] border-lightGray'
                 src={`${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
                   process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
-                    ? 'c_fill,h_200,w_200'
+                    ? 'c_fill,h_200,w_201'
                     : ''
                 }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
                   attribute['trait_type']

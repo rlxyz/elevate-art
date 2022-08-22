@@ -48,7 +48,9 @@ export class App {
     }
   }
 
-  createRandomCollection = async (totalSupply: number): Promise<ArtCollection> => {
+  createRandomCollection = async (
+    totalSupply: number
+  ): Promise<ArtCollection> => {
     const allHash = new Set()
     const tokens = []
     const data = []

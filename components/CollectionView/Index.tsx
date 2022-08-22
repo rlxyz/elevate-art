@@ -20,6 +20,7 @@ import { App } from '@utils/x/App'
 import { ethers } from 'ethers'
 import ArtCollection from '@utils/x/Collection'
 import { SortByRarity } from '@components/CollectionPreview/SortByRarity'
+import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 
 export enum LayerSectionEnum {
   PREVIEW = 0,
@@ -29,38 +30,13 @@ export enum LayerSectionEnum {
 }
 
 const DomView = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const { data } = useSWR<Repository>(
-    [organisationName, repositoryName],
-    fetcher,
-    {
-      refreshInterval: 300,
-    }
-  )
   const [filters, setFilters] = useState(null)
-  const [layerInitiailised, setLayerInitiailised] = useState(false)
-
   const {
     collection,
     layers,
     regenerate,
     currentViewSection,
-    currentLayerPriority,
-    artCollection,
-    setApp,
-    setRegenerateFilter,
-    setCurrentViewSection,
-    setCollection,
-    setArtCollection,
-    setCurrentLayer,
-    setLayers,
-    setRepository,
-    setCurrentLayerPriority,
-    setRegeneratePreview,
     setRegenerateCollection,
-    setRegenerateFilterIndex,
   } = useCompilerViewStore((state) => {
     return {
       collection: state.collection,
@@ -85,117 +61,6 @@ const DomView = () => {
     }
   })
   const [layerDropdown, setLayerDropdown] = useState(null)
-
-  useHotkeys(
-    'shift+1',
-    () => layerInitiailised && layers.length > 0 && setCurrentLayerPriority(0)
-  )
-  useHotkeys(
-    'shift+2',
-    () => layerInitiailised && layers.length > 1 && setCurrentLayerPriority(1)
-  )
-  useHotkeys(
-    'shift+3',
-    () => layerInitiailised && layers.length > 3 && setCurrentLayerPriority(2)
-  )
-  useHotkeys(
-    'shift+4',
-    () => layerInitiailised && layers.length > 4 && setCurrentLayerPriority(3)
-  )
-  useHotkeys(
-    'shift+5',
-    () => layerInitiailised && layers.length > 5 && setCurrentLayerPriority(4)
-  )
-  useHotkeys(
-    'shift+6',
-    () => layerInitiailised && layers.length > 6 && setCurrentLayerPriority(5)
-  )
-  useHotkeys(
-    'shift+7',
-    () => layerInitiailised && layers.length > 7 && setCurrentLayerPriority(6)
-  )
-  useHotkeys(
-    'shift+8',
-    () => layerInitiailised && layers.length > 8 && setCurrentLayerPriority(7)
-  )
-  useHotkeys(
-    'shift+9',
-    () => layers.length > 9 && setCurrentLayerPriority(layers.length - 1)
-  )
-  useHotkeys(
-    'shift+cmd+up',
-    () =>
-      layerInitiailised &&
-      currentLayerPriority > 0 &&
-      setCurrentLayerPriority(currentLayerPriority - 1),
-    {
-      keydown: true,
-    },
-    [currentLayerPriority, setCurrentLayerPriority]
-  )
-  useHotkeys(
-    'shift+cmd+down',
-    () =>
-      layerInitiailised &&
-      currentLayerPriority + 1 < layers.length &&
-      setCurrentLayerPriority(currentLayerPriority + 1),
-    {
-      keydown: true,
-    },
-    [currentLayerPriority, setCurrentLayerPriority]
-  )
-  useHotkeys(
-    'shift+cmd+right',
-    () =>
-      layerInitiailised &&
-      currentViewSection + 1 < 4 &&
-      setCurrentViewSection(currentViewSection + 1),
-    {
-      keydown: true,
-    },
-    [currentViewSection, setCurrentViewSection]
-  )
-  useHotkeys(
-    'shift+cmd+left',
-    () =>
-      layerInitiailised &&
-      currentViewSection > 0 &&
-      setCurrentViewSection(currentViewSection - 1),
-    {
-      keydown: true,
-    },
-    [currentViewSection, setCurrentViewSection]
-  )
-  useHotkeys('ctrl+1', () => setCurrentViewSection(LayerSectionEnum.PREVIEW))
-  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.IMAGES))
-  useHotkeys('ctrl+3', () => setCurrentViewSection(LayerSectionEnum.RARITY))
-  useHotkeys('ctrl+4', () => setCurrentViewSection(LayerSectionEnum.RULES))
-  useHotkeys('ctrl+g', () => setRegenerateCollection(true))
-  useHotkeys('ctrl+r', () => setRegeneratePreview(true))
-
-  const createCollectionSeed = (collectionId: string, generation: number) => {
-    return parseInt(
-      ethers.utils
-        .keccak256(ethers.utils.toUtf8Bytes(`${collectionId}-${generation}`))
-        .toString(),
-      16
-    )
-  }
-
-  useEffect(() => {
-    data && setRepository(data)
-    data.collections.length > 0 && setCollection(data.collections[0])
-    data.layers.length > 0 && setLayers(data.layers)
-    data.layers.length > 0 && setCurrentLayer(0)
-  }, [data])
-
-  // useEffect(() => {
-  //   console.log(artCollection)
-  // }, [artCollection])
-
-  useEffect(() => {
-    setLayerInitiailised(true)
-  }, [layers])
 
   useEffect(() => {
     layers &&
