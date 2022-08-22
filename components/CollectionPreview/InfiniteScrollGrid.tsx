@@ -80,8 +80,10 @@ const InfiniteScrollGrid = ({
     // )
     // const newTokens = artCollection.filterByPosition(startPoint, endPoint)
     // setTokens([...tokens, ...newTokens])
-    setTokens([...tokens, ...artCollection.tokens.slice(startPoint, endPoint)])
-    console.log('length', tokens.length)
+    setTokens([
+      ...tokens,
+      ...artCollection.filtered.slice(startPoint, endPoint),
+    ])
     setPage((p) => p + 1)
   }
 
