@@ -23,6 +23,7 @@ interface CompilerViewInterface {
   regenerateFilterIndex: { start: number; end: number }
   regenerateFilter: boolean
   regeneratePreview: boolean
+  traitFilters: { trait_type: string; value: string }[]
   setApp: (app: App) => void
   setCurrentCustomRulesViewSection: (index: number) => void
   setCurrentViewSection: (index: number) => void
@@ -33,6 +34,13 @@ interface CompilerViewInterface {
   }: {
     start: number
     end: number
+  }) => void
+  setTraitFilters: ({
+    trait_type,
+    value,
+  }: {
+    trait_type: string
+    value: string
   }) => void
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
@@ -60,9 +68,12 @@ const useCompilerViewStore = create<CompilerViewInterface>((set) => ({
   regenerateFilterIndex: { start: 0, end: 0 }, // start with true to ensure that on hydrate preview is populated
   regenerateFilter: false, // start with true to ensure that on hydrate preview is populated
   regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
+  traitFilters: [], // start with true to ensure that on hydrate preview is populated
   setApp: (app: App) => set((_) => ({ app })),
   setCurrentViewSection: (index: number) =>
     set((_) => ({ currentViewSection: index })),
+  setTraitFilters: (filter) =>
+    set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
   setCurrentLayerPriority: (index: number) =>
     set((_) => ({ currentLayerPriority: index })),
   setOrganisation: (organisation: Organisation) =>

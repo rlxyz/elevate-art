@@ -187,18 +187,6 @@ const DomView = () => {
     data.collections.length > 0 && setCollection(data.collections[0])
     data.layers.length > 0 && setLayers(data.layers)
     data.layers.length > 0 && setCurrentLayer(0)
-    setArtCollection(
-      new ArtCollection(
-        createCompilerApp(repositoryName).createRandomCollectionFromSeed(
-          createCollectionSeed(
-            data.collections[0].id,
-            data.collections[0].generations
-          ),
-          0,
-          5555
-        )
-      )
-    )
   }, [data])
 
   // useEffect(() => {

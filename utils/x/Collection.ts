@@ -1,10 +1,18 @@
 import { CollectionAnalyticsType } from './types'
 
+export type ArtCollectionElement = {
+  trait_type: string
+  value: string
+}
+
 class ArtCollection {
   username: string
   tokens: { attributes: any; token_hash: string }[]
+  filtered: { attributes: any; token_hash: string }[]
   data: any
   totalSupply: number
+  traitsToTokenId: any
+  filteredTokenIds: number[]
 
   constructor({
     tokens,
@@ -16,12 +24,30 @@ class ArtCollection {
     totalSupply: number
   }) {
     this.tokens = tokens
-    this.data = data
+    this.filtered = tokens
     this.totalSupply = totalSupply
+    this.traitsToTokenId = this.createTraitToTokenIdMapping()
   }
 
   getTotalSupply = (): number => {
     return Number(process.env.COLLECTION_TOTAL_SUPPLY)
+  }
+
+  // todo: make this faster
+  setFilter = (filters: ArtCollectionElement[]): void => {
+    let filteredTokenIds: number[] = []
+    filters.forEach(({ trait_type, value }: ArtCollectionElement) => {
+      filteredTokenIds = [
+        ...filteredTokenIds,
+        ...(this.traitsToTokenId[trait_type][value] || []),
+      ]
+    })
+    filteredTokenIds = filteredTokenIds
+      .filter((entry, index) => filteredTokenIds.indexOf(entry) === index)
+      .sort()
+    this.filtered = this.tokens.filter((_, index) =>
+      filteredTokenIds.includes(index)
+    )
   }
 
   calculateRarityAttributes = (type: CollectionAnalyticsType) => {
@@ -240,12 +266,37 @@ class ArtCollection {
     })
   }
 
+  // todo: make this faster
+  createTraitToTokenIdMapping = () => {
+    let t = {}
+    this.tokens.forEach(
+      (
+        { attributes }: { attributes: ArtCollectionElement[] },
+        index: number
+      ) => {
+        attributes.forEach((attribute: ArtCollectionElement) => {
+          const { trait_type, value } = attribute
+          !t[trait_type] && (t[trait_type] = {})
+          if (!t[trait_type][value]) {
+            t[trait_type][value] = [index]
+          } else {
+            t[trait_type][value] &&
+              (t[trait_type][value] = [...t[trait_type][value], index])
+          }
+        })
+      }
+    )
+    return t
+  }
+
   filterByPosition = (
     start: number,
     end: number
   ): { token_hash: string; attributes: any }[] => {
     return this.tokens.slice(start, end)
   }
+
+  filterByAttribute = () => {}
 }
 
 export default ArtCollection

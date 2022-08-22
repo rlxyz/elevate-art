@@ -71,15 +71,17 @@ const InfiniteScrollGrid = ({
     const endPointIndex = start + 1
     const startPoint = startPointIndex * increments
     const endPoint = endPointIndex * increments
-    console.log(
-      artCollection,
-      startPointIndex,
-      endPointIndex,
-      startPointIndex * increments,
-      endPointIndex * increments
-    )
-    const newTokens = artCollection.filterByPosition(startPoint, endPoint)
-    setTokens([...tokens, ...newTokens])
+    // console.log(
+    //   artCollection,
+    //   startPointIndex,
+    //   endPointIndex,
+    //   startPointIndex * increments,
+    //   endPointIndex * increments
+    // )
+    // const newTokens = artCollection.filterByPosition(startPoint, endPoint)
+    // setTokens([...tokens, ...newTokens])
+    setTokens([...tokens, ...artCollection.tokens.slice(startPoint, endPoint)])
+    console.log('length', tokens.length)
     setPage((p) => p + 1)
   }
 
@@ -157,43 +159,43 @@ const InfiniteScrollGridSelector = () => {
   }
 
   useEffect(() => {
-    if (regenerate) {
-      const artCollection = new ArtCollection(
-        createCompilerApp(repositoryName).createRandomCollectionFromSeed(
-          createCollectionSeed(collection.id, Math.random()),
-          0,
-          collection.totalSupply
-        )
+    const artCollection = new ArtCollection(
+      createCompilerApp(repositoryName).createRandomCollectionFromSeed(
+        createCollectionSeed(collection.id, Math.random()),
+        0,
+        5555
       )
-      setStartPoint(0)
-      setTotalSupply(collection.totalSupply)
-      setIncrements(50)
-      setArtCollection(artCollection)
-      setRegenerateCollection(false)
-    }
-  }, [regenerate])
+    )
+    setStartPoint(0)
+    // setTotalSupply(collection.totalSupply)
+    setTotalSupply(5555)
+    setIncrements(50)
+    setArtCollection(artCollection)
+    setRegenerateCollection(false)
+    // }, [regenerate])
+  }, [])
 
-  useEffect(() => {
-    if (regenerateFilter) {
-      const artCollection = new ArtCollection(
-        createCompilerApp(repositoryName).createRandomCollectionFromSeed(
-          createCollectionSeed(collection.id, collection.generations),
-          regenerateFilterIndex.start,
-          regenerateFilterIndex.end
-        )
-      )
-      setStartPoint(0)
-      setTotalSupply(10)
-      setIncrements(10)
-      setArtCollection(artCollection)
-      setRegenerateFilter(false)
-    }
-  }, [regenerateFilter])
+  // useEffect(() => {
+  //   if (regenerateFilter) {
+  //     const artCollection = new ArtCollection(
+  //       createCompilerApp(repositoryName).createRandomCollectionFromSeed(
+  //         createCollectionSeed(collection.id, collection.generations),
+  //         regenerateFilterIndex.start,
+  //         regenerateFilterIndex.end
+  //       )
+  //     )
+  //     setStartPoint(0)
+  //     setTotalSupply(10)
+  //     setIncrements(10)
+  //     setArtCollection(artCollection)
+  //     setRegenerateFilter(false)
+  //   }
+  // }, [regenerateFilter])
 
   return (
     totalSupply &&
-    !regenerate &&
-    !regenerateFilter && (
+    !regenerate && (
+      // !regenerateFilter &&
       <InfiniteScrollGrid
         repositoryName={repositoryName}
         organisationName={organisationName}

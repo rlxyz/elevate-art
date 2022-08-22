@@ -77,7 +77,6 @@ export class App {
     const allHash = new Set()
     const tokens = []
     const data = []
-    console.log(startPoint, endPoint)
     for (let i = startPoint; i < endPoint; ) {
       const element: Element = this.createElementFromHash(
         utils.keccak256(utils.toUtf8Bytes(String((i + 1) * seed)))
