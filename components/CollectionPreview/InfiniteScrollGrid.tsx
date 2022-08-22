@@ -29,9 +29,6 @@ const InfiniteScrollGridItems = ({
 }) => {
   const repository = useCompilerViewStore((state) => state.repository)
   const organisation = useCompilerViewStore((state) => state.organisation)
-
-  console.log({ organisation, repository })
-
   return (
     <motion.div
       className='grid grid-cols-1 gap-y-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
