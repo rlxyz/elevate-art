@@ -21,6 +21,7 @@ import {
   RepositoryContext,
   createRepositoryStore,
 } from '@hooks/useRepositoryStore'
+import { Layout } from '@components/Layout/Layout'
 
 const { chains, provider } = configureChains(
   [
@@ -81,7 +82,9 @@ function CustomApp({
       >
         {/* <Provider createStore={createStore}> */}
         <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-          <App {...pageProps} err={err} />
+          <Layout>
+            <App {...pageProps} err={err} />
+          </Layout>
           {/* <Toaster /> */}
         </RepositoryContext.Provider>
         {/* </Provider> */}

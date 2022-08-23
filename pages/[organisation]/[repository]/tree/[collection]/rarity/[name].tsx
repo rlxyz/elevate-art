@@ -61,7 +61,7 @@ const Page = () => {
     data && setOrganisation(data)
   }, [data])
 
-  return <Layout>{hasHydrated && <Index />}</Layout>
+  return hasHydrated && <Index />
 }
 
 export default Page
