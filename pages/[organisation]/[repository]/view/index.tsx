@@ -2,7 +2,7 @@ import { Layout } from '@components/Layout/Layout'
 import { Organisation, Repository } from '@utils/types'
 import React, { useEffect } from 'react'
 import useSWR, { SWRConfig, unstable_serialize } from 'swr'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useCompilerViewStore, { useStore } from '@hooks/useCompilerViewStore'
 import { fetcher } from '../../../../utils/fetcher'
 import { NextRouter, useRouter } from 'next/router'
 import { Index } from '../../../../components/Repository/Index'
@@ -13,6 +13,9 @@ const Page = ({ fallback }: { fallback: Repository }) => {
   const { data } = useSWR<Organisation>(`organisation/${name}`, fetcher, {
     refreshInterval: 3000,
   })
+  // const state = useStore((state) => state.organisation)
+
+  // useEffect(() => console.log(state), [])
 
   const { setOrganisation } = useCompilerViewStore((state) => {
     return {
