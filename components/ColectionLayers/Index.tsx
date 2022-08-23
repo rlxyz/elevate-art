@@ -8,14 +8,12 @@ import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import LayerGrid from './LayerGrid'
 
 const Index = () => {
-  const { currentLayerPriority, currentLayer, setCurrentLayer } =
-    useRepositoryStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
+  const { currentLayerPriority, currentLayer } = useRepositoryStore((state) => {
+    return {
+      currentLayerPriority: state.currentLayerPriority,
+      currentLayer: state.currentLayer,
+    }
+  })
 
   return (
     currentLayer && (

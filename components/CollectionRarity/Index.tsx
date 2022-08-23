@@ -27,7 +27,6 @@ const CollectionRulesView = () => {
       currentLayerPriority: state.currentLayerPriority,
       currentLayer: state.currentLayer,
       collection: state.collection,
-      setCurrentLayer: state.setCurrentLayer,
     }
   })
 
