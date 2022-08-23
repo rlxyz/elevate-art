@@ -1,7 +1,6 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { LayerSectionEnum } from '@components/CollectionView/Index'
+import { LayerSectionEnum } from '@components/Repository/RepositoryView'
 
 export const useKeybordShortcuts = () => {
   const {

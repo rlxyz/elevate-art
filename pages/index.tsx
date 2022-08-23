@@ -1,5 +1,3 @@
-import BasicDomLayout from '@components/Dom/BasicDomLayout'
-import DomIndex from '@components/Dom/DomIndex'
 import { GetStaticProps } from 'next'
 import React from 'react'
 
@@ -7,9 +5,7 @@ import React from 'react'
 const Page = () => {
   return (
     <>
-      <BasicDomLayout>
-        <DomIndex />
-      </BasicDomLayout>
+      <div>Nothing here.</div>
     </>
   )
 }
