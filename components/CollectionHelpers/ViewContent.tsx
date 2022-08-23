@@ -35,7 +35,7 @@ export const CollectionViewLeftbar = ({
           </h1>
           <div className='mt-5 flex justify-between'>
             {[
-              { name: 'Preview', route: '' },
+              { name: 'Preview', route: `preview/${name}` },
               { name: 'Layers', route: `layers/${name}` },
               { name: 'Rarity', route: `rarity/${name}` },
               { name: 'Rules', route: `rules/${name}` },

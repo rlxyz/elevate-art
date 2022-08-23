@@ -4,13 +4,18 @@ import React, { useEffect, useState } from 'react'
 import useSWR, { SWRConfig, unstable_serialize } from 'swr'
 import { NextRouter, useRouter } from 'next/router'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { LayerSectionEnum } from '@components/Repository/RepositoryImplementation'
+import {
+  LayerSectionEnum,
+  LayerSectionEnumIndexes,
+  LayerSectionEnumNames,
+} from '@components/Repository/RepositoryImplementation'
 import { fetcher } from '@utils/fetcher'
 import { Index } from '@components/Repository/Index'
 
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
+  const section: string = router.query.section as string
   const name: string = router.query.name as string
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { data } = useSWR<Organisation>(
@@ -20,6 +25,8 @@ const Page = () => {
 
   const {
     layers,
+    organisation,
+    currentLayer,
     setCurrentLayer,
     setCurrentLayerPriority,
     setCurrentViewSection,
@@ -29,6 +36,7 @@ const Page = () => {
       layers: state.layers,
       organisation: state.organisation,
       setOrganisation: state.setOrganisation,
+      currentLayer: state.currentLayer,
       setCurrentLayer: state.setCurrentLayer,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setCurrentViewSection: state.setCurrentViewSection,
@@ -36,7 +44,7 @@ const Page = () => {
   })
 
   useEffect(() => {
-    setCurrentViewSection(LayerSectionEnum.RULES)
+    setCurrentViewSection(LayerSectionEnum.LAYERS)
   }, [])
 
   useEffect(() => {
@@ -51,10 +59,15 @@ const Page = () => {
       return
     }
 
-    setHasHydrated(true)
+    setCurrentViewSection(LayerSectionEnumIndexes[section])
     setCurrentLayerPriority(layer.priority)
     setCurrentLayer(layer.priority)
-  }, [name])
+    setHasHydrated(true)
+  }, [name, section])
+
+  useEffect(() => {
+    console.log(currentLayer)
+  }, [])
 
   useEffect(() => {
     data && setOrganisation(data)

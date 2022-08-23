@@ -36,6 +36,13 @@ export const LayerSectionEnumNames = Object.freeze({
   3: 'rules',
 })
 
+export const LayerSectionEnumIndexes = Object.freeze({
+  preview: 0,
+  layers: 1,
+  rarity: 2,
+  rules: 3,
+})
+
 const RepositoryImplementation = () => {
   const [filters, setFilters] = useState(null)
   const {
