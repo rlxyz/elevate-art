@@ -10,20 +10,18 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const {
-    currentLayer,
-    collection,
-    organisation,
-    repository,
-    currentViewSection,
-  } = useRepositoryStore((state) => {
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const name: string = router.query.name as string
+  const collectionName: string = router.query.collection as string
+
+  const { currentViewSection } = useRepositoryStore((state) => {
     return {
       currentLayer: state.currentLayer,
       collection: state.collection,
       organisation: state.organisation,
       repository: state.repository,
-      regenerate: state.regenerate,
-      setRegenerateCollection: state.setRegenerateCollection,
       currentViewSection: state.currentViewSection,
     }
   })
@@ -38,9 +36,9 @@ export const CollectionViewLeftbar = ({
           <div className='mt-5 flex justify-between'>
             {[
               { name: 'Preview', route: '' },
-              { name: 'Layers', route: `layers/${currentLayer.name}` },
-              { name: 'Rarity', route: `rarity/${currentLayer.name}` },
-              { name: 'Rules', route: `rules/${currentLayer.name}` },
+              { name: 'Layers', route: `layers/${name}` },
+              { name: 'Rarity', route: `rarity/${name}` },
+              { name: 'Rules', route: `rules/${name}` },
             ].map(
               (
                 { name, route }: { name: string; route: string },
@@ -49,7 +47,7 @@ export const CollectionViewLeftbar = ({
                 return (
                   <Link
                     key={`${name}-${index}`}
-                    href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
+                    href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${route}`}
                   >
                     <div
                       className={`pr-8 text-sm ${
