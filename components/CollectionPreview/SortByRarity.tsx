@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useCompilerViewStore from '@hooks/useCompilerViewStore'
 import { Button } from '@components/UI/Button'
-import { ChevronDownIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
 import { ArtCollectionElement } from '@utils/x/Collection'
 
@@ -67,8 +67,6 @@ export const SortByRarity = () => {
     <Formik
       initialValues={{ checked: [] }}
       onSubmit={async (values) => {
-        // alert(JSON.stringify(values, null, 2))
-        console.log(artCollection)
         const filters: ArtCollectionElement[] = values.checked.map((value) => {
           return {
             trait_type: value.split('/')[0],
@@ -97,10 +95,20 @@ export const SortByRarity = () => {
                         key={`${option.value}-${option.label}-${sectionIdx}`}
                         className='flex flex-col'
                       >
-                        <div className='flex justify-between'>
+                        <div
+                          className={`flex justify-between ${
+                            layerDropdown === optionIdx
+                              ? 'text-black font-semibold'
+                              : 'text-darkGrey'
+                          }`}
+                        >
                           <label
                             htmlFor={`${section.id}-${optionIdx}`}
-                            className='text-sm text-darkGrey'
+                            className={`text-sm ${
+                              layerDropdown === optionIdx
+                                ? 'text-black font-semibold'
+                                : ''
+                            }`}
                           >
                             {option.label}
                           </label>
@@ -133,43 +141,64 @@ export const SortByRarity = () => {
                           <ChevronDownIcon className='w-5 h-5 text-darkGrey' />
                         </Button>
                       )} */}
-                          <Button
-                            onClick={() => {
-                              if (layerDropdown === optionIdx) {
-                                setLayerDropdown(null)
-                              } else {
-                                setLayerDropdown(optionIdx)
+                          <div className='flex items-center space-x-2'>
+                            <span className='text-xs'>
+                              {
+                                Object.keys(
+                                  artCollection.attributeMap[option.value]
+                                ).length
                               }
-                            }}
-                            className='border rounded-[5px] border-lightGray'
-                          >
-                            <ChevronDownIcon className='w-5 h-5 text-darkGrey' />
-                          </Button>
+                            </span>
+                            <Button
+                              onClick={() => {
+                                if (layerDropdown === optionIdx) {
+                                  setLayerDropdown(null)
+                                } else {
+                                  setLayerDropdown(optionIdx)
+                                }
+                              }}
+                              className='w-5 h-5 flex justify-center items-center'
+                            >
+                              {layerDropdown !== optionIdx ? (
+                                <ChevronDownIcon className='w-4 h-4' />
+                              ) : (
+                                <ChevronUpIcon className='w-4 h-4' />
+                              )}
+                            </Button>
+                          </div>
                         </div>
                         <div
                           className={
-                            layerDropdown === optionIdx ? '' : 'hidden'
+                            layerDropdown === optionIdx
+                              ? 'h-[13rem] overflow-y-scroll no-scrollbar border-b border-lightGray rounded-[5px] mt-3 space-y-3 pl-1'
+                              : 'hidden'
                           }
                         >
                           {option.dropdown.map((d, index) => {
                             return (
                               <div
                                 key={index}
-                                className='flex justify-between items-center'
+                                className='flex justify-between items-center text-sm'
                               >
-                                <span className='px-2 py-1 text-sm text-darkGrey'>
-                                  {d.label}
-                                </span>
-                                <Field
-                                  type='checkbox'
-                                  name='checked'
-                                  value={`${option.label}/${d.value}`}
-                                  className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
-                                  onChange={(e) => {
-                                    handleChange(e)
-                                    submitForm()
-                                  }}
-                                />
+                                <span className='text-darkGrey'>{d.label}</span>
+                                <div className='flex items-center space-x-2'>
+                                  <span className='text-darkGrey text-xs'>
+                                    {artCollection.getTraitCount({
+                                      trait_type: option.value,
+                                      value: d.value,
+                                    })}
+                                  </span>
+                                  <Field
+                                    type='checkbox'
+                                    name='checked'
+                                    value={`${option.label}/${d.value}`}
+                                    className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
+                                    onChange={(e) => {
+                                      handleChange(e)
+                                      submitForm()
+                                    }}
+                                  />
+                                </div>
                               </div>
                             )
                           })}
