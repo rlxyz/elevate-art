@@ -11,14 +11,12 @@ const LayerGrid = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  const { currentLayerPriority, currentLayer, setCurrentLayer } =
-    useRepositoryStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
+  const { currentLayer } = useRepositoryStore((state) => {
+    return {
+      currentLayerPriority: state.currentLayerPriority,
+      currentLayer: state.currentLayer,
+    }
+  })
   const [show, setShow] = useState(null)
 
   return (

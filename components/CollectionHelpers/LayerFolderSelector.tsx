@@ -27,6 +27,8 @@ import { App } from '@utils/x/App'
 import { Element } from '@utils/x/Element'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { useNotification } from '@hooks/useNotification'
+import Link from 'next/link'
+import { LayerSectionEnumNames } from '@components/Repository/RepositoryImplementation'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -58,18 +60,28 @@ export const ReorderItem = ({
   item,
   name,
   enabled,
-  onClick,
   canReorder,
 }: {
   item: number
   name: string
   enabled: boolean
   canReorder: boolean
-  onClick: () => void
 }) => {
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
+
+  const { collection, organisation, repository, currentViewSection } =
+    useRepositoryStore((state) => {
+      return {
+        collection: state.collection,
+        organisation: state.organisation,
+        repository: state.repository,
+        regenerate: state.regenerate,
+        setRegenerateCollection: state.setRegenerateCollection,
+        currentViewSection: state.currentViewSection,
+      }
+    })
 
   return (
     <Reorder.Item
@@ -79,29 +91,29 @@ export const ReorderItem = ({
       dragListener={false}
       dragControls={dragControls}
     >
-      <a // eslint-disable-line
-        className={`flex flex-row p-[4px] rounded-[5px] justify-between ${
-          enabled ? 'bg-lightGray font-semibold' : 'text-darkGrey'
-        }`}
-        onClick={(e) => {
-          e.preventDefault()
-          onClick()
-        }}
+      <Link
+        href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${LayerSectionEnumNames[currentViewSection]}/${name}`}
       >
-        <div className='flex'>
-          <FolderIcon className='w-5 h-5' />
-          <span className='ml-2 text-sm'>{name}</span>
+        <div
+          className={`flex flex-row p-[4px] rounded-[5px] justify-between ${
+            enabled ? 'bg-lightGray font-semibold' : 'text-darkGrey'
+          }`}
+        >
+          <div className='flex'>
+            <FolderIcon className='w-5 h-5' />
+            <span className='ml-2 text-sm'>{name}</span>
+          </div>
+          {canReorder && (
+            <DotsHorizontalIcon
+              className='w-5 h-5'
+              onPointerDown={(e) => {
+                e.preventDefault()
+                dragControls.start(e)
+              }}
+            />
+          )}
         </div>
-        {canReorder && (
-          <DotsHorizontalIcon
-            className='w-5 h-5'
-            onPointerDown={(e) => {
-              e.preventDefault()
-              dragControls.start(e)
-            }}
-          />
-        )}
-      </a>
+      </Link>
     </Reorder.Item>
   )
 }
@@ -116,9 +128,13 @@ const LayerFolderSelector = () => {
     setRegeneratePreview,
     setRegenerateCollection,
     setCurrentLayerPriority,
+    organisation,
+    repository,
   } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
+      organisation: state.organisation,
+      repository: state.repository,
       regenerate: state.regenerate,
       regeneratePreview: state.regeneratePreview,
       currentViewSection: state.currentViewSection,
@@ -133,6 +149,7 @@ const LayerFolderSelector = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
@@ -142,7 +159,7 @@ const LayerFolderSelector = () => {
   >([])
 
   const generateImageHandler = async (): Promise<React.ReactNode[]> => {
-    const app: App = createCompilerApp(repositoryName)
+    const app: App = createCompilerApp(repository.name)
     return Array.from(Array(30).keys()).map(async () => {
       const imageElement: Element = app.createElementFromRandomness()
       return (
@@ -159,7 +176,9 @@ const LayerFolderSelector = () => {
                     process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES
                       ? 'c_fill,h_300,w_300'
                       : ''
-                  }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
+                  }/v1/${organisation.name}/${
+                    repository.name
+                  }/layers/${toPascalCaseWithSpace(
                     attribute['trait_type']
                   )}/${toPascalCaseWithSpace(attribute['value'])}.png`
               ),
@@ -249,9 +268,6 @@ const LayerFolderSelector = () => {
                           name={layers[item]?.name}
                           item={item}
                           enabled={currentLayerPriority === item}
-                          onClick={() => {
-                            setCurrentLayerPriority(item)
-                          }}
                         />
                       )
                     })}

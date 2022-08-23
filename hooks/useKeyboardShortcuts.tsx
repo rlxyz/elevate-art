@@ -75,7 +75,7 @@ export const useKeybordShortcuts = () => {
     [currentViewSection, setCurrentViewSection]
   )
   useHotkeys('ctrl+1', () => setCurrentViewSection(LayerSectionEnum.PREVIEW))
-  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.IMAGES))
+  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.LAYERS))
   useHotkeys('ctrl+3', () => setCurrentViewSection(LayerSectionEnum.RARITY))
   useHotkeys('ctrl+4', () => setCurrentViewSection(LayerSectionEnum.RULES))
   useHotkeys('ctrl+g', () => setRegenerateCollection(true))

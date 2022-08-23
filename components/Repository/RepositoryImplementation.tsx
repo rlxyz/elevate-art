@@ -22,12 +22,19 @@ import ArtCollection from '@utils/x/Collection'
 import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 
-export enum LayerSectionEnum {
-  PREVIEW = 0,
-  IMAGES = 1,
-  RARITY = 2,
-  RULES = 3,
-}
+export const LayerSectionEnum = Object.freeze({
+  PREVIEW: 0,
+  LAYERS: 1,
+  RARITY: 2,
+  RULES: 3,
+})
+
+export const LayerSectionEnumNames = Object.freeze({
+  0: 'preview',
+  1: 'layers',
+  2: 'rarity',
+  3: 'rules',
+})
 
 const RepositoryImplementation = () => {
   const [filters, setFilters] = useState(null)
@@ -48,7 +55,6 @@ const RepositoryImplementation = () => {
       currentCustomRulesViewSection: state.currentCustomRulesViewSection,
       setApp: state.setApp,
       setLayers: state.setLayers,
-      setCurrentLayer: state.setCurrentLayer,
       setArtCollection: state.setArtCollection,
       setCollection: state.setCollection,
       setRepository: state.setRepository,
@@ -104,43 +110,41 @@ const RepositoryImplementation = () => {
   }, [layers])
 
   return (
-    layers &&
-    layers.length > 0 && (
-      <>
-        <div className='min-w-screen mx-auto'>
-          <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-            <div className='col-span-2'>
-              <CollectionViewLeftbar title='Art'>
-                {[
-                  LayerSectionEnum.IMAGES,
-                  LayerSectionEnum.RARITY,
-                  LayerSectionEnum.RULES,
-                ].includes(currentViewSection) && <LayerFolderSelector />}
-                {currentViewSection === LayerSectionEnum.PREVIEW && (
-                  <div className='p-8 space-y-6 min-h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)'>
-                    <div className='space-y-2'>
-                      <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-                        {'Generate'}
-                      </span>
-                      <div>
-                        <Button
-                          onClick={() => {
-                            !regenerate && setRegenerateCollection(true)
-                          }}
-                        >
-                          <span className='p-2 flex items-center justify-center space-x-1'>
-                            <RefreshIcon className='w-5 h-5' />
-                            <span>Generate</span>
-                          </span>
-                        </Button>
-                      </div>
-                    </div>
-                    <div className='hidden lg:block overflow-hidden'>
-                      <FilterByRarity />
+    <>
+      <div className='min-w-screen mx-auto'>
+        <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
+          <div className='col-span-2'>
+            <CollectionViewLeftbar title='Art'>
+              {[
+                LayerSectionEnum.LAYERS,
+                LayerSectionEnum.RARITY,
+                LayerSectionEnum.RULES,
+              ].includes(currentViewSection) && <LayerFolderSelector />}
+              {currentViewSection === LayerSectionEnum.PREVIEW && (
+                <div className='p-8 space-y-6 min-h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)'>
+                  <div className='space-y-2'>
+                    <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+                      {'Generate'}
+                    </span>
+                    <div>
+                      <Button
+                        onClick={() => {
+                          !regenerate && setRegenerateCollection(true)
+                        }}
+                      >
+                        <span className='p-2 flex items-center justify-center space-x-1'>
+                          <RefreshIcon className='w-5 h-5' />
+                          <span>Generate</span>
+                        </span>
+                      </Button>
                     </div>
                   </div>
-                )}
-                {/* {currentViewSection === LayerSectionEnum.RULES && (
+                  <div className='hidden lg:block overflow-hidden'>
+                    <FilterByRarity />
+                  </div>
+                </div>
+              )}
+              {/* {currentViewSection === LayerSectionEnum.RULES && (
                   <aside className='p-8 divide-y divide-lightGray'>
                     <div className='mb-8 h-10'>
                       <Button
@@ -195,26 +199,25 @@ const RepositoryImplementation = () => {
                     </div>
                   </aside>
                 )} */}
-              </CollectionViewLeftbar>
-            </div>
-            <div className='col-span-8'>
-              {currentViewSection === LayerSectionEnum.PREVIEW && (
-                <CollectionPreview />
-              )}
-              {currentViewSection === LayerSectionEnum.IMAGES && (
-                <CollectionLayers />
-              )}
-              {currentViewSection === LayerSectionEnum.RARITY && (
-                <CollectionRarity />
-              )}
-              {currentViewSection === LayerSectionEnum.RULES && (
-                <CollectionRules />
-              )}
-            </div>
+            </CollectionViewLeftbar>
+          </div>
+          <div className='col-span-8'>
+            {currentViewSection === LayerSectionEnum.PREVIEW && (
+              <CollectionPreview />
+            )}
+            {currentViewSection === LayerSectionEnum.LAYERS && (
+              <CollectionLayers />
+            )}
+            {currentViewSection === LayerSectionEnum.RARITY && (
+              <CollectionRarity />
+            )}
+            {currentViewSection === LayerSectionEnum.RULES && (
+              <CollectionRules />
+            )}
           </div>
         </div>
-      </>
-    )
+      </div>
+    </>
   )
 }
 

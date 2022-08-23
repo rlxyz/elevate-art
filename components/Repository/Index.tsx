@@ -19,7 +19,6 @@ export const Index = () => {
     repository,
     setCollection,
     setArtCollection,
-    setCurrentLayer,
     setLayers,
     setRepository,
   } = useRepositoryStore((state) => {
@@ -28,7 +27,6 @@ export const Index = () => {
       organisation: state.organisation,
       collection: state.collection,
       repository: state.repository,
-      setCurrentLayer: state.setCurrentLayer,
       setLayers: state.setLayers,
       setArtCollection: state.setArtCollection,
       setCollection: state.setCollection,
@@ -55,7 +53,6 @@ export const Index = () => {
     // create app
     setCollection(collection)
     setLayers(layers)
-    setCurrentLayer(0)
     // setArtCollection(createArtCollection(name, id, generations, 0, totalSupply))
   }, [repository])
 

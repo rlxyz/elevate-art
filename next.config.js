@@ -48,7 +48,10 @@ if (process.env.EXPORT !== 'true') {
 }
 
 nextConfig.images = {
-  domains: ['res.cloudinary.com'],
+  domains: [
+    'res.cloudinary.com',
+    '566trjatswur3bhut7eenm3u3c7g5qw3zozaeinuoh2umdvamgwa.arweave.net', // subtraction by ThankYouX in Error Page
+  ],
 }
 
 module.exports = plugins(

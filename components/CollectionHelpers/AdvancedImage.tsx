@@ -17,6 +17,7 @@ const AdvancedImage = ({
         className={`rounded-[5px] border-[1px] border-lightGray h-[30px] w-[30px]`}
       >
         <Image
+          priority
           src={cld.image(url).resize(fill().width(30).height(30)).toURL()}
           width={30}
           height={30}
@@ -31,6 +32,7 @@ const AdvancedImage = ({
       className={`rounded-[5px] border-[1px] border-lightGray h-[125px] w-[125px]`}
     >
       <Image
+        priority
         src={cld
           .image(url)
           // .resize(fill().width(125).height(125))
