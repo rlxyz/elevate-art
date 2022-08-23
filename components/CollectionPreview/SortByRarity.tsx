@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
@@ -13,7 +13,7 @@ export const SortByRarity = () => {
   const [filters, setFilters] = useState(null)
   const [layerDropdown, setLayerDropdown] = useState(null)
   const { artCollection, layers, traitFilters, setTraitFilters } =
-    useCompilerViewStore((state) => {
+    useRepositoryStore((state) => {
       return {
         artCollection: state.artCollection,
         layers: state.layers,

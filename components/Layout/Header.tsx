@@ -1,5 +1,5 @@
 import { ConnectButton } from '@components/ConnectButton'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 
@@ -7,7 +7,7 @@ export const Header = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
 
-  const { repository } = useCompilerViewStore((state) => {
+  const { repository } = useRepositoryStore((state) => {
     return {
       repository: state.repository,
     }

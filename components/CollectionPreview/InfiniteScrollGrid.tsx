@@ -1,4 +1,4 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import {
   createCollectionSeed,
   createCompilerApp,
@@ -27,8 +27,8 @@ const InfiniteScrollGridItems = ({
 }: {
   tokens: ArtCollectionToken[]
 }) => {
-  const repository = useCompilerViewStore((state) => state.repository)
-  const organisation = useCompilerViewStore((state) => state.organisation)
+  const repository = useRepositoryStore((state) => state.repository)
+  const organisation = useRepositoryStore((state) => state.organisation)
   return (
     <motion.div
       className='grid grid-cols-1 gap-y-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
@@ -116,7 +116,7 @@ const InfiniteScrollGridSelector = () => {
     setArtCollection,
     setRegenerateFilter,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       artCollection: state.artCollection,
       repository: state.repository,

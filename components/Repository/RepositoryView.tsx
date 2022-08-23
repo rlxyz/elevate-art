@@ -3,7 +3,7 @@ import CollectionImagesView from '@components/ColectionLayers/Index'
 import CollectionRulesView from '@components/CollectionRarity/Index'
 import CollectionTraitRulesView from '@components/CollectionRules/Index'
 import { Button } from '@components/UI/Button'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { useNotification } from '@hooks/useNotification'
 import { fetcher } from '@utils/fetcher'
 import { Repository } from '@utils/types'
@@ -37,7 +37,7 @@ const DomView = () => {
     regenerate,
     currentViewSection,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       collection: state.collection,
       artCollection: state.artCollection,

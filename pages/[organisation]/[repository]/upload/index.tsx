@@ -1,24 +1,22 @@
-import FileUpload from '@components/CollectionHelpers/FileUpload'
 import { Layout } from '@components/Layout/Layout'
+import { RepositoryContext } from '@hooks/useCompilerViewStore'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { NextRouter, useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Page = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
+  const { organisation } = RepositoryContext.useStore((state) => {
+    return {
+      organisation: state.organisation,
+    }
+  })
 
   return (
-    organisationName &&
-    repositoryName && (
+    organisation && (
       <>
         <Layout>
-          <div className='min-h-screen w-screen mx-auto h-[40%]'>
-            <FileUpload id={`${organisationName}/${repositoryName}`}>
-              <div className='h-1/2'>Upload here.</div>
-            </FileUpload>
-          </div>
+          <main className='min-h-screen w-screen mx-auto h-[40%]'>
+            <div>{organisation.name}</div>
+          </main>
         </Layout>
       </>
     )

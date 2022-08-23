@@ -7,7 +7,7 @@ import {
   SwitchVerticalIcon,
 } from '@heroicons/react/outline'
 import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import {
   animate,
   AnimatePresence,
@@ -117,7 +117,7 @@ const LayerFolderSelector = () => {
     setRegeneratePreview,
     setRegenerateCollection,
     setCurrentLayerPriority,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       regenerate: state.regenerate,

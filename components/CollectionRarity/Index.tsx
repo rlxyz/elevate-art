@@ -1,7 +1,7 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { fetcherPost } from '@utils/fetcher'
 import { toPascalCaseWithSpace } from '@utils/format'
 import {
@@ -22,7 +22,7 @@ const CollectionRulesView = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  const { collection, currentLayer } = useCompilerViewStore((state) => {
+  const { collection, currentLayer } = useRepositoryStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
       currentLayer: state.currentLayer,

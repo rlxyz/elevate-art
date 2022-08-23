@@ -1,5 +1,5 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { LayerSectionEnum } from '@components/Repository/RepositoryView'
 
 export const useKeybordShortcuts = () => {
@@ -11,7 +11,7 @@ export const useKeybordShortcuts = () => {
     setCurrentLayerPriority,
     setRegeneratePreview,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       currentViewSection: state.currentViewSection,

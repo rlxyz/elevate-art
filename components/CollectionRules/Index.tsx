@@ -1,12 +1,12 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { RuleConditionDisplay } from './RuleConditionDisplay'
 import { RuleConditionSelector } from './RuleConditionSelector'
 
 const CollectionRulesView = () => {
-  const layers = useCompilerViewStore((state) => state.layers)
-  const { currentLayer } = useCompilerViewStore((state) => {
+  const layers = useRepositoryStore((state) => state.layers)
+  const { currentLayer } = useRepositoryStore((state) => {
     return {
       currentLayer: state.currentLayer,
     }

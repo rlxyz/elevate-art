@@ -1,4 +1,4 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { useNotification } from '@hooks/useNotification'
 import { fetcher, fetcherPost } from '@utils/fetcher'
 import ArtCollection from '@utils/x/Collection'
@@ -21,7 +21,7 @@ const CollectionGenerateView = () => {
     artCollection,
     setArtCollection,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       collection: state.collection,
       regenerate: state.regenerate,

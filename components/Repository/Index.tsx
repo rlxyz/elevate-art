@@ -1,20 +1,27 @@
-import DomCompilerView from '@components/Repository/RepositoryView';
-import { Repository } from '@utils/types';
-import React, { useEffect } from 'react';
-import useSWR from 'swr';
-import useCompilerViewStore from '@hooks/useCompilerViewStore';
-import { fetcher } from '../../utils/fetcher';
-import { NextRouter, useRouter } from 'next/router';
-import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts';
-import { createArtCollection } from '@utils/x/Collection';
+import DomCompilerView from '@components/Repository/RepositoryView'
+import { Repository } from '@utils/types'
+import React, { useEffect } from 'react'
+import useSWR from 'swr'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
+import { fetcher } from '../../utils/fetcher'
+import { NextRouter, useRouter } from 'next/router'
+import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
+import { createArtCollection } from '@utils/x/Collection'
 
 export const Index = () => {
-  useKeybordShortcuts();
-  const router: NextRouter = useRouter();
-  const name: string = router.query.repository as string;
+  useKeybordShortcuts()
+  const router: NextRouter = useRouter()
+  const name: string = router.query.repository as string
   const {
-    organisation, collection, repository, setCollection, setArtCollection, setCurrentLayer, setLayers, setRepository,
-  } = useCompilerViewStore((state) => {
+    organisation,
+    collection,
+    repository,
+    setCollection,
+    setArtCollection,
+    setCurrentLayer,
+    setLayers,
+    setRepository,
+  } = useRepositoryStore((state) => {
     return {
       organisation: state.organisation,
       collection: state.collection,
@@ -24,34 +31,34 @@ export const Index = () => {
       setArtCollection: state.setArtCollection,
       setCollection: state.setCollection,
       setRepository: state.setRepository,
-    };
-  });
+    }
+  })
 
   const { data } = useSWR<Repository>(`repository/${name}`, fetcher, {
     refreshInterval: 300,
-  });
+  })
 
   // set repository
   useEffect(() => {
-    data && setRepository(data);
-  }, [data]);
+    data && setRepository(data)
+  }, [data])
 
   // set collection
   useEffect(() => {
-    if (!repository || !repository.collections)
-      return;
-
+    if (!repository || !repository.collections) return
+    console.log(repository)
     // init
-    const { collections, name } = repository;
-    const collection = collections[0];
-    const { id, generations, totalSupply } = collection;
+    const { layers, collections, name } = repository
+    const collection = collections[0]
+    const { id, generations, totalSupply } = collection
 
     // create app
-    setCollection(collection);
-    setArtCollection(createArtCollection(name, id, generations, 0, totalSupply));
-    setLayers(data.layers);
-    setCurrentLayer(0);
-  }, [repository]);
+    setCollection(collection)
+    setLayers(layers)
+    setCurrentLayer(0)
 
-  return organisation && repository && collection && <DomCompilerView />;
-};
+    setArtCollection(createArtCollection(name, id, generations, 0, totalSupply))
+  }, [repository])
+
+  return organisation && repository && collection && <DomCompilerView />
+}

@@ -17,7 +17,10 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import { createStore, Provider } from '@hooks/useCompilerViewStore'
+import {
+  RepositoryContext,
+  createRepositoryStore,
+} from '@hooks/useCompilerViewStore'
 
 const { chains, provider } = configureChains(
   [
@@ -76,10 +79,12 @@ function CustomApp({
         chains={chains}
         initialChain={config.networkId}
       >
-        <Provider createStore={createStore}>
+        {/* <Provider createStore={createStore}> */}
+        <RepositoryContext.Provider createStore={() => createRepositoryStore}>
           <App {...pageProps} err={err} />
-          <Toaster />
-        </Provider>
+          {/* <Toaster /> */}
+        </RepositoryContext.Provider>
+        {/* </Provider> */}
       </RainbowKitProvider>
     </WagmiConfig>
     // </ErrorBoundary>

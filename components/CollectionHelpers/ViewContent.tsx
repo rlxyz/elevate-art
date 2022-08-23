@@ -1,4 +1,4 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({
@@ -8,7 +8,7 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const { currentViewSection, setCurrentViewSection } = useCompilerViewStore(
+  const { currentViewSection, setCurrentViewSection } = useRepositoryStore(
     (state) => {
       return {
         regenerate: state.regenerate,

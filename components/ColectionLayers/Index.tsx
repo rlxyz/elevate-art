@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from '@heroicons/react/outline'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useCompilerViewStore'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { useEffect } from 'react'
@@ -12,7 +12,7 @@ const Index = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { currentLayerPriority, currentLayer, setCurrentLayer } =
-    useCompilerViewStore((state) => {
+    useRepositoryStore((state) => {
       return {
         currentLayerPriority: state.currentLayerPriority,
         currentLayer: state.currentLayer,
