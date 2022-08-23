@@ -1,6 +1,6 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
-import { LayerSectionEnum } from '@components/Repository/RepositoryView'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { LayerSectionEnum } from '@components/Repository/RepositoryImplementation'
 
 export const useKeybordShortcuts = () => {
   const {
@@ -11,7 +11,7 @@ export const useKeybordShortcuts = () => {
     setCurrentLayerPriority,
     setRegeneratePreview,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       currentViewSection: state.currentViewSection,
@@ -75,7 +75,7 @@ export const useKeybordShortcuts = () => {
     [currentViewSection, setCurrentViewSection]
   )
   useHotkeys('ctrl+1', () => setCurrentViewSection(LayerSectionEnum.PREVIEW))
-  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.IMAGES))
+  useHotkeys('ctrl+2', () => setCurrentViewSection(LayerSectionEnum.LAYERS))
   useHotkeys('ctrl+3', () => setCurrentViewSection(LayerSectionEnum.RARITY))
   useHotkeys('ctrl+4', () => setCurrentViewSection(LayerSectionEnum.RULES))
   useHotkeys('ctrl+g', () => setRegenerateCollection(true))

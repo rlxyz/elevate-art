@@ -1,38 +1,49 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useNotification } from '@hooks/useNotification'
 import { fetcher, fetcherPost } from '@utils/fetcher'
-import ArtCollection from '@utils/x/Collection'
+import ArtCollection, { createArtCollection } from '@utils/x/Collection'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
-import React, { ReactNode, useCallback } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import InfiniteScrollGrid from './InfiniteScrollGrid'
+import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 
-const CollectionGenerateView = () => {
+const CollectionPreview = () => {
   const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
   const collectionTotalSupply = 100
-  const {
-    collection,
-    regenerate,
-    repository,
-    artCollection,
-    setArtCollection,
-    setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  const { collection, regenerate, repository, setRegenerateCollection } =
+    useRepositoryStore((state) => {
+      return {
+        collection: state.collection,
+        regenerate: state.regenerate,
+        repository: state.repository,
+        artCollection: state.artCollection,
+        setArtCollection: state.setArtCollection,
+        setRegenerateCollection: state.setRegenerateCollection,
+      }
+    })
+
+  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
     return {
-      collection: state.collection,
-      regenerate: state.regenerate,
-      repository: state.repository,
       artCollection: state.artCollection,
       setArtCollection: state.setArtCollection,
-      setRegenerateCollection: state.setRegenerateCollection,
     }
   })
-  const { notifySuccess } = useNotification(repositoryName)
+  const { notifySuccess } = useNotification(repository.name)
 
+  useEffect(() => {
+    setArtCollection(
+      createArtCollection(
+        repository.name,
+        collection.id,
+        collection.generations,
+        0,
+        collectionTotalSupply
+      )
+    )
+  }, [])
   // const handler = async (regenerate: boolean) => {
   //   const app: App = createCompilerApp(repositoryName)
   //   const _collection: Collection = await app.createRandomCollectionFromSeed(
@@ -71,15 +82,17 @@ const CollectionGenerateView = () => {
   // }, [])
 
   return (
-    <CollectionViewContent
-      title='Generate your Collection'
-      description='Create different token sets before finalising the collection'
-    >
-      <div className='p-8'>
-        <InfiniteScrollGrid />
-      </div>
-    </CollectionViewContent>
+    artCollection && (
+      <CollectionViewContent
+        title='Generate your Collection'
+        description='Create different token sets before finalising the collection'
+      >
+        <div className='p-8 h-full w-full'>
+          <InfiniteScrollGrid />
+        </div>
+      </CollectionViewContent>
+    )
   )
 }
 
-export default CollectionGenerateView
+export default CollectionPreview

@@ -1,4 +1,4 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import {
   createCollectionSeed,
   createCompilerApp,
@@ -11,6 +11,8 @@ import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { motion } from 'framer-motion'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
 import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
+import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
+import { Player } from '@lottiefiles/react-lottie-player'
 
 const container = {
   hidden: { opacity: 0 },
@@ -27,8 +29,8 @@ const InfiniteScrollGridItems = ({
 }: {
   tokens: ArtCollectionToken[]
 }) => {
-  const repository = useCompilerViewStore((state) => state.repository)
-  const organisation = useCompilerViewStore((state) => state.organisation)
+  const repository = useRepositoryStore((state) => state.repository)
+  const organisation = useRepositoryStore((state) => state.organisation)
   return (
     <motion.div
       className='grid grid-cols-1 gap-y-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
@@ -59,6 +61,7 @@ const InfiniteScrollGrid = ({
 }) => {
   const [tokens, setTokens] = useState([])
   const [page, setPage] = useState(startPoint)
+  const [hasMore, setHasMore] = useState(true)
 
   const fetch = (start: number) => {
     if (!artCollection) return
@@ -75,7 +78,10 @@ const InfiniteScrollGrid = ({
   }
 
   const fetchMoreData = (page: number) => {
-    if (page * increments >= totalSupply) return
+    if (page * increments >= totalSupply) {
+      setHasMore(false)
+      return
+    }
     return fetch(page)
   }
 
@@ -84,7 +90,27 @@ const InfiniteScrollGrid = ({
   }, [])
 
   if (!tokens.length) {
-    return <div>loading...</div>
+    return (
+      <div className='w-full min-h-full flex items-center justify-center'>
+        <div className='absolute'>
+          <motion.div
+            className='box border-[3px] w-5 h-5'
+            animate={{
+              scale: [1, 1.5, 1.5, 1, 1],
+              rotate: [0, 0, 180, 180, 0],
+              borderRadius: ['20%', '20%', '50%', '50%', '20%'],
+            }}
+            transition={{
+              duration: 2,
+              ease: 'easeInOut',
+              times: [0, 0.2, 0.5, 0.8, 1],
+              repeat: Infinity,
+              repeatDelay: 1,
+            }}
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -92,8 +118,28 @@ const InfiniteScrollGrid = ({
       <InfiniteScrollComponent.default
         dataLength={tokens.length}
         next={() => fetchMoreData(page)}
-        hasMore={true}
-        loader={<div className='w-full h-full flex items-center'>...</div>}
+        hasMore={hasMore}
+        loader={
+          <div className='w-full min-h-full flex items-center justify-center'>
+            <div className='absolute'>
+              <motion.div
+                className='box border-[3px] w-5 h-5'
+                animate={{
+                  scale: [1, 1.5, 1.5, 1, 1],
+                  rotate: [0, 0, 180, 180, 0],
+                  borderRadius: ['20%', '20%', '50%', '50%', '20%'],
+                }}
+                transition={{
+                  duration: 2,
+                  ease: 'easeInOut',
+                  times: [0, 0.2, 0.5, 0.8, 1],
+                  repeat: Infinity,
+                  repeatDelay: 1,
+                }}
+              />
+            </div>
+          </div>
+        }
       >
         <InfiniteScrollGridItems tokens={tokens} />
       </InfiniteScrollComponent.default>
@@ -107,16 +153,14 @@ const InfiniteScrollGridSelector = () => {
   const [increments, setIncrements] = useState(50)
 
   const {
-    artCollection,
     collection,
     repository,
     regenerate,
     regenerateFilter,
     regenerateFilterIndex,
-    setArtCollection,
     setRegenerateFilter,
     setRegenerateCollection,
-  } = useCompilerViewStore((state) => {
+  } = useRepositoryStore((state) => {
     return {
       artCollection: state.artCollection,
       repository: state.repository,
@@ -126,6 +170,13 @@ const InfiniteScrollGridSelector = () => {
       regenerateFilterIndex: state.regenerateFilterIndex,
       setRegenerateFilter: state.setRegenerateFilter,
       setRegenerateCollection: state.setRegenerateCollection,
+      setArtCollection: state.setArtCollection,
+    }
+  })
+
+  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
+    return {
+      artCollection: state.artCollection,
       setArtCollection: state.setArtCollection,
     }
   })

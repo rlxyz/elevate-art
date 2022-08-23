@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from '@heroicons/react/outline'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { useEffect } from 'react'
@@ -8,21 +8,12 @@ import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import LayerGrid from './LayerGrid'
 
 const Index = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const { currentLayerPriority, currentLayer, setCurrentLayer } =
-    useCompilerViewStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
-
-  useEffect(() => {
-    setCurrentLayer(currentLayerPriority)
-  }, [currentLayerPriority])
+  const { currentLayerPriority, currentLayer } = useRepositoryStore((state) => {
+    return {
+      currentLayerPriority: state.currentLayerPriority,
+      currentLayer: state.currentLayer,
+    }
+  })
 
   return (
     currentLayer && (

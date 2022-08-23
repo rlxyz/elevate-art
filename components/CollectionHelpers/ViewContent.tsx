@@ -1,4 +1,6 @@
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import Link from 'next/link'
+import { NextRouter, useRouter } from 'next/router'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({
@@ -8,16 +10,21 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const { currentViewSection, setCurrentViewSection } = useCompilerViewStore(
-    (state) => {
-      return {
-        regenerate: state.regenerate,
-        setRegenerateCollection: state.setRegenerateCollection,
-        currentViewSection: state.currentViewSection,
-        setCurrentViewSection: state.setCurrentViewSection,
-      }
+  const {
+    organisation,
+    repository,
+    collection,
+    currentLayer,
+    currentViewSection,
+  } = useRepositoryStore((state) => {
+    return {
+      currentLayer: state.currentLayer,
+      collection: state.collection,
+      organisation: state.organisation,
+      repository: state.repository,
+      currentViewSection: state.currentViewSection,
     }
-  )
+  })
 
   return (
     <main>
@@ -27,22 +34,29 @@ export const CollectionViewLeftbar = ({
             <span className='col-span-1 text-2xl'>{title}</span>
           </h1>
           <div className='mt-5 flex justify-between'>
-            {['Preview', 'Layers', 'Rarity', 'Rules'].map(
-              (section: string, index: number) => {
+            {[
+              { name: 'Preview', route: `preview` },
+              { name: 'Layers', route: `layers/${currentLayer.name}` },
+              { name: 'Rarity', route: `rarity/${currentLayer.name}` },
+              { name: 'Rules', route: `rules/${currentLayer.name}` },
+            ].map(
+              (
+                { name, route }: { name: string; route: string },
+                index: number
+              ) => {
                 return (
-                  <div key={`${section}-${index}`}>
-                    <button
+                  <Link
+                    key={`${name}-${index}`}
+                    href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
+                  >
+                    <div
                       className={`pr-8 text-sm ${
                         currentViewSection == index
                           ? 'text-black min-h-full font-bold'
                           : 'text-darkGrey'
                       }`}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setCurrentViewSection(index)
-                      }}
                     >
-                      {section}
+                      {name}
                       <div className='mt-[1px]'>
                         <div
                           className={`${
@@ -55,8 +69,8 @@ export const CollectionViewLeftbar = ({
                           <div className='absolute h-[5px] w-[5px] bg-black rotate-45 translate-y-[-2px]' />
                         )}
                       </div>
-                    </button>
-                  </div>
+                    </div>
+                  </Link>
                 )
               }
             )}
@@ -85,7 +99,7 @@ export const CollectionViewContent = ({
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      <div className='max-h-[calc(100vh-13rem)]'>{children}</div>
+      <div className='h-[calc(100vh-13rem)]'>{children}</div>
     </main>
   )
 }

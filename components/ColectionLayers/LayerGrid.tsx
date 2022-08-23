@@ -1,6 +1,6 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { DotsHorizontalIcon } from '@heroicons/react/outline'
-import useCompilerViewStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'
@@ -11,14 +11,12 @@ const LayerGrid = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  const { currentLayerPriority, currentLayer, setCurrentLayer } =
-    useCompilerViewStore((state) => {
-      return {
-        currentLayerPriority: state.currentLayerPriority,
-        currentLayer: state.currentLayer,
-        setCurrentLayer: state.setCurrentLayer,
-      }
-    })
+  const { currentLayer } = useRepositoryStore((state) => {
+    return {
+      currentLayerPriority: state.currentLayerPriority,
+      currentLayer: state.currentLayer,
+    }
+  })
   const [show, setShow] = useState(null)
 
   return (
