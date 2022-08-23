@@ -18,12 +18,9 @@ export default function NotFound() {
                   Sorry, we couldn’t find the page you’re looking for.
                 </p>
                 <div className='mt-6'>
-                  <Link
-                    href='/'
-                    className='text-base font-medium text-indigo-600 hover:text-indigo-500'
-                  >
-                    <div>
-                      Go back home<span aria-hidden='true'> &rarr;</span>
+                  <Link href='/'>
+                    <div className='text-darkGrey text-sm'>
+                      Go back<span aria-hidden='true'> &rarr;</span>
                     </div>
                   </Link>
                 </div>

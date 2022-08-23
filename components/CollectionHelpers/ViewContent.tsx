@@ -10,13 +10,13 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const name: string = router.query.name as string
-  const collectionName: string = router.query.collection as string
-
-  const { currentViewSection } = useRepositoryStore((state) => {
+  const {
+    organisation,
+    repository,
+    collection,
+    currentLayer,
+    currentViewSection,
+  } = useRepositoryStore((state) => {
     return {
       currentLayer: state.currentLayer,
       collection: state.collection,
@@ -35,10 +35,10 @@ export const CollectionViewLeftbar = ({
           </h1>
           <div className='mt-5 flex justify-between'>
             {[
-              { name: 'Preview', route: `preview/${name}` },
-              { name: 'Layers', route: `layers/${name}` },
-              { name: 'Rarity', route: `rarity/${name}` },
-              { name: 'Rules', route: `rules/${name}` },
+              { name: 'Preview', route: `preview` },
+              { name: 'Layers', route: `layers/${currentLayer.name}` },
+              { name: 'Rarity', route: `rarity/${currentLayer.name}` },
+              { name: 'Rules', route: `rules/${currentLayer.name}` },
             ].map(
               (
                 { name, route }: { name: string; route: string },
@@ -47,7 +47,7 @@ export const CollectionViewLeftbar = ({
                 return (
                   <Link
                     key={`${name}-${index}`}
-                    href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${route}`}
+                    href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
                   >
                     <div
                       className={`pr-8 text-sm ${

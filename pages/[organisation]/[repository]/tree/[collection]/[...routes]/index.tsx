@@ -15,8 +15,7 @@ import { Index } from '@components/Repository/Index'
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const section: string = router.query.section as string
-  const name: string = router.query.name as string
+  const routes: string = router.query.routes as string
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { data } = useSWR<Organisation>(
     `organisation/${organisationName}`,
@@ -48,22 +47,37 @@ const Page = () => {
   }, [])
 
   useEffect(() => {
-    if (!layers || layers.length == 0 || !name) {
+    if (!layers || layers.length == 0 || !routes) {
       return
     }
 
-    const layer = layers.filter((layer) => layer.name === name)[0]
-
-    if (!layer) {
-      router.push('/404')
+    if (routes.length === 1 && routes[0] === LayerSectionEnumNames[0]) {
+      setCurrentViewSection(0)
+      setCurrentLayerPriority(0)
+      setCurrentLayer(0)
+      setHasHydrated(true)
       return
     }
 
-    setCurrentViewSection(LayerSectionEnumIndexes[section])
-    setCurrentLayerPriority(layer.priority)
-    setCurrentLayer(layer.priority)
-    setHasHydrated(true)
-  }, [name, section])
+    if (routes.length == 2) {
+      const section = routes[0]
+      const name = routes[1]
+      const layer = layers.filter((layer) => layer.name === name)[0]
+
+      if (!layer) {
+        router.push('/404')
+        return
+      }
+
+      setCurrentViewSection(LayerSectionEnumIndexes[section])
+      setCurrentLayerPriority(layer.priority)
+      setCurrentLayer(layer.priority)
+      setHasHydrated(true)
+      return
+    }
+
+    router.push('/404')
+  }, [routes])
 
   useEffect(() => {
     console.log(currentLayer)
