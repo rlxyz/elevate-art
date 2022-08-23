@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from '@heroicons/react/outline'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { useEffect } from 'react'

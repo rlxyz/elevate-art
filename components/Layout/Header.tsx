@@ -1,5 +1,5 @@
 import { ConnectButton } from '@components/ConnectButton'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 

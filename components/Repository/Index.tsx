@@ -1,8 +1,8 @@
-import DomCompilerView from '@components/Repository/RepositoryView'
+import RepositoryImplementation from '@components/Repository/RepositoryImplementation'
 import { Repository } from '@utils/types'
 import React, { useEffect } from 'react'
 import useSWR from 'swr'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { fetcher } from '../../utils/fetcher'
 import { NextRouter, useRouter } from 'next/router'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
@@ -13,6 +13,7 @@ export const Index = () => {
   const router: NextRouter = useRouter()
   const name: string = router.query.repository as string
   const {
+    artCollection,
     organisation,
     collection,
     repository,
@@ -23,6 +24,7 @@ export const Index = () => {
     setRepository,
   } = useRepositoryStore((state) => {
     return {
+      artCollection: state.artCollection,
       organisation: state.organisation,
       collection: state.collection,
       repository: state.repository,
@@ -50,15 +52,16 @@ export const Index = () => {
     // init
     const { layers, collections, name } = repository
     const collection = collections[0]
-    const { id, generations, totalSupply } = collection
+    // const { id, generations, totalSupply } = collection
 
     // create app
     setCollection(collection)
     setLayers(layers)
     setCurrentLayer(0)
-
-    setArtCollection(createArtCollection(name, id, generations, 0, totalSupply))
+    // setArtCollection(createArtCollection(name, id, generations, 0, totalSupply))
   }, [repository])
 
-  return organisation && repository && collection && <DomCompilerView />
+  return (
+    organisation && repository && collection && <RepositoryImplementation />
+  )
 }

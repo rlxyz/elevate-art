@@ -1,4 +1,4 @@
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import {
   createCollectionSeed,
   createCompilerApp,

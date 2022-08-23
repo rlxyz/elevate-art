@@ -3,7 +3,7 @@ import CollectionImagesView from '@components/ColectionLayers/Index'
 import CollectionRulesView from '@components/CollectionRarity/Index'
 import CollectionTraitRulesView from '@components/CollectionRules/Index'
 import { Button } from '@components/UI/Button'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useNotification } from '@hooks/useNotification'
 import { fetcher } from '@utils/fetcher'
 import { Repository } from '@utils/types'
@@ -29,7 +29,7 @@ export enum LayerSectionEnum {
   RULES = 3,
 }
 
-const DomView = () => {
+const RepositoryImplementation = () => {
   const [filters, setFilters] = useState(null)
   const {
     collection,
@@ -136,7 +136,7 @@ const DomView = () => {
                       </div>
                     </div>
                     <div className='hidden lg:block overflow-hidden'>
-                      <SortByRarity />
+                      {/* <SortByRarity /> */}
                     </div>
                   </div>
                 )}
@@ -236,4 +236,4 @@ const DomView = () => {
   )
 }
 
-export default DomView
+export default RepositoryImplementation

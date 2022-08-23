@@ -1,6 +1,6 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { DotsHorizontalIcon } from '@heroicons/react/outline'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { TraitElement } from '@utils/types'
 import { NextRouter, useRouter } from 'next/router'

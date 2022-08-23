@@ -7,7 +7,7 @@ import {
   SwitchVerticalIcon,
 } from '@heroicons/react/outline'
 import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import {
   animate,
   AnimatePresence,
@@ -21,7 +21,6 @@ import { useEffect, useState } from 'react'
 import * as React from 'react'
 import mergeImages from 'merge-images'
 import { CollectionUpload } from './CollectionUpload'
-import { LayerSectionEnum } from '../CollectionView/Index'
 import Image from 'next/image'
 import { createCompilerApp } from '@utils/createCompilerApp'
 import { App } from '@utils/x/App'
@@ -294,9 +293,12 @@ const LayerFolderSelector = () => {
               expandPreview ? 'w-[calc(100vw-4rem)]' : ''
             } space-x-2`}
           >
-            {currentImagePreviews?.map((images) => {
+            {currentImagePreviews?.map((images, index) => {
               return (
-                <div className='border border-lightGray rounded-[5px] min-h-[100px] min-w-[100px] max-h-[100px]'>
+                <div
+                  key={index}
+                  className='border border-lightGray rounded-[5px] min-h-[100px] min-w-[100px] max-h-[100px]'
+                >
                   {images}
                 </div>
               )

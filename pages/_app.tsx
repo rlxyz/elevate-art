@@ -20,7 +20,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import {
   RepositoryContext,
   createRepositoryStore,
-} from '@hooks/useCompilerViewStore'
+} from '@hooks/useRepositoryStore'
 
 const { chains, provider } = configureChains(
   [

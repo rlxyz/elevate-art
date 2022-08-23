@@ -1,7 +1,7 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { fetcherPost } from '@utils/fetcher'
 import { toPascalCaseWithSpace } from '@utils/format'
 import {
