@@ -36,9 +36,7 @@ export const Index = () => {
     }
   })
 
-  const { data } = useSWR<Repository>(`repository/${name}`, fetcher, {
-    refreshInterval: 300,
-  })
+  const { data } = useSWR<Repository>(`repository/${name}`, fetcher)
 
   // set repository
   useEffect(() => {
@@ -48,7 +46,7 @@ export const Index = () => {
   // set collection
   useEffect(() => {
     if (!repository || !repository.collections) return
-    console.log(repository)
+
     // init
     const { layers, collections, name } = repository
     const collection = collections[0]

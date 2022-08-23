@@ -2,13 +2,13 @@ import { Layout } from '@components/Layout/Layout'
 import { Organisation, Repository } from '@utils/types'
 import React, { useEffect, useState } from 'react'
 import useSWR, { SWRConfig, unstable_serialize } from 'swr'
-import { fetcher } from '../../../../utils/fetcher'
 import { NextRouter, useRouter } from 'next/router'
-import { Index } from '../../../../components/Repository/Index'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerSectionEnum } from '@components/Repository/RepositoryImplementation'
+import { fetcher } from '@utils/fetcher'
+import { Index } from '@components/Repository/Index'
 
-const Page = ({ fallback }: { fallback: Repository }) => {
+const Page = () => {
   const router: NextRouter = useRouter()
   const name: string = router.query.organisation as string
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
@@ -28,7 +28,7 @@ const Page = ({ fallback }: { fallback: Repository }) => {
   }, [organisation])
 
   useEffect(() => {
-    setCurrentViewSection(LayerSectionEnum.PREVIEW)
+    setCurrentViewSection(LayerSectionEnum.IMAGES)
   }, [])
 
   // set organisation
@@ -36,27 +36,7 @@ const Page = ({ fallback }: { fallback: Repository }) => {
     data && setOrganisation(data)
   }, [data])
 
-  return (
-    hasHydrated && (
-      <Layout>
-        <SWRConfig value={{ fallback }}>
-          <Index />
-        </SWRConfig>
-      </Layout>
-    )
-  )
-}
-
-export const getServerSideProps = async ({ params }) => {
-  return {
-    props: {
-      fallback: {
-        [unstable_serialize(['repository', params.repository])]: await fetcher(
-          `repository/${params.repository}`
-        ),
-      },
-    },
-  }
+  return <Layout>{hasHydrated && <Index />}</Layout>
 }
 
 export default Page

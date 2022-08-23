@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
 import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
+import { Player } from '@lottiefiles/react-lottie-player'
 
 const container = {
   hidden: { opacity: 0 },
@@ -60,6 +61,7 @@ const InfiniteScrollGrid = ({
 }) => {
   const [tokens, setTokens] = useState([])
   const [page, setPage] = useState(startPoint)
+  const [hasMore, setHasMore] = useState(true)
 
   const fetch = (start: number) => {
     if (!artCollection) return
@@ -76,7 +78,10 @@ const InfiniteScrollGrid = ({
   }
 
   const fetchMoreData = (page: number) => {
-    if (page * increments >= totalSupply) return
+    if (page * increments >= totalSupply) {
+      setHasMore(false)
+      return
+    }
     return fetch(page)
   }
 
@@ -85,7 +90,27 @@ const InfiniteScrollGrid = ({
   }, [])
 
   if (!tokens.length) {
-    return <div>loading...</div>
+    return (
+      <div className='w-full min-h-full flex items-center justify-center'>
+        <div className='absolute'>
+          <motion.div
+            className='box border-[3px] w-5 h-5'
+            animate={{
+              scale: [1, 1.5, 1.5, 1, 1],
+              rotate: [0, 0, 180, 180, 0],
+              borderRadius: ['20%', '20%', '50%', '50%', '20%'],
+            }}
+            transition={{
+              duration: 2,
+              ease: 'easeInOut',
+              times: [0, 0.2, 0.5, 0.8, 1],
+              repeat: Infinity,
+              repeatDelay: 1,
+            }}
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -93,8 +118,28 @@ const InfiniteScrollGrid = ({
       <InfiniteScrollComponent.default
         dataLength={tokens.length}
         next={() => fetchMoreData(page)}
-        hasMore={true}
-        loader={<div className='w-full h-full flex items-center'>...</div>}
+        hasMore={hasMore}
+        loader={
+          <div className='w-full min-h-full flex items-center justify-center'>
+            <div className='absolute'>
+              <motion.div
+                className='box border-[3px] w-5 h-5'
+                animate={{
+                  scale: [1, 1.5, 1.5, 1, 1],
+                  rotate: [0, 0, 180, 180, 0],
+                  borderRadius: ['20%', '20%', '50%', '50%', '20%'],
+                }}
+                transition={{
+                  duration: 2,
+                  ease: 'easeInOut',
+                  times: [0, 0.2, 0.5, 0.8, 1],
+                  repeat: Infinity,
+                  repeatDelay: 1,
+                }}
+              />
+            </div>
+          </div>
+        }
       >
         <InfiniteScrollGridItems tokens={tokens} />
       </InfiniteScrollComponent.default>

@@ -11,12 +11,14 @@ export const CollectionViewLeftbar = ({
 }) => {
   const router: NextRouter = useRouter()
   const {
+    collection,
     organisation,
     repository,
     currentViewSection,
     setCurrentViewSection,
   } = useRepositoryStore((state) => {
     return {
+      collection: state.collection,
       organisation: state.organisation,
       repository: state.repository,
       regenerate: state.regenerate,
@@ -55,7 +57,7 @@ export const CollectionViewLeftbar = ({
                       onClick={(e) => {
                         e.preventDefault()
                         router.push(
-                          `/${organisation.name}/${repository.name}/view/${route}`
+                          `/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`
                         )
                       }}
                     >
@@ -102,7 +104,7 @@ export const CollectionViewContent = ({
           <p className='mt-1 text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      <div className='max-h-[calc(100vh-13rem)]'>{children}</div>
+      <div className='h-[calc(100vh-13rem)]'>{children}</div>
     </main>
   )
 }

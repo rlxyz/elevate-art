@@ -87,7 +87,7 @@ const CollectionPreview = () => {
         title='Generate your Collection'
         description='Create different token sets before finalising the collection'
       >
-        <div className='p-8'>
+        <div className='p-8 h-full w-full'>
           <InfiniteScrollGrid />
         </div>
       </CollectionViewContent>
