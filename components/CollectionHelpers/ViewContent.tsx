@@ -1,4 +1,5 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { NextRouter, useRouter } from 'next/router'
 import { ReactFragment } from 'react'
 
 export const CollectionViewLeftbar = ({
@@ -8,16 +9,22 @@ export const CollectionViewLeftbar = ({
   children: React.ReactNode
   title: string
 }) => {
-  const { currentViewSection, setCurrentViewSection } = useRepositoryStore(
-    (state) => {
-      return {
-        regenerate: state.regenerate,
-        setRegenerateCollection: state.setRegenerateCollection,
-        currentViewSection: state.currentViewSection,
-        setCurrentViewSection: state.setCurrentViewSection,
-      }
+  const router: NextRouter = useRouter()
+  const {
+    organisation,
+    repository,
+    currentViewSection,
+    setCurrentViewSection,
+  } = useRepositoryStore((state) => {
+    return {
+      organisation: state.organisation,
+      repository: state.repository,
+      regenerate: state.regenerate,
+      setRegenerateCollection: state.setRegenerateCollection,
+      currentViewSection: state.currentViewSection,
+      setCurrentViewSection: state.setCurrentViewSection,
     }
-  )
+  })
 
   return (
     <main>
@@ -27,10 +34,18 @@ export const CollectionViewLeftbar = ({
             <span className='col-span-1 text-2xl'>{title}</span>
           </h1>
           <div className='mt-5 flex justify-between'>
-            {['Preview', 'Layers', 'Rarity', 'Rules'].map(
-              (section: string, index: number) => {
+            {[
+              { name: 'Preview', route: '' },
+              { name: 'Layers', route: 'layers' },
+              { name: 'Rarity', route: 'rarity' },
+              { name: 'Rules', route: 'rules' },
+            ].map(
+              (
+                { name, route }: { name: string; route: string },
+                index: number
+              ) => {
                 return (
-                  <div key={`${section}-${index}`}>
+                  <div key={`${name}-${index}`}>
                     <button
                       className={`pr-8 text-sm ${
                         currentViewSection == index
@@ -39,10 +54,12 @@ export const CollectionViewLeftbar = ({
                       }`}
                       onClick={(e) => {
                         e.preventDefault()
-                        setCurrentViewSection(index)
+                        router.push(
+                          `/${organisation.name}/${repository.name}/view/${route}`
+                        )
                       }}
                     >
-                      {section}
+                      {name}
                       <div className='mt-[1px]'>
                         <div
                           className={`${

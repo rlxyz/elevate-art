@@ -1,7 +1,7 @@
-import CollectionGenerateView from '@components/CollectionPreview/Index'
-import CollectionImagesView from '@components/ColectionLayers/Index'
-import CollectionRulesView from '@components/CollectionRarity/Index'
-import CollectionTraitRulesView from '@components/CollectionRules/Index'
+import CollectionPreview from '@components/CollectionPreview/Index'
+import CollectionLayers from '@components/ColectionLayers/Index'
+import CollectionRarity from '@components/CollectionRarity/Index'
+import CollectionRules from '@components/CollectionRules/Index'
 import { Button } from '@components/UI/Button'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useNotification } from '@hooks/useNotification'
@@ -19,7 +19,7 @@ import { createCompilerApp } from '@utils/createCompilerApp'
 import { App } from '@utils/x/App'
 import { ethers } from 'ethers'
 import ArtCollection from '@utils/x/Collection'
-import { SortByRarity } from '@components/CollectionPreview/SortByRarity'
+import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 
 export enum LayerSectionEnum {
@@ -136,7 +136,7 @@ const RepositoryImplementation = () => {
                       </div>
                     </div>
                     <div className='hidden lg:block overflow-hidden'>
-                      {/* <SortByRarity /> */}
+                      <FilterByRarity />
                     </div>
                   </div>
                 )}
@@ -198,36 +198,18 @@ const RepositoryImplementation = () => {
               </CollectionViewLeftbar>
             </div>
             <div className='col-span-8'>
-              <div
-                className={
-                  currentViewSection !== LayerSectionEnum.IMAGES ? 'hidden' : ''
-                }
-              >
-                <CollectionImagesView />
-              </div>
-              <div
-                className={
-                  currentViewSection !== LayerSectionEnum.RARITY ? 'hidden' : ''
-                }
-              >
-                <CollectionRulesView />
-              </div>
-              <div
-                className={
-                  currentViewSection !== LayerSectionEnum.PREVIEW
-                    ? 'hidden'
-                    : ''
-                }
-              >
-                <CollectionGenerateView />
-              </div>
-              <div
-                className={
-                  currentViewSection !== LayerSectionEnum.RULES ? 'hidden' : ''
-                }
-              >
-                <CollectionTraitRulesView />
-              </div>
+              {currentViewSection === LayerSectionEnum.PREVIEW && (
+                <CollectionPreview />
+              )}
+              {currentViewSection === LayerSectionEnum.IMAGES && (
+                <CollectionLayers />
+              )}
+              {currentViewSection === LayerSectionEnum.RARITY && (
+                <CollectionRarity />
+              )}
+              {currentViewSection === LayerSectionEnum.RULES && (
+                <CollectionRules />
+              )}
             </div>
           </div>
         </div>

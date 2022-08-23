@@ -11,6 +11,7 @@ import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { motion } from 'framer-motion'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
 import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
+import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 
 const container = {
   hidden: { opacity: 0 },
@@ -107,13 +108,11 @@ const InfiniteScrollGridSelector = () => {
   const [increments, setIncrements] = useState(50)
 
   const {
-    artCollection,
     collection,
     repository,
     regenerate,
     regenerateFilter,
     regenerateFilterIndex,
-    setArtCollection,
     setRegenerateFilter,
     setRegenerateCollection,
   } = useRepositoryStore((state) => {
@@ -126,6 +125,13 @@ const InfiniteScrollGridSelector = () => {
       regenerateFilterIndex: state.regenerateFilterIndex,
       setRegenerateFilter: state.setRegenerateFilter,
       setRegenerateCollection: state.setRegenerateCollection,
+      setArtCollection: state.setArtCollection,
+    }
+  })
+
+  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
+    return {
+      artCollection: state.artCollection,
       setArtCollection: state.setArtCollection,
     }
   })

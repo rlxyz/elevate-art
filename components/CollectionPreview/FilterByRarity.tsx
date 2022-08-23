@@ -1,26 +1,30 @@
 import { useEffect, useState } from 'react'
-import useRepositoryStore from '@hooks/useCompilerViewStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
 import { ArtCollectionElement } from '@utils/x/Collection'
+import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 
-const submitMyForm = ({ value }) => {
-  alert(value)
-}
-
-export const SortByRarity = () => {
+export const FilterByRarity = () => {
   const [filters, setFilters] = useState(null)
   const [layerDropdown, setLayerDropdown] = useState(null)
-  const { artCollection, layers, traitFilters, setTraitFilters } =
-    useRepositoryStore((state) => {
+  const { layers, traitFilters, setTraitFilters } = useRepositoryStore(
+    (state) => {
       return {
-        artCollection: state.artCollection,
         layers: state.layers,
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    })
+    }
+  )
+
+  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
+    return {
+      artCollection: state.artCollection,
+      setArtCollection: state.setArtCollection,
+    }
+  })
 
   useEffect(() => {
     layers &&
