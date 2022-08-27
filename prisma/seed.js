@@ -7,18 +7,16 @@ const toPascalCaseWithSpace = (name) => {
     .toLowerCase()
     .replace(new RegExp(/[-_]+/, 'g'), ' ')
     .replace(/\.[^.]*$/, '')
-    .replace(
-      new RegExp(/\s+(.)(\w*)/, 'g'),
-      ($1, $2, $3) => ` ${$2.toUpperCase() + $3}`
-    )
+    .replace(new RegExp(/\s+(.)(\w*)/, 'g'), ($1, $2, $3) => ` ${$2.toUpperCase() + $3}`)
     .replace(new RegExp(/\w/), (s) => s.toUpperCase())
 }
 
-const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
+// const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
+const prisma = new PrismaClient()
 
 const cleanDb = async () => {
   try {
-    await prisma.artElement.deleteMany()
+    await prisma.traitElementRule.deleteMany()
     await prisma.traitElement.deleteMany()
     await prisma.layerElement.deleteMany()
     await prisma.collection.deleteMany()
@@ -77,14 +75,54 @@ const main = async (
 
     Promise.all(layerElements).then((elements) => {
       elements.forEach(async (element) => {
+        const total = layerConfig[element.priority].traits.reduce(
+          (acc, trait) => acc + trait.weight,
+          0
+        )
         await prisma.traitElement.createMany({
           data: layerConfig[element.priority].traits.map((trait) => {
             return {
               name: toPascalCaseWithSpace(trait.name),
-              weight: trait.weight,
+              weight: (trait.weight / total) * 100,
               layerElementId: element.id,
             }
           }),
+        })
+
+        // ret if rule not in a layer
+        if (!layerConfig[element.priority].rules) return
+
+        layerConfig[element.priority].rules.forEach(async (rule) => {
+          const { primary, type, links } = rule
+          const primaryElement = await prisma.traitElement.findFirst({
+            where: {
+              name: toPascalCaseWithSpace(primary),
+              layerElementId: element.id,
+            },
+          })
+
+          const rules = links.map(async (link) => {
+            return await prisma.traitElementRule.create({
+              data: {
+                type,
+                traitElementId: primaryElement.id,
+                linkedTraitElementId: toPascalCaseWithSpace(link),
+                // layerElementId: element.id,
+              },
+            })
+          })
+
+          Promise.all(rules).then((rules) => {
+            console.log(rules)
+          })
+
+          // await prisma.traitElementRule.createMany({
+          //   data: {
+          //     type: toPascalCaseWithSpace(rule.name),
+          //     description: rule.description,
+          //     layerElementId: element.id,
+          //   },
+          // })
         })
       })
     })
@@ -122,12 +160,12 @@ cleanDb().then(async () => {
     5555,
     roboghostData
   )
-  await main(
-    '0x1fdf89Dd0Eba85603CBdE7f9F5cE5D830ffc7643',
-    'dreamlab',
-    'reflections',
-    'Reflection',
-    1111,
-    reflectionsData
-  )
+  // await main(
+  //   '0x1fdf89Dd0Eba85603CBdE7f9F5cE5D830ffc7643',
+  //   'dreamlab',
+  //   'reflections',
+  //   'Reflection',
+  //   1111,
+  //   reflectionsData
+  // )
 })
