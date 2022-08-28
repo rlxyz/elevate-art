@@ -104,8 +104,7 @@ export class ImageElementRandomizer {
   ): ArtImageElement => {
     const sequences: ElementSource[] = []
     const generate_seed = mh3(seed)
-    const getRandom = sfc32(generate_seed(), generate_seed(), generate_seed(), generate_seed())
-
+    const getRandom = sfc32(generate_seed(), generate_seed(), generate_seed(), generate_seed()) // todo: fix
     layers.forEach((layer: Layer, index: number) => {
       const { weight, iterations, occuranceRate, elements } = layer
       for (let k = 0; k < iterations; k++) {

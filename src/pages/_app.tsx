@@ -12,7 +12,6 @@ import {
   RainbowKitProvider,
   wallet,
 } from '@rainbow-me/rainbowkit'
-import { config } from '@utils/config'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
@@ -24,23 +23,24 @@ import {
   RepositoryRouterContext,
 } from '@hooks/useRepositoryRouterStore'
 import { Toaster } from 'react-hot-toast'
+import { env } from 'src/env/client.mjs'
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.hardhat, ...(config.testnetEnabled ? [chain.rinkeby] : [])],
+  [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
   [
-    alchemyProvider({ apiKey: config.alchemyId }),
-    infuraProvider({ apiKey: config.infuraId }),
+    alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }),
+    infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }),
     publicProvider(),
   ]
 )
 
 const { wallets } = getDefaultWallets({
-  appName: config.appName,
+  appName: env.NEXT_PUBLIC_APP_NAME,
   chains,
 })
 
 const appInfo = {
-  appName: config.appName,
+  appName: env.NEXT_PUBLIC_APP_NAME,
 }
 
 const connectors = connectorsForWallets([
@@ -61,7 +61,11 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
   return (
     <SessionProvider session={session}>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={config.networkId}>
+        <RainbowKitProvider
+          appInfo={appInfo}
+          chains={chains}
+          initialChain={env.NEXT_PUBLIC_NETWORK_ID}
+        >
           <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
             <RepositoryContext.Provider createStore={() => createRepositoryStore}>
               <Layout>

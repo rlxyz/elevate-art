@@ -1,32 +1,30 @@
 // sources: https://www.delftstack.com/howto/javascript/javascript-random-seed-to-generate-random/
-export const mh3 = (string: string) => {
-  let hash: any
-  for (let i = 0, hash = 1779033703 ^ string.length; i < string.length; i++) {
-    const bitwise_xor_from_character = hash ^ string.charCodeAt(i)
-    hash = Math.imul(bitwise_xor_from_character, 3432918353)
+export const mh3 = (str: string): (() => number) => {
+  let hash: number
+  for (let i = 0, hash = 1779033703 ^ str.length; i < str.length; i++) {
+    hash = Math.imul(hash ^ str.charCodeAt(i), 3432918353)
     hash = (hash << 13) | (hash >>> 19)
   }
   return () => {
-    // Return the hash that you can use as a seed
     hash = Math.imul(hash ^ (hash >>> 16), 2246822507)
     hash = Math.imul(hash ^ (hash >>> 13), 3266489909)
     return (hash ^= hash >>> 16) >>> 0
   }
 }
 
-export const sfc32 = (seed_1: any, seed_2: any, seed_3: any, seed_4: any) => {
+export const sfc32 = (a: number, b: number, c: number, d: number): (() => number) => {
   return () => {
-    seed_1 >>>= 0
-    seed_2 >>>= 0
-    seed_3 >>>= 0
-    seed_4 >>>= 0
-    let cast32 = (seed_1 + seed_2) | 0
-    seed_1 = seed_2 ^ (seed_2 >>> 9)
-    seed_2 = (seed_3 + (seed_3 << 3)) | 0
-    seed_3 = (seed_3 << 21) | (seed_3 >>> 11)
-    seed_4 = (seed_4 + 1) | 0
-    cast32 = (cast32 + seed_4) | 0
-    seed_3 = (seed_3 + cast32) | 0
+    a >>>= 0
+    b >>>= 0
+    c >>>= 0
+    d >>>= 0
+    let cast32 = (a + b) | 0
+    a = b ^ (b >>> 9)
+    b = (c + (c << 3)) | 0
+    c = (c << 21) | (c >>> 11)
+    d = (d + 1) | 0
+    cast32 = (cast32 + d) | 0
+    c = (c + cast32) | 0
     return (cast32 >>> 0) / 4294967296
   }
 }
