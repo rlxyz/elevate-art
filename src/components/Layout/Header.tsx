@@ -11,7 +11,7 @@ export const Header = () => {
   return (
     <header className='w-full flex bg-white justify-between h-[5rem] px-4 lg:py-8 lg:px-8 pointer-events-auto border-b border-b-lightGray items-center'>
       <div className='flex'>
-        <Image width={25} height={25} src='/images/logo.svg' alt='Logo' />
+        <Image priority width={25} height={25} src='/images/logo.svg' alt='Logo' />
         <div className='mt-2 ml-4 font-bold'>
           <span className='pr-2 text-darkGrey border-r border-r-darkGrey'>{organisationName}</span>
           <span className='pl-2'>{repositoryName && repositoryName}</span>

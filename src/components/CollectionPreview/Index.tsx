@@ -1,94 +1,85 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useNotification } from '@hooks/useNotification'
-import ArtCollection, { createArtCollection } from '@utils/x/Collection'
+import ArtCollection from '@utils/x/Collection'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
-import React, { ReactNode, useCallback, useEffect } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import seedrandom from 'seedrandom'
 
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
-import InfiniteScrollGrid from './InfiniteScrollGrid'
+import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
+import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
+import { LayerElement, TraitElement, TraitElementRule } from '@prisma/client'
+import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 
 const CollectionPreview = () => {
-  const router: NextRouter = useRouter()
-  const collectionTotalSupply = 100
-  const { collection, regenerate, repository, setRegenerateCollection } = useRepositoryStore(
-    (state) => {
-      return {
-        collection: state.collection,
-        regenerate: state.regenerate,
-        repository: state.repository,
-        setRegenerateCollection: state.setRegenerateCollection,
-      }
-    }
-  )
-
-  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
+  const { layers, collection } = useRepositoryStore((state) => {
     return {
-      artCollection: state.artCollection,
-      setArtCollection: state.setArtCollection,
+      layers: state.layers,
+      collection: state.collection,
     }
   })
-  const { notifySuccess } = useNotification()
-  useEffect(() => {
-    setArtCollection(
-      createArtCollection(
-        repository.name,
-        collection.id,
-        collection.generations,
-        0,
-        collectionTotalSupply
+  const [hasHydrated, setHasHydrated] = useState(false)
+  const [tokens, setTokens] = useState<TraitElement[][]>([])
+
+  const createRandomCollectionFromSeed = (
+    layers: (LayerElement & {
+      traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+    })[],
+    totalSupply: number,
+    seed: string
+  ): TraitElement[][] => {
+    // sort all layers by priority
+    // sort all trait elemnents by weight
+    layers
+      .sort((a, b) => a.priority - b.priority)
+      .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
+        traitElements.sort((a, b) => a.weight - b.weight)
       )
-    )
-  }, [])
-  // const handler = async (regenerate: boolean) => {
-  //   const app: App = createCompilerApp(repositoryName)
-  //   const _collection: Collection = await app.createRandomCollectionFromSeed(
-  //     collectionTotalSupply,
-  //     parseInt(
-  //       ethers.utils
-  //         .keccak256(
-  //           ethers.utils.toUtf8Bytes(
-  //             `${collection.id}-${collection.generations + 1}`
-  //           )
-  //         )
-  //         .toString(),
-  //       16
-  //     )
-  //   )
-  //   console.log('_collection', collection.generations + 1)
-  //   setArtCollection(_collection)
-  // }
 
-  // useEffect(() => {
-  //   if (regenerate) {
-  //     notifySuccess()
-  //     console.log('start')
-  //     handler(true).then(async () => {
-  //       console.log('done')
-  //       setRegenerateCollection(false)
-  //       regenerate
-  //         ? await fetcherPost(`collection/${collection.id}/generate`, {})
-  //         : await fetcher(`collection/${collection.id}/generate`)
-  //     })
-  //   }
-  // }, [regenerate])
+    const allElements: TraitElement[][] = []
+    for (let i = 0; i < totalSupply; i++) {
+      // create element
+      let elements: TraitElement[] = []
+      var random = seedrandom(`${seed}${i}`)
+      layers.forEach(
+        ({
+          traitElements,
+        }: LayerElement & { traitElements: (TraitElement & { rules: TraitElementRule[] })[] }) => {
+          let r = Math.floor(random() * traitElements.reduce((a, b) => a + b.weight, 0))
+          traitElements.every((traitElement: TraitElement & { rules: TraitElementRule[] }) => {
+            r -= traitElement.weight
+            if (r < 0) {
+              elements.push(traitElement)
+              return false
+            }
+            return true
+          })
+        }
+      )
+      allElements.push(elements)
+    }
+    return allElements
+  }
 
-  // useEffect(() => {
-  //   handler(false)
-  // }, [])
+  useEffect(() => {
+    layers &&
+      (setTokens(createRandomCollectionFromSeed(layers, collection.totalSupply, `seed`)),
+      setHasHydrated(true))
+  }, [layers])
 
   return (
-    artCollection && (
-      <CollectionViewContent
-        title='Generate your Collection'
-        description='Create different token sets before finalising the collection'
-      >
+    <CollectionViewContent
+      title='Generate your Collection'
+      description='Create different token sets before finalising the collection'
+    >
+      {hasHydrated && (
         <div className='p-8 h-full w-full'>
-          <InfiniteScrollGrid />
+          <InfiniteScrollGrid tokens={tokens} />
         </div>
-      </CollectionViewContent>
-    )
+      )}
+    </CollectionViewContent>
   )
 }
 

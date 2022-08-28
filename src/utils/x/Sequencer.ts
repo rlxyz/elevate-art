@@ -105,14 +105,13 @@ export class ImageElementRandomizer {
     const sequences: ElementSource[] = []
     const generate_seed = mh3(seed)
     const getRandom = sfc32(generate_seed(), generate_seed(), generate_seed(), generate_seed()) // todo: fix
-    layers.forEach((layer: Layer, index: number) => {
+    layers.forEach((layer: Layer) => {
       const { weight, iterations, occuranceRate, elements } = layer
       for (let k = 0; k < iterations; k++) {
         if (getRandom() > occuranceRate) {
           continue
         }
         let r = Math.floor(getRandom() * weight)
-
         elements.forEach((element: LayerElement, index: number) => {
           if (
             Sequencer.layerElementHasExclusion(layers, layer, element.name || '', sequences) ||
@@ -120,7 +119,6 @@ export class ImageElementRandomizer {
           ) {
             return
           }
-
           for (let i = 0; i < elements.length; i++) {
             r -= element.weight
             if (r < 0) {
