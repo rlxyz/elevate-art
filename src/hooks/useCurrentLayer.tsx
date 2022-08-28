@@ -2,7 +2,6 @@ import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
-import { useEffect } from 'react'
 
 export const useCurrentLayer = () => {
   const layers = useRepositoryStore((state) => state.layers)
