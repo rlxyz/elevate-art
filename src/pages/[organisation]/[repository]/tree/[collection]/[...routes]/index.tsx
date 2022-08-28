@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerSectionEnum } from 'src/types/enums'
-import { Index } from '@components/Repository/Index'
+import Index from '@components/Repository/Index'
 import { trpc } from '@utils/trpc'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import Loading from '@components/UI/Loading'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -20,7 +21,7 @@ const PageImplementation = ({
 }) => {
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
-  const [hasHydrated, setHasHydrated] = useState<boolean>(false)
+  const { isLoading, isError } = useCurrentLayer()
   const { data: organisationData } = trpc.useQuery([
     'organisation.getOrganisationByName',
     { name: organisationName },
@@ -64,7 +65,6 @@ const PageImplementation = ({
     if (routes.length === 1 && parse.data === LayerSectionEnum.enum.Preview) {
       setCurrentViewSection(parse.data)
       setCurrentLayerPriority(0)
-      setHasHydrated(true)
       return
     }
 
@@ -79,7 +79,6 @@ const PageImplementation = ({
 
       setCurrentViewSection(parse.data)
       setCurrentLayerPriority(layer.priority)
-      setHasHydrated(true)
       return
     }
 
@@ -109,7 +108,18 @@ const PageImplementation = ({
     setLayers(layers)
   }, [repositoryData])
 
-  return hasHydrated ? <Index /> : <Loading />
+  return (
+    <>
+      <div className={`${isLoading ? 'hidden' : ''}`}>
+        <Index />
+      </div>
+      {isLoading && (
+        <div>
+          <Loading />
+        </div>
+      )}
+    </>
+  )
 }
 
 // wrapper to hydate routes
