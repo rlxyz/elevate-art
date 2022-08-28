@@ -132,17 +132,31 @@ model TraitElement {
     layerElement   LayerElement @relation(fields: [layerElementId], references: [id])
     layerElementId String
 
-    rules TraitElementRule[]
+    rulesPrimary   Rules[] @relation("primaryTraitElement")
+    rulesSecondary Rules[] @relation("secondaryTraitElement")
 }
 
-model TraitElementRule {
-    id String @id @default(cuid())
+model Rules {
+    id                      String       @id @default(cuid())
+    condition               String
+    primaryTraitElementId   String
+    secondaryTraitElementId String
+    primaryTraitElement     TraitElement @relation("primaryTraitElement", fields: [primaryTraitElementId], references: [id])
+    secondaryTraitElement   TraitElement @relation("secondaryTraitElement", fields: [secondaryTraitElementId], references: [id])
 
-    type String
-
-    traitElement         TraitElement @relation(fields: [traitElementId], references: [id])
-    traitElementId       String
-    linkedTraitElementId String
-
-    createdAt DateTime @default(now())
+    @@unique([primaryTraitElementId, secondaryTraitElementId])
 }
+
+// model TraitElementRule {
+//     id String @id @default(cuid())
+
+//     type String
+
+//     traitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "forwardRules")
+//     traitElementId String
+
+//     linkedTraitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "backwardRules")
+//     linkedTraitElementId String
+
+//     createdAt DateTime @default(now())
+// }

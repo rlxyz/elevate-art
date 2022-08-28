@@ -14,9 +14,16 @@ export const layerElementRouter = createRouter()
           traitElements: {
             orderBy: { weight: 'asc' },
             include: {
-              rules: {
-                orderBy: {
-                  createdAt: 'desc',
+              rulesPrimary: {
+                include: {
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
+                },
+              },
+              rulesSecondary: {
+                include: {
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
                 },
               },
             },

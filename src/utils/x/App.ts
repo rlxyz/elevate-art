@@ -1,4 +1,4 @@
-import { LayerElement, TraitElement, TraitElementRule } from '@prisma/client'
+import { LayerElement, TraitElement, Rules } from '@prisma/client'
 import { utils } from 'ethers'
 
 import ArtCollection from './Collection'
@@ -100,7 +100,7 @@ export class App {
 
 export const createRandomCollectionFromSeed = (
   layers: (LayerElement & {
-    traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+    traitElements: (TraitElement & { rules: Rules[] })[]
   })[],
   totalSupply: number,
   seed: string
@@ -120,9 +120,9 @@ export const createRandomCollectionFromSeed = (
     layers.forEach(
       ({
         traitElements,
-      }: LayerElement & { traitElements: (TraitElement & { rules: TraitElementRule[] })[] }) => {
+      }: LayerElement & { traitElements: (TraitElement & { rules: Rules[] })[] }) => {
         let r = Math.floor(random() * traitElements.reduce((a, b) => a + b.weight, 0))
-        traitElements.forEach((traitElement: TraitElement & { rules: TraitElementRule[] }) => {
+        traitElements.forEach((traitElement: TraitElement & { rules: Rules[] }) => {
           r -= traitElement.weight
           if (r < 0) {
             elements.push(traitElement)

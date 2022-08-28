@@ -6,7 +6,7 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { classNames, toPascalCaseWithSpace } from '@utils/format'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
-import { LayerElement, TraitElement, TraitElementRule } from '@prisma/client'
+import { LayerElement, TraitElement, Rules } from '@prisma/client'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
@@ -23,7 +23,14 @@ export const RuleConditionSelector = ({
 }: {
   title: string
   traitElements: (TraitElement & {
-    rules: TraitElementRule[]
+    rulesPrimary: (Rules & {
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
+    })[]
+    rulesSecondary: (Rules & {
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
+    })[]
   })[]
   onSuccess: () => void
   layerName: string

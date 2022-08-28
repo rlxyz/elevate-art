@@ -10,7 +10,7 @@ import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
-import { LayerElement, TraitElement, TraitElementRule } from '@prisma/client'
+import { LayerElement, TraitElement, Rules } from '@prisma/client'
 import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 
 const CollectionPreview = () => {
@@ -23,9 +23,9 @@ const CollectionPreview = () => {
   const [hasHydrated, setHasHydrated] = useState(false)
   const [tokens, setTokens] = useState<TraitElement[][]>([])
 
-  const createRandomCollectionFromSeed = (
+  const createCollectionFromSeed = (
     layers: (LayerElement & {
-      traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+      traitElements: (TraitElement & { rules: Rules[] })[]
     })[],
     totalSupply: number,
     seed: string
@@ -39,16 +39,14 @@ const CollectionPreview = () => {
       )
 
     const allElements: TraitElement[][] = []
-    for (let i = 0; i < totalSupply; i++) {
-      // create element
+    for (let i = 0, random = seedrandom(`${seed}${i}`); i < totalSupply; i++) {
       let elements: TraitElement[] = []
-      var random = seedrandom(`${seed}${i}`)
       layers.forEach(
         ({
           traitElements,
-        }: LayerElement & { traitElements: (TraitElement & { rules: TraitElementRule[] })[] }) => {
+        }: LayerElement & { traitElements: (TraitElement & { rules: Rules[] })[] }) => {
           let r = Math.floor(random() * traitElements.reduce((a, b) => a + b.weight, 0))
-          traitElements.every((traitElement: TraitElement & { rules: TraitElementRule[] }) => {
+          traitElements.every((traitElement: TraitElement & { rules: Rules[] }) => {
             r -= traitElement.weight
             if (r < 0) {
               elements.push(traitElement)
@@ -65,7 +63,7 @@ const CollectionPreview = () => {
 
   useEffect(() => {
     layers &&
-      (setTokens(createRandomCollectionFromSeed(layers, collection.totalSupply, `seed`)),
+      (setTokens(createCollectionFromSeed(layers, collection.totalSupply, `seed`)),
       setHasHydrated(true))
   }, [layers])
 
