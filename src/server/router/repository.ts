@@ -19,9 +19,8 @@ export const repositoryRouter = createRouter().query('getRepositoryByName', {
             traitElements: {
               orderBy: { weight: 'asc' }, // guarantee rarest first
               include: {
-                rules: {
-                  orderBy: { createdAt: 'desc' }, // guarantee rarest first
-                },
+                rulesPrimary: true,
+                rulesSecondary: true,
               },
             },
           },

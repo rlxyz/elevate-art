@@ -1,4 +1,5 @@
 import sha256 from 'crypto-js/sha256'
+import { ArtCollectionElement } from './Collection'
 import Layer from './Layer'
 import { ElementSource } from './types'
 
@@ -34,14 +35,16 @@ abstract class ImageElement extends Element {
   }
 
   toAttributes(): any[] {
-    const attributes: any[] = []
-    this.layers.forEach((layer: Layer, i) => {
-      if (this.sources[i]) {
-        attributes.push({
-          trait_type: this.layers[this.sources[i]?.layerIndex || 0]?.name,
-          value: this.sources[i]?.element?.name,
-        })
-      }
+    const attributes: ArtCollectionElement[] = []
+
+    this.layers.forEach((layer: Layer, index: number) => {
+      // if (this.sources[i]) {
+      //   attributes.push({
+      //     // trait_type: this.layers[this.sources[i].layerIndex]?.name,
+      //     trait_type: this.layers[this.sources[i].layerIndex]?.name,
+      //     value: this.sources[i]?.element?.name,
+      //   })
+      // }
     })
     return attributes
   }

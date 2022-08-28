@@ -4,7 +4,7 @@ import {
   Organisation,
   Repository,
   TraitElement,
-  TraitElementRule,
+  Rules,
 } from '@prisma/client'
 import create, { StoreApi } from 'zustand'
 import createContext from 'zustand/context'
@@ -15,7 +15,16 @@ interface CompilerViewInterface {
   repository: Repository
   collection: Collection
   layers: (LayerElement & {
-    traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
+      })[]
+    })[]
   })[]
   currentLayer: LayerElement & {
     traitElements: TraitElement[]
@@ -35,7 +44,16 @@ interface CompilerViewInterface {
   setCollection: (collection: Collection) => void
   setLayers: (
     layers: (LayerElement & {
-      traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+      traitElements: (TraitElement & {
+        rulesPrimary: (Rules & {
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
+        })[]
+        rulesSecondary: (Rules & {
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
+        })[]
+      })[]
     })[]
   ) => void
   setCurrentLayer: (priority: number) => void
@@ -94,7 +112,16 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setCollection: (collection: Collection) => set((_) => ({ collection })),
     setLayers: (
       layers: (LayerElement & {
-        traitElements: (TraitElement & { rules: TraitElementRule[] })[]
+        traitElements: (TraitElement & {
+          rulesPrimary: (Rules & {
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
+          })[]
+          rulesSecondary: (Rules & {
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
+          })[]
+        })[]
       })[]
     ) => set((_) => ({ layers })),
     setCurrentLayer: (priority: number) =>

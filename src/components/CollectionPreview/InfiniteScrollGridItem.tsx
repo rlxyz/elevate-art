@@ -5,6 +5,8 @@ import { useInView } from 'react-intersection-observer'
 import Image from 'next/image'
 import { ArtImageElement } from '@utils/x/Element'
 import { ArtCollectionElement } from '@utils/x/Collection'
+import { TraitElement } from '@prisma/client'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 
 const InfiniteScrollGridItem = ({
   token,
@@ -12,14 +14,14 @@ const InfiniteScrollGridItem = ({
   organisationName,
   name,
 }: {
-  token: any
+  token: TraitElement[]
   repositoryName: string
   organisationName: string
   name: string
 }) => {
   const controls = useAnimation()
   const [ref, inView] = useInView()
-
+  const layers = useRepositoryStore((state) => state.layers)
   useEffect(() => {
     if (inView) {
       controls.start('show')
@@ -47,7 +49,7 @@ const InfiniteScrollGridItem = ({
       ref={ref}
     >
       <div className='h-[120px] overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
-        {token.map(({ trait_type, value }: ArtCollectionElement, index: number) => {
+        {token.map((traitElement: TraitElement, index: number) => {
           return (
             <div className='absolute w-full h-full flex flex-col items-center' key={index}>
               <Image
@@ -57,8 +59,8 @@ const InfiniteScrollGridItem = ({
                 src={`${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
                   process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES ? 'c_fill,h_200,w_201' : ''
                 }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
-                  trait_type
-                )}/${toPascalCaseWithSpace(value)}.png`}
+                  layers[index]?.name // todo fix
+                )}/${toPascalCaseWithSpace(traitElement.name)}.png`}
               />
             </div>
           )

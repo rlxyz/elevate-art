@@ -16,7 +16,7 @@ const prisma = new PrismaClient()
 
 const cleanDb = async () => {
   try {
-    await prisma.traitElementRule.deleteMany()
+    await prisma.rules.deleteMany()
     await prisma.traitElement.deleteMany()
     await prisma.layerElement.deleteMany()
     await prisma.collection.deleteMany()
@@ -90,40 +90,40 @@ const main = async (
         })
 
         // ret if rule not in a layer
-        if (!layerConfig[element.priority].rules) return
+        // if (!layerConfig[element.priority].rules) return
 
-        layerConfig[element.priority].rules.forEach(async (rule) => {
-          const { primary, type, links } = rule
-          const primaryElement = await prisma.traitElement.findFirst({
-            where: {
-              name: toPascalCaseWithSpace(primary),
-              layerElementId: element.id,
-            },
-          })
+        // layerConfig[element.priority].rules.forEach(async (rule) => {
+        //   const { primary, type, links } = rule
+        //   const primaryElement = await prisma.traitElement.findFirst({
+        //     where: {
+        //       name: toPascalCaseWithSpace(primary),
+        //       layerElementId: element.id,
+        //     },
+        //   })
 
-          const rules = links.map(async (link) => {
-            return await prisma.traitElementRule.create({
-              data: {
-                type,
-                traitElementId: primaryElement.id,
-                linkedTraitElementId: toPascalCaseWithSpace(link),
-                // layerElementId: element.id,
-              },
-            })
-          })
+        //   const rules = links.map(async (link) => {
+        //     return await prisma.traitElementRule.create({
+        //       data: {
+        //         type,
+        //         traitElementId: primaryElement.id,
+        //         linkedTraitElementId: toPascalCaseWithSpace(link),
+        //         // layerElementId: element.id,
+        //       },
+        //     })
+        //   })
 
-          Promise.all(rules).then((rules) => {
-            console.log(rules)
-          })
+        //   Promise.all(rules).then((rules) => {
+        //     console.log(rules)
+        //   })
 
-          // await prisma.traitElementRule.createMany({
-          //   data: {
-          //     type: toPascalCaseWithSpace(rule.name),
-          //     description: rule.description,
-          //     layerElementId: element.id,
-          //   },
-          // })
-        })
+        //   // await prisma.traitElementRule.createMany({
+        //   //   data: {
+        //   //     type: toPascalCaseWithSpace(rule.name),
+        //   //     description: rule.description,
+        //   //     layerElementId: element.id,
+        //   //   },
+        //   // })
+        // })
       })
     })
 

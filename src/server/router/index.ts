@@ -12,7 +12,7 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .merge('organisation.', organisationRouter)
   .merge('repository.', repositoryRouter)
-  .merge('auth.', protectedExampleRouter)
+  // .merge('auth.', protectedExampleRouter)
   .merge('trait.', traitElementRouter)
   .merge('layer.', layerElementRouter)
 

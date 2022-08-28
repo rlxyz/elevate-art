@@ -3,11 +3,10 @@ import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { TrashIcon } from '@heroicons/react/outline'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { toPascalCaseWithSpace } from '@utils/format'
+import { classNames, toPascalCaseWithSpace } from '@utils/format'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
-import { classNames } from '@utils/classnames'
-import { LayerElement, TraitElement, TraitElementRule } from '@prisma/client'
+import { LayerElement, TraitElement, Rules } from '@prisma/client'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
@@ -24,7 +23,14 @@ export const RuleConditionSelector = ({
 }: {
   title: string
   traitElements: (TraitElement & {
-    rules: TraitElementRule[]
+    rulesPrimary: (Rules & {
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
+    })[]
+    rulesSecondary: (Rules & {
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
+    })[]
   })[]
   onSuccess: () => void
   layerName: string

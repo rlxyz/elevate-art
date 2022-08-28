@@ -1,3 +1,4 @@
+import { LayerElement, TraitElement, Rules } from '@prisma/client'
 import { utils } from 'ethers'
 
 import ArtCollection from './Collection'
@@ -40,7 +41,7 @@ export class App {
     }
   }
 
-  createRandomCollection = async (totalSupply: number): Promise<ArtCollection> => {
+  createRandomCollection = (totalSupply: number): ArtCollection => {
     const allHash = new Set()
     const tokens = []
     const data = []
@@ -58,14 +59,14 @@ export class App {
         data.push(attributes)
       }
     }
-    return new ArtCollection({ tokens, data, totalSupply })
+    return new ArtCollection({ tokens, totalSupply })
   }
 
   createRandomCollectionFromSeed = (
     seed: number,
-    endPoint: number,
-    startPoint: number
-  ): { tokens: any[]; data: any; totalSupply: number } => {
+    startPoint: number,
+    endPoint: number
+  ): ArtCollection => {
     const allHash = new Set()
     const tokens = []
     const data = []
@@ -75,6 +76,8 @@ export class App {
       )
       const hash: string = element.toHex()
       const attributes: any[] = element.toAttributes()
+      i++
+      console.log('new item', { hash, attributes })
       if (!allHash.has(hash)) {
         i++
         allHash.add(hash)
@@ -82,7 +85,7 @@ export class App {
         data.push(attributes)
       }
     }
-    return { tokens, data, totalSupply: endPoint - startPoint }
+    return new ArtCollection({ tokens, totalSupply: endPoint - startPoint })
   }
 
   createElementFromHash = (tokenHash: string): Element => {
@@ -92,5 +95,42 @@ export class App {
   createElementFromRandomness(): Element {
     const hash = utils.keccak256(utils.toUtf8Bytes(String(Math.random())))
     return this.sequencer.createElement(hash)
+  }
+}
+
+export const createRandomCollectionFromSeed = (
+  layers: (LayerElement & {
+    traitElements: (TraitElement & { rules: Rules[] })[]
+  })[],
+  totalSupply: number,
+  seed: string
+) => {
+  // sort all layers by priority
+  // sort all trait elemnents by weight
+  layers
+    .sort((a, b) => a.priority - b.priority)
+    .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
+      traitElements.sort((a, b) => a.weight - b.weight)
+    )
+
+  for (let i = 0; i < totalSupply; i++) {
+    // create element
+    let elements: TraitElement[] = []
+    const random = sfc32(`${seed}.${i}`)
+    layers.forEach(
+      ({
+        traitElements,
+      }: LayerElement & { traitElements: (TraitElement & { rules: Rules[] })[] }) => {
+        let r = Math.floor(random() * traitElements.reduce((a, b) => a + b.weight, 0))
+        traitElements.forEach((traitElement: TraitElement & { rules: Rules[] }) => {
+          r -= traitElement.weight
+          if (r < 0) {
+            elements.push(traitElement)
+            return
+          }
+        })
+      }
+    )
+    console.log(elements)
   }
 }

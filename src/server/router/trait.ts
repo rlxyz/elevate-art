@@ -31,11 +31,11 @@ export const traitElementRouter = createRouter()
       linkedTraitElementId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      await ctx.prisma.traitElementRule.create({
+      await ctx.prisma.rules.create({
         data: {
-          type: input.type,
-          traitElementId: input.id,
-          linkedTraitElementId: input.linkedTraitElementId,
+          condition: input.type,
+          primaryTraitElementId: input.id,
+          secondaryTraitElementId: input.linkedTraitElementId,
         },
       })
     },
@@ -45,9 +45,9 @@ export const traitElementRouter = createRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
-      await ctx.prisma.traitElementRule.deleteMany({
+      await ctx.prisma.rules.deleteMany({
         where: {
-          traitElementId: input.id,
+          primaryTraitElementId: input.id,
         },
       })
     },

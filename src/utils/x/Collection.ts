@@ -25,31 +25,29 @@ class ArtCollection {
 
   // Data
   tokens: ArtCollectionToken[]
-  filtered: ArtCollectionToken[]
 
   // Maps
-  tokenIdMap: ArtCollectionTokenMapV2
-  attributeMap: ArtCollectionAttributeMapV2
+  tokenIdMap: ArtCollectionTokenMapV2 | undefined
+  attributeMap: ArtCollectionAttributeMapV2 | undefined
 
-  constructor({ tokens, data, totalSupply }: { tokens: any; data: any; totalSupply: number }) {
+  constructor({ tokens, totalSupply }: { tokens: any; totalSupply: number }) {
     this.tokens = tokens
-    this.filtered = tokens
     this.totalSupply = totalSupply
-    const { attributeMap, tokenIdMap } = this.createAttributeMappings()
-    this.tokenIdMap = tokenIdMap!
-    this.attributeMap = attributeMap!
+    // const { attributeMap, tokenIdMap } = this.createAttributeMappings()
+    // this.tokenIdMap = tokenIdMap!
+    // this.attributeMap = attributeMap!
   }
 
   getTokens = () => {
-    return this.filtered.length > 0 ? this.filtered : this.tokens
+    return this.tokens
   }
 
   getTraitCount = ({ trait_type, value }: ArtCollectionElement): number => {
-    return this.attributeMap.get(trait_type)?.get(value) || 0
+    return this.attributeMap?.get(trait_type)?.get(value) || 0
   }
 
   getLayerCount = (trait_type: string): number => {
-    return this.attributeMap.get(trait_type)?.size || 0
+    return this.attributeMap?.get(trait_type)?.size || 0
   }
 
   getTotalSupply = (): number => {
@@ -318,19 +316,3 @@ class ArtCollection {
 }
 
 export default ArtCollection
-
-export const createArtCollection = (
-  name: string,
-  id: string,
-  seed: number,
-  start: number,
-  end: number
-): ArtCollection => {
-  return new ArtCollection(
-    createCompilerApp(name).createRandomCollectionFromSeed(
-      createCollectionSeed(id, seed),
-      start,
-      end
-    )
-  )
-}
