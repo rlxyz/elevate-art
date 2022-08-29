@@ -8,6 +8,7 @@ import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import Loading from '@components/UI/Loading'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { Layout } from '@components/Layout/Layout'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -108,18 +109,7 @@ const PageImplementation = ({
     setLayers(layers)
   }, [repositoryData])
 
-  return (
-    <>
-      <div className={`${isLoading ? 'hidden' : ''}`}>
-        <Index />
-      </div>
-      {isLoading && (
-        <div>
-          <Loading />
-        </div>
-      )}
-    </>
-  )
+  return <div>{isLoading ? <Loading /> : <Index />}</div>
 }
 
 // wrapper to hydate routes
@@ -135,11 +125,13 @@ const Page = () => {
   }, [organisationName, repositoryName])
 
   return hasHydrated ? (
-    <PageImplementation
-      organisationName={organisationName}
-      repositoryName={repositoryName}
-      routes={routes}
-    />
+    <Layout>
+      <PageImplementation
+        organisationName={organisationName}
+        repositoryName={repositoryName}
+        routes={routes}
+      />
+    </Layout>
   ) : (
     <Loading />
   )

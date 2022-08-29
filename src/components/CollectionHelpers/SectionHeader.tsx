@@ -1,4 +1,5 @@
 import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
+import { Button } from '@components/UI/Button'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import * as React from 'react'
 
@@ -22,12 +23,12 @@ export const SectionHeader = () => {
         <div className='border border-lightGray rounded-[5px] px-4 py-3 max-w-[20%]'>
           <div className='space-y-4'>
             <span className='font-normal flex flex-col text-xs space-y-3'>
-              <span className='font-semibold'>Generate</span>
+              <span className='font-semibold'>Guides</span>
               <span className='text-darkGrey'>
-                You can regenerate your collection by clicking this button.
+                Need some help with how the compiler works? Check out our guides.
               </span>
             </span>
-            <RegegenerateButton />
+            <Button className='border w-full rounded-[5px] text-xs py-1'>Learn More</Button>
           </div>
         </div>
       </div>

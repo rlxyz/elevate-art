@@ -99,67 +99,65 @@ export const RarityDisplay = ({
           }) => (
             <>
               <div className='flex flex-col'>
-                <div className='grid grid-cols-6 gap-y-4'>
-                  <div className='col-span-4'>
-                    <div className='inline-block min-w-full align-middle'>
-                      <Form onSubmit={handleSubmit}>
-                        <table className='w-full table-fixed divide-y divide-lightGray'>
-                          <thead>
-                            <tr>
-                              {[
-                                'Image',
-                                'Name',
-                                'Quantity in Collection',
-                                // 'Rarity Score',
-                                'Percentage',
-                              ].map((item, index) => {
-                                return (
-                                  <th
-                                    key={item}
-                                    scope='col'
-                                    className={`${
-                                      index === 3 ? 'text-right' : 'text-left'
-                                    }  text-xs font-semibold uppercase text-darkGrey pb-8`}
-                                  >
-                                    {item}
-                                  </th>
-                                )
-                              })}
-                            </tr>
-                          </thead>
-                          <tbody className='divide-y divide-lightGray'>
-                            {traitElements.map(({ name }: TraitElement, index: number) => (
-                              <tr key={index}>
-                                <td className='py-8'>
-                                  <AdvancedImage
-                                    url={`${organisation.name}/${
-                                      repository.name
-                                    }/layers/${layerName}/${toPascalCaseWithSpace(name)}.png`}
+                <div className='inline-block min-w-full align-middle'>
+                  <Form onSubmit={handleSubmit}>
+                    <table className='w-full table-fixed divide-y divide-lightGray'>
+                      <thead>
+                        <tr>
+                          {[
+                            'Image',
+                            'Name',
+                            'Quantity in Collection',
+                            // 'Rarity Score',
+                            'Percentage',
+                          ].map((item, index) => {
+                            return (
+                              <th
+                                key={item}
+                                scope='col'
+                                className={`${
+                                  index === 3 ? 'text-right' : 'text-left'
+                                }  text-xs font-semibold uppercase text-darkGrey pb-8`}
+                              >
+                                {item}
+                              </th>
+                            )
+                          })}
+                        </tr>
+                      </thead>
+                      <tbody className='divide-y divide-lightGray'>
+                        {traitElements.map(({ name }: TraitElement, index: number) => (
+                          <tr key={index}>
+                            <td className='py-8'>
+                              <AdvancedImage
+                                url={`${organisation.name}/${
+                                  repository.name
+                                }/layers/${layerName}/${toPascalCaseWithSpace(name)}.png`}
+                              />
+                            </td>
+                            <td className='whitespace-nowrap text-sm font-medium'>
+                              {toPascalCaseWithSpace(name)}
+                            </td>
+                            <td className='whitespace-nowrap text-sm font-medium'>
+                              <div className='flex space-x-3 items-center justify-start'>
+                                <div className='w-24'>
+                                  <Textbox
+                                    id={`traits.${index}.weight`}
+                                    type='number'
+                                    name={`traits.${index}.weight`}
+                                    value={values.traits[index]?.weight}
+                                    onChange={(e) => {
+                                      e.persist()
+                                      !hasFormChange && setHasFormChange(true)
+                                      handleChange(e)
+                                    }}
                                   />
-                                </td>
-                                <td className='whitespace-nowrap text-sm font-medium'>
-                                  {toPascalCaseWithSpace(name)}
-                                </td>
-                                <td className='whitespace-nowrap text-sm font-medium'>
-                                  <div className='flex space-x-3 items-center justify-start'>
-                                    <div className='w-24'>
-                                      <Textbox
-                                        id={`traits.${index}.weight`}
-                                        type='number'
-                                        name={`traits.${index}.weight`}
-                                        value={values.traits[index]?.weight}
-                                        onChange={(e) => {
-                                          e.persist()
-                                          !hasFormChange && setHasFormChange(true)
-                                          handleChange(e)
-                                        }}
-                                      />
-                                    </div>
-                                    <span>out of {collection.totalSupply}</span>
-                                  </div>
-                                </td>
-                                {/* <td className='whitespace-nowrap text-sm font-medium'>
-                                  {calculateTraitRarityScore(
+                                </div>
+                                <span>out of {collection.totalSupply}</span>
+                              </div>
+                            </td>
+                            {/* <td className='whitespace-nowrap text-sm font-medium'>
+                                {calculateTraitRarityScore(
                                     values.traits[index]?.weight,
                                     calculateSumArray(values.traits),
                                     collection.totalSupply
@@ -167,35 +165,18 @@ export const RarityDisplay = ({
                                     .toFixed(2)
                                     .toString()}
                                 </td> */}
-                                <td className='whitespace-nowrap text-right text-sm font-medium'>
-                                  {calculateTraitRarityPercentage(
-                                    Number(values.traits[index]?.weight),
-                                    calculateSumArray(values.traits)
-                                  ).toFixed(2)}
-                                  %
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </Form>
-                    </div>
-                  </div>
-                  <div className='col-span-2'>
-                    <div className='mt-12 ml-8'>
-                      <div className='border rounded-[5px] border-lightGray'>
-                        <div className='p-8 flex flex-col font-plus-jakarta-sans text-sm'>
-                          <span className='font-semibold'>
-                            Need some help with how rarities work? Check this guide here.
-                          </span>
-                          <p className='my-8'>
-                            This is an example of how we structure rarities for NFT collections.
-                          </p>
-                          <Button className='text-sm border rounded-[5px] p-2'>Learn More</Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                            <td className='whitespace-nowrap text-right text-sm font-medium'>
+                              {calculateTraitRarityPercentage(
+                                Number(values.traits[index]?.weight),
+                                calculateSumArray(values.traits)
+                              ).toFixed(2)}
+                              %
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </Form>
                 </div>
               </div>
               {hasFormChange && (

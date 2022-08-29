@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react'
 import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 
 type Filter = {
@@ -59,22 +58,6 @@ const Index = () => {
             },
           ],
         },
-        // {
-        //   id: 'trait',
-        //   name: 'By Trait',
-        //   options: layers.map((layer) => {
-        //     return {
-        //       value: layer.name,
-        //       label: layer.name,
-        //       dropdown: layer.traits.map((trait) => {
-        //         return {
-        //           value: trait.name,
-        //           label: trait.name,
-        //         }
-        //       }),
-        //     }
-        //   }),
-        // },
       ])
   }, [layers])
 
@@ -88,62 +71,6 @@ const Index = () => {
             LayerSectionEnum.enum.Rules,
           ].includes(currentViewSection) && <LayerFolderSelector />}
           {currentViewSection === LayerSectionEnum.enum.Preview && <FilterByRarity />}
-          {/* {currentViewSection === LayerSectionEnum.RULES && (
-                  <aside className='p-8 divide-y divide-lightGray'>
-                    <div className='mb-8 h-10'>
-                      <Button
-                        onClick={() => {
-                          !regenerate && setRegenerateCollection(true)
-                        }}
-                      >
-                        Generate New
-                      </Button>
-                    </div>
-                    <div className='hidden lg:block'>
-                      <form className='divide-y divide-lightGray space-y-8'>
-                        <div className='mt-4'>
-                          {[
-                            {
-                              name: 'Trait Rules',
-                              icon: <CubeIcon width={20} height={20} />,
-                              enumRules: CustomRulesEnum.TRAIT_RULES,
-                              disabled: false,
-                            },
-                            {
-                              name: 'Layer Order',
-                              icon: <SelectorIcon width={20} height={20} />,
-                              enumRules: CustomRulesEnum.LAYER_ORDERING,
-                              disabled: true,
-                            },
-                          ].map(
-                            ({ name, icon, enumRules, disabled }, index) => {
-                              return (
-                                <button
-                                  key={`${name}-${index}`}
-                                  className={`flex mt-2 flex-row w-full p-[4px] rounded-[5px] ${
-                                    currentCustomRulesViewSection === enumRules
-                                      ? 'bg-lightGray font-semibold'
-                                      : 'text-darkGrey'
-                                  }`}
-                                  disabled={disabled}
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                  }}
-                                  data-tip
-                                  data-for='registerTip'
-                                >
-                                  {icon}
-                                  <span className='ml-2 text-sm'>{name}</span>
-                                </button>
-                              )
-                            }
-                          )}
-                        </div>
-                      </form>
-                    </div>
-                  </aside>
-                )} */}
-          {/* </CollectionViewLeftbar> */}
         </div>
         <div className='col-span-8'>
           {currentViewSection === LayerSectionEnum.enum.Preview && <CollectionPreview />}

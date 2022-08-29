@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 import * as React from 'react'
 import Link from 'next/link'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -95,13 +96,13 @@ export const ReorderItem = ({
         href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${currentViewSection}/${name}`}
       >
         <div
-          className={`flex flex-row py-3 px-1 rounded-[5px] justify-between hover:bg-lightGray hover:bg-opacity-30 ${
+          className={`flex flex-row py-3 rounded-[5px] justify-between hover:bg-lightGray hover:bg-opacity-30 ${
             enabled ? 'bg-lightGray bg-opacity-30 font-semibold' : ''
           }`}
         >
-          <div className='flex flex-row items-center justify-between text-sm w-full'>
+          <div className='px-1 flex flex-row items-center justify-between text-sm w-full'>
             <span>{name}</span>
-            <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span>
+            {/* <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span> */}
           </div>
           {canReorder && (
             <DotsHorizontalIcon
@@ -204,6 +205,17 @@ const LayerFolderSelector = () => {
     <main>
       {layers && layers.length > 0 && (
         <div className='flex flex-col space-y-6 justify-between'>
+          <div className='border border-lightGray rounded-[5px] px-3 py-3'>
+            <div className='space-y-4'>
+              <span className='font-normal flex flex-col text-xs space-y-3'>
+                <span className='font-semibold'>Generate</span>
+                <span className='text-darkGrey'>
+                  You can regenerate your collection by clicking this button.
+                </span>
+              </span>
+              <RegegenerateButton />
+            </div>
+          </div>
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
               <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>

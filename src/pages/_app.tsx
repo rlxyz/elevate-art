@@ -68,10 +68,8 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
         >
           <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
             <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <Layout>
-                <Component {...pageProps} />
-                <Toaster />
-              </Layout>
+              <Component {...pageProps} />
+              <Toaster />
             </RepositoryContext.Provider>
           </RepositoryRouterContext.Provider>
         </RainbowKitProvider>

@@ -25,7 +25,6 @@ const CollectionPreview = () => {
         collection: state.collection,
       }
     })
-  const [hasHydrated, setHasHydrated] = useState(false)
 
   const { data: collectionData } = trpc.useQuery([
     'collection.getCollectionById',
@@ -45,7 +44,6 @@ const CollectionPreview = () => {
       tokenIdMap,
       traitMap,
     })
-    setHasHydrated(true)
   }, [collectionData])
 
   return (
@@ -53,7 +51,7 @@ const CollectionPreview = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      {hasHydrated && <InfiniteScrollGrid collectionId={collection.id} />}
+      <InfiniteScrollGrid collectionId={collection.id} />
     </CollectionViewContent>
   )
 }

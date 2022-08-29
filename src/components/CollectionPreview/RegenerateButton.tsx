@@ -25,9 +25,9 @@ export const RegegenerateButton = () => {
 
   return (
     <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collection.id })}>
-      <span className='p-2 flex items-center justify-center space-x-1'>
-        <RefreshIcon className='w-5 h-5' />
-        <span>Generate</span>
+      <span className='py-1 flex items-center justify-center space-x-2'>
+        <RefreshIcon className='w-3 h-3' />
+        <span className='text-xs'>elevate.art</span>
       </span>
     </Button>
   )

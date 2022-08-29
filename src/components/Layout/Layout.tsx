@@ -56,27 +56,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
         <div className='bg-hue-light flex justify-center border border-t border-lightGray'>
           <div className='w-[70%]'>
-            <footer>
-              <div className='max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8'>
-                <div className='flex justify-center space-x-6 md:order-2'>
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className='text-gray-400 hover:text-gray-500'
-                    >
-                      <div>
-                        <span className='sr-only'>{item.name}</span>
-                        <item.icon className='h-6 w-6 text-darkGrey' aria-hidden='true' />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-                <div className='mt-8 md:mt-0 md:order-1'>
-                  <p className='text-center text-xs text-darkGrey'>
-                    &copy; 2022 Elevate Art. All rights reserved.
-                  </p>
-                </div>
+            <footer className='max-w-7xl mx-auto py-9 flex items-center justify-between'>
+              <div className='flex justify-center space-x-6 md:order-2'>
+                {navigation.map((item) => (
+                  <Link key={item.name} href={item.href}>
+                    <item.icon className='h-6 w-6 text-darkGrey' aria-hidden='true' />
+                  </Link>
+                ))}
+              </div>
+              <div className='mt-8 md:mt-0 md:order-1'>
+                <p className='text-center text-xs text-darkGrey'>
+                  &copy; 2022 Elevate Art. All rights reserved.
+                </p>
               </div>
             </footer>
           </div>
