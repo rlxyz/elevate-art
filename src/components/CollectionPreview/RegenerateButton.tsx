@@ -6,10 +6,11 @@ import { compiler } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 
 export const RegegenerateButton = () => {
-  const { collection, layers } = useRepositoryStore((state) => {
+  const { setTokens, collection, layers } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       collection: state.collection,
+      setTokens: state.setTokens,
     }
   })
   const { notifySuccess } = useNotification()
@@ -17,7 +18,7 @@ export const RegegenerateButton = () => {
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data) => {
       const { generations, totalSupply, name } = data
-      compiler(layers, totalSupply, name, generations)
+      setTokens(compiler(layers, 250, name, generations))
       notifySuccess('Collection regenerated')
     },
   })

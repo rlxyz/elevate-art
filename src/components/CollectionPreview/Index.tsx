@@ -16,21 +16,21 @@ import { trpc } from '@utils/trpc'
 import { compiler } from '@utils/compiler'
 
 const CollectionPreview = () => {
-  const { setRegenerateCollection, layers, collection, regenerate } = useRepositoryStore(
-    (state) => {
+  const { setTokens, tokens, setRegenerateCollection, layers, collection, regenerate } =
+    useRepositoryStore((state) => {
       return {
+        setTokens: state.setTokens,
         setRegenerateCollection: state.setRegenerateCollection,
         regenerate: state.regenerate,
+        tokens: state.tokens,
         layers: state.layers,
         collection: state.collection,
       }
-    }
-  )
+    })
   const [hasHydrated, setHasHydrated] = useState(false)
-  const [tokens, setTokens] = useState<TraitElement[][]>([])
 
   useEffect(() => {
-    setTokens(compiler(layers, collection.totalSupply, collection.name, collection.generations))
+    setTokens(compiler(layers, 250, collection.name, collection.generations))
     setHasHydrated(true)
   }, [])
 

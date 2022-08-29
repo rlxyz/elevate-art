@@ -51,6 +51,15 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
   const [tokensOnDisplay, setTokensOnDisplay] = useState<TraitElement[][]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [hasHydrated, setHasHydrated] = useState(false)
+
+  // Reset
+  useEffect(() => {
+    setTokensOnDisplay([])
+    setPage(0)
+    setHasMore(true)
+    setHasHydrated(false)
+  }, [tokens])
 
   const fetch = (start: number) => {
     if (!tokens || !tokens.length) return
@@ -61,10 +70,11 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
     const endPoint = endPointIndex * 50
     setTokensOnDisplay([...tokensOnDisplay, ...tokens.slice(startPoint, endPoint)])
     setPage((p) => p + 1)
+    setHasHydrated(true)
   }
 
   const fetchMoreData = (page: number) => {
-    if (page * 50 >= 55555) {
+    if (page * 50 >= tokens.length) {
       setHasMore(false)
       return
     }
@@ -72,10 +82,10 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
   }
 
   useEffect(() => {
-    fetch(page)
-  }, [])
+    !hasHydrated && fetch(page), setHasHydrated(true)
+  }, [hasHydrated])
 
-  if (!tokensOnDisplay.length) {
+  if (!tokensOnDisplay.length || !hasHydrated) {
     return <Loading />
   }
 
