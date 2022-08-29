@@ -53,10 +53,12 @@ export const ReorderItem = ({
   name,
   enabled,
   canReorder,
+  id,
 }: {
   item: number
   name: string
   enabled: boolean
+  id: string
   canReorder: boolean
 }) => {
   const y = useMotionValue(0)
@@ -70,8 +72,9 @@ export const ReorderItem = ({
     }
   })
 
-  const { collection, organisation, repository } = useRepositoryStore((state) => {
+  const { traitMapping, collection, organisation, repository } = useRepositoryStore((state) => {
     return {
+      traitMapping: state.traitMapping,
       collection: state.collection,
       organisation: state.organisation,
       repository: state.repository,
@@ -92,17 +95,17 @@ export const ReorderItem = ({
         href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${currentViewSection}/${name}`}
       >
         <div
-          className={`flex flex-row p-[4px] rounded-[5px] justify-between ${
-            enabled ? 'bg-lightGray bg-opacity-50 font-semibold' : 'text-darkGrey'
+          className={`flex flex-row py-3 px-1 rounded-[5px] justify-between hover:bg-lightGray hover:bg-opacity-30 ${
+            enabled ? 'bg-lightGray bg-opacity-30 font-semibold' : ''
           }`}
         >
-          <div className='flex'>
-            <FolderIcon className='w-5 h-5' />
-            <span className='ml-2 text-sm'>{name}</span>
+          <div className='flex flex-row items-center justify-between text-sm w-full'>
+            <span>{name}</span>
+            <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span>
           </div>
           {canReorder && (
             <DotsHorizontalIcon
-              className='w-5 h-5'
+              className='ml-1 w-5 h-5'
               onPointerDown={(e) => {
                 e.preventDefault()
                 dragControls.start(e)
@@ -145,8 +148,7 @@ const LayerFolderSelector = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const [items, setItems] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-
+  const [items, setItems] = useState(layers.map((layer) => layer.id))
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
@@ -194,9 +196,9 @@ const LayerFolderSelector = () => {
   //       })
   // }, [refreshImage, regeneratePreview])
 
-  useEffect(() => {
-    setItems(Array.from(Array(layers.length).keys()))
-  }, [layers])
+  // useEffect(() => {
+  //   setItems(Array.from(Array(layers.length).keys()))
+  // }, [layers])
 
   return (
     <main>
@@ -208,39 +210,40 @@ const LayerFolderSelector = () => {
                 {layers.length === 1 ? 'Layer' : 'Layers'}
               </span>
               <div className='space-x-1 flex items-center'>
-                <button onClick={() => setOpenReordering(!openReordering)}>
+                {/* <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
-                    <SwitchVerticalIcon className='text-darkGrey w-3 h-3' />
+                    <SwitchVerticalIcon className='text-darkGrey w-2 h-2' />
                   </div>
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   onClick={() => {
                     setOpenUpload(true)
                   }}
                 >
                   <div className='border rounded-[5px] border-lightGray p-1'>
-                    <PlusIcon className='text-darkGrey w-3 h-3' />
+                    <PlusIcon className='text-darkGrey w-2 h-2' />
                   </div>
-                </button>
+                </button> */}
               </div>
             </div>
-            <div className='border border-lightGray rounded-[5px] max-h-[calc(100vh-37rem)] overflow-y-scroll'>
+            <div className='max-h-[calc(100vh-17.5rem)] overflow-y-scroll'>
               <FileUpload id={`${organisationName}/${repositoryName}`}>
                 <AnimatePresence>
                   <Reorder.Group
                     axis='y'
                     values={items}
                     onReorder={setItems}
-                    className='space-y-2 m-2'
+                    // className='space-y-3'
                   >
-                    {items.map((item) => {
+                    {items.map((item, index) => {
                       return (
                         <ReorderItem
                           canReorder={openReordering}
                           key={item}
-                          name={layers[item]?.name || ''}
-                          item={item}
-                          enabled={currentLayerPriority === item}
+                          name={layers[index]?.name || ''}
+                          item={index}
+                          id={item}
+                          enabled={currentLayerPriority === index}
                         />
                       )
                     })}

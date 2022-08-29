@@ -45,17 +45,13 @@ export const FilterByRarity = () => {
           {layers.length &&
             traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&
-            [{ name: 'Trait', id: 'something' }].map((section: any, sectionIdx: number) => (
+            [{ name: 'Traits', id: 'something' }].map((section: any, sectionIdx: number) => (
               <div key={`${section.name}-${sectionIdx}`}>
-                <fieldset className='space-y-2'>
-                  <legend
-                    className={`block text-xs font-normal text-darkGrey uppercase ${
-                      sectionIdx !== 0 ? 'pt-8' : ''
-                    }`}
-                  >
+                <div className='space-y-2'>
+                  <span className={`text-xs font-normal text-darkGrey uppercase`}>
                     {section.name}
-                  </legend>
-                  <div className='py-2 rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
+                  </span>
+                  <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
                     {layers.map(
                       (
                         layer: LayerElement & { traitElements: TraitElement[] },
@@ -70,7 +66,7 @@ export const FilterByRarity = () => {
                                 setLayerDropdown(optionIdx)
                               }
                             }}
-                            className={`hover:bg-lightGray hover:bg-opacity-20 uppercase rounded-[5px] py-3 ${
+                            className={`hover:bg-lightGray hover:bg-opacity-30 text-sm rounded-[5px] py-3 ${
                               layerDropdown === optionIdx ? 'font-semibold' : ''
                             }`}
                           >
@@ -129,7 +125,7 @@ export const FilterByRarity = () => {
                       )
                     )}
                   </div>
-                </fieldset>
+                </div>
               </div>
             ))}
         </Form>
