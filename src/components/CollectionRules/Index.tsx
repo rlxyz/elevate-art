@@ -17,7 +17,7 @@ const Index = () => {
       title={name}
       description='Set how often you want certain images to appear in the generation'
     >
-      <div className='p-8 flex flex-col divide-y divide-lightGray space-y-6'>
+      <div className='flex flex-col divide-y divide-lightGray space-y-6'>
         <TraitRulesSelector
           traitElements={traitElements}
           title='Create a condition'

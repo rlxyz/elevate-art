@@ -30,11 +30,7 @@ const Index = () => {
         </span>
       }
     >
-      <div className='p-8'>
-        <div className='grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7'>
-          <LayerGrid traitElements={traitElements} layerName={name} />
-        </div>
-      </div>
+      <LayerGrid traitElements={traitElements} layerName={name} />
     </CollectionViewContent>
   )
 }

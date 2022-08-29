@@ -98,7 +98,7 @@ export const RarityDisplay = ({
             resetForm,
           }) => (
             <>
-              <div className='p-8 flex flex-col'>
+              <div className='flex flex-col'>
                 <div className='grid grid-cols-6 gap-y-4'>
                   <div className='col-span-4'>
                     <div className='inline-block min-w-full align-middle'>

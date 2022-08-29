@@ -49,14 +49,12 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
 
               return (
                 <button onClick={openAccountModal} type='button' className='flex items-center'>
-                  <span className='font-bold mr-3 text-darkGrey'>{account.displayName}</span>
-                  <div className='p-2'>
-                    <img
-                      src='/images/lightGray-wallet.svg'
-                      className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
-                      alt='Wallet'
-                    />
-                  </div>
+                  {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
+                  <img
+                    src='/images/lightGray-wallet.svg'
+                    className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
+                    alt='Wallet'
+                  />
                 </button>
               )
             })()}

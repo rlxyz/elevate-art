@@ -19,7 +19,7 @@ const LayerGrid = ({
   const repositoryName: string = router.query.repository as string
   const [show, setShow] = useState<number | null>(null)
   return (
-    <>
+    <div className='grid grid-cols-6 gap-x-8 gap-y-8'>
       {traitElements.map((trait: TraitElement, index: number) => {
         return (
           <div key={`${trait.name}-${index}`} className='flex flex-col items-center'>
@@ -49,7 +49,7 @@ const LayerGrid = ({
           </div>
         )
       })}
-    </>
+    </div>
   )
 }
 

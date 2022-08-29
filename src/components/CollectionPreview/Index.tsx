@@ -1,6 +1,5 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useNotification } from '@hooks/useNotification'
-import ArtCollection from '@utils/x/Collection'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
@@ -54,11 +53,7 @@ const CollectionPreview = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      {hasHydrated && (
-        <div className='p-8 h-full w-full'>
-          <InfiniteScrollGrid collectionId={collection.id} />
-        </div>
-      )}
+      {hasHydrated && <InfiniteScrollGrid collectionId={collection.id} />}
     </CollectionViewContent>
   )
 }

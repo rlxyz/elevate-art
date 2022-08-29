@@ -19,18 +19,8 @@ import {
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import * as React from 'react'
-import mergeImages from 'merge-images'
-import { CollectionUpload } from './CollectionUpload'
-import Image from 'next/image'
-import { createCompilerApp } from '@utils/createCompilerApp'
-import { App } from '@utils/x/App'
-import { Element } from '@utils/x/Element'
-import { toPascalCaseWithSpace } from '@utils/format'
-import { useNotification } from '@hooks/useNotification'
 import Link from 'next/link'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import { LayerSectionEnum } from 'src/types/enums'
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -209,15 +199,9 @@ const LayerFolderSelector = () => {
   }, [layers])
 
   return (
-    <main className='p-8 space-y-6'>
+    <main>
       {layers && layers.length > 0 && (
         <div className='flex flex-col space-y-6 justify-between'>
-          <div className='space-y-2'>
-            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-              {'Generate'}
-            </span>
-            <RegegenerateButton />
-          </div>
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
               <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>

@@ -155,14 +155,14 @@ export const CollectionViewContent = ({
   description: React.ReactNode
 }) => {
   return (
-    <main className='min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] border-l border-l-lightGray'>
-      <div className='grid grid-cols-8 border-b border-b-lightGray flex flex-col'>
-        <div className='col-span-6 p-8 font-plus-jakarta-sans'>
+    <main className='space-y-6 pl-8 py-8 min-h-[calc(100vh-19rem)]'>
+      <div className='flex flex-col'>
+        <div className='col-span-6 font-plus-jakarta-sans space-y-3'>
           <h1 className='text-2xl font-bold text-black'>{title}</h1>
-          <p className='mt-1 text-sm text-darkGrey'>{description}</p>
+          <p className='text-sm text-darkGrey'>{description}</p>
         </div>
       </div>
-      <div className='h-[calc(100vh-13rem)]'>{children}</div>
+      <div>{children}</div>
     </main>
   )
 }

@@ -2,26 +2,11 @@ import CollectionPreview from '@components/CollectionPreview/Index'
 import CollectionLayers from '@components/ColectionLayers/Index'
 import CollectionRarity from '@components/CollectionRarity/Index'
 import CollectionRules from '@components/CollectionRules/Index'
-import { Button } from '@components/UI/Button'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useNotification } from '@hooks/useNotification'
-import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
 import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
-import { CollectionViewLeftbar } from '../CollectionHelpers/ViewContent'
-import { useHotkeys } from 'react-hotkeys-hook'
-import { RefreshIcon } from '@heroicons/react/outline'
-import { ChevronDownIcon } from '@heroicons/react/solid'
-import { createCompilerApp } from '@utils/createCompilerApp'
-import { App } from '@utils/x/App'
-import { ethers } from 'ethers'
-import ArtCollection from '@utils/x/Collection'
-import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
-import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 type Filter = {
   id: string
@@ -93,16 +78,14 @@ const Index = () => {
 
   return (
     <>
-      <div className='min-w-screen mx-auto'>
-        <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-          <div className='col-span-2'>
-            <CollectionViewLeftbar title='Art'>
-              {[
-                LayerSectionEnum.enum.Layers,
-                LayerSectionEnum.enum.Rarity,
-                LayerSectionEnum.enum.Rules,
-              ].includes(currentViewSection) && <LayerFolderSelector />}
-              {currentViewSection === LayerSectionEnum.enum.Preview && (
+      <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
+        <div className='col-span-2 py-8'>
+          {[
+            LayerSectionEnum.enum.Layers,
+            LayerSectionEnum.enum.Rarity,
+            LayerSectionEnum.enum.Rules,
+          ].includes(currentViewSection) && <LayerFolderSelector />}
+          {/* {currentViewSection === LayerSectionEnum.enum.Preview && (
                 <div className='p-8 space-y-6 min-h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)'>
                   <div className='space-y-2'>
                     <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
@@ -114,8 +97,8 @@ const Index = () => {
                     <FilterByRarity />
                   </div>
                 </div>
-              )}
-              {/* {currentViewSection === LayerSectionEnum.RULES && (
+              )} */}
+          {/* {currentViewSection === LayerSectionEnum.RULES && (
                   <aside className='p-8 divide-y divide-lightGray'>
                     <div className='mb-8 h-10'>
                       <Button
@@ -170,14 +153,13 @@ const Index = () => {
                     </div>
                   </aside>
                 )} */}
-            </CollectionViewLeftbar>
-          </div>
-          <div className='col-span-8'>
-            {currentViewSection === LayerSectionEnum.enum.Preview && <CollectionPreview />}
-            {currentViewSection === LayerSectionEnum.enum.Layers && <CollectionLayers />}
-            {currentViewSection === LayerSectionEnum.enum.Rarity && <CollectionRarity />}
-            {currentViewSection === LayerSectionEnum.enum.Rules && <CollectionRules />}
-          </div>
+          {/* </CollectionViewLeftbar> */}
+        </div>
+        <div className='col-span-8'>
+          {currentViewSection === LayerSectionEnum.enum.Preview && <CollectionPreview />}
+          {currentViewSection === LayerSectionEnum.enum.Layers && <CollectionLayers />}
+          {currentViewSection === LayerSectionEnum.enum.Rarity && <CollectionRarity />}
+          {currentViewSection === LayerSectionEnum.enum.Rules && <CollectionRules />}
         </div>
       </div>
     </>

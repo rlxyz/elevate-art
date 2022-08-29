@@ -1,11 +1,12 @@
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore';
-import * as React from 'react';
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
+import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import * as React from 'react'
 
 export const SectionHeader = () => {
-  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection);
+  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
   return (
     <main className='pointer-events-auto'>
-      <div className='flex justify-between items-center h-[10rem] space-y-2'>
+      <div className='flex justify-between items-center h-[14rem] space-y-2'>
         <div className='flex flex-col space-y-1'>
           <span className='text-3xl font-semibold'>
             {SectionHeaderContent[currentViewSection].title}
@@ -18,14 +19,21 @@ export const SectionHeader = () => {
               <div></div>
             */}
         </div>
-        {/*
-              Preview Component goes here...
-              <div></div>
-            */}
+        <div className='border border-lightGray rounded-[5px] px-4 py-3 max-w-[20%]'>
+          <div className='space-y-4'>
+            <span className='font-normal flex flex-col text-xs space-y-3'>
+              <span className='font-semibold'>Generate</span>
+              <span className='text-darkGrey'>
+                You can regenerate your collection by clicking this button.
+              </span>
+            </span>
+            <RegegenerateButton />
+          </div>
+        </div>
       </div>
     </main>
-  );
-};
+  )
+}
 const SectionHeaderContent = Object.freeze({
   preview: {
     title: 'Preview Collection',
@@ -40,4 +48,4 @@ const SectionHeaderContent = Object.freeze({
     title: 'Custom Rules',
     description: 'Add custom rules for your traits so it layers perfectly!',
   },
-});
+})
