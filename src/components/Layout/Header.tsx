@@ -1,7 +1,7 @@
 import { ConnectButton } from '@components/ConnectButton'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
+import { RepositoryNavbar } from '@components/CollectionHelpers/ViewContent'
 
 export const Header = () => {
   const router: NextRouter = useRouter()
@@ -9,17 +9,18 @@ export const Header = () => {
   const repositoryName: string = router.query.repository as string
 
   return (
-    <header className='w-full flex bg-white justify-between h-[5rem] px-4 lg:py-8 lg:px-8 pointer-events-auto border-b border-b-lightGray items-center'>
-      <div className='flex'>
-        <Image priority width={25} height={25} src='/images/logo.svg' alt='Logo' />
-        <div className='mt-2 ml-4 font-bold'>
-          <span className='pr-2 text-darkGrey'>{`${organisationName}`}</span>
-          <span className='pr-2 text-darkGrey'>/</span>
+    <header className='pointer-events-auto'>
+      <div className='flex justify-between items-center h-[5rem]'>
+        <div className='flex items-center font-semibold'>
+          <Image priority width={40} height={40} src='/images/logo-transparent.png' alt='Logo' />
+          <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo' />
+          <span>{`${organisationName}`}</span>
+          <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo' />
           <span>{repositoryName && repositoryName}</span>
         </div>
-      </div>
-      <div className='ml-4 md:block flex justify-center space-x-6 md:order-2'>
-        <ConnectButton />
+        <div className='ml-4 md:block flex justify-center space-x-6 md:order-2'>
+          <ConnectButton />
+        </div>
       </div>
     </header>
   )

@@ -9,6 +9,7 @@ module.exports = {
     colors: {
       hue: {
         light: '#FDFDF9',
+        header: '#FAFAFA',
         dark: '#0F111A',
       },
       white: colors.white,
