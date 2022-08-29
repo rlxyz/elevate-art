@@ -11,6 +11,7 @@ import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { TraitElement } from '@prisma/client'
 import Loading from '@components/UI/Loading'
+import { createToken } from '@utils/compiler'
 
 const container = {
   hidden: { opacity: 0 },
@@ -22,9 +23,15 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({ tokens }: { tokens: TraitElement[][] }) => {
+const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
   const repository = useRepositoryStore((state) => state.repository)
   const organisation = useRepositoryStore((state) => state.organisation)
+  const { collection, layers } = useRepositoryStore((state) => {
+    return {
+      collection: state.collection,
+      layers: state.layers,
+    }
+  })
   return (
     <motion.div
       className='grid grid-cols-1 gap-y-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
@@ -32,14 +39,19 @@ const InfiniteScrollGridItems = ({ tokens }: { tokens: TraitElement[][] }) => {
       animate='show'
       variants={container}
     >
-      {tokens.map((token: TraitElement[], index) => {
+      {tokens.map((token: number) => {
         return (
           <CollectionInfiniteScrollItem
-            key={index}
-            token={token}
+            key={token}
+            token={createToken({
+              id: token,
+              name: collection.name,
+              generation: collection.generations,
+              layers,
+            })}
             repositoryName={repository.name}
             organisationName={organisation.name}
-            name={`${repository.tokenName} #${index}`}
+            name={`${repository.tokenName} #${token}`}
           />
         )
       })}
@@ -48,7 +60,7 @@ const InfiniteScrollGridItems = ({ tokens }: { tokens: TraitElement[][] }) => {
 }
 
 export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => {
-  const [tokensOnDisplay, setTokensOnDisplay] = useState<TraitElement[][]>([])
+  const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [hasHydrated, setHasHydrated] = useState(false)
@@ -68,7 +80,10 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
     const endPoint = endPointIndex * 50
-    setTokensOnDisplay([...tokensOnDisplay, ...tokens.slice(startPoint, endPoint)])
+    setTokensOnDisplay([
+      ...tokensOnDisplay,
+      ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint),
+    ])
     setPage((p) => p + 1)
     setHasHydrated(true)
   }

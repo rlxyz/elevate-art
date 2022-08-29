@@ -7,6 +7,7 @@ import { ArtImageElement } from '@utils/x/Element'
 import { ArtCollectionElement } from '@utils/x/Collection'
 import { TraitElement } from '@prisma/client'
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { createToken } from '@utils/compiler'
 
 const InfiniteScrollGridItem = ({
   token,
@@ -19,9 +20,14 @@ const InfiniteScrollGridItem = ({
   organisationName: string
   name: string
 }) => {
+  const { layers } = useRepositoryStore((state) => {
+    return {
+      collection: state.collection,
+      layers: state.layers,
+    }
+  })
   const controls = useAnimation()
   const [ref, inView] = useInView()
-  const layers = useRepositoryStore((state) => state.layers)
   useEffect(() => {
     if (inView) {
       controls.start('show')
