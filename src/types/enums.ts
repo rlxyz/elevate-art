@@ -11,8 +11,8 @@ export const LayerSectionEnum = z.nativeEnum(LayerSection)
 export type LayerSectionType = z.infer<typeof LayerSectionEnum>
 
 const Rules = Object.freeze({
-  EXCLUSION: 'cannot mix with',
-  COMBINATION: 'only mixes with',
+  'cannot mix with': 'cannot mix with',
+  'only mixes with': 'only mixes with',
 })
 
 export const RulesEnum = z.nativeEnum(Rules)

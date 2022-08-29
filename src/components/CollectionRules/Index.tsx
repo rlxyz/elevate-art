@@ -1,14 +1,13 @@
+import Loading from '@components/UI/Loading'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
-import { RuleConditionDisplay } from './RuleConditionDisplay'
-import { RuleConditionSelector } from './RuleConditionSelector'
+import { TraitRulesDisplayAll } from './TraitRulesDisplayAll'
+import { TraitRulesSelector } from './TraitRulesSelector'
 
 const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
 
-  if (isLoading || !currentLayer) return <div>Loading...</div>
+  if (isLoading || !currentLayer) return <Loading />
   if (isError) return <div>Error...</div>
 
   const { name, traitElements } = currentLayer
@@ -19,14 +18,13 @@ const Index = () => {
       description='Set how often you want certain images to appear in the generation'
     >
       <div className='p-8 flex flex-col divide-y divide-lightGray space-y-6'>
-        <RuleConditionSelector
+        <TraitRulesSelector
           traitElements={traitElements}
-          layerName={name}
           title='Create a condition'
           onSuccess={refetch}
         />
         <div className='pt-6'>
-          <RuleConditionDisplay
+          <TraitRulesDisplayAll
             traitElements={traitElements}
             title='Applied Rules'
             onSuccess={refetch}

@@ -30,6 +30,7 @@ import { useNotification } from '@hooks/useNotification'
 import Link from 'next/link'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from 'src/types/enums'
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -215,18 +216,7 @@ const LayerFolderSelector = () => {
             <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
               {'Generate'}
             </span>
-            <div>
-              <Button
-                onClick={() => {
-                  !regenerate && setRegenerateCollection(true)
-                }}
-              >
-                <span className='p-2 flex items-center justify-center space-x-1'>
-                  <RefreshIcon className='w-5 h-5' />
-                  <span>Generate</span>
-                </span>
-              </Button>
-            </div>
+            <RegegenerateButton />
           </div>
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>

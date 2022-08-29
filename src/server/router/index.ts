@@ -7,6 +7,7 @@ import { organisationRouter } from './organisation'
 import { repositoryRouter } from './repository'
 import { traitElementRouter } from './trait'
 import { layerElementRouter } from './layer'
+import { collectionRouter } from './collection'
 
 export const appRouter = createRouter()
   .transformer(superjson)
@@ -15,6 +16,7 @@ export const appRouter = createRouter()
   // .merge('auth.', protectedExampleRouter)
   .merge('trait.', traitElementRouter)
   .merge('layer.', layerElementRouter)
+  .merge('collection.', collectionRouter)
 
 // export type definition of API
 export type AppRouter = typeof appRouter

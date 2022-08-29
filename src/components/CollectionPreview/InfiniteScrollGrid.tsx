@@ -11,6 +11,9 @@ import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { TraitElement } from '@prisma/client'
 import Loading from '@components/UI/Loading'
+import { createToken } from '@utils/compiler'
+import { trpc } from '@utils/trpc'
+import Image from 'next/image'
 
 const container = {
   hidden: { opacity: 0 },
@@ -22,49 +25,64 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({ tokens }: { tokens: TraitElement[][] }) => {
+const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
   const repository = useRepositoryStore((state) => state.repository)
   const organisation = useRepositoryStore((state) => state.organisation)
+  const { collection, layers } = useRepositoryStore((state) => {
+    return {
+      collection: state.collection,
+      layers: state.layers,
+    }
+  })
+  const { data: collectionData } = trpc.useQuery([
+    'collection.getCollectionById',
+    { id: collection.id },
+  ])
+
   return (
-    <motion.div
-      className='grid grid-cols-1 gap-y-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-7 overflow-hidden'
-      initial='hidden'
-      animate='show'
-      variants={container}
-    >
-      {tokens.map((token: TraitElement[], index) => {
+    <div className='grid grid-cols-6 gap-y-10 overflow-hidden'>
+      {tokens.map((token: number) => {
         return (
           <CollectionInfiniteScrollItem
-            key={index}
-            token={token}
+            key={token}
+            token={createToken({
+              id: token,
+              name: collection.name,
+              generation: collectionData?.generations || 1,
+              layers,
+            })}
             repositoryName={repository.name}
             organisationName={organisation.name}
-            name={`${repository.tokenName} #${index}`}
+            name={`${repository.tokenName} #${token}`}
           />
         )
       })}
-    </motion.div>
+    </div>
   )
 }
 
-export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => {
-  const [tokensOnDisplay, setTokensOnDisplay] = useState<TraitElement[][]>([])
+export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) => {
+  const { data } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
 
   const fetch = (start: number) => {
-    if (!tokens || !tokens.length) return
+    if (!data || !data.totalSupply) return
 
     const startPointIndex = start
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
     const endPoint = endPointIndex * 50
-    setTokensOnDisplay([...tokensOnDisplay, ...tokens.slice(startPoint, endPoint)])
+    setTokensOnDisplay([
+      ...tokensOnDisplay,
+      ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint),
+    ])
     setPage((p) => p + 1)
   }
 
   const fetchMoreData = (page: number) => {
-    if (page * 50 >= 55555) {
+    if (!data || page * 50 >= data.totalSupply) {
       setHasMore(false)
       return
     }
@@ -74,10 +92,6 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
   useEffect(() => {
     fetch(page)
   }, [])
-
-  if (!tokensOnDisplay.length) {
-    return <Loading />
-  }
 
   return (
     <InfiniteScrollComponent.default
@@ -90,77 +104,3 @@ export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => 
     </InfiniteScrollComponent.default>
   )
 }
-
-// const InfiniteScrollGridSelector = ({ artCollection }: TraitElement[][]) => {
-//   const [startPoint, setStartPoint] = useState(null)
-//   const [totalSupply, setTotalSupply] = useState(null)
-//   const [increments, setIncrements] = useState(50)
-
-//   const {
-//     collection,
-//     repository,
-//     regenerate,
-//     regenerateFilter,
-//     regenerateFilterIndex,
-//     setRegenerateFilter,
-//     setRegenerateCollection,
-//   } = useRepositoryStore((state) => {
-//     return {
-//       repository: state.repository,
-//       collection: state.collection,
-//       regenerate: state.regenerate,
-//       regenerateFilter: state.regenerateFilter,
-//       regenerateFilterIndex: state.regenerateFilterIndex,
-//       setRegenerateFilter: state.setRegenerateFilter,
-//       setRegenerateCollection: state.setRegenerateCollection,
-//     }
-//   })
-
-//   const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
-//     return {
-//       artCollection: state.artCollection,
-//       setArtCollection: state.setArtCollection,
-//     }
-//   })
-
-//   // useEffect(() => {
-//   //   const artCollection = new ArtCollection(
-//   //     createCompilerApp(repositoryName).createRandomCollectionFromSeed(
-//   //       createCollectionSeed(collection.id, Math.random()),
-//   //       0,
-//   //       5555
-//   //     )
-//   //   )
-//   //   setStartPoint(0)
-//   //   // setTotalSupply(collection.totalSupply)
-//   //   setTotalSupply(5555)
-//   //   setIncrements(50)
-//   //   setArtCollection(artCollection)
-//   //   setRegenerateCollection(false)
-//   //   // }, [regenerate])
-//   // }, [])
-
-//   // useEffect(() => {
-//   //   if (regenerateFilter) {
-//   //     const artCollection = new ArtCollection(
-//   //       createCompilerApp(repositoryName).createRandomCollectionFromSeed(
-//   //         createCollectionSeed(collection.id, collection.generations),
-//   //         regenerateFilterIndex.start,
-//   //         regenerateFilterIndex.end
-//   //       )
-//   //     )
-//   //     setStartPoint(0)
-//   //     setTotalSupply(10)
-//   //     setIncrements(10)
-//   //     setArtCollection(artCollection)
-//   //     setRegenerateFilter(false)
-//   //   }
-//   // }, [regenerateFilter])
-
-//   return (
-//     // !regenerateFilter &&
-//     <div>Hi</div>
-//   )
-// }
-
-// export default InfiniteScrollGridSelector
