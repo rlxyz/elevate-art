@@ -1,13 +1,11 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
-import { App } from '@utils/x/App'
 import { ethers } from 'ethers'
 import { NextRouter, useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { motion } from 'framer-motion'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
-import { ArtCollectionElement, ArtCollectionToken } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { TraitElement } from '@prisma/client'
 import Loading from '@components/UI/Loading'
@@ -40,7 +38,7 @@ const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
   ])
 
   return (
-    <div className='grid grid-cols-6 gap-y-10 overflow-hidden'>
+    <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
       {tokens.map((token: number) => {
         return (
           <CollectionInfiniteScrollItem

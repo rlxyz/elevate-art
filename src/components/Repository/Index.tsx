@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
+import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 
 type Filter = {
   id: string
@@ -85,19 +87,7 @@ const Index = () => {
             LayerSectionEnum.enum.Rarity,
             LayerSectionEnum.enum.Rules,
           ].includes(currentViewSection) && <LayerFolderSelector />}
-          {/* {currentViewSection === LayerSectionEnum.enum.Preview && (
-                <div className='p-8 space-y-6 min-h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)'>
-                  <div className='space-y-2'>
-                    <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-                      {'Generate'}
-                    </span>
-                    <RegegenerateButton />
-                  </div>
-                  <div className='hidden lg:block overflow-hidden'>
-                    <FilterByRarity />
-                  </div>
-                </div>
-              )} */}
+          {currentViewSection === LayerSectionEnum.enum.Preview && <FilterByRarity />}
           {/* {currentViewSection === LayerSectionEnum.RULES && (
                   <aside className='p-8 divide-y divide-lightGray'>
                     <div className='mb-8 h-10'>

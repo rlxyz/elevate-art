@@ -207,7 +207,7 @@ const LayerFolderSelector = () => {
               <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
                 {layers.length === 1 ? 'Layer' : 'Layers'}
               </span>
-              <div className='space-x-1'>
+              <div className='space-x-1 flex items-center'>
                 <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
                     <SwitchVerticalIcon className='text-darkGrey w-3 h-3' />

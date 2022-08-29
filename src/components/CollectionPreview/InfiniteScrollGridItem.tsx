@@ -3,8 +3,6 @@ import React, { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import Image from 'next/image'
-import { ArtImageElement } from '@utils/x/Element'
-import { ArtCollectionElement } from '@utils/x/Collection'
 import { TraitElement } from '@prisma/client'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createToken } from '@utils/compiler'
@@ -54,7 +52,7 @@ const InfiniteScrollGridItem = ({
       animate={controls}
       ref={ref}
     >
-      <div className='h-[200px] overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
+      <div className='h-[150px] overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
         {token.map((traitElement: TraitElement, index: number) => {
           return (
             <div className='absolute w-full h-full flex flex-col items-center' key={index}>

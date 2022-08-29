@@ -45,7 +45,7 @@ export const FilterByRarity = () => {
           {layers.length &&
             traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&
-            [{ name: 'By Trait', id: 'something' }].map((section: any, sectionIdx: number) => (
+            [{ name: 'Trait', id: 'something' }].map((section: any, sectionIdx: number) => (
               <div key={`${section.name}-${sectionIdx}`}>
                 <fieldset className='space-y-2'>
                   <legend
