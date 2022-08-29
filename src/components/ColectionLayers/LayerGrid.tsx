@@ -1,0 +1,56 @@
+import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import { DotsHorizontalIcon } from '@heroicons/react/outline'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { TraitElement } from '@prisma/client'
+import { toPascalCaseWithSpace } from '@utils/format'
+import { NextRouter, useRouter } from 'next/router'
+import { useState } from 'react'
+
+const LayerGrid = ({
+  traitElements,
+  layerName,
+}: {
+  traitElements: TraitElement[]
+  layerName: string
+}) => {
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const [show, setShow] = useState<number | null>(null)
+  return (
+    <>
+      {traitElements.map((trait: TraitElement, index: number) => {
+        return (
+          <div key={`${trait.name}-${index}`} className='flex flex-col items-center'>
+            <button
+              onMouseEnter={() => {
+                setShow(index)
+              }}
+              onMouseLeave={() => {
+                setShow(null)
+              }}
+              className='relative'
+            >
+              <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
+                <div className='bg-hue-light rounded-[3px] w-5 h-5 flex items-center justify-center'>
+                  <DotsHorizontalIcon className='w-3 h-3 text-lightGray' />
+                </div>
+              </div>
+              <div className='z-1'>
+                <AdvancedImage
+                  url={`${organisationName}/${repositoryName}/layers/${layerName}/${toPascalCaseWithSpace(
+                    trait.name
+                  )}.png`}
+                />
+              </div>
+            </button>
+            <span className='py-2 text-xs'>{toPascalCaseWithSpace(trait.name)}</span>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+export default LayerGrid

@@ -129,21 +129,23 @@ module.exports = {
           weight: 50,
         },
       ],
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          'Electric-Clamps': ['Blister-Pack'],
+      rules: [
+        {
+          primary: 'Electric-Clamps',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack'],
         },
-      },
+      ],
     },
     {
       name: 'Accessories',
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          Archangel: ['Blister-Pack', 'Invader'],
+      rules: [
+        {
+          primary: 'Archangel',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack', 'Invader'],
         },
-      },
+      ],
       metadata: true,
       traits: [
         {
@@ -256,12 +258,13 @@ module.exports = {
     },
     {
       name: 'Gloves',
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          'Road-Warrior': ['Blister-Pack'],
+      rules: [
+        {
+          primary: 'Road-Warrior',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack'],
         },
-      },
+      ],
       metadata: true,
       traits: [
         {
@@ -328,13 +331,18 @@ module.exports = {
     },
     {
       name: 'Shoulder',
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          INSECTICIDE: ['ARCHANGEL'],
-          CANNONS: ['ARCHANGEL'],
+      rules: [
+        {
+          primary: 'INSECTICIDE',
+          type: 'EXCLUSION',
+          links: ['ARCHANGEL'],
         },
-      },
+        {
+          primary: 'CANNONS',
+          type: 'EXCLUSION',
+          links: ['ARCHANGEL'],
+        },
+      ],
       metadata: true,
       traits: [
         {
@@ -648,13 +656,18 @@ module.exports = {
     {
       name: 'Mouth',
       metadata: true,
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          ROBOSHOUT: ['BARS'],
-          OCTOBOT: ['BARS'],
+      rules: [
+        {
+          primary: 'ROBOSHOUT',
+          type: 'EXCLUSION',
+          links: ['BARS'],
         },
-      },
+        {
+          primary: 'OCTOBOT',
+          type: 'EXCLUSION',
+          links: ['BARS'],
+        },
+      ],
       traits: [
         {
           name: 'RAINBOW GRILLZ',
@@ -728,13 +741,18 @@ module.exports = {
     },
     {
       name: 'Eyes',
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          Laser: ['Blister-Pack', 'Chained'],
-          'Rainbow-Vision': ['Blister-Pack'],
+      rules: [
+        {
+          primary: 'Laser',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack', 'Chained'],
         },
-      },
+        {
+          primary: 'Rainbow-Vision',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack'],
+        },
+      ],
       metadata: true,
       traits: [
         {
@@ -825,36 +843,28 @@ module.exports = {
     },
     {
       name: 'Head Accessories',
-      options: {
-        type: 'EXCLUSION',
-        exclude: {
-          Royals: ['Blister-Pack'],
-          LEONIDIS: [
-            'LED',
-            'DONUT',
-            'DONUT REPLICA',
-            'PIZZA',
-            'PIZZA REPLICA',
-            'PIZZA REPLICA GOLD',
-          ],
-          DOOMED: [
-            'LED',
-            'DONUT',
-            'DONUT REPLICA',
-            'PIZZA',
-            'PIZZA REPLICA',
-            'PIZZA REPLICA GOLD',
-          ],
-          'GOLDEN MC': [
-            'LED',
-            'DONUT',
-            'DONUT REPLICA',
-            'PIZZA',
-            'PIZZA REPLICA',
-            'PIZZA REPLICA GOLD',
-          ],
+      rules: [
+        {
+          primary: 'Royals',
+          type: 'EXCLUSION',
+          links: ['Blister-Pack'],
         },
-      },
+        {
+          primary: 'LEONIDIS',
+          type: 'EXCLUSION',
+          links: ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
+        },
+        {
+          primary: 'DOOMED',
+          type: 'EXCLUSION',
+          links: ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
+        },
+        {
+          primary: 'DOOMED',
+          type: 'EXCLUSION',
+          links: ['LED', 'DONUT', 'DONUT REPLICA', 'PIZZA', 'PIZZA REPLICA', 'PIZZA REPLICA GOLD'],
+        },
+      ],
       metadata: true,
       traits: [
         {
