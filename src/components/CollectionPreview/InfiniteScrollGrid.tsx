@@ -59,7 +59,7 @@ const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
   )
 }
 
-export const InfiniteScrollGrid = ({ tokens }: { tokens: TraitElement[][] }) => {
+export const InfiniteScrollGrid = ({ tokens }: { tokens: number[] }) => {
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)

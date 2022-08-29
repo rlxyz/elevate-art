@@ -17,8 +17,9 @@ export const RegegenerateButton = () => {
 
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data) => {
-      const { generations, totalSupply, name } = data
-      setTokens(createManyTokens(layers, 250, name, generations))
+      //  update the collection
+      const { totalSupply } = data
+      setTokens(Array.from(Array(totalSupply).keys()))
       notifySuccess('Collection regenerated')
     },
   })

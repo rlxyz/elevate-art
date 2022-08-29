@@ -34,7 +34,7 @@ interface CompilerViewInterface {
   regenerateFilter: boolean
   regeneratePreview: boolean
   traitFilters: { trait_type: string; value: string }[]
-  tokens: TraitElement[][]
+  tokens: number[]
   traitMapping: {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
@@ -46,7 +46,7 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }) => void
-  setTokens: (tokens: TraitElement[][]) => void
+  setTokens: (tokens: number[]) => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
   setRegenerateFilter: (regenerateFilter: boolean) => void
@@ -78,13 +78,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       tokenIdMap: new Map(),
       traitMap: new Map(),
     },
-    setTraitMapping: ({
-      tokenIdMap,
-      traitMap,
-    }: {
-      tokenIdMap: Map<string, Map<string, number[]>>
-      traitMap: Map<string, Map<string, number>>
-    }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
     repository: {
       id: '',
       name: '',
@@ -127,6 +120,13 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
     setTraitFilters: (filter) =>
       set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
+    setTraitMapping: ({
+      tokenIdMap,
+      traitMap,
+    }: {
+      tokenIdMap: Map<string, Map<string, number[]>>
+      traitMap: Map<string, Map<string, number>>
+    }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
     setOrganisation: (organisation: Organisation) => set((_) => ({ organisation })),
     setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) =>
       set((_) => ({ regenerateFilterIndex: { start, end } })),
@@ -135,7 +135,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
     setRepository: (repository: Repository) => set((_) => ({ repository })),
     setCollection: (collection: Collection) => set((_) => ({ collection })),
-    setTokens: (tokens: TraitElement[][]) => set((_) => ({ tokens })),
+    setTokens: (tokens: number[]) => set((_) => ({ tokens })),
     setLayers: (
       layers: (LayerElement & {
         traitElements: (TraitElement & {

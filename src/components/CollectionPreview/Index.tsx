@@ -38,9 +38,9 @@ const CollectionPreview = () => {
   const [hasHydrated, setHasHydrated] = useState(false)
 
   useEffect(() => {
-    const tokens = createManyTokens(layers, 250, collection.name, collection.generations)
+    const tokens = createManyTokens(layers, 10000, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-    setTokens(tokens)
+    setTokens(Array.from(Array(tokens.length).keys()))
     setTraitMapping({
       tokenIdMap,
       traitMap,
