@@ -13,8 +13,9 @@ export const Header = () => {
       <div className='flex'>
         <Image priority width={25} height={25} src='/images/logo.svg' alt='Logo' />
         <div className='mt-2 ml-4 font-bold'>
-          <span className='pr-2 text-darkGrey border-r border-r-darkGrey'>{organisationName}</span>
-          <span className='pl-2'>{repositoryName && repositoryName}</span>
+          <span className='pr-2 text-darkGrey'>{`${organisationName}`}</span>
+          <span className='pr-2 text-darkGrey'>/</span>
+          <span>{repositoryName && repositoryName}</span>
         </div>
       </div>
       <div className='ml-4 md:block flex justify-center space-x-6 md:order-2'>

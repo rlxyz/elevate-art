@@ -3,7 +3,6 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
-import { ArtCollectionElement } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 
@@ -35,12 +34,10 @@ export const FilterByRarity = () => {
             }
           }
         )
-
         const filteredTokenIds = filters
           .map(({ layer: { id: l }, trait: { id: t } }) => traitMapping.tokenIdMap.get(l)?.get(t))
           .flatMap((map) => map)
-
-        console.log(filteredTokenIds)
+        filteredTokenIds.sort()
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (
