@@ -13,24 +13,38 @@ import { TraitElement } from '@prisma/client'
 import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 import { useMutation } from 'react-query'
 import { trpc } from '@utils/trpc'
-import { compiler } from '@utils/compiler'
+import { createManyTokens, getTraitMappings } from '@utils/compiler'
 
 const CollectionPreview = () => {
-  const { setTokens, tokens, setRegenerateCollection, layers, collection, regenerate } =
-    useRepositoryStore((state) => {
-      return {
-        setTokens: state.setTokens,
-        setRegenerateCollection: state.setRegenerateCollection,
-        regenerate: state.regenerate,
-        tokens: state.tokens,
-        layers: state.layers,
-        collection: state.collection,
-      }
-    })
+  const {
+    setTokens,
+    setTraitMapping,
+    tokens,
+    setRegenerateCollection,
+    layers,
+    collection,
+    regenerate,
+  } = useRepositoryStore((state) => {
+    return {
+      setTokens: state.setTokens,
+      setTraitMapping: state.setTraitMapping,
+      setRegenerateCollection: state.setRegenerateCollection,
+      regenerate: state.regenerate,
+      tokens: state.tokens,
+      layers: state.layers,
+      collection: state.collection,
+    }
+  })
   const [hasHydrated, setHasHydrated] = useState(false)
 
   useEffect(() => {
-    setTokens(compiler(layers, 250, collection.name, collection.generations))
+    const tokens = createManyTokens(layers, 250, collection.name, collection.generations)
+    const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+    setTokens(tokens)
+    setTraitMapping({
+      tokenIdMap,
+      traitMap,
+    })
     setHasHydrated(true)
   }, [])
 

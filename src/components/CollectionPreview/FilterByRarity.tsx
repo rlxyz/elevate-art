@@ -5,66 +5,50 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { Field, Form, Formik } from 'formik'
 import { ArtCollectionElement } from '@utils/x/Collection'
 import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
-import { TraitElement } from '@prisma/client'
+import { LayerElement, TraitElement } from '@prisma/client'
 
 export const FilterByRarity = () => {
-  const [filters, setFilters] = useState<any>(null) // todo: fix
+  // const [filters, setFilters] = useState<any>(null) // todo: fix
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { layers, traitFilters, setTraitFilters } = useRepositoryStore((state) => {
+  const { layers, traitMapping, traitFilters, setTraitFilters } = useRepositoryStore((state) => {
     return {
+      traitMapping: state.traitMapping,
       layers: state.layers,
       traitFilters: state.traitFilters,
       setTraitFilters: state.setTraitFilters,
     }
   })
 
-  const { setArtCollection, artCollection } = useArtCollectionStore((state) => {
-    return {
-      artCollection: state.artCollection,
-      setArtCollection: state.setArtCollection,
-    }
-  })
-
-  useEffect(() => {
-    layers &&
-      setFilters([
-        {
-          id: 'trait',
-          name: 'By Trait',
-          options: layers.map((layer) => {
-            return {
-              value: layer.name,
-              label: layer.name,
-              dropdown: layer.traitElements.map((trait: TraitElement) => {
-                return {
-                  value: trait.name,
-                  label: trait.name,
-                }
-              }),
-            }
-          }),
-        },
-      ])
-  }, [layers])
-
   return (
     <Formik
       initialValues={{ checked: [] }}
-      onSubmit={async (values) => {
-        const filters: ArtCollectionElement[] = values.checked.map((value: any) => {
-          // todo: fix
-          return {
-            trait_type: value.split('/')[0],
-            value: value.split('/')[1],
+      onSubmit={async ({ checked }: { checked: string[] }) => {
+        const filters: { layer: LayerElement; trait: TraitElement }[] = checked.map(
+          (value: string) => {
+            const layer = layers.filter((layer) => layer.id === value.split('/')[0])[0]
+            const trait = layer?.traitElements.filter(
+              (trait) => trait.id === value.split('/')[1]
+            )[0]
+            return {
+              layer,
+              trait,
+            }
           }
-        })
-        // artCollection.setFilter(filters)
+        )
+
+        const filteredTokenIds = filters
+          .map(({ layer: { id: l }, trait: { id: t } }) => traitMapping.tokenIdMap.get(l)?.get(t))
+          .flatMap((map) => map)
+
+        console.log(filteredTokenIds)
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (
         <Form>
-          {filters &&
-            filters.map((section: any, sectionIdx: number) => (
+          {layers.length &&
+            traitMapping.tokenIdMap.size > 0 &&
+            traitMapping.traitMap.size > 0 &&
+            [{ name: 'By Trait', id: 'something' }].map((section: any, sectionIdx: number) => (
               <div key={`${section.name}-${sectionIdx}`}>
                 <fieldset className='space-y-2'>
                   <legend
@@ -75,115 +59,86 @@ export const FilterByRarity = () => {
                     {section.name}
                   </legend>
                   <div className='p-2 space-y-3 border border-lightGray rounded-[5px] max-h-[22em] overflow-y-scroll no-scrollbar'>
-                    {section.options.map((option: any, optionIdx: number) => (
-                      <div
-                        key={`${option.value}-${option.label}-${sectionIdx}`}
-                        className='flex flex-col'
-                      >
-                        <div
-                          className={`flex justify-between ${
-                            layerDropdown === optionIdx
-                              ? 'text-black font-semibold'
-                              : 'text-darkGrey'
-                          }`}
-                        >
-                          <label
-                            htmlFor={`${section.id}-${optionIdx}`}
-                            className={`text-sm ${
-                              layerDropdown === optionIdx ? 'text-black font-semibold' : ''
+                    {layers.map(
+                      (
+                        layer: LayerElement & { traitElements: TraitElement[] },
+                        optionIdx: number
+                      ) => (
+                        <div key={layer.id} className='flex flex-col'>
+                          <div
+                            className={`flex justify-between ${
+                              layerDropdown === optionIdx
+                                ? 'text-black font-semibold'
+                                : 'text-darkGrey'
                             }`}
                           >
-                            {option.label}
-                          </label>
-                          {/* {sectionIdx === 0 ? (
-                        <input
-                          id={`${section.id}-${optionIdx}`}
-                          name={`${section.id}[]`}
-                          defaultValue={option.value}
-                          type='checkbox'
-                          className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
-                          onClick={() => {
-                            setRegenerateFilterIndex({
-                              start: option.start,
-                              end: option.end,
-                            })
-                            setRegenerateFilter(true)
-                          }}
-                        />
-                      ) : (
-                        <Button
-                          onClick={() => {
-                            if (layerDropdown === optionIdx) {
-                              setLayerDropdown(null)
-                            } else {
-                              setLayerDropdown(optionIdx)
-                            }
-                          }}
-                          className='border rounded-[5px] border-lightGray'
-                        >
-                          <ChevronDownIcon className='w-5 h-5 text-darkGrey' />
-                        </Button>
-                      )} */}
-                          <div className='flex items-center space-x-2'>
-                            <span className='text-xs'>
-                              {artCollection.getLayerCount(option.value)}
-                            </span>
-                            <Button
-                              onClick={() => {
-                                if (layerDropdown === optionIdx) {
-                                  setLayerDropdown(null)
-                                } else {
-                                  setLayerDropdown(optionIdx)
-                                }
-                              }}
-                              className='w-5 h-5 flex justify-center items-center'
+                            <label
+                              htmlFor={`${section.id}-${optionIdx}`}
+                              className={`text-sm ${
+                                layerDropdown === optionIdx ? 'text-black font-semibold' : ''
+                              }`}
                             >
-                              {layerDropdown !== optionIdx ? (
-                                <ChevronDownIcon className='w-4 h-4' />
-                              ) : (
-                                <ChevronUpIcon className='w-4 h-4' />
-                              )}
-                            </Button>
+                              {layer.name}
+                            </label>
+                            <div className='flex items-center space-x-2'>
+                              <span className='text-xs'>
+                                {traitMapping.traitMap?.get(layer.id)?.size || 0}
+                              </span>
+                              <Button
+                                onClick={() => {
+                                  if (layerDropdown === optionIdx) {
+                                    setLayerDropdown(null)
+                                  } else {
+                                    setLayerDropdown(optionIdx)
+                                  }
+                                }}
+                                className='w-5 h-5 flex justify-center items-center'
+                              >
+                                {layerDropdown !== optionIdx ? (
+                                  <ChevronDownIcon className='w-4 h-4' />
+                                ) : (
+                                  <ChevronUpIcon className='w-4 h-4' />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                          <div
+                            className={
+                              layerDropdown === optionIdx
+                                ? 'h-[13rem] overflow-y-scroll no-scrollbar border-b border-lightGray rounded-[5px] mt-3 space-y-3 pl-1'
+                                : 'hidden'
+                            }
+                          >
+                            {layer.traitElements.map((traitElement: TraitElement) => {
+                              return (
+                                <div
+                                  key={traitElement.id}
+                                  className='flex justify-between items-center text-sm'
+                                >
+                                  <span className='text-darkGrey'>{traitElement.name}</span>
+                                  <div className='flex items-center space-x-2'>
+                                    <span className='text-darkGrey text-xs'>
+                                      {traitMapping.traitMap?.get(layer.id)?.get(traitElement.id) ||
+                                        0}
+                                    </span>
+                                    <Field
+                                      type='checkbox'
+                                      name='checked'
+                                      value={`${layer.id}/${traitElement.id}`}
+                                      className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
+                                      onChange={(e: any) => {
+                                        handleChange(e)
+                                        submitForm()
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              )
+                            })}
                           </div>
                         </div>
-                        <div
-                          className={
-                            layerDropdown === optionIdx
-                              ? 'h-[13rem] overflow-y-scroll no-scrollbar border-b border-lightGray rounded-[5px] mt-3 space-y-3 pl-1'
-                              : 'hidden'
-                          }
-                        >
-                          {option.dropdown.map((d: any, index: number) => {
-                            return (
-                              <div
-                                key={index}
-                                className='flex justify-between items-center text-sm'
-                              >
-                                <span className='text-darkGrey'>{d.label}</span>
-                                <div className='flex items-center space-x-2'>
-                                  <span className='text-darkGrey text-xs'>
-                                    {artCollection.getTraitCount({
-                                      trait_type: option.value,
-                                      value: d.value,
-                                    })}
-                                  </span>
-                                  <Field
-                                    type='checkbox'
-                                    name='checked'
-                                    value={`${option.label}/${d.value}`}
-                                    className='h-5 w-5 border rounded-[5px] border-lightGray bg-hue-light'
-                                    onChange={(e: any) => {
-                                      handleChange(e)
-                                      submitForm()
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </fieldset>
               </div>

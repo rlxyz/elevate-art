@@ -35,6 +35,17 @@ interface CompilerViewInterface {
   regeneratePreview: boolean
   traitFilters: { trait_type: string; value: string }[]
   tokens: TraitElement[][]
+  traitMapping: {
+    tokenIdMap: Map<string, Map<string, number[]>>
+    traitMap: Map<string, Map<string, number>>
+  }
+  setTraitMapping: ({
+    tokenIdMap,
+    traitMap,
+  }: {
+    tokenIdMap: Map<string, Map<string, number[]>>
+    traitMap: Map<string, Map<string, number>>
+  }) => void
   setTokens: (tokens: TraitElement[][]) => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
@@ -63,6 +74,17 @@ interface CompilerViewInterface {
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    traitMapping: {
+      tokenIdMap: new Map(),
+      traitMap: new Map(),
+    },
+    setTraitMapping: ({
+      tokenIdMap,
+      traitMap,
+    }: {
+      tokenIdMap: Map<string, Map<string, number[]>>
+      traitMap: Map<string, Map<string, number>>
+    }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
     repository: {
       id: '',
       name: '',

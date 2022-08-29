@@ -2,7 +2,7 @@ import { Button } from '@components/UI/Button'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { compiler } from '@utils/compiler'
+import { createManyTokens } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 
 export const RegegenerateButton = () => {
@@ -18,7 +18,7 @@ export const RegegenerateButton = () => {
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data) => {
       const { generations, totalSupply, name } = data
-      setTokens(compiler(layers, 250, name, generations))
+      setTokens(createManyTokens(layers, 250, name, generations))
       notifySuccess('Collection regenerated')
     },
   })
