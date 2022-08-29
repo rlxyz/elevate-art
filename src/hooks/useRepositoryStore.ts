@@ -34,7 +34,6 @@ interface CompilerViewInterface {
   regenerateFilter: boolean
   regeneratePreview: boolean
   traitFilters: { trait_type: string; value: string }[]
-  tokens: number[]
   traitMapping: {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
@@ -46,7 +45,6 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }) => void
-  setTokens: (tokens: number[]) => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
   setRegenerateFilter: (regenerateFilter: boolean) => void
@@ -112,7 +110,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       updatedAt: new Date(-1),
       traitElements: [],
     },
-    tokens: [],
     regenerate: false,
     regenerateFilterIndex: { start: 0, end: 0 }, // start with true to ensure that on hydrate preview is populated
     regenerateFilter: false, // start with true to ensure that on hydrate preview is populated
@@ -135,7 +132,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
     setRepository: (repository: Repository) => set((_) => ({ repository })),
     setCollection: (collection: Collection) => set((_) => ({ collection })),
-    setTokens: (tokens: number[]) => set((_) => ({ tokens })),
     setLayers: (
       layers: (LayerElement & {
         traitElements: (TraitElement & {

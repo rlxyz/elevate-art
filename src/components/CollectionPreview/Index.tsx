@@ -16,37 +16,38 @@ import { trpc } from '@utils/trpc'
 import { createManyTokens, getTraitMappings } from '@utils/compiler'
 
 const CollectionPreview = () => {
-  const {
-    setTokens,
-    setTraitMapping,
-    tokens,
-    setRegenerateCollection,
-    layers,
-    collection,
-    regenerate,
-  } = useRepositoryStore((state) => {
-    return {
-      setTokens: state.setTokens,
-      setTraitMapping: state.setTraitMapping,
-      setRegenerateCollection: state.setRegenerateCollection,
-      regenerate: state.regenerate,
-      tokens: state.tokens,
-      layers: state.layers,
-      collection: state.collection,
-    }
-  })
+  const { setTraitMapping, setRegenerateCollection, layers, collection, regenerate } =
+    useRepositoryStore((state) => {
+      return {
+        setTraitMapping: state.setTraitMapping,
+        setRegenerateCollection: state.setRegenerateCollection,
+        regenerate: state.regenerate,
+        layers: state.layers,
+        collection: state.collection,
+      }
+    })
   const [hasHydrated, setHasHydrated] = useState(false)
 
+  const { data: collectionData } = trpc.useQuery([
+    'collection.getCollectionById',
+    { id: collection.id },
+  ])
+
   useEffect(() => {
-    const tokens = createManyTokens(layers, 10000, collection.name, collection.generations)
+    if (!collectionData) return
+    const tokens = createManyTokens(
+      layers,
+      collectionData.totalSupply,
+      collectionData.name,
+      collectionData.generations
+    )
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-    setTokens(Array.from(Array(tokens.length).keys()))
     setTraitMapping({
       tokenIdMap,
       traitMap,
     })
     setHasHydrated(true)
-  }, [])
+  }, [collectionData])
 
   return (
     <CollectionViewContent
@@ -55,7 +56,7 @@ const CollectionPreview = () => {
     >
       {hasHydrated && (
         <div className='p-8 h-full w-full'>
-          <InfiniteScrollGrid tokens={tokens} />
+          <InfiniteScrollGrid collectionId={collection.id} />
         </div>
       )}
     </CollectionViewContent>

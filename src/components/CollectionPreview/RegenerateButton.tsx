@@ -4,22 +4,21 @@ import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createManyTokens } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
+import { useQueryClient } from 'react-query'
 
 export const RegegenerateButton = () => {
-  const { setTokens, collection, layers } = useRepositoryStore((state) => {
+  const { collection, layers } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       collection: state.collection,
-      setTokens: state.setTokens,
     }
   })
   const { notifySuccess } = useNotification()
+  const ctx = trpc.useContext()
 
   const mutation = trpc.useMutation('collection.incrementGeneration', {
-    onSuccess: (data) => {
-      //  update the collection
-      const { totalSupply } = data
-      setTokens(Array.from(Array(totalSupply).keys()))
+    onSuccess: (data, variables) => {
+      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
       notifySuccess('Collection regenerated')
     },
   })

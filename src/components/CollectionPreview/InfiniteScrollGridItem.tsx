@@ -8,6 +8,7 @@ import { ArtCollectionElement } from '@utils/x/Collection'
 import { TraitElement } from '@prisma/client'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createToken } from '@utils/compiler'
+import { env } from 'src/env/client.mjs'
 
 const InfiniteScrollGridItem = ({
   token,
@@ -37,7 +38,6 @@ const InfiniteScrollGridItem = ({
   const item = {
     hidden: {
       opacity: 0,
-      y: 50,
       transition: { ease: [0.78, 0.14, 0.15, 0.86] },
     },
     show: {
@@ -54,16 +54,16 @@ const InfiniteScrollGridItem = ({
       animate={controls}
       ref={ref}
     >
-      <div className='h-[120px] overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
+      <div className='h-[200px] overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
         {token.map((traitElement: TraitElement, index: number) => {
           return (
             <div className='absolute w-full h-full flex flex-col items-center' key={index}>
               <Image
-                width={125}
-                height={125}
+                width={200}
+                height={200}
                 className='rounded-[5px] border-[1px] border-lightGray'
-                src={`${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
-                  process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES ? 'c_fill,h_200,w_201' : ''
+                src={`${env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
+                  env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES ? 'c_fill,h_200,w_200' : ''
                 }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
                   layers[index]?.name || ''
                 )}/${toPascalCaseWithSpace(traitElement.name)}.png`}
