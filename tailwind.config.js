@@ -12,6 +12,9 @@ module.exports = {
         header: '#FAFAFA',
         dark: '#0F111A',
       },
+      hover: {
+        light: '#E5E8EB',
+      },
       white: colors.white,
       primary: colors.red,
       lightGray: '#E7E7E7',

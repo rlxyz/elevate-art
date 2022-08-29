@@ -93,7 +93,7 @@ export const ReorderItem = ({
       >
         <div
           className={`flex flex-row p-[4px] rounded-[5px] justify-between ${
-            enabled ? 'bg-lightGray font-semibold' : 'text-darkGrey'
+            enabled ? 'bg-lightGray bg-opacity-50 font-semibold' : 'text-darkGrey'
           }`}
         >
           <div className='flex'>
