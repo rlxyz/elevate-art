@@ -10,7 +10,7 @@ const Index = () => {
   if (isLoading || !currentLayer) return <Loading />
   if (isError) return <div>Error...</div>
 
-  const { name, traitElements, id } = currentLayer
+  const { name, traitElements } = currentLayer
 
   return (
     <CollectionViewContent
@@ -20,8 +20,6 @@ const Index = () => {
       <div className='p-8 flex flex-col divide-y divide-lightGray space-y-6'>
         <TraitRulesSelector
           traitElements={traitElements}
-          layerId={id}
-          layerName={name}
           title='Create a condition'
           onSuccess={refetch}
         />

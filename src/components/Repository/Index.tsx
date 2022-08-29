@@ -21,6 +21,7 @@ import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 type Filter = {
   id: string
@@ -107,18 +108,7 @@ const Index = () => {
                     <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
                       {'Generate'}
                     </span>
-                    <div>
-                      <Button
-                        onClick={() => {
-                          !regenerate && setRegenerateCollection(true)
-                        }}
-                      >
-                        <span className='p-2 flex items-center justify-center space-x-1'>
-                          <RefreshIcon className='w-5 h-5' />
-                          <span>Generate</span>
-                        </span>
-                      </Button>
-                    </div>
+                    <RegegenerateButton />
                   </div>
                   <div className='hidden lg:block overflow-hidden'>
                     <FilterByRarity />

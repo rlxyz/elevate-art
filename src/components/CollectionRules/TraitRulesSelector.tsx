@@ -14,9 +14,6 @@ import { useNotification } from '@hooks/useNotification'
 export const TraitRulesSelector = ({
   title,
   traitElements,
-  layerName,
-  layerId,
-  disabled = false,
   onSuccess,
 }: {
   title: string
@@ -31,9 +28,6 @@ export const TraitRulesSelector = ({
     })[]
   })[]
   onSuccess: () => void
-  layerName: string
-  layerId: string
-  disabled?: boolean
 }) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
@@ -61,9 +55,7 @@ export const TraitRulesSelector = ({
 
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <span className={`block text-xs font-semibold uppercase ${disabled ? 'text-darkGrey' : ''}`}>
-        {title}
-      </span>
+      <span className='block text-xs font-semibold uppercase'>{title}</span>
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
           <TraitSelector
@@ -73,55 +65,7 @@ export const TraitRulesSelector = ({
           />
         </div>
         <div className='col-span-2 relative mt-1'>
-          <Combobox as='div' value={selectedCondition} onChange={setSelectedCondition}>
-            <Combobox.Input
-              className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
-              onChange={(event) => setQuery(event.target.value)}
-              displayValue={(value: string) => value}
-              placeholder='cannot mix with'
-            />
-            <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-              <SelectorIcon className='h-5 w-5 text-lightGray' aria-hidden='true' />
-            </Combobox.Button>
-            <Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-              {[
-                { id: 0, name: RulesEnum.enum['cannot mix with'] },
-                { id: 1, name: RulesEnum.enum['only mixes with'] },
-                // { id: 3, name: 'always mixes with' },
-              ].map((option, index) => (
-                <Combobox.Option
-                  key={index}
-                  value={option.name}
-                  className={({ active }) =>
-                    classNames(
-                      'relative cursor-default select-none py-2 pl-3 pr-9',
-                      active ? 'text-blueHighlight' : 'text-black'
-                    )
-                  }
-                >
-                  {({ active, selected }) => (
-                    <>
-                      <span
-                        className={classNames('block truncate', selected ? 'font-semibold' : '')}
-                      >
-                        {option.name}
-                      </span>
-                      {selected && (
-                        <span
-                          className={classNames(
-                            'absolute inset-y-0 right-0 flex items-center pr-4',
-                            active ? 'text-black' : 'text-indigo-600'
-                          )}
-                        >
-                          <CheckIcon className='h-5 w-5' aria-hidden='true' />
-                        </span>
-                      )}
-                    </>
-                  )}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
-          </Combobox>
+          <TraitSelectorCondition selected={selectedCondition} onChange={setSelectedCondition} />
         </div>
         <div className='col-span-4 relative mt-1'>
           <TraitSelector
@@ -149,6 +93,77 @@ export const TraitRulesSelector = ({
         </div>
       </div>
     </div>
+  )
+}
+
+export const TraitSelectorCondition = ({
+  selected,
+  onChange,
+}: {
+  selected: undefined | null | string
+  onChange: Dispatch<SetStateAction<string | null | undefined>>
+}) => {
+  const [query, setQuery] = useState('')
+
+  const filteredConditions =
+    query === ''
+      ? [
+          { id: 0, name: RulesEnum.enum['cannot mix with'] },
+          { id: 1, name: RulesEnum.enum['only mixes with'] },
+          // { id: 3, name: 'always mixes with' },
+        ]
+      : [
+          { id: 0, name: RulesEnum.enum['cannot mix with'] },
+          { id: 1, name: RulesEnum.enum['only mixes with'] },
+          // { id: 3, name: 'always mixes with' },
+        ].filter((conditions) => {
+          return conditions.name.toLowerCase().includes(query.toLowerCase())
+        })
+
+  return (
+    <Combobox as='div' value={selected} onChange={onChange}>
+      <Combobox.Input
+        className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
+        onChange={(event) => setQuery(event.target.value)}
+        displayValue={(value: string) => value}
+        placeholder='cannot mix with'
+      />
+      <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
+        <SelectorIcon className='h-5 w-5 text-lightGray' aria-hidden='true' />
+      </Combobox.Button>
+      <Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+        {filteredConditions.map((option, index) => (
+          <Combobox.Option
+            key={index}
+            value={option.name}
+            className={({ active }) =>
+              classNames(
+                'relative cursor-default select-none py-2 pl-3 pr-9',
+                active ? 'text-blueHighlight' : 'text-black'
+              )
+            }
+          >
+            {({ active, selected }) => (
+              <>
+                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
+                  {option.name}
+                </span>
+                {selected && (
+                  <span
+                    className={classNames(
+                      'absolute inset-y-0 right-0 flex items-center pr-4',
+                      active ? 'text-black' : 'text-indigo-600'
+                    )}
+                  >
+                    <CheckIcon className='h-5 w-5' aria-hidden='true' />
+                  </span>
+                )}
+              </>
+            )}
+          </Combobox.Option>
+        ))}
+      </Combobox.Options>
+    </Combobox>
   )
 }
 

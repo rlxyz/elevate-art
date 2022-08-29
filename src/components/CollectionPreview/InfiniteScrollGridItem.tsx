@@ -59,7 +59,7 @@ const InfiniteScrollGridItem = ({
                 src={`${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/image/upload/${
                   process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES ? 'c_fill,h_200,w_201' : ''
                 }/v1/${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
-                  layers[index]?.name // todo fix
+                  layers[index]?.name || ''
                 )}/${toPascalCaseWithSpace(traitElement.name)}.png`}
               />
             </div>
