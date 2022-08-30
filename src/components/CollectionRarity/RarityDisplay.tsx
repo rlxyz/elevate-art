@@ -53,7 +53,7 @@ export const RarityDisplay = ({
 
   return (
     <>
-      {!summedRarityWeightage && summedRarityWeightage > 0 ? (
+      {!summedRarityWeightage ? (
         <table className='w-full table-fixed divide-y divide-lightGray'>
           <thead>
             <tr>
@@ -79,22 +79,18 @@ export const RarityDisplay = ({
             </tr>
           </thead>
           <tbody className='divide-y divide-lightGray'>
-            {traitElements.map(({ name }: TraitElement, index: number) => (
-              <tr key={index}>
-                <td className='py-8'>
-                  <AdvancedImage url='/images/logo.png' />
-                </td>
-                <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
-                <td className='whitespace-nowrap text-sm font-medium'>
-                  <div className='flex space-x-3 items-center justify-start'>
-                    <div className='w-24'>
-                      <div placeholder={'....'} />
-                    </div>
-                  </div>
-                </td>
-                <td className='whitespace-nowrap text-right text-sm font-medium'>...</td>
-              </tr>
-            ))}
+            {Array.from(Array(5).keys()).map((index) => {
+              return (
+                <tr key={index}>
+                  <td className='py-8'>
+                    <AdvancedImage url='/images/logo.png' />
+                  </td>
+                  <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
+                  <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
+                  <td className='whitespace-nowrap text-right text-sm font-medium'>{'...'}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       ) : (
