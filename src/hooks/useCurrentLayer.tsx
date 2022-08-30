@@ -26,5 +26,13 @@ export const useCurrentLayer = () => {
     ])
   })
 
-  return { currentLayer: data, isLoading: !data || isLoading, isError, refetch }
+  return {
+    currentLayer: data || {
+      name: '',
+      traitElements: [],
+    },
+    isLoading: !data || isLoading,
+    isError,
+    refetch,
+  }
 }

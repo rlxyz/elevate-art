@@ -23,3 +23,15 @@ export const collectionRouter = createRouter()
       })
     },
   })
+  .query('getCollectionByRepositoryId', {
+    input: z.object({
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return ctx.prisma.collection.findFirst({
+        where: {
+          repositoryId: input.repositoryId,
+        },
+      })
+    },
+  })

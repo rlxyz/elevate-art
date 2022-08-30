@@ -9,12 +9,8 @@ import { RarityDisplay } from './RarityDisplay'
 import { useNotification } from '@hooks/useNotification'
 
 const Index = () => {
-  const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
+  const { currentLayer, refetch } = useCurrentLayer()
   const { notifySuccess } = useNotification()
-
-  if (isLoading || !currentLayer) return <div>Loading...</div>
-  if (isError) return <div>Error...</div>
-
   const { name, traitElements } = currentLayer
 
   return (

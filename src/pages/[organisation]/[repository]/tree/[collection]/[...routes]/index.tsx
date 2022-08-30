@@ -13,16 +13,17 @@ import { Layout } from '@components/Layout/Layout'
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
   organisationName,
+  collectionName,
   repositoryName,
   routes,
 }: {
   organisationName: string
   repositoryName: string
+  collectionName: string
   routes: any
 }) => {
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
-  const { isLoading, isError } = useCurrentLayer()
   const { data: organisationData } = trpc.useQuery([
     'organisation.getOrganisationByName',
     { name: organisationName },
@@ -31,6 +32,10 @@ const PageImplementation = ({
     'repository.getRepositoryByName',
     { name: repositoryName },
   ])
+  // const { data: collectionData } = trpc.useQuery([
+  //   'collection.getCollectionByRepositoryId',
+  //   { repositoryId: repositoryData?.id },
+  // ])
 
   const { layers, setOrganisation, repository, setCollection, setLayers, setRepository } =
     useRepositoryStore((state) => {
@@ -109,13 +114,14 @@ const PageImplementation = ({
     setLayers(layers)
   }, [repositoryData])
 
-  return <div>{isLoading ? <Loading /> : <Index />}</div>
+  return <Index />
 }
 
 // wrapper to hydate routes
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
+  const collectionName: string = router.query.collection as string
   const repositoryName: string = router.query.repository as string
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
@@ -129,6 +135,7 @@ const Page = () => {
       <PageImplementation
         organisationName={organisationName}
         repositoryName={repositoryName}
+        collectionName={collectionName}
         routes={routes}
       />
     </Layout>

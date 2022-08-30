@@ -12,10 +12,6 @@ import { useCurrentLayer } from '../../hooks/useCurrentLayer'
 const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
-
-  if (isLoading || !currentLayer) return <div>Loading...</div>
-  if (isError) return <div>Error...</div>
-
   const { name, traitElements } = currentLayer
 
   return (

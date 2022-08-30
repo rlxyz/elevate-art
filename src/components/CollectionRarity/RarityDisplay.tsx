@@ -53,7 +53,51 @@ export const RarityDisplay = ({
 
   return (
     <>
-      {summedRarityWeightage && summedRarityWeightage > 0 && (
+      {!summedRarityWeightage && summedRarityWeightage > 0 ? (
+        <table className='w-full table-fixed divide-y divide-lightGray'>
+          <thead>
+            <tr>
+              {[
+                'Image',
+                'Name',
+                'Quantity in Collection',
+                // 'Rarity Score',
+                'Percentage',
+              ].map((item, index) => {
+                return (
+                  <th
+                    key={item}
+                    scope='col'
+                    className={`${
+                      index === 3 ? 'text-right' : 'text-left'
+                    }  text-xs font-semibold uppercase text-darkGrey pb-8`}
+                  >
+                    {item}
+                  </th>
+                )
+              })}
+            </tr>
+          </thead>
+          <tbody className='divide-y divide-lightGray'>
+            {traitElements.map(({ name }: TraitElement, index: number) => (
+              <tr key={index}>
+                <td className='py-8'>
+                  <AdvancedImage url='/images/logo.png' />
+                </td>
+                <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
+                <td className='whitespace-nowrap text-sm font-medium'>
+                  <div className='flex space-x-3 items-center justify-start'>
+                    <div className='w-24'>
+                      <div placeholder={'....'} />
+                    </div>
+                  </div>
+                </td>
+                <td className='whitespace-nowrap text-right text-sm font-medium'>...</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
         <Formik
           enableReinitialize
           initialValues={{
