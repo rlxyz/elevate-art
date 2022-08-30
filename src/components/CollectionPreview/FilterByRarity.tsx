@@ -9,8 +9,19 @@ import { LayerElement, TraitElement } from '@prisma/client'
 export const FilterByRarity = () => {
   // const [filters, setFilters] = useState<any>(null) // todo: fix
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { layers, traitMapping, traitFilters, setTraitFilters } = useRepositoryStore((state) => {
+  const {
+    layers,
+    collection,
+    traitMapping,
+    setTokens,
+    resetTokens,
+    traitFilters,
+    setTraitFilters,
+  } = useRepositoryStore((state) => {
     return {
+      collection: state.collection,
+      resetTokens: state.resetTokens,
+      setTokens: state.setTokens,
       traitMapping: state.traitMapping,
       layers: state.layers,
       traitFilters: state.traitFilters,
@@ -22,6 +33,10 @@ export const FilterByRarity = () => {
     <Formik
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
+        if (!checked.length) {
+          resetTokens()
+          return
+        }
         const filters: { layer: LayerElement; trait: TraitElement }[] = checked.map(
           (value: string) => {
             const layer = layers.filter((layer) => layer.id === value.split('/')[0])[0]
@@ -35,9 +50,12 @@ export const FilterByRarity = () => {
           }
         )
         const filteredTokenIds = filters
-          .map(({ layer: { id: l }, trait: { id: t } }) => traitMapping.tokenIdMap.get(l)?.get(t))
+          .map(
+            ({ layer: { id: l }, trait: { id: t } }) => traitMapping.tokenIdMap.get(l)?.get(t) || []
+          )
           .flatMap((map) => map)
         filteredTokenIds.sort()
+        setTokens(filteredTokenIds)
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (
@@ -91,9 +109,9 @@ export const FilterByRarity = () => {
                                 : 'hidden'
                             }
                           >
-                            {layer.traitElements.map((traitElement: TraitElement) => {
+                            {layer.traitElements.map((traitElement: TraitElement, index) => {
                               return (
-                                <div>
+                                <div key={index}>
                                   <Button
                                     key={traitElement.id}
                                     className='flex flex-row justify-between items-center py-3 px-1 hover:bg-lightGray hover:bg-opacity-20 w-full rounded-[5px]'

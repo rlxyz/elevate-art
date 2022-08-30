@@ -59,10 +59,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className='w-[70%]'>
             <footer className='max-w-7xl mx-auto py-9 flex items-center justify-between'>
               <div className='flex justify-center space-x-6 md:order-2'>
-                {navigation.map((item) => (
-                  <Link key={item.name} href={item.href}>
-                    <item.icon className='h-6 w-6 text-darkGrey' aria-hidden='true' />
-                  </Link>
+                {navigation.map((item, index) => (
+                  <div key={index}>
+                    <Link href={item.href}>
+                      <item.icon className='h-6 w-6 text-darkGrey' aria-hidden='true' />
+                    </Link>
+                  </div>
                 ))}
               </div>
               <div className='mt-8 md:mt-0 md:order-1'>

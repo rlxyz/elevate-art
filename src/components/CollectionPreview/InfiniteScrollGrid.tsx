@@ -23,11 +23,14 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
+const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
   const repository = useRepositoryStore((state) => state.repository)
   const organisation = useRepositoryStore((state) => state.organisation)
-  const { collection, layers } = useRepositoryStore((state) => {
+  const { collection, tokens, resetTokens, layers, setTokens } = useRepositoryStore((state) => {
     return {
+      setTokens: state.setTokens,
+      resetTokens: state.resetTokens,
+      tokens: state.tokens,
       collection: state.collection,
       layers: state.layers,
     }
@@ -37,25 +40,32 @@ const InfiniteScrollGridItems = ({ tokens }: { tokens: number[] }) => {
     { id: collection.id },
   ])
 
+  useEffect(() => {
+    resetTokens()
+  }, [])
+
   return (
-    <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-      {tokens.map((token: number) => {
-        return (
-          <CollectionInfiniteScrollItem
-            key={token}
-            token={createToken({
-              id: token,
-              name: collection.name,
-              generation: collectionData?.generations || 1,
-              layers,
-            })}
-            repositoryName={repository.name}
-            organisationName={organisation.name}
-            name={`${repository.tokenName} #${token}`}
-          />
-        )
-      })}
-    </div>
+    tokens &&
+    tokens.length && (
+      <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
+        {tokensOnDisplay.map((index: number) => {
+          return (
+            <CollectionInfiniteScrollItem
+              key={`${index}`}
+              token={createToken({
+                id: Number(tokens[index]),
+                name: collection.name,
+                generation: collectionData?.generations || 1,
+                layers,
+              })}
+              repositoryName={repository.name}
+              organisationName={organisation.name}
+              name={`${repository.tokenName} #${tokens[index] || 0}`}
+            />
+          )
+        })}
+      </div>
+    )
   )
 }
 
@@ -98,7 +108,7 @@ export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) =
       hasMore={hasMore}
       loader={<Loading />}
     >
-      <InfiniteScrollGridItems tokens={tokensOnDisplay} />
+      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
     </InfiniteScrollComponent.default>
   )
 }
