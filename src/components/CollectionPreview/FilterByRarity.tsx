@@ -55,7 +55,6 @@ export const FilterByRarity = () => {
         )
         const filtered = allTokenIdsArray.reduce(
           (results, item) => {
-            // if (!item || !results) return results
             const tokens: number[] = item
               .map((token) => {
                 if (results.includes(token)) return [token]
@@ -66,7 +65,7 @@ export const FilterByRarity = () => {
           },
           [...(allTokenIdsArray[0] || [])]
         )
-        setTokens(filtered)
+        setTokens(filtered.sort((a, b) => a - b))
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (

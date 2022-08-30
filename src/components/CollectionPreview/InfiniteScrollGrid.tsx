@@ -49,7 +49,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   const populateCollection = (): ReactNode[] => {
     const items: ReactNode[] = []
     tokensOnDisplay.forEach((index: number) => {
-      if (index > tokens.length) return
+      if (index >= tokens.length) return
       items.push(
         <CollectionInfiniteScrollItem
           key={`${index}`}
