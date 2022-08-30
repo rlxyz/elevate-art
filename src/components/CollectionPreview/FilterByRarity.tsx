@@ -7,17 +7,8 @@ import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 
 export const FilterByRarity = () => {
-  // const [filters, setFilters] = useState<any>(null) // todo: fix
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const {
-    layers,
-    collection,
-    traitMapping,
-    setTokens,
-    resetTokens,
-    traitFilters,
-    setTraitFilters,
-  } = useRepositoryStore((state) => {
+  const { layers, traitMapping, setTokens, resetTokens } = useRepositoryStore((state) => {
     return {
       collection: state.collection,
       resetTokens: state.resetTokens,
@@ -49,13 +40,33 @@ export const FilterByRarity = () => {
             }
           }
         )
-        const filteredTokenIds = filters
-          .map(
-            ({ layer: { id: l }, trait: { id: t } }) => traitMapping.tokenIdMap.get(l)?.get(t) || []
-          )
-          .flatMap((map) => map)
-        filteredTokenIds.sort()
-        setTokens(filteredTokenIds)
+        const allTokenIdsArray = Object.values(
+          filters
+            .map(({ layer: { id: l }, trait: { id: t } }) => {
+              return {
+                layer: l,
+                tokens: traitMapping.tokenIdMap.get(l)?.get(t) || [],
+              }
+            })
+            .reduce((a: { [key: string]: number[] }, { layer, tokens }) => {
+              a[layer] = a[layer] || []
+              return { ...a, ...{ [layer]: [...(a[layer] || []), ...tokens] } }
+            }, {})
+        )
+        const filtered = allTokenIdsArray.reduce(
+          (results, item) => {
+            // if (!item || !results) return results
+            const tokens: number[] = item
+              .map((token) => {
+                if (results.includes(token)) return [token]
+                return []
+              })
+              .flatMap((x) => x)
+            return tokens
+          },
+          [...(allTokenIdsArray[0] || [])]
+        )
+        setTokens(filtered)
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (

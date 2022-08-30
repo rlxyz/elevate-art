@@ -2,7 +2,7 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
 import { ethers } from 'ethers'
 import { NextRouter, useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { motion } from 'framer-motion'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
@@ -46,24 +46,31 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
 
   if (!tokens || !tokens.length || !collectionData) return <></>
 
+  const populateCollection = (): ReactNode[] => {
+    const items: ReactNode[] = []
+    tokensOnDisplay.forEach((index: number) => {
+      if (index > tokens.length) return
+      items.push(
+        <CollectionInfiniteScrollItem
+          key={`${index}`}
+          token={createToken({
+            id: Number(tokens[index]),
+            name: collection.name,
+            generation: collectionData.generations,
+            layers,
+          })}
+          repositoryName={repository.name}
+          organisationName={organisation.name}
+          name={`${repository.tokenName} #${tokens[index] || 0}`}
+        />
+      )
+    })
+    return items
+  }
+
   return (
     <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-      {tokensOnDisplay.map((index: number) => {
-        return (
-          <CollectionInfiniteScrollItem
-            key={`${index}`}
-            token={createToken({
-              id: Number(tokens[index]),
-              name: collection.name,
-              generation: collectionData?.generations || 1,
-              layers,
-            })}
-            repositoryName={repository.name}
-            organisationName={organisation.name}
-            name={`${repository.tokenName} #${tokens[index] || 0}`}
-          />
-        )
-      })}
+      {populateCollection().map((item) => item)}
     </div>
   )
 }
@@ -107,23 +114,24 @@ export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) =
       next={() => fetchMoreData(page)}
       hasMore={hasMore}
       loader={
-        <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-          {Array.from(Array(50).keys()).map((index: number) => {
-            return (
-              <div>
-                <div className='border border-lightGray rounded-[5px]'>
-                  <Image
-                    width={200}
-                    height={200}
-                    className='rounded-[5px] border-[1px] border-lightGray'
-                    src={`/images/logo.png`}
-                  />
-                </div>
-                <span className='text-xs flex justify-center'>...</span>
-              </div>
-            )
-          })}
-        </div>
+        // <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
+        //   {Array.from(Array(50).keys()).map((index: number) => {
+        //     return (
+        //       <div key={index}>
+        //         <div className='border border-lightGray rounded-[5px]'>
+        //           <Image
+        //             width={200}
+        //             height={200}
+        //             className='rounded-[5px] border-[1px] border-lightGray'
+        //             src={`/images/logo.png`}
+        //           />
+        //         </div>
+        //         <span className='text-xs flex justify-center'>...</span>
+        //       </div>
+        //     )
+        //   })}
+        // </div>
+        <></>
       }
     >
       <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
