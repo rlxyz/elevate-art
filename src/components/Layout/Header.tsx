@@ -40,9 +40,9 @@ export const Header = () => {
         </div>
         <div className='flex flex-row justify-center items-center space-x-6'>
           <div className='flex flex-row space-x-3'>
-            {navigation.map((item) => {
+            {navigation.map((item, index) => {
               return (
-                <Link href={item.href}>
+                <Link key={index} href={item.href}>
                   <span className='text-xs font-semibold'>{item.name}</span>
                 </Link>
               )

@@ -38,6 +38,8 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }
+  tokens: number[]
+  setTokens: (tokens: number[]) => void
   setTraitMapping: ({
     tokenIdMap,
     traitMap,
@@ -50,6 +52,7 @@ interface CompilerViewInterface {
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
+  resetTokens: () => void
   setOrganisation: (organisation: Organisation) => void
   setRepository: (repository: Repository) => void
   setCollection: (collection: Collection) => void
@@ -72,6 +75,7 @@ interface CompilerViewInterface {
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    tokens: [],
     traitMapping: {
       tokenIdMap: new Map(),
       traitMap: new Map(),
@@ -115,6 +119,9 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     regenerateFilter: false, // start with true to ensure that on hydrate preview is populated
     regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
+    resetTokens: () =>
+      set((state) => ({ tokens: Array.from(Array(state.collection.totalSupply).keys()) })),
+    setTokens: (tokens: number[]) => set((_) => ({ tokens })),
     setTraitFilters: (filter) =>
       set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
     setTraitMapping: ({
