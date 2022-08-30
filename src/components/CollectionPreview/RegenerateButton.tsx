@@ -4,6 +4,7 @@ import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createManyTokens } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
+import Image from 'next/image'
 import { useQueryClient } from 'react-query'
 
 export const RegegenerateButton = () => {
@@ -24,11 +25,26 @@ export const RegegenerateButton = () => {
   })
 
   return (
-    <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collection.id })}>
-      <span className='py-1 flex items-center justify-center space-x-2'>
-        <RefreshIcon className='w-3 h-3' />
-        <span className='text-xs'>elevate.art</span>
-      </span>
-    </Button>
+    <div className='flex items-center border border-lightGray rounded-[5px] px-3 py-3'>
+      <div className='space-y-4'>
+        <span className='font-normal flex flex-col text-xs space-y-3'>
+          <div className='flex items-center justify-between'>
+            <span className='font-semibold'>Generate</span>
+          </div>
+          <span className='text-darkGrey'>
+            You can regenerate your collection by clicking this button.
+          </span>
+          <Button
+            disabled={mutation.isLoading}
+            onClick={() => mutation.mutate({ id: collection.id })}
+          >
+            <span className='flex items-center justify-center space-x-2'>
+              <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />
+              <span className='text-xs'>elevate.art</span>
+            </span>
+          </Button>
+        </span>
+      </div>
+    </div>
   )
 }

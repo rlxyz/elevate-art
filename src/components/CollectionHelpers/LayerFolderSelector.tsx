@@ -204,30 +204,18 @@ const LayerFolderSelector = () => {
   return (
     <main>
       {layers && layers.length > 0 && (
-        <div className='flex flex-col space-y-6 justify-between'>
-          <div className='border border-lightGray rounded-[5px] px-3 py-3'>
-            <div className='space-y-4'>
-              <span className='font-normal flex flex-col text-xs space-y-3'>
-                <span className='font-semibold'>Generate</span>
-                <span className='text-darkGrey'>
-                  You can regenerate your collection by clicking this button.
-                </span>
-              </span>
-              <RegegenerateButton />
-            </div>
-          </div>
-          <div className='space-y-2'>
-            <div className='flex items-center justify-between'>
-              <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
-                {layers.length === 1 ? 'Layer' : 'Layers'}
-              </span>
-              <div className='space-x-1 flex items-center'>
-                {/* <button onClick={() => setOpenReordering(!openReordering)}>
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+              {layers.length === 1 ? 'Layer' : 'Layers'}
+            </span>
+            <div className='space-x-1 flex items-center'>
+              {/* <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
                     <SwitchVerticalIcon className='text-darkGrey w-2 h-2' />
                   </div>
                 </button> */}
-                {/* <button
+              {/* <button
                   onClick={() => {
                     setOpenUpload(true)
                   }}
@@ -236,33 +224,32 @@ const LayerFolderSelector = () => {
                     <PlusIcon className='text-darkGrey w-2 h-2' />
                   </div>
                 </button> */}
-              </div>
             </div>
-            <div className='max-h-[calc(100vh-17.5rem)] overflow-y-scroll'>
-              <FileUpload id={`${organisationName}/${repositoryName}`}>
-                <AnimatePresence>
-                  <Reorder.Group
-                    axis='y'
-                    values={items}
-                    onReorder={setItems}
-                    // className='space-y-3'
-                  >
-                    {items.map((item, index) => {
-                      return (
-                        <ReorderItem
-                          canReorder={openReordering}
-                          key={item}
-                          name={layers[index]?.name || ''}
-                          item={index}
-                          id={item}
-                          enabled={currentLayerPriority === index}
-                        />
-                      )
-                    })}
-                  </Reorder.Group>
-                </AnimatePresence>
-              </FileUpload>
-            </div>
+          </div>
+          <div className='max-h-[calc(100vh-17.5rem)] overflow-y-scroll'>
+            <FileUpload id={`${organisationName}/${repositoryName}`}>
+              <AnimatePresence>
+                <Reorder.Group
+                  axis='y'
+                  values={items}
+                  onReorder={setItems}
+                  // className='space-y-3'
+                >
+                  {items.map((item, index) => {
+                    return (
+                      <ReorderItem
+                        canReorder={openReordering}
+                        key={item}
+                        name={layers[index]?.name || ''}
+                        item={index}
+                        id={item}
+                        enabled={currentLayerPriority === index}
+                      />
+                    )
+                  })}
+                </Reorder.Group>
+              </AnimatePresence>
+            </FileUpload>
           </div>
         </div>
       )}

@@ -8,6 +8,7 @@ import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
 import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
+import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 
 type Filter = {
   id: string
@@ -69,8 +70,18 @@ const Index = () => {
             LayerSectionEnum.enum.Layers,
             LayerSectionEnum.enum.Rarity,
             LayerSectionEnum.enum.Rules,
-          ].includes(currentViewSection) && <LayerFolderSelector />}
-          {currentViewSection === LayerSectionEnum.enum.Preview && <FilterByRarity />}
+          ].includes(currentViewSection) && (
+            <div className='flex flex-col space-y-6 justify-between'>
+              <RegegenerateButton />
+              <LayerFolderSelector />
+            </div>
+          )}
+          {currentViewSection === LayerSectionEnum.enum.Preview && (
+            <div className='flex flex-col space-y-6 justify-between'>
+              <RegegenerateButton />
+              <FilterByRarity />
+            </div>
+          )}
         </div>
         <div className='col-span-8'>
           {currentViewSection === LayerSectionEnum.enum.Preview && <CollectionPreview />}

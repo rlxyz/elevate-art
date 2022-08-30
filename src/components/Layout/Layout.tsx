@@ -5,6 +5,7 @@ import { Header } from './Header'
 import { SectionHeader } from '../CollectionHelpers/SectionHeader'
 import { Seo } from './Seo'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface LayoutProps {
   children: React.ReactNode

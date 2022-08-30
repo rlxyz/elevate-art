@@ -24,7 +24,7 @@ export const Header = () => {
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center h-[4.5rem]'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Image priority width={40} height={40} src='/images/logo-transparent.png' alt='Logo' />
+          <Image priority width={40} height={40} src='/images/logo-black.png' alt='Logo' />
           <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo Slash 1' />
           <span className='text-darkGrey'>{organisationName}</span>
           <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo Slash 2' />
