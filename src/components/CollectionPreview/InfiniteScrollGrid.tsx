@@ -46,6 +46,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
 
   if (!tokens || !tokens.length || !collectionData) return <></>
 
+  // lags the front end
   const populateCollection = (): ReactNode[] => {
     const items: ReactNode[] = []
     tokensOnDisplay.forEach((index: number) => {
