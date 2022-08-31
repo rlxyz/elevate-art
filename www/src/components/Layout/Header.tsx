@@ -25,7 +25,7 @@ export const Header = () => {
   const collectionName: string = router.query.collection as string
 
   return (
-    <header className='pointer-events-auto'>
+    <header className='-ml-2 pointer-events-auto'>
       <div className='flex justify-between items-center h-[3.5rem]'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
           <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />

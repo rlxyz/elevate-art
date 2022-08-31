@@ -12,7 +12,7 @@ export const RepositoryNavbar = () => {
   const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
 
   return (
-    <aside>
+    <aside className='-ml-5'>
       <div className='flex'>
         {currentLayer &&
           [
