@@ -8,6 +8,7 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
 import { classNames, toPascalCaseWithSpace } from '@utils/format'
 import { trpc } from '@utils/trpc'
+import router from 'next/router'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { RulesEnum, RulesType } from 'src/types/enums'
 
@@ -182,12 +183,11 @@ export const TraitSelector = ({
 }) => {
   const [query, setQuery] = useState('')
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
-
-  const { organisation, layers, repository } = useRepositoryStore((state) => {
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const { layers } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
-      repository: state.repository,
-      organisation: state.organisation,
     }
   })
 
@@ -228,7 +228,7 @@ export const TraitSelector = ({
                 <>
                   <div className='flex flex-row items-center space-x-3'>
                     <SmallAdvancedImage
-                      url={`${organisation.name}/${repository.name}/layers/${
+                      url={`${organisationName}/${repositoryName}/layers/${
                         layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name
                       }/${toPascalCaseWithSpace(traitElement.name)}.png`}
                     />
