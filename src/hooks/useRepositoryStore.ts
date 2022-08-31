@@ -38,6 +38,7 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }
+  tokenRanking: number[]
   tokens: number[]
   setTokens: (tokens: number[]) => void
   setTraitMapping: ({
@@ -48,6 +49,7 @@ interface CompilerViewInterface {
     traitMap: Map<string, Map<string, number>>
   }) => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
+  setTokenRanking: (indices: number[]) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
@@ -118,6 +120,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     regenerateFilterIndex: { start: 0, end: 0 }, // start with true to ensure that on hydrate preview is populated
     regenerateFilter: false, // start with true to ensure that on hydrate preview is populated
     regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
+    tokenRanking: [], // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
     resetTokens: () =>
       set((state) => ({ tokens: Array.from(Array(state.collection.totalSupply).keys()) })),
@@ -139,6 +142,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
     setRepository: (repository: Repository) => set((_) => ({ repository })),
     setCollection: (collection: Collection) => set((_) => ({ collection })),
+    setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
     setLayers: (
       layers: (LayerElement & {
         traitElements: (TraitElement & {

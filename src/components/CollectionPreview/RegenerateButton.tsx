@@ -2,10 +2,8 @@ import { Button } from '@components/UI/Button'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { createManyTokens } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
-import { useQueryClient } from 'react-query'
 
 export const RegegenerateButton = () => {
   const { collection, layers } = useRepositoryStore((state) => {

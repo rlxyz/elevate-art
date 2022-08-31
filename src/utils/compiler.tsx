@@ -88,3 +88,24 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
   })
   return { tokenIdMap, traitMap }
 }
+
+export const getTokenRanking = (
+  tokens: TraitElement[][],
+  traitMap: Map<string, Map<string, number>>,
+  totalSupply: number
+) => {
+  return tokens
+    .map((token, index) => {
+      return {
+        index,
+        value: token.reduce((result, item) => {
+          const { layerElementId, id } = item
+          return result + (traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply
+        }, 0),
+      }
+    })
+    .sort((a, b) => {
+      return a.value > b.value ? 1 : a.value == b.value ? 0 : -1
+    })
+    .map((map) => map.index)
+}

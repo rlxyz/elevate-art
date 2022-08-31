@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
-import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
+import { FilterByRarity, FilterByTrait } from '@components/CollectionPreview/FilterByTrait'
 import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 import CollectionSettings from '@components/CollectionSettings/Index'
 import { SettingsNavigations } from '@components/CollectionSettings/SettingsNavigations'
@@ -82,6 +82,7 @@ const Index = () => {
             <div className='flex flex-col space-y-6 justify-between'>
               <RegegenerateButton />
               <FilterByRarity />
+              <FilterByTrait />
             </div>
           )}
           {currentViewSection === LayerSectionEnum.enum.Settings && (

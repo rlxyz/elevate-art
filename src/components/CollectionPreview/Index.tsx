@@ -12,19 +12,26 @@ import { TraitElement } from '@prisma/client'
 import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 import { useMutation } from 'react-query'
 import { trpc } from '@utils/trpc'
-import { createManyTokens, getTraitMappings } from '@utils/compiler'
+import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 
 const CollectionPreview = () => {
-  const { setTraitMapping, setRegenerateCollection, layers, collection, regenerate } =
-    useRepositoryStore((state) => {
-      return {
-        setTraitMapping: state.setTraitMapping,
-        setRegenerateCollection: state.setRegenerateCollection,
-        regenerate: state.regenerate,
-        layers: state.layers,
-        collection: state.collection,
-      }
-    })
+  const {
+    setTraitMapping,
+    setTokenRanking,
+    setRegenerateCollection,
+    layers,
+    collection,
+    regenerate,
+  } = useRepositoryStore((state) => {
+    return {
+      setTokenRanking: state.setTokenRanking,
+      setTraitMapping: state.setTraitMapping,
+      setRegenerateCollection: state.setRegenerateCollection,
+      regenerate: state.regenerate,
+      layers: state.layers,
+      collection: state.collection,
+    }
+  })
 
   const { data: collectionData } = trpc.useQuery([
     'collection.getCollectionById',
@@ -44,6 +51,7 @@ const CollectionPreview = () => {
       tokenIdMap,
       traitMap,
     })
+    setTokenRanking(getTokenRanking(tokens, traitMap, collectionData.totalSupply))
   }, [collectionData])
 
   return (
