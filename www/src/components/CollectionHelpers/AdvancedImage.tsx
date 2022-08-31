@@ -5,12 +5,12 @@ import Image from 'next/image'
 export const SmallAdvancedImage = ({ url }: { url: string }) => {
   const cld = createCloudinary()
   return (
-    <div className={`rounded-[5px] border-[1px] border-mediumGrey h-[25px] w-[25px]`}>
+    <div className={`rounded-[5px] border-[1px] border-mediumGrey h-[35px] w-[35px]`}>
       <Image
         priority
-        src={cld.image(url).resize(fill().width(25).height(25)).toURL()}
-        width={25}
-        height={25}
+        src={cld.image(url).resize(fill().width(35).height(35)).toURL()}
+        width={35}
+        height={35}
         className='rounded-[3px]'
       />
     </div>
