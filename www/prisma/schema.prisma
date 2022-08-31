@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
+}
+
+model Example {
+    id String @id @default(cuid())
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? //@db.Text
+    access_token      String? //@db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? //@db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String         @id @default(cuid())
+    address       String         @unique @db.VarChar(42) // number of hexademical characters in eth address
+    name          String?        @unique
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @default(now())
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    organisations Organisation[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Organisation {
+    id        String   @id @default(cuid())
+    name      String   @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    repositories Repository[]
+
+    owner   User   @relation(fields: [ownerId], references: [id])
+    ownerId String @db.VarChar(255)
+
+    @@map(name: "organisations")
+}
+
+model Repository {
+    id        String   @id @default(cuid())
+    name      String   @db.VarChar(255)
+    tokenName String   @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    layers      LayerElement[]
+    collections Collection[]
+
+    organisation   Organisation @relation(fields: [organisationId], references: [id])
+    organisationId String
+
+    @@map(name: "repositories")
+}
+
+model Collection {
+    id          String @id @default(cuid())
+    name        String @default("main") @db.VarChar(255)
+    totalSupply Int    @default(1)
+    generations Int    @default(1)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    repository   Repository @relation(fields: [repositoryId], references: [id])
+    repositoryId String
+}
+
+model LayerElement {
+    id       String @id @default(cuid())
+    name     String @db.VarChar(255)
+    priority Int    @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    repository   Repository @relation(fields: [repositoryId], references: [id])
+    repositoryId String
+
+    traitElements TraitElement[]
+}
+
+model TraitElement {
+    id String @id @default(cuid())
+
+    name   String
+    weight Float
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    layerElement   LayerElement @relation(fields: [layerElementId], references: [id])
+    layerElementId String
+
+    rulesPrimary   Rules[] @relation("primaryTraitElement")
+    rulesSecondary Rules[] @relation("secondaryTraitElement")
+}
+
+model Rules {
+    id                      String       @id @default(cuid())
+    condition               String
+    primaryTraitElementId   String
+    secondaryTraitElementId String
+    primaryTraitElement     TraitElement @relation("primaryTraitElement", fields: [primaryTraitElementId], references: [id])
+    secondaryTraitElement   TraitElement @relation("secondaryTraitElement", fields: [secondaryTraitElementId], references: [id])
+
+    @@unique([primaryTraitElementId, secondaryTraitElementId])
+}
+
+// model TraitElementRule {
+//     id String @id @default(cuid())
+
+//     type String
+
+//     traitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "forwardRules")
+//     traitElementId String
+
+//     linkedTraitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "backwardRules")
+//     linkedTraitElementId String
+
+//     createdAt DateTime @default(now())
+// }

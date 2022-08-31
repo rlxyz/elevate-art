@@ -1,0 +1,54 @@
+// @ts-check
+import { z } from 'zod'
+
+/**
+ * Specify your server-side environment variables schema here.
+ * This way you can ensure the app isn't built with invalid env vars.
+ */
+export const serverSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
+  // NEXTAUTH_SECRET: z.string(),
+  // NEXTAUTH_URL: z.string().url(),
+})
+
+/**
+ * Specify your client-side environment variables schema here.
+ * This way you can ensure the app isn't built with invalid env vars.
+ * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
+ */
+export const clientSchema = z.object({
+  // NEXT_PUBLIC_BAR: z.string(),
+  NEXT_PUBLIC_ETHEREUM_RPC_URL: z.string(),
+  NEXT_PUBLIC_INFURA_ID: z.string(),
+  NEXT_PUBLIC_ALCHEMY_ID: z.string(),
+  NEXT_PUBLIC_ENABLE_TESTNETS: z.boolean(),
+  NEXT_PUBLIC_NETWORK_ID: z.number(),
+  NEXT_PUBLIC_COLLECTION_GENERATION_BATCH_SIZE: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_API: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_API_SECRET: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_URL: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES: z.string(),
+  NEXT_PUBLIC_APP_NAME: z.string(),
+})
+
+/**
+ * You can't destruct `process.env` as a regular object, so you have to do
+ * it manually here. This is because Next.js evaluates this at build time,
+ * and only used environment variables are included in the build.
+ * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
+ */
+export const clientEnv = {
+  NEXT_PUBLIC_ETHEREUM_RPC_URL: process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL,
+  NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
+  NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+  NEXT_PUBLIC_ENABLE_TESTNETS: Boolean(process.env.NEXT_PUBLIC_ENABLE_TESTNETS),
+  NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
+  NEXT_PUBLIC_COLLECTION_GENERATION_BATCH_SIZE:
+    process.env.NEXT_PUBLIC_COLLECTION_GENERATION_BATCH_SIZE,
+  NEXT_PUBLIC_CLOUDINARY_API: process.env.NEXT_PUBLIC_CLOUDINARY_API,
+  NEXT_PUBLIC_CLOUDINARY_API_SECRET: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+  NEXT_PUBLIC_CLOUDINARY_URL: process.env.NEXT_PUBLIC_CLOUDINARY_URL,
+  NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES: process.env.NEXT_PUBLIC_CLOUDINARY_LOW_RES_IMAGES,
+  NEXT_PUBLIC_APP_NAME: 'elevate.art',
+}
