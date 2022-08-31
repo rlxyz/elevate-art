@@ -1,12 +1,6 @@
 import FileUpload from '@components/CollectionHelpers/FileUpload'
-import { Button } from '@components/UI/Button'
-import {
-  ArrowsExpandIcon,
-  FolderIcon,
-  RefreshIcon,
-  SwitchVerticalIcon,
-} from '@heroicons/react/outline'
-import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import {
   animate,
@@ -14,14 +8,12 @@ import {
   MotionValue,
   Reorder,
   useDragControls,
-  useMotionValue,
+  useMotionValue
 } from 'framer-motion'
-import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import * as React from 'react'
 import Link from 'next/link'
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
+import { NextRouter, useRouter } from 'next/router'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 

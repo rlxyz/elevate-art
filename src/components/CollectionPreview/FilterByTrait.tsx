@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { Field, Form, Formik } from 'formik'
-import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
+import { Field, Form, Formik } from 'formik'
+import { useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
@@ -28,18 +27,12 @@ export const FilterByTrait = () => {
           resetTokens()
           return
         }
-        const filters: { layer: LayerElement; trait: TraitElement }[] = checked.map(
-          (value: string) => {
-            const layer = layers.filter((layer) => layer.id === value.split('/')[0])[0]
-            const trait = layer?.traitElements.filter(
-              (trait) => trait.id === value.split('/')[1]
-            )[0]
-            return {
-              layer,
-              trait,
-            }
-          }
-        )
+        const filters: { layer: LayerElement; trait: TraitElement }[] = []
+        checked.forEach((value: string) => {
+          const layer = layers.filter((layer) => layer.id === value.split('/')[0])[0]
+          const trait = layer?.traitElements.filter((trait) => trait.id === value.split('/')[1])[0]
+          if (layer && trait) filters.push({ layer, trait })
+        })
         const allTokenIdsArray = Object.values(
           filters
             .map(({ layer: { id: l }, trait: { id: t } }) => {

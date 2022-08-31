@@ -1,20 +1,19 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
+import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
 import {
   calculateTraitQuantityInCollection,
-  calculateTraitRarityPercentage,
-  calculateTraitRarityScore,
+  calculateTraitRarityPercentage
 } from '@utils/math'
+import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { trpc } from '@utils/trpc'
-import { useNotification } from '@hooks/useNotification'
+import { useEffect, useState } from 'react'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works

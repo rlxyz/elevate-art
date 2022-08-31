@@ -1,5 +1,5 @@
-import { useHotkeys } from 'react-hotkeys-hook'
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { LayerSectionEnum } from 'src/types/enums'
 import useRepositoryRouterStore from './useRepositoryRouterStore'
 

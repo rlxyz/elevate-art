@@ -1,7 +1,5 @@
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
 import { DotsHorizontalIcon } from '@heroicons/react/outline'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { NextRouter, useRouter } from 'next/router'

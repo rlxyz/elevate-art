@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithRef, forwardRef } from 'react'
+import { ComponentPropsWithRef, forwardRef } from 'react'
 
 type ButtonProps = {
   label?: string

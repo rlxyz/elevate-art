@@ -1,7 +1,5 @@
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
 import { Button } from '@components/UI/Button'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import * as React from 'react'
 
 const SectionHeaderHelper = () => {
   return (

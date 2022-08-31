@@ -116,42 +116,41 @@ export const TraitRulesDisplayAll = ({
           }) => {
             return (
               <>
-                {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map(
-                  (ruleType: string) => {
-                    return (
-                      <>
-                        {rulesPrimary
-                          .filter((rule) => rule.condition === ruleType)
-                          .map((rule, index) => {
-                            return (
-                              <TraitRulesDisplayPerItem
-                                onSuccess={() => onSuccess()}
-                                id={rule.primaryTraitElementId}
-                                key={index}
-                                primary={rule.primaryTraitElement.name}
-                                condition={rule.condition}
-                                secondary={rule.secondaryTraitElement.name}
-                              />
-                            )
-                          })}
-                        {rulesSecondary
-                          .filter((rule) => rule.condition === ruleType)
-                          .map((rule, index) => {
-                            return (
-                              <TraitRulesDisplayPerItem
-                                onSuccess={() => onSuccess()}
-                                id={rule.primaryTraitElementId}
-                                key={index}
-                                primary={rule.secondaryTraitElement.name}
-                                condition={rule.condition}
-                                secondary={rule.primaryTraitElement.name}
-                              />
-                            )
-                          })}
-                      </>
-                    )
-                  }
-                )}
+                {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
+                {[RulesEnum.enum['cannot mix with']].map((ruleType: string) => {
+                  return (
+                    <>
+                      {rulesPrimary
+                        .filter((rule) => rule.condition === ruleType)
+                        .map((rule, index) => {
+                          return (
+                            <TraitRulesDisplayPerItem
+                              onSuccess={() => onSuccess()}
+                              id={rule.primaryTraitElementId}
+                              key={index}
+                              primary={rule.primaryTraitElement.name}
+                              condition={rule.condition}
+                              secondary={rule.secondaryTraitElement.name}
+                            />
+                          )
+                        })}
+                      {rulesSecondary
+                        .filter((rule) => rule.condition === ruleType)
+                        .map((rule, index) => {
+                          return (
+                            <TraitRulesDisplayPerItem
+                              onSuccess={() => onSuccess()}
+                              id={rule.primaryTraitElementId}
+                              key={index}
+                              primary={rule.secondaryTraitElement.name}
+                              condition={rule.condition}
+                              secondary={rule.primaryTraitElement.name}
+                            />
+                          )
+                        })}
+                    </>
+                  )
+                })}
               </>
             )
           }

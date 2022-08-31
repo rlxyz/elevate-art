@@ -1,15 +1,15 @@
-import AdvancedImage, { SmallAdvancedImage } from '@components/CollectionHelpers/AdvancedImage'
+import { SmallAdvancedImage } from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { classNames, toPascalCaseWithSpace } from '@utils/format'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { TraitElement, Rules, LayerElement } from '@prisma/client'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import { trpc } from '@utils/trpc'
-import { RulesEnum, RulesType } from 'src/types/enums'
 import { useNotification } from '@hooks/useNotification'
+import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { Rules, TraitElement } from '@prisma/client'
+import { classNames, toPascalCaseWithSpace } from '@utils/format'
+import { trpc } from '@utils/trpc'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { RulesEnum, RulesType } from 'src/types/enums'
 
 export const TraitRulesSelector = ({
   title,

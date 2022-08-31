@@ -1,11 +1,9 @@
 import { RepositoryNavbar } from '@components/CollectionHelpers/ViewContent'
-import * as React from 'react'
-import * as z from 'zod'
-import { Header } from './Header'
-import { SectionHeader } from '../CollectionHelpers/SectionHeader'
-import { Seo } from './Seo'
 import Link from 'next/link'
-import Image from 'next/image'
+import * as React from 'react'
+import { SectionHeader } from '../CollectionHelpers/SectionHeader'
+import { Header } from './Header'
+import { Seo } from './Seo'
 
 interface LayoutProps {
   children: React.ReactNode

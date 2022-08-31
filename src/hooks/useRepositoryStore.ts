@@ -3,10 +3,10 @@ import {
   LayerElement,
   Organisation,
   Repository,
-  TraitElement,
   Rules,
+  TraitElement
 } from '@prisma/client'
-import create, { StoreApi } from 'zustand'
+import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
@@ -62,12 +62,12 @@ interface CompilerViewInterface {
     layers: (LayerElement & {
       traitElements: (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
+          primaryTraitElement: TraitElement & { layerElement: LayerElement }
+          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
+          primaryTraitElement: TraitElement & { layerElement: LayerElement }
+          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
         })[]
       })[]
     })[]
@@ -147,12 +147,12 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       layers: (LayerElement & {
         traitElements: (TraitElement & {
           rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement
-            secondaryTraitElement: TraitElement
+            primaryTraitElement: TraitElement & { layerElement: LayerElement }
+            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
           })[]
           rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement
-            secondaryTraitElement: TraitElement
+            primaryTraitElement: TraitElement & { layerElement: LayerElement }
+            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
           })[]
         })[]
       })[]

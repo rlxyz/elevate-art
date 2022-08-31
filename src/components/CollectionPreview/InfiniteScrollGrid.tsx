@@ -1,17 +1,9 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
-import { ethers } from 'ethers'
-import { NextRouter, useRouter } from 'next/router'
-import React, { ReactNode, useEffect, useState } from 'react'
-import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { motion } from 'framer-motion'
-import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
-import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
-import { TraitElement } from '@prisma/client'
-import Loading from '@components/UI/Loading'
 import { createToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import Image from 'next/image'
+import { ReactNode, useEffect, useState } from 'react'
+import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
 
 const container = {
   hidden: { opacity: 0 },

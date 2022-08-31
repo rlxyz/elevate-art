@@ -1,13 +1,10 @@
-import { toPascalCaseWithSpace } from '@utils/format'
-import React, { useEffect } from 'react'
-import { motion, useAnimation } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import Image from 'next/image'
-import { TraitElement } from '@prisma/client'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { createToken } from '@utils/compiler'
-import { env } from 'src/env/client.mjs'
 import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { TraitElement } from '@prisma/client'
+import { toPascalCaseWithSpace } from '@utils/format'
+import { motion, useAnimation } from 'framer-motion'
+import { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 const InfiniteScrollGridItem = ({
   token,

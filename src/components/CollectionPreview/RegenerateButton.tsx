@@ -1,5 +1,4 @@
 import { Button } from '@components/UI/Button'
-import { RefreshIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'

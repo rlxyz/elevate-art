@@ -1,10 +1,7 @@
 import { ConnectButton } from '@components/ConnectButton'
 import Image from 'next/image'
-import { NextRouter, useRouter } from 'next/router'
-import { RepositoryNavbar } from '@components/CollectionHelpers/ViewContent'
 import Link from 'next/link'
-import { Button } from '@components/UI/Button'
-import { Menu } from '@headlessui/react'
+import { NextRouter, useRouter } from 'next/router'
 
 const navigation = [
   {

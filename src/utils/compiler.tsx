@@ -1,6 +1,5 @@
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import seedrandom from 'seedrandom'
-import { LayerElement, TraitElement, Rules } from '@prisma/client'
-import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 
 export const createToken = (opts: {
   id: number
@@ -18,10 +17,6 @@ export const createToken = (opts: {
       })[]
     })[]
   })[]
-  // allRules: (Rules & {
-  //   primaryTraitElement: TraitElement & { layerElement: LayerElement }
-  //   secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-  // })[]
 }) => {
   const { id, name, generation, layers } = opts
 
@@ -32,7 +27,7 @@ export const createToken = (opts: {
   //   .flatMap((map) => map)
 
   const random = seedrandom(`${name}.${generation}.${id}`)
-  let elements: TraitElement[] = []
+  const elements: TraitElement[] = []
   layers.forEach(({ traitElements }, index: number) => {
     // exclusion
     const filtered = traitElements.filter((traitElement) => {
@@ -127,7 +122,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
 
       // update traitMap - increment by 1 each time
       traitMap.get(l)?.get(t)
-        ? traitMap.get(l)?.set(t, traitMap.get(l)?.get(t) + 1)
+        ? traitMap.get(l)?.set(t, traitMap.get(l)?.get(t) || 0 + 1)
         : traitMap.get(l)?.set(t, 1)
     })
   })

@@ -1,19 +1,10 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useNotification } from '@hooks/useNotification'
-import Image from 'next/image'
-import { NextRouter, useRouter } from 'next/router'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
+import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
+import { trpc } from '@utils/trpc'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
-import { useArtCollectionStore } from '@hooks/useArtCollectionStore'
-import { createCollectionSeed, createCompilerApp } from '@utils/createCompilerApp'
-import { TraitElement } from '@prisma/client'
-import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
-import { useMutation } from 'react-query'
-import { trpc } from '@utils/trpc'
-import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
-import LayerFolderSelector from '@components/CollectionHelpers/LayerFolderSelector'
 
 const CollectionPreview = () => {
   const {

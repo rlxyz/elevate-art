@@ -1,13 +1,12 @@
 // src/server/router/index.ts
-import { createRouter } from './context'
 import superjson from 'superjson'
+import { createRouter } from './context'
 
-import { protectedExampleRouter } from './protected-example-router'
+import { collectionRouter } from './collection'
+import { layerElementRouter } from './layer'
 import { organisationRouter } from './organisation'
 import { repositoryRouter } from './repository'
 import { traitElementRouter } from './trait'
-import { layerElementRouter } from './layer'
-import { collectionRouter } from './collection'
 
 export const appRouter = createRouter()
   .transformer(superjson)

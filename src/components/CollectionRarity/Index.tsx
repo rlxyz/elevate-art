@@ -1,12 +1,7 @@
-import { LayerElement } from '@prisma/client'
-import { calculateTraitRarityFromQuantity } from '@utils/math'
 
-import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
-import * as z from 'zod'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { RarityDisplay } from './RarityDisplay'
-import { useNotification } from '@hooks/useNotification'
 
 const Index = () => {
   const { currentLayer, refetch } = useCurrentLayer()

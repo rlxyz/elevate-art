@@ -1,6 +1,4 @@
 import { CollectionViewContentWrapper } from '@components/CollectionHelpers/ViewContent'
-import { ArrowNarrowRightIcon, ArrowSmRightIcon } from '@heroicons/react/outline'
-import { ArrowNarrowUpIcon } from '@heroicons/react/solid'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import Link from 'next/link'
 

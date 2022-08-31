@@ -1,13 +1,9 @@
-import { DotsVerticalIcon } from '@heroicons/react/outline'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import { LayerElement } from '@prisma/client'
-import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
-import { useEffect } from 'react'
 
+import { useCurrentLayer } from '../../hooks/useCurrentLayer'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import LayerGrid from './LayerGrid'
-import { useCurrentLayer } from '../../hooks/useCurrentLayer'
 
 const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()

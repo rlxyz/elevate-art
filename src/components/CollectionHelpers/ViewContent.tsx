@@ -2,8 +2,6 @@ import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import Link from 'next/link'
-import { NextRouter, useRouter } from 'next/router'
-import { ReactFragment } from 'react'
 import { LayerSectionEnum } from 'src/types/enums'
 
 export const RepositoryNavbar = () => {

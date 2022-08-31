@@ -1,6 +1,5 @@
 import Loading from '@components/UI/Loading'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { TraitElement } from '@prisma/client'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { TraitRulesDisplayAll } from './TraitRulesDisplayAll'
 import { TraitRulesSelector } from './TraitRulesSelector'
