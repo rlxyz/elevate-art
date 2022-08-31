@@ -9,7 +9,7 @@ $$$$$$$$/ /$$$$$$  |$$$$$$$  |/$$$$$$  |      $$$$$$$  |/$$$$$$  |/$$$$$$  |/$$$
 /$$      |$$    $$/ $$ |  $$ |$$ |  $$ |      $$    $$/ $$    $$/ $$    $$/ $$    $$/ 
 $$$$$$$$/  $$$$$$/  $$/   $$/ $$/   $$/       $$$$$$$/   $$$$$$/   $$$$$$/   $$$$$$/ 
 ```
-
+Hi.
 # Contribution Guidelines
 Thanks for giving a little extra love to our docs site! Below are some basic guidelines to follow to get your PR merged :)
 
