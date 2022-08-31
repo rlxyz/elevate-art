@@ -25,7 +25,7 @@ export const RegegenerateButton = () => {
   })
 
   return (
-    <div className='flex items-center border border-lightGray rounded-[5px] px-3 py-3'>
+    <div className='flex items-center border border-mediumGrey rounded-[5px] px-3 py-3'>
       <div className='space-y-4'>
         <span className='font-normal flex flex-col text-xs space-y-3'>
           <div className='flex items-center justify-between'>

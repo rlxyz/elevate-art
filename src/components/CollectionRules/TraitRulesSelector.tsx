@@ -1,4 +1,4 @@
-import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import AdvancedImage, { SmallAdvancedImage } from '@components/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
@@ -123,13 +123,13 @@ export const TraitSelectorCondition = ({
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
-        className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
+        className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(value: string) => value}
         placeholder='cannot mix with'
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-        <SelectorIcon className='h-5 w-5 text-lightGray' aria-hidden='true' />
+        <SelectorIcon className='h-5 w-5 text-mediumGrey' aria-hidden='true' />
       </Combobox.Button>
       <Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
         {filteredConditions.map((option, index) => (
@@ -199,16 +199,16 @@ export const TraitSelector = ({
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
-        className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
+        className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
         placeholder='Select a Trait or Layer'
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-        <SelectorIcon className='h-5 w-5 text-lightGray' aria-hidden='true' />
+        <SelectorIcon className='h-5 w-5 text-mediumGrey' aria-hidden='true' />
       </Combobox.Button>
       {filteredTraits.length > 0 && (
-        <Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+        <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-[10rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
           {filteredTraits.map((traitElement) => (
             <Combobox.Option
               key={traitElement.id}
@@ -223,8 +223,7 @@ export const TraitSelector = ({
               {({ active, selected }) => (
                 <>
                   <div className='flex flex-row items-center space-x-3'>
-                    <AdvancedImage
-                      type='sm'
+                    <SmallAdvancedImage
                       url={`${organisation.name}/${repository.name}/layers/${
                         layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name
                       }/${toPascalCaseWithSpace(traitElement.name)}.png`}

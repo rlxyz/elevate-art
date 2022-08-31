@@ -34,19 +34,26 @@ export const RepositoryNavbar = () => {
             name: LayerSectionEnum.enum.Rules,
             route: `${LayerSectionEnum.enum.Rules}/${currentLayer?.name}`,
           },
-          {
-            name: LayerSectionEnum.enum.Settings,
-            route: `${LayerSectionEnum.enum.Settings}`,
-          },
+          // {
+          //   name: LayerSectionEnum.enum.Settings,
+          //   route: `${LayerSectionEnum.enum.Settings}`,
+          // },
         ].map(({ name, route }: { name: string; route: string }, index: number) => {
           return (
-            <div key={`${name}-${index}`} className='hover:bg-mediumGrey rounded-[5px] mb-1'>
+            <div
+              key={`${name}-${index}`}
+              className={`hover:bg-mediumGrey rounded-[5px] mb-1 ${
+                !currentLayer ? 'pointer-events-none' : ''
+              }`}
+            >
               <Link
                 href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
               >
                 <div
-                  className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
-                    currentViewSection == name ? 'text-black min-h-full font-bold' : 'text-darkGrey'
+                  className={`cursor-pointer text-xs flex px-3 py-1 hover:text-black items-center capitalize ${
+                    currentViewSection == name
+                      ? 'text-black min-h-full font-semibold'
+                      : 'text-darkGrey'
                   }`}
                 >
                   <div>{name}</div>

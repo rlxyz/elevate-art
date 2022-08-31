@@ -115,7 +115,7 @@ export const FilterByRarity = () => {
                           <div
                             className={
                               layerDropdown === optionIdx
-                                ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-lightGray rounded-[5px] space-y-3'
+                                ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
                                 : 'hidden'
                             }
                           >
@@ -137,7 +137,7 @@ export const FilterByRarity = () => {
                                         type='checkbox'
                                         name='checked'
                                         value={`${layer.id}/${traitElement.id}`}
-                                        className='h-4 w-4 border rounded-[3px] border-lightGray bg-hue-light'
+                                        className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
                                         onChange={(e: any) => {
                                           handleChange(e)
                                           submitForm()

@@ -70,7 +70,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   }
 
   return (
-    <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
+    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
       {populateCollection().map((item) => item)}
     </div>
   )
