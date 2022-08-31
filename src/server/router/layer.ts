@@ -34,6 +34,7 @@ export const layerElementRouter = createRouter()
   })
   .mutation('setAllTraits', {
     input: z.object({
+      layerId: z.string(),
       traits: z.array(
         z.object({
           id: z.string(),
@@ -52,6 +53,30 @@ export const layerElementRouter = createRouter()
             weight,
           },
         })
+      })
+      return await ctx.prisma.layerElement.findFirst({
+        where: {
+          id: input.layerId,
+        },
+        include: {
+          traitElements: {
+            orderBy: { weight: 'asc' },
+            include: {
+              rulesPrimary: {
+                include: {
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
+                },
+              },
+              rulesSecondary: {
+                include: {
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
+                },
+              },
+            },
+          },
+        },
       })
     },
   })

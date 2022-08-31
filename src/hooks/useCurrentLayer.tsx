@@ -28,6 +28,7 @@ export const useCurrentLayer = () => {
 
   return {
     currentLayer: data || {
+      id: '',
       name: '',
       traitElements: [],
     },

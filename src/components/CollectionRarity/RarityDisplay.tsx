@@ -23,11 +23,11 @@ const calculateSumArray = (values: { id: string; weight: number }[]) => {
 export const RarityDisplay = ({
   traitElements,
   layerName,
-  onSuccess,
+  layerId,
 }: {
   traitElements: TraitElement[]
   layerName: string
-  onSuccess: () => void
+  layerId: string
 }) => {
   const { collection, organisation, repository } = useRepositoryStore((state) => {
     return {
@@ -36,14 +36,16 @@ export const RarityDisplay = ({
       repository: state.repository,
     }
   })
-
+  const ctx = trpc.useContext()
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
+  const { notifySuccess } = useNotification()
 
   const mutation = trpc.useMutation('layer.setAllTraits', {
-    onSuccess: () => {
-      onSuccess()
+    onSuccess: (data, variables) => {
+      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
       setHasFormChange(false)
+      notifySuccess('Weights updated successfully')
     },
   })
 
@@ -54,7 +56,7 @@ export const RarityDisplay = ({
   return (
     <>
       {!summedRarityWeightage ? (
-        <table className='w-full table-fixed divide-y divide-lightGray'>
+        <table className='w-full table-fixed divide-y divide-mediumGrey'>
           <thead>
             <tr>
               {[
@@ -78,7 +80,7 @@ export const RarityDisplay = ({
               })}
             </tr>
           </thead>
-          <tbody className='divide-y divide-lightGray'>
+          <tbody className='divide-y divide-mediumGrey'>
             {Array.from(Array(5).keys()).map((index) => {
               return (
                 <tr key={index}>
@@ -113,6 +115,7 @@ export const RarityDisplay = ({
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               mutation.mutate({
+                layerId,
                 traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
                   return {
                     id,
@@ -141,7 +144,7 @@ export const RarityDisplay = ({
               <div className='flex flex-col'>
                 <div className='inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit}>
-                    <table className='w-full table-fixed divide-y divide-lightGray'>
+                    <table className='w-full table-fixed divide-y divide-mediumGrey'>
                       <thead>
                         <tr>
                           {[
@@ -165,7 +168,7 @@ export const RarityDisplay = ({
                           })}
                         </tr>
                       </thead>
-                      <tbody className='divide-y divide-lightGray'>
+                      <tbody className='divide-y divide-mediumGrey'>
                         {traitElements.map(({ name }: TraitElement, index: number) => (
                           <tr key={index}>
                             <td className='py-8'>
@@ -237,10 +240,10 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-t-lightGray'
+                  className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-t-mediumGrey'
                 >
-                  <div className='flex items-center h-full w-full'>
-                    <div className='flex justify-end h-full w-3/4 p-6'>
+                  <div className='flex items-center justify-between h-full w-full'>
+                    <div className='flex justify-end h-full p-6'>
                       <div className='flex items-center space-x-3 mr-6'>
                         {calculateSumArray(values.traits) >
                           calculateSumArray(initialValues.traits) && (

@@ -94,7 +94,7 @@ export const FilterByRarity = () => {
                                 setLayerDropdown(optionIdx)
                               }
                             }}
-                            className={`hover:bg-lightGray hover:bg-opacity-30 text-sm rounded-[5px] py-3 ${
+                            className={`hover:bg-mediumGrey hover:bg-opacity-30 text-sm rounded-[5px] py-3 ${
                               layerDropdown === optionIdx ? 'font-semibold' : ''
                             }`}
                           >

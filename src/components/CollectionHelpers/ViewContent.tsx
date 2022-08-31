@@ -18,8 +18,8 @@ export const RepositoryNavbar = () => {
   const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
 
   return (
-    <aside className='w-[20%]'>
-      <div className='flex justify-between'>
+    <aside>
+      <div className='flex'>
         {[
           { name: LayerSectionEnum.enum.Preview, route: `${LayerSectionEnum.enum.Preview}` },
           {
@@ -42,7 +42,7 @@ export const RepositoryNavbar = () => {
           return (
             <div
               key={`${name}-${index}`}
-              className={`hover:bg-mediumGrey rounded-[5px] mb-1 ${
+              className={`hover:bg-mediumGrey hover:bg-opacity-50 rounded-[5px] mb-1 mx-2 ${
                 !currentLayer ? 'pointer-events-none' : ''
               }`}
             >
@@ -50,7 +50,7 @@ export const RepositoryNavbar = () => {
                 href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
               >
                 <div
-                  className={`cursor-pointer text-xs flex px-3 py-1 hover:text-black items-center capitalize ${
+                  className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
                     currentViewSection == name
                       ? 'text-black min-h-full font-semibold'
                       : 'text-darkGrey'

@@ -55,7 +55,7 @@ const LayerGrid = ({
               >
                 <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
                   <div className='bg-hue-light rounded-[3px] w-5 h-5 flex items-center justify-center'>
-                    <DotsHorizontalIcon className='w-3 h-3 text-lightGray' />
+                    <DotsHorizontalIcon className='w-3 h-3 text-mediumGrey' />
                   </div>
                 </div>
                 <div className='z-1'>
