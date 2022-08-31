@@ -67,7 +67,7 @@ const Index = () => {
   return (
     <>
       <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-        <div className='col-span-2 py-8'>
+        <div className='col-span-2 py-8 -ml-4'>
           {[
             LayerSectionEnum.enum.Layers,
             LayerSectionEnum.enum.Rarity,

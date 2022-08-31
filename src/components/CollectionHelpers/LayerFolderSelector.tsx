@@ -96,11 +96,11 @@ export const ReorderItem = ({
         href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${currentViewSection}/${name}`}
       >
         <div
-          className={`cursor-pointer flex flex-row py-3 rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30 ${
-            enabled ? 'bg-lightGray bg-opacity-30 font-semibold' : ''
+          className={`cursor-pointer flex flex-row rounded-[5px] py-3 justify-between hover:bg-mediumGrey hover:bg-opacity-30 ${
+            enabled ? 'bg-mediumGrey bg-opacity-50 font-semibold' : ''
           }`}
         >
-          <div className='px-1 flex flex-row items-center justify-between text-sm w-full'>
+          <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
             <span>{name}</span>
             {/* <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span> */}
           </div>
@@ -202,13 +202,13 @@ const LayerFolderSelector = () => {
   // }, [layers])
 
   return (
-    <main>
+    <aside>
       {layers && layers.length > 0 && (
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
-            <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
+            {/* <span className='col-span-4 text-xs font-normal text-darkGrey uppercase'>
               {layers.length === 1 ? 'Layer' : 'Layers'}
-            </span>
+            </span> */}
             <div className='space-x-1 flex items-center'>
               {/* <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
@@ -298,7 +298,7 @@ const LayerFolderSelector = () => {
           </div>
           <CollectionUpload open={openUpload} setOpen={setOpenUpload} />
         </footer> */}
-    </main>
+    </aside>
   )
 }
 

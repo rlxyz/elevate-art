@@ -74,85 +74,82 @@ export const FilterByRarity = () => {
             traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&
             [{ name: 'Traits', id: 'something' }].map((section: any, sectionIdx: number) => (
-              <div key={`${section.name}-${sectionIdx}`}>
-                <div className='space-y-2'>
-                  <span className={`text-xs font-normal text-darkGrey uppercase`}>
+              <div className='space-y-2' key={`${section.name}-${sectionIdx}`}>
+                {/* <span className={`text-xs font-normal text-darkGrey uppercase`}>
                     {section.name}
-                  </span>
-                  <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
-                    {layers.map(
-                      (
-                        layer: LayerElement & { traitElements: TraitElement[] },
-                        optionIdx: number
-                      ) => (
-                        <div key={layer.id} className='flex flex-col text-xs'>
-                          <Button
-                            onClick={() => {
-                              if (layerDropdown === optionIdx) {
-                                setLayerDropdown(null)
-                              } else {
-                                setLayerDropdown(optionIdx)
-                              }
-                            }}
-                            className={`hover:bg-mediumGrey hover:bg-opacity-30 text-sm rounded-[5px] py-3 ${
-                              layerDropdown === optionIdx ? 'font-semibold' : ''
-                            }`}
-                          >
-                            <div className='px-1 flex justify-between'>
-                              <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
-                              <div className='flex items-center space-x-2'>
-                                <span className='text-xs'>
-                                  {traitMapping.traitMap?.get(layer.id)?.size || 0}
-                                </span>
-                                {layerDropdown !== optionIdx ? (
-                                  <ChevronDownIcon className='w-3 h-3' />
-                                ) : (
-                                  <ChevronUpIcon className='w-3 h-3' />
-                                )}
-                              </div>
-                            </div>
-                          </Button>
-                          <div
-                            className={
-                              layerDropdown === optionIdx
-                                ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
-                                : 'hidden'
+                  </span> */}
+                <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
+                  {layers.map(
+                    (
+                      layer: LayerElement & { traitElements: TraitElement[] },
+                      optionIdx: number
+                    ) => (
+                      <div key={layer.id} className='flex flex-col text-xs'>
+                        <Button
+                          onClick={() => {
+                            if (layerDropdown === optionIdx) {
+                              setLayerDropdown(null)
+                            } else {
+                              setLayerDropdown(optionIdx)
                             }
-                          >
-                            {layer.traitElements.map((traitElement: TraitElement, index) => {
-                              return (
-                                <div key={index}>
-                                  <Button
-                                    key={traitElement.id}
-                                    className='flex flex-row justify-between items-center py-3 px-1 hover:bg-lightGray hover:bg-opacity-20 w-full rounded-[5px]'
-                                  >
-                                    <span className='uppercase'>{traitElement.name}</span>
-                                    <div className='flex items-center space-x-2'>
-                                      <span className='text-darkGrey text-xs'>
-                                        {traitMapping.traitMap
-                                          ?.get(layer.id)
-                                          ?.get(traitElement.id) || 0}
-                                      </span>
-                                      <Field
-                                        type='checkbox'
-                                        name='checked'
-                                        value={`${layer.id}/${traitElement.id}`}
-                                        className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                                        onChange={(e: any) => {
-                                          handleChange(e)
-                                          submitForm()
-                                        }}
-                                      />
-                                    </div>
-                                  </Button>
-                                </div>
-                              )
-                            })}
+                          }}
+                          className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
+                            layerDropdown === optionIdx ? 'font-semibold' : ''
+                          }`}
+                        >
+                          <div className='pr-1 pl-5 flex justify-between'>
+                            <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
+                            <div className='flex items-center space-x-2'>
+                              <span className='text-xs'>
+                                {traitMapping.traitMap?.get(layer.id)?.size || 0}
+                              </span>
+                              {layerDropdown !== optionIdx ? (
+                                <ChevronDownIcon className='w-3 h-3' />
+                              ) : (
+                                <ChevronUpIcon className='w-3 h-3' />
+                              )}
+                            </div>
                           </div>
+                        </Button>
+                        <div
+                          className={
+                            layerDropdown === optionIdx
+                              ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
+                              : 'hidden'
+                          }
+                        >
+                          {layer.traitElements.map((traitElement: TraitElement, index) => {
+                            return (
+                              <div key={index}>
+                                <Button
+                                  key={traitElement.id}
+                                  className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
+                                >
+                                  <span>{traitElement.name}</span>
+                                  <div className='flex items-center space-x-2'>
+                                    <span className='text-darkGrey text-xs'>
+                                      {traitMapping.traitMap?.get(layer.id)?.get(traitElement.id) ||
+                                        0}
+                                    </span>
+                                    <Field
+                                      type='checkbox'
+                                      name='checked'
+                                      value={`${layer.id}/${traitElement.id}`}
+                                      className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                                      onChange={(e: any) => {
+                                        handleChange(e)
+                                        submitForm()
+                                      }}
+                                    />
+                                  </div>
+                                </Button>
+                              </div>
+                            )
+                          })}
                         </div>
-                      )
-                    )}
-                  </div>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             ))}
