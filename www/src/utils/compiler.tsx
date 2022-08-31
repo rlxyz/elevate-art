@@ -122,7 +122,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
 
       // update traitMap - increment by 1 each time
       traitMap.get(l)?.get(t)
-        ? traitMap.get(l)?.set(t, traitMap.get(l)?.get(t) || 0 + 1)
+        ? traitMap.get(l)?.set(t, (traitMap.get(l)?.get(t) || 1) + 1)
         : traitMap.get(l)?.set(t, 1)
     })
   })

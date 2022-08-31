@@ -39,6 +39,7 @@ const CollectionPreview = () => {
       collectionData.generations
     )
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+    console.log({ tokenIdMap, traitMap })
     setTraitMapping({
       tokenIdMap,
       traitMap,
