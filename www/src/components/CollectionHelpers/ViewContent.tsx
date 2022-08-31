@@ -1,61 +1,58 @@
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import Link from 'next/link'
+import router from 'next/router'
 import { LayerSectionEnum } from 'src/types/enums'
 
 export const RepositoryNavbar = () => {
-  const { organisation, repository, collection } = useRepositoryStore((state) => {
-    return {
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
-    }
-  })
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const collectionName: string = router.query.collection as string
   const { currentLayer } = useCurrentLayer()
   const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
 
   return (
     <aside>
       <div className='flex'>
-        {[
-          { name: LayerSectionEnum.enum.Preview, route: `${LayerSectionEnum.enum.Preview}` },
-          {
-            name: LayerSectionEnum.enum.Layers,
-            route: `${LayerSectionEnum.enum.Layers}/${currentLayer?.name}`,
-          },
-          {
-            name: LayerSectionEnum.enum.Rarity,
-            route: `${LayerSectionEnum.enum.Rarity}/${currentLayer?.name}`,
-          },
-          {
-            name: LayerSectionEnum.enum.Rules,
-            route: `${LayerSectionEnum.enum.Rules}/${currentLayer?.name}`,
-          },
-          // {
-          //   name: LayerSectionEnum.enum.Settings,
-          //   route: `${LayerSectionEnum.enum.Settings}`,
-          // },
-        ].map(({ name, route }: { name: string; route: string }, index: number) => {
-          return (
-            <div
-              key={`${name}-${index}`}
-              className={`hover:bg-mediumGrey hover:bg-opacity-50 rounded-[5px] mb-1 mx-2 ${
-                !currentLayer ? 'pointer-events-none' : ''
-              }`}
-            >
-              <Link
-                href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
+        {currentLayer &&
+          [
+            { name: LayerSectionEnum.enum.Preview, route: `${LayerSectionEnum.enum.Preview}` },
+            {
+              name: LayerSectionEnum.enum.Layers,
+              route: `${LayerSectionEnum.enum.Layers}/${currentLayer?.name}`,
+            },
+            {
+              name: LayerSectionEnum.enum.Rarity,
+              route: `${LayerSectionEnum.enum.Rarity}/${currentLayer?.name}`,
+            },
+            {
+              name: LayerSectionEnum.enum.Rules,
+              route: `${LayerSectionEnum.enum.Rules}/${currentLayer?.name}`,
+            },
+            // {
+            //   name: LayerSectionEnum.enum.Settings,
+            //   route: `${LayerSectionEnum.enum.Settings}`,
+            // },
+          ].map(({ name, route }: { name: string; route: string }, index: number) => {
+            return (
+              <div
+                key={`${name}-${index}`}
+                className={`hover:bg-mediumGrey hover:bg-opacity-50 rounded-[5px] mb-1 mx-2 ${
+                  !currentLayer ? 'pointer-events-none' : ''
+                }`}
               >
-                <div
-                  className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
-                    currentViewSection == name
-                      ? 'text-black min-h-full font-semibold'
-                      : 'text-darkGrey'
-                  }`}
+                <Link
+                  href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${route}`}
                 >
-                  <div>{name}</div>
-                  {/* <div className='mt-[1px]'>
+                  <div
+                    className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
+                      currentViewSection == name
+                        ? 'text-black min-h-full font-semibold'
+                        : 'text-darkGrey'
+                    }`}
+                  >
+                    <div>{name}</div>
+                    {/* <div className='mt-[1px]'>
                     <div
                       className={`${
                         currentViewSection == name ? 'border-b-2 pb-2.5 translate-y-[1.5px]' : ''
@@ -65,11 +62,11 @@ export const RepositoryNavbar = () => {
                       <div className='absolute h-[5px] w-[5px] bg-black rotate-45 translate-y-[-2px]' />
                     )}
                   </div> */}
-                </div>
-              </Link>
-            </div>
-          )
-        })}
+                  </div>
+                </Link>
+              </div>
+            )
+          })}
       </div>
     </aside>
   )
