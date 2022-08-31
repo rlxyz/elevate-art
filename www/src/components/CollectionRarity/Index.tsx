@@ -1,4 +1,3 @@
-
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { RarityDisplay } from './RarityDisplay'

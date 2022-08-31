@@ -5,14 +5,12 @@ import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
-import {
-  calculateTraitQuantityInCollection,
-  calculateTraitRarityPercentage
-} from '@utils/math'
+import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } from '@utils/math'
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import router from 'next/router'
 import { useEffect, useState } from 'react'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
@@ -35,6 +33,9 @@ export const RarityDisplay = ({
       repository: state.repository,
     }
   })
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const collectionName: string = router.query.collection as string
   const ctx = trpc.useContext()
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
@@ -172,9 +173,9 @@ export const RarityDisplay = ({
                           <tr key={index}>
                             <td className='py-8'>
                               <AdvancedImage
-                                url={`${organisation.name}/${
-                                  repository.name
-                                }/layers/${layerName}/${toPascalCaseWithSpace(name)}.png`}
+                                url={`${organisationName}/${repositoryName}/layers/${layerName}/${toPascalCaseWithSpace(
+                                  name
+                                )}.png`}
                               />
                             </td>
                             <td className='whitespace-nowrap text-sm font-medium'>

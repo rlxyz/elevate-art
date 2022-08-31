@@ -8,7 +8,7 @@ import {
   MotionValue,
   Reorder,
   useDragControls,
-  useMotionValue
+  useMotionValue,
 } from 'framer-motion'
 import Link from 'next/link'
 import router, { NextRouter, useRouter } from 'next/router'

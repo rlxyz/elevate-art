@@ -4,7 +4,7 @@ import {
   Organisation,
   Repository,
   Rules,
-  TraitElement
+  TraitElement,
 } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'

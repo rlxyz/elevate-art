@@ -1,6 +1,7 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
+import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
@@ -16,17 +17,19 @@ const container = {
 }
 
 const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
-  const repository = useRepositoryStore((state) => state.repository)
-  const organisation = useRepositoryStore((state) => state.organisation)
-  const { collection, tokens, resetTokens, layers, setTokens } = useRepositoryStore((state) => {
+  const { collection, repository, tokens, resetTokens, layers } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
       resetTokens: state.resetTokens,
+      repository: state.repository,
       tokens: state.tokens,
       collection: state.collection,
       layers: state.layers,
     }
   })
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
   const { data: collectionData } = trpc.useQuery([
     'collection.getCollectionById',
     { id: collection.id },
@@ -52,8 +55,8 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
             generation: collectionData.generations,
             layers,
           })}
-          repositoryName={repository.name}
-          organisationName={organisation.name}
+          repositoryName={repositoryName}
+          organisationName={organisationName}
           name={`${repository.tokenName} #${tokens[index] || 0}`}
         />
       )
