@@ -11,7 +11,7 @@ import {
   useMotionValue
 } from 'framer-motion'
 import Link from 'next/link'
-import { NextRouter, useRouter } from 'next/router'
+import router, { NextRouter, useRouter } from 'next/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 
@@ -65,6 +65,10 @@ export const ReorderItem = ({
     }
   })
 
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const collectionName: string = router.query.collection as string
+
   const { traitMapping, collection, organisation, repository } = useRepositoryStore((state) => {
     return {
       traitMapping: state.traitMapping,
@@ -85,7 +89,7 @@ export const ReorderItem = ({
       dragControls={dragControls}
     >
       <Link
-        href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${currentViewSection}/${name}`}
+        href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${currentViewSection}/${name}`}
       >
         <div
           className={`cursor-pointer flex flex-row rounded-[5px] py-3 justify-between hover:bg-mediumGrey hover:bg-opacity-30 ${
