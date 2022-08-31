@@ -96,7 +96,7 @@ export const ReorderItem = ({
         href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${currentViewSection}/${name}`}
       >
         <div
-          className={`flex flex-row py-3 rounded-[5px] justify-between hover:bg-lightGray hover:bg-opacity-30 ${
+          className={`cursor-pointer flex flex-row py-3 rounded-[5px] justify-between hover:bg-lightGray hover:bg-opacity-30 ${
             enabled ? 'bg-lightGray bg-opacity-30 font-semibold' : ''
           }`}
         >

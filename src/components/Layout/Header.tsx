@@ -8,6 +8,10 @@ import { Menu } from '@headlessui/react'
 
 const navigation = [
   {
+    name: 'Changelog',
+    href: 'https://changelog.elevate.art',
+  },
+  {
     name: 'Docs',
     href: 'https://docs.elevate.art',
   },
@@ -25,29 +29,31 @@ export const Header = () => {
 
   return (
     <header className='pointer-events-auto'>
-      <div className='flex justify-between items-center h-[4.5rem]'>
+      <div className='flex justify-between items-center h-[3.5rem]'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Image priority width={40} height={40} src='/images/logo-black.png' alt='Logo' />
-          <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo Slash 1' />
+          <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
+          <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
           <span className='text-darkGrey'>{organisationName}</span>
-          <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo Slash 2' />
+          <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 2' />
           <span>{repositoryName}</span>
-          <Image priority width={20} height={20} src='/images/logo-slash.svg' alt='Logo Slash 2' />
+          <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 2' />
           <span>{collectionName}</span>
           {/* <Button onClick={() => console.log('test')} className=''>
             <Image width={15} height={15} src='/images/selector.svg' />
           </Button> */}
         </div>
-        <div className='flex flex-row justify-center items-center space-x-6'>
-          <div className='flex flex-row space-x-3'>
+        <div className='flex flex-row justify-center items-center space-x-3'>
+          <aside className='flex flex-row space-x-3'>
             {navigation.map((item, index) => {
               return (
                 <Link key={index} href={item.href}>
-                  <span className='text-xs font-semibold'>{item.name}</span>
+                  <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
+                    {item.name}
+                  </span>
                 </Link>
               )
             })}
-          </div>
+          </aside>
           <ConnectButton />
         </div>
       </div>

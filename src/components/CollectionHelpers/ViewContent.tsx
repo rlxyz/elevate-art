@@ -18,7 +18,7 @@ export const RepositoryNavbar = () => {
   const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
 
   return (
-    <main className='w-[20%]'>
+    <aside className='w-[20%]'>
       <div className='flex justify-between'>
         {[
           { name: LayerSectionEnum.enum.Preview, route: `${LayerSectionEnum.enum.Preview}` },
@@ -34,35 +34,44 @@ export const RepositoryNavbar = () => {
             name: LayerSectionEnum.enum.Rules,
             route: `${LayerSectionEnum.enum.Rules}/${currentLayer?.name}`,
           },
+          {
+            name: LayerSectionEnum.enum.Settings,
+            route: `${LayerSectionEnum.enum.Settings}`,
+          },
         ].map(({ name, route }: { name: string; route: string }, index: number) => {
           return (
-            <Link
-              key={`${name}-${index}`}
-              href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
-            >
-              <div
-                className={`pr-8 text-xs capitalize ${
-                  currentViewSection == name ? 'text-black min-h-full font-bold' : 'text-darkGrey'
-                }`}
+            <div key={`${name}-${index}`} className='hover:bg-mediumGrey rounded-[5px] mb-1'>
+              <Link
+                href={`/${organisation.name}/${repository.name}/tree/${collection.name}/${route}`}
               >
-                {name}
-                <div className='mt-[1px]'>
-                  <div
-                    className={`${
-                      currentViewSection == name ? 'border-b-2 pb-2.5 translate-y-[1.5px]' : ''
-                    }`}
-                  />
-                  {currentViewSection == name && (
-                    <div className='absolute h-[5px] w-[5px] bg-black rotate-45 translate-y-[-2px]' />
-                  )}
+                <div
+                  className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
+                    currentViewSection == name ? 'text-black min-h-full font-bold' : 'text-darkGrey'
+                  }`}
+                >
+                  <div>{name}</div>
+                  {/* <div className='mt-[1px]'>
+                    <div
+                      className={`${
+                        currentViewSection == name ? 'border-b-2 pb-2.5 translate-y-[1.5px]' : ''
+                      }`}
+                    />
+                    {currentViewSection == name && (
+                      <div className='absolute h-[5px] w-[5px] bg-black rotate-45 translate-y-[-2px]' />
+                    )}
+                  </div> */}
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           )
         })}
       </div>
-    </main>
+    </aside>
   )
+}
+
+export const CollectionViewContentWrapper = ({ children }: { children: React.ReactNode }) => {
+  return <main className='space-y-9 pl-8 py-8 min-h-[calc(100vh-19rem)]'>{children}</main>
 }
 
 export const CollectionViewContent = ({
@@ -75,7 +84,7 @@ export const CollectionViewContent = ({
   description: React.ReactNode
 }) => {
   return (
-    <main className='space-y-9 pl-8 py-8 min-h-[calc(100vh-19rem)]'>
+    <CollectionViewContentWrapper>
       <div className='flex flex-col h-[4rem]'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-3'>
           <h1 className='text-2xl font-bold text-black'>{title || '...'}</h1>
@@ -83,6 +92,6 @@ export const CollectionViewContent = ({
         </div>
       </div>
       <div>{children}</div>
-    </main>
+    </CollectionViewContentWrapper>
   )
 }

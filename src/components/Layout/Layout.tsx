@@ -41,22 +41,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <Seo />
       <main>
-        <div className='bg-hue-header flex justify-center border border-b border-lightGray'>
-          <div className='w-[70%]'>
+        <div className='bg-hue-light flex justify-center'>
+          <div className='w-[90%] lg:w-[75%]'>
             <Header />
             <RepositoryNavbar />
           </div>
         </div>
-        <div className='bg-hue-light flex justify-center border border-b border-lightGray'>
-          <div className='w-[70%]'>
+        <div className='bg-hue-light flex justify-center border border-b border-mediumGrey'>
+          <div className='w-[90%] lg:w-[75%]'>
             <SectionHeader />
           </div>
         </div>
         <div className='bg-hue-light flex justify-center'>
-          <div className='w-[70%]'>{children}</div>
+          <div className='w-[90%] lg:w-[75%]'>{children}</div>
         </div>
-        <div className='bg-hue-light flex justify-center border border-t border-lightGray'>
-          <div className='w-[70%]'>
+        <div className='bg-hue-light flex justify-center border border-t border-mediumGrey'>
+          <div className='w-[90%] lg:w-[75%]'>
             <footer className='max-w-7xl mx-auto py-9 flex items-center justify-between'>
               <div className='flex justify-center space-x-6 md:order-2'>
                 {navigation.map((item, index) => (

@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     colors: {
       hue: {
-        light: '#FDFDF9',
+        light: '#ffffff',
         header: '#FAFAFA',
         dark: '#0F111A',
       },
@@ -17,13 +17,14 @@ module.exports = {
       },
       white: colors.white,
       primary: colors.red,
-      lightGray: '#E7E7E7',
-      darkGrey: '#959595',
+      lightGray: '#FAFAFA',
+      darkGrey: '#888888',
+      mediumGrey: '#eaeaea',
       redDot: '#FF5555',
       greenDot: '#86D893',
       black: '#2C2C2C',
       disabledGray: '#D7D7D7',
-      blueHighlight: '#6484F3',
+      blueHighlight: '#0070F3',
       redError: '#FF5555',
     },
     fontFamily: {

@@ -5,6 +5,7 @@ const LayerSection = Object.freeze({
   Layers: 'layers',
   Rarity: 'rarity',
   Rules: 'rules',
+  Settings: 'settings',
 })
 
 export const LayerSectionEnum = z.nativeEnum(LayerSection)

@@ -68,10 +68,19 @@ const PageImplementation = ({
       return
     }
 
-    if (routes.length === 1 && parse.data === LayerSectionEnum.enum.Preview) {
-      setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(0)
-      return
+    if (routes.length === 1) {
+      const route = parse.data
+
+      switch (route) {
+        case LayerSectionEnum.enum.Preview:
+          setCurrentViewSection(parse.data)
+          setCurrentLayerPriority(0)
+          return
+        case LayerSectionEnum.enum.Settings:
+          setCurrentViewSection(parse.data)
+          setCurrentLayerPriority(4)
+          return
+      }
     }
 
     if (routes.length == 2) {

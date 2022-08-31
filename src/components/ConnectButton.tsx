@@ -26,13 +26,15 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
                 if (normalButton) {
                   return (
                     <div className='flex justify-center'>
-                      <Button onClick={openConnectModal}>Connect Wallet</Button>
+                      <Button disabled onClick={openConnectModal}>
+                        Connect Wallet
+                      </Button>
                     </div>
                   )
                 }
                 return (
                   <>
-                    <button onClick={openConnectModal} type='button'>
+                    <button disabled onClick={openConnectModal} type='button'>
                       <img
                         src='/images/lightGray-wallet.svg'
                         className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
@@ -45,7 +47,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
 
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type='button'>
+                  <button disabled onClick={openChainModal} type='button'>
                     Wrong network
                   </button>
                 )

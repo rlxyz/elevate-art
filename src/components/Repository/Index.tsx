@@ -9,6 +9,8 @@ import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
 import { FilterByRarity } from '@components/CollectionPreview/FilterByRarity'
 import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
+import CollectionSettings from '@components/CollectionSettings/Index'
+import { SettingsNavigations } from '@components/CollectionSettings/SettingsNavigations'
 
 type Filter = {
   id: string
@@ -82,12 +84,18 @@ const Index = () => {
               <FilterByRarity />
             </div>
           )}
+          {currentViewSection === LayerSectionEnum.enum.Settings && (
+            <div className='flex flex-col space-y-6 justify-between'>
+              <SettingsNavigations />
+            </div>
+          )}
         </div>
         <div className='col-span-8'>
           {currentViewSection === LayerSectionEnum.enum.Preview && <CollectionPreview />}
           {currentViewSection === LayerSectionEnum.enum.Layers && <CollectionLayers />}
           {currentViewSection === LayerSectionEnum.enum.Rarity && <CollectionRarity />}
           {currentViewSection === LayerSectionEnum.enum.Rules && <CollectionRules />}
+          {currentViewSection === LayerSectionEnum.enum.Settings && <CollectionSettings />}
         </div>
       </div>
     </>
