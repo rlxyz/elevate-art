@@ -19,8 +19,34 @@ export const repositoryRouter = createRouter().query('getRepositoryByName', {
             traitElements: {
               orderBy: { weight: 'asc' }, // guarantee rarest first
               include: {
-                rulesPrimary: true,
-                rulesSecondary: true,
+                rulesPrimary: {
+                  include: {
+                    primaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                    secondaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                  },
+                },
+                rulesSecondary: {
+                  include: {
+                    primaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                    secondaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },

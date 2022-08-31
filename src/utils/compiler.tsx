@@ -1,5 +1,6 @@
 import seedrandom from 'seedrandom'
 import { LayerElement, TraitElement, Rules } from '@prisma/client'
+import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 
 export const createToken = (opts: {
   id: number
@@ -8,22 +9,64 @@ export const createToken = (opts: {
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
       rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
     })[]
   })[]
+  // allRules: (Rules & {
+  //   primaryTraitElement: TraitElement & { layerElement: LayerElement }
+  //   secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+  // })[]
 }) => {
   const { id, name, generation, layers } = opts
+
+  // const allRules = layers
+  //   .map((layer) => layer.traitElements.map((trait) => trait.rulesPrimary))
+  //   .flatMap((map) => map)
+  //   .filter((arr) => arr.length > 0)
+  //   .flatMap((map) => map)
+
   const random = seedrandom(`${name}.${generation}.${id}`)
   let elements: TraitElement[] = []
-  layers.forEach(({ traitElements }) => {
-    let r = Math.floor(random() * traitElements.reduce((a, b) => a + b.weight, 0))
-    traitElements.every((traitElement) => {
+  layers.forEach(({ traitElements }, index: number) => {
+    // exclusion
+    const filtered = traitElements.filter((traitElement) => {
+      return (
+        traitElement.rulesSecondary.every((rule) => {
+          const {
+            primaryTraitElement: { layerElement },
+            secondaryTraitElement,
+          } = rule
+          if (
+            layerElement.priority > index ||
+            traitElements[layerElement.priority]?.name === secondaryTraitElement.name
+          )
+            return true
+          return false
+        }) &&
+        traitElement.rulesPrimary.every((rule) => {
+          const {
+            primaryTraitElement,
+            secondaryTraitElement: { layerElement },
+          } = rule
+          if (
+            primaryTraitElement.layerElement.priority <= index ||
+            traitElements[layerElement.priority]?.name === primaryTraitElement.name
+          ) {
+            return true
+          }
+          return false
+        })
+      )
+    })
+
+    let r = Math.floor(random() * filtered.reduce((a, b) => a + b.weight, 0))
+    filtered.every((traitElement) => {
       r -= traitElement.weight
       if (r < 0) {
         elements.push(traitElement)
@@ -32,6 +75,7 @@ export const createToken = (opts: {
       return true
     })
   })
+
   return elements
 }
 
@@ -39,12 +83,12 @@ export const createManyTokens = (
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
       rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
     })[]
   })[],
@@ -52,12 +96,13 @@ export const createManyTokens = (
   name: string,
   generation: number
 ): TraitElement[][] => {
-  // sort all layers by priority & trait elements by weight
-  layers
-    .sort((a, b) => a.priority - b.priority)
-    .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
-      traitElements.sort((a, b) => a.weight - b.weight)
-    )
+  // // sort all layers by priority & trait elements by weight
+  // layers
+  //   .sort((a, b) => a.priority - b.priority)
+  //   .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
+  //     traitElements.sort((a, b) => a.weight - b.weight)
+  //   )
+
   return Array.from(Array(totalSupply).keys()).map((id: number) => {
     return createToken({ id, name, generation, layers })
   })

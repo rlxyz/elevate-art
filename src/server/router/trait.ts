@@ -26,27 +26,27 @@ export const traitElementRouter = createRouter()
   })
   .mutation('setRuleById', {
     input: z.object({
-      id: z.string(),
       type: z.string(),
-      linkedTraitElementId: z.string(),
+      primaryTraitElementId: z.string(),
+      secondaryTraitElementId: z.string(),
     }),
     async resolve({ ctx, input }) {
       await ctx.prisma.rules.create({
         data: {
           condition: input.type,
-          primaryTraitElementId: input.id,
-          secondaryTraitElementId: input.linkedTraitElementId,
+          primaryTraitElementId: input.primaryTraitElementId,
+          secondaryTraitElementId: input.secondaryTraitElementId,
         },
       })
       return {
         primary: await ctx.prisma.traitElement.findFirst({
           where: {
-            id: input.id,
+            id: input.primaryTraitElementId,
           },
         }),
         secondary: await ctx.prisma.traitElement.findFirst({
           where: {
-            id: input.linkedTraitElementId,
+            id: input.secondaryTraitElementId,
           },
         }),
       }

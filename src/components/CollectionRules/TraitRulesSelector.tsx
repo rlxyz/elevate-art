@@ -87,9 +87,9 @@ export const TraitRulesSelector = ({
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
               mutation.mutate({
-                id: selectedLeftTrait.id,
+                primaryTraitElementId: selectedLeftTrait.id,
                 type: selectedCondition,
-                linkedTraitElementId: selectedRightTrait.id,
+                secondaryTraitElementId: selectedRightTrait.id,
               })
             }}
           >
@@ -109,17 +109,16 @@ export const TraitSelectorCondition = ({
   onChange: Dispatch<SetStateAction<string | null | undefined>>
 }) => {
   const [query, setQuery] = useState('')
-
   const filteredConditions =
     query === ''
       ? [
           { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          { id: 1, name: RulesEnum.enum['only mixes with'] },
+          // { id: 1, name: RulesEnum.enum['only mixes with'] },
           // { id: 3, name: 'always mixes with' },
         ]
       : [
           { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          { id: 1, name: RulesEnum.enum['only mixes with'] },
+          // { id: 1, name: RulesEnum.enum['only mixes with'] },
           // { id: 3, name: 'always mixes with' },
         ].filter((conditions) => {
           return conditions.name.toLowerCase().includes(query.toLowerCase())

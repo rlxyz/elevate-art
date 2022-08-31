@@ -17,12 +17,12 @@ interface CompilerViewInterface {
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
       rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
       })[]
     })[]
   })[]
