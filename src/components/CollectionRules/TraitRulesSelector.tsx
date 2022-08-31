@@ -44,11 +44,16 @@ export const TraitRulesSelector = ({
     onSuccess: (data, variables) => {
       onSuccess()
       notifySuccess(
-        `Added Rule ${variables.id} ${variables.type} ${variables.linkedTraitElementId}`
+        <div>
+          <span className='text-blueHighlight text-semibold'>{data.primary?.name}</span>
+          <span>{` now ${variables.type} `}</span>
+          <span className='font-semibold'>{data.secondary?.name}</span>
+        </div>,
+        'new rule'
       )
       setSelectedRightTrait(null)
     },
-    onError: (data, variables) => {
+    onError: () => {
       notifyError('Something went wrong')
     },
   })

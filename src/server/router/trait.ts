@@ -38,6 +38,18 @@ export const traitElementRouter = createRouter()
           secondaryTraitElementId: input.linkedTraitElementId,
         },
       })
+      return {
+        primary: await ctx.prisma.traitElement.findFirst({
+          where: {
+            id: input.id,
+          },
+        }),
+        secondary: await ctx.prisma.traitElement.findFirst({
+          where: {
+            id: input.linkedTraitElementId,
+          },
+        }),
+      }
     },
   })
   .mutation('deleteRuleById', {
@@ -45,11 +57,23 @@ export const traitElementRouter = createRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
+      const data = await ctx.prisma.rules.findFirst({
+        where: {
+          primaryTraitElementId: input.id,
+        },
+        include: {
+          primaryTraitElement: true,
+          secondaryTraitElement: true,
+        },
+      })
+
       await ctx.prisma.rules.deleteMany({
         where: {
           primaryTraitElementId: input.id,
         },
       })
+
+      return data
     },
   })
   .query('getTraitManyByLayerElementId', {

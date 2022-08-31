@@ -18,7 +18,16 @@ export const RegegenerateButton = () => {
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data, variables) => {
       ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
-      notifySuccess('Collection regenerated')
+      notifySuccess(
+        <span>
+          <span className='text-blueHighlight'>Successfully</span>
+          <span>
+            {' '}
+            generated a <span className='font-semibold'>new collection!</span>
+          </span>
+        </span>,
+        'elevate'
+      )
     },
   })
 

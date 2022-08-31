@@ -13,6 +13,7 @@ import { element } from '@rainbow-me/rainbowkit/dist/css/reset.css'
 import { useMutation } from 'react-query'
 import { trpc } from '@utils/trpc'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
+import LayerFolderSelector from '@components/CollectionHelpers/LayerFolderSelector'
 
 const CollectionPreview = () => {
   const {

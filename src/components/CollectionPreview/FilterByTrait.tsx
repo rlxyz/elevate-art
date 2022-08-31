@@ -160,7 +160,6 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
   const { layers, traitMapping, tokenRanking, collection, setTokens, resetTokens } =
     useRepositoryStore((state) => {
       return {
@@ -198,10 +197,9 @@ export const FilterByRarity = () => {
           .forEach((val) => {
             setTokens(tokenRanking.slice(val.start, val.end))
           })
-        // setTokens()
       }}
     >
-      {({ values, setFieldValue, handleChange, submitForm }) => (
+      {({ values, handleChange, submitForm }) => (
         <Form>
           {layers.length &&
             traitMapping.tokenIdMap.size > 0 &&
@@ -209,19 +207,10 @@ export const FilterByRarity = () => {
             [{ name: 'Rarity', id: 'rarity' }].map((section: any, sectionIdx: number) => (
               <div className='space-y-2' key={`${section.name}-${sectionIdx}`}>
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
-                  {filters.map(({ value, start, end }, optionIdx: number) => (
+                  {filters.map(({ value }, optionIdx: number) => (
                     <div key={optionIdx} className='flex flex-col text-xs'>
                       <Button
-                        onClick={() => {
-                          if (layerDropdown === optionIdx) {
-                            setLayerDropdown(null)
-                          } else {
-                            setLayerDropdown(optionIdx)
-                          }
-                        }}
-                        className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
-                          layerDropdown === optionIdx ? 'font-semibold' : ''
-                        }`}
+                        className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}
                       >
                         <div className='pr-1 pl-5 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>

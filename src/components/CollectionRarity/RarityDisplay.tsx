@@ -45,7 +45,7 @@ export const RarityDisplay = ({
     onSuccess: (data, variables) => {
       ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
       setHasFormChange(false)
-      notifySuccess('Weights updated successfully')
+      // notifySuccess('Weights updated successfully')
     },
   })
 

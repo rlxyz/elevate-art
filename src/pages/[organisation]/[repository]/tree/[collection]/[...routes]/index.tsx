@@ -32,10 +32,6 @@ const PageImplementation = ({
     'repository.getRepositoryByName',
     { name: repositoryName },
   ])
-  // const { data: collectionData } = trpc.useQuery([
-  //   'collection.getCollectionByRepositoryId',
-  //   { repositoryId: repositoryData?.id },
-  // ])
 
   const { layers, setOrganisation, repository, setCollection, setLayers, setRepository } =
     useRepositoryStore((state) => {
@@ -74,13 +70,13 @@ const PageImplementation = ({
       switch (route) {
         case LayerSectionEnum.enum.Preview:
           setCurrentViewSection(parse.data)
-          setCurrentLayerPriority(0)
           return
         case LayerSectionEnum.enum.Settings:
           setCurrentViewSection(parse.data)
-          setCurrentLayerPriority(4)
           return
       }
+
+      router.push('/404')
     }
 
     if (routes.length == 2) {

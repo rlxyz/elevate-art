@@ -1,5 +1,6 @@
 import { Button } from '@components/UI/Button'
 import { TrashIcon } from '@heroicons/react/outline'
+import { useNotification } from '@hooks/useNotification'
 import { TraitElement, Rules } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
@@ -17,29 +18,45 @@ export const TraitRulesDisplayPerItem = ({
   secondary: string
   onSuccess: () => void
 }) => {
+  const { notifySuccess, notifyError } = useNotification()
   const mutation = trpc.useMutation('trait.deleteRuleById', {
-    onSuccess: onSuccess,
+    onSuccess: (data) => {
+      onSuccess()
+      notifySuccess(
+        <div>
+          <span className='text-blueHighlight text-semibold'>{data?.primaryTraitElement.name}</span>
+          <span>{` now `}</span>
+          <span className='text-redError'>{`doesnt `}</span>
+          <span>{`${data?.condition} `}</span>
+          <span className='font-semibold'>{data?.secondaryTraitElement.name}</span>
+        </div>,
+        'delete rule'
+      )
+    },
+    onError: () => {
+      notifyError('Something went wrong')
+    },
   })
 
   return (
-    <div className='grid grid-cols-10 space-x-3'>
+    <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
             {primary}
           </div>
         </div>
       </div>
       <div className='col-span-2 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
             {condition}
           </div>
         </div>
       </div>
       <div className='col-span-4 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-lightGray bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
             {secondary}
           </div>
         </div>
@@ -48,7 +65,7 @@ export const TraitRulesDisplayPerItem = ({
         <Button
           disabled={mutation.isLoading}
           onClick={() => mutation.mutate({ id })}
-          className='h-5 w-5 text-lightGray'
+          className='h-5 w-5 text-mediumGrey'
         >
           <TrashIcon />
         </Button>
