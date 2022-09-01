@@ -66,7 +66,7 @@ const Home: NextPage = () => {
     <>
       <BasicLayout>
         <div className='space-y-20'>
-          <div className='w-full min-h-[calc(100vh-13rem)] flex justify-center items-center'>
+          <div className='w-full min-h-[calc(100vh-8rem)] flex justify-center items-center'>
             <div className='w-[50%]'>
               <img
                 className='h-full object-cover'
