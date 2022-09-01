@@ -1,24 +1,28 @@
+import { BasicLayout } from '@components/Layout/Layout'
 import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <div className='flex flex-col items-center justify-center h-[calc(100vh-5rem)] w-full'>
+    <BasicLayout>
       <div className='w-full min-h-full flex flex-col lg:relative'>
         <div className='flex-grow flex flex-col'>
           <main className='flex-grow flex flex-col bg-white'>
             <div className='flex-grow mx-auto max-w-7xl w-full flex flex-col px-4 sm:px-6 lg:px-8'>
               <div className='flex-shrink-0 my-auto py-16 sm:py-32'>
-                <p className='text-base font-semibold text-indigo-600'>404</p>
-                <h1 className='mt-2 text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl sm:tracking-tight'>
-                  Page not found
-                </h1>
-                <p className='mt-2 text-base text-gray-500'>
-                  Sorry, we couldn’t find the page you’re looking for.
-                </p>
-                <div className='mt-6'>
+                <p className='text-base font-semibold'>404</p>
+                <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
+                <div className=' mt-4 flex flex-col'>
+                  <span className='text-sm font-semibold'>
+                    “Control can sometimes be an illusion.
+                  </span>
+                  <span className='text-sm font-semibold'>
+                    But sometimes you need illusion to gain control.” &#8212; Mr. Robot
+                  </span>
+                </div>
+                <div className='mt-2'>
                   <Link href='/'>
                     <div className='text-darkGrey text-sm'>
-                      Go back<span aria-hidden='true'> &rarr;</span>
+                      lets go somewhere<span aria-hidden='true'> &rarr;</span>
                     </div>
                   </Link>
                 </div>
@@ -28,12 +32,12 @@ export default function NotFound() {
         </div>
         <div className='hidden lg:block lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2'>
           <img
-            className='absolute inset-0 h-full w-full object-cover'
-            src='https://2hgmgkliytraizr4tldhdvzg6dxtcbzweirhbcgixuayjrku3weq.arweave.net/0czDKWjE4gRmPJrGcdcm8O8xBzYiInCIyL0BhMVU3Yk'
+            className='absolute inset-0 h-full object-cover'
+            src='/images/protoglyph.png'
             alt='subtraction-by-thankyoux'
           />
         </div>
       </div>
-    </div>
+    </BasicLayout>
   )
 }
