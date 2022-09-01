@@ -9,7 +9,7 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/zoraOrb.svg',
+  favicon: 'img/favicon.ico',
   organizationName: 'ourzora',
   projectName: 'Zora Docs',
   themeConfig: {
