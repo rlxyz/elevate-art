@@ -1,6 +1,6 @@
+import { Link } from '@components/UI/Link'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import Link from 'next/link'
 import router from 'next/router'
 import { LayerSectionEnum } from 'src/types/enums'
 
@@ -13,7 +13,7 @@ export const RepositoryNavbar = () => {
 
   return (
     <aside className='-ml-5'>
-      <div className='flex'>
+      <div className='flex mb-1'>
         {currentLayer &&
           [
             { name: LayerSectionEnum.enum.Preview, route: `${LayerSectionEnum.enum.Preview}` },
@@ -35,36 +35,12 @@ export const RepositoryNavbar = () => {
             // },
           ].map(({ name, route }: { name: string; route: string }, index: number) => {
             return (
-              <div
-                key={`${name}-${index}`}
-                className={`hover:bg-mediumGrey hover:bg-opacity-50 rounded-[5px] mb-1 mx-2 ${
-                  !currentLayer ? 'pointer-events-none' : ''
-                }`}
-              >
-                <Link
-                  href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${route}`}
-                >
-                  <div
-                    className={`cursor-pointer text-xs flex px-3 py-2 hover:text-black items-center capitalize ${
-                      currentViewSection == name
-                        ? 'text-black min-h-full font-semibold'
-                        : 'text-darkGrey'
-                    }`}
-                  >
-                    <div>{name}</div>
-                    {/* <div className='mt-[1px]'>
-                    <div
-                      className={`${
-                        currentViewSection == name ? 'border-b-2 pb-2.5 translate-y-[1.5px]' : ''
-                      }`}
-                    />
-                    {currentViewSection == name && (
-                      <div className='absolute h-[5px] w-[5px] bg-black rotate-45 translate-y-[-2px]' />
-                    )}
-                  </div> */}
-                  </div>
-                </Link>
-              </div>
+              <Link
+                enabled={currentViewSection === name}
+                title={name}
+                size='md'
+                href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${route}`}
+              />
             )
           })}
       </div>

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@components/UI/Link'
 
 const navigation = [
   {
@@ -24,13 +24,14 @@ const navigation = [
     ),
   },
 ]
+
 export const Footer = () => {
   return (
     <footer className='mx-auto py-6 flex items-center justify-between'>
       <div className='flex justify-center space-x-6 md:order-2'>
         {navigation.map((item, index) => (
           <div key={index} className='cursor-pointer'>
-            <Link href={item.href}>
+            <Link external={true} href={item.href}>
               <item.icon className='h-5 w-5 text-darkGrey' aria-hidden='true' />
             </Link>
           </div>

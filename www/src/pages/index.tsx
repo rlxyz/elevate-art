@@ -1,4 +1,5 @@
 import { BasicLayout } from '@components/Layout/Layout'
+import { Link } from '@components/UI/Link'
 import type { NextPage } from 'next'
 
 const Guide = () => {
@@ -66,7 +67,7 @@ const Home: NextPage = () => {
     <>
       <BasicLayout>
         <div className='space-y-20'>
-          <div className='w-full min-h-[calc(100vh-8rem)] flex justify-center items-center'>
+          <div className='w-full min-h-[calc(100vh-8rem)] flex flex-col justify-center items-center'>
             <div className='w-[50%]'>
               <img
                 className='h-full object-cover'
@@ -74,6 +75,12 @@ const Home: NextPage = () => {
                 alt='People working on laptops'
               />
             </div>
+            <span className='text-right'>
+              powered by{' '}
+              <Link external={true} href='https://0v1.xyz'>
+                <span className='font-extrabold'>0v1</span>
+              </Link>
+            </span>
           </div>
           {/* <Guide /> */}
           {/* <CoolShit /> */}

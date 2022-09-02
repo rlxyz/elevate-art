@@ -1,4 +1,5 @@
 import FileUpload from '@components/CollectionHelpers/FileUpload'
+import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -8,9 +9,8 @@ import {
   MotionValue,
   Reorder,
   useDragControls,
-  useMotionValue,
+  useMotionValue
 } from 'framer-motion'
-import Link from 'next/link'
 import router, { NextRouter, useRouter } from 'next/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -57,28 +57,10 @@ export const ReorderItem = ({
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
-
-  const { currentLayerPriority, currentViewSection } = useRepositoryRouterStore((state) => {
-    return {
-      currentLayerPriority: state.currentLayerPriority,
-      currentViewSection: state.currentViewSection,
-    }
-  })
-
+  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
-
-  const { traitMapping, collection, organisation, repository } = useRepositoryStore((state) => {
-    return {
-      traitMapping: state.traitMapping,
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
-      regenerate: state.regenerate,
-      setRegenerateCollection: state.setRegenerateCollection,
-    }
-  })
 
   return (
     <Reorder.Item
@@ -90,26 +72,18 @@ export const ReorderItem = ({
     >
       <Link
         href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${currentViewSection}/${name}`}
+        enabled={enabled}
+        title={name}
       >
-        <div
-          className={`cursor-pointer flex flex-row rounded-[5px] py-3 justify-between hover:bg-mediumGrey hover:bg-opacity-30 ${
-            enabled ? 'bg-mediumGrey bg-opacity-50 font-semibold' : ''
-          }`}
-        >
-          <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
-            <span>{name}</span>
-            {/* <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span> */}
-          </div>
-          {canReorder && (
-            <DotsHorizontalIcon
-              className='ml-1 w-5 h-5'
-              onPointerDown={(e) => {
-                e.preventDefault()
-                dragControls.start(e)
-              }}
-            />
-          )}
-        </div>
+        {canReorder && (
+          <DotsHorizontalIcon
+            className='ml-1 w-5 h-5'
+            onPointerDown={(e) => {
+              e.preventDefault()
+              dragControls.start(e)
+            }}
+          />
+        )}
       </Link>
     </Reorder.Item>
   )
