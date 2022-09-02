@@ -84,6 +84,7 @@ export const Header = ({ navigation }: { navigation: { name: string; href: strin
           <ConnectButton />
         </div>
       </div>
+      {children}
     </header>
   )
 }
