@@ -103,13 +103,19 @@ export const Header = ({
   internalRoutes = [],
   externalRoutes = [],
   connectButton = false,
+  socialRoutes = [],
 }: {
   children?: ReactNode
   internalRoutes?: {
     current: string
     options?: string[]
   }[]
-  externalRoutes?: { name: string; href: string }[]
+  externalRoutes?: { name: string; href: string; icon?: ReactNode }[]
+  socialRoutes?: {
+    name: string
+    href: string
+    icon: (props: any) => JSX.Element
+  }[]
   connectButton?: boolean
 }) => {
   return (
@@ -122,6 +128,13 @@ export const Header = ({
           <HeaderInternalRoutes routes={internalRoutes} />
         </div>
         <HeaderExternalaRoutes routes={externalRoutes}>
+          {socialRoutes.map((item, index) => (
+            <div key={index} className='cursor-pointer'>
+              <Link external={true} href={item.href}>
+                <item.icon className='h-4 w-4 text-darkGrey' aria-hidden='true' />
+              </Link>
+            </div>
+          ))}
           {connectButton && <ConnectButton />}
         </HeaderExternalaRoutes>
       </div>
