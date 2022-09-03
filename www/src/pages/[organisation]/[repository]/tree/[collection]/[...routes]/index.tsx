@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { NextRouter, useRouter } from 'next/router'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { LayerSectionEnum } from 'src/types/enums'
-import Index from '@components/Repository/Index'
-import { trpc } from '@utils/trpc'
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
-import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import Loading from '@components/UI/Loading'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { RepositoryNavbar } from '@components/CollectionHelpers/RepositoryNavbar'
+import { SectionHeader } from '@components/CollectionHelpers/SectionHeader'
+import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
+import Index from '@components/Repository/Index'
+import Loading from '@components/UI/Loading'
+import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
+import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { trpc } from '@utils/trpc'
+import { NextRouter, useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { LayerSectionEnum } from 'src/types/enums'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -132,17 +134,31 @@ const Page = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
 
   useEffect(() => {
-    setHasHydrated(Boolean(organisationName) && Boolean(repositoryName))
-  }, [organisationName, repositoryName])
+    setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
+  }, [organisationName, repositoryName, collectionName])
 
   return hasHydrated ? (
     <Layout>
-      <PageImplementation
-        organisationName={organisationName}
-        repositoryName={repositoryName}
-        collectionName={collectionName}
-        routes={routes}
-      />
+      <Layout.Header>
+        <Header
+          internalRoutes={[
+            { current: organisationName },
+            { current: repositoryName },
+            { current: collectionName, options: ['main', 'development'] },
+          ]}
+        >
+          <RepositoryNavbar />
+        </Header>
+      </Layout.Header>
+      <Layout.Body>
+        <SectionHeader />
+        <PageImplementation
+          organisationName={organisationName}
+          repositoryName={repositoryName}
+          collectionName={collectionName}
+          routes={routes}
+        />
+      </Layout.Body>
     </Layout>
   ) : (
     <Loading />
