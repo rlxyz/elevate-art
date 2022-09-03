@@ -11,6 +11,12 @@ const LayerSection = Object.freeze({
 export const LayerSectionEnum = z.nativeEnum(LayerSection)
 export type LayerSectionType = z.infer<typeof LayerSectionEnum>
 
+const RepositorySection = Object.freeze({
+  Overview: 'overview',
+})
+export const RepositorySectionEnum = z.nativeEnum(RepositorySection)
+export type RepositorySectionType = z.infer<typeof LayerSectionEnum>
+
 const Rules = Object.freeze({
   'cannot mix with': 'cannot mix with',
   // 'only mixes with': 'only mixes with',

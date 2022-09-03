@@ -36,7 +36,7 @@ const LayoutHeader = ({ children }: { children: React.ReactNode }) => (
 )
 
 const LayoutBody = ({ children }: { children: React.ReactNode }) => (
-  <LayoutContainer className='body'>{children}</LayoutContainer>
+  <LayoutContainer className='body min-h-[calc(100vh-10rem)]'>{children}</LayoutContainer>
 )
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
