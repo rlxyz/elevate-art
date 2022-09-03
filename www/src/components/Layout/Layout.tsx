@@ -1,4 +1,4 @@
-import { RepositoryNavbar } from '@components/CollectionHelpers/ViewContent'
+import { RepositoryNavbar } from '@components/CollectionHelpers/RepositoryNavbar'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { SectionHeader } from '../CollectionHelpers/SectionHeader'
@@ -80,8 +80,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   href: 'https://discord.elevate.art',
                 },
               ]}
-            />
-            <RepositoryNavbar />
+            >
+              <RepositoryNavbar />
+            </Header>
           </div>
         </div>
         <div className='bg-hue-light flex justify-center border border-b border-mediumGrey'>

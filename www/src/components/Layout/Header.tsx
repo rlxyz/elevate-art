@@ -46,6 +46,7 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
                       <div className='p-2 relative bg-white'>
                         {options.map((item) => (
                           <Link
+                            hover
                             pascalCase={false}
                             title={item}
                             enabled={item === current}
@@ -67,6 +68,33 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
         )
       })}
     </>
+  )
+}
+
+const HeaderExternalaRoutes = ({
+  routes,
+  children,
+}: {
+  routes: { name: string; href: string }[]
+  children: ReactNode
+}) => {
+  return (
+    <div className='flex flex-row justify-center items-center space-x-3'>
+      {routes && (
+        <aside className='flex flex-row space-x-3'>
+          {routes.map((item, index) => {
+            return (
+              <Link external={true} key={index} href={item.href}>
+                <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
+                  {item.name}
+                </span>
+              </Link>
+            )
+          })}
+        </aside>
+      )}
+      {children}
+    </div>
   )
 }
 
@@ -93,22 +121,9 @@ export const Header = ({
           </Link>
           <HeaderInternalRoutes routes={internalRoutes} />
         </div>
-        <div className='flex flex-row justify-center items-center space-x-3'>
-          {externalRoutes && (
-            <aside className='flex flex-row space-x-3'>
-              {externalRoutes.map((item, index) => {
-                return (
-                  <Link external={true} key={index} href={item.href}>
-                    <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
-                      {item.name}
-                    </span>
-                  </Link>
-                )
-              })}
-            </aside>
-          )}
+        <HeaderExternalaRoutes routes={externalRoutes}>
           {connectButton && <ConnectButton />}
-        </div>
+        </HeaderExternalaRoutes>
       </div>
       {children}
     </header>

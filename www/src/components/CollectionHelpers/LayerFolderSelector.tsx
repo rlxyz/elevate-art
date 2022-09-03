@@ -73,6 +73,7 @@ export const ReorderItem = ({
       <Link
         href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${currentViewSection}/${name}`}
         enabled={enabled}
+        hover
         title={name}
       >
         {canReorder && (
