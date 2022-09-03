@@ -1,4 +1,5 @@
-import { BasicLayout } from '@components/Layout/Layout'
+import { Header } from '@components/Layout/Header'
+import { Layout } from '@components/Layout/Layout'
 import { Link } from '@components/UI/Link'
 import type { NextPage } from 'next'
 
@@ -65,27 +66,32 @@ const CoolShit = () => {
 const Home: NextPage = () => {
   return (
     <>
-      <BasicLayout>
-        <div className='space-y-20'>
-          <div className='w-full min-h-[calc(100vh-8rem)] flex flex-col justify-center items-center'>
-            <div className='w-[50%]'>
-              <img
-                className='h-full object-cover'
-                src='/images/logo-banner.png'
-                alt='People working on laptops'
-              />
+      <Layout>
+        <Layout.Header>
+          <Header />
+        </Layout.Header>
+        <Layout.Body>
+          <div className='space-y-20'>
+            <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col justify-center items-center'>
+              <div className='w-[50%]'>
+                <img
+                  className='h-full object-cover'
+                  src='/images/logo-banner.png'
+                  alt='People working on laptops'
+                />
+              </div>
+              <span className='text-right'>
+                powered by{' '}
+                <Link external={true} href='https://0v1.xyz'>
+                  <span className='font-extrabold'>0v1</span>
+                </Link>
+              </span>
             </div>
-            <span className='text-right'>
-              powered by{' '}
-              <Link external={true} href='https://0v1.xyz'>
-                <span className='font-extrabold'>0v1</span>
-              </Link>
-            </span>
+            {/* <Guide /> */}
+            {/* <CoolShit /> */}
           </div>
-          {/* <Guide /> */}
-          {/* <CoolShit /> */}
-        </div>
-      </BasicLayout>
+        </Layout.Body>
+      </Layout>
     </>
   )
 }

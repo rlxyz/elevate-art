@@ -7,16 +7,8 @@ import { Fragment, ReactNode } from 'react'
 
 const externalRoutes = [
   {
-    name: 'Blog',
-    href: 'https://blog.art',
-  },
-  {
     name: 'Docs',
     href: 'https://docs.elevate.art',
-  },
-  {
-    name: 'Discord',
-    href: 'https://discord.elevate.art',
   },
 ]
 

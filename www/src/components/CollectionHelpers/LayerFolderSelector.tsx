@@ -197,7 +197,7 @@ const LayerFolderSelector = () => {
                 </button> */}
             </div>
           </div>
-          <div className='max-h-[calc(100vh-17.5rem)] overflow-y-scroll'>
+          <div className='max-h-[calc(100vh-17.5rem)]'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
               <AnimatePresence>
                 <Reorder.Group

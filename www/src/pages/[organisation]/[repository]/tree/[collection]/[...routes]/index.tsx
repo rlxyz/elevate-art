@@ -150,8 +150,10 @@ const Page = () => {
           <RepositoryNavbar />
         </Header>
       </Layout.Header>
-      <Layout.Body>
+      <Layout.Title>
         <SectionHeader />
+      </Layout.Title>
+      <Layout.Body>
         <PageImplementation
           organisationName={organisationName}
           repositoryName={repositoryName}
