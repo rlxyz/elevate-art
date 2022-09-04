@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import FileUpload from '@components/CollectionHelpers/FileUpload'
+import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
 import { Button } from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'
@@ -105,7 +105,7 @@ export const CollectionUpload = ({
                             key={`${trait}-${index}`}
                             className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}
                           >
-                            <div className='col-span-9 flex space-y-3 flex flex-col'>
+                            <div className='col-span-9 space-y-3 flex flex-col'>
                               <div className='flex space-x-3'>
                                 <div className='flex items-center'>
                                   <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
@@ -141,11 +141,7 @@ export const CollectionUpload = ({
                   </div>
                   <div className='flex w-full pt-6 space-x-4'>
                     <div className='w-1/2'>
-                      <Button
-                        type='button'
-                        // className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm'
-                        onClick={() => setOpen(false)}
-                      >
+                      <Button type='button' onClick={() => setOpen(false)}>
                         Upload
                       </Button>
                     </div>
@@ -153,7 +149,6 @@ export const CollectionUpload = ({
                       <Button
                         type='button'
                         disabled
-                        // className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
                         onClick={() => setOpen(false)}
                         ref={cancelButtonRef}
                       >

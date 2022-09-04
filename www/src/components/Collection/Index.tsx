@@ -1,16 +1,19 @@
-import CollectionPreview from '@components/CollectionPreview/Index'
-import CollectionLayers from '@components/ColectionLayers/Index'
-import CollectionRarity from '@components/CollectionRarity/Index'
-import CollectionRules from '@components/CollectionRules/Index'
+import CollectionLayers from '@components/Collection/ColectionLayers/Index'
+import {
+  FilterByRarity,
+  FilterByTrait
+} from '@components/Collection/CollectionPreview/FilterByTrait'
+import CollectionPreview from '@components/Collection/CollectionPreview/Index'
+import { RegegenerateButton } from '@components/Collection/CollectionPreview/RegenerateButton'
+import CollectionRarity from '@components/Collection/CollectionRarity/Index'
+import CollectionRules from '@components/Collection/CollectionRules/Index'
+import CollectionSettings from '@components/Collection/CollectionSettings/Index'
+import { SettingsNavigations } from '@components/Collection/CollectionSettings/SettingsNavigations'
+import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useEffect, useState } from 'react'
-import LayerFolderSelector from '../CollectionHelpers/LayerFolderSelector'
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import { LayerSectionEnum } from '../../types/enums'
-import { FilterByRarity, FilterByTrait } from '@components/CollectionPreview/FilterByTrait'
-import { RegegenerateButton } from '@components/CollectionPreview/RegenerateButton'
-import CollectionSettings from '@components/CollectionSettings/Index'
-import { SettingsNavigations } from '@components/CollectionSettings/SettingsNavigations'
+import LayerFolderSelector from './CollectionHelpers/LayerFolderSelector'
 
 type Filter = {
   id: string

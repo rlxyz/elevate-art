@@ -1,7 +1,7 @@
 import { Button } from '@components/UI/Button'
 import { TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
-import { TraitElement, Rules } from '@prisma/client'
+import { Rules, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
 

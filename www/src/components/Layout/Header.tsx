@@ -1,7 +1,8 @@
-import { ConnectButton } from '@components/ConnectButton'
+import { ConnectButton } from '@components/UI/ConnectButton'
 import { Link } from '@components/UI/Link'
 import { Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment, ReactNode } from 'react'
 
@@ -50,9 +51,38 @@ const socialRoutes = [
   },
 ]
 
+interface NavigationProps {
+  links: { name: string; enabled: boolean; href: string }[]
+}
+
+export const Navigation = ({ links }: NavigationProps) => {
+  return (
+    <aside className='-ml-5'>
+      <ul className='flex list-none'>
+        {links.map(({ name, enabled, href }, index: number) => {
+          return (
+            <li key={index} className={enabled ? 'flex space-between items-center relative' : ''}>
+              <div className='mb-1'>
+                <Link enabled={enabled} title={name} size='md' href={href}></Link>
+              </div>
+              {enabled && (
+                <motion.div
+                  className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0'
+                  layoutId='underline'
+                />
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </aside>
+  )
+}
+
 type HeaderInternalRoutesProp = {
   routes: {
     current: string
+    href: string
     options?: string[]
   }[]
 }
@@ -61,7 +91,7 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
   if (!routes.length) return <></>
   return (
     <>
-      {routes.map(({ current, options }, index) => {
+      {routes.map(({ current, href, options }) => {
         return (
           <>
             <Image
@@ -105,7 +135,7 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
                 </Transition>
               </Popover>
             ) : (
-              <Link href='#' className='' external={true}>
+              <Link href={href} enabled={false} external>
                 <div className='text-darkGrey'>{current}</div>
               </Link>
             )}
@@ -125,19 +155,17 @@ const HeaderExternalaRoutes = ({
 }) => {
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      {routes && (
-        <aside className='flex flex-row space-x-3'>
-          {routes.map((item, index) => {
-            return (
-              <Link external={true} key={index} href={item.href}>
-                <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
-                  {item.name}
-                </span>
-              </Link>
-            )
-          })}
-        </aside>
-      )}
+      <aside className='flex flex-row space-x-3'>
+        {routes.map((item, index) => {
+          return (
+            <Link external={true} key={index} href={item.href}>
+              <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
+                {item.name}
+              </span>
+            </Link>
+          )
+        })}
+      </aside>
       {children}
     </div>
   )
@@ -146,20 +174,17 @@ const HeaderExternalaRoutes = ({
 export const Header = ({
   children,
   internalRoutes = [],
+  internalNavigation = [],
   connectButton = false,
 }: {
   children?: ReactNode
   internalRoutes?: {
     current: string
+    href: string
     options?: string[]
   }[]
-  externalRoutes?: { name: string; href: string; icon?: ReactNode }[]
-  socialRoutes?: {
-    name: string
-    href: string
-    icon: (props: any) => JSX.Element
-  }[]
   connectButton?: boolean
+  internalNavigation?: { name: string; enabled: boolean; href: string }[]
 }) => {
   return (
     <header className='-ml-2 pointer-events-auto'>
@@ -181,7 +206,7 @@ export const Header = ({
           {connectButton && <ConnectButton />}
         </HeaderExternalaRoutes>
       </div>
-      {children}
+      {internalNavigation && <Navigation links={internalNavigation} />}
     </header>
   )
 }

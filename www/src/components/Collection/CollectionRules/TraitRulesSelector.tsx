@@ -1,4 +1,4 @@
-import { SmallAdvancedImage } from '@components/CollectionHelpers/AdvancedImage'
+import { SmallAdvancedImage } from '@components/Collection/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'

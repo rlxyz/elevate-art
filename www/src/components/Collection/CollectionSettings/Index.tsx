@@ -1,4 +1,4 @@
-import { CollectionViewContentWrapper } from '@components/CollectionHelpers/ViewContent'
+import { CollectionViewContentWrapper } from '@components/Collection/CollectionHelpers/ViewContent'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import Link from 'next/link'
 
@@ -22,7 +22,7 @@ const CollectionSettingsContentItem = ({
         </div>
         <div>{children}</div>
       </div>
-      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs flex justify-between items-center border-t border-t-mediumGrey'>
+      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs  justify-between border-t border-t-mediumGrey'>
         <div className='flex'>
           <span>{`Learn more about`}&nbsp;</span>
           <Link href='#'>

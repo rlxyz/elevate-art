@@ -1,4 +1,4 @@
-import FileUpload from '@components/CollectionHelpers/FileUpload'
+import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
 import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'

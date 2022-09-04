@@ -1,4 +1,4 @@
-import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'

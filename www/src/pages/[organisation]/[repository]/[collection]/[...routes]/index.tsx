@@ -1,9 +1,9 @@
-import { RepositoryNavbar } from '@components/CollectionHelpers/RepositoryNavbar'
-import { SectionHeader } from '@components/CollectionHelpers/SectionHeader'
+import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
+import Index from '@components/Collection/Index'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import Index from '@components/Repository/Index'
 import Loading from '@components/UI/Loading'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -132,6 +132,8 @@ const Page = () => {
   const repositoryName: string = router.query.repository as string
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
+  const { currentLayer } = useCurrentLayer()
+  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
 
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
@@ -142,13 +144,37 @@ const Page = () => {
       <Layout.Header>
         <Header
           internalRoutes={[
-            { current: organisationName },
-            { current: repositoryName },
-            { current: collectionName, options: ['main', 'development'] },
+            { current: organisationName, href: `${organisationName}` },
+            { current: repositoryName, href: `${organisationName}/${repositoryName}` },
+            { current: collectionName, options: ['main', 'development'], href: `` },
           ]}
-        >
-          <RepositoryNavbar />
-        </Header>
+          internalNavigation={[
+            {
+              name: LayerSectionEnum.enum.Preview,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Preview}`,
+              enabled: LayerSectionEnum.enum.Preview === currentViewSection,
+            },
+            {
+              name: LayerSectionEnum.enum.Layers,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Layers}/${currentLayer.name}`,
+              enabled: LayerSectionEnum.enum.Layers === currentViewSection,
+            },
+            {
+              name: LayerSectionEnum.enum.Rarity,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Rarity}/${currentLayer.name}`,
+              enabled: LayerSectionEnum.enum.Rarity === currentViewSection,
+            },
+            {
+              name: LayerSectionEnum.enum.Rules,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Rules}/${currentLayer.name}`,
+              enabled: LayerSectionEnum.enum.Rules === currentViewSection,
+            },
+            // {
+            //   name: LayerSectionEnum.enum.Settings,
+            //   route: `${LayerSectionEnum.enum.Settings}`,
+            // },
+          ]}
+        />
       </Layout.Header>
       <Layout.Title>
         <SectionHeader />

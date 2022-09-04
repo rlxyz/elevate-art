@@ -1,4 +1,4 @@
-import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'

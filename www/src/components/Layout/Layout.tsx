@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Footer } from './Footer'
 
 interface LayoutProps {
-  children: React.ReactNode
+  children: React.ReactElement[] | React.ReactElement
 }
 
 const LayoutContainer = ({
@@ -20,7 +20,7 @@ const LayoutContainer = ({
   )
 }
 
-export const Layout = ({ children }: { children: React.ReactElement[] }) => {
+export const Layout = ({ children }: LayoutProps) => {
   return (
     <main className='layout'>
       {children}
