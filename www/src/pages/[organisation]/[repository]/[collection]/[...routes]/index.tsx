@@ -29,20 +29,19 @@ const PageImplementation = ({
   const { data: organisationData } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
 
-  const { layers, setOrganisation, setCollectionId, repository, setCollection, setLayers, setRepository } =
-    useRepositoryStore((state) => {
+  const { layers, setOrganisation, setCollectionId, repository, setLayers, setRepository } = useRepositoryStore(
+    (state) => {
       return {
         layers: state.layers,
         organisation: state.organisation,
         setOrganisation: state.setOrganisation,
-        collection: state.collection,
         repository: state.repository,
         setCollectionId: state.setCollectionId,
         setLayers: state.setLayers,
-        setCollection: state.setCollection,
         setRepository: state.setRepository,
       }
-    })
+    }
+  )
 
   const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryRouterStore((state) => {
     return {

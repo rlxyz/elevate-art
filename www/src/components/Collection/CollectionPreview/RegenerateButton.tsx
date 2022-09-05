@@ -5,10 +5,10 @@ import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 
 export const RegegenerateButton = () => {
-  const { collection, layers } = useRepositoryStore((state) => {
+  const { collectionId } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
-      collection: state.collection,
+      collectionId: state.collectionId,
     }
   })
   const { notifySuccess } = useNotification()
@@ -38,7 +38,7 @@ export const RegegenerateButton = () => {
             <span className='font-semibold'>Generate</span>
           </div>
           <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
-          <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collection.id })}>
+          <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}>
             <span className='flex items-center justify-center space-x-2'>
               <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />
               <span className='text-xs'>elevate.art</span>

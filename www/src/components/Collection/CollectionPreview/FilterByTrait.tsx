@@ -8,9 +8,9 @@ import { useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { layers, traitMapping, setTokens, resetTokens } = useRepositoryStore((state) => {
+  const { layers, traitMapping, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
     return {
-      collection: state.collection,
+      collectionId: state.collectionId,
       resetTokens: state.resetTokens,
       setTokens: state.setTokens,
       traitMapping: state.traitMapping,
@@ -19,13 +19,15 @@ export const FilterByTrait = () => {
       setTraitFilters: state.setTraitFilters,
     }
   })
+  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
+  if (!collectionData) return null
   return (
     <Formik
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens()
+          resetTokens(collectionData.totalSupply)
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -177,7 +179,7 @@ export const FilterByRarity = () => {
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens()
+          resetTokens(collectionData.totalSupply)
           return
         }
         filters

@@ -29,7 +29,6 @@ const InfiniteScrollGridItems = ({
       resetTokens: state.resetTokens,
       repository: state.repository,
       tokens: state.tokens,
-      collection: state.collection,
       layers: state.layers,
     }
   })
@@ -38,7 +37,7 @@ const InfiniteScrollGridItems = ({
   const repositoryName: string = router.query.repository as string
 
   useEffect(() => {
-    resetTokens()
+    resetTokens(collection.totalSupply)
   }, [])
 
   if (!tokens || !tokens.length || !collection) return <></>

@@ -1,4 +1,4 @@
-import { Collection, LayerElement, Organisation, Repository, Rules, TraitElement } from '@prisma/client'
+import { LayerElement, Organisation, Repository, Rules, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
@@ -7,7 +7,6 @@ interface CompilerViewInterface {
   collectionId: string
   organisation: Organisation
   repository: Repository
-  collection: Collection
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
@@ -48,11 +47,10 @@ interface CompilerViewInterface {
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
-  resetTokens: () => void
+  resetTokens: (totalSupply: number) => void
   setOrganisation: (organisation: Organisation) => void
   setRepository: (repository: Repository) => void
   setCollectionId: (collectionId: string) => void
-  setCollection: (collection: Collection) => void
   setLayers: (
     layers: (LayerElement & {
       traitElements: (TraitElement & {
@@ -118,7 +116,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
     tokenRanking: [], // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
-    resetTokens: () => set((state) => ({ tokens: Array.from(Array(state.collection.totalSupply).keys()) })),
+    resetTokens: (totalSupply: number) => set((state) => ({ tokens: Array.from(Array(totalSupply).keys()) })),
     setTokens: (tokens: number[]) => set((_) => ({ tokens })),
     setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
     setTraitMapping: ({
@@ -136,7 +134,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegeneratePreview: (regenerate: boolean) => set((_) => ({ regeneratePreview: regenerate })),
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
     setRepository: (repository: Repository) => set((_) => ({ repository })),
-    setCollection: (collection: Collection) => set((_) => ({ collection })),
     setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
     setLayers: (
       layers: (LayerElement & {

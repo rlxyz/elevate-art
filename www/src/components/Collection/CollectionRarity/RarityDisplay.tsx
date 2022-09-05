@@ -26,13 +26,12 @@ export const RarityDisplay = ({
   layerName: string
   layerId: string
 }) => {
-  const { collection, organisation, repository } = useRepositoryStore((state) => {
+  const { collectionId } = useRepositoryStore((state) => {
     return {
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
+      collectionId: state.collectionId,
     }
   })
+  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
@@ -52,6 +51,8 @@ export const RarityDisplay = ({
   useEffect(() => {
     setSummedRarityWeightage(calculateSumArray(traitElements))
   }, [traitElements])
+
+  if (!collectionData) return null
 
   return (
     <>
@@ -106,7 +107,7 @@ export const RarityDisplay = ({
                   calculateTraitQuantityInCollection(
                     traitElement.weight,
                     summedRarityWeightage,
-                    collection.totalSupply
+                    collectionData.totalSupply
                   ).toFixed(0)
                 ),
               }
@@ -194,7 +195,7 @@ export const RarityDisplay = ({
                                     }}
                                   />
                                 </div>
-                                <span>out of {collection.totalSupply}</span>
+                                <span>out of {collectionData.totalSupply}</span>
                               </div>
                             </td>
                             {/* <td className='whitespace-nowrap text-sm font-medium'>
