@@ -1,16 +1,10 @@
-import FileUpload from '@components/CollectionHelpers/FileUpload'
+import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
+import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import {
-  animate,
-  AnimatePresence,
-  MotionValue,
-  Reorder,
-  useDragControls,
-  useMotionValue,
-} from 'framer-motion'
-import Link from 'next/link'
+import { trpc } from '@utils/trpc'
+import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router, { NextRouter, useRouter } from 'next/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -57,28 +51,10 @@ export const ReorderItem = ({
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
-
-  const { currentLayerPriority, currentViewSection } = useRepositoryRouterStore((state) => {
-    return {
-      currentLayerPriority: state.currentLayerPriority,
-      currentViewSection: state.currentViewSection,
-    }
-  })
-
+  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
-
-  const { traitMapping, collection, organisation, repository } = useRepositoryStore((state) => {
-    return {
-      traitMapping: state.traitMapping,
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
-      regenerate: state.regenerate,
-      setRegenerateCollection: state.setRegenerateCollection,
-    }
-  })
 
   return (
     <Reorder.Item
@@ -89,68 +65,61 @@ export const ReorderItem = ({
       dragControls={dragControls}
     >
       <Link
-        href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${currentViewSection}/${name}`}
+        href={`/${organisationName}/${repositoryName}/${collectionName}/${currentViewSection}/${name}`}
+        enabled={enabled}
+        hover
+        title={name}
       >
-        <div
-          className={`cursor-pointer flex flex-row rounded-[5px] py-3 justify-between hover:bg-mediumGrey hover:bg-opacity-30 ${
-            enabled ? 'bg-mediumGrey bg-opacity-50 font-semibold' : ''
-          }`}
-        >
-          <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
-            <span>{name}</span>
-            {/* <span className='text-xs'>{traitMapping.traitMap?.get(id)?.size || 0}</span> */}
-          </div>
-          {canReorder && (
-            <DotsHorizontalIcon
-              className='ml-1 w-5 h-5'
-              onPointerDown={(e) => {
-                e.preventDefault()
-                dragControls.start(e)
-              }}
-            />
-          )}
-        </div>
+        {canReorder && (
+          <DotsHorizontalIcon
+            className='ml-1 w-5 h-5'
+            onPointerDown={(e) => {
+              e.preventDefault()
+              dragControls.start(e)
+            }}
+          />
+        )}
       </Link>
     </Reorder.Item>
   )
 }
 
 const LayerFolderSelector = () => {
-  const {
-    layers,
-    regenerate,
-    regeneratePreview,
-    setRegeneratePreview,
-    setRegenerateCollection,
-    organisation,
-    repository,
-  } = useRepositoryStore((state) => {
-    return {
-      layers: state.layers,
-      organisation: state.organisation,
-      repository: state.repository,
-      regenerate: state.regenerate,
-      regeneratePreview: state.regeneratePreview,
-      setRegeneratePreview: state.setRegeneratePreview,
-      setRegenerateCollection: state.setRegenerateCollection,
-    }
-  })
-
+  const { repositoryId, regenerate, regeneratePreview, setRegeneratePreview, setRegenerateCollection } =
+    useRepositoryStore((state) => {
+      return {
+        repositoryId: state.repositoryId,
+        regenerate: state.regenerate,
+        regeneratePreview: state.regeneratePreview,
+        setRegeneratePreview: state.setRegeneratePreview,
+        setRegenerateCollection: state.setRegenerateCollection,
+      }
+    })
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { currentLayerPriority } = useRepositoryRouterStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
     }
   })
-
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const [items, setItems] = useState(layers.map((layer) => layer.id))
+
+  const [items, setItems] = useState<string[]>()
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
   const [expandPreview, setExpandPreview] = useState(false)
   const [currentImagePreviews, setCurrentImagePreviews] = useState<React.ReactNode[]>([])
+
+  useEffect(() => {
+    if (!layers) return
+    setItems(layers.map((layer) => layer.id))
+  }, [layers])
+
+  if (!layers || !items) return null
+
+  console.log('creating')
 
   // const generateImageHandler = async (): Promise<React.ReactNode[]> => {
   //   const app: App = createCompilerApp(repository.name)
@@ -222,7 +191,7 @@ const LayerFolderSelector = () => {
                 </button> */}
             </div>
           </div>
-          <div className='max-h-[calc(100vh-17.5rem)] overflow-y-scroll'>
+          <div className='max-h-[calc(100vh-17.5rem)]'>
             <FileUpload id={`${organisationName}/${repositoryName}`}>
               <AnimatePresence>
                 <Reorder.Group

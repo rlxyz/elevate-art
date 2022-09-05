@@ -7,52 +7,35 @@ import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 
 const CollectionPreview = () => {
-  const {
-    setTraitMapping,
-    setTokenRanking,
-    setRegenerateCollection,
-    layers,
-    collection,
-    regenerate,
-  } = useRepositoryStore((state) => {
+  const { setTraitMapping, setTokenRanking, collectionId, repositoryId } = useRepositoryStore((state) => {
     return {
       setTokenRanking: state.setTokenRanking,
       setTraitMapping: state.setTraitMapping,
-      setRegenerateCollection: state.setRegenerateCollection,
-      regenerate: state.regenerate,
-      layers: state.layers,
-      collection: state.collection,
+      collectionId: state.collectionId,
+      repositoryId: state.repositoryId,
     }
   })
 
-  const { data: collectionData } = trpc.useQuery([
-    'collection.getCollectionById',
-    { id: collection.id },
-  ])
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
 
   useEffect(() => {
-    if (!collectionData) return
-    const tokens = createManyTokens(
-      layers,
-      collectionData.totalSupply,
-      collectionData.name,
-      collectionData.generations
-    )
+    if (!collection || !layers) return
+    const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-    console.log({ tokenIdMap, traitMap })
     setTraitMapping({
       tokenIdMap,
       traitMap,
     })
-    setTokenRanking(getTokenRanking(tokens, traitMap, collectionData.totalSupply))
-  }, [collectionData])
+    setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
+  }, [collection, layers])
 
   return (
     <CollectionViewContent
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      <InfiniteScrollGrid collectionId={collection.id} />
+      {collection && layers && <InfiniteScrollGrid collection={collection} />}
     </CollectionViewContent>
   )
 }

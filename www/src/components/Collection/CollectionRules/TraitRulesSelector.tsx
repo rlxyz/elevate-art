@@ -1,4 +1,4 @@
-import { SmallAdvancedImage } from '@components/CollectionHelpers/AdvancedImage'
+import { SmallAdvancedImage } from '@components/Collection/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
@@ -15,7 +15,6 @@ import { RulesEnum, RulesType } from 'src/types/enums'
 export const TraitRulesSelector = ({
   title,
   traitElements,
-  onSuccess,
 }: {
   title: string
   traitElements: (TraitElement & {
@@ -28,22 +27,27 @@ export const TraitRulesSelector = ({
       secondaryTraitElement: TraitElement
     })[]
   })[]
-  onSuccess: () => void
 }) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
-  const layers = useRepositoryStore((state) => state.layers)
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
   const { notifySuccess, notifyError } = useNotification()
-
+  if (!layers) return null
   const allRightTraitElements = layers
     .filter((_, index) => index !== currentLayerPriority)
     .flatMap((layer) => layer.traitElements)
+  const ctx = trpc.useContext()
 
   const mutation = trpc.useMutation('trait.setRuleById', {
     onSuccess: (data, variables) => {
-      onSuccess()
+      const primaryLayer = data.layers.filter((layer) => layer.id === (data.primary?.layerElement.id || ''))[0]
+      const secondaryLayer = data.layers.filter((layer) => layer.id === (data.secondary?.layerElement.id || ''))[0]
+      if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
+      if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       notifySuccess(
         <div>
           <span className='text-blueHighlight text-semibold'>{data.primary?.name}</span>
@@ -64,11 +68,7 @@ export const TraitRulesSelector = ({
       <span className='block text-xs font-semibold uppercase'>{title}</span>
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
-          <TraitSelector
-            traitElements={traitElements}
-            selected={selectedLeftTrait}
-            onChange={setSelectedLeftTrait}
-          />
+          <TraitSelector traitElements={traitElements} selected={selectedLeftTrait} onChange={setSelectedLeftTrait} />
         </div>
         <div className='col-span-2 relative mt-1'>
           <TraitSelectorCondition selected={selectedCondition} onChange={setSelectedCondition} />
@@ -82,12 +82,11 @@ export const TraitRulesSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
           <Button
-            disabled={
-              !(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading
-            }
+            disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
               mutation.mutate({
+                repositoryId: repositoryId,
                 primaryTraitElementId: selectedLeftTrait.id,
                 type: selectedCondition,
                 secondaryTraitElementId: selectedRightTrait.id,
@@ -150,9 +149,7 @@ export const TraitSelectorCondition = ({
           >
             {({ active, selected }) => (
               <>
-                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
-                  {option.name}
-                </span>
+                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{option.name}</span>
                 {selected && (
                   <span
                     className={classNames(
@@ -185,12 +182,8 @@ export const TraitSelector = ({
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { layers } = useRepositoryStore((state) => {
-    return {
-      layers: state.layers,
-    }
-  })
-
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const filteredTraits =
     query === ''
       ? traitElements
@@ -199,6 +192,8 @@ export const TraitSelector = ({
         })
 
   useEffect(() => onChange(null), [currentLayerPriority])
+
+  if (!layers) return null
 
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
@@ -234,19 +229,11 @@ export const TraitSelector = ({
                     />
                     <div className='flex flex-row space-x-2 items-center'>
                       <span
-                        className={classNames(
-                          'block truncate text-xs tracking-tight',
-                          selected ? 'font-semibold' : ''
-                        )}
+                        className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}
                       >
-                        {
-                          layers.filter((layer) => layer.id === traitElement.layerElementId)[0]
-                            ?.name
-                        }
+                        {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
                       </span>
-                      <span
-                        className={classNames('block truncate', selected ? 'font-semibold' : '')}
-                      >
+                      <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
                         {traitElement.name}
                       </span>
                     </div>

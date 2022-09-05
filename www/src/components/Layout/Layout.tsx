@@ -1,88 +1,48 @@
-import { RepositoryNavbar } from '@components/CollectionHelpers/ViewContent'
+import { classNames } from '@utils/format'
 import * as React from 'react'
-import { SectionHeader } from '../CollectionHelpers/SectionHeader'
 import { Footer } from './Footer'
-import { BasicHeader, Header } from './Header'
-import { Seo } from './Seo'
 
 interface LayoutProps {
+  children: React.ReactElement[] | React.ReactElement
+}
+
+const LayoutContainer = ({
+  className,
+  children,
+}: {
+  className?: string
   children: React.ReactNode
-}
-
-export const BasicLayout: React.FC<LayoutProps> = ({ children }) => {
+}) => {
   return (
-    <>
-      <Seo />
-      <main>
-        <div className='bg-hue-light flex justify-center border-b border-mediumGrey h-[3.5rem]'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>
-            <BasicHeader
-              navigation={[
-                {
-                  name: 'Blog',
-                  href: 'https://blog.elevate.art',
-                },
-                {
-                  name: 'Discord',
-                  href: 'https://discord.elevate.art',
-                },
-              ]}
-            />
-          </div>
-        </div>
-        <div className='bg-hue-light flex justify-center min-h-[calc(100vh-8rem)]'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>{children}</div>
-        </div>
-        <div className='bg-hue-light flex justify-center border border-t border-mediumGrey h-[4.5rem]'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>
-            <Footer />
-          </div>
-        </div>
-      </main>
-    </>
+    <div className={classNames('flex justify-center border-b border-mediumGrey', className || '')}>
+      <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>{children}</div>
+    </div>
   )
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout = ({ children }: LayoutProps) => {
   return (
-    <>
-      <Seo />
-      <main>
-        <div className='bg-hue-light flex justify-center'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>
-            <Header
-              navigation={[
-                {
-                  name: 'Changelog',
-                  href: 'https://changelog.elevate.art',
-                },
-                {
-                  name: 'Docs',
-                  href: 'https://docs.elevate.art',
-                },
-                {
-                  name: 'Discord',
-                  href: 'https://discord.elevate.art',
-                },
-              ]}
-            />
-            <RepositoryNavbar />
-          </div>
-        </div>
-        <div className='bg-hue-light flex justify-center border border-b border-mediumGrey'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>
-            <SectionHeader />
-          </div>
-        </div>
-        <div className='bg-hue-light flex justify-center'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%]  2xl:w-[65%]'>{children}</div>
-        </div>
-        <div className='bg-hue-light flex justify-center border border-t border-mediumGrey'>
-          <div className='w-[90%] lg:w-[75%] xl:[82%]  2xl:w-[65%]'>
-            <Footer />
-          </div>
-        </div>
-      </main>
-    </>
+    <main className='layout'>
+      {children}
+      <LayoutContainer>
+        <Footer />
+      </LayoutContainer>
+    </main>
   )
 }
+
+const LayoutHeader = ({ children }: { children: React.ReactNode }) => (
+  <LayoutContainer className='header'>{children}</LayoutContainer>
+)
+
+const LayoutBody = ({ children }: { children: React.ReactNode }) => (
+  <LayoutContainer className='body min-h-[calc(100vh-10rem)]'>{children}</LayoutContainer>
+)
+
+const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
+  <LayoutContainer className='title'>{children}</LayoutContainer>
+)
+
+Layout.Header = LayoutHeader
+Layout.Title = LayoutTitle
+Layout.Body = LayoutBody

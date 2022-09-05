@@ -1,7 +1,8 @@
-import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
+import { trpc } from '@utils/trpc'
 import { motion, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -17,12 +18,8 @@ const InfiniteScrollGridItem = ({
   organisationName: string
   name: string
 }) => {
-  const { layers } = useRepositoryStore((state) => {
-    return {
-      collection: state.collection,
-      layers: state.layers,
-    }
-  })
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const controls = useAnimation()
   const [ref, inView] = useInView()
   useEffect(() => {
@@ -41,6 +38,9 @@ const InfiniteScrollGridItem = ({
       transition: { ease: [0.78, 0.14, 0.15, 0.86] },
     },
   }
+
+  if (!layers || !layers.length) return null
+
   return (
     <motion.div
       className='flex flex-col space-y-2 justify-center items-center'
@@ -49,10 +49,7 @@ const InfiniteScrollGridItem = ({
       animate={controls}
       ref={ref}
     >
-      <div
-        className='h-[125px] w-[125px] w- overflow-hidden'
-        style={{ transformStyle: 'preserve-3d' }}
-      >
+      <div className='h-[125px] w-[125px] w- overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
         {token.map((traitElement: TraitElement, index: number) => {
           return (
             <div className='absolute flex flex-col items-center justify-center' key={index}>

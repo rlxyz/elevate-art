@@ -39,6 +39,7 @@ export const SectionHeader = () => {
     </main>
   )
 }
+
 const SectionHeaderContent = Object.freeze({
   preview: {
     title: 'Preview Collection',

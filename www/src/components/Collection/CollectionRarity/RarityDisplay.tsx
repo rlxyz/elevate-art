@@ -1,4 +1,4 @@
-import AdvancedImage from '@components/CollectionHelpers/AdvancedImage'
+import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'
@@ -26,26 +26,37 @@ export const RarityDisplay = ({
   layerName: string
   layerId: string
 }) => {
-  const { collection, organisation, repository } = useRepositoryStore((state) => {
+  const { collectionId, repositoryId } = useRepositoryStore((state) => {
     return {
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
+      repositoryId: state.repositoryId,
+      collectionId: state.collectionId,
     }
   })
+  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
   const ctx = trpc.useContext()
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
 
   const mutation = trpc.useMutation('layer.setAllTraits', {
     onSuccess: (data, variables) => {
-      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
+      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data.changedLayer)
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       setHasFormChange(false)
-      // notifySuccess('Weights updated successfully')
+      notifySuccess(
+        <div>
+          <span>{`Successfully updated `}</span>
+          <span className='text-blueHighlight text-semibold'>{data.changedLayer?.name}</span>
+          <span className='font-semibold'>{` rarities`}</span>
+        </div>,
+        'rarity changed'
+      )
+    },
+    onError: () => {
+      notifyError('Something went wrong')
     },
   })
 
@@ -55,7 +66,7 @@ export const RarityDisplay = ({
 
   return (
     <>
-      {!summedRarityWeightage ? (
+      {!summedRarityWeightage || !collectionData ? (
         <table className='w-full table-fixed divide-y divide-mediumGrey'>
           <thead>
             <tr>
@@ -106,15 +117,16 @@ export const RarityDisplay = ({
                   calculateTraitQuantityInCollection(
                     traitElement.weight,
                     summedRarityWeightage,
-                    collection.totalSupply
+                    collectionData.totalSupply
                   ).toFixed(0)
                 ),
               }
             }),
           }}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values) => {
             setTimeout(() => {
               mutation.mutate({
+                repositoryId,
                 layerId,
                 traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
                   return {
@@ -123,7 +135,6 @@ export const RarityDisplay = ({
                   }
                 }),
               })
-              setSubmitting(false)
             }, 400)
           }}
         >
@@ -178,9 +189,7 @@ export const RarityDisplay = ({
                                 )}.png`}
                               />
                             </td>
-                            <td className='whitespace-nowrap text-sm font-medium'>
-                              {toPascalCaseWithSpace(name)}
-                            </td>
+                            <td className='whitespace-nowrap text-sm font-medium'>{toPascalCaseWithSpace(name)}</td>
                             <td className='whitespace-nowrap text-sm font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>
                                 <div className='w-24'>
@@ -196,7 +205,7 @@ export const RarityDisplay = ({
                                     }}
                                   />
                                 </div>
-                                <span>out of {collection.totalSupply}</span>
+                                <span>out of {collectionData.totalSupply}</span>
                               </div>
                             </td>
                             {/* <td className='whitespace-nowrap text-sm font-medium'>
@@ -245,30 +254,25 @@ export const RarityDisplay = ({
                   <div className='flex items-center justify-between h-full w-full'>
                     <div className='flex justify-end h-full p-6'>
                       <div className='flex items-center space-x-3 mr-6'>
-                        {calculateSumArray(values.traits) >
-                          calculateSumArray(initialValues.traits) && (
+                        {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
                           <>
                             <Image src='/images/tooltip.svg' height={15} width={15} />
                             <span className='text-redDot text-sm'>{`You've overallocated by ${
-                              calculateSumArray(values.traits) -
-                              calculateSumArray(initialValues.traits)
+                              calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
                             }`}</span>
                           </>
                         )}
 
-                        {calculateSumArray(initialValues.traits) >
-                          calculateSumArray(values.traits) && (
+                        {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
                           <>
                             <Image src='/images/tooltip.svg' height={15} width={15} />
                             <span className='text-redDot text-sm'>{`You've underallocated by ${
-                              calculateSumArray(initialValues.traits) -
-                              calculateSumArray(values.traits)
+                              calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
                             }`}</span>
                           </>
                         )}
 
-                        {calculateSumArray(initialValues.traits) ===
-                          calculateSumArray(values.traits) && (
+                        {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
                           <>
                             <span className='text-blueHighlight text-sm'>You can now submit</span>
                           </>
@@ -286,8 +290,7 @@ export const RarityDisplay = ({
                         </Button>
                         <Button
                           disabled={
-                            (calculateSumArray(values.traits) ==
-                            calculateSumArray(initialValues.traits)
+                            (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits)
                               ? false
                               : true) || isSubmitting
                           }

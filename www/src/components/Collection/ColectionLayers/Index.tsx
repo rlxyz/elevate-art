@@ -1,7 +1,7 @@
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import ordinal from 'ordinal'
 
-import { useCurrentLayer } from '../../hooks/useCurrentLayer'
+import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import LayerGrid from './LayerGrid'
 

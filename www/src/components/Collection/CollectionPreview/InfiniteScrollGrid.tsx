@@ -1,4 +1,5 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { Collection } from '@prisma/client'
 import { createToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -17,29 +18,29 @@ const container = {
 }
 
 const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
-  const { collection, repository, tokens, resetTokens, layers } = useRepositoryStore((state) => {
+  const { collectionId, repositoryId, tokens, resetTokens } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
       resetTokens: state.resetTokens,
-      repository: state.repository,
       tokens: state.tokens,
-      collection: state.collection,
-      layers: state.layers,
+      repositoryId: state.repositoryId,
+      collectionId: state.collectionId,
     }
   })
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: repository } = trpc.useQuery(['repository.getRepositoryById', { id: repositoryId }])
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { data: collectionData } = trpc.useQuery([
-    'collection.getCollectionById',
-    { id: collection.id },
-  ])
 
   useEffect(() => {
-    resetTokens()
-  }, [])
+    if (!collection) return
+    resetTokens(collection.totalSupply)
+  }, [collection])
 
-  if (!tokens || !tokens.length || !collectionData) return <></>
+  if (!tokens || !tokens.length || !collection || !repository || !layers) return null
 
   // lags the front end
   const populateCollection = (): ReactNode[] => {
@@ -52,7 +53,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
           token={createToken({
             id: Number(tokens[index]),
             name: collection.name,
-            generation: collectionData.generations,
+            generation: collection.generations,
             layers,
           })}
           repositoryName={repositoryName}
@@ -71,29 +72,23 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   )
 }
 
-export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) => {
-  const { data } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-  const collection = useRepositoryStore((state) => state.collection)
+export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) => {
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
 
   const fetch = (start: number) => {
-    if (!collection || !collection.totalSupply) return
-
+    if (!collection) return
     const startPointIndex = start
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
     const endPoint = endPointIndex * 50
-    setTokensOnDisplay([
-      ...tokensOnDisplay,
-      ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint),
-    ])
+    setTokensOnDisplay([...tokensOnDisplay, ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint)])
     setPage((p) => p + 1)
   }
 
   const fetchMoreData = (page: number) => {
-    if (!data || page * 50 >= data.totalSupply) {
+    if (!collection || page * 50 >= collection.totalSupply) {
       setHasMore(false)
       return
     }
@@ -109,26 +104,7 @@ export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) =
       dataLength={tokensOnDisplay.length}
       next={() => fetchMoreData(page)}
       hasMore={hasMore}
-      loader={
-        // <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-        //   {Array.from(Array(50).keys()).map((index: number) => {
-        //     return (
-        //       <div key={index}>
-        //         <div className='border border-lightGray rounded-[5px]'>
-        //           <Image
-        //             width={200}
-        //             height={200}
-        //             className='rounded-[5px] border-[1px] border-lightGray'
-        //             src={`/images/logo.png`}
-        //           />
-        //         </div>
-        //         <span className='text-xs flex justify-center'>...</span>
-        //       </div>
-        //     )
-        //   })}
-        // </div>
-        <></>
-      }
+      loader={<></>}
     >
       <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
     </InfiniteScrollComponent.default>
