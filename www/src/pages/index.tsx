@@ -11,14 +11,12 @@ const Guide = () => {
       <span className='font-bold text-4xl'>Start with creating your collection</span>
       <div className='mt-8 w-[60%] grid grid-cols-2 space-x-4'>
         <div className='col-span-1 text-sm'>
-          Developers love Next.js, the open source React framework Vercel built together with Google
-          and Facebook. Next.js powers the biggest websites like Patreon, for use cases in
-          e-commerce, travel, news, and marketing.
+          Developers love Next.js, the open source React framework Vercel built together with Google and Facebook.
+          Next.js powers the biggest websites like Patreon, for use cases in e-commerce, travel, news, and marketing.
         </div>
         <div className='col-span-1 text-sm'>
-          Vercel is the best place to deploy any frontend app. Start by deploying with zero
-          configuration to our global edge network. Scale dynamically to millions of pages without
-          breaking a sweat.
+          Vercel is the best place to deploy any frontend app. Start by deploying with zero configuration to our global
+          edge network. Scale dynamically to millions of pages without breaking a sweat.
         </div>
       </div>
       <div className='mt-8 grid grid-cols-2 space-x-16'>
@@ -74,16 +72,12 @@ const Home: NextPage = () => {
           <div className='space-y-20'>
             <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col justify-center items-center'>
               <div className='w-[50%]'>
-                <img
-                  className='h-full object-cover'
-                  src='/images/logo-banner.png'
-                  alt='People working on laptops'
-                />
+                <img className='h-full object-cover' src='/images/logo-banner.png' alt='People working on laptops' />
               </div>
               <span className='text-right'>
-                powered by{' '}
-                <Link external={true} href='https://0v1.xyz'>
-                  <span className='font-extrabold'>0v1</span>
+                by{' '}
+                <Link external={true} href='https://twitter.com/rlxyz_eth'>
+                  <span className='font-extrabold line-through'>RLXYZ</span>
                 </Link>
               </span>
             </div>
