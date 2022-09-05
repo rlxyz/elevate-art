@@ -3,14 +3,7 @@ import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import {
-  animate,
-  AnimatePresence,
-  MotionValue,
-  Reorder,
-  useDragControls,
-  useMotionValue
-} from 'framer-motion'
+import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router, { NextRouter, useRouter } from 'next/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -91,25 +84,17 @@ export const ReorderItem = ({
 }
 
 const LayerFolderSelector = () => {
-  const {
-    layers,
-    regenerate,
-    regeneratePreview,
-    setRegeneratePreview,
-    setRegenerateCollection,
-    organisation,
-    repository,
-  } = useRepositoryStore((state) => {
-    return {
-      layers: state.layers,
-      organisation: state.organisation,
-      repository: state.repository,
-      regenerate: state.regenerate,
-      regeneratePreview: state.regeneratePreview,
-      setRegeneratePreview: state.setRegeneratePreview,
-      setRegenerateCollection: state.setRegenerateCollection,
-    }
-  })
+  const { layers, regenerate, regeneratePreview, setRegeneratePreview, setRegenerateCollection, organisation } =
+    useRepositoryStore((state) => {
+      return {
+        layers: state.layers,
+        organisation: state.organisation,
+        regenerate: state.regenerate,
+        regeneratePreview: state.regeneratePreview,
+        setRegeneratePreview: state.setRegeneratePreview,
+        setRegenerateCollection: state.setRegenerateCollection,
+      }
+    })
 
   const { currentLayerPriority } = useRepositoryRouterStore((state) => {
     return {

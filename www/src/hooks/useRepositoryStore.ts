@@ -1,12 +1,12 @@
-import { LayerElement, Organisation, Repository, Rules, TraitElement } from '@prisma/client'
+import { LayerElement, Organisation, Rules, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
   collectionId: string
+  repositoryId: string
   organisation: Organisation
-  repository: Repository
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
@@ -49,7 +49,7 @@ interface CompilerViewInterface {
   setRegenerateCollection: (regenerate: boolean) => void
   resetTokens: (totalSupply: number) => void
   setOrganisation: (organisation: Organisation) => void
-  setRepository: (repository: Repository) => void
+  setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setLayers: (
     layers: (LayerElement & {
@@ -70,19 +70,12 @@ interface CompilerViewInterface {
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    repositoryId: '',
     collectionId: '',
     tokens: [],
     traitMapping: {
       tokenIdMap: new Map(),
       traitMap: new Map(),
-    },
-    repository: {
-      id: '',
-      name: '',
-      tokenName: '',
-      organisationId: '',
-      createdAt: new Date(-1),
-      updatedAt: new Date(-1),
     },
     organisation: {
       id: '',
@@ -126,6 +119,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       tokenIdMap: Map<string, Map<string, number[]>>
       traitMap: Map<string, Map<string, number>>
     }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
+    setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
     setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
     setOrganisation: (organisation: Organisation) => set((_) => ({ organisation })),
     setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) =>
@@ -133,7 +127,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegenerateFilter: (regenerateFilter: boolean) => set((_) => ({ regenerateFilter })),
     setRegeneratePreview: (regenerate: boolean) => set((_) => ({ regeneratePreview: regenerate })),
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
-    setRepository: (repository: Repository) => set((_) => ({ repository })),
     setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
     setLayers: (
       layers: (LayerElement & {
