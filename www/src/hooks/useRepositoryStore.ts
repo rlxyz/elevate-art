@@ -1,31 +1,13 @@
-import {
-  Collection,
-  LayerElement,
-  Organisation,
-  Repository,
-  Rules,
-  TraitElement,
-} from '@prisma/client'
+import { LayerElement, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
-  organisation: Organisation
-  repository: Repository
-  collection: Collection
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[]
+  layerNames: string[]
+  layerIds: string[]
+  collectionId: string
+  repositoryId: string
   currentLayer: LayerElement & {
     traitElements: TraitElement[]
   }
@@ -54,48 +36,23 @@ interface CompilerViewInterface {
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
-  resetTokens: () => void
-  setOrganisation: (organisation: Organisation) => void
-  setRepository: (repository: Repository) => void
-  setCollection: (collection: Collection) => void
-  setLayers: (
-    layers: (LayerElement & {
-      traitElements: (TraitElement & {
-        rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-        })[]
-        rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-        })[]
-      })[]
-    })[]
-  ) => void
-  setCurrentLayer: (priority: number) => void
+  resetTokens: (totalSupply: number) => void
+  setRepositoryId: (repositoryId: string) => void
+  setCollectionId: (collectionId: string) => void
+  setLayerIds: (ids: string[]) => void
+  setLayerNames: (names: string[]) => void
 }
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    layerNames: [],
+    layerIds: [],
+    repositoryId: '',
+    collectionId: '',
     tokens: [],
     traitMapping: {
       tokenIdMap: new Map(),
       traitMap: new Map(),
-    },
-    repository: {
-      id: '',
-      name: '',
-      tokenName: '',
-      organisationId: '',
-      createdAt: new Date(-1),
-      updatedAt: new Date(-1),
-    },
-    organisation: {
-      id: '',
-      name: '',
-      ownerId: '',
-      createdAt: new Date(-1),
-      updatedAt: new Date(-1),
     },
     collection: {
       id: '',
@@ -122,11 +79,9 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
     tokenRanking: [], // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
-    resetTokens: () =>
-      set((state) => ({ tokens: Array.from(Array(state.collection.totalSupply).keys()) })),
+    resetTokens: (totalSupply: number) => set((state) => ({ tokens: Array.from(Array(totalSupply).keys()) })),
     setTokens: (tokens: number[]) => set((_) => ({ tokens })),
-    setTraitFilters: (filter) =>
-      set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
+    setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
     setTraitMapping: ({
       tokenIdMap,
       traitMap,
@@ -134,31 +89,16 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       tokenIdMap: Map<string, Map<string, number[]>>
       traitMap: Map<string, Map<string, number>>
     }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
-    setOrganisation: (organisation: Organisation) => set((_) => ({ organisation })),
+    setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
+    setLayerNames: (names: string[]) => set((_) => ({ layerNames: names })),
+    setLayerIds: (ids: string[]) => set((_) => ({ layerIds: ids })),
+    setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
     setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) =>
       set((_) => ({ regenerateFilterIndex: { start, end } })),
     setRegenerateFilter: (regenerateFilter: boolean) => set((_) => ({ regenerateFilter })),
     setRegeneratePreview: (regenerate: boolean) => set((_) => ({ regeneratePreview: regenerate })),
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
-    setRepository: (repository: Repository) => set((_) => ({ repository })),
-    setCollection: (collection: Collection) => set((_) => ({ collection })),
     setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
-    setLayers: (
-      layers: (LayerElement & {
-        traitElements: (TraitElement & {
-          rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-          rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-        })[]
-      })[]
-    ) => set((_) => ({ layers })),
-    setCurrentLayer: (priority: number) =>
-      set((state) => ({ currentLayer: state.layers[priority] })),
   }))
 )
 

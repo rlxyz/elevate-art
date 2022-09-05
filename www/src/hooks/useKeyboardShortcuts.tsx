@@ -4,33 +4,32 @@ import { LayerSectionEnum } from 'src/types/enums'
 import useRepositoryRouterStore from './useRepositoryRouterStore'
 
 export const useKeybordShortcuts = () => {
-  const { layers, setRegeneratePreview, setRegenerateCollection } = useRepositoryStore((state) => {
+  const { setRegeneratePreview, setRegenerateCollection, layerIds } = useRepositoryStore((state) => {
     return {
-      layers: state.layers,
+      layerIds: state.layerIds,
       setRegeneratePreview: state.setRegeneratePreview,
       setRegenerateCollection: state.setRegenerateCollection,
     }
   })
 
-  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } =
-    useRepositoryRouterStore((state) => {
-      return {
-        setCurrentViewSection: state.setCurrentViewSection,
-        setCurrentLayerPriority: state.setCurrentLayerPriority,
-        currentLayerPriority: state.currentLayerPriority,
-        currentViewSection: state.currentViewSection,
-      }
-    })
+  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useRepositoryRouterStore((state) => {
+    return {
+      setCurrentViewSection: state.setCurrentViewSection,
+      setCurrentLayerPriority: state.setCurrentLayerPriority,
+      currentLayerPriority: state.currentLayerPriority,
+      currentViewSection: state.currentViewSection,
+    }
+  })
 
-  useHotkeys('shift+1', () => layers.length > 0 && setCurrentLayerPriority(0))
-  useHotkeys('shift+2', () => layers.length > 1 && setCurrentLayerPriority(1))
-  useHotkeys('shift+3', () => layers.length > 3 && setCurrentLayerPriority(2))
-  useHotkeys('shift+4', () => layers.length > 4 && setCurrentLayerPriority(3))
-  useHotkeys('shift+5', () => layers.length > 5 && setCurrentLayerPriority(4))
-  useHotkeys('shift+6', () => layers.length > 6 && setCurrentLayerPriority(5))
-  useHotkeys('shift+7', () => layers.length > 7 && setCurrentLayerPriority(6))
-  useHotkeys('shift+8', () => layers.length > 8 && setCurrentLayerPriority(7))
-  useHotkeys('shift+9', () => layers.length > 9 && setCurrentLayerPriority(layers.length - 1))
+  useHotkeys('shift+1', () => layerIds.length > 0 && setCurrentLayerPriority(0))
+  useHotkeys('shift+2', () => layerIds.length > 1 && setCurrentLayerPriority(1))
+  useHotkeys('shift+3', () => layerIds.length > 3 && setCurrentLayerPriority(2))
+  useHotkeys('shift+4', () => layerIds.length > 4 && setCurrentLayerPriority(3))
+  useHotkeys('shift+5', () => layerIds.length > 5 && setCurrentLayerPriority(4))
+  useHotkeys('shift+6', () => layerIds.length > 6 && setCurrentLayerPriority(5))
+  useHotkeys('shift+7', () => layerIds.length > 7 && setCurrentLayerPriority(6))
+  useHotkeys('shift+8', () => layerIds.length > 8 && setCurrentLayerPriority(7))
+  useHotkeys('shift+9', () => layerIds.length > 9 && setCurrentLayerPriority(layerIds.length - 1))
   useHotkeys(
     'shift+cmd+up',
     () => currentLayerPriority > 0 && setCurrentLayerPriority(currentLayerPriority - 1),
@@ -41,8 +40,7 @@ export const useKeybordShortcuts = () => {
   )
   useHotkeys(
     'shift+cmd+down',
-    () =>
-      currentLayerPriority + 1 < layers.length && setCurrentLayerPriority(currentLayerPriority + 1),
+    () => currentLayerPriority + 1 < layerIds.length && setCurrentLayerPriority(currentLayerPriority + 1),
     {
       keydown: true,
     },

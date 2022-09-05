@@ -169,11 +169,11 @@ function NavbarMobileSidebar({ sidebarShown, toggleSidebar }) {
               />
             ))}
           </ul>
-          <a href="https://zora.co/" target="_blank" rel="noopener noreferrer">
-            <p className={styles.zoraCoText}>Zora.co</p>
+          <a href="https://elevate.art/" target="_blank" rel="noopener noreferrer">
+            <p className={styles.zoraCoText}>elevate.art</p>
           </a>
           <a
-            href="https://github.com/ourzora"
+            href="https://github.com/rlxyz"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -248,7 +248,7 @@ function Navbar() {
           <>
             <div className="navbar__items navbar__items--right">
               <a
-                href="https://github.com/ourzora"
+                href="https://github.com/rlxyz"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -261,8 +261,8 @@ function Navbar() {
                   onChange={colorModeToggle.toggle}
                 />
               )}
-              <a href="https://zora.co/" target="_blank" rel="noopener noreferrer">
-                <button className={styles.zoraCoButton}>Zora.co</button>
+              <a href="https://elevate.art/" target="_blank" rel="noopener noreferrer">
+                <button className={styles.zoraCoButton}>elevate.art</button>
               </a>
             </div>
           </>

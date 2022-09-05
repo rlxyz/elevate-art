@@ -4,19 +4,19 @@ const katex = require('rehype-katex')
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'Zora Docs',
-  url: 'https://docs.zora.co',
+  title: 'Elevate Art Docs',
+  url: 'https://docs.elevate.art',
   baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo_white.svg',
   organizationName: 'ourzora',
   projectName: 'Zora Docs',
   themeConfig: {
     navbar: {
       logo: {
         alt: 'Zora Docs Logo',
-        src: 'img/zoraOrb.svg',
+        src: 'img/logo_white.svg',
       },
       items: [
         {
@@ -68,16 +68,16 @@ module.exports = {
     metadatas: [
       {
         name: 'title',
-        content: 'Zora Docs',
+        content: 'Elevate Art Docs',
       },
       {
         name: 'og:description',
-        content: 'Open tools to build your own NFT marketplaces and applications.'
+        content: 'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.'
       },
       {
         name: 'description',
         content:
-          'Zora makes it easy for developers to get started building with NFTs by providing tools for displaying, minting, and selling all in one place. ',
+          'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.',
       },
     ],
   },

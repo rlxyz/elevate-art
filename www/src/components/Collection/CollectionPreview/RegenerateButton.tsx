@@ -1,0 +1,50 @@
+import { Button } from '@components/UI/Button'
+import { useNotification } from '@hooks/useNotification'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { trpc } from '@utils/trpc'
+import Image from 'next/image'
+
+export const RegegenerateButton = () => {
+  const { collectionId } = useRepositoryStore((state) => {
+    return {
+      collectionId: state.collectionId,
+    }
+  })
+  const { notifySuccess } = useNotification()
+  const ctx = trpc.useContext()
+
+  const mutation = trpc.useMutation('collection.incrementGeneration', {
+    onSuccess: (data, variables) => {
+      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
+      notifySuccess(
+        <span>
+          <span className='text-blueHighlight'>Successfully</span>
+          <span>
+            {' '}
+            generated a <span className='font-semibold'>new collection!</span>
+          </span>
+        </span>,
+        'elevate'
+      )
+    },
+  })
+
+  return (
+    <div className='flex items-center border border-mediumGrey rounded-[5px] px-4 py-3'>
+      <div className='space-y-4'>
+        <span className='font-normal flex flex-col text-xs space-y-3'>
+          <div className='flex items-center justify-between'>
+            <span className='font-semibold'>Generate</span>
+          </div>
+          <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
+          <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}>
+            <span className='flex items-center justify-center space-x-2'>
+              <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />
+              <span className='text-xs'>elevate.art</span>
+            </span>
+          </Button>
+        </span>
+      </div>
+    </div>
+  )
+}
