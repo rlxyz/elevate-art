@@ -16,27 +16,27 @@ const CollectionPreview = () => {
     }
   })
 
-  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: collection, isLoading, isError } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
   useEffect(() => {
-    if (!collectionData) return
-    const tokens = createManyTokens(layers, collectionData.totalSupply, collectionData.name, collectionData.generations)
+    if (!collection) return
+    const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,
       traitMap,
     })
-    setTokenRanking(getTokenRanking(tokens, traitMap, collectionData.totalSupply))
-  }, [collectionData])
+    setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
+  }, [collection])
 
-  if (!collectionData) return null
+  if (isLoading || isError || !collection) return null
 
   return (
     <CollectionViewContent
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      <InfiniteScrollGrid />
+      <InfiniteScrollGrid collection={collection} />
     </CollectionViewContent>
   )
 }

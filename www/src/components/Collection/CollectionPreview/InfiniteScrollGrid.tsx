@@ -1,4 +1,5 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { Collection } from '@prisma/client'
 import { createToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -29,19 +30,22 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   })
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const { data: repository } = trpc.useQuery(['repository.getRepositoryById', { id: repositoryId }])
+
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+
   useEffect(() => {
     if (!collection) return
     resetTokens(collection.totalSupply)
-  }, [])
+  }, [collection])
 
-  if (!tokens || !tokens.length || !collection || !repository) return <></>
+  if (!tokens || !tokens.length || !collection || !repository) return null
 
   // lags the front end
   const populateCollection = (): ReactNode[] => {
     const items: ReactNode[] = []
+    console.log('populating', tokensOnDisplay)
     tokensOnDisplay.forEach((index: number) => {
       if (index >= tokens.length) return
       items.push(
@@ -62,6 +66,8 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
     return items
   }
 
+  console.log('hi')
+
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
       {repository && layers && populateCollection().map((item) => item)}
@@ -69,14 +75,13 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   )
 }
 
-export const InfiniteScrollGrid = () => {
-  const collectionId = useRepositoryStore((state) => state.collectionId)
-  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) => {
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+
   const fetch = (start: number) => {
-    if (!collection || !collection.totalSupply) return
+    if (!collection) return
     const startPointIndex = start
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
