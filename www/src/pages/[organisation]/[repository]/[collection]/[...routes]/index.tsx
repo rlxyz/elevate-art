@@ -128,7 +128,7 @@ const Page = () => {
           internalRoutes={[
             { current: organisationName, href: `${organisationName}` },
             { current: repositoryName, href: `${organisationName}/${repositoryName}` },
-            { current: collectionName, options: ['main', 'development'], href: `` },
+            { current: collectionName, options: ['main'], href: `` },
           ]}
           internalNavigation={[
             {
