@@ -91,16 +91,10 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
   if (!routes.length) return <></>
   return (
     <>
-      {routes.map(({ current, href, options }) => {
+      {routes.map(({ current, href, options }, index) => {
         return (
-          <>
-            <Image
-              priority
-              width={30}
-              height={30}
-              src='/images/logo-slash.svg'
-              alt='Logo Slash 1'
-            />
+          <div key={index} className='flex items-center justify-center'>
+            <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
             {options ? (
               <Popover className='relative'>
                 <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs focus:ring-offset-2'>
@@ -139,7 +133,7 @@ const HeaderInternalRoutes = ({ routes }: HeaderInternalRoutesProp) => {
                 <div className='text-darkGrey'>{current}</div>
               </Link>
             )}
-          </>
+          </div>
         )
       })}
     </>
@@ -159,9 +153,7 @@ const HeaderExternalaRoutes = ({
         {routes.map((item, index) => {
           return (
             <Link external={true} key={index} href={item.href}>
-              <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>
-                {item.name}
-              </span>
+              <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>{item.name}</span>
             </Link>
           )
         })}

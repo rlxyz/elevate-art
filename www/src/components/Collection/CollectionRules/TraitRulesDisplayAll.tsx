@@ -46,25 +46,27 @@ export const TraitRulesDisplayPerItem = ({
     },
   })
 
+  if (!repositoryId) return null
+
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
             {primary}
           </div>
         </div>
       </div>
       <div className='col-span-2 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
             {condition}
           </div>
         </div>
       </div>
       <div className='col-span-4 relative mt-1'>
         <div>
-          <div className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'>
+          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
             {secondary}
           </div>
         </div>
@@ -123,9 +125,9 @@ export const TraitRulesDisplayAll = ({
             return (
               <>
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
-                {[RulesEnum.enum['cannot mix with']].map((ruleType: string) => {
+                {[RulesEnum.enum['cannot mix with']].map((ruleType: string, index) => {
                   return (
-                    <div className='space-y-2'>
+                    <div className='space-y-2' key={index}>
                       {rulesPrimary
                         .filter((rule) => rule.condition === ruleType)
                         .map((rule, index) => {

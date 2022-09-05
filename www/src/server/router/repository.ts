@@ -14,7 +14,7 @@ export const repositoryRouter = createRouter()
         include: {
           layers: {
             orderBy: { priority: 'asc' }, // guarantee layer order correctness
-            select: { id: true },
+            select: { id: true, name: true },
           },
           collections: {
             where: { name: 'main' },

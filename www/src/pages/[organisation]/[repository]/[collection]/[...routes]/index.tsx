@@ -27,14 +27,18 @@ const PageImplementation = ({
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-  const { setLayerIds, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-      setCollectionId: state.setCollectionId,
-      setLayerIds: state.setLayerIds,
-      layerIds: state.layerIds,
+  const { setLayerIds, setLayerNames, layerNames, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore(
+    (state) => {
+      return {
+        setRepositoryId: state.setRepositoryId,
+        setCollectionId: state.setCollectionId,
+        setLayerIds: state.setLayerIds,
+        setLayerNames: state.setLayerNames,
+        layerIds: state.layerIds,
+        layerNames: state.layerNames,
+      }
     }
-  })
+  )
 
   const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryRouterStore((state) => {
     return {
@@ -45,7 +49,7 @@ const PageImplementation = ({
 
   // sync routing with store
   useEffect(() => {
-    if (!layerIds || layerIds.length === 0 || !routes) return
+    if (!layerNames || layerNames.length === 0 || !routes) return
 
     const parse = LayerSectionEnum.safeParse(routes[0])
     if (!parse.success) {
@@ -70,20 +74,20 @@ const PageImplementation = ({
 
     if (routes.length == 2) {
       const name: string = routes[1] as string
-      // const layer = layers.filter((layer) => layer.name === name)[0]
+      const layer = layerNames.filter((layer) => layer === name)[0]
 
-      // if (!layer) {
-      //   router.push('/404')
-      //   return
-      // }
+      if (!layer) {
+        router.push('/404')
+        return
+      }
 
       setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(0) // fix!
+      setCurrentLayerPriority(layerNames.findIndex((layer) => layer == name)) // fix!
       return
     }
 
     router.push('/404')
-  }, [routes])
+  }, [routes, layerNames])
 
   // sync repository to store
   useEffect(() => {
@@ -94,6 +98,7 @@ const PageImplementation = ({
     if (!collection) return
     if (!layers || layers.length == 0) return
     setLayerIds(layers.map((layer) => layer.id))
+    setLayerNames(layers.map((layer) => layer.name))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
   }, [repositoryData])

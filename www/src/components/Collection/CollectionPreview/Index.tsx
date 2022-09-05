@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
+import AdvancedImage from '../CollectionHelpers/AdvancedImage'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 
@@ -30,7 +31,21 @@ const CollectionPreview = () => {
     setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
   }, [collection, layers])
 
-  if (!collection || !layers) return null
+  if (!collection || !layers)
+    return (
+      <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
+        {Array.from(Array(50).keys()).map((index: number) => {
+          return (
+            <div key={index}>
+              <div className='border border-lightGray rounded-[5px]'>
+                <AdvancedImage url='' />
+              </div>
+              <span className='text-xs flex justify-center'>...</span>
+            </div>
+          )
+        })}
+      </div>
+    )
 
   return (
     <CollectionViewContent
