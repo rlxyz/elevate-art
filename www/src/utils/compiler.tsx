@@ -31,27 +31,22 @@ export const createToken = (opts: {
   layers.forEach(({ traitElements, name }, index: number) => {
     // exclusion
     const filtered = traitElements.filter((traitElement) => {
-      const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter(
-        (rule) => {
-          if (rule.primaryTraitElementId === traitElement.id)
-            return index > rule.secondaryTraitElement.layerElement.priority
-          if (rule.secondaryTraitElementId === traitElement.id)
-            return index > rule.primaryTraitElement.layerElement.priority
-        }
-      )
+      const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
+        if (rule.primaryTraitElementId === traitElement.id)
+          return index > rule.secondaryTraitElement.layerElement.priority
+        if (rule.secondaryTraitElementId === traitElement.id)
+          return index > rule.primaryTraitElement.layerElement.priority
+      })
       return rules.every((rule) => {
         if (rule.primaryTraitElementId === traitElement.id) {
-          return (
-            elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
-          )
+          return elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
         }
         if (rule.secondaryTraitElementId === traitElement.id) {
           return elements[rule.primaryTraitElement.layerElement.priority]?.id !== rule.primaryTraitElementId
         }
       })
     })
-
-    let r = Math.floor(random() * filtered.reduce((a, b) => a + b.weight, 0))
+    let r = random() * filtered.reduce((a, b) => a + b.weight, 0)
     filtered.every((traitElement) => {
       r -= traitElement.weight
       if (r < 0) {
@@ -111,9 +106,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
         : tokenIdMap.get(l)?.set(t, [index])
 
       // update traitMap - increment by 1 each time
-      traitMap.get(l)?.get(t)
-        ? traitMap.get(l)?.set(t, (traitMap.get(l)?.get(t) || 1) + 1)
-        : traitMap.get(l)?.set(t, 1)
+      traitMap.get(l)?.get(t) ? traitMap.get(l)?.set(t, (traitMap.get(l)?.get(t) || 1) + 1) : traitMap.get(l)?.set(t, 1)
     })
   })
   return { tokenIdMap, traitMap }

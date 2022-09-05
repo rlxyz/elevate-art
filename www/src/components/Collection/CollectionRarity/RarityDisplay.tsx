@@ -39,15 +39,24 @@ export const RarityDisplay = ({
   const ctx = trpc.useContext()
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
 
   const mutation = trpc.useMutation('layer.setAllTraits', {
     onSuccess: (data, variables) => {
       ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data.changedLayer)
-      // ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       setHasFormChange(false)
-      // notifySuccess('Weights updated successfully')
+      notifySuccess(
+        <div>
+          <span>{`Successfully updated `}</span>
+          <span className='text-blueHighlight text-semibold'>{data.changedLayer?.name}</span>
+          <span className='font-semibold'>{` rarities`}</span>
+        </div>,
+        'rarity changed'
+      )
+    },
+    onError: () => {
+      notifyError('Something went wrong')
     },
   })
 
@@ -55,11 +64,9 @@ export const RarityDisplay = ({
     setSummedRarityWeightage(calculateSumArray(traitElements))
   }, [traitElements])
 
-  if (!collectionData) return null
-
   return (
     <>
-      {!summedRarityWeightage ? (
+      {!summedRarityWeightage || !collectionData ? (
         <table className='w-full table-fixed divide-y divide-mediumGrey'>
           <thead>
             <tr>
@@ -116,7 +123,7 @@ export const RarityDisplay = ({
               }
             }),
           }}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values) => {
             setTimeout(() => {
               mutation.mutate({
                 repositoryId,
@@ -128,7 +135,6 @@ export const RarityDisplay = ({
                   }
                 }),
               })
-              setSubmitting(false)
             }, 400)
           }}
         >
