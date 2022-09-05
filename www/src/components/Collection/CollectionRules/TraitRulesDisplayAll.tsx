@@ -119,7 +119,7 @@ export const TraitRulesDisplayAll = ({
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
                 {[RulesEnum.enum['cannot mix with']].map((ruleType: string) => {
                   return (
-                    <>
+                    <div key={ruleType}>
                       {rulesPrimary
                         .filter((rule) => rule.condition === ruleType)
                         .map((rule, index) => {
@@ -148,7 +148,7 @@ export const TraitRulesDisplayAll = ({
                             />
                           )
                         })}
-                    </>
+                    </div>
                   )
                 })}
               </>

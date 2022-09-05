@@ -33,10 +33,11 @@ export const TraitRulesSelector = ({
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
-  const layers = useRepositoryStore((state) => state.layers)
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
   const { notifySuccess, notifyError } = useNotification()
-
+  if (!layers) return null
   const allRightTraitElements = layers
     .filter((_, index) => index !== currentLayerPriority)
     .flatMap((layer) => layer.traitElements)

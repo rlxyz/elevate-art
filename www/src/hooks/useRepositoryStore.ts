@@ -4,6 +4,7 @@ import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
+  layerIds: string[]
   collectionId: string
   repositoryId: string
   layers: (LayerElement & {
@@ -64,10 +65,12 @@ interface CompilerViewInterface {
     })[]
   ) => void
   setCurrentLayer: (priority: number) => void
+  setLayerIds: (ids: string[]) => void
 }
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    layerIds: [],
     repositoryId: '',
     collectionId: '',
     tokens: [],
@@ -111,6 +114,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       traitMap: Map<string, Map<string, number>>
     }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
     setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
+    setLayerIds: (ids: string[]) => set((_) => ({ layerIds: ids })),
     setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
     setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) =>
       set((_) => ({ regenerateFilterIndex: { start, end } })),

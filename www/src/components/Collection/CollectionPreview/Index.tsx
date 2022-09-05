@@ -7,19 +7,21 @@ import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 
 const CollectionPreview = () => {
-  const { setTraitMapping, setTokenRanking, layers, collectionId } = useRepositoryStore((state) => {
+  const { setTraitMapping, setTokenRanking, collectionId, repositoryId } = useRepositoryStore((state) => {
     return {
       setTokenRanking: state.setTokenRanking,
       setTraitMapping: state.setTraitMapping,
       layers: state.layers,
       collectionId: state.collectionId,
+      repositoryId: state.repositoryId,
     }
   })
 
-  const { data: collection, isLoading, isError } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
 
   useEffect(() => {
-    if (!collection) return
+    if (!collection || !layers) return
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
@@ -27,9 +29,9 @@ const CollectionPreview = () => {
       traitMap,
     })
     setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
-  }, [collection])
+  }, [collection, layers])
 
-  if (isLoading || isError || !collection) return null
+  if (!collection || !layers) return null
 
   return (
     <CollectionViewContent

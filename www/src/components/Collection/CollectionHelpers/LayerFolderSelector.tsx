@@ -3,6 +3,7 @@ import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { trpc } from '@utils/trpc'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router, { NextRouter, useRouter } from 'next/router'
 import * as React from 'react'
@@ -84,27 +85,29 @@ export const ReorderItem = ({
 }
 
 const LayerFolderSelector = () => {
-  const { layers, regenerate, regeneratePreview, setRegeneratePreview, setRegenerateCollection, organisation } =
+  const { repositoryId, regenerate, regeneratePreview, setRegeneratePreview, setRegenerateCollection } =
     useRepositoryStore((state) => {
       return {
+        repositoryId: state.repositoryId,
         layers: state.layers,
-        organisation: state.organisation,
         regenerate: state.regenerate,
         regeneratePreview: state.regeneratePreview,
         setRegeneratePreview: state.setRegeneratePreview,
         setRegenerateCollection: state.setRegenerateCollection,
       }
     })
-
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { currentLayerPriority } = useRepositoryRouterStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
     }
   })
-
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+
+  if (!layers) return null
+
   const [items, setItems] = useState(layers.map((layer) => layer.id))
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)

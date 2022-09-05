@@ -8,26 +8,28 @@ import { useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { layers, traitMapping, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
+  const { traitMapping, collectionId, repositoryId, setTokens, resetTokens } = useRepositoryStore((state) => {
     return {
+      repositoryId: state.repositoryId,
       collectionId: state.collectionId,
       resetTokens: state.resetTokens,
       setTokens: state.setTokens,
       traitMapping: state.traitMapping,
-      layers: state.layers,
       traitFilters: state.traitFilters,
       setTraitFilters: state.setTraitFilters,
     }
   })
-  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
-  if (!collectionData) return null
+  if (!collection || !layers) return null
+
   return (
     <Formik
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens(collectionData.totalSupply)
+          resetTokens(collection.totalSupply)
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []

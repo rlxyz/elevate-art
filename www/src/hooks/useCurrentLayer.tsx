@@ -1,14 +1,11 @@
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { LayerElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 
 export const useCurrentLayer = () => {
-  const layers = useRepositoryStore((state) => state.layers)
-  const currentLayerPriority: number = useRepositoryRouterStore(
-    (state) => state.currentLayerPriority
-  )
-  const currentLayerPriorityId: string = layers[currentLayerPriority]?.id || ''
+  const layerIds = useRepositoryStore((state) => state.layerIds)
+  const currentLayerPriority: number = useRepositoryRouterStore((state) => state.currentLayerPriority)
+  const currentLayerPriorityId: string = layerIds[currentLayerPriority] || ''
 
   const { data, isLoading, isError, refetch } = trpc.useQuery([
     'layer.getLayerById',
@@ -17,13 +14,8 @@ export const useCurrentLayer = () => {
     },
   ])
 
-  layers.forEach((layer: LayerElement) => {
-    trpc.useQuery([
-      'layer.getLayerById',
-      {
-        id: layer.id,
-      },
-    ])
+  layerIds.forEach((id: string) => {
+    trpc.useQuery(['layer.getLayerById', { id }])
   })
 
   return {

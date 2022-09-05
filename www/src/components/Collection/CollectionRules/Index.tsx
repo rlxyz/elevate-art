@@ -13,26 +13,14 @@ const Index = () => {
   const { name, traitElements } = currentLayer
 
   return (
-    <CollectionViewContent
-      title={name}
-      description='Set how often you want certain images to appear in the generation'
-    >
+    <CollectionViewContent title={name} description='Set how often you want certain images to appear in the generation'>
       <div className='flex flex-col divide-y divide-mediumGrey space-y-6'>
-        <TraitRulesSelector
-          traitElements={traitElements}
-          title='Create a condition'
-          onSuccess={refetch}
-        />
+        <TraitRulesSelector traitElements={traitElements} title='Create a condition' onSuccess={refetch} />
         <div className='pt-8'>
           {traitElements.filter(
-            (traitElement) =>
-              traitElement.rulesPrimary.length > 0 || traitElement.rulesSecondary.length > 0
+            (traitElement) => traitElement.rulesPrimary.length > 0 || traitElement.rulesSecondary.length > 0
           ).length ? (
-            <TraitRulesDisplayAll
-              traitElements={traitElements}
-              title='Applied Rules'
-              onSuccess={refetch}
-            />
+            <TraitRulesDisplayAll traitElements={traitElements} title='Applied Rules' onSuccess={refetch} />
           ) : (
             <></>
           )}

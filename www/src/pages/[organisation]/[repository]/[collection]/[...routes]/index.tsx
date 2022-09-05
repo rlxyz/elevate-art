@@ -27,11 +27,12 @@ const PageImplementation = ({
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-  const { layers, setCollectionId, setRepositoryId, setLayers } = useRepositoryStore((state) => {
+  const { setLayerIds, layers, setCollectionId, setRepositoryId, setLayers } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
       setRepositoryId: state.setRepositoryId,
       setCollectionId: state.setCollectionId,
+      setLayerIds: state.setLayerIds,
       setLayers: state.setLayers,
     }
   })
@@ -94,7 +95,7 @@ const PageImplementation = ({
     if (!collection) return
     if (!layers || layers.length == 0) return
     setLayers(layers)
-    // setLayerIds(layers.map((layer) => layer.id))
+    setLayerIds(layers.map((layer) => layer.id))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
   }, [repositoryData])
