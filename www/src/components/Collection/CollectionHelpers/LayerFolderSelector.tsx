@@ -71,7 +71,7 @@ export const ReorderItem = ({
       dragControls={dragControls}
     >
       <Link
-        href={`/${organisationName}/${repositoryName}/tree/${collectionName}/${currentViewSection}/${name}`}
+        href={`/${organisationName}/${repositoryName}/${collectionName}/${currentViewSection}/${name}`}
         enabled={enabled}
         hover
         title={name}

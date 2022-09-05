@@ -28,36 +28,27 @@ export const createToken = (opts: {
 
   const random = seedrandom(`${name}.${generation}.${id}`)
   const elements: TraitElement[] = []
-  layers.forEach(({ traitElements }, index: number) => {
+  layers.forEach(({ traitElements, name }, index: number) => {
     // exclusion
     const filtered = traitElements.filter((traitElement) => {
-      return (
-        traitElement.rulesSecondary.every((rule) => {
-          const {
-            primaryTraitElement: { layerElement },
-            secondaryTraitElement,
-          } = rule
-          if (
-            layerElement.priority > index ||
-            traitElements[layerElement.priority]?.name === secondaryTraitElement.name
-          )
-            return true
-          return false
-        }) &&
-        traitElement.rulesPrimary.every((rule) => {
-          const {
-            primaryTraitElement,
-            secondaryTraitElement: { layerElement },
-          } = rule
-          if (
-            primaryTraitElement.layerElement.priority <= index ||
-            traitElements[layerElement.priority]?.name === primaryTraitElement.name
-          ) {
-            return true
-          }
-          return false
-        })
+      const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter(
+        (rule) => {
+          if (rule.primaryTraitElementId === traitElement.id)
+            return index > rule.secondaryTraitElement.layerElement.priority
+          if (rule.secondaryTraitElementId === traitElement.id)
+            return index > rule.primaryTraitElement.layerElement.priority
+        }
       )
+      return rules.every((rule) => {
+        if (rule.primaryTraitElementId === traitElement.id) {
+          return (
+            elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
+          )
+        }
+        if (rule.secondaryTraitElementId === traitElement.id) {
+          return elements[rule.primaryTraitElement.layerElement.priority]?.id !== rule.primaryTraitElementId
+        }
+      })
     })
 
     let r = Math.floor(random() * filtered.reduce((a, b) => a + b.weight, 0))
@@ -112,8 +103,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
       const { id: t, layerElementId: l } = element
 
       tokenIdMap.get(l) ||
-        (tokenIdMap.set(l, new Map<string, number[]>([])),
-        traitMap.set(l, new Map<string, number>()))
+        (tokenIdMap.set(l, new Map<string, number[]>([])), traitMap.set(l, new Map<string, number>()))
 
       // update tokenIdMap - push to array
       tokenIdMap.get(l)?.get(t)
