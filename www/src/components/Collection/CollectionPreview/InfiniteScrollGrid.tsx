@@ -1,6 +1,6 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Collection } from '@prisma/client'
 import { createToken } from '@utils/compiler'
+import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
@@ -16,27 +16,23 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({
-  tokensOnDisplay,
-  collection,
-}: {
-  tokensOnDisplay: number[]
-  collection: Collection
-}) => {
-  const { repository, tokens, resetTokens, layers } = useRepositoryStore((state) => {
+const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
+  const { repository, collectionId, tokens, resetTokens, layers } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
       resetTokens: state.resetTokens,
       repository: state.repository,
       tokens: state.tokens,
       layers: state.layers,
+      collectionId: state.collectionId,
     }
   })
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-
   useEffect(() => {
+    if (!collection) return
     resetTokens(collection.totalSupply)
   }, [])
 
@@ -61,6 +57,7 @@ const InfiniteScrollGridItems = ({
           name={`${repository.tokenName} #${tokens[index] || 0}`}
         />
       )
+      console.log(collection.generations)
     })
     return items
   }
@@ -72,7 +69,9 @@ const InfiniteScrollGridItems = ({
   )
 }
 
-export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) => {
+export const InfiniteScrollGrid = () => {
+  const collectionId = useRepositoryStore((state) => state.collectionId)
+  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
@@ -124,7 +123,7 @@ export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) =
         <></>
       }
     >
-      <InfiniteScrollGridItems collection={collection} tokensOnDisplay={tokensOnDisplay} />
+      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
     </InfiniteScrollComponent.default>
   )
 }

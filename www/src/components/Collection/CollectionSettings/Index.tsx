@@ -1,6 +1,6 @@
 import { CollectionViewContentWrapper } from '@components/Collection/CollectionHelpers/ViewContent'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import Link from 'next/link'
+import { NextRouter, useRouter } from 'next/router'
 
 const CollectionSettingsContentItem = ({
   children,
@@ -43,14 +43,10 @@ const CollectionSettingsContentItem = ({
 }
 
 const CollectionSettings = () => {
-  const { organisation, collection, repository } = useRepositoryStore((state) => {
-    return {
-      collection: state.collection,
-      organisation: state.organisation,
-      repository: state.repository,
-    }
-  })
-
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const collectionName: string = router.query.collection as string
+  const repositoryName: string = router.query.repository as string
   return (
     <CollectionViewContentWrapper>
       <CollectionSettingsContentItem
@@ -60,10 +56,10 @@ const CollectionSettings = () => {
         <div className='w-full border border-mediumGrey rounded-[5px]'>
           <div className='h-full grid grid-cols-10 text-sm'>
             <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
-              <span className='px-4 py-2'>{`elevate.art/${organisation.name}/${repository.name}/`}</span>
+              <span className='px-4 py-2'>{`elevate.art/${organisationName}/${repositoryName}/`}</span>
             </div>
             <div className='col-span-6 flex items-center'>
-              <span className='px-4 py-2'>{collection.name}</span>
+              <span className='px-4 py-2'>{collectionName}</span>
             </div>
             {/* <input className='col-span-6 p-2'>Test</input> */}
           </div>

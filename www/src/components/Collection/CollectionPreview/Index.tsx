@@ -36,7 +36,7 @@ const CollectionPreview = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      <InfiniteScrollGrid collection={collectionData} />
+      <InfiniteScrollGrid />
     </CollectionViewContent>
   )
 }
