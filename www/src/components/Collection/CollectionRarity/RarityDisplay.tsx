@@ -26,8 +26,9 @@ export const RarityDisplay = ({
   layerName: string
   layerId: string
 }) => {
-  const { collectionId } = useRepositoryStore((state) => {
+  const { collectionId, repositoryId } = useRepositoryStore((state) => {
     return {
+      repositoryId: state.repositoryId,
       collectionId: state.collectionId,
     }
   })
@@ -42,7 +43,9 @@ export const RarityDisplay = ({
 
   const mutation = trpc.useMutation('layer.setAllTraits', {
     onSuccess: (data, variables) => {
-      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
+      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data.changedLayer)
+      // ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       setHasFormChange(false)
       // notifySuccess('Weights updated successfully')
     },
@@ -116,6 +119,7 @@ export const RarityDisplay = ({
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               mutation.mutate({
+                repositoryId,
                 layerId,
                 traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
                   return {

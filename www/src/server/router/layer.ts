@@ -1,5 +1,5 @@
-import { createRouter } from './context'
 import { z } from 'zod'
+import { createRouter } from './context'
 export const layerElementRouter = createRouter()
   .query('getLayerById', {
     input: z.object({
@@ -35,6 +35,7 @@ export const layerElementRouter = createRouter()
   .mutation('setAllTraits', {
     input: z.object({
       layerId: z.string(),
+      repositoryId: z.string(),
       traits: z.array(
         z.object({
           id: z.string(),
@@ -54,30 +55,73 @@ export const layerElementRouter = createRouter()
           },
         })
       })
-      return await ctx.prisma.layerElement.findFirst({
-        where: {
-          id: input.layerId,
-        },
-        include: {
-          traitElements: {
-            orderBy: { weight: 'asc' },
-            include: {
-              rulesPrimary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
+      return {
+        changedLayer: await ctx.prisma.layerElement.findFirst({
+          where: {
+            id: input.layerId,
+          },
+          include: {
+            traitElements: {
+              orderBy: { weight: 'asc' },
+              include: {
+                rulesPrimary: {
+                  include: {
+                    primaryTraitElement: true,
+                    secondaryTraitElement: true,
+                  },
                 },
-              },
-              rulesSecondary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
+                rulesSecondary: {
+                  include: {
+                    primaryTraitElement: true,
+                    secondaryTraitElement: true,
+                  },
                 },
               },
             },
           },
-        },
-      })
+        }),
+        layers: await ctx.prisma.layerElement.findMany({
+          where: {
+            repositoryId: input.repositoryId,
+          },
+          orderBy: { priority: 'asc' },
+          include: {
+            traitElements: {
+              orderBy: { weight: 'asc' }, // guarantee rarest first
+              include: {
+                rulesPrimary: {
+                  include: {
+                    primaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                    secondaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                  },
+                },
+                rulesSecondary: {
+                  include: {
+                    primaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                    secondaryTraitElement: {
+                      include: {
+                        layerElement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }),
+      }
     },
   })
   .query('getAllTraits', {

@@ -14,41 +14,7 @@ export const repositoryRouter = createRouter()
         include: {
           layers: {
             orderBy: { priority: 'asc' }, // guarantee layer order correctness
-            include: {
-              traitElements: {
-                orderBy: { weight: 'asc' }, // guarantee rarest first
-                include: {
-                  rulesPrimary: {
-                    include: {
-                      primaryTraitElement: {
-                        include: {
-                          layerElement: true,
-                        },
-                      },
-                      secondaryTraitElement: {
-                        include: {
-                          layerElement: true,
-                        },
-                      },
-                    },
-                  },
-                  rulesSecondary: {
-                    include: {
-                      primaryTraitElement: {
-                        include: {
-                          layerElement: true,
-                        },
-                      },
-                      secondaryTraitElement: {
-                        include: {
-                          layerElement: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            select: { id: true },
           },
           collections: {
             where: { name: 'main' },

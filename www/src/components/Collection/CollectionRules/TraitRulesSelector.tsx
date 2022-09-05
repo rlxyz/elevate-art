@@ -45,7 +45,7 @@ export const TraitRulesSelector = ({
 
   const mutation = trpc.useMutation('trait.setRuleById', {
     onSuccess: (data, variables) => {
-      // ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       onSuccess()
       notifySuccess(
         <div>
@@ -85,6 +85,7 @@ export const TraitRulesSelector = ({
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
               mutation.mutate({
+                repositoryId: repositoryId,
                 primaryTraitElementId: selectedLeftTrait.id,
                 type: selectedCondition,
                 secondaryTraitElementId: selectedRightTrait.id,
