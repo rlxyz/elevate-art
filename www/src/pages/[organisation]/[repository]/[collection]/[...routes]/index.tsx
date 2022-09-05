@@ -26,15 +26,11 @@ const PageImplementation = ({
 }) => {
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
-  const { data: organisationData } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-
-  const { layers, setOrganisation, setCollectionId, setRepositoryId, setLayers } = useRepositoryStore((state) => {
+  const { layers, setCollectionId, setRepositoryId, setLayers } = useRepositoryStore((state) => {
     return {
       layers: state.layers,
-      organisation: state.organisation,
       setRepositoryId: state.setRepositoryId,
-      setOrganisation: state.setOrganisation,
       setCollectionId: state.setCollectionId,
       setLayers: state.setLayers,
     }
@@ -89,13 +85,6 @@ const PageImplementation = ({
     router.push('/404')
   }, [routes])
 
-  // sync org to store
-  useEffect(() => {
-    if (!organisationData) return
-
-    setOrganisation(organisationData)
-  }, [organisationData])
-
   // sync repository to store
   useEffect(() => {
     if (!repositoryData) return
@@ -105,6 +94,7 @@ const PageImplementation = ({
     if (!collection) return
     if (!layers || layers.length == 0) return
     setLayers(layers)
+    // setLayerIds(layers.map((layer) => layer.id))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
   }, [repositoryData])

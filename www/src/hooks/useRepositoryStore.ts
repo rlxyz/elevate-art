@@ -1,4 +1,4 @@
-import { LayerElement, Organisation, Rules, TraitElement } from '@prisma/client'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
@@ -6,7 +6,6 @@ import { persist } from 'zustand/middleware'
 interface CompilerViewInterface {
   collectionId: string
   repositoryId: string
-  organisation: Organisation
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
@@ -48,7 +47,6 @@ interface CompilerViewInterface {
   setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
   resetTokens: (totalSupply: number) => void
-  setOrganisation: (organisation: Organisation) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setLayers: (
@@ -76,13 +74,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     traitMapping: {
       tokenIdMap: new Map(),
       traitMap: new Map(),
-    },
-    organisation: {
-      id: '',
-      name: '',
-      ownerId: '',
-      createdAt: new Date(-1),
-      updatedAt: new Date(-1),
     },
     collection: {
       id: '',
@@ -121,7 +112,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
     setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
     setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
-    setOrganisation: (organisation: Organisation) => set((_) => ({ organisation })),
     setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) =>
       set((_) => ({ regenerateFilterIndex: { start, end } })),
     setRegenerateFilter: (regenerateFilter: boolean) => set((_) => ({ regenerateFilter })),

@@ -10,9 +10,7 @@ export const repositoryRouter = createRouter()
     input: getRepositoryByNameSchema,
     async resolve({ ctx, input }) {
       return await ctx.prisma.repository.findFirst({
-        where: {
-          ...input,
-        },
+        where: { ...input },
         include: {
           layers: {
             orderBy: { priority: 'asc' }, // guarantee layer order correctness
@@ -54,8 +52,21 @@ export const repositoryRouter = createRouter()
           },
           collections: {
             where: { name: 'main' },
+            select: { id: true },
             orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
           },
+        },
+      })
+    },
+  })
+  .query('getRepositoryLayers', {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.layerElement.findMany({
+        where: {
+          repositoryId: input.id,
         },
       })
     },
