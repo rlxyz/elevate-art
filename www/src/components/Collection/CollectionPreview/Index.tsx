@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import AdvancedImage from '../CollectionHelpers/AdvancedImage'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 
@@ -36,22 +35,7 @@ const CollectionPreview = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      {collection && layers ? (
-        <InfiniteScrollGrid collection={collection} />
-      ) : (
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
-          {Array.from(Array(50).keys()).map((index: number) => {
-            return (
-              <div key={index} className="flex flex-col items-center">
-                <div className='border border-lightGray rounded-[5px]'>
-                  <AdvancedImage url='' />
-                </div>
-                <span className='text-xs flex items-center justify-center'>...</span>
-              </div>
-            )
-          })}
-        </div>
-      )}
+      {collection && layers && <InfiniteScrollGrid collection={collection} />}
     </CollectionViewContent>
   )
 }
