@@ -7,22 +7,14 @@ import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment, useRef } from 'react'
 
-export const CollectionUpload = ({
-  open,
-  setOpen,
-}: {
-  open: boolean
-  setOpen: (x: boolean) => void
-}) => {
+export const CollectionUpload = ({ open, setOpen }: { open: boolean; setOpen: (x: boolean) => void }) => {
   const cancelButtonRef = useRef(null)
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   return (
     <>
-      {open && (
-        <div className='fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black z-100 opacity-75' />
-      )}
+      {open && <div className='fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black z-100 opacity-75' />}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='relative z-10' initialFocus={cancelButtonRef} onClose={setOpen}>
           <Transition.Child
@@ -58,9 +50,7 @@ export const CollectionUpload = ({
                         <span className='text-lg text-blueHighlight'>Click to upload</span>
                         <span> or drag and drop</span>
                       </FileUpload>
-                      <span className='text-xs text-darkGrey'>
-                        Only PNG files supported, max file size 10 MB
-                      </span>
+                      <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
                     </div>
                     <div className='h-[300px] max-h-[300px] overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray'>
                       {[
@@ -101,10 +91,7 @@ export const CollectionUpload = ({
                         },
                       ].map(({ trait, size, current, total }, index) => {
                         return (
-                          <div
-                            key={`${trait}-${index}`}
-                            className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}
-                          >
+                          <div key={`${trait}-${index}`} className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}>
                             <div className='col-span-9 space-y-3 flex flex-col'>
                               <div className='flex space-x-3'>
                                 <div className='flex items-center'>
@@ -113,12 +100,8 @@ export const CollectionUpload = ({
                                   </div>
                                 </div>
                                 <div className='flex flex-col space-y-1'>
-                                  <span className='text-sm font-semibold text-black text-darkGrey'>
-                                    {trait}
-                                  </span>
-                                  <span className='text-xs text-darkGrey'>
-                                    {size.toFixed(1)} MB
-                                  </span>
+                                  <span className='text-sm font-semibold text-black text-darkGrey'>{trait}</span>
+                                  <span className='text-xs text-darkGrey'>{size.toFixed(1)} MB</span>
                                 </div>
                               </div>
                               <div className='w-full rounded-[5px] h-1 bg-lightGray'>
@@ -146,12 +129,7 @@ export const CollectionUpload = ({
                       </Button>
                     </div>
                     <div className='w-1/2 h-12'>
-                      <Button
-                        type='button'
-                        disabled
-                        onClick={() => setOpen(false)}
-                        ref={cancelButtonRef}
-                      >
+                      <Button type='button' disabled onClick={() => setOpen(false)} ref={cancelButtonRef}>
                         Cancel
                       </Button>
                     </div>

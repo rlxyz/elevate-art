@@ -40,9 +40,11 @@ export const TraitRulesSelector = ({
   const allRightTraitElements = layers
     .filter((_, index) => index !== currentLayerPriority)
     .flatMap((layer) => layer.traitElements)
+  const ctx = trpc.useContext()
 
   const mutation = trpc.useMutation('trait.setRuleById', {
     onSuccess: (data, variables) => {
+      // ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data)
       onSuccess()
       notifySuccess(
         <div>
@@ -64,11 +66,7 @@ export const TraitRulesSelector = ({
       <span className='block text-xs font-semibold uppercase'>{title}</span>
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
-          <TraitSelector
-            traitElements={traitElements}
-            selected={selectedLeftTrait}
-            onChange={setSelectedLeftTrait}
-          />
+          <TraitSelector traitElements={traitElements} selected={selectedLeftTrait} onChange={setSelectedLeftTrait} />
         </div>
         <div className='col-span-2 relative mt-1'>
           <TraitSelectorCondition selected={selectedCondition} onChange={setSelectedCondition} />
@@ -82,9 +80,7 @@ export const TraitRulesSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
           <Button
-            disabled={
-              !(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading
-            }
+            disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
               mutation.mutate({
@@ -150,9 +146,7 @@ export const TraitSelectorCondition = ({
           >
             {({ active, selected }) => (
               <>
-                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
-                  {option.name}
-                </span>
+                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{option.name}</span>
                 {selected && (
                   <span
                     className={classNames(
@@ -234,19 +228,11 @@ export const TraitSelector = ({
                     />
                     <div className='flex flex-row space-x-2 items-center'>
                       <span
-                        className={classNames(
-                          'block truncate text-xs tracking-tight',
-                          selected ? 'font-semibold' : ''
-                        )}
+                        className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}
                       >
-                        {
-                          layers.filter((layer) => layer.id === traitElement.layerElementId)[0]
-                            ?.name
-                        }
+                        {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
                       </span>
-                      <span
-                        className={classNames('block truncate', selected ? 'font-semibold' : '')}
-                      >
+                      <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
                         {traitElement.name}
                       </span>
                     </div>

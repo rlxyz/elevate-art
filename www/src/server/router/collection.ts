@@ -1,5 +1,5 @@
-import { createRouter } from './context'
 import { z } from 'zod'
+import { createRouter } from './context'
 
 export const collectionRouter = createRouter()
   .mutation('incrementGeneration', {
@@ -11,14 +11,15 @@ export const collectionRouter = createRouter()
       })
     },
   })
-  .query('getCollectionById', {
+  .query('getCollectionByName', {
     input: z.object({
-      id: z.string(),
+      repositoryId: z.string(),
+      name: z.string(),
     }),
     async resolve({ ctx, input }) {
       return ctx.prisma.collection.findFirst({
         where: {
-          id: input.id,
+          name: input.name,
         },
       })
     },

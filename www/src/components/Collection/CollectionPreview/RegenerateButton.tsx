@@ -16,7 +16,7 @@ export const RegegenerateButton = () => {
 
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data, variables) => {
-      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
+      ctx.setQueryData(['collection.getCollectionByName', { name: data.name, repositoryId: data.repositoryId }], data)
       notifySuccess(
         <span>
           <span className='text-blueHighlight'>Successfully</span>
@@ -37,13 +37,8 @@ export const RegegenerateButton = () => {
           <div className='flex items-center justify-between'>
             <span className='font-semibold'>Generate</span>
           </div>
-          <span className='text-darkGrey'>
-            You can regenerate your collection by clicking this button.
-          </span>
-          <Button
-            disabled={mutation.isLoading}
-            onClick={() => mutation.mutate({ id: collection.id })}
-          >
+          <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
+          <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collection.id })}>
             <span className='flex items-center justify-center space-x-2'>
               <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />
               <span className='text-xs'>elevate.art</span>

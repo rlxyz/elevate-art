@@ -30,9 +30,10 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+
   const { data: collectionData } = trpc.useQuery([
-    'collection.getCollectionById',
-    { id: collection.id },
+    'collection.getCollectionByName',
+    { name: collection.name, repositoryId: collection.repositoryId },
   ])
 
   useEffect(() => {
@@ -71,8 +72,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   )
 }
 
-export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) => {
-  const { data } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+export const InfiniteScrollGrid = () => {
   const collection = useRepositoryStore((state) => state.collection)
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
@@ -85,15 +85,12 @@ export const InfiniteScrollGrid = ({ collectionId }: { collectionId: string }) =
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
     const endPoint = endPointIndex * 50
-    setTokensOnDisplay([
-      ...tokensOnDisplay,
-      ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint),
-    ])
+    setTokensOnDisplay([...tokensOnDisplay, ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint)])
     setPage((p) => p + 1)
   }
 
   const fetchMoreData = (page: number) => {
-    if (!data || page * 50 >= data.totalSupply) {
+    if (!collection || page * 50 >= collection.totalSupply) {
       setHasMore(false)
       return
     }

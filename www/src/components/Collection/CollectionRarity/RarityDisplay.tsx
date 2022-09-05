@@ -178,9 +178,7 @@ export const RarityDisplay = ({
                                 )}.png`}
                               />
                             </td>
-                            <td className='whitespace-nowrap text-sm font-medium'>
-                              {toPascalCaseWithSpace(name)}
-                            </td>
+                            <td className='whitespace-nowrap text-sm font-medium'>{toPascalCaseWithSpace(name)}</td>
                             <td className='whitespace-nowrap text-sm font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>
                                 <div className='w-24'>
@@ -245,30 +243,25 @@ export const RarityDisplay = ({
                   <div className='flex items-center justify-between h-full w-full'>
                     <div className='flex justify-end h-full p-6'>
                       <div className='flex items-center space-x-3 mr-6'>
-                        {calculateSumArray(values.traits) >
-                          calculateSumArray(initialValues.traits) && (
+                        {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
                           <>
                             <Image src='/images/tooltip.svg' height={15} width={15} />
                             <span className='text-redDot text-sm'>{`You've overallocated by ${
-                              calculateSumArray(values.traits) -
-                              calculateSumArray(initialValues.traits)
+                              calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
                             }`}</span>
                           </>
                         )}
 
-                        {calculateSumArray(initialValues.traits) >
-                          calculateSumArray(values.traits) && (
+                        {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
                           <>
                             <Image src='/images/tooltip.svg' height={15} width={15} />
                             <span className='text-redDot text-sm'>{`You've underallocated by ${
-                              calculateSumArray(initialValues.traits) -
-                              calculateSumArray(values.traits)
+                              calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
                             }`}</span>
                           </>
                         )}
 
-                        {calculateSumArray(initialValues.traits) ===
-                          calculateSumArray(values.traits) && (
+                        {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
                           <>
                             <span className='text-blueHighlight text-sm'>You can now submit</span>
                           </>
@@ -286,8 +279,7 @@ export const RarityDisplay = ({
                         </Button>
                         <Button
                           disabled={
-                            (calculateSumArray(values.traits) ==
-                            calculateSumArray(initialValues.traits)
+                            (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits)
                               ? false
                               : true) || isSubmitting
                           }
