@@ -1,6 +1,7 @@
 import { Button } from '@components/UI/Button'
 import { TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
@@ -10,25 +11,32 @@ export const TraitRulesDisplayPerItem = ({
   primary,
   condition,
   secondary,
-  onSuccess,
 }: {
   id: string
   primary: string
   condition: string
   secondary: string
-  onSuccess: () => void
 }) => {
   const { notifySuccess, notifyError } = useNotification()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const ctx = trpc.useContext()
   const mutation = trpc.useMutation('trait.deleteRuleById', {
     onSuccess: (data) => {
-      onSuccess()
+      const primaryLayer = data.layers.filter(
+        (layer) => layer.id === (data.deletedRule.primaryTraitElement?.layerElement.id || '')
+      )[0]
+      const secondaryLayer = data.layers.filter(
+        (layer) => layer.id === (data.deletedRule.secondaryTraitElement?.layerElement.id || '')
+      )[0]
+      if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
+      if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       notifySuccess(
         <div>
-          <span className='text-blueHighlight text-semibold'>{data?.primaryTraitElement.name}</span>
-          <span>{` now `}</span>
-          <span className='text-redError'>{`doesnt `}</span>
-          <span>{`${data?.condition} `}</span>
-          <span className='font-semibold'>{data?.secondaryTraitElement.name}</span>
+          <span>{`Removed `}</span>
+          <span className='text-blueHighlight text-semibold'>{data?.deletedRule.primaryTraitElement?.name}</span>
+          <span className='text-redError'>{` ${data?.deletedRule.condition} `}</span>
+          <span className='font-semibold'>{data?.deletedRule.secondaryTraitElement?.name}</span>
         </div>,
         'delete rule'
       )
@@ -64,7 +72,7 @@ export const TraitRulesDisplayPerItem = ({
       <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
         <Button
           disabled={mutation.isLoading}
-          onClick={() => mutation.mutate({ id })}
+          onClick={() => mutation.mutate({ id, repositoryId })}
           className='h-5 w-5 text-mediumGrey'
         >
           <TrashIcon />
@@ -77,7 +85,6 @@ export const TraitRulesDisplayPerItem = ({
 export const TraitRulesDisplayAll = ({
   title,
   traitElements,
-  onSuccess,
 }: {
   title: string
   traitElements: (TraitElement & {
@@ -90,7 +97,6 @@ export const TraitRulesDisplayAll = ({
       secondaryTraitElement: TraitElement
     })[]
   })[]
-  onSuccess: () => void
 }) => {
   return (
     <div className='w-full flex flex-col space-y-3'>
@@ -119,14 +125,13 @@ export const TraitRulesDisplayAll = ({
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
                 {[RulesEnum.enum['cannot mix with']].map((ruleType: string) => {
                   return (
-                    <div key={ruleType}>
+                    <div className='space-y-2'>
                       {rulesPrimary
                         .filter((rule) => rule.condition === ruleType)
                         .map((rule, index) => {
                           return (
                             <TraitRulesDisplayPerItem
-                              onSuccess={() => onSuccess()}
-                              id={rule.primaryTraitElementId}
+                              id={rule.id}
                               key={index}
                               primary={rule.primaryTraitElement.name}
                               condition={rule.condition}
@@ -139,8 +144,7 @@ export const TraitRulesDisplayAll = ({
                         .map((rule, index) => {
                           return (
                             <TraitRulesDisplayPerItem
-                              onSuccess={() => onSuccess()}
-                              id={rule.primaryTraitElementId}
+                              id={rule.id}
                               key={index}
                               primary={rule.secondaryTraitElement.name}
                               condition={rule.condition}

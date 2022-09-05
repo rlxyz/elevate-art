@@ -15,7 +15,6 @@ import { RulesEnum, RulesType } from 'src/types/enums'
 export const TraitRulesSelector = ({
   title,
   traitElements,
-  onSuccess,
 }: {
   title: string
   traitElements: (TraitElement & {
@@ -28,7 +27,6 @@ export const TraitRulesSelector = ({
       secondaryTraitElement: TraitElement
     })[]
   })[]
-  onSuccess: () => void
 }) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
@@ -45,8 +43,11 @@ export const TraitRulesSelector = ({
 
   const mutation = trpc.useMutation('trait.setRuleById', {
     onSuccess: (data, variables) => {
+      const primaryLayer = data.layers.filter((layer) => layer.id === (data.primary?.layerElement.id || ''))[0]
+      const secondaryLayer = data.layers.filter((layer) => layer.id === (data.secondary?.layerElement.id || ''))[0]
+      if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
+      if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
-      onSuccess()
       notifySuccess(
         <div>
           <span className='text-blueHighlight text-semibold'>{data.primary?.name}</span>
