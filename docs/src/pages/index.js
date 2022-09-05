@@ -5,7 +5,7 @@ import { GettingStartedCards } from '../components/GettingStartedCards'
 import { ToolsCards } from '../components/ToolsCards'
 import { ShaderComponent } from '../components/ShaderComponent'
 import ProjectsCards from '../components/ProjectsCards'
-import HomepageLogo from '../../static/img/homepageLogo.svg'
+import HomepageLogo from '../../static/img/logo_text_white.svg'
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <ShaderComponent />
       <div>
         <HomepageLogo className={styles.logoText} />
-        <h2 className={styles.headerSubtitle}>THE NFT MARKETPLACE PROTOCOL</h2>
+        <h2 className={styles.headerSubtitle}>THE LEADING ART GENERATOR</h2>
       </div>
       <main className={styles.layout}>
         <div className={styles.layoutFlexBox}>
@@ -26,7 +26,7 @@ export default function Home() {
           <GettingStartedCards />
           <p className={styles.tools}>Tools</p>
           <ToolsCards />
-          <p className={styles.projects}>Projects Building on ZORA</p>
+          <p className={styles.projects}>Projects Building on Elevate.Art</p>
           <ProjectsCards />
         </div>
       </main>

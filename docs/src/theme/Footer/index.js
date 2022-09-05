@@ -8,7 +8,7 @@ import React from 'react'
 import styles from './styles.module.css'
 import QuestionsIcon from '../../../static/img/questionsIcon.svg'
 import TwitterIcon from '../../../static/img/twitterIcon.svg'
-import ZoraLogo from '../../../static/img/homepageLogo.svg'
+import ElevateLogo from '../../../static/img/logo_white.svg'
 
 function Footer() {
   return (
@@ -16,7 +16,7 @@ function Footer() {
       <div className={styles.footerLinksFlexbox}>
         <a
           className={styles.textFlexbox}
-          href="https://zora.community"
+          href="https://elevate.art"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -25,11 +25,11 @@ function Footer() {
             <h3 className={styles.footerTitle}>Questions?</h3>
           </div>
           <p className={styles.footerParagraph}>
-            Get help in the #developers channel on Discord.
+            Get help in the in Discord.
           </p>
         </a>
         <a
-          href="https://twitter.com/ourzora"
+          href="https://twitter.com/elevate_art"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.textFlexbox}
@@ -39,12 +39,12 @@ function Footer() {
             <h3 className={styles.footerTitle}>Stay updated</h3>
           </div>
           <p className={styles.footerParagraph}>
-            Follow us on Twitter for release updates.
+            Follow us on Twitter for updates.
           </p>
         </a>
       </div>
       <div className={styles.logoFlexbox}>
-        <ZoraLogo className={styles.zoraLogo} />
+        <ElevateLogo className={styles.zoraLogo} />
       </div>
     </div>
   )
