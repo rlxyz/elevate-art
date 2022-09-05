@@ -31,28 +31,27 @@ const CollectionPreview = () => {
     setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
   }, [collection, layers])
 
-  if (!collection || !layers)
-    return (
-      <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-        {Array.from(Array(50).keys()).map((index: number) => {
-          return (
-            <div key={index}>
-              <div className='border border-lightGray rounded-[5px]'>
-                <AdvancedImage url='' />
-              </div>
-              <span className='text-xs flex justify-center'>...</span>
-            </div>
-          )
-        })}
-      </div>
-    )
-
   return (
     <CollectionViewContent
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      <InfiniteScrollGrid collection={collection} />
+      {collection && layers ? (
+        <InfiniteScrollGrid collection={collection} />
+      ) : (
+        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
+          {Array.from(Array(50).keys()).map((index: number) => {
+            return (
+              <div key={index} className="flex flex-col items-center">
+                <div className='border border-lightGray rounded-[5px]'>
+                  <AdvancedImage url='' />
+                </div>
+                <span className='text-xs flex items-center justify-center'>...</span>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </CollectionViewContent>
   )
 }

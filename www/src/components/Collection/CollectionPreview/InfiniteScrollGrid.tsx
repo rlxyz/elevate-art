@@ -5,6 +5,7 @@ import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import AdvancedImage from '../CollectionHelpers/AdvancedImage'
 import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
 
 const container = {
@@ -105,24 +106,18 @@ export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) =
       next={() => fetchMoreData(page)}
       hasMore={hasMore}
       loader={
-        // <div className='grid grid-cols-6 gap-y-4 gap-x-10 overflow-hidden'>
-        //   {Array.from(Array(50).keys()).map((index: number) => {
-        //     return (
-        //       <div key={index}>
-        //         <div className='border border-lightGray rounded-[5px]'>
-        //           <Image
-        //             width={200}
-        //             height={200}
-        //             className='rounded-[5px] border-[1px] border-lightGray'
-        //             src={`/images/logo.png`}
-        //           />
-        //         </div>
-        //         <span className='text-xs flex justify-center'>...</span>
-        //       </div>
-        //     )
-        //   })}
-        // </div>
-        <></>
+        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
+          {Array.from(Array(50).keys()).map((index: number) => {
+            return (
+              <div key={index} className='flex flex-col items-center'>
+                <div className='border border-lightGray rounded-[5px]'>
+                  <AdvancedImage url='' />
+                </div>
+                <span className='text-xs flex justify-center'>...</span>
+              </div>
+            )
+          })}
+        </div>
       }
     >
       <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
