@@ -1,4 +1,4 @@
-import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { LayerElement, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
@@ -7,18 +7,6 @@ interface CompilerViewInterface {
   layerIds: string[]
   collectionId: string
   repositoryId: string
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[]
   currentLayer: LayerElement & {
     traitElements: TraitElement[]
   }
@@ -50,21 +38,6 @@ interface CompilerViewInterface {
   resetTokens: (totalSupply: number) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
-  setLayers: (
-    layers: (LayerElement & {
-      traitElements: (TraitElement & {
-        rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-        })[]
-        rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-        })[]
-      })[]
-    })[]
-  ) => void
-  setCurrentLayer: (priority: number) => void
   setLayerIds: (ids: string[]) => void
 }
 
@@ -122,21 +95,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     setRegeneratePreview: (regenerate: boolean) => set((_) => ({ regeneratePreview: regenerate })),
     setRegenerateCollection: (regenerate: boolean) => set((_) => ({ regenerate })),
     setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
-    setLayers: (
-      layers: (LayerElement & {
-        traitElements: (TraitElement & {
-          rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-          rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-        })[]
-      })[]
-    ) => set((_) => ({ layers })),
-    setCurrentLayer: (priority: number) => set((state) => ({ currentLayer: state.layers[priority] })),
   }))
 )
 

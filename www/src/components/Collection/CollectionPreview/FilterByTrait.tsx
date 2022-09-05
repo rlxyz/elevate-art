@@ -150,14 +150,13 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { layers, traitMapping, tokenRanking, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
+  const { traitMapping, tokenRanking, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
     return {
       tokenRanking: state.tokenRanking,
       collectionId: state.collectionId,
       resetTokens: state.resetTokens,
       setTokens: state.setTokens,
       traitMapping: state.traitMapping,
-      layers: state.layers,
       traitFilters: state.traitFilters,
       setTraitFilters: state.setTraitFilters,
     }
@@ -193,8 +192,7 @@ export const FilterByRarity = () => {
     >
       {({ values, handleChange, submitForm }) => (
         <Form>
-          {layers.length &&
-            traitMapping.tokenIdMap.size > 0 &&
+          {traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&
             [{ name: 'Rarity', id: 'rarity' }].map((section: any, sectionIdx: number) => (
               <div className='space-y-2' key={`${section.name}-${sectionIdx}`}>

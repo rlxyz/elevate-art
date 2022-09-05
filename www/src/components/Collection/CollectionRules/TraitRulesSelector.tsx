@@ -180,12 +180,8 @@ export const TraitSelector = ({
   const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { layers } = useRepositoryStore((state) => {
-    return {
-      layers: state.layers,
-    }
-  })
-
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const filteredTraits =
     query === ''
       ? traitElements
@@ -194,6 +190,8 @@ export const TraitSelector = ({
         })
 
   useEffect(() => onChange(null), [currentLayerPriority])
+
+  if (!layers) return null
 
   return (
     <Combobox as='div' value={selected} onChange={onChange}>

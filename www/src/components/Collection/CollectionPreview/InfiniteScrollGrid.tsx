@@ -18,18 +18,18 @@ const container = {
 }
 
 const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
-  const { collectionId, repositoryId, tokens, resetTokens, layers } = useRepositoryStore((state) => {
+  const { collectionId, repositoryId, tokens, resetTokens } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
       resetTokens: state.resetTokens,
       tokens: state.tokens,
-      layers: state.layers,
       repositoryId: state.repositoryId,
       collectionId: state.collectionId,
     }
   })
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const { data: repository } = trpc.useQuery(['repository.getRepositoryById', { id: repositoryId }])
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
 
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
@@ -40,7 +40,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
     resetTokens(collection.totalSupply)
   }, [collection])
 
-  if (!tokens || !tokens.length || !collection || !repository) return null
+  if (!tokens || !tokens.length || !collection || !repository || !layers) return null
 
   // lags the front end
   const populateCollection = (): ReactNode[] => {

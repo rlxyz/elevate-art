@@ -7,7 +7,6 @@ import Image from 'next/image'
 export const RegegenerateButton = () => {
   const { collectionId } = useRepositoryStore((state) => {
     return {
-      layers: state.layers,
       collectionId: state.collectionId,
     }
   })

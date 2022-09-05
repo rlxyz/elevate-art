@@ -11,7 +11,6 @@ const CollectionPreview = () => {
     return {
       setTokenRanking: state.setTokenRanking,
       setTraitMapping: state.setTraitMapping,
-      layers: state.layers,
       collectionId: state.collectionId,
       repositoryId: state.repositoryId,
     }

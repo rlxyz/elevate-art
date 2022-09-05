@@ -89,7 +89,6 @@ const LayerFolderSelector = () => {
     useRepositoryStore((state) => {
       return {
         repositoryId: state.repositoryId,
-        layers: state.layers,
         regenerate: state.regenerate,
         regeneratePreview: state.regeneratePreview,
         setRegeneratePreview: state.setRegeneratePreview,
@@ -106,14 +105,21 @@ const LayerFolderSelector = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  if (!layers) return null
-
-  const [items, setItems] = useState(layers.map((layer) => layer.id))
+  const [items, setItems] = useState<string[]>()
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const [refreshImage, setRefreshImage] = useState(true)
   const [expandPreview, setExpandPreview] = useState(false)
   const [currentImagePreviews, setCurrentImagePreviews] = useState<React.ReactNode[]>([])
+
+  useEffect(() => {
+    if (!layers) return
+    setItems(layers.map((layer) => layer.id))
+  }, [layers])
+
+  if (!layers || !items) return null
+
+  console.log('creating')
 
   // const generateImageHandler = async (): Promise<React.ReactNode[]> => {
   //   const app: App = createCompilerApp(repository.name)

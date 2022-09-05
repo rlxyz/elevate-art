@@ -27,13 +27,12 @@ const PageImplementation = ({
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-  const { setLayerIds, layers, setCollectionId, setRepositoryId, setLayers } = useRepositoryStore((state) => {
+  const { setLayerIds, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
     return {
-      layers: state.layers,
       setRepositoryId: state.setRepositoryId,
       setCollectionId: state.setCollectionId,
       setLayerIds: state.setLayerIds,
-      setLayers: state.setLayers,
+      layerIds: state.layerIds,
     }
   })
 
@@ -46,7 +45,7 @@ const PageImplementation = ({
 
   // sync routing with store
   useEffect(() => {
-    if (!layers || layers.length === 0 || !routes) return
+    if (!layerIds || layerIds.length === 0 || !routes) return
 
     const parse = LayerSectionEnum.safeParse(routes[0])
     if (!parse.success) {
@@ -71,15 +70,15 @@ const PageImplementation = ({
 
     if (routes.length == 2) {
       const name: string = routes[1] as string
-      const layer = layers.filter((layer) => layer.name === name)[0]
+      // const layer = layers.filter((layer) => layer.name === name)[0]
 
-      if (!layer) {
-        router.push('/404')
-        return
-      }
+      // if (!layer) {
+      //   router.push('/404')
+      //   return
+      // }
 
       setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(layer.priority)
+      setCurrentLayerPriority(0) // fix!
       return
     }
 
@@ -94,7 +93,6 @@ const PageImplementation = ({
     const collection = repositoryData.collections[0]
     if (!collection) return
     if (!layers || layers.length == 0) return
-    setLayers(layers)
     setLayerIds(layers.map((layer) => layer.id))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
