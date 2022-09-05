@@ -12,27 +12,6 @@ import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { LayerSectionEnum } from 'src/types/enums'
 
-const CollectionIndexPage = ({ collectionName, repositoryId }: { collectionName: string; repositoryId: string }) => {
-  const { data: collectionData } = trpc.useQuery([
-    'collection.getCollectionByName',
-    { name: collectionName, repositoryId: repositoryId },
-  ])
-
-  const { setCollection } = useRepositoryStore((state) => {
-    return {
-      setCollection: state.setCollection,
-    }
-  })
-
-  useEffect(() => {
-    if (!collectionData) return
-    console.log('changed', { collectionData })
-    setCollection(collectionData)
-  }, [collectionData])
-
-  return <Index />
-}
-
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
   organisationName,
@@ -50,20 +29,20 @@ const PageImplementation = ({
   const { data: organisationData } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
 
-  const { layers, setOrganisation, repository, setCollection, setLayers, setRepository } = useRepositoryStore(
-    (state) => {
+  const { layers, setOrganisation, setCollectionId, repository, setCollection, setLayers, setRepository } =
+    useRepositoryStore((state) => {
       return {
         layers: state.layers,
         organisation: state.organisation,
         setOrganisation: state.setOrganisation,
         collection: state.collection,
         repository: state.repository,
+        setCollectionId: state.setCollectionId,
         setLayers: state.setLayers,
         setCollection: state.setCollection,
         setRepository: state.setRepository,
       }
-    }
-  )
+    })
 
   const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryRouterStore((state) => {
     return {
@@ -126,12 +105,15 @@ const PageImplementation = ({
     if (!repositoryData) return
     if (!repositoryData.collections) return
     const layers = repositoryData.layers
+    const collection = repositoryData.collections[0]
+    if (!collection) return
     if (!layers || layers.length == 0) return
     setRepository(repository)
     setLayers(layers)
+    setCollectionId(collection.id)
   }, [repositoryData])
 
-  return repository && <CollectionIndexPage collectionName={collectionName} repositoryId={repository.id} />
+  return <Index />
 }
 
 // wrapper to hydate routes

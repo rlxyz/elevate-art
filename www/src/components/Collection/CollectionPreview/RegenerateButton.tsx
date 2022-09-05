@@ -16,7 +16,7 @@ export const RegegenerateButton = () => {
 
   const mutation = trpc.useMutation('collection.incrementGeneration', {
     onSuccess: (data, variables) => {
-      ctx.setQueryData(['collection.getCollectionByName', { name: data.name, repositoryId: data.repositoryId }], data)
+      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
       notifySuccess(
         <span>
           <span className='text-blueHighlight'>Successfully</span>

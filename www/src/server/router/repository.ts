@@ -52,6 +52,7 @@ export const repositoryRouter = createRouter().query('getRepositoryByName', {
           },
         },
         collections: {
+          where: { name: 'main' },
           orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
         },
       },

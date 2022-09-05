@@ -2,6 +2,7 @@ import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
+import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
 
@@ -72,77 +73,69 @@ export const FilterByTrait = () => {
                     {section.name}
                   </span> */}
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
-                  {layers.map(
-                    (
-                      layer: LayerElement & { traitElements: TraitElement[] },
-                      optionIdx: number
-                    ) => (
-                      <div key={layer.id} className='flex flex-col text-xs'>
-                        <Button
-                          onClick={() => {
-                            if (layerDropdown === optionIdx) {
-                              setLayerDropdown(null)
-                            } else {
-                              setLayerDropdown(optionIdx)
-                            }
-                          }}
-                          className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
-                            layerDropdown === optionIdx ? 'font-semibold' : ''
-                          }`}
-                        >
-                          <div className='pr-1 pl-5 flex justify-between'>
-                            <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
-                            <div className='flex items-center space-x-2'>
-                              <span className='text-xs'>
-                                {traitMapping.traitMap?.get(layer.id)?.size || 0}
-                              </span>
-                              {layerDropdown !== optionIdx ? (
-                                <ChevronDownIcon className='w-3 h-3' />
-                              ) : (
-                                <ChevronUpIcon className='w-3 h-3' />
-                              )}
-                            </div>
-                          </div>
-                        </Button>
-                        <div
-                          className={
-                            layerDropdown === optionIdx
-                              ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
-                              : 'hidden'
+                  {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
+                    <div key={layer.id} className='flex flex-col text-xs'>
+                      <Button
+                        onClick={() => {
+                          if (layerDropdown === optionIdx) {
+                            setLayerDropdown(null)
+                          } else {
+                            setLayerDropdown(optionIdx)
                           }
-                        >
-                          {layer.traitElements.map((traitElement: TraitElement, index) => {
-                            return (
-                              <div key={index}>
-                                <Button
-                                  key={traitElement.id}
-                                  className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
-                                >
-                                  <span>{traitElement.name}</span>
-                                  <div className='flex items-center space-x-2'>
-                                    <span className='text-darkGrey text-xs'>
-                                      {traitMapping.traitMap?.get(layer.id)?.get(traitElement.id) ||
-                                        0}
-                                    </span>
-                                    <Field
-                                      type='checkbox'
-                                      name='checked'
-                                      value={`${layer.id}/${traitElement.id}`}
-                                      className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                                      onChange={(e: any) => {
-                                        handleChange(e)
-                                        submitForm()
-                                      }}
-                                    />
-                                  </div>
-                                </Button>
-                              </div>
-                            )
-                          })}
+                        }}
+                        className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
+                          layerDropdown === optionIdx ? 'font-semibold' : ''
+                        }`}
+                      >
+                        <div className='pr-1 pl-5 flex justify-between'>
+                          <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
+                          <div className='flex items-center space-x-2'>
+                            <span className='text-xs'>{traitMapping.traitMap?.get(layer.id)?.size || 0}</span>
+                            {layerDropdown !== optionIdx ? (
+                              <ChevronDownIcon className='w-3 h-3' />
+                            ) : (
+                              <ChevronUpIcon className='w-3 h-3' />
+                            )}
+                          </div>
                         </div>
+                      </Button>
+                      <div
+                        className={
+                          layerDropdown === optionIdx
+                            ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
+                            : 'hidden'
+                        }
+                      >
+                        {layer.traitElements.map((traitElement: TraitElement, index) => {
+                          return (
+                            <div key={index}>
+                              <Button
+                                key={traitElement.id}
+                                className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
+                              >
+                                <span>{traitElement.name}</span>
+                                <div className='flex items-center space-x-2'>
+                                  <span className='text-darkGrey text-xs'>
+                                    {traitMapping.traitMap?.get(layer.id)?.get(traitElement.id) || 0}
+                                  </span>
+                                  <Field
+                                    type='checkbox'
+                                    name='checked'
+                                    value={`${layer.id}/${traitElement.id}`}
+                                    className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                                    onChange={(e: any) => {
+                                      handleChange(e)
+                                      submitForm()
+                                    }}
+                                  />
+                                </div>
+                              </Button>
+                            </div>
+                          )
+                        })}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -153,28 +146,30 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { layers, traitMapping, tokenRanking, collection, setTokens, resetTokens } =
-    useRepositoryStore((state) => {
-      return {
-        tokenRanking: state.tokenRanking,
-        collection: state.collection,
-        resetTokens: state.resetTokens,
-        setTokens: state.setTokens,
-        traitMapping: state.traitMapping,
-        layers: state.layers,
-        traitFilters: state.traitFilters,
-        setTraitFilters: state.setTraitFilters,
-      }
-    })
+  const { layers, traitMapping, tokenRanking, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
+    return {
+      tokenRanking: state.tokenRanking,
+      collectionId: state.collectionId,
+      resetTokens: state.resetTokens,
+      setTokens: state.setTokens,
+      traitMapping: state.traitMapping,
+      layers: state.layers,
+      traitFilters: state.traitFilters,
+      setTraitFilters: state.setTraitFilters,
+    }
+  })
+  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+
+  if (!collectionData) return null
 
   const filters = [
     { value: 'Top 10', start: 0, end: 10 },
     {
       value: 'Middle 10',
-      start: parseInt((collection.totalSupply / 2 - 5).toFixed(0)),
-      end: parseInt((collection.totalSupply / 2 + 5).toFixed(0)),
+      start: parseInt((collectionData.totalSupply / 2 - 5).toFixed(0)),
+      end: parseInt((collectionData.totalSupply / 2 + 5).toFixed(0)),
     },
-    { value: 'Last 10', start: collection.totalSupply - 10, end: collection.totalSupply },
+    { value: 'Last 10', start: collectionData.totalSupply - 10, end: collectionData.totalSupply },
   ]
 
   return (
@@ -202,9 +197,7 @@ export const FilterByRarity = () => {
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
                   {filters.map(({ value }, optionIdx: number) => (
                     <div key={optionIdx} className='flex flex-col text-xs'>
-                      <Button
-                        className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}
-                      >
+                      <Button className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
                         <div className='pr-1 pl-5 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>
                           <div className='flex items-center space-x-2'>

@@ -1,6 +1,6 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
+import { Collection } from '@prisma/client'
 import { createToken } from '@utils/compiler'
-import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
@@ -16,8 +16,14 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
-  const { collection, repository, tokens, resetTokens, layers } = useRepositoryStore((state) => {
+const InfiniteScrollGridItems = ({
+  tokensOnDisplay,
+  collection,
+}: {
+  tokensOnDisplay: number[]
+  collection: Collection
+}) => {
+  const { repository, tokens, resetTokens, layers } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
       resetTokens: state.resetTokens,
@@ -31,16 +37,11 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
 
-  const { data: collectionData } = trpc.useQuery([
-    'collection.getCollectionByName',
-    { name: collection.name, repositoryId: collection.repositoryId },
-  ])
-
   useEffect(() => {
     resetTokens()
   }, [])
 
-  if (!tokens || !tokens.length || !collectionData) return <></>
+  if (!tokens || !tokens.length || !collection) return <></>
 
   // lags the front end
   const populateCollection = (): ReactNode[] => {
@@ -53,7 +54,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
           token={createToken({
             id: Number(tokens[index]),
             name: collection.name,
-            generation: collectionData.generations,
+            generation: collection.generations,
             layers,
           })}
           repositoryName={repositoryName}
@@ -72,15 +73,12 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   )
 }
 
-export const InfiniteScrollGrid = () => {
-  const collection = useRepositoryStore((state) => state.collection)
+export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) => {
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-
   const fetch = (start: number) => {
     if (!collection || !collection.totalSupply) return
-
     const startPointIndex = start
     const endPointIndex = start + 1
     const startPoint = startPointIndex * 50
@@ -127,7 +125,7 @@ export const InfiniteScrollGrid = () => {
         <></>
       }
     >
-      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
+      <InfiniteScrollGridItems collection={collection} tokensOnDisplay={tokensOnDisplay} />
     </InfiniteScrollComponent.default>
   )
 }
