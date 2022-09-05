@@ -1,11 +1,15 @@
+import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Link from 'next/link'
 
 export default function NotFound() {
   return (
     <Layout>
+      <Layout.Header>
+        <Header />
+      </Layout.Header>
       <Layout.Body>
-        <div className='w-full min-h-full flex flex-col lg:relative'>
+        <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
             <main className='flex-grow flex flex-col bg-white'>
               <div className='flex-grow mx-auto max-w-7xl w-full flex flex-col px-4 sm:px-6 lg:px-8'>
@@ -35,7 +39,7 @@ export default function NotFound() {
             <img
               className='absolute inset-0 h-full object-cover'
               src='/images/protoglyph.png'
-              alt='subtraction-by-thankyoux'
+              alt='protoglyph-by-larvalabs'
             />
           </div>
         </div>
