@@ -190,7 +190,7 @@ const LayerFolderSelector = () => {
             </div>
           </div>
           <div className='max-h-[calc(100vh-17.5rem)]'>
-            <FileUpload id={`${organisationName}/${repositoryName}`}>
+            <FileUpload layers={layers} repositoryId={repositoryId}>
               <AnimatePresence>
                 <Reorder.Group
                   axis='y'

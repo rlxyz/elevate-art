@@ -1,24 +1,42 @@
+import { LayerElement, TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { ReactNode, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { clientEnv } from 'src/env/schema.mjs'
 
-const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
+const FileUpload = ({
+  repositoryId,
+  layers,
+  children,
+}: {
+  repositoryId: string
+  layers: (LayerElement & { traitElements: TraitElement[] })[]
+  children?: ReactNode
+}) => {
   const uploadCollectionLayerImageCloudinary = ({
-    id,
+    allTraits,
     layerName,
     fileName,
     file,
   }: {
-    id: string
+    allTraits: TraitElement[]
     layerName: string
     fileName: string
     file: any
   }) => {
     return new Promise((resolve, reject) => {
-      const key = `${id}/layers/${layerName}`
+      // find the layer & trait element id
+      const _traitName = toPascalCaseWithSpace(fileName)
+      const _layerName = toPascalCaseWithSpace(layerName)
+      const traits = layers.filter((layer) => layer.name === _layerName)[0]?.traitElements
+      if (!traits) return
+      const trait = traits.filter((trait) => trait.name === _traitName)[0]
+      if (!trait) return // todo: this returns if havent added trait to db. should add it if not
+      const key = `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}`
       const data = new FormData()
       data.append('file', file)
-      data.append('public_id', toPascalCaseWithSpace(fileName))
+      data.append('public_id', trait.id)
+      data.append('original_filename', _traitName)
       data.append('upload_preset', 'collection-upload')
       data.append('cloud_name', 'rlxyz')
       data.append('folder', key)
@@ -36,6 +54,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
   }
 
   const onDrop = useCallback(async (files: any) => {
+    const allTraits = layers.flatMap((map) => map.traitElements.flatMap((map) => map))
     files.forEach((file: any) => {
       const reader = new FileReader()
       const pathArray = String(file.path).split('/')
@@ -46,7 +65,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
       reader.onload = async () => {
         if (!fileName || !layerName) return // todo: throw error
         uploadCollectionLayerImageCloudinary({
-          id: id,
+          allTraits,
           fileName: fileName,
           layerName: layerName,
           file: file,
@@ -64,7 +83,7 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
     })
   }, [])
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],
@@ -77,11 +96,11 @@ const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {children}
-      {/* {isDragActive ? (
-        <p>Drop the files here ...</p>
+      {isDragActive ? (
+        <p className='text-xs ml-5'>Drop the files here ...</p>
       ) : (
-        <p>Drag and drop some files here, or click to select files</p>
-      )} */}
+        <p className='text-xs ml-5'>Drag and drop some files here, or click to select files</p>
+      )}
     </div>
   )
 }

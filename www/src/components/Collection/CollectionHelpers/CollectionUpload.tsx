@@ -3,6 +3,8 @@ import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
 import { Button } from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment, useRef } from 'react'
@@ -10,8 +12,11 @@ import { Fragment, useRef } from 'react'
 export const CollectionUpload = ({ open, setOpen }: { open: boolean; setOpen: (x: boolean) => void }) => {
   const cancelButtonRef = useRef(null)
   const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+
+  if (!layers) return
+
   return (
     <>
       {open && <div className='fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black z-100 opacity-75' />}
@@ -46,7 +51,7 @@ export const CollectionUpload = ({ open, setOpen }: { open: boolean; setOpen: (x
                       Upload Traits
                     </Dialog.Title>
                     <div className='h-[150px] border border-dashed border-lightGray rounded-[5px] flex flex-col justify-center items-center'>
-                      <FileUpload id={`${organisationName}/${repositoryName}`}>
+                      <FileUpload layers={layers} repositoryId={repositoryId}>
                         <span className='text-lg text-blueHighlight'>Click to upload</span>
                         <span> or drag and drop</span>
                       </FileUpload>

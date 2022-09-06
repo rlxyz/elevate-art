@@ -3,7 +3,6 @@ import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
-import { toPascalCaseWithSpace } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { NextRouter, useRouter } from 'next/router'
@@ -111,11 +110,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                         </Popover>
                       </div> */}
                       <div className='z-1 cursor-pointer' onDoubleClick={() => console.log('test')}>
-                        <AdvancedImage
-                          url={`${organisationName}/${repositoryName}/layers/${layerName}/${toPascalCaseWithSpace(
-                            trait.name
-                          )}.png`}
-                        />
+                        <AdvancedImage url={`${trait.layerElementId}/${trait.id}`} />
                       </div>
                     </div>
                     {canEdit === index ? (

@@ -9,6 +9,7 @@ import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } fr
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -177,14 +178,10 @@ export const RarityDisplay = ({
                         </tr>
                       </thead>
                       <tbody className='divide-y divide-mediumGrey'>
-                        {traitElements.map(({ name }: TraitElement, index: number) => (
+                        {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
                           <tr key={index}>
                             <td className='py-8'>
-                              <AdvancedImage
-                                url={`${organisationName}/${repositoryName}/layers/${layerName}/${toPascalCaseWithSpace(
-                                  name
-                                )}.png`}
-                              />
+                              <AdvancedImage url={`${layerElementId}/${id}`} />
                             </td>
                             <td className='whitespace-nowrap text-sm font-medium'>{toPascalCaseWithSpace(name)}</td>
                             <td className='whitespace-nowrap text-sm font-medium'>
@@ -246,34 +243,34 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-l border-l-mediumGrey border-t-mediumGrey'
+                  className='fixed z-0 bottom-0 h-[10%] max-w-full bg-hue-light border-t border-l border-l-mediumGrey border-t-mediumGrey'
                 >
                   <div className='flex justify-center items-center max-w-full'>
-                    {/* <div className='flex items-center space-x-3 mr-6'>
-                        {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
-                          <>
-                            <Image src='/images/tooltip.svg' height={15} width={15} />
-                            <span className='text-redDot text-sm'>{`You've overallocated by ${
-                              calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
-                            }`}</span>
-                          </>
-                        )}
+                    <div className='flex items-center space-x-3 mr-6'>
+                      {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
+                        <>
+                          <Image src='/images/tooltip.svg' height={15} width={15} />
+                          <span className='text-redDot text-sm'>{`You've overallocated by ${
+                            calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
+                          }`}</span>
+                        </>
+                      )}
 
-                        {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
-                          <>
-                            <Image src='/images/tooltip.svg' height={15} width={15} />
-                            <span className='text-redDot text-sm'>{`You've underallocated by ${
-                              calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
-                            }`}</span>
-                          </>
-                        )}
+                      {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
+                        <>
+                          <Image src='/images/tooltip.svg' height={15} width={15} />
+                          <span className='text-redDot text-sm'>{`You've underallocated by ${
+                            calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
+                          }`}</span>
+                        </>
+                      )}
 
-                        {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
-                          <>
-                            <span className='text-blueHighlight text-sm'>You can now submit</span>
-                          </>
-                        )}
-                      </div> */}
+                      {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
+                        <>
+                          <span className='text-blueHighlight text-sm'>You can now submit</span>
+                        </>
+                      )}
+                    </div>
                     <Button
                       className=''
                       onClick={(e) => {
