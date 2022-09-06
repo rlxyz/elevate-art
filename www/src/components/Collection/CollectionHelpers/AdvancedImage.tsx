@@ -1,4 +1,3 @@
-import { fill } from '@cloudinary/url-gen/actions/resize'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createCloudinary } from '@utils/cloudinary'
 import Image from 'next/image'
@@ -12,10 +11,7 @@ export const SmallAdvancedImage = ({ url }: { url: string }) => {
     <div className={`rounded-[5px] border-[1px] border-mediumGrey h-[35px] w-[35px]`}>
       <Image
         priority
-        src={cld
-          .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}`)
-          .resize(fill().width(35).height(35))
-          .toURL()}
+        src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}`).toURL()}
         width={35}
         height={35}
         className='rounded-[3px]'
