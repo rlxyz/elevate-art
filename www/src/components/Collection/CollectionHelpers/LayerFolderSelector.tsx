@@ -119,8 +119,6 @@ const LayerFolderSelector = () => {
 
   if (!layers || !items) return null
 
-  console.log('creating')
-
   // const generateImageHandler = async (): Promise<React.ReactNode[]> => {
   //   const app: App = createCompilerApp(repository.name)
   //   return Array.from(Array(30).keys()).map(async () => {
@@ -181,14 +179,14 @@ const LayerFolderSelector = () => {
                   </div>
                 </button> */}
               {/* <button
-                  onClick={() => {
-                    setOpenUpload(true)
-                  }}
-                >
-                  <div className='border rounded-[5px] border-lightGray p-1'>
-                    <PlusIcon className='text-darkGrey w-2 h-2' />
-                  </div>
-                </button> */}
+                onClick={() => {
+                  setOpenUpload(true)
+                }}
+              >
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <PlusIcon className='text-darkGrey w-2 h-2' />
+                </div>
+              </button> */}
             </div>
           </div>
           <div className='max-h-[calc(100vh-17.5rem)]'>

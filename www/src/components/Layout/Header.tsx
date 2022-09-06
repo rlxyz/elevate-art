@@ -149,7 +149,7 @@ const HeaderExternalaRoutes = ({
 }) => {
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      <aside className='flex flex-row space-x-3'>
+      <aside className='flex flex-row items-center justify-center space-x-3'>
         {routes.map((item, index) => {
           return (
             <Link external={true} key={index} href={item.href}>

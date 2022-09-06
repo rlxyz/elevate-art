@@ -9,7 +9,6 @@ import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } fr
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -124,18 +123,16 @@ export const RarityDisplay = ({
             }),
           }}
           onSubmit={(values) => {
-            setTimeout(() => {
-              mutation.mutate({
-                repositoryId,
-                layerId,
-                traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
-                  return {
-                    id,
-                    weight: (weight / calculateSumArray(values.traits)) * 100,
-                  }
-                }),
-              })
-            }, 400)
+            mutation.mutate({
+              repositoryId,
+              layerId,
+              traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
+                return {
+                  id,
+                  weight: (weight / calculateSumArray(values.traits)) * 100,
+                }
+              }),
+            })
           }}
         >
           {({
@@ -232,7 +229,7 @@ export const RarityDisplay = ({
                 </div>
               </div>
               {hasFormChange && (
-                <motion.footer
+                <motion.div
                   initial='hidden'
                   animate='show'
                   variants={{
@@ -249,11 +246,10 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-t-mediumGrey'
+                  className='fixed z-0 bottom-0 h-[10%] w-full bg-hue-light border-t border-l border-l-mediumGrey border-t-mediumGrey'
                 >
-                  <div className='flex items-center justify-between h-full w-full'>
-                    <div className='flex justify-end h-full p-6'>
-                      <div className='flex items-center space-x-3 mr-6'>
+                  <div className='flex justify-center items-center max-w-full'>
+                    {/* <div className='flex items-center space-x-3 mr-6'>
                         {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
                           <>
                             <Image src='/images/tooltip.svg' height={15} width={15} />
@@ -277,34 +273,32 @@ export const RarityDisplay = ({
                             <span className='text-blueHighlight text-sm'>You can now submit</span>
                           </>
                         )}
-                      </div>
-                      <div className='space-x-6 flex flex-row'>
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault()
-                            resetForm()
-                            setHasFormChange(false)
-                          }}
-                        >
-                          Reset
-                        </Button>
-                        <Button
-                          disabled={
-                            (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits)
-                              ? false
-                              : true) || isSubmitting
-                          }
-                          onClick={(e) => {
-                            e.preventDefault()
-                            handleSubmit()
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    </div>
+                      </div> */}
+                    <Button
+                      className=''
+                      onClick={(e) => {
+                        e.preventDefault()
+                        resetForm()
+                        setHasFormChange(false)
+                      }}
+                    >
+                      Reset
+                    </Button>
+                    <Button
+                      className=''
+                      disabled={
+                        (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits) ? false : true) ||
+                        isSubmitting
+                      }
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                      }}
+                    >
+                      Save
+                    </Button>
                   </div>
-                </motion.footer>
+                </motion.div>
               )}
             </>
           )}
