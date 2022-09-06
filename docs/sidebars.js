@@ -17,7 +17,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['intro', 'create-your-team', 'configure-profile'],
+    items: ['intro', 'getting-started', 'configure-profile'],
     },
   ],
   smartcontracts: [
