@@ -1,8 +1,5 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import { Button } from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
-import { Popover, Transition } from '@headlessui/react'
-import { DotsHorizontalIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
@@ -10,7 +7,7 @@ import { toPascalCaseWithSpace } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { NextRouter, useRouter } from 'next/router'
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 
 const LayerGridLoading = () => {
   return (
@@ -55,6 +52,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
       )
     },
     onError: () => {
+      resetCanEdit()
       notifyError('Something went wrong')
     },
   })
@@ -86,7 +84,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                       }}
                       className='relative'
                     >
-                      <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
+                      {/* <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
                         <Popover className='relative'>
                           <Popover.Button className='bg-lightGray border border-mediumGrey rounded-[3px] w-5 h-5 group inline-flex items-center justify-center'>
                             <DotsHorizontalIcon className='w-3 h-3 text-darkGrey' />
@@ -111,8 +109,8 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                             </Popover.Panel>
                           </Transition>
                         </Popover>
-                      </div>
-                      <div className='z-1'>
+                      </div> */}
+                      <div className='z-1 cursor-pointer' onDoubleClick={() => console.log('test')}>
                         <AdvancedImage
                           url={`${organisationName}/${repositoryName}/layers/${layerName}/${toPascalCaseWithSpace(
                             trait.name
@@ -122,18 +120,24 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                     </div>
                     {canEdit === index ? (
                       <Textbox
-                        className='p-2 text-xs text-center text-black'
+                        className='p-2 text-xs text-center text-black focus:outline-none'
                         id={`name`}
                         type='string'
                         name={`name`}
                         value={values.name}
+                        onBlur={resetCanEdit}
                         onChange={(e) => {
                           e.persist()
                           handleChange(e)
                         }}
                       />
                     ) : (
-                      <span className='p-2 text-xs text-center text-black'>{values.name}</span>
+                      <span
+                        onDoubleClick={() => setCanEdit(index)}
+                        className='p-2 cursor-pointer text-xs text-center text-black'
+                      >
+                        {values.name}
+                      </span>
                     )}
                   </div>
                 </Form>
