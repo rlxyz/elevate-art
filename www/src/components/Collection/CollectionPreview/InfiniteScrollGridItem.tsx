@@ -1,7 +1,6 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
-import { toPascalCaseWithSpace } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import { motion, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
@@ -50,14 +49,10 @@ const InfiniteScrollGridItem = ({
       ref={ref}
     >
       <div className='h-[125px] w-[125px] w- overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
-        {token.map((traitElement: TraitElement, index: number) => {
+        {token.map(({ layerElementId, id }: TraitElement, index: number) => {
           return (
             <div className='absolute flex flex-col items-center justify-center' key={index}>
-              <AdvancedImage
-                url={`${organisationName}/${repositoryName}/layers/${toPascalCaseWithSpace(
-                  layers[index]?.name || ''
-                )}/${toPascalCaseWithSpace(traitElement.name)}.png`}
-              />
+              <AdvancedImage url={`${layerElementId}/${id}`} />
             </div>
           )
         })}

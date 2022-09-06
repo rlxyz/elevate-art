@@ -6,7 +6,7 @@ import { useNotification } from '@hooks/useNotification'
 import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
-import { classNames, toPascalCaseWithSpace } from '@utils/format'
+import { classNames } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import router from 'next/router'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -222,11 +222,7 @@ export const TraitSelector = ({
               {({ active, selected }) => (
                 <>
                   <div className='flex flex-row items-center space-x-3'>
-                    <SmallAdvancedImage
-                      url={`${organisationName}/${repositoryName}/layers/${
-                        layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name
-                      }/${toPascalCaseWithSpace(traitElement.name)}.png`}
-                    />
+                    <SmallAdvancedImage url={`${traitElement.layerElementId}/${traitElement.id}`} />
                     <div className='flex flex-row space-x-2 items-center'>
                       <span
                         className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}
