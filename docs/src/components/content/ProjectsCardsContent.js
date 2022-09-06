@@ -1,5 +1,5 @@
 import Proof from '@site/static/img/projects/proof.jpeg'
-import PunkHouse from '@site/static/img/projects/punkHouse.png'
+import Zora from '@site/static/img/zoraOrb.svg'
 import DreamLab from '@site/static/img/projects/dreamlab.jpeg'
 import Rektguy from '@site/static/img/projects/rekt.jpeg'
 import Fellowship from '@site/static/img/projects/fellowship.jpeg'
@@ -37,8 +37,8 @@ export const projectsContent = [
     link: 'https://www.roboghosts.com/',
    },
   // {
-  //   project: PunkHouse,
-  //   link: 'https://punks.house/',
+  //   project: Zora,
+  //   link: 'https://zora.co/',
   // },
   // {
   //   project: BrightMoments,
