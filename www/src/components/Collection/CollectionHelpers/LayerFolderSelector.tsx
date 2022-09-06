@@ -119,8 +119,6 @@ const LayerFolderSelector = () => {
 
   if (!layers || !items) return null
 
-  console.log('creating')
-
   // const generateImageHandler = async (): Promise<React.ReactNode[]> => {
   //   const app: App = createCompilerApp(repository.name)
   //   return Array.from(Array(30).keys()).map(async () => {

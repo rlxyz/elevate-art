@@ -72,13 +72,14 @@ const Home: NextPage = () => {
           <div className='space-y-20'>
             <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col justify-center items-center'>
               <div className='w-[50%]'>
-                <img className='h-full object-cover' src='/images/logo-banner.png' alt='People working on laptops' />
+                <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
               </div>
-              <span className='text-right'>
-                by{' '}
+              <span className='text-xs uppercase'>
+                an&nbsp;
                 <Link external={true} href='https://twitter.com/rlxyz_eth'>
                   <span className='font-extrabold line-through'>RLXYZ</span>
                 </Link>
+                &nbsp;production
               </span>
             </div>
             {/* <Guide /> */}

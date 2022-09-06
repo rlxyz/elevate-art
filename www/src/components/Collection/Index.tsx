@@ -24,7 +24,6 @@ const Index = () => {
           currentViewSection
         ) && (
           <div className='flex flex-col space-y-6 justify-between'>
-            <RegegenerateButton />
             <LayerFolderSelector />
           </div>
         )}
