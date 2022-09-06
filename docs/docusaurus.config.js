@@ -29,17 +29,17 @@ module.exports = {
         {
           position: 'left',
           label: 'Generator',
-          to: '/docs/smart-contracts/zora-V3',
+          to: '/docs/generator/intro',
         },
         {
           position: 'left',
           label: 'Smart Contracts',
-          to: '/docs/zora-api/intro',
+          to: '/docs/smart-contracts/zora-v3',
         },
         {
           position: 'left',
           label: 'Mint Client',
-          to: '/docs/developer-tools/nft-rendering/introduction',
+          to: '/docs/mint-client/intro',
         },
       ],
     },

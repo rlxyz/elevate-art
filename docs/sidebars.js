@@ -17,9 +17,15 @@ module.exports = {
     {
       type: 'category',
       label: 'Getting Started',
-    items: ['intro', 'getting-started', 'configure-profile'],
+    items: ['intro', 'account-setup'],
     },
   ],
+  generator: [
+    {
+      type: 'category',
+      label: 'Generator',
+      items: ['generator/intro', 'generator/upload-art', 'generator/add-collaborators'],
+          },],
   smartcontracts: [
     {
       type: 'category',
