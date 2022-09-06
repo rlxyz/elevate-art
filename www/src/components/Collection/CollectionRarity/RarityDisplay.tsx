@@ -243,36 +243,36 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed z-0 bottom-0 h-[10%] max-w-full bg-hue-light border-t border-l border-l-mediumGrey border-t-mediumGrey'
+                  className='fixed bottom-0 h-[10%] w-[calc(100vw-47rem)] flex justify-between rounded-[5px] bg-hue-light border border-mediumGrey p-4'
                 >
-                  <div className='flex justify-center items-center max-w-full'>
-                    <div className='flex items-center space-x-3 mr-6'>
-                      {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
-                        <>
-                          <Image src='/images/tooltip.svg' height={15} width={15} />
-                          <span className='text-redDot text-sm'>{`You've overallocated by ${
-                            calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
-                          }`}</span>
-                        </>
-                      )}
+                  <div className='flex items-center space-x-3'>
+                    {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
+                      <>
+                        <Image src='/images/tooltip.svg' height={15} width={15} />
+                        <span className='text-redDot text-sm'>{`You've overallocated by ${
+                          calculateSumArray(values.traits) - calculateSumArray(initialValues.traits)
+                        }`}</span>
+                      </>
+                    )}
 
-                      {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
-                        <>
-                          <Image src='/images/tooltip.svg' height={15} width={15} />
-                          <span className='text-redDot text-sm'>{`You've underallocated by ${
-                            calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
-                          }`}</span>
-                        </>
-                      )}
+                    {calculateSumArray(initialValues.traits) > calculateSumArray(values.traits) && (
+                      <>
+                        <Image src='/images/tooltip.svg' height={15} width={15} />
+                        <span className='text-redDot text-sm'>{`You've underallocated by ${
+                          calculateSumArray(initialValues.traits) - calculateSumArray(values.traits)
+                        }`}</span>
+                      </>
+                    )}
 
-                      {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
-                        <>
-                          <span className='text-blueHighlight text-sm'>You can now submit</span>
-                        </>
-                      )}
-                    </div>
+                    {calculateSumArray(initialValues.traits) === calculateSumArray(values.traits) && (
+                      <>
+                        <span className='text-blueHighlight text-sm'>You can now submit</span>
+                      </>
+                    )}
+                  </div>
+                  <div className='flex space-x-3'>
                     <Button
-                      className=''
+                      type='button'
                       onClick={(e) => {
                         e.preventDefault()
                         resetForm()
@@ -282,7 +282,6 @@ export const RarityDisplay = ({
                       Reset
                     </Button>
                     <Button
-                      className=''
                       disabled={
                         (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits) ? false : true) ||
                         isSubmitting
