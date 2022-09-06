@@ -72,6 +72,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
               onSubmit={({ name }) => {
                 mutation.mutate({ id: trait.id, newName: name, oldName: trait.name, repositoryId: repositoryId })
               }}
+              key={index}
             >
               {({ values, handleChange }) => (
                 <Form>
