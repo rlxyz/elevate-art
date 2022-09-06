@@ -1,6 +1,3 @@
-import { toPascalCaseWithSpace } from '@utils/format'
-import cloudinary from 'cloudinary'
-import { clientEnv } from 'src/env/schema.mjs'
 import { z } from 'zod'
 import { createRouter } from './context'
 // const cloudinary = require('cloudinary').v2
@@ -189,53 +186,6 @@ export const traitElementRouter = createRouter()
       newName: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const data = await ctx.prisma.repository.findFirst({
-        where: {
-          id: input.repositoryId,
-        },
-        include: {
-          organisation: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      })
-
-      const trait = await ctx.prisma.traitElement.findFirst({
-        where: {
-          id: input.id,
-        },
-        include: {
-          layerElement: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      })
-
-      try {
-        // todo: move to @utils/cloudinary
-        cloudinary.v2.config({
-          cloud_name: 'rlxyz',
-          api_key: `${clientEnv.NEXT_PUBLIC_CLOUDINARY_API}`,
-          api_secret: `${clientEnv.NEXT_PUBLIC_CLOUDINARY_API_SECRET}`,
-        })
-
-        await cloudinary.v2.uploader.rename(
-          `${data?.organisation.name}/${data?.name}/layers/${trait?.layerElement.name}/${toPascalCaseWithSpace(
-            input.oldName
-          )}`,
-          `${data?.organisation.name}/${data?.name}/layers/${trait?.layerElement.name}/${toPascalCaseWithSpace(
-            input.newName
-          )}`
-        )
-      } catch (err) {
-        console.error(err)
-        throw err
-      }
-
       await ctx.prisma.traitElement.update({
         where: {
           id: input.id,

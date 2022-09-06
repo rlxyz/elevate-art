@@ -83,7 +83,7 @@ const FileUpload = ({
     })
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],
@@ -96,11 +96,11 @@ const FileUpload = ({
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {children}
-      {isDragActive ? (
+      {/* {isDragActive ? (
         <p className='text-xs ml-5'>Drop the files here ...</p>
       ) : (
         <p className='text-xs ml-5'>Drag and drop some files here, or click to select files</p>
-      )}
+      )} */}
     </div>
   )
 }
