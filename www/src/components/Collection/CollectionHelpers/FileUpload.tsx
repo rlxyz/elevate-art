@@ -1,6 +1,6 @@
-import { toPascalCaseWithSpace } from '@utils/format';
-import { ReactNode, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { toPascalCaseWithSpace } from '@utils/format'
+import { ReactNode, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 
 const FileUpload = ({ id, children }: { id: string; children?: ReactNode }) => {
   const uploadCollectionLayerImageCloudinary = ({

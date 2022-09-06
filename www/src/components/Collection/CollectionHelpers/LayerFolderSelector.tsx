@@ -179,14 +179,14 @@ const LayerFolderSelector = () => {
                   </div>
                 </button> */}
               {/* <button
-                  onClick={() => {
-                    setOpenUpload(true)
-                  }}
-                >
-                  <div className='border rounded-[5px] border-lightGray p-1'>
-                    <PlusIcon className='text-darkGrey w-2 h-2' />
-                  </div>
-                </button> */}
+                onClick={() => {
+                  setOpenUpload(true)
+                }}
+              >
+                <div className='border rounded-[5px] border-lightGray p-1'>
+                  <PlusIcon className='text-darkGrey w-2 h-2' />
+                </div>
+              </button> */}
             </div>
           </div>
           <div className='max-h-[calc(100vh-17.5rem)]'>
