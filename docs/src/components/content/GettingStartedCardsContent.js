@@ -3,7 +3,7 @@ export const gettingStartedContent = [
     docNumber: '01',
     docTitle: 'Getting started with Elevate.Art →',
     docSubtopic: 'Intro to Elevate.Art',
-    docLink: 'docs/getting-started',
+    docLink: 'docs/account-setup',
   },
   {
     docNumber: '02',
@@ -16,5 +16,5 @@ export const gettingStartedContent = [
     docTitle: 'Curating your Collection →',
     docSubtopic: 'Art Generator',
     docLink: '/docs/guides/curating-your-collection',
-  }
+  },
 ]

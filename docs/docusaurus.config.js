@@ -29,7 +29,7 @@ module.exports = {
         {
           position: 'left',
           label: 'Generator',
-          to: '/docs/generator/intro',
+          to: '/docs/generator/upload-art',
         },
         {
           position: 'left',
@@ -73,7 +73,8 @@ module.exports = {
       },
       {
         name: 'og:description',
-        content: 'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.'
+        content:
+          'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.',
       },
       {
         name: 'description',
