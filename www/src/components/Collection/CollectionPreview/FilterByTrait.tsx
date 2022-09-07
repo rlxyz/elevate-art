@@ -4,24 +4,24 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens, resetTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens } = useRepositoryStore(
+    (state) => {
       return {
         tokenRanking: state.tokenRanking,
         rarityFilter: state.rarityFilter,
         repositoryId: state.repositoryId,
         collectionId: state.collectionId,
-        resetTokens: state.resetTokens,
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    })
+    }
+  )
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
@@ -32,7 +32,7 @@ export const FilterByTrait = () => {
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens(rarityFilter.end - rarityFilter.start)
+          // resetTokens(collection.totalSupply)
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -66,6 +66,7 @@ export const FilterByTrait = () => {
           },
           [...(allTokenIdsArray[0] || [])]
         )
+
         const filteredRarity = filtered
           .map((val) => {
             return {
@@ -74,13 +75,27 @@ export const FilterByTrait = () => {
             }
           })
           .sort((a, b) => a.rank - b.rank)
-          .slice(rarityFilter.start, rarityFilter.end)
+          .slice(
+            rarityFilter === 'Top 10'
+              ? 0
+              : rarityFilter === 'Middle 10'
+              ? parseInt((filtered.length / 2 - 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? filtered.length - 10
+              : 0,
+            rarityFilter === 'Top 10'
+              ? 10
+              : rarityFilter === 'Middle 10'
+              ? parseInt((filtered.length / 2 + 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? filtered.length
+              : collection.totalSupply
+          )
           .map((x) => x.tokenId)
-        console.log('inTrait', { rarityFilter, filtered, traitMapping, tokenRanking, filteredRarity })
         setTokens(filteredRarity)
       }}
     >
-      {({ values, setFieldValue, handleChange, submitForm }) => (
+      {({ handleChange, submitForm }) => (
         <Form>
           {layers.length &&
             traitMapping.tokenIdMap.size > 0 &&
@@ -164,59 +179,62 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, rarityFilter, setRarityFilter, collectionId, setTokens, resetTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, tokenRanking, rarityFilter, setRarityFilter, collectionId, setTokens } = useRepositoryStore(
+    (state) => {
       return {
         rarityFilter: state.rarityFilter,
         setRarityFilter: state.setRarityFilter,
         tokenRanking: state.tokenRanking,
         collectionId: state.collectionId,
-        resetTokens: state.resetTokens,
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    })
+    }
+  )
   const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-
-  useEffect(() => {
-    console.log(rarityFilter)
-  }, [rarityFilter])
+  const filters: { value: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All' }[] = [
+    { value: 'All' },
+    { value: 'Top 10' },
+    { value: 'Middle 10' },
+    { value: 'Bottom 10' },
+  ]
 
   if (!collectionData) return null
-
-  const filters = [
-    { value: 'All', start: 0, end: collectionData.totalSupply },
-    { value: 'Top 10', start: 0, end: 10 },
-    {
-      value: 'Middle 10',
-      start: parseInt((collectionData.totalSupply / 2 - 5).toFixed(0)),
-      end: parseInt((collectionData.totalSupply / 2 + 5).toFixed(0)),
-    },
-    { value: 'Last 10', start: collectionData.totalSupply - 10, end: collectionData.totalSupply },
-  ]
 
   return (
     <Formik
       initialValues={{ checked: 'All' }}
       onSubmit={async ({ checked }: { checked: string }) => {
         if (!checked) {
-          resetTokens(collectionData.totalSupply)
+          // resetTokens(collectionData.totalSupply)
           return
         }
         const filter = filters.filter((val) => val.value === checked)[0]
         if (!filter) return
-        const { start, end } = filter
-        setRarityFilter({ start, end })
-        filters
-          .filter((val) => val.value === checked)
-          .forEach((val) => {
-            setTokens(tokenRanking.slice(val.start, val.end))
-          })
+        setRarityFilter(filter.value)
+        setTokens(
+          tokenRanking.slice(
+            filter.value === 'Top 10'
+              ? 0
+              : filter.value === 'Middle 10'
+              ? parseInt((collectionData.totalSupply / 2 - 5).toFixed(0))
+              : filter.value === 'Bottom 10'
+              ? collectionData.totalSupply - 10
+              : 0,
+            filter.value === 'Top 10'
+              ? 10
+              : filter.value === 'Middle 10'
+              ? parseInt((collectionData.totalSupply / 2 + 5).toFixed(0))
+              : filter.value === 'Bottom 10'
+              ? collectionData.totalSupply
+              : collectionData.totalSupply
+          )
+        )
       }}
     >
-      {({ values, handleChange, submitForm }) => (
+      {({ handleChange, submitForm }) => (
         <Form>
           {traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&

@@ -25,27 +25,17 @@ const InfiniteScrollGridItems = ({
     })[]
   })[]
 }) => {
-  const { tokens, resetTokens } = useRepositoryStore((state) => {
+  const { tokens } = useRepositoryStore((state) => {
     return {
-      resetTokens: state.resetTokens,
       tokens: state.tokens,
     }
   })
 
-  // todo: this is a hacky way of resetting. fix this.
-  // useEffect(() => {
-  //   if (!collection) return
-  //   resetTokens(collection.totalSupply)
-  // }, [collection])
-
-  if (!tokens || !tokens.length || !collection) {
-    return <></>
-  }
+  if (!tokens || !tokens.length || !collection) return <></>
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
-        // console.log('start', index)
         return (
           <CollectionInfiniteScrollItem
             key={`${index}`}
