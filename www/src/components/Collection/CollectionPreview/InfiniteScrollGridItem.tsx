@@ -1,33 +1,10 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { TraitElement } from '@prisma/client'
 import { motion, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-const InfiniteScrollGridItem = ({
-  token,
-  repositoryName,
-  organisationName,
-  name,
-  layers,
-}: {
-  token: TraitElement[]
-  repositoryName: string
-  organisationName: string
-  name: string
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[]
-}) => {
+const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
   const controls = useAnimation()
   const [ref, inView] = useInView()
   useEffect(() => {

@@ -56,7 +56,6 @@ export const createToken = (opts: {
       return true
     })
   })
-
   return elements
 }
 
