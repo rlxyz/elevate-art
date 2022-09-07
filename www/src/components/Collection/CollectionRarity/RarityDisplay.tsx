@@ -243,7 +243,7 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed bottom-0 h-[10%] w-[calc(100vw-47rem)] flex justify-between rounded-[5px] bg-hue-light border border-mediumGrey p-4'
+                  className='fixed bottom-0 h-[10%] w-[calc(51vw)] flex justify-between rounded-[5px] bg-hue-light border border-mediumGrey p-4'
                 >
                   <div className='flex items-center space-x-3'>
                     {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
