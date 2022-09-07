@@ -166,6 +166,7 @@ export const FilterByRarity = () => {
   if (!collectionData) return null
 
   const filters = [
+    { value: 'All', start: 0, end: collectionData.totalSupply },
     { value: 'Top 10', start: 0, end: 10 },
     {
       value: 'Middle 10',
@@ -177,7 +178,7 @@ export const FilterByRarity = () => {
 
   return (
     <Formik
-      initialValues={{ checked: '' }}
+      initialValues={{ checked: 'All' }}
       onSubmit={async ({ checked }: { checked: string }) => {
         if (!checked) {
           resetTokens(collectionData.totalSupply)
@@ -186,7 +187,7 @@ export const FilterByRarity = () => {
         filters
           .filter((val) => val.value === checked)
           .forEach((val) => {
-            setTokens(tokenRanking.slice(val.start, val.end))
+            setTokens(tokenRanking.slice(val.start, val.end).sort((a, b) => a - b))
           })
       }}
     >
