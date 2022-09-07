@@ -71,9 +71,7 @@ const Index = () => {
   })
 
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }], {
-    onSuccess: (data) => console.log({ data }),
-  })
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
 
   return (
     <CollectionViewContent
