@@ -8,9 +8,10 @@ import { useEffect, useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, rarityFilter, collectionId, repositoryId, setTokens, resetTokens } = useRepositoryStore(
-    (state) => {
+  const { traitMapping, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens, resetTokens } =
+    useRepositoryStore((state) => {
       return {
+        tokenRanking: state.tokenRanking,
         rarityFilter: state.rarityFilter,
         repositoryId: state.repositoryId,
         collectionId: state.collectionId,
@@ -20,8 +21,7 @@ export const FilterByTrait = () => {
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    }
-  )
+    })
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
@@ -66,8 +66,18 @@ export const FilterByTrait = () => {
           },
           [...(allTokenIdsArray[0] || [])]
         )
-        console.log('inTrait', rarityFilter)
-        setTokens(filtered.slice(rarityFilter.start, rarityFilter.end))
+        const filteredRarity = filtered
+          .map((val) => {
+            return {
+              tokenId: val,
+              rank: tokenRanking.findIndex((token) => token === val),
+            }
+          })
+          .sort((a, b) => a.rank - b.rank)
+          .slice(rarityFilter.start, rarityFilter.end)
+          .map((x) => x.tokenId)
+        console.log('inTrait', { rarityFilter, filtered, traitMapping, tokenRanking, filteredRarity })
+        setTokens(filteredRarity)
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (
