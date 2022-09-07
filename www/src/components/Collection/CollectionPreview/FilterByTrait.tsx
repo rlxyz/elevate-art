@@ -4,21 +4,24 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, collectionId, repositoryId, setTokens, resetTokens } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-      collectionId: state.collectionId,
-      resetTokens: state.resetTokens,
-      setTokens: state.setTokens,
-      traitMapping: state.traitMapping,
-      traitFilters: state.traitFilters,
-      setTraitFilters: state.setTraitFilters,
+  const { traitMapping, rarityFilter, collectionId, repositoryId, setTokens, resetTokens } = useRepositoryStore(
+    (state) => {
+      return {
+        rarityFilter: state.rarityFilter,
+        repositoryId: state.repositoryId,
+        collectionId: state.collectionId,
+        resetTokens: state.resetTokens,
+        setTokens: state.setTokens,
+        traitMapping: state.traitMapping,
+        traitFilters: state.traitFilters,
+        setTraitFilters: state.setTraitFilters,
+      }
     }
-  })
+  )
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
@@ -29,7 +32,7 @@ export const FilterByTrait = () => {
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens(collection.totalSupply)
+          resetTokens(rarityFilter.end - rarityFilter.start)
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -63,7 +66,8 @@ export const FilterByTrait = () => {
           },
           [...(allTokenIdsArray[0] || [])]
         )
-        setTokens(filtered.sort((a, b) => a - b))
+        console.log('inTrait', rarityFilter)
+        setTokens(filtered.slice(rarityFilter.start, rarityFilter.end))
       }}
     >
       {({ values, setFieldValue, handleChange, submitForm }) => (
@@ -150,18 +154,25 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
-    return {
-      tokenRanking: state.tokenRanking,
-      collectionId: state.collectionId,
-      resetTokens: state.resetTokens,
-      setTokens: state.setTokens,
-      traitMapping: state.traitMapping,
-      traitFilters: state.traitFilters,
-      setTraitFilters: state.setTraitFilters,
-    }
-  })
+  const { traitMapping, tokenRanking, rarityFilter, setRarityFilter, collectionId, setTokens, resetTokens } =
+    useRepositoryStore((state) => {
+      return {
+        rarityFilter: state.rarityFilter,
+        setRarityFilter: state.setRarityFilter,
+        tokenRanking: state.tokenRanking,
+        collectionId: state.collectionId,
+        resetTokens: state.resetTokens,
+        setTokens: state.setTokens,
+        traitMapping: state.traitMapping,
+        traitFilters: state.traitFilters,
+        setTraitFilters: state.setTraitFilters,
+      }
+    })
   const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+
+  useEffect(() => {
+    console.log(rarityFilter)
+  }, [rarityFilter])
 
   if (!collectionData) return null
 
@@ -184,10 +195,14 @@ export const FilterByRarity = () => {
           resetTokens(collectionData.totalSupply)
           return
         }
+        const filter = filters.filter((val) => val.value === checked)[0]
+        if (!filter) return
+        const { start, end } = filter
+        setRarityFilter({ start, end })
         filters
           .filter((val) => val.value === checked)
           .forEach((val) => {
-            setTokens(tokenRanking.slice(val.start, val.end).sort((a, b) => a - b))
+            setTokens(tokenRanking.slice(val.start, val.end))
           })
       }}
     >

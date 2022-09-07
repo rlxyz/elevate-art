@@ -4,6 +4,7 @@ import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
+  rarityFilter: { start: number; end: number }
   layerNames: string[]
   layerIds: string[]
   collectionId: string
@@ -30,6 +31,7 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }) => void
+  setRarityFilter: ({ start, end }: { start: number; end: number }) => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
   setTokenRanking: (indices: number[]) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
@@ -45,6 +47,8 @@ interface CompilerViewInterface {
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    rarityFilter: { start: 0, end: 0 }, // start with true to ensure that on hydrate preview is populated
+    setRarityFilter: ({ start, end }: { start: number; end: number }) => set((_) => ({ rarityFilter: { start, end } })),
     layerNames: [],
     layerIds: [],
     repositoryId: '',
@@ -80,7 +84,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     tokenRanking: [], // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
     resetTokens: (totalSupply: number) => set((state) => ({ tokens: Array.from(Array(totalSupply).keys()) })),
-    setTokens: (tokens: number[]) => set((_) => ({ tokens })),
+    setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens.sort((a, b) => a - b) })),
     setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
     setTraitMapping: ({
       tokenIdMap,
