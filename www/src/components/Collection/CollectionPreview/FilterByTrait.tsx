@@ -32,7 +32,23 @@ export const FilterByTrait = () => {
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          // resetTokens(collection.totalSupply)
+          const filteredRarity = tokenRanking.slice(
+            rarityFilter === 'Top 10'
+              ? 0
+              : rarityFilter === 'Middle 10'
+              ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? tokenRanking.length - 10
+              : 0,
+            rarityFilter === 'Top 10'
+              ? 10
+              : rarityFilter === 'Middle 10'
+              ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? tokenRanking.length
+              : collection.totalSupply
+          )
+          setTokens(filteredRarity)
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
