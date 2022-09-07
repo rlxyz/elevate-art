@@ -200,7 +200,7 @@ export const FilterByRarity = () => {
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
                   {filters.map(({ value }, optionIdx: number) => (
                     <div key={optionIdx} className='flex flex-col text-xs'>
-                      <Button className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
+                      <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
                         <div className='pr-1 pl-5 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>
                           <div className='flex items-center space-x-2'>
@@ -218,7 +218,7 @@ export const FilterByRarity = () => {
                             </span>
                           </div>
                         </div>
-                      </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
