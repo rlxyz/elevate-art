@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
   rarityFilter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All'
+  traitFilteredTokens: number[]
   layerNames: string[]
   layerIds: string[]
   collectionId: string
@@ -43,11 +44,14 @@ interface CompilerViewInterface {
   setCollectionId: (collectionId: string) => void
   setLayerIds: (ids: string[]) => void
   setLayerNames: (names: string[]) => void
+  setTraitFilteredTokens: (tokens: number[]) => void
 }
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
     rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
+    traitFilteredTokens: [],
+    setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),
     setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
     layerNames: [],
     layerIds: [],

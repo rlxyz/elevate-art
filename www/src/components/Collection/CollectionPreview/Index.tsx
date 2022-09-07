@@ -41,8 +41,10 @@ const CollectionPreviewImplementation = ({
     })[]
   })[]
 }) => {
-  const { setTraitMapping, setTokenRanking } = useRepositoryStore((state) => {
+  const { setTokens, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
     return {
+      rarityFilter: state.rarityFilter,
+      setTokens: state.setTokens,
       setTokenRanking: state.setTokenRanking,
       setTraitMapping: state.setTraitMapping,
     }
@@ -56,7 +58,26 @@ const CollectionPreviewImplementation = ({
       tokenIdMap,
       traitMap,
     })
-    setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
+    const tokenRanking = getTokenRanking(tokens, traitMap, collection.totalSupply)
+    setTokenRanking(tokenRanking)
+    setTokens(
+      tokenRanking.slice(
+        rarityFilter === 'Top 10'
+          ? 0
+          : rarityFilter === 'Middle 10'
+          ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? tokenRanking.length - 10
+          : 0,
+        rarityFilter === 'Top 10'
+          ? 10
+          : rarityFilter === 'Middle 10'
+          ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? tokenRanking.length
+          : tokenRanking.length
+      )
+    )
   }, [layers, collection])
 
   return <InfiniteScrollGrid collection={collection} layers={layers} />
