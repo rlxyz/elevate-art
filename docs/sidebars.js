@@ -17,7 +17,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['intro', 'account-setup'],
+      items: ['elevate-difference', 'intro', 'account-setup'],
     },
   ],
   generator: [
@@ -25,8 +25,11 @@ module.exports = {
       type: 'category',
       label: 'Generator',
       items: [
-        'generator/preview-collection',
         'generator/upload-art',
+        'generator/preview-collection',
+        'generator/layers',
+        'generator/traits',
+        'generator/rules',
         'generator/add-collaborators',
       ],
     },
