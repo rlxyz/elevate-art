@@ -38,12 +38,7 @@ const InfiniteScrollGridItems = ({
     resetTokens(collection.totalSupply)
   }, [collection])
 
-  useEffect(() => {
-    console.log('InfiniteScrollGridItems render')
-  }, [])
-
   if (!tokens || !tokens.length || !collection) {
-    console.log('InfiniteScrollGridItems null')
     return <></>
   }
 

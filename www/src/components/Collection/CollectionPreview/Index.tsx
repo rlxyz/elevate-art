@@ -50,7 +50,6 @@ const CollectionPreviewImplementation = ({
 
   useDeepCompareEffect(() => {
     if (!collection || !layers) return
-    console.log('render')
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
@@ -60,7 +59,7 @@ const CollectionPreviewImplementation = ({
     setTokenRanking(getTokenRanking(tokens, traitMap, collection.totalSupply))
   }, [layers, collection])
 
-  return <InfiniteScrollGrid collection={collection} layers={layers}/>
+  return <InfiniteScrollGrid collection={collection} layers={layers} />
 }
 
 const Index = () => {
