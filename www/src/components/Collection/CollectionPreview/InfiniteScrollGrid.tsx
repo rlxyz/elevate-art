@@ -33,10 +33,10 @@ const InfiniteScrollGridItems = ({
   })
 
   // todo: this is a hacky way of resetting. fix this.
-  useEffect(() => {
-    if (!collection) return
-    resetTokens(collection.totalSupply)
-  }, [collection])
+  // useEffect(() => {
+  //   if (!collection) return
+  //   resetTokens(collection.totalSupply)
+  // }, [collection])
 
   if (!tokens || !tokens.length || !collection) {
     return <></>
@@ -111,6 +111,7 @@ export const InfiniteScrollGrid = ({
     <InfiniteScrollComponent.default
       dataLength={tokensOnDisplay.length}
       next={() => {
+        console.log(tokensOnDisplay.length)
         fetchMoreData(page)
         console.log('InfiniteScrollGrid next')
       }}

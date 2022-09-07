@@ -177,14 +177,14 @@ export const FilterByRarity = () => {
 
   return (
     <Formik
-      initialValues={{ checked: [] }}
-      onSubmit={async ({ checked }: { checked: string[] }) => {
-        if (!checked.length) {
+      initialValues={{ checked: '' }}
+      onSubmit={async ({ checked }: { checked: string }) => {
+        if (!checked) {
           resetTokens(collectionData.totalSupply)
           return
         }
         filters
-          .filter((val) => val.value === checked[0])
+          .filter((val) => val.value === checked)
           .forEach((val) => {
             setTokens(tokenRanking.slice(val.start, val.end))
           })
@@ -205,7 +205,7 @@ export const FilterByRarity = () => {
                           <div className='flex items-center space-x-2'>
                             <span className='text-xs'>
                               <Field
-                                type='checkbox'
+                                type='radio'
                                 name='checked'
                                 value={value}
                                 className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
