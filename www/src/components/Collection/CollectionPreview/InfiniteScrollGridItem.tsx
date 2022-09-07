@@ -1,7 +1,5 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { TraitElement } from '@prisma/client'
-import { trpc } from '@utils/trpc'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { motion, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -11,14 +9,25 @@ const InfiniteScrollGridItem = ({
   repositoryName,
   organisationName,
   name,
+  layers,
 }: {
   token: TraitElement[]
   repositoryName: string
   organisationName: string
   name: string
+  layers: (LayerElement & {
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+    })[]
+  })[]
 }) => {
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const controls = useAnimation()
   const [ref, inView] = useInView()
   useEffect(() => {
@@ -37,8 +46,6 @@ const InfiniteScrollGridItem = ({
       transition: { ease: [0.78, 0.14, 0.15, 0.86] },
     },
   }
-
-  if (!layers || !layers.length) return null
 
   return (
     <motion.div

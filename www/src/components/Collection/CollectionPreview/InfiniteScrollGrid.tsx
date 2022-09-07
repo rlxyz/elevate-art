@@ -1,5 +1,5 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Collection } from '@prisma/client'
+import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -17,7 +17,24 @@ const container = {
   },
 }
 
-const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[] }) => {
+const InfiniteScrollGridItems = ({
+  tokensOnDisplay,
+  layers,
+}: {
+  tokensOnDisplay: number[]
+  layers: (LayerElement & {
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+    })[]
+  })[]
+}) => {
   const { collectionId, repositoryId, tokens, resetTokens } = useRepositoryStore((state) => {
     return {
       setTokens: state.setTokens,
@@ -29,7 +46,6 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
   })
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
   const { data: repository } = trpc.useQuery(['repository.getRepositoryById', { id: repositoryId }])
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
 
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
@@ -40,7 +56,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
     resetTokens(collection.totalSupply)
   }, [collection])
 
-  if (!tokens || !tokens.length || !collection || !repository || !layers) return null
+  if (!tokens || !tokens.length || !collection || !repository) return null
 
   // lags the front end
   const populateCollection = (): ReactNode[] => {
@@ -56,6 +72,7 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
             generation: collection.generations,
             layers,
           })}
+          layers={layers}
           repositoryName={repositoryName}
           organisationName={organisationName}
           name={`${repository.tokenName} #${tokens[index] || 0}`}
@@ -67,12 +84,29 @@ const InfiniteScrollGridItems = ({ tokensOnDisplay }: { tokensOnDisplay: number[
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
-      {repository && layers && populateCollection().map((item) => item)}
+      {repository && populateCollection().map((item) => item)}
     </div>
   )
 }
 
-export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) => {
+export const InfiniteScrollGrid = ({
+  collection,
+  layers,
+}: {
+  collection: Collection
+  layers: (LayerElement & {
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+    })[]
+  })[]
+}) => {
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
@@ -85,6 +119,7 @@ export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) =
     const endPoint = endPointIndex * 50
     setTokensOnDisplay([...tokensOnDisplay, ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint)])
     setPage((p) => p + 1)
+    console.log('fetched next data')
   }
 
   const fetchMoreData = (page: number) => {
@@ -96,6 +131,7 @@ export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) =
   }
 
   useEffect(() => {
+    console.log('populating preview')
     fetch(page)
   }, [])
 
@@ -106,7 +142,7 @@ export const InfiniteScrollGrid = ({ collection }: { collection: Collection }) =
       hasMore={hasMore}
       loader={<></>}
     >
-      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} />
+      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} layers={layers} />
     </InfiniteScrollComponent.default>
   )
 }
