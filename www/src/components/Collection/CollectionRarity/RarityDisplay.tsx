@@ -150,7 +150,7 @@ export const RarityDisplay = ({
             resetForm,
           }) => (
             <>
-              <div className='flex flex-col'>
+              <div className='flex flex-col pb-14'>
                 <div className='inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit}>
                     <table className='w-full table-fixed divide-y divide-mediumGrey'>
@@ -243,7 +243,7 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed bottom-0 h-[10%] w-[calc(100vw-47rem)] flex justify-between rounded-[5px] bg-hue-light border border-mediumGrey p-4'
+                  className='fixed bottom-0 h-[10%] 2xl:w-[calc(51vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey p-4'
                 >
                   <div className='flex items-center space-x-3'>
                     {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
@@ -270,7 +270,7 @@ export const RarityDisplay = ({
                       </>
                     )}
                   </div>
-                  <div className='flex space-x-3'>
+                  <div className='flex space-x-3 py-6'>
                     <Button
                       type='button'
                       onClick={(e) => {

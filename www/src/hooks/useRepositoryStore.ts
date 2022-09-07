@@ -4,6 +4,8 @@ import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
 interface CompilerViewInterface {
+  rarityFilter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All'
+  traitFilteredTokens: number[]
   layerNames: string[]
   layerIds: string[]
   collectionId: string
@@ -30,21 +32,27 @@ interface CompilerViewInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }) => void
+  setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => void
   setRegenerateFilterIndex: ({ start, end }: { start: number; end: number }) => void
   setTokenRanking: (indices: number[]) => void
   setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
   setRegenerateFilter: (regenerateFilter: boolean) => void
   setRegeneratePreview: (regenerate: boolean) => void
   setRegenerateCollection: (regenerate: boolean) => void
-  resetTokens: (totalSupply: number) => void
+  // resetTokens: (totalSupply: number) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setLayerIds: (ids: string[]) => void
   setLayerNames: (names: string[]) => void
+  setTraitFilteredTokens: (tokens: number[]) => void
 }
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
+    traitFilteredTokens: [],
+    setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),
+    setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
     layerNames: [],
     layerIds: [],
     repositoryId: '',
@@ -79,8 +87,8 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
     regeneratePreview: true, // start with true to ensure that on hydrate preview is populated
     tokenRanking: [], // start with true to ensure that on hydrate preview is populated
     traitFilters: [], // start with true to ensure that on hydrate preview is populated
-    resetTokens: (totalSupply: number) => set((state) => ({ tokens: Array.from(Array(totalSupply).keys()) })),
-    setTokens: (tokens: number[]) => set((_) => ({ tokens })),
+    // resetTokens: (totalSupply: number) => set((state) => ({ tokens: Array.from(Array(totalSupply).keys()) })),
+    setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
     setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
     setTraitMapping: ({
       tokenIdMap,

@@ -4,21 +4,24 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, collectionId, repositoryId, setTokens, resetTokens } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-      collectionId: state.collectionId,
-      resetTokens: state.resetTokens,
-      setTokens: state.setTokens,
-      traitMapping: state.traitMapping,
-      traitFilters: state.traitFilters,
-      setTraitFilters: state.setTraitFilters,
-    }
-  })
+  const { traitMapping, setTraitFilteredTokens, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens } =
+    useRepositoryStore((state) => {
+      return {
+        setTraitFilteredTokens: state.setTraitFilteredTokens,
+        tokenRanking: state.tokenRanking,
+        rarityFilter: state.rarityFilter,
+        repositoryId: state.repositoryId,
+        collectionId: state.collectionId,
+        setTokens: state.setTokens,
+        traitMapping: state.traitMapping,
+        traitFilters: state.traitFilters,
+        setTraitFilters: state.setTraitFilters,
+      }
+    })
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
   const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 
@@ -29,7 +32,24 @@ export const FilterByTrait = () => {
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!checked.length) {
-          resetTokens(collection.totalSupply)
+          const filteredRarity = tokenRanking.slice(
+            rarityFilter === 'Top 10'
+              ? 0
+              : rarityFilter === 'Middle 10'
+              ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? tokenRanking.length - 10
+              : 0,
+            rarityFilter === 'Top 10'
+              ? 10
+              : rarityFilter === 'Middle 10'
+              ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+              : rarityFilter === 'Bottom 10'
+              ? tokenRanking.length
+              : collection.totalSupply
+          )
+          setTokens(filteredRarity)
+          setTraitFilteredTokens([])
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -51,22 +71,47 @@ export const FilterByTrait = () => {
               return { ...a, ...{ [layer]: [...(a[layer] || []), ...tokens] } }
             }, {})
         )
-        const filtered = allTokenIdsArray.reduce(
-          (results, item) => {
-            const tokens: number[] = item
-              .map((token) => {
-                if (results.includes(token)) return [token]
-                return []
-              })
-              .flatMap((x) => x)
-            return tokens
-          },
-          [...(allTokenIdsArray[0] || [])]
+        const allFilteredByRank = allTokenIdsArray
+          .reduce(
+            (results, item) => {
+              const tokens: number[] = item
+                .map((token) => {
+                  if (results.includes(token)) return [token]
+                  return []
+                })
+                .flatMap((x) => x)
+              return tokens
+            },
+            [...(allTokenIdsArray[0] || [])]
+          )
+          .map((val) => {
+            return {
+              tokenId: val,
+              rank: tokenRanking.findIndex((token) => token === val),
+            }
+          })
+          .sort((a, b) => a.rank - b.rank)
+        const filteredRarity = allFilteredByRank.slice(
+          rarityFilter === 'Top 10'
+            ? 0
+            : rarityFilter === 'Middle 10'
+            ? parseInt((allFilteredByRank.length / 2 - 5).toFixed(0))
+            : rarityFilter === 'Bottom 10'
+            ? allFilteredByRank.length - 10
+            : 0,
+          rarityFilter === 'Top 10'
+            ? 10
+            : rarityFilter === 'Middle 10'
+            ? parseInt((allFilteredByRank.length / 2 + 5).toFixed(0))
+            : rarityFilter === 'Bottom 10'
+            ? allFilteredByRank.length
+            : collection.totalSupply
         )
-        setTokens(filtered.sort((a, b) => a - b))
+        setTraitFilteredTokens(allFilteredByRank.map((x) => x.tokenId))
+        setTokens(filteredRarity.map((x) => x.tokenId))
       }}
     >
-      {({ values, setFieldValue, handleChange, submitForm }) => (
+      {({ handleChange, submitForm }) => (
         <Form>
           {layers.length &&
             traitMapping.tokenIdMap.size > 0 &&
@@ -150,47 +195,84 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, collectionId, setTokens, resetTokens } = useRepositoryStore((state) => {
-    return {
-      tokenRanking: state.tokenRanking,
-      collectionId: state.collectionId,
-      resetTokens: state.resetTokens,
-      setTokens: state.setTokens,
-      traitMapping: state.traitMapping,
-      traitFilters: state.traitFilters,
-      setTraitFilters: state.setTraitFilters,
-    }
-  })
+  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } =
+    useRepositoryStore((state) => {
+      return {
+        traitFilteredTokens: state.traitFilteredTokens,
+        rarityFilter: state.rarityFilter,
+        setRarityFilter: state.setRarityFilter,
+        tokenRanking: state.tokenRanking,
+        collectionId: state.collectionId,
+        setTokens: state.setTokens,
+        traitMapping: state.traitMapping,
+        traitFilters: state.traitFilters,
+        setTraitFilters: state.setTraitFilters,
+      }
+    })
   const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+  const filters: { value: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All' }[] = [
+    { value: 'All' },
+    { value: 'Top 10' },
+    { value: 'Middle 10' },
+    { value: 'Bottom 10' },
+  ]
+
+  useEffect(() => {
+    setRarityFilter('All')
+  }, [])
 
   if (!collectionData) return null
 
-  const filters = [
-    { value: 'Top 10', start: 0, end: 10 },
-    {
-      value: 'Middle 10',
-      start: parseInt((collectionData.totalSupply / 2 - 5).toFixed(0)),
-      end: parseInt((collectionData.totalSupply / 2 + 5).toFixed(0)),
-    },
-    { value: 'Last 10', start: collectionData.totalSupply - 10, end: collectionData.totalSupply },
-  ]
-
   return (
     <Formik
-      initialValues={{ checked: [] }}
-      onSubmit={async ({ checked }: { checked: string[] }) => {
-        if (!checked.length) {
-          resetTokens(collectionData.totalSupply)
-          return
+      initialValues={{ checked: 'All' }}
+      onSubmit={async ({ checked }: { checked: string }) => {
+        const filter = filters.filter((val) => val.value === checked)[0]
+        if (!filter) return
+        setRarityFilter(filter.value)
+        // todo:cleanup
+        if (!traitFilteredTokens.length) {
+          setTokens(
+            tokenRanking.slice(
+              filter.value === 'Top 10'
+                ? 0
+                : filter.value === 'Middle 10'
+                ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+                : filter.value === 'Bottom 10'
+                ? tokenRanking.length - 10
+                : 0,
+              filter.value === 'Top 10'
+                ? 10
+                : filter.value === 'Middle 10'
+                ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+                : filter.value === 'Bottom 10'
+                ? tokenRanking.length
+                : tokenRanking.length
+            )
+          )
+        } else {
+          setTokens(
+            traitFilteredTokens.slice(
+              filter.value === 'Top 10'
+                ? 0
+                : filter.value === 'Middle 10'
+                ? parseInt((traitFilteredTokens.length / 2 - 5).toFixed(0))
+                : filter.value === 'Bottom 10'
+                ? traitFilteredTokens.length - 10
+                : 0,
+              filter.value === 'Top 10'
+                ? 10
+                : filter.value === 'Middle 10'
+                ? parseInt((traitFilteredTokens.length / 2 + 5).toFixed(0))
+                : filter.value === 'Bottom 10'
+                ? traitFilteredTokens.length
+                : traitFilteredTokens.length
+            )
+          )
         }
-        filters
-          .filter((val) => val.value === checked[0])
-          .forEach((val) => {
-            setTokens(tokenRanking.slice(val.start, val.end))
-          })
       }}
     >
-      {({ values, handleChange, submitForm }) => (
+      {({ handleChange, submitForm }) => (
         <Form>
           {traitMapping.tokenIdMap.size > 0 &&
             traitMapping.traitMap.size > 0 &&
@@ -199,13 +281,13 @@ export const FilterByRarity = () => {
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
                   {filters.map(({ value }, optionIdx: number) => (
                     <div key={optionIdx} className='flex flex-col text-xs'>
-                      <Button className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
+                      <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
                         <div className='pr-1 pl-5 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>
                           <div className='flex items-center space-x-2'>
                             <span className='text-xs'>
                               <Field
-                                type='checkbox'
+                                type='radio'
                                 name='checked'
                                 value={value}
                                 className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
@@ -217,7 +299,7 @@ export const FilterByRarity = () => {
                             </span>
                           </div>
                         </div>
-                      </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
