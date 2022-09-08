@@ -5,12 +5,12 @@ import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { LayerSectionEnum } from 'src/types/enums'
+import { CollectionNavigationEnum } from 'src/types/enums'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -40,7 +40,7 @@ const PageImplementation = ({
     }
   )
 
-  const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryRouterStore((state) => {
+  const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryNavigationStore((state) => {
     return {
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setCurrentViewSection: state.setCurrentViewSection,
@@ -51,7 +51,7 @@ const PageImplementation = ({
   useEffect(() => {
     if (!layerNames || layerNames.length === 0 || !routes) return
 
-    const parse = LayerSectionEnum.safeParse(routes[0])
+    const parse = CollectionNavigationEnum.safeParse(routes[0])
     if (!parse.success) {
       router.push('/404')
       return
@@ -61,10 +61,10 @@ const PageImplementation = ({
       const route = parse.data
 
       switch (route) {
-        case LayerSectionEnum.enum.Preview:
+        case CollectionNavigationEnum.enum.Preview:
           setCurrentViewSection(parse.data)
           return
-        case LayerSectionEnum.enum.Settings:
+        case CollectionNavigationEnum.enum.Settings:
           setCurrentViewSection(parse.data)
           return
       }
@@ -115,7 +115,7 @@ const Page = () => {
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { currentLayer } = useCurrentLayer()
-  const currentViewSection = useRepositoryRouterStore((state) => state.currentViewSection)
+  const currentViewSection = useRepositoryNavigationStore((state) => state.currentViewSection)
 
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
@@ -132,24 +132,24 @@ const Page = () => {
           ]}
           internalNavigation={[
             {
-              name: LayerSectionEnum.enum.Preview,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Preview}`,
-              enabled: LayerSectionEnum.enum.Preview === currentViewSection,
+              name: CollectionNavigationEnum.enum.Preview,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Preview}`,
+              enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
             },
             {
-              name: LayerSectionEnum.enum.Layers,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Layers}/${currentLayer.name}`,
-              enabled: LayerSectionEnum.enum.Layers === currentViewSection,
+              name: CollectionNavigationEnum.enum.Layers,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
             },
             {
-              name: LayerSectionEnum.enum.Rarity,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Rarity}/${currentLayer.name}`,
-              enabled: LayerSectionEnum.enum.Rarity === currentViewSection,
+              name: CollectionNavigationEnum.enum.Rarity,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
             },
             {
-              name: LayerSectionEnum.enum.Rules,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${LayerSectionEnum.enum.Rules}/${currentLayer.name}`,
-              enabled: LayerSectionEnum.enum.Rules === currentViewSection,
+              name: CollectionNavigationEnum.enum.Rules,
+              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
             },
             // {
             //   name: LayerSectionEnum.enum.Settings,

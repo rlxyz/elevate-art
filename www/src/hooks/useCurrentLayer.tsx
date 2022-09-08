@@ -1,10 +1,10 @@
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 
 export const useCurrentLayer = () => {
   const layerIds = useRepositoryStore((state) => state.layerIds)
-  const currentLayerPriority: number = useRepositoryRouterStore((state) => state.currentLayerPriority)
+  const currentLayerPriority: number = useRepositoryNavigationStore((state) => state.currentLayerPriority)
   const currentLayerPriorityId: string = layerIds[currentLayerPriority] || ''
 
   const { data, isLoading, isError, refetch } = trpc.useQuery([
