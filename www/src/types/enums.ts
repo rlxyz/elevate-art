@@ -4,6 +4,7 @@ const OrganisationNavigation = Object.freeze({
   Dashboard: 'dashboard',
   Activity: 'activity',
   Settings: 'account',
+  New: 'new',
 })
 
 export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)

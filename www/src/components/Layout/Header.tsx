@@ -178,6 +178,7 @@ export const Header = ({
   connectButton?: boolean
   internalNavigation?: { name: string; enabled: boolean; href: string }[]
 }) => {
+  console.log(internalRoutes)
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center h-[3.5rem]'>

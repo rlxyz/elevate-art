@@ -9,21 +9,20 @@ import { RepositorySectionEnum } from 'src/types/enums'
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const collectionName: string = router.query.collection as string
   const repositoryName: string = router.query.repository as string
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
 
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName))
-  }, [organisationName, repositoryName, collectionName])
+  }, [organisationName, repositoryName])
 
   return hasHydrated ? (
     <Layout>
       <Layout.Header>
         <Header
           internalRoutes={[
-            { current: organisationName, href: `${organisationName}` },
-            { current: repositoryName, href: `${organisationName}/${repositoryName}` },
+            { current: organisationName, href: `/${organisationName}` },
+            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
           internalNavigation={[
             {
