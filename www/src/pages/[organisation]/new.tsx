@@ -1,5 +1,7 @@
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
+import { Button } from '@components/UI/Button'
+import { Link } from '@components/UI/Link'
 import XCircleIcon from '@heroicons/react/outline/XCircleIcon'
 import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
 import type { NextPage } from 'next'
@@ -9,6 +11,8 @@ import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const PageImplementation = ({}) => {
+  const router: NextRouter = useRouter()
+  const organisationName = router.query.organisation as string
   const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
@@ -102,6 +106,22 @@ const PageImplementation = ({}) => {
                   </div>
                 )
               })}
+            </div>
+            <div className='flex justify-end space-x-3'>
+              <Button
+                onClick={() => {
+                  // should delete repo
+                  router.push(`/${organisationName}`)
+                }}
+                className='w-[12rem] py-4 bg-white text-black border border-mediumGrey font-semibold rounded-[5px]'
+              >
+                Cancel
+              </Button>
+              <Link href={`/${organisationName}/${'roboghosts'}`} external>
+                <div className='w-[12rem] py-4 bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'>
+                  Create Project
+                </div>
+              </Link>
             </div>
           </div>
         </div>
