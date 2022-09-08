@@ -2,13 +2,12 @@ import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUploa
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Button } from '@components/UI/Button'
-import { Link } from '@components/UI/Link'
 import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
 import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const PageImplementation = ({}) => {
@@ -19,6 +18,7 @@ const PageImplementation = ({}) => {
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
   }, [])
+  const [createProjectDisabled, setCreateProjectDisabled] = useState(true)
   if (!organisation) return <div>loading...</div>
   return (
     <div>
@@ -35,7 +35,7 @@ const PageImplementation = ({}) => {
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-white p-12 drop-shadow-2xl space-y-12'>
             <div className='text-4xl font-semibold'>Import layers</div>
             <div className='h-2/5 border border-dashed border-mediumGrey rounded-[5px] flex flex-col justify-center items-center'>
-              <FolderUpload organisationId={organisation.id} />
+              <FolderUpload onSuccess={() => setCreateProjectDisabled(false)} organisationId={organisation.id} />
             </div>
             {/* <div className='h-2/6 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
               {[
@@ -117,11 +117,13 @@ const PageImplementation = ({}) => {
                 >
                   Cancel
                 </Button>
-                <Link href={`/${organisationName}/${'roboghosts'}`} external>
-                  <div className='w-[12rem] py-4 bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'>
-                    Create Project
-                  </div>
-                </Link>
+                <Button
+                  className='p-4 disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'
+                  onClick={() => router.push(`/${organisationName}/${'roboghosts'}`)}
+                  disabled={createProjectDisabled}
+                >
+                  Create Project
+                </Button>
               </div>
             </div>
           </div>
@@ -129,7 +131,7 @@ const PageImplementation = ({}) => {
         <div className='col-span-2'>
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-lightGray p-12 space-y-12'>
             <div className='text-4xl font-semibold'>Clone template</div>
-            <div className='grid grid-cols-2 gap-6'>
+            <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
               {[
                 {
                   imageUrl:
