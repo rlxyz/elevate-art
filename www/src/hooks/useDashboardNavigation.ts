@@ -1,21 +1,21 @@
-import { DashboardNavigationType } from 'src/types/enums'
+import { OrganisationNavigationType } from 'src/types/enums'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
-interface DashboardNavigationInterface {
-  currentRoute: DashboardNavigationType
-  setCurrentViewSection: (view: DashboardNavigationType) => void
+interface OrganisationNavigationInterface {
+  currentRoute: OrganisationNavigationType
+  setCurrentRoute: (view: OrganisationNavigationType) => void
 }
 
-export const createDashboardNavigationStore = create<DashboardNavigationInterface>()(
+export const createOrganisationNavigationStore = create<OrganisationNavigationInterface>()(
   persist((set) => ({
     currentRoute: 'dashboard',
-    setCurrentViewSection: (view: DashboardNavigationType) => set((_) => ({ currentRoute: view })),
+    setCurrentRoute: (view: OrganisationNavigationType) => set((_) => ({ currentRoute: view })),
   }))
 )
 
-export const DashboardRouterContext = createContext<typeof createDashboardNavigationStore>()
-const useDashboardNavigationStore = DashboardRouterContext.useStore
+export const OrganisationRouterContext = createContext<typeof createOrganisationNavigationStore>()
+const useOrganisationNavigationStore = OrganisationRouterContext.useStore
 
-export default useDashboardNavigationStore
+export default useOrganisationNavigationStore

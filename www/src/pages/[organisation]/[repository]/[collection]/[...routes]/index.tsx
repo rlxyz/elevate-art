@@ -10,7 +10,7 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
+import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -159,7 +159,10 @@ const Page = () => {
         />
       </Layout.Header>
       <Layout.Title>
-        <SectionHeader />
+        <SectionHeader
+          title={CollectionTitleContent[currentViewSection].title}
+          description={CollectionTitleContent[currentViewSection].description}
+        />
       </Layout.Title>
       <Layout.Body>
         <PageImplementation

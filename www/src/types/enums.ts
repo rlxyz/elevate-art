@@ -1,13 +1,13 @@
 import * as z from 'zod'
 
-const DashboardNavigation = Object.freeze({
+const OrganisationNavigation = Object.freeze({
   Dashboard: 'dashboard',
-  Activity: 'dashboard/activity',
+  Activity: 'activity',
   Settings: 'account',
 })
 
-export const DashboardNavigationEnum = z.nativeEnum(DashboardNavigation)
-export type DashboardNavigationType = z.infer<typeof DashboardNavigationEnum>
+export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 const CollectionNavigation = Object.freeze({
   Preview: 'preview',
@@ -33,3 +33,23 @@ const Rules = Object.freeze({
 
 export const RulesEnum = z.nativeEnum(Rules)
 export type RulesType = z.infer<typeof RulesEnum>
+
+export const CollectionTitleContent = Object.freeze({
+  preview: {
+    title: 'Preview Collection',
+    description: 'Create different token sets before finalising the collection',
+  },
+  layers: { title: 'All Layers', description: 'View and edit layers of your collection' },
+  rarity: {
+    title: 'Rarity',
+    description: 'Set how often you want certain images to appear in the generation',
+  },
+  rules: {
+    title: 'Custom Rules',
+    description: 'Add custom rules for your traits so it layers perfectly!',
+  },
+  settings: {
+    title: 'Collection Settings',
+    description: '',
+  },
+})

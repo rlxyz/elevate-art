@@ -1,5 +1,5 @@
 // src/pages/_app.tsx
-import { createDashboardNavigationStore, DashboardRouterContext } from '@hooks/useDashboardNavigation'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useDashboardNavigation'
 import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
@@ -54,14 +54,14 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
     <SessionProvider session={session}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
-          <DashboardRouterContext.Provider createStore={() => createDashboardNavigationStore}>
+          <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
             <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
               <RepositoryContext.Provider createStore={() => createRepositoryStore}>
                 <Component {...pageProps} />
                 <Toaster />
               </RepositoryContext.Provider>
             </RepositoryRouterContext.Provider>
-          </DashboardRouterContext.Provider>
+          </OrganisationRouterContext.Provider>
         </RainbowKitProvider>
       </WagmiConfig>
     </SessionProvider>

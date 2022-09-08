@@ -179,7 +179,7 @@ export const Header = ({
   internalNavigation?: { name: string; enabled: boolean; href: string }[]
 }) => {
   return (
-    <header className='-ml-2 pointer-events-auto'>
+    <header className='pointer-events-auto'>
       <div className='flex justify-between items-center h-[3.5rem]'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
           <Link className='' external={true} href='/'>
