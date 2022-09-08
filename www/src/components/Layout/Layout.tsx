@@ -4,6 +4,7 @@ import { Footer } from './Footer'
 
 interface LayoutProps {
   children: React.ReactElement[] | React.ReactElement
+  hasFooter?: boolean
 }
 
 const LayoutContainer = ({ className, children }: { className?: string; children: React.ReactNode }) => {
@@ -14,13 +15,17 @@ const LayoutContainer = ({ className, children }: { className?: string; children
   )
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   return (
     <main className='layout'>
       {children}
-      <LayoutContainer>
-        <Footer />
-      </LayoutContainer>
+      {hasFooter ? (
+        <LayoutContainer>
+          <Footer />
+        </LayoutContainer>
+      ) : (
+        <></>
+      )}
     </main>
   )
 }

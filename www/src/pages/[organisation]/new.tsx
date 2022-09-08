@@ -126,8 +126,33 @@ const PageImplementation = ({}) => {
           </div>
         </div>
         <div className='col-span-2'>
-          <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-lightGray p-12'>
+          <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-lightGray p-12 space-y-12'>
             <div className='text-4xl font-semibold'>Clone template</div>
+            <div className='grid grid-cols-2 gap-2'>
+              {[
+                {
+                  imageUrl:
+                    'https://vercel.com/_next/image?url=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Fv1647366075%2Ffront%2Fimport%2Fnextjs.png&w=1920&q=75',
+                  name: 'RoboGhosts',
+                  thumbnailUrl:
+                    'https://vercel.com/_next/image?url=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Fv1647366075%2Ffront%2Fimport%2Fnextjs.png&w=1920&q=75',
+                },
+              ].map(({ imageUrl, thumbnailUrl, name }, index) => {
+                return (
+                  <div key={index} className='border border-mediumGrey rounded-[5px] h-[15rem]'>
+                    <div className='h-3/4 relative'>
+                      <Image src={imageUrl} layout='fill' className='rounded-t-[5px]' />
+                    </div>
+                    <div className='h-1/4 flex items-center space-x-3 p-4'>
+                      <div className='border border-mediumGrey w-[35px] h-[35px] rounded-full items-center flex justify-center'>
+                        <Image src={thumbnailUrl} width={30} height={30} className='rounded-full' />
+                      </div>
+                      <span className='font-semibold'>{name}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
         <div className='z-[-1] mt-32 bg-lightGray absolute left-0 w-full h-[calc(100vh-32rem)] py-12' />
@@ -141,7 +166,7 @@ const Page: NextPage = () => {
   const organisationName: string = router.query.organisation as string
   return (
     <>
-      <Layout>
+      <Layout hasFooter={false}>
         <Layout.Header>
           <Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
         </Layout.Header>
