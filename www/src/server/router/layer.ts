@@ -141,3 +141,24 @@ export const layerElementRouter = createRouter()
       })
     },
   })
+  .mutation('createMany', {
+    input: z.object({
+      layers: z.array(
+        z.object({
+          layerName: z.string(),
+          traitName: z.array(z.string()),
+        })
+      ),
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.layerElement.createMany({
+        data: input.layers.map(({ layerName: name }) => {
+          return {
+            name,
+            repositoryId: input.repositoryId,
+          }
+        }),
+      })
+    },
+  })

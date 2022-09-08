@@ -1,9 +1,10 @@
+import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUpload'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Button } from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
-import XCircleIcon from '@heroicons/react/outline/XCircleIcon'
 import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
+import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
@@ -13,10 +14,12 @@ import { OrganisationNavigationEnum } from 'src/types/enums'
 const PageImplementation = ({}) => {
   const router: NextRouter = useRouter()
   const organisationName = router.query.organisation as string
+  const { data: organisation } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
   const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
   }, [])
+  if (!organisation) return <div>loading...</div>
   return (
     <div>
       <div className='py-24'>
@@ -32,13 +35,9 @@ const PageImplementation = ({}) => {
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-white p-12 drop-shadow-2xl space-y-12'>
             <div className='text-4xl font-semibold'>Import layers</div>
             <div className='h-2/5 border border-dashed border-mediumGrey rounded-[5px] flex flex-col justify-center items-center'>
-              {/* <FileUpload layers={layers} repositoryId={repositoryId}> */}
-              <span className='text-lg text-blueHighlight'>Click to upload</span>
-              <span> or drag and drop</span>
-              {/* </FileUpload> */}
-              <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
+              <FolderUpload organisationId={organisation.id} />
             </div>
-            <div className='h-2/6 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
+            {/* <div className='h-2/6 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
               {[
                 {
                   trait: 'Background',
@@ -86,7 +85,7 @@ const PageImplementation = ({}) => {
                           </div>
                         </div>
                         <div className='flex flex-col space-y-1'>
-                          <span className='text-sm font-semibold text-black text-darkGrey'>{trait}</span>
+                          <span className='text-sm font-semibold'>{trait}</span>
                           <span className='text-xs text-darkGrey'>{size.toFixed(1)} MB</span>
                         </div>
                       </div>
@@ -106,29 +105,31 @@ const PageImplementation = ({}) => {
                   </div>
                 )
               })}
-            </div>
-            <div className='flex justify-end space-x-3'>
-              <Button
-                onClick={() => {
-                  // should delete repo
-                  router.push(`/${organisationName}`)
-                }}
-                className='w-[12rem] py-4 bg-white text-black border border-mediumGrey font-semibold rounded-[5px]'
-              >
-                Cancel
-              </Button>
-              <Link href={`/${organisationName}/${'roboghosts'}`} external>
-                <div className='w-[12rem] py-4 bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'>
-                  Create Project
-                </div>
-              </Link>
+            </div> */}
+            <div className='py-12 pr-12 absolute bottom-0 right-0'>
+              <div className='flex justify-end space-x-3'>
+                <Button
+                  onClick={() => {
+                    // should delete repo
+                    router.push(`/${organisationName}`)
+                  }}
+                  className='w-[12rem] py-4 bg-white text-black border border-mediumGrey font-semibold rounded-[5px]'
+                >
+                  Cancel
+                </Button>
+                <Link href={`/${organisationName}/${'roboghosts'}`} external>
+                  <div className='w-[12rem] py-4 bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'>
+                    Create Project
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
         <div className='col-span-2'>
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-lightGray p-12 space-y-12'>
             <div className='text-4xl font-semibold'>Clone template</div>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className='grid grid-cols-2 gap-6'>
               {[
                 {
                   imageUrl:
