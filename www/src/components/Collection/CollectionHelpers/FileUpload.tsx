@@ -1,7 +1,7 @@
 import { Button } from '@components/UI/Button'
-import { LayerElement, TraitElement } from '@prisma/client'
+import { LayerElement, Repository, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
-import { ReactNode, useCallback } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
@@ -104,9 +104,17 @@ const FileUpload = ({
   )
 }
 
-export const FolderUpload = ({ onSuccess, organisationId }: { organisationId: string; onSuccess: () => void }) => {
+export const FolderUpload = ({
+  setRepository,
+  onSuccess,
+  organisationId,
+}: {
+  organisationId: string
+  onSuccess: () => void
+  setRepository: Dispatch<SetStateAction<Repository | null>>
+}) => {
   const mutation = trpc.useMutation('repository.create', {
-    onSuccess: (data, variables) => console.log('created new repo'),
+    onSuccess: (data, variables) => setRepository(data),
   })
 
   const mutationLayer = trpc.useMutation('layer.createMany', {
@@ -158,7 +166,6 @@ export const FolderUpload = ({ onSuccess, organisationId }: { organisationId: st
             { repositoryId: data.id, layers: layerNames },
             {
               onSuccess: (data) => {
-                console.log('saved all layers', { data })
                 files.map((file: any) => {
                   const reader = new FileReader()
                   const pathArray = String(file.path).split('/')

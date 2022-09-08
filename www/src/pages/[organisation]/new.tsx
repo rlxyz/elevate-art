@@ -3,6 +3,7 @@ import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Button } from '@components/UI/Button'
 import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
+import { Repository } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
@@ -18,6 +19,7 @@ const PageImplementation = ({}) => {
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
   }, [])
+  const [repository, setRepository] = useState<Repository | null>(null)
   const [createProjectDisabled, setCreateProjectDisabled] = useState(true)
   if (!organisation) return <div>loading...</div>
   return (
@@ -35,7 +37,11 @@ const PageImplementation = ({}) => {
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-white p-12 drop-shadow-2xl space-y-12'>
             <div className='text-4xl font-semibold'>Import layers</div>
             <div className='h-2/5 border border-dashed border-mediumGrey rounded-[5px] flex flex-col justify-center items-center'>
-              <FolderUpload onSuccess={() => setCreateProjectDisabled(false)} organisationId={organisation.id} />
+              <FolderUpload
+                setRepository={setRepository}
+                onSuccess={() => setCreateProjectDisabled(false)}
+                organisationId={organisation.id}
+              />
             </div>
             {/* <div className='h-2/6 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
               {[
@@ -119,8 +125,8 @@ const PageImplementation = ({}) => {
                 </Button>
                 <Button
                   className='p-4 disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'
-                  onClick={() => router.push(`/${organisationName}/${'roboghosts'}`)}
-                  disabled={createProjectDisabled}
+                  onClick={() => router.push(`/${organisationName}/${repository?.name}/main/preview`)} // todo: should go to collection creation page
+                  disabled={repository !== null && createProjectDisabled}
                 >
                   Create Project
                 </Button>
