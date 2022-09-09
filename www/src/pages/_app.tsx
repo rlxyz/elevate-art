@@ -1,6 +1,7 @@
 // src/pages/_app.tsx
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
+import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -55,12 +56,14 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
           <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-            <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-              <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                <Component {...pageProps} />
-                <Toaster />
-              </RepositoryContext.Provider>
-            </CollectionRouterContext.Provider>
+            <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+              <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                  <Component {...pageProps} />
+                  <Toaster />
+                </RepositoryContext.Provider>
+              </CollectionRouterContext.Provider>
+            </RepositoryRouterContext.Provider>
           </OrganisationRouterContext.Provider>
         </RainbowKitProvider>
       </WagmiConfig>

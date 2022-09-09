@@ -1,10 +1,19 @@
+import Dashboard from '@components/Dashboard/Index'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
+import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { RepositorySectionEnum } from 'src/types/enums'
+import { RepositoryNavigationEnum, RepositorySectionEnum } from 'src/types/enums'
 
+const PageImplementation = ({}) => {
+  const setCurrentRoute = useRepositoryNavigationStore((state) => state.setCurrentRoute)
+  useEffect(() => {
+    setCurrentRoute(RepositoryNavigationEnum.enum.Dashboard)
+  }, [])
+  return <Dashboard />
+}
 // wrapper to hydate routes
 const Page = () => {
   const router: NextRouter = useRouter()
@@ -38,7 +47,7 @@ const Page = () => {
         />
       </Layout.Header>
       <Layout.Body>
-        <div>Hi</div>
+        <PageImplementation />
       </Layout.Body>
     </Layout>
   ) : (

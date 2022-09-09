@@ -3,9 +3,9 @@ import Index from '@components/Collection/Index'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -126,8 +126,8 @@ const Page = () => {
       <Layout.Header>
         <Header
           internalRoutes={[
-            { current: organisationName, href: `${organisationName}` },
-            { current: repositoryName, href: `${organisationName}/${repositoryName}` },
+            { current: organisationName, href: `/${organisationName}` },
+            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
             { current: collectionName, options: ['main'], href: `` },
           ]}
           internalNavigation={[
