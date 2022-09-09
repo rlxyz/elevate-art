@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -40,7 +40,7 @@ const PageImplementation = ({
     }
   )
 
-  const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryNavigationStore((state) => {
+  const { setCurrentLayerPriority, setCurrentViewSection } = useCollectionNavigationStore((state) => {
     return {
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setCurrentViewSection: state.setCurrentViewSection,
@@ -115,7 +115,7 @@ const Page = () => {
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { currentLayer } = useCurrentLayer()
-  const currentViewSection = useRepositoryNavigationStore((state) => state.currentViewSection)
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
 
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))

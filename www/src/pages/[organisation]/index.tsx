@@ -1,10 +1,11 @@
 import Dashboard from '@components/Dashboard/Index'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
+import Loading from '@components/UI/Loading'
+import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const PageImplementation = ({}) => {
@@ -19,7 +20,13 @@ const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  return (
+  const [hasHydrated, setHasHydrated] = useState<boolean>(false)
+
+  useEffect(() => {
+    setHasHydrated(Boolean(organisationName))
+  }, [organisationName])
+
+  return hasHydrated ? (
     <>
       <Layout>
         <Layout.Header>
@@ -49,6 +56,8 @@ const Page: NextPage = () => {
         </Layout.Body>
       </Layout>
     </>
+  ) : (
+    <Loading />
   )
 }
 

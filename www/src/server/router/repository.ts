@@ -111,12 +111,19 @@ export const repositoryRouter = createRouter()
       organisationId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.create({
+      const repository = await ctx.prisma.repository.create({
         data: {
           name: input.name,
           tokenName: input.name,
           organisationId: input.organisationId,
         },
       })
+      await ctx.prisma.collection.create({
+        data: {
+          name: 'main',
+          repositoryId: repository.id,
+        },
+      })
+      return repository
     },
   })

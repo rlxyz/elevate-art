@@ -53,6 +53,7 @@ const CollectionPreviewImplementation = ({
   useDeepCompareEffect(() => {
     if (!collection || !layers) return
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
+    console.log(tokens)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,

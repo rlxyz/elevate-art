@@ -3,7 +3,7 @@ import { Button } from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useNotification } from '@hooks/useNotification'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
 import { classNames } from '@utils/format'
@@ -33,7 +33,7 @@ export const TraitRulesSelector = ({
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
-  const currentLayerPriority = useRepositoryNavigationStore((state) => state.currentLayerPriority)
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { notifySuccess, notifyError } = useNotification()
   if (!layers) return null
   const allRightTraitElements = layers
@@ -179,7 +179,7 @@ export const TraitSelector = ({
   onChange: Dispatch<SetStateAction<TraitElement | null | undefined>>
 }) => {
   const [query, setQuery] = useState('')
-  const currentLayerPriority = useRepositoryNavigationStore((state) => state.currentLayerPriority)
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const repositoryId = useRepositoryStore((state) => state.repositoryId)

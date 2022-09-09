@@ -101,9 +101,7 @@ export const InfiniteScrollGrid = ({
     <InfiniteScrollComponent.default
       dataLength={tokensOnDisplay.length}
       next={() => {
-        console.log(tokensOnDisplay.length)
         fetchMoreData(page)
-        console.log('InfiniteScrollGrid next')
       }}
       hasMore={hasMore}
       loader={<></>}

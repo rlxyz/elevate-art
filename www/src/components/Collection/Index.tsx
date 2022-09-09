@@ -6,12 +6,12 @@ import CollectionRarity from '@components/Collection/CollectionRarity/Index'
 import CollectionRules from '@components/Collection/CollectionRules/Index'
 import CollectionSettings from '@components/Collection/CollectionSettings/Index'
 import { SettingsNavigations } from '@components/Collection/CollectionSettings/SettingsNavigations'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { CollectionNavigationEnum } from '../../types/enums'
 import LayerFolderSelector from './CollectionHelpers/LayerFolderSelector'
 
 const Index = () => {
-  const { currentViewSection } = useRepositoryNavigationStore((state) => {
+  const { currentViewSection } = useCollectionNavigationStore((state) => {
     return {
       currentViewSection: state.currentViewSection,
     }

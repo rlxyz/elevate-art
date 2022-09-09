@@ -1,7 +1,7 @@
 import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
 import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
@@ -51,7 +51,7 @@ export const ReorderItem = ({
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
-  const currentViewSection = useRepositoryNavigationStore((state) => state.currentViewSection)
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
@@ -96,7 +96,7 @@ const LayerFolderSelector = () => {
       }
     })
   const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
-  const { currentLayerPriority } = useRepositoryNavigationStore((state) => {
+  const { currentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
     }
