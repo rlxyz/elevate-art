@@ -66,7 +66,7 @@ const Home: NextPage = () => {
     <>
       <Layout>
         <Layout.Header>
-          <Header />
+          <Header connectButton />
         </Layout.Header>
         <Layout.Body>
           <div className='space-y-20'>

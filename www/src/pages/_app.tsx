@@ -1,27 +1,19 @@
 // src/pages/_app.tsx
 import { withTRPC } from '@trpc/next'
 import type { AppRouter } from '../server/router'
-import type { AppType } from 'next/dist/shared/lib/utils'
+import type { AppProps } from 'next/app'
 import superjson from 'superjson'
 import { SessionProvider } from 'next-auth/react'
+import { RainbowKitSiweNextAuthProvider, GetSiweMessageOptions } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
-import {
-  connectorsForWallets,
-  getDefaultWallets,
-  RainbowKitProvider,
-  wallet,
-} from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { RepositoryContext, createRepositoryStore } from '@hooks/useRepositoryStore'
-import { Layout } from '@components/Layout/Layout'
-import {
-  createRepositoryRouterStore,
-  RepositoryRouterContext,
-} from '@hooks/useRepositoryRouterStore'
+import { createRepositoryRouterStore, RepositoryRouterContext } from '@hooks/useRepositoryRouterStore'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 
@@ -57,24 +49,26 @@ const wagmiClient = createClient({
   provider,
 })
 
-const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: 'Sign in to Elevate.art',
+})
+
+const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <SessionProvider session={session}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          appInfo={appInfo}
-          chains={chains}
-          initialChain={env.NEXT_PUBLIC_NETWORK_ID}
-        >
-          <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
-            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <Component {...pageProps} />
-              <Toaster />
-            </RepositoryContext.Provider>
-          </RepositoryRouterContext.Provider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </SessionProvider>
+    <WagmiConfig client={wagmiClient}>
+      <SessionProvider refetchInterval={0} session={pageProps.session}>
+        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+          <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+            <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
+              <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                <Component {...pageProps} />
+                <Toaster />
+              </RepositoryContext.Provider>
+            </RepositoryRouterContext.Provider>
+          </RainbowKitProvider>
+        </RainbowKitSiweNextAuthProvider>
+      </SessionProvider>
+    </WagmiConfig>
   )
 }
 

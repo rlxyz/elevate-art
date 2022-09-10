@@ -4,9 +4,10 @@ import React from 'react'
 
 interface ConnectButtonProps {
   normalButton?: boolean
+  disabled?: boolean
 }
 
-export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) => {
+export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disabled = false }) => {
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
@@ -34,7 +35,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
                 }
                 return (
                   <>
-                    <button disabled onClick={openConnectModal} type='button'>
+                    <button disabled={disabled} onClick={openConnectModal} type='button'>
                       <img
                         src='/images/lightGray-wallet.svg'
                         className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
@@ -47,14 +48,14 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton }) =>
 
               if (chain.unsupported) {
                 return (
-                  <button disabled onClick={openChainModal} type='button'>
+                  <button disabled={disabled} onClick={openChainModal} type='button'>
                     Wrong network
                   </button>
                 )
               }
 
               return (
-                <button onClick={openAccountModal} type='button' className='flex items-center'>
+                <button disabled={disabled} onClick={openAccountModal} type='button' className='flex items-center'>
                   {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
                   <img
                     src='/images/lightGray-wallet.svg'
