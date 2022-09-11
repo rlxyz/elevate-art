@@ -9,7 +9,6 @@ const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { name, traitElements } = currentLayer
-
   return (
     <CollectionViewContent
       title={name}

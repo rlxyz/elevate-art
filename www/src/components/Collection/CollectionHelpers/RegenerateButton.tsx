@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 
-export const RegegenerateButton = () => {
+const RegegenerateButton = () => {
   const { collectionId } = useRepositoryStore((state) => {
     return {
       collectionId: state.collectionId,
@@ -108,3 +108,5 @@ export const RegegenerateButton = () => {
     </>
   )
 }
+
+export default RegegenerateButton

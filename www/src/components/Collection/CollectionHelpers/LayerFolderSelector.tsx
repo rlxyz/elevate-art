@@ -1,4 +1,3 @@
-import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
 import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
@@ -190,29 +189,27 @@ const LayerFolderSelector = () => {
             </div>
           </div>
           <div className='max-h-[calc(100vh-17.5rem)]'>
-            <FileUpload layers={layers} repositoryId={repositoryId}>
-              <AnimatePresence>
-                <Reorder.Group
-                  axis='y'
-                  values={items}
-                  onReorder={setItems}
-                  // className='space-y-3'
-                >
-                  {items.map((item, index) => {
-                    return (
-                      <ReorderItem
-                        canReorder={openReordering}
-                        key={item}
-                        name={layers[index]?.name || ''}
-                        item={index}
-                        id={item}
-                        enabled={currentLayerPriority === index}
-                      />
-                    )
-                  })}
-                </Reorder.Group>
-              </AnimatePresence>
-            </FileUpload>
+            <AnimatePresence>
+              <Reorder.Group
+                axis='y'
+                values={items}
+                onReorder={setItems}
+                // className='space-y-3'
+              >
+                {items.map((item, index) => {
+                  return (
+                    <ReorderItem
+                      canReorder={openReordering}
+                      key={item}
+                      name={layers[index]?.name || ''}
+                      item={index}
+                      id={item}
+                      enabled={currentLayerPriority === index}
+                    />
+                  )
+                })}
+              </Reorder.Group>
+            </AnimatePresence>
           </div>
         </div>
       )}

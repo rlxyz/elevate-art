@@ -309,3 +309,14 @@ export const FilterByRarity = () => {
     </Formik>
   )
 }
+
+const CollectionFilters = () => {
+  return (
+    <>
+      <FilterByTrait />
+      <FilterByRarity />
+    </>
+  )
+}
+
+export default CollectionFilters
