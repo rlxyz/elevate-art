@@ -1,27 +1,11 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useEffect } from 'react'
 
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { dequal as deepEqual } from 'dequal'
-import { useRef } from 'react'
+import { useDeepCompareEffect } from '../../../hooks/useDeepCompareEffect'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
-
-export function useDeepEqualMemo<T>(value: T) {
-  const ref = useRef<T | undefined>(undefined)
-
-  if (!deepEqual(ref.current, value)) {
-    ref.current = value
-  }
-
-  return ref.current
-}
-
-export function useDeepCompareEffect(callback: () => void, dependencies: any) {
-  useEffect(callback, dependencies.map(useDeepEqualMemo))
-}
 
 const CollectionPreviewImplementation = ({
   layers,

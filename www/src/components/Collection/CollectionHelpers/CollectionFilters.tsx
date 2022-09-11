@@ -313,8 +313,8 @@ export const FilterByRarity = () => {
 const CollectionFilters = () => {
   return (
     <>
-      <FilterByTrait />
       <FilterByRarity />
+      <FilterByTrait />
     </>
   )
 }

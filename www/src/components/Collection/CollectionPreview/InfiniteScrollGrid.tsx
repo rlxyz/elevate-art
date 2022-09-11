@@ -1,11 +1,13 @@
-import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
+import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
   const controls = useAnimation()
@@ -26,25 +28,34 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
       transition: { ease: [0.78, 0.14, 0.15, 0.86] },
     },
   }
-
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
   return (
     <motion.div
-      className='flex flex-col space-y-2 justify-center items-center'
+      className='flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] h-64 w-full'
       variants={item}
       initial='hidden'
       animate={controls}
       ref={ref}
     >
-      <div className='h-[125px] w-[125px] w- overflow-hidden' style={{ transformStyle: 'preserve-3d' }}>
+      <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
         {token.map(({ layerElementId, id }: TraitElement, index: number) => {
           return (
-            <div className='absolute flex flex-col items-center justify-center' key={index}>
-              <AdvancedImage url={`${layerElementId}/${id}`} />
+            <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
+              <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
+                <Image
+                  priority
+                  src={cld
+                    .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                    .toURL()}
+                  layout='fill'
+                  className='rounded-[5px]'
+                />
+              </div>
             </div>
           )
         })}
       </div>
-      <span className='text-xs flex justify-center'>{name}</span>
     </motion.div>
   )
 }
@@ -78,19 +89,22 @@ const InfiniteScrollGridItems = ({
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
+    <div className='grid grid-cols-4 gap-y-6 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
         return (
-          <InfiniteScrollGridItem
-            key={`${index}`}
-            token={createToken({
-              id: Number(tokens[index]),
-              name: collection.name,
-              generation: collection.generations,
-              layers,
-            })}
-            name={`#${tokens[index] || 0}`}
-          />
+          <div className='col-span-1'>
+            <InfiniteScrollGridItem
+              key={`${index}`}
+              token={createToken({
+                id: Number(tokens[index]),
+                name: collection.name,
+                generation: collection.generations,
+                layers,
+              })}
+              name={`#${tokens[index] || 0}`}
+            />
+            <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span>
+          </div>
         )
       })}
     </div>
