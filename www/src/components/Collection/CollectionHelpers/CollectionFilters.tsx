@@ -53,8 +53,8 @@ export const FilterByTrait = () => {
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
         checked.forEach((value: string) => {
-          const layer = layers.filter((layer) => layer.id === value.split('/')[0])[0]
-          const trait = layer?.traitElements.filter((trait) => trait.id === value.split('/')[1])[0]
+          const layer = layers.filter((layer: LayerElement) => layer.id === value.split('/')[0])[0]
+          const trait = layer?.traitElements.filter((trait: TraitElement) => trait.id === value.split('/')[1])[0]
           if (layer && trait) filters.push({ layer, trait })
         })
         const allTokenIdsArray = Object.values(

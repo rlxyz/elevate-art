@@ -3,68 +3,68 @@ import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
 import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
-// import { connectorsForWallets, getDefaultWallets, wallet } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import { withTRPC } from '@trpc/next'
 import { SessionProvider } from 'next-auth/react'
 import type { AppType } from 'next/dist/shared/lib/utils'
-// import { env } from 'src/env/client.mjs'
+import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
-// import { chain, configureChains, createClient } from 'wagmi'
-// import { alchemyProvider } from 'wagmi/providers/alchemy'
-// import { infuraProvider } from 'wagmi/providers/infura'
-// import { publicProvider } from 'wagmi/providers/public'
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { infuraProvider } from 'wagmi/providers/infura'
+import { publicProvider } from 'wagmi/providers/public'
 import type { AppRouter } from '../server/router'
 import '../styles/globals.css'
 
-// const { chains, provider } = configureChains(
-//   [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
-//   [
-//     alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }),
-//     infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }),
-//     publicProvider(),
-//   ]
-// )
+const { chains, provider } = configureChains(
+  [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
+  [
+    alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }),
+    infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }),
+    publicProvider(),
+  ]
+)
 
-// const { wallets } = getDefaultWallets({
-//   appName: env.NEXT_PUBLIC_APP_NAME,
-//   chains,
-// })
+const { wallets } = getDefaultWallets({
+  appName: env.NEXT_PUBLIC_APP_NAME,
+  chains,
+})
 
-// const appInfo = {
-//   appName: env.NEXT_PUBLIC_APP_NAME,
-// }
+const appInfo = {
+  appName: env.NEXT_PUBLIC_APP_NAME,
+}
 
-// const connectors = connectorsForWallets([
-//   ...wallets,
-//   {
-//     groupName: 'Other',
-//     wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
-//   },
-// ])
+const connectors = connectorsForWallets([
+  ...wallets,
+  {
+    groupName: 'Other',
+    wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
+  },
+])
 
-// const wagmiClient = createClient({
-//   autoConnect: true,
-//   connectors,
-//   provider,
-// })
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+})
 
 const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <SessionProvider session={session}>
-      {/* <WagmiConfig client={wagmiClient}> */}
-      {/* <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}> */}
-      <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-        <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
-          <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <Component {...pageProps} />
-            </RepositoryContext.Provider>
-          </CollectionRouterContext.Provider>
-        </RepositoryRouterContext.Provider>
-      </OrganisationRouterContext.Provider>
-      {/* </RainbowKitProvider> */}
-      {/* </WagmiConfig> */}
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+          <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+            <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+              <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                  <Component {...pageProps} />
+                </RepositoryContext.Provider>
+              </CollectionRouterContext.Provider>
+            </RepositoryRouterContext.Provider>
+          </OrganisationRouterContext.Provider>
+        </RainbowKitProvider>
+      </WagmiConfig>
     </SessionProvider>
   )
 }
