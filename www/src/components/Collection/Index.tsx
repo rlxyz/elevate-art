@@ -17,6 +17,9 @@ const DynamicRegenerateButton = dynamic(() => import('@components/Collection/Col
 const DynamicCollectionFilters = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionFilters'), {
   ssr: false,
 })
+const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
+  ssr: false,
+})
 
 const Index = () => {
   const { currentViewSection } = useCollectionNavigationStore((state) => {
@@ -52,7 +55,7 @@ const Index = () => {
       <div className='col-span-8'>
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
         {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Rarity && <CollectionRarity />} */}
+        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
         {/* {currentViewSection === CollectionNavigationEnum.enum.Rules && <CollectionRules />} */}
         {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />} */}
       </div>
