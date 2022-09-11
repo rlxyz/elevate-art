@@ -105,3 +105,25 @@ export const repositoryRouter = createRouter()
       })
     },
   })
+  .mutation('create', {
+    input: z.object({
+      name: z.string(),
+      organisationId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const repository = await ctx.prisma.repository.create({
+        data: {
+          name: input.name,
+          tokenName: input.name,
+          organisationId: input.organisationId,
+        },
+      })
+      await ctx.prisma.collection.create({
+        data: {
+          name: 'main',
+          repositoryId: repository.id,
+        },
+      })
+      return repository
+    },
+  })

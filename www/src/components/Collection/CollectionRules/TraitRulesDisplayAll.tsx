@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -72,11 +72,7 @@ export const TraitRulesDisplayPerItem = ({
         </div>
       </div>
       <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
-        <Button
-          disabled={mutation.isLoading}
-          onClick={() => mutation.mutate({ id, repositoryId })}
-          className='h-5 w-5 text-mediumGrey'
-        >
+        <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id, repositoryId })}>
           <TrashIcon />
         </Button>
       </div>

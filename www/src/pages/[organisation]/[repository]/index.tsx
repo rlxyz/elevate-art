@@ -1,10 +1,18 @@
-import { Header } from '@components/Layout/Header'
+import Dashboard from '@components/Views/ViewAllRepositories'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
+import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { RepositorySectionEnum } from 'src/types/enums'
+import { RepositoryNavigationEnum, RepositorySectionEnum } from 'src/types/enums'
 
+const PageImplementation = ({}) => {
+  const setCurrentRoute = useRepositoryNavigationStore((state) => state.setCurrentRoute)
+  useEffect(() => {
+    setCurrentRoute(RepositoryNavigationEnum.enum.Dashboard)
+  }, [])
+  return <Dashboard />
+}
 // wrapper to hydate routes
 const Page = () => {
   const router: NextRouter = useRouter()
@@ -18,27 +26,25 @@ const Page = () => {
 
   return hasHydrated ? (
     <Layout>
-      <Layout.Header>
-        <Header
-          internalRoutes={[
-            { current: organisationName, href: `/${organisationName}` },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-          ]}
-          internalNavigation={[
-            {
-              name: RepositorySectionEnum.enum.Overview,
-              href: `/${organisationName}/${repositoryName}`,
-              enabled: true,
-            },
-            // {
-            //   name: LayerSectionEnum.enum.Settings,
-            //   route: `${LayerSectionEnum.enum.Settings}`,
-            // },
-          ]}
-        />
-      </Layout.Header>
+      <Layout.Header
+        internalRoutes={[
+          { current: organisationName, href: `/${organisationName}` },
+          { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+        ]}
+        internalNavigation={[
+          {
+            name: RepositorySectionEnum.enum.Overview,
+            href: `/${organisationName}/${repositoryName}`,
+            enabled: true,
+          },
+          // {
+          //   name: LayerSectionEnum.enum.Settings,
+          //   route: `${LayerSectionEnum.enum.Settings}`,
+          // },
+        ]}
+      />
       <Layout.Body>
-        <div>Hi</div>
+        <PageImplementation />
       </Layout.Body>
     </Layout>
   ) : (

@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 
 const SectionHeaderHelper = () => {
   return (
@@ -8,7 +8,7 @@ const SectionHeaderHelper = () => {
           <span className='font-semibold'>Guides</span>
           <span className='text-darkGrey'>Need some help with how the compiler works? Check out our guides.</span>
         </span>
-        <Button className='border w-full rounded-[5px] text-xs py-1'>Learn More</Button>
+        <Button>Learn More</Button>
       </div>
     </div>
   )
@@ -26,4 +26,3 @@ export const SectionHeader = ({ title, description }: { title: string; descripti
     </main>
   )
 }
-   

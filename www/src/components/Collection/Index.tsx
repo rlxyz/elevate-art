@@ -1,17 +1,31 @@
-import CollectionLayers from '@components/Collection/ColectionLayers/Index'
-import { FilterByRarity, FilterByTrait } from '@components/Collection/CollectionPreview/FilterByTrait'
-import CollectionPreview from '@components/Collection/CollectionPreview/Index'
-import { RegegenerateButton } from '@components/Collection/CollectionPreview/RegenerateButton'
-import CollectionRarity from '@components/Collection/CollectionRarity/Index'
-import CollectionRules from '@components/Collection/CollectionRules/Index'
-import CollectionSettings from '@components/Collection/CollectionSettings/Index'
-import { SettingsNavigations } from '@components/Collection/CollectionSettings/SettingsNavigations'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
-import LayerFolderSelector from './CollectionHelpers/LayerFolderSelector'
+
+const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
+  ssr: false,
+})
+const DynamicCollectionLayers = dynamic(() => import('@components/Collection/CollectionLayers/Index'), {
+  ssr: false,
+})
+const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
+  ssr: false,
+})
+const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
+  ssr: false,
+})
+const DynamicCollectionFilters = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionFilters'), {
+  ssr: false,
+})
+const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
+  ssr: false,
+})
+const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
+  ssr: false,
+})
 
 const Index = () => {
-  const { currentViewSection } = useRepositoryNavigationStore((state) => {
+  const { currentViewSection } = useCollectionNavigationStore((state) => {
     return {
       currentViewSection: state.currentViewSection,
     }
@@ -26,28 +40,27 @@ const Index = () => {
           CollectionNavigationEnum.enum.Rules,
         ].includes(currentViewSection) && (
           <div className='flex flex-col space-y-6 justify-between'>
-            <LayerFolderSelector />
+            <DynamicLayerFolder />
           </div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
           <div className='flex flex-col space-y-6 justify-between'>
-            <RegegenerateButton />
-            <FilterByRarity />
-            <FilterByTrait />
+            <DynamicRegenerateButton />
+            <DynamicCollectionFilters />
           </div>
         )}
-        {currentViewSection === CollectionNavigationEnum.enum.Settings && (
+        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && (
           <div className='flex flex-col space-y-6 justify-between'>
             <SettingsNavigations />
           </div>
-        )}
+        )} */}
       </div>
       <div className='col-span-8'>
-        {currentViewSection === CollectionNavigationEnum.enum.Preview && <CollectionPreview />}
-        {currentViewSection === CollectionNavigationEnum.enum.Layers && <CollectionLayers />}
-        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <CollectionRarity />}
-        {currentViewSection === CollectionNavigationEnum.enum.Rules && <CollectionRules />}
-        {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />}
+        {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
+        {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
+        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
+        {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
+        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />} */}
       </div>
     </div>
   )

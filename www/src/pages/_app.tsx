@@ -1,5 +1,6 @@
 // src/pages/_app.tsx
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useDashboardNavigation'
+import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
 import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
@@ -7,7 +8,6 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { withTRPC } from '@trpc/next'
 import { SessionProvider } from 'next-auth/react'
 import type { AppType } from 'next/dist/shared/lib/utils'
-import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
@@ -56,10 +56,11 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
         <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
           <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
             <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
-              <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                <Component {...pageProps} />
-                <Toaster />
-              </RepositoryContext.Provider>
+              <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                  <Component {...pageProps} />
+                </RepositoryContext.Provider>
+              </CollectionRouterContext.Provider>
             </RepositoryRouterContext.Provider>
           </OrganisationRouterContext.Provider>
         </RainbowKitProvider>

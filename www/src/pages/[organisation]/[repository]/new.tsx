@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 
-const DynamicCreateNewRepository = dynamic(() => import('@components/Views/CreateNewRepository'), {
+const DynamicCreateNewCollection = dynamic(() => import('@components/Views/CreateNewCollection'), {
   ssr: false,
   suspense: true,
 })
@@ -16,7 +16,7 @@ const Page: NextPage = () => {
       <Layout hasFooter={false}>
         <Layout.Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
         <Layout.Body>
-          <DynamicCreateNewRepository />
+          <DynamicCreateNewCollection />
         </Layout.Body>
       </Layout>
     </>

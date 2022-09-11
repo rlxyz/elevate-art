@@ -1,11 +1,10 @@
 import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
 import Index from '@components/Collection/Index'
-import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -40,7 +39,7 @@ const PageImplementation = ({
     }
   )
 
-  const { setCurrentLayerPriority, setCurrentViewSection } = useRepositoryNavigationStore((state) => {
+  const { setCurrentLayerPriority, setCurrentViewSection } = useCollectionNavigationStore((state) => {
     return {
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       setCurrentViewSection: state.setCurrentViewSection,
@@ -115,7 +114,7 @@ const Page = () => {
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { currentLayer } = useCurrentLayer()
-  const currentViewSection = useRepositoryNavigationStore((state) => state.currentViewSection)
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
 
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
@@ -123,41 +122,39 @@ const Page = () => {
 
   return hasHydrated ? (
     <Layout>
-      <Layout.Header>
-        <Header
-          internalRoutes={[
-            { current: organisationName, href: `${organisationName}` },
-            { current: repositoryName, href: `${organisationName}/${repositoryName}` },
-            { current: collectionName, options: ['main'], href: `` },
-          ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Preview}`,
-              enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Layers,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
-              enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
-              enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
-              enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
-            },
-            // {
-            //   name: LayerSectionEnum.enum.Settings,
-            //   route: `${LayerSectionEnum.enum.Settings}`,
-            // },
-          ]}
-        />
-      </Layout.Header>
+      <Layout.Header
+        internalRoutes={[
+          { current: organisationName, href: `/${organisationName}` },
+          { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+          { current: collectionName, options: ['main'], href: `` },
+        ]}
+        internalNavigation={[
+          {
+            name: CollectionNavigationEnum.enum.Preview,
+            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Preview}`,
+            enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
+          },
+          {
+            name: CollectionNavigationEnum.enum.Layers,
+            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+            enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
+          },
+          {
+            name: CollectionNavigationEnum.enum.Rarity,
+            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+            enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
+          },
+          {
+            name: CollectionNavigationEnum.enum.Rules,
+            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+            enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
+          },
+          // {
+          //   name: LayerSectionEnum.enum.Settings,
+          //   route: `${LayerSectionEnum.enum.Settings}`,
+          // },
+        ]}
+      />
       <Layout.Title>
         <SectionHeader
           title={CollectionTitleContent[currentViewSection].title}

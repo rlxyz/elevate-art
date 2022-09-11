@@ -1,19 +1,11 @@
-import Dashboard from '@components/Dashboard/Index'
-import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import useOrganisationNavigationStore from '@hooks/useDashboardNavigation'
+import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
-const PageImplementation = ({}) => {
-  const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
-  }, [])
-  return <Dashboard />
-}
+const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'), { suspense: true })
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
@@ -22,30 +14,18 @@ const Page: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.Header>
-          <Header
-            internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]}
-            internalNavigation={[
-              {
-                name: OrganisationNavigationEnum.enum.Dashboard,
-                href: `/${organisationName}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              },
-              // {
-              //   name: DashboardNavigationEnum.enum.Activity,
-              //   href: `/dashboard/activity`,
-              //   enabled: currentRoute === DashboardNavigationEnum.enum.Activity,
-              // },
-              // {
-              //   name: DashboardNavigationEnum.enum.Settings,
-              //   href: `/account`,
-              //   enabled: currentRoute === DashboardNavigationEnum.enum.Settings,
-              // },
-            ]}
-          />
-        </Layout.Header>
+        <Layout.Header
+          internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]}
+          internalNavigation={[
+            {
+              name: OrganisationNavigationEnum.enum.Dashboard,
+              href: `/${organisationName}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+            },
+          ]}
+        />
         <Layout.Body>
-          <PageImplementation />
+          <DynamicViewOrganisation />
         </Layout.Body>
       </Layout>
     </>

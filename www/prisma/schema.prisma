@@ -3,7 +3,7 @@
 
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+    previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
 }
 
 datasource db {
@@ -90,6 +90,7 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id])
     organisationId String
 
+    // @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
 }
 
@@ -102,7 +103,7 @@ model Collection {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    repository   Repository @relation(fields: [repositoryId], references: [id])
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
     repositoryId String
 }
 
@@ -114,7 +115,7 @@ model LayerElement {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    repository   Repository @relation(fields: [repositoryId], references: [id])
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
     repositoryId String
 
     traitElements TraitElement[]
@@ -124,12 +125,12 @@ model TraitElement {
     id String @id @default(cuid())
 
     name   String
-    weight Float
+    weight Float  @default(1)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    layerElement   LayerElement @relation(fields: [layerElementId], references: [id])
+    layerElement   LayerElement @relation(fields: [layerElementId], references: [id], onDelete: Cascade)
     layerElementId String
 
     rulesPrimary   Rules[] @relation("primaryTraitElement")
@@ -141,22 +142,8 @@ model Rules {
     condition               String
     primaryTraitElementId   String
     secondaryTraitElementId String
-    primaryTraitElement     TraitElement @relation("primaryTraitElement", fields: [primaryTraitElementId], references: [id])
-    secondaryTraitElement   TraitElement @relation("secondaryTraitElement", fields: [secondaryTraitElementId], references: [id])
+    primaryTraitElement     TraitElement @relation("primaryTraitElement", fields: [primaryTraitElementId], references: [id], onDelete: Cascade)
+    secondaryTraitElement   TraitElement @relation("secondaryTraitElement", fields: [secondaryTraitElementId], references: [id], onDelete: Cascade)
 
     @@unique([primaryTraitElementId, secondaryTraitElementId])
 }
-
-// model TraitElementRule {
-//     id String @id @default(cuid())
-
-//     type String
-
-//     traitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "forwardRules")
-//     traitElementId String
-
-//     linkedTraitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "backwardRules")
-//     linkedTraitElementId String
-
-//     createdAt DateTime @default(now())
-// }

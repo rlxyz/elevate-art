@@ -1,4 +1,4 @@
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import ordinal from 'ordinal'
 
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
@@ -7,9 +7,8 @@ import LayerGrid from './LayerGrid'
 
 const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
-  const currentLayerPriority = useRepositoryNavigationStore((state) => state.currentLayerPriority)
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { name, traitElements } = currentLayer
-
   return (
     <CollectionViewContent
       title={name}

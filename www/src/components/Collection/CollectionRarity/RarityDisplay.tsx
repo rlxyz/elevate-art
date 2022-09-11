@@ -1,5 +1,5 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -273,7 +273,7 @@ export const RarityDisplay = ({
                   <div className='flex space-x-3 py-6'>
                     <Button
                       type='button'
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.preventDefault()
                         resetForm()
                         setHasFormChange(false)
@@ -286,7 +286,7 @@ export const RarityDisplay = ({
                         (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits) ? false : true) ||
                         isSubmitting
                       }
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.preventDefault()
                         handleSubmit()
                       }}

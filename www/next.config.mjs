@@ -1,3 +1,4 @@
+import withBundleAnalyzer from '@next/bundle-analyzer'
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -7,6 +8,9 @@
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
+  if (process.env.ANALYZE) {
+    return withBundleAnalyzer(config)
+  }
   return config
 }
 

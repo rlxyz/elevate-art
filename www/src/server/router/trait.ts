@@ -14,7 +14,6 @@ export const traitElementRouter = createRouter()
     }),
     async resolve({ ctx, input }) {
       input.traits.forEach(async ({ id, weight }) => {
-        console.log(id, weight)
         await ctx.prisma.traitElement.update({
           where: {
             id,

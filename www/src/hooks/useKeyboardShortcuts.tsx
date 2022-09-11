@@ -1,7 +1,7 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { CollectionNavigationEnum } from 'src/types/enums'
-import useRepositoryNavigationStore from './useRepositoryNavigationStore'
+import useCollectionNavigationStore from './useCollectionNavigationStore'
 
 export const useKeybordShortcuts = () => {
   const { setRegeneratePreview, setRegenerateCollection, layerIds } = useRepositoryStore((state) => {
@@ -12,7 +12,7 @@ export const useKeybordShortcuts = () => {
     }
   })
 
-  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useRepositoryNavigationStore(
+  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useCollectionNavigationStore(
     (state) => {
       return {
         setCurrentViewSection: state.setCurrentViewSection,

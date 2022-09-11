@@ -10,6 +10,13 @@ const OrganisationNavigation = Object.freeze({
 export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
+const RepositoryNavigation = Object.freeze({
+  Dashboard: 'dashboard',
+})
+
+export const RepositoryNavigationEnum = z.nativeEnum(RepositoryNavigation)
+export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
+
 const CollectionNavigation = Object.freeze({
   Preview: 'preview',
   Layers: 'layers',
