@@ -6,9 +6,11 @@ import { HeaderProps } from './Header/Index'
 
 const DynamicHeader = dynamic(() => import('./Header/Index'), {
   suspense: true,
+  ssr: false,
 })
 
 const DynamicFooter = dynamic(() => import('./Footer'), {
+  ssr: false,
   suspense: true,
 })
 

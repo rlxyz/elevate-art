@@ -9,9 +9,7 @@ interface AccordionProps {
 export const Accordion: React.FC<AccordionProps> = ({ label, children }) => {
   const [expanded, setExpanded] = React.useState(false)
 
-  const arrowIcon = expanded
-    ? '/images/accordion/down-arrow.svg'
-    : '/images/accordion/right-arrow.svg'
+  const arrowIcon = expanded ? '/images/accordion/down-arrow.svg' : '/images/accordion/right-arrow.svg'
   const iconAltText = expanded ? 'Expanded' : 'Collapse'
 
   return (

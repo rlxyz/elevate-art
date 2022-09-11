@@ -15,10 +15,12 @@ const ViewAllRepositories = () => {
   return (
     <div className='h-full w-full space-y-6'>
       <div className='w-full grid grid-cols-10 space-x-3 items-center'>
-        <div className='col-span-9'>
-          <div className='h-12 border border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'>
-            Search...
-          </div>
+        <div className='col-span-9 h-full w-full'>
+          {/* register your input into the hook by invoking the "register" function */}
+          <input
+            placeholder='Search...'
+            className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
+          />
         </div>
         <div className='col-span-1 h-full w-full'>
           <Button
