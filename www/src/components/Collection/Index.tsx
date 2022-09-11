@@ -20,6 +20,9 @@ const DynamicCollectionFilters = dynamic(() => import('@components/Collection/Co
 const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
   ssr: false,
 })
+const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
+  ssr: false,
+})
 
 const Index = () => {
   const { currentViewSection } = useCollectionNavigationStore((state) => {
@@ -56,7 +59,7 @@ const Index = () => {
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
         {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
         {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Rules && <CollectionRules />} */}
+        {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
         {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />} */}
       </div>
     </div>

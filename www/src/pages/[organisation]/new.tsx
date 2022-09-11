@@ -1,7 +1,7 @@
 import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUpload'
 import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
 import { Repository } from '@prisma/client'
 import { trpc } from '@utils/trpc'
@@ -119,7 +119,6 @@ const PageImplementation = ({}) => {
                     // should delete repo
                     router.push(`/${organisationName}`)
                   }}
-                  className='w-[12rem] py-4 bg-white text-black border border-mediumGrey font-semibold rounded-[5px]'
                 >
                   Cancel
                 </Button>

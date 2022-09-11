@@ -1,6 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import FileUpload from '@components/Collection/CollectionHelpers/FileUpload'
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -51,10 +50,10 @@ export const CollectionUpload = ({ open, setOpen }: { open: boolean; setOpen: (x
                       Upload Traits
                     </Dialog.Title>
                     <div className='h-[150px] border border-dashed border-lightGray rounded-[5px] flex flex-col justify-center items-center'>
-                      <FileUpload layers={layers} repositoryId={repositoryId}>
-                        <span className='text-lg text-blueHighlight'>Click to upload</span>
-                        <span> or drag and drop</span>
-                      </FileUpload>
+                      {/* <FileUpload layers={layers} repositoryId={repositoryId}> */}
+                      <span className='text-lg text-blueHighlight'>Click to upload</span>
+                      <span> or drag and drop</span>
+                      {/* </FileUpload> */}
                       <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
                     </div>
                     <div className='h-[300px] max-h-[300px] overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray'>
@@ -134,9 +133,9 @@ export const CollectionUpload = ({ open, setOpen }: { open: boolean; setOpen: (x
                       </Button>
                     </div>
                     <div className='w-1/2 h-12'>
-                      <Button type='button' disabled onClick={() => setOpen(false)} ref={cancelButtonRef}>
-                        Cancel
-                      </Button>
+                      {/* <Button type='button' disabled onClick={() => setOpen(false)} ref={cancelButtonRef}> */}
+                      {/* Cancel */}
+                      {/* </Button> */}
                     </div>
                   </div>
                 </Dialog.Panel>

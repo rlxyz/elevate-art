@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { LayerElement, Repository, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { Dispatch, ReactNode, SetStateAction, useCallback } from 'react'
@@ -204,7 +204,7 @@ export const FolderUpload = ({
 
   return (
     <div {...getRootProps()} className='w-full h-full'>
-      <Button className='h-full w-full flex flex-col items-center justify-center' onClick={open}>
+      <Button onClick={open}>
         <input {...getInputProps()} />
         <div>
           <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
