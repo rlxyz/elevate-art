@@ -1,5 +1,4 @@
 import Dashboard from '@components/Dashboard/Index'
-import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
 import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
@@ -27,25 +26,23 @@ const Page = () => {
 
   return hasHydrated ? (
     <Layout>
-      <Layout.Header>
-        <Header
-          internalRoutes={[
-            { current: organisationName, href: `/${organisationName}` },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-          ]}
-          internalNavigation={[
-            {
-              name: RepositorySectionEnum.enum.Overview,
-              href: `/${organisationName}/${repositoryName}`,
-              enabled: true,
-            },
-            // {
-            //   name: LayerSectionEnum.enum.Settings,
-            //   route: `${LayerSectionEnum.enum.Settings}`,
-            // },
-          ]}
-        />
-      </Layout.Header>
+      <Layout.Header
+        internalRoutes={[
+          { current: organisationName, href: `/${organisationName}` },
+          { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+        ]}
+        internalNavigation={[
+          {
+            name: RepositorySectionEnum.enum.Overview,
+            href: `/${organisationName}/${repositoryName}`,
+            enabled: true,
+          },
+          // {
+          //   name: LayerSectionEnum.enum.Settings,
+          //   route: `${LayerSectionEnum.enum.Settings}`,
+          // },
+        ]}
+      />
       <Layout.Body>
         <PageImplementation />
       </Layout.Body>

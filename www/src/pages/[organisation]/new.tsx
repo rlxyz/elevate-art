@@ -1,5 +1,4 @@
 import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUpload'
-import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Button from '@components/UI/Button'
 import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
@@ -175,9 +174,7 @@ const Page: NextPage = () => {
   return (
     <>
       <Layout hasFooter={false}>
-        <Layout.Header>
-          <Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
-        </Layout.Header>
+        <Layout.Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
         <Layout.Body>
           <PageImplementation />
         </Layout.Body>

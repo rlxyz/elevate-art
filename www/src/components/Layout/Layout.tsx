@@ -1,6 +1,16 @@
 import { classNames } from '@utils/format'
+import dynamic from 'next/dynamic'
 import * as React from 'react'
-import { Footer } from './Footer'
+import { Toaster } from 'react-hot-toast'
+import { HeaderProps } from './Header/Index'
+
+const DynamicHeader = dynamic(() => import('./Header/Index'), {
+  suspense: true,
+})
+
+const DynamicFooter = dynamic(() => import('./Footer'), {
+  suspense: true,
+})
 
 interface LayoutProps {
   children: React.ReactElement[] | React.ReactElement
@@ -21,18 +31,19 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
       {children}
       {hasFooter ? (
         <LayoutContainer>
-          <Footer />
+          <DynamicFooter />
         </LayoutContainer>
       ) : (
         <></>
       )}
+      <Toaster />
     </main>
   )
 }
 
-const LayoutHeader = ({ children }: { children: React.ReactNode }) => (
+const LayoutHeader = (props: HeaderProps) => (
   <LayoutContainer className='header'>
-    <div className='-ml-2'>{children}</div>
+    <div className='-ml-2'>{<DynamicHeader {...props} />}</div>
   </LayoutContainer>
 )
 
