@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
@@ -22,11 +22,10 @@ const Dashboard = () => {
         </div>
         <div className='col-span-1 h-full w-full'>
           <Button
-            onClick={(e) => {
+            onClick={(e: any) => {
               e.preventDefault()
               router.push(`${organisationName}/new`)
             }}
-            className='h-full w-full bg-black text-white text-left pl-4 rounded-[5px]'
           >
             Add New...
           </Button>

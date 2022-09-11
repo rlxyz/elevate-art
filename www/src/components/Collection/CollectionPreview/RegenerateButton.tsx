@@ -1,4 +1,4 @@
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
@@ -90,11 +90,13 @@ export const RegegenerateButton = () => {
                       </p>
                     </div>
                     <div className='flex justify-between'>
-                      <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}>
-                        <span className='flex items-center justify-center space-x-2 px-4 py-4'>
-                          <span className='text-xs'>Confirm</span>
-                        </span>
-                      </Button>
+                      <div className='ml-[auto]'>
+                        <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}>
+                          <span className='flex items-center justify-center space-x-2 px-4 py-4'>
+                            <span className='text-xs'>Confirm</span>
+                          </span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

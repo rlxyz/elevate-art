@@ -1,4 +1,3 @@
-import { Button } from '@components/UI/Button'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
@@ -124,7 +123,7 @@ export const FilterByTrait = () => {
                 <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
                   {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
                     <div key={layer.id} className='flex flex-col text-xs'>
-                      <Button
+                      <div
                         onClick={() => {
                           if (layerDropdown === optionIdx) {
                             setLayerDropdown(null)
@@ -147,7 +146,7 @@ export const FilterByTrait = () => {
                             )}
                           </div>
                         </div>
-                      </Button>
+                      </div>
                       <div
                         className={
                           layerDropdown === optionIdx
@@ -158,7 +157,7 @@ export const FilterByTrait = () => {
                         {layer.traitElements.map((traitElement: TraitElement, index) => {
                           return (
                             <div key={index}>
-                              <Button
+                              <div
                                 key={traitElement.id}
                                 className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
                               >
@@ -178,7 +177,7 @@ export const FilterByTrait = () => {
                                     }}
                                   />
                                 </div>
-                              </Button>
+                              </div>
                             </div>
                           )
                         })}
