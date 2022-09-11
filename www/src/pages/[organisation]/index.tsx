@@ -1,31 +1,17 @@
-import Dashboard from '@components/Dashboard/Index'
 import { Layout } from '@components/Layout/Layout'
-import Loading from '@components/UI/Loading'
 import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
-const PageImplementation = ({}) => {
-  const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
-  }, [])
-  return <Dashboard />
-}
+const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'), { suspense: true })
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const [hasHydrated, setHasHydrated] = useState<boolean>(false)
-
-  useEffect(() => {
-    setHasHydrated(Boolean(organisationName))
-  }, [organisationName])
-
-  return hasHydrated ? (
+  return (
     <>
       <Layout>
         <Layout.Header
@@ -36,25 +22,13 @@ const Page: NextPage = () => {
               href: `/${organisationName}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
             },
-            // {
-            //   name: DashboardNavigationEnum.enum.Activity,
-            //   href: `/dashboard/activity`,
-            //   enabled: currentRoute === DashboardNavigationEnum.enum.Activity,
-            // },
-            // {
-            //   name: DashboardNavigationEnum.enum.Settings,
-            //   href: `/account`,
-            //   enabled: currentRoute === DashboardNavigationEnum.enum.Settings,
-            // },
           ]}
         />
         <Layout.Body>
-          <PageImplementation />
+          <DynamicViewOrganisation />
         </Layout.Body>
       </Layout>
     </>
-  ) : (
-    <Loading />
   )
 }
 

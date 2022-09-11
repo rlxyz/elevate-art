@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 const Loading = () => {
   return (
     <div className='w-full h-[calc(100vh-5rem)] flex items-center justify-center'>
-      <motion.div
+      <m.div
         className='box border-[3px] w-5 h-5'
         animate={{
           scale: [1, 1.5, 1.5, 1, 1],

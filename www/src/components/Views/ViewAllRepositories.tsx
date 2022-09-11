@@ -4,7 +4,7 @@ import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 
-const Dashboard = () => {
+const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const { data: repositories } = trpc.useQuery([
@@ -63,4 +63,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default ViewAllRepositories

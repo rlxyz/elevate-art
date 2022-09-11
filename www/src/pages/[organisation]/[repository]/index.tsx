@@ -1,4 +1,4 @@
-import Dashboard from '@components/Dashboard/Index'
+import Dashboard from '@components/Views/ViewAllRepositories'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
 import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
