@@ -22,7 +22,7 @@ interface LayoutProps {
 const LayoutContainer = ({ className, children }: { className?: string; children: React.ReactNode }) => {
   return (
     <div className={classNames('flex justify-center border-b border-mediumGrey', className || '')}>
-      <div className='w-[90%] lg:w-[75%] xl:[82%] 2xl:w-[65%]'>{children}</div>
+      <div className='w-[90%] lg:w-[75%] 2xl:w-[50%]'>{children}</div>
     </div>
   )
 }
@@ -44,14 +44,14 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 }
 
 const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header'>
+  <LayoutContainer className='header min-h-[3.5rem]'>
     <div className='-ml-2'>{<DynamicHeader {...props} />}</div>
   </LayoutContainer>
 )
 
 const LayoutBody = ({ children }: { children: React.ReactNode }) => (
-  <LayoutContainer className='body min-h-[calc(100vh-10rem)]'>
-    <div className='py-8 -ml-2'>{children}</div>
+  <LayoutContainer className='body min-h-[calc(100vh-7rem)]'>
+    <div className='py-8 -ml-2 h-full space-y-8'>{children}</div>
   </LayoutContainer>
 )
 

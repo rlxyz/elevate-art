@@ -29,7 +29,7 @@ export interface HeaderProps {
 const Header = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {
   return (
     <header className='pointer-events-auto'>
-      <div className='flex justify-between items-center h-[3.5rem]'>
+      <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
           <Link className='' external={true} href='/'>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
