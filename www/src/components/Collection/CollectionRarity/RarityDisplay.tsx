@@ -73,7 +73,7 @@ export const RarityDisplay = ({
               {[
                 'Image',
                 'Name',
-                'Quantity in Collection',
+                'Esimate in Collection',
                 // 'Rarity Score',
                 'Percentage',
               ].map((item, index) => {
@@ -91,7 +91,7 @@ export const RarityDisplay = ({
               })}
             </tr>
           </thead>
-          <tbody className='divide-y divide-mediumGrey'>
+          <tbody className='divide-y divide-mediumGrey animate-pulse'>
             {Array.from(Array(5).keys()).map((index) => {
               return (
                 <tr key={index}>
@@ -243,7 +243,7 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed bottom-0 h-[7.5%] 2xl:w-[calc(39vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey'
+                  className='fixed bottom-0 h-[7.5%] 2xl:w-[calc(55vw)] 3xl:w-[calc(39vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey'
                 >
                   <div className='flex items-center space-x-3'>
                     {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
