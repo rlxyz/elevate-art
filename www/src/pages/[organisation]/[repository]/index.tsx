@@ -1,18 +1,12 @@
-import Dashboard from '@components/Views/ViewAllRepositories'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
-import useRepositoryNavigationStore from '@hooks/useRepositoryNavigationStore'
+import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { RepositoryNavigationEnum, RepositorySectionEnum } from 'src/types/enums'
+import { RepositorySectionEnum } from 'src/types/enums'
 
-const PageImplementation = ({}) => {
-  const setCurrentRoute = useRepositoryNavigationStore((state) => state.setCurrentRoute)
-  useEffect(() => {
-    setCurrentRoute(RepositoryNavigationEnum.enum.Dashboard)
-  }, [])
-  return <Dashboard />
-}
+const DynamicViewRepository = dynamic(() => import('@components/Views/ViewRepository'), { suspense: true })
+
 // wrapper to hydate routes
 const Page = () => {
   const router: NextRouter = useRouter()
@@ -37,14 +31,10 @@ const Page = () => {
             href: `/${organisationName}/${repositoryName}`,
             enabled: true,
           },
-          // {
-          //   name: LayerSectionEnum.enum.Settings,
-          //   route: `${LayerSectionEnum.enum.Settings}`,
-          // },
         ]}
       />
       <Layout.Body>
-        <PageImplementation />
+        <DynamicViewRepository />
       </Layout.Body>
     </Layout>
   ) : (

@@ -24,6 +24,24 @@ export const collectionRouter = createRouter()
       })
     },
   })
+  .query('getCollectionByRepositoryNameAndOrganisationName', {
+    input: z.object({
+      repositoryName: z.string(),
+      organisationName: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return ctx.prisma.collection.findMany({
+        where: {
+          repository: {
+            name: input.repositoryName,
+            organisation: {
+              name: input.organisationName,
+            },
+          },
+        },
+      })
+    },
+  })
   .query('getCollectionById', {
     input: z.object({
       id: z.string(),
