@@ -3,11 +3,9 @@ import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
-import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
   const controls = useAnimation()
@@ -32,13 +30,13 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
   const cld = createCloudinary()
   return (
     <motion.div
-      className='flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] h-64 w-full'
+      className='relative flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] w-full h-full'
       variants={item}
       initial='hidden'
       animate={controls}
       ref={ref}
     >
-      <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
+      {/* <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
         {token.map(({ layerElementId, id }: TraitElement, index: number) => {
           return (
             <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
@@ -55,7 +53,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
             </div>
           )
         })}
-      </div>
+      </div> */}
     </motion.div>
   )
 }
@@ -93,20 +91,28 @@ const InfiniteScrollGridItems = ({
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
         return (
           <div className='col-span-1'>
-            <InfiniteScrollGridItem
-              key={`${index}`}
-              token={createToken({
-                id: Number(tokens[index]),
-                name: collection.name,
-                generation: collection.generations,
-                layers,
-              })}
-              name={`#${tokens[index] || 0}`}
-            />
-            <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span>
+            <div className='pb-[100%] block'>
+              <div className='absolute h-full w-full'>
+                <InfiniteScrollGridItem
+                  key={`${index}`}
+                  token={createToken({
+                    id: Number(tokens[index]),
+                    name: collection.name,
+                    generation: collection.generations,
+                    layers,
+                  })}
+                  name={`#${tokens[index] || 0}`}
+                />
+              </div>
+              {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
+            </div>
           </div>
         )
       })}
+      {/* <div className='col-span-1'>Hi</div>
+      <div className='col-span-1'>Hi</div>
+      <div className='col-span-1'>Hi</div>
+      <div className='col-span-1'>Hi</div> */}
     </div>
   )
 }
