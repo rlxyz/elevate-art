@@ -11,6 +11,7 @@ const Index = () => {
   const { name, traitElements } = currentLayer
   return (
     <CollectionViewContent
+      isLoading={isLoading}
       title={name}
       description={
         <span>

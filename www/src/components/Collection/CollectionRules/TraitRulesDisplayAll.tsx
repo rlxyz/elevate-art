@@ -50,29 +50,24 @@ export const TraitRulesDisplayPerItem = ({
 
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
-      <div className='col-span-3 relative mt-1'>
-        <div>
-          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-            {primary}
-          </div>
+      <div className='col-span-3 h-full relative'>
+        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
+          {primary}
         </div>
       </div>
-      <div className='col-span-2 relative mt-1'>
-        <div>
-          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-            {condition}
-          </div>
+      <div className='col-span-2 h-full relative'>
+        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-sm'>
+          {condition}
         </div>
       </div>
-      <div className='col-span-4 relative mt-1'>
-        <div>
-          <div className='w-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-            {secondary}
-          </div>
+      <div className='col-span-4 h-full relative'>
+        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
+          {secondary}
         </div>
       </div>
-      <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
+      <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <Button
+          variant='icon'
           className='w-full bg-inherit'
           disabled={mutation.isLoading}
           onClick={() => mutation.mutate({ id, repositoryId })}

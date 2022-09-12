@@ -16,7 +16,7 @@ const LayerGridLoading = () => {
       {Array.from(Array(10).keys()).map((index) => {
         return (
           <div key={`${index}`} className='flex flex-col items-center opacity-70'>
-            <div className='z-1'>
+            <div className='z-1 animate-pulse'>
               <AdvancedImage url='/images/logo.png' />
             </div>
             <span className='py-2 text-xs invisible'>{'...'}</span>
