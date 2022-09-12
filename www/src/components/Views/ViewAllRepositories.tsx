@@ -5,39 +5,7 @@ import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
-
-const timeline = [
-  {
-    id: 1,
-    content: 'Collections',
-    target: '2',
-    href: '#',
-    date: 'Sep 20',
-    datetime: '2020-09-20',
-    icon: UserIcon,
-    iconBackground: 'bg-gray-400',
-  },
-  {
-    id: 2,
-    content: 'Layers',
-    target: '13',
-    href: '#',
-    date: 'Sep 22',
-    datetime: '2020-09-22',
-    icon: CubeIcon,
-    iconBackground: 'bg-blue-500',
-  },
-  {
-    id: 3,
-    content: 'Traits',
-    target: '200',
-    href: '#',
-    date: 'Sep 22',
-    datetime: '2020-09-22',
-    icon: DocumentDuplicateIcon,
-    iconBackground: 'bg-blue-500',
-  },
-]
+import { timeAgo } from '../../utils/time'
 
 const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
@@ -82,14 +50,38 @@ const ViewAllRepositories = () => {
                         className='rounded-full'
                       />
                     </div>
-                    <span className='text-sm font-semibold'>{repository.name}</span>
+                    <div className='flex flex-col'>
+                      <span className='text-sm font-semibold'>{repository.name}</span>
+                      <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>
+                    </div>
                   </div>
                   <div className='flow-root'>
                     <ul role='list'>
-                      {timeline.map((event, eventIdx) => (
+                      {[
+                        {
+                          id: 1,
+                          content: 'Collections',
+                          target: repository._count.collections,
+                          icon: UserIcon,
+                        },
+                        {
+                          id: 2,
+                          content: 'Layers',
+                          target: repository._count.layers,
+                          icon: CubeIcon,
+                        },
+                        {
+                          id: 3,
+                          content: 'Traits',
+                          target: repository.layers.reduce((a, b) => {
+                            return a + b._count.traitElements
+                          }, 0),
+                          icon: DocumentDuplicateIcon,
+                        },
+                      ].map((event, eventIdx) => (
                         <li key={event.id}>
-                          <div className={clsx('relative ml-2', eventIdx !== timeline.length - 1 && 'pb-6')}>
-                            {eventIdx !== timeline.length - 1 ? (
+                          <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
+                            {eventIdx !== 2 ? (
                               <span
                                 className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black'
                                 aria-hidden='true'
@@ -98,10 +90,7 @@ const ViewAllRepositories = () => {
                             <div className='relative flex items-center space-x-5'>
                               <div>
                                 <span
-                                  className={clsx(
-                                    event.iconBackground,
-                                    'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'
-                                  )}
+                                  className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}
                                 >
                                   <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
                                 </span>
