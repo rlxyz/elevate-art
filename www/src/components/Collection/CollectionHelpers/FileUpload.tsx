@@ -1,5 +1,7 @@
+import { XCircleIcon } from '@heroicons/react/solid'
 import { LayerElement, Repository, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
+import Image from 'next/image'
 import { Dispatch, ReactNode, SetStateAction, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
@@ -202,86 +204,88 @@ export const FolderUpload = ({
   })
 
   return (
-    <div
-      {...getRootProps()}
-      onClick={open}
-      className='h-full border border-dashed border-mediumGrey rounded-[5px] flex flex-col justify-center items-center'
-    >
-      <input {...getInputProps()} />
-      <div>
-        <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
-        <span> to upload</span>
+    <div className='h-full space-y-6'>
+      <div
+        className='h-2/5 border border-dashed border-mediumGrey rounded-[5px] flex flex-col justify-center items-center'
+        {...getRootProps()}
+        onClick={open}
+      >
+        <input {...getInputProps()} />
+        <div>
+          <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
+          <span> to upload</span>
+        </div>
+        <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
       </div>
-      <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
-      {/* <div className='h-2/6 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
-                {[
-                  {
-                    trait: 'Background',
-                    size: 10,
-                    current: 4,
-                    total: 5,
-                    progress: 75,
-                  },
-                  {
-                    trait: 'Scenery',
-                    size: 13.255,
-                    current: 4,
-                    total: 13,
-                    progress: 60,
-                  },
-                  {
-                    trait: 'Clamps',
-                    size: 7.5,
-                    current: 1,
-                    total: 13,
-                    progress: 30,
-                  },
-                  {
-                    trait: 'Accessories',
-                    size: 7.5,
-                    current: 10,
-                    total: 13,
-                    progress: 70,
-                  },
-                  {
-                    trait: 'Arms',
-                    size: 7.5,
-                    current: 6,
-                    total: 15,
-                    progress: 20,
-                  },
-                ].map(({ trait, size, current, total }, index) => {
-                  return (
-                    <div key={`${trait}-${index}`} className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}>
-                      <div className='col-span-9 space-y-3 flex flex-col'>
-                        <div className='flex space-x-3'>
-                          <div className='flex items-center'>
-                            <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
-                              <Image src={'/images/not-found.svg'} width={15} height={15} />
-                            </div>
-                          </div>
-                          <div className='flex flex-col space-y-1'>
-                            <span className='text-sm font-semibold'>{trait}</span>
-                            <span className='text-xs text-darkGrey'>{size.toFixed(1)} MB</span>
-                          </div>
-                        </div>
-                        <div className='w-full rounded-[5px] h-1 bg-lightGray'>
-                          <div className={`bg-blueHighlight h-1 w-[50%]`}></div>
-                        </div>
-                      </div>
-                      <div className='col-span-1 flex flex-col'>
-                        <div className='grid grid-rows-3 justify-items-end'>
-                          <XCircleIcon className='w-5 h-5 row-span-1' />
-                          <div />
-                          <span className='text-sm'>
-                            {current}/{total}
-                          </span>
-                        </div>
-                      </div>
+      <div className='h-2/5 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
+        {[
+          {
+            trait: 'Background',
+            size: 10,
+            current: 4,
+            total: 5,
+            progress: 75,
+          },
+          {
+            trait: 'Scenery',
+            size: 13.255,
+            current: 4,
+            total: 13,
+            progress: 60,
+          },
+          {
+            trait: 'Clamps',
+            size: 7.5,
+            current: 1,
+            total: 13,
+            progress: 30,
+          },
+          {
+            trait: 'Accessories',
+            size: 7.5,
+            current: 10,
+            total: 13,
+            progress: 70,
+          },
+          {
+            trait: 'Arms',
+            size: 7.5,
+            current: 6,
+            total: 15,
+            progress: 20,
+          },
+        ].map(({ trait, size, current, total }, index) => {
+          return (
+            <div key={`${trait}-${index}`} className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}>
+              <div className='col-span-9 space-y-3 flex flex-col'>
+                <div className='flex space-x-3'>
+                  <div className='flex items-center'>
+                    <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
+                      <Image src={'/images/not-found.svg'} width={15} height={15} />
                     </div>
-                  )
-                })}
-              </div> */}
+                  </div>
+                  <div className='flex flex-col space-y-1'>
+                    <span className='text-sm font-semibold'>{trait}</span>
+                    <span className='text-xs text-darkGrey'>{size.toFixed(1)} MB</span>
+                  </div>
+                </div>
+                <div className='w-full rounded-[5px] h-1 bg-lightGray'>
+                  <div className={`bg-blueHighlight h-1 w-[50%]`}></div>
+                </div>
+              </div>
+              <div className='col-span-1 flex flex-col'>
+                <div className='grid grid-rows-3 justify-items-end'>
+                  <XCircleIcon className='w-5 h-5 row-span-1' />
+                  <div />
+                  <span className='text-sm'>
+                    {current}/{total}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

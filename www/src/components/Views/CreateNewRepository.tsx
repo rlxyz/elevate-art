@@ -73,13 +73,11 @@ const CreateNewRepository = () => {
         <div className='col-span-6'>
           <div className='w-full h-[60rem] border border-mediumGrey rounded-[5px] bg-white p-12 drop-shadow-2xl space-y-12'>
             <div className='text-4xl font-semibold'>Import layers</div>
-            <div className='h-2/5'>
-              <FolderUpload
-                setRepository={setRepository}
-                onSuccess={() => setCreateProjectDisabled(false)}
-                organisationId={organisation.id}
-              />
-            </div>
+            <FolderUpload
+              setRepository={setRepository}
+              onSuccess={() => setCreateProjectDisabled(false)}
+              organisationId={organisation.id}
+            />
             <div className='py-12 pr-12 absolute bottom-0 right-0'>
               <div className='flex justify-end space-x-3'>
                 <Button
@@ -96,7 +94,6 @@ const CreateNewRepository = () => {
                   Cancel
                 </Button>
                 <Button
-                  className='p-4 disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'
                   onClick={() => router.push(`/${organisationName}/${repository?.name}/main/preview`)} // todo: should go to collection creation page
                   disabled={repository === null && createProjectDisabled}
                 >
