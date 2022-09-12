@@ -1,10 +1,18 @@
-import { XCircleIcon } from '@heroicons/react/solid'
 import { LayerElement, Repository, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
-import { Dispatch, ReactNode, SetStateAction, useCallback } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
+
+const formatBytes = (a: number, b = 2) => {
+  if (!+a) return '0 Bytes'
+  const c = 0 > b ? 0 : b,
+    d = Math.floor(Math.log(a) / Math.log(1024))
+  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${
+    ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]
+  }`
+}
 
 const FileUpload = ({
   repositoryId,
@@ -114,15 +122,32 @@ export const FolderUpload = ({
   onSuccess: () => void
   setRepository: Dispatch<SetStateAction<Repository | null>>
 }) => {
-  const mutation = trpc.useMutation('repository.create', {
+  const [layers, setLayers] = useState<
+    {
+      name: string
+      size: number
+      current: number
+      total: number
+      progress: string
+    }[]
+  >([])
+  const mr = trpc.useMutation('repository.create', {
     onSuccess: (data, variables) => setRepository(data),
   })
 
-  const mutationLayer = trpc.useMutation('layer.createMany', {
+  const ml = trpc.useMutation('layer.createMany', {
     onSuccess: (data, variables) => console.log('created all layers'),
   })
 
-  const uploadCollectionLayerImageCloudinary = ({ trait, file }: { file: any; trait: TraitElement }) => {
+  const uploadCollectionLayerImageCloudinary = ({
+    layerName,
+    trait,
+    file,
+  }: {
+    layerName: string
+    file: any
+    trait: TraitElement
+  }) => {
     return new Promise((resolve, reject) => {
       const key = `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${organisationId}/${trait.layerElementId}`
       const data = new FormData()
@@ -136,8 +161,25 @@ export const FolderUpload = ({
         method: 'post',
         body: data,
       })
-        .then((response) => {
-          resolve(response.json())
+        .then(async (response) => {
+          const { bytes } = await response.json()
+          setLayers((prev) => {
+            const layer = prev.find((layer) => layer.name === layerName)
+            const index = prev.findIndex((layer) => layer.name === layerName)
+            if (!layer || !index) return [...prev]
+            return [
+              ...prev.slice(0, index),
+              {
+                name: layer.name,
+                size: layer.size + bytes,
+                current: layer.current + 1,
+                total: layer.total,
+                progress: `w-[${(((layer.current + 1) / layer.total) * 100).toFixed(0)}%]`,
+              },
+              ...prev.slice(index + 1),
+            ]
+          })
+          resolve(bytes)
         })
         .catch((err) => {
           reject(err)
@@ -148,7 +190,7 @@ export const FolderUpload = ({
   const onDrop = useCallback(async (files: any) => {
     const repositoryName = files[0].path.split('/')[1]
     if (!repositoryName) return // should throw error
-    mutation.mutate(
+    mr.mutate(
       { organisationId, name: repositoryName },
       {
         onSuccess: (data) => {
@@ -163,7 +205,18 @@ export const FolderUpload = ({
             {}
           )
           const layerNames = Object.entries(fileObject).map(([key, value]) => ({ layerName: key, traitNames: value }))
-          mutationLayer.mutate(
+          setLayers(
+            layerNames.map((layer) => {
+              return {
+                name: layer.layerName,
+                size: 0,
+                current: 0,
+                total: layer.traitNames.length,
+                progress: 'w-[5%]',
+              }
+            })
+          )
+          ml.mutate(
             { repositoryId: data.id, layers: layerNames },
             {
               onSuccess: (data) => {
@@ -179,6 +232,7 @@ export const FolderUpload = ({
                     const trait = data.filter((item) => item.name === traitName)[0]
                     if (!trait) return // todo: throw error
                     uploadCollectionLayerImageCloudinary({
+                      layerName,
                       trait,
                       file,
                     })
@@ -217,75 +271,44 @@ export const FolderUpload = ({
         </div>
         <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
       </div>
-      <div className='h-2/5 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
-        {[
-          {
-            trait: 'Background',
-            size: 10,
-            current: 4,
-            total: 5,
-            progress: 75,
-          },
-          {
-            trait: 'Scenery',
-            size: 13.255,
-            current: 4,
-            total: 13,
-            progress: 60,
-          },
-          {
-            trait: 'Clamps',
-            size: 7.5,
-            current: 1,
-            total: 13,
-            progress: 30,
-          },
-          {
-            trait: 'Accessories',
-            size: 7.5,
-            current: 10,
-            total: 13,
-            progress: 70,
-          },
-          {
-            trait: 'Arms',
-            size: 7.5,
-            current: 6,
-            total: 15,
-            progress: 20,
-          },
-        ].map(({ trait, size, current, total }, index) => {
-          return (
-            <div key={`${trait}-${index}`} className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}>
-              <div className='col-span-9 space-y-3 flex flex-col'>
-                <div className='flex space-x-3'>
-                  <div className='flex items-center'>
-                    <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
-                      <Image src={'/images/not-found.svg'} width={15} height={15} />
+      {layers && layers.length ? (
+        <div className='h-2/5 overflow-y-scroll w-full flex flex-col justify-start space-y-6 divide-y divide-lightGray no-scrollbar'>
+          {layers.map(({ name, size, current, total, progress }, index) => {
+            return (
+              <div key={`${name}-${index}`} className={`grid grid-cols-10 ${index !== 0 ? 'pt-3' : ''}`}>
+                <div className='col-span-9 space-y-3 flex flex-col'>
+                  <div className='flex space-x-3'>
+                    <div className='flex items-center'>
+                      <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
+                        <Image src={'/images/not-found.svg'} width={15} height={15} />
+                      </div>
+                    </div>
+                    <div className='flex flex-col space-y-1'>
+                      <span className='text-sm font-semibold'>{name}</span>
+                      <span className='text-xs text-darkGrey'>{formatBytes(size)}</span>
                     </div>
                   </div>
-                  <div className='flex flex-col space-y-1'>
-                    <span className='text-sm font-semibold'>{trait}</span>
-                    <span className='text-xs text-darkGrey'>{size.toFixed(1)} MB</span>
+                  <div className='w-full rounded-[5px] h-1 bg-lightGray'>
+                    <div className={`bg-blueHighlight h-1 ${progress}`}></div>
                   </div>
                 </div>
-                <div className='w-full rounded-[5px] h-1 bg-lightGray'>
-                  <div className={`bg-blueHighlight h-1 w-[50%]`}></div>
+                <div className='col-span-1 flex flex-col'>
+                  <div className='grid grid-rows-3 justify-items-end'>
+                    {/* <XCircleIcon className='w-5 h-5 row-span-1' /> */}
+                    <div />
+                    <div />
+                    <span className='text-sm'>
+                      {current}/{total}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className='col-span-1 flex flex-col'>
-                <div className='grid grid-rows-3 justify-items-end'>
-                  <XCircleIcon className='w-5 h-5 row-span-1' />
-                  <div />
-                  <span className='text-sm'>
-                    {current}/{total}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

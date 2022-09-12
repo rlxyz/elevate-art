@@ -40,7 +40,7 @@ const ViewAllRepositories = () => {
         {repositories.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index}>
-              <Link href={`${organisationName}/${repository.name}`} external>
+              <Link href={`/${organisationName}/${repository.name}`} external>
                 <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
