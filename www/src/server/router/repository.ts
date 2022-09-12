@@ -127,3 +127,15 @@ export const repositoryRouter = createRouter()
       return repository
     },
   })
+  .mutation('deleteRepositoryById', {
+    input: z.object({
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.repository.delete({
+        where: {
+          id: input.repositoryId,
+        },
+      })
+    },
+  })

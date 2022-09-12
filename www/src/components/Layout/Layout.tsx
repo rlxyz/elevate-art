@@ -1,4 +1,4 @@
-import { classNames } from '@utils/format'
+import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -19,9 +19,17 @@ interface LayoutProps {
   hasFooter?: boolean
 }
 
-const LayoutContainer = ({ className, children }: { className?: string; children: React.ReactNode }) => {
+const LayoutContainer = ({
+  className,
+  children,
+  hasBorder = true,
+}: {
+  hasBorder?: boolean
+  className?: string
+  children: React.ReactNode
+}) => {
   return (
-    <div className={classNames('flex justify-center border-b border-mediumGrey', className || '')}>
+    <div className={clsx('flex justify-center', className, hasBorder && 'border-b border-mediumGrey')}>
       <div className='w-[90%] lg:w-[75%] 2xl:w-[50%]'>{children}</div>
     </div>
   )
@@ -49,8 +57,8 @@ const LayoutHeader = (props: HeaderProps) => (
   </LayoutContainer>
 )
 
-const LayoutBody = ({ children }: { children: React.ReactNode }) => (
-  <LayoutContainer className='body min-h-[calc(100vh-7rem)]'>
+const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode; hasBorder?: boolean }) => (
+  <LayoutContainer className='body min-h-[calc(100vh-7rem)]' hasBorder={hasBorder}>
     <div className='py-8 -ml-2 h-full space-y-8'>{children}</div>
   </LayoutContainer>
 )
