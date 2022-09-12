@@ -30,7 +30,7 @@ const LayoutContainer = ({
 }) => {
   return (
     <div className={clsx('flex justify-center', className, hasBorder && 'border-b border-mediumGrey')}>
-      <div className='w-[90%] lg:w-[75%] 2xl:w-[50%]'>{children}</div>
+      <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%]'>{children}</div>
     </div>
   )
 }

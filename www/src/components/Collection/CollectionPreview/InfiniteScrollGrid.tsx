@@ -1,10 +1,11 @@
+import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
 import { clientEnv } from 'src/env/schema.mjs'
@@ -12,6 +13,7 @@ import { clientEnv } from 'src/env/schema.mjs'
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
   const controls = useAnimation()
   const [ref, inView] = useInView()
+
   useEffect(() => {
     if (inView) {
       controls.start('show')
@@ -31,32 +33,34 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const cld = createCloudinary()
   return (
-    <motion.div
-      className='relative flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] w-full h-full'
-      variants={item}
-      initial='hidden'
-      animate={controls}
-      ref={ref}
-    >
-      <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
-        {token.map(({ layerElementId, id }: TraitElement, index: number) => {
-          return (
-            <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
-              <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
-                <Image
-                  priority
-                  src={cld
-                    .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
-                    .toURL()}
-                  layout='fill'
-                  className='rounded-[5px]'
-                />
+    <>
+      <motion.div
+        className='relative flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] w-full h-full'
+        variants={item}
+        initial='hidden'
+        animate={controls}
+        ref={ref}
+      >
+        <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
+          {token.map(({ layerElementId, id }: TraitElement, index: number) => {
+            return (
+              <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
+                <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
+                  <Image
+                    priority
+                    src={cld
+                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                      .toURL()}
+                    layout='fill'
+                    className='rounded-[5px]'
+                  />
+                </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
-    </motion.div>
+            )
+          })}
+        </div>
+      </motion.div>
+    </>
   )
 }
 
@@ -85,14 +89,25 @@ const InfiniteScrollGridItems = ({
       tokens: state.tokens,
     }
   })
-
+  const [selectedToken, setSelectedToken] = useState<{ traitElements: TraitElement[] }>({
+    traitElements: [],
+  })
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
     <div className='grid grid-cols-5 gap-y-6 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
+        const token = createToken({
+          id: Number(tokens[index]),
+          name: collection.name,
+          generation: collection.generations,
+          layers,
+        })
         return (
-          <div className='relative col-span-1'>
+          <div
+            className='cursor-pointer relative col-span-1'
+            onClick={() => setSelectedToken({ traitElements: token })}
+          >
             <div className='pb-[100%] blocks'>
               <div className='absolute h-full w-full'>
                 <InfiniteScrollGridItem
@@ -111,6 +126,53 @@ const InfiniteScrollGridItems = ({
           </div>
         )
       })}
+      <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
+        <Dialog
+          as='div'
+          className='relative z-10'
+          onClose={() =>
+            setSelectedToken({
+              traitElements: [],
+            })
+          }
+        >
+          <Transition.Child
+            as={Fragment}
+            enter='ease-out duration-300'
+            enterFrom='opacity-0'
+            enterTo='opacity-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100'
+            leaveTo='opacity-0'
+          >
+            <div className='fixed inset-0 bg-black bg-opacity-50' />
+          </Transition.Child>
+
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex items-end sm:items-center justify-center min-h-full text-center'>
+              <Transition.Child
+                as={Fragment}
+                enter='ease-out duration-300'
+                enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+                enterTo='opacity-100 translate-y-0 sm:scale-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100 translate-y-0 sm:scale-100'
+                leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+              >
+                <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
+                  <div className='space-y-4'>
+                    <div className='pb-[100%] blocks'>
+                      <div className='absolute h-full w-full'>
+                        <InfiniteScrollGridItem token={selectedToken.traitElements} name={'#1'} />
+                      </div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   )
 }
