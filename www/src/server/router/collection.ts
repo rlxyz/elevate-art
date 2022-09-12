@@ -11,6 +11,34 @@ export const collectionRouter = createRouter()
       })
     },
   })
+  .mutation('create', {
+    input: z.object({
+      organisationName: z.string(),
+      repositoryName: z.string(),
+      name: z.string(),
+      totalSupply: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const repo = await ctx.prisma.repository.findFirst({
+        where: {
+          organisation: {
+            name: input.organisationName,
+          },
+          name: input.repositoryName,
+        },
+      })
+
+      if (!repo) throw new Error('Repository not found')
+
+      return await ctx.prisma.collection.create({
+        data: {
+          name: input.name,
+          repositoryId: repo.id,
+          totalSupply: input.totalSupply,
+        },
+      })
+    },
+  })
   .query('getCollectionByName', {
     input: z.object({
       repositoryId: z.string(),

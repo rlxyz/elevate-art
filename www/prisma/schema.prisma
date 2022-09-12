@@ -90,7 +90,7 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id])
     organisationId String
 
-    // @@unique([organisationId, name], name: "repositoryIdentifier")
+    @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
 }
 
@@ -105,6 +105,8 @@ model Collection {
 
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
     repositoryId String
+
+    @@unique([repositoryId, name], name: "collectionIdentifier")
 }
 
 model LayerElement {

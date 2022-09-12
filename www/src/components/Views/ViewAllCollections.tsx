@@ -1,11 +1,13 @@
 import Button from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
+import { Dialog, Transition } from '@headlessui/react'
 import { CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
+import { useNotification } from '@hooks/useNotification'
 import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { timeAgo } from '../../utils/time'
 
 const ViewAllRepositories = () => {
@@ -17,7 +19,28 @@ const ViewAllRepositories = () => {
     'collection.getCollectionByRepositoryNameAndOrganisationName',
     { organisationName, repositoryName },
   ])
-  console.log(collections)
+  const ctx = trpc.useContext()
+  const { notifySuccess } = useNotification()
+  const mutation = trpc.useMutation('collection.create', {
+    onSuccess: (data, variables) => {
+      ctx.setQueryData(
+        ['collection.getCollectionByRepositoryNameAndOrganisationName', { organisationName, repositoryName }],
+        [...(collections || []), data]
+      )
+      setIsOpen(false)
+      notifySuccess(
+        <span>
+          <span className='text-blueHighlight'>Successfully</span>
+          <span>
+            {' '}
+            created a <span className='font-semibold'>new collection!</span>
+          </span>
+        </span>,
+        'new collection'
+      )
+    },
+  })
+  const [isOpen, setIsOpen] = useState(false)
   if (!collections) return <></>
   const filteredCollections =
     query === ''
@@ -40,18 +63,79 @@ const ViewAllRepositories = () => {
             className='w-full'
             onClick={(e: any) => {
               e.preventDefault()
-              router.push(`${organisationName}/new`)
+              setIsOpen(true)
             }}
           >
             Add New...
           </Button>
+          <Transition appear show={isOpen} as={Fragment}>
+            <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
+              <Transition.Child
+                as={Fragment}
+                enter='ease-out duration-300'
+                enterFrom='opacity-0'
+                enterTo='opacity-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100'
+                leaveTo='opacity-0'
+              >
+                <div className='fixed inset-0 bg-black bg-opacity-50' />
+              </Transition.Child>
+
+              <div className='fixed inset-0 overflow-y-auto'>
+                <div className='flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0'>
+                  <Transition.Child
+                    as={Fragment}
+                    enter='ease-out duration-300'
+                    enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+                    enterTo='opacity-100 translate-y-0 sm:scale-100'
+                    leave='ease-in duration-200'
+                    leaveFrom='opacity-100 translate-y-0 sm:scale-100'
+                    leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+                  >
+                    <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-lightGray'>
+                      <div className='space-y-4'>
+                        <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
+                          Are you sure?
+                        </Dialog.Title>
+                        <div>
+                          <p className='text-sm'>
+                            This will generate a new collection and you will lose the existing collection.
+                          </p>
+                        </div>
+                        <div className='flex justify-between'>
+                          <div className='ml-[auto]'>
+                            <Button
+                              disabled={mutation.isLoading}
+                              onClick={() =>
+                                mutation.mutate({
+                                  name: 'something',
+                                  organisationName,
+                                  repositoryName,
+                                  totalSupply: 1,
+                                })
+                              }
+                            >
+                              <span className='flex items-center justify-center space-x-2 px-4 py-4'>
+                                <span className='text-xs'>Confirm</span>
+                              </span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
+              </div>
+            </Dialog>
+          </Transition>
         </div>
       </div>
       <div className='grid grid-cols-3 gap-x-6 gap-y-6'>
         {filteredCollections.map((collection, index) => {
           return (
             <div className='col-span-1 w-full' key={index}>
-              <Link href={`/${organisationName}/${collection.name}`} external>
+              <Link href={`/${organisationName}/${repositoryName}/${collection.name}/preview`} external>
                 <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
