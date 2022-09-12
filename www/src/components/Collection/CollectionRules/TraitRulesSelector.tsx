@@ -82,6 +82,7 @@ export const TraitRulesSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
           <Button
+            className='w-full'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
@@ -93,7 +94,7 @@ export const TraitRulesSelector = ({
               })
             }}
           >
-            Add
+            Add Rule
           </Button>
         </div>
       </div>

@@ -243,7 +243,7 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed bottom-0 h-[10%] 2xl:w-[calc(51vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey p-4'
+                  className='fixed bottom-0 h-[7.5%] 2xl:w-[calc(39vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey'
                 >
                   <div className='flex items-center space-x-3'>
                     {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
@@ -270,9 +270,10 @@ export const RarityDisplay = ({
                       </>
                     )}
                   </div>
-                  <div className='flex space-x-3 py-6'>
+                  <div className='flex space-x-3 items-center px-6'>
                     <Button
                       type='button'
+                      variant='secondary'
                       onClick={(e: any) => {
                         e.preventDefault()
                         resetForm()
@@ -282,6 +283,7 @@ export const RarityDisplay = ({
                       Reset
                     </Button>
                     <Button
+                      variant='primary'
                       disabled={
                         (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits) ? false : true) ||
                         isSubmitting
@@ -291,7 +293,9 @@ export const RarityDisplay = ({
                         handleSubmit()
                       }}
                     >
-                      Save
+                      <span className='flex items-center justify-center space-x-2 px-4 py-4'>
+                        <span className='text-xs'>Confirm</span>
+                      </span>
                     </Button>
                   </div>
                 </motion.div>

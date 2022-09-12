@@ -72,8 +72,12 @@ export const TraitRulesDisplayPerItem = ({
         </div>
       </div>
       <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
-        <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id, repositoryId })}>
-          <TrashIcon />
+        <Button
+          className='w-full bg-inherit'
+          disabled={mutation.isLoading}
+          onClick={() => mutation.mutate({ id, repositoryId })}
+        >
+          <TrashIcon className='w-5 h-5' />
         </Button>
       </div>
     </div>

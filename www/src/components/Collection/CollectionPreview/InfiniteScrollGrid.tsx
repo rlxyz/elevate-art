@@ -3,9 +3,11 @@ import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
+import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
   const controls = useAnimation()
@@ -36,7 +38,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
       animate={controls}
       ref={ref}
     >
-      {/* <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
+      <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
         {token.map(({ layerElementId, id }: TraitElement, index: number) => {
           return (
             <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
@@ -53,7 +55,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
             </div>
           )
         })}
-      </div> */}
+      </div>
     </motion.div>
   )
 }
@@ -87,11 +89,11 @@ const InfiniteScrollGridItems = ({
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
-    <div className='grid grid-cols-4 gap-y-6 gap-x-6 overflow-hidden'>
+    <div className='grid grid-cols-5 gap-y-6 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
         return (
-          <div className='col-span-1'>
-            <div className='pb-[100%] block'>
+          <div className='relative col-span-1'>
+            <div className='pb-[100%] blocks'>
               <div className='absolute h-full w-full'>
                 <InfiniteScrollGridItem
                   key={`${index}`}
@@ -109,10 +111,6 @@ const InfiniteScrollGridItems = ({
           </div>
         )
       })}
-      {/* <div className='col-span-1'>Hi</div>
-      <div className='col-span-1'>Hi</div>
-      <div className='col-span-1'>Hi</div>
-      <div className='col-span-1'>Hi</div> */}
     </div>
   )
 }
