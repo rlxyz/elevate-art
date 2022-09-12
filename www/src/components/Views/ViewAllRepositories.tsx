@@ -5,22 +5,31 @@ import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
+import { useState } from 'react'
 import { timeAgo } from '../../utils/time'
 
 const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
+  const [query, setQuery] = useState('')
   const { data: repositories } = trpc.useQuery([
     'repository.getAllRepositoriesByOrganisationName',
     { name: organisationName },
   ])
   if (!repositories) return <></>
+  const filteredRepositories =
+    query === ''
+      ? repositories
+      : repositories.filter((repo) => {
+          return repo.name.toLowerCase().includes(query.toLowerCase())
+        })
   return (
     <>
       <div className='grid grid-cols-10 space-x-3 items-center'>
         <div className='col-span-9 h-full w-full'>
           <input
             placeholder='Search...'
+            onChange={(e) => setQuery(e.target.value)}
             className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           />
         </div>
@@ -37,7 +46,7 @@ const ViewAllRepositories = () => {
         </div>
       </div>
       <div className='grid grid-cols-3 gap-x-6 gap-y-6'>
-        {repositories.map((repository, index) => {
+        {filteredRepositories.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index}>
               <Link href={`/${organisationName}/${repository.name}`} external>
