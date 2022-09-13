@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { timeAgo } from '../../utils/time'
 
 const ViewAllRepositories = () => {
@@ -19,6 +20,12 @@ const ViewAllRepositories = () => {
     'collection.getCollectionByRepositoryNameAndOrganisationName',
     { organisationName, repositoryName },
   ])
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
   const mutation = trpc.useMutation('collection.create', {
@@ -96,32 +103,59 @@ const ViewAllRepositories = () => {
                     <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-lightGray'>
                       <div className='space-y-4'>
                         <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
-                          Are you sure?
+                          Create new collection
                         </Dialog.Title>
-                        <div>
-                          <p className='text-sm'>
-                            This will generate a new collection and you will lose the existing collection.
-                          </p>
-                        </div>
-                        <div className='flex justify-between'>
-                          <div className='ml-[auto]'>
-                            <Button
-                              disabled={mutation.isLoading}
-                              onClick={() =>
-                                mutation.mutate({
-                                  name: 'something',
-                                  organisationName,
-                                  repositoryName,
-                                  totalSupply: 1,
-                                })
-                              }
-                            >
-                              <span className='flex items-center justify-center space-x-2 px-4 py-4'>
-                                <span className='text-xs'>Confirm</span>
-                              </span>
-                            </Button>
+                        <form
+                          onSubmit={handleSubmit((data) => {
+                            mutation.mutate({
+                              name: data.name,
+                              organisationName,
+                              repositoryName,
+                              totalSupply: Number(data.totalSupply),
+                            })
+                          })}
+                        >
+                          <div className='divide-y divide-mediumGrey space-y-6'>
+                            <div>
+                              <p className='text-sm'>
+                                This will create a new collection, your existing collection will remain the same
+                              </p>
+                            </div>
+                            <div className='pt-6 space-y-2'>
+                              <div className='space-y-1 flex flex-col'>
+                                <span className='text-xs font-base'>Collection name</span>
+                                <input
+                                  className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                                  defaultValue='development'
+                                  type='string'
+                                  {...register('name', { required: true, maxLength: 20, minLength: 3 })}
+                                />
+                                {errors.name && (
+                                  <span className='text-xs text-redError'>Must be between 3 and 20 characters long</span>
+                                )}
+                              </div>
+                              <div className='space-y-1 flex flex-col'>
+                                <span className='text-xs font-base'>Total Supply</span>
+                                <input
+                                  className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                                  defaultValue={10000}
+                                  type='number'
+                                  {...register('totalSupply', { required: true, min: 1, max: 10000 })}
+                                />
+                                {errors.totalSupply && <span className='text-xs text-redError'>Must be smaller than 10000</span>}
+                              </div>
+                              <div className='pt-6 flex justify-between'>
+                                <div className='ml-[auto]'>
+                                  <Button>
+                                    <span className='flex items-center justify-center space-x-2 px-4 py-4'>
+                                      <span className='text-xs'>Confirm</span>
+                                    </span>
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        </form>
                       </div>
                     </Dialog.Panel>
                   </Transition.Child>
@@ -131,10 +165,10 @@ const ViewAllRepositories = () => {
           </Transition>
         </div>
       </div>
-      <div className='grid grid-cols-3 gap-x-6 gap-y-6'>
+      <div className='no-scrollbar overflow-x-scroll flex flex-row space-x-6 w-full'>
         {filteredCollections.map((collection, index) => {
           return (
-            <div className='col-span-1 w-full' key={index}>
+            <div className='w-full' key={index}>
               <Link href={`/${organisationName}/${repositoryName}/${collection.name}/preview`} external>
                 <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
                   <div className='flex items-center space-x-3'>
@@ -147,7 +181,9 @@ const ViewAllRepositories = () => {
                     </div>
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{collection.name}</span>
-                      <span className='text-xs text-darkGrey'>Last Edited {timeAgo(collection.updatedAt)}</span>
+                      <span className='text-xs text-darkGrey relative w-max'>
+                        <span>Last Edited {timeAgo(collection.updatedAt)}</span>
+                      </span>
                     </div>
                   </div>
                   <div className='flow-root'>
@@ -175,16 +211,11 @@ const ViewAllRepositories = () => {
                         <li key={event.id}>
                           <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
                             {eventIdx !== 2 ? (
-                              <span
-                                className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black'
-                                aria-hidden='true'
-                              />
+                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
                             ) : null}
                             <div className='relative flex items-center space-x-5'>
                               <div>
-                                <span
-                                  className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}
-                                >
+                                <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
                                   <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
                                 </span>
                               </div>
@@ -201,21 +232,24 @@ const ViewAllRepositories = () => {
                       ))}
                     </ul>
                   </div>
-                  {/* <div className='ml-4 space-y-2'>
-                    <div className='text-sm'>{collection._count.collections} collections</div>
-                    <div className='text-sm'>{collection._count.layers} layers</div>
-                    <div className='text-sm'>
-                      {collection.layers.reduce((a, b) => {
-                        return a + b._count.traitElements
-                      }, 0)}{' '}
-                      traits
-                    </div>
-                  </div> */}
                 </div>
               </Link>
             </div>
           )
         })}
+        {/* <div>
+          {filteredCollections.length === 1 && (
+            <div
+              onClick={(e: any) => {
+                e.preventDefault()
+                setIsOpen(true)
+              }}
+              className='w-[20rem] h-full border border-mediumGrey rounded-[5px] flex items-center justify-center text-black text-sm'
+            >
+              Add new
+            </div>
+          )}
+        </div> */}
       </div>
     </>
   )
