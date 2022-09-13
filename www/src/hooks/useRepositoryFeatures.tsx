@@ -29,15 +29,17 @@ export const useMutateRepositoryLayersWeight = () => {
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        const id = draft.findIndex((l) => l.id === input.layerId)
-        draft[id].traitElements = draft[id]?.traitElements
-          .map((trait) => {
-            return produce(trait, (draft) => {
-              draft.weight = input.traits.find((t) => t.id === trait.id)?.weight || 0
-              draft.updatedAt = new Date()
+        const layer = draft.find((l) => l.id === input.layerId)
+        if (typeof layer === 'undefined') return
+        layer.traitElements =
+          layer.traitElements
+            .map((trait) => {
+              return produce(trait, (draft) => {
+                draft.weight = input.traits.find((t) => t.id === trait.id)?.weight || 0
+                draft.updatedAt = new Date()
+              })
             })
-          })
-          .sort((a, b) => a.weight - b.weight)
+            .sort((a, b) => a.weight - b.weight) || []
       })
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
 
@@ -64,7 +66,6 @@ export const useMutateRepositoryLayersWeight = () => {
 
 export const useMutateRepositoryRule = () => {
   const ctx = trpc.useContext()
-  const { data: layers } = useQueryRepositoryLayer()
   const { notifySuccess } = useNotification()
   return trpc.useMutation('repository.createRule', {
     // Optimistic Update
@@ -88,11 +89,31 @@ export const useMutateRepositoryRule = () => {
       const next = produce(backup, (draft) => {
         draft[primaryId]?.traitElements[Number(primaryTrait.id)]?.rulesPrimary.push({
           id: 'temp',
+          condition: input.type,
           secondaryTraitElementId: input.secondaryTraitElementId,
           primaryTraitElementId: input.primaryTraitElementId,
-          condition: input.type,
-          secondaryTraitElement: draft[secondaryId]?.traitElements[Number(secondaryTrait.id)] || primaryTrait,
-          primaryTraitElement: draft[primaryId]?.traitElements[Number(primaryTrait.id)] || secondaryTrait,
+          secondaryTraitElement: {
+            ...secondaryTrait,
+            layerElement: {
+              id: secondaryTrait.layerElementId,
+              name: draft[secondaryId]?.name ?? '',
+              priority: draft[secondaryId]?.priority ?? 0,
+              repositoryId: draft[secondaryId]?.repositoryId ?? '',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          },
+          primaryTraitElement: {
+            ...primaryTrait,
+            layerElement: {
+              id: primaryTrait.layerElementId,
+              name: draft[primaryId]?.name ?? '',
+              priority: draft[primaryId]?.priority ?? 0,
+              repositoryId: draft[primaryId]?.repositoryId ?? '',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          },
         })
       })
       // console.log({ b: backup[primaryId]?.traitElements[primaryTraitId], n: next[primaryId]?.traitElements[primaryTraitId] })
@@ -101,9 +122,11 @@ export const useMutateRepositoryRule = () => {
       // Notify Success
       notifySuccess(
         <div>
-          <span className='text-blueHighlight text-semibold'>{backup[primaryId]?.traitElements[primaryTraitId].name}</span>
+          <span className='text-blueHighlight text-semibold'>
+            {backup[primaryId]?.traitElements[Number(primaryTrait.id)]?.name || ''}
+          </span>
           <span>{` now ${input.type} `}</span>
-          <span className='font-semibold'>{backup[secondaryId]?.traitElements[secondaryTraitId].name}</span>
+          <span className='font-semibold'>{backup[secondaryId]?.traitElements[Number(secondaryTrait.id)]?.name}</span>
         </div>,
         'new rule'
       )
