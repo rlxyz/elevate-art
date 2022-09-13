@@ -61,7 +61,9 @@ const ViewAllRepositories = () => {
         <div className='col-span-9 h-full w-full'>
           <input
             placeholder='Search...'
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              e.preventDefault(), setQuery(e.target.value)
+            }}
             className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           />
         </div>
@@ -165,78 +167,80 @@ const ViewAllRepositories = () => {
           </Transition>
         </div>
       </div>
-      <div className='no-scrollbar overflow-x-scroll flex flex-row space-x-6 w-full'>
-        {filteredCollections.map((collection, index) => {
-          return (
-            <div className='w-full' key={index}>
-              <Link href={`/${organisationName}/${repositoryName}/${collection.name}/preview`} external>
-                <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
-                  <div className='flex items-center space-x-3'>
-                    <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
-                      <Image
-                        src='https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg'
-                        layout='fill'
-                        className='rounded-full'
-                      />
+      <div className='no-scrollbar overflow-x-scroll flex flex-row space-x-6'>
+        {filteredCollections
+          .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+          .map((collection, index) => {
+            return (
+              <div className='w-[20rem]' key={index}>
+                <Link href={`/${organisationName}/${repositoryName}/${collection.name}/preview`} external>
+                  <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
+                    <div className='flex items-center space-x-3'>
+                      <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
+                        <Image
+                          src='https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg'
+                          layout='fill'
+                          className='rounded-full'
+                        />
+                      </div>
+                      <div className='flex flex-col'>
+                        <span className='text-sm font-semibold'>{collection.name}</span>
+                        <span className='text-xs text-darkGrey relative w-max'>
+                          <span>Last Edited {timeAgo(collection.updatedAt)}</span>
+                        </span>
+                      </div>
                     </div>
-                    <div className='flex flex-col'>
-                      <span className='text-sm font-semibold'>{collection.name}</span>
-                      <span className='text-xs text-darkGrey relative w-max'>
-                        <span>Last Edited {timeAgo(collection.updatedAt)}</span>
-                      </span>
-                    </div>
-                  </div>
-                  <div className='flow-root'>
-                    <ul role='list'>
-                      {[
-                        {
-                          id: 1,
-                          content: 'Generation',
-                          target: collection.generations,
-                          icon: UserIcon,
-                        },
-                        {
-                          id: 2,
-                          content: 'Total Supply',
-                          target: collection.totalSupply,
-                          icon: CubeIcon,
-                        },
-                        {
-                          id: 3,
-                          content: 'tbd',
-                          target: 0,
-                          icon: DocumentDuplicateIcon,
-                        },
-                      ].map((event, eventIdx) => (
-                        <li key={event.id}>
-                          <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
-                            {eventIdx !== 2 ? (
-                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
-                            ) : null}
-                            <div className='relative flex items-center space-x-5'>
-                              <div>
-                                <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
-                                  <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
-                                </span>
-                              </div>
-                              <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
-                                <p className='text-xs text-black'>{event.content}</p>
-                                <div className='whitespace-nowrap text-right text-xs text-black'>
-                                  {/* <time dateTime={event.datetime}>{event.date}</time> */}
-                                  {event.target}
+                    <div className='flow-root'>
+                      <ul role='list'>
+                        {[
+                          {
+                            id: 1,
+                            content: 'Generation',
+                            target: collection.generations,
+                            icon: UserIcon,
+                          },
+                          {
+                            id: 2,
+                            content: 'Total Supply',
+                            target: collection.totalSupply,
+                            icon: CubeIcon,
+                          },
+                          {
+                            id: 3,
+                            content: 'tbd',
+                            target: 0,
+                            icon: DocumentDuplicateIcon,
+                          },
+                        ].map((event, eventIdx) => (
+                          <li key={event.id}>
+                            <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
+                              {eventIdx !== 2 ? (
+                                <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
+                              ) : null}
+                              <div className='relative flex items-center space-x-5'>
+                                <div>
+                                  <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
+                                    <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
+                                  </span>
+                                </div>
+                                <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
+                                  <p className='text-xs text-black'>{event.content}</p>
+                                  <div className='whitespace-nowrap text-right text-xs text-black'>
+                                    {/* <time dateTime={event.datetime}>{event.date}</time> */}
+                                    {event.target}
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-          )
-        })}
+                </Link>
+              </div>
+            )
+          })}
         {/* <div>
           {filteredCollections.length === 1 && (
             <div
