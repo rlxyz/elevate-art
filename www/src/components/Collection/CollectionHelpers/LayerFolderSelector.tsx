@@ -54,19 +54,8 @@ export const ReorderItem = ({
   const collectionName: string = router.query.collection as string
 
   return (
-    <Reorder.Item
-      value={item}
-      id={item.toString()}
-      style={{ boxShadow, y }}
-      dragListener={false}
-      dragControls={dragControls}
-    >
-      <Link
-        href={`/${organisationName}/${repositoryName}/${collectionName}/${currentViewSection}/${name}`}
-        enabled={enabled}
-        hover
-        title={name}
-      >
+    <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
+      <Link href={`/${organisationName}/${repositoryName}/${currentViewSection}/${name}`} enabled={enabled} hover title={name}>
         {canReorder && (
           <DotsHorizontalIcon
             className='ml-1 w-5 h-5'

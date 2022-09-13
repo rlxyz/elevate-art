@@ -94,7 +94,7 @@ const CreateNewRepository = () => {
                   Cancel
                 </Button>
                 <Button
-                  onClick={() => router.push(`/${organisationName}/${repository?.name}/main/preview`)} // todo: should go to collection creation page
+                  onClick={() => router.push(`/${organisationName}/${repository?.name}/preview`)} // todo: should go to collection creation page
                   disabled={repository === null && createProjectDisabled}
                 >
                   Create Project

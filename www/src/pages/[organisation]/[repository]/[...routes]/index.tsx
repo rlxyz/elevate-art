@@ -1,3 +1,4 @@
+import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
 import Index from '@components/Collection/Index'
 import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
@@ -10,7 +11,7 @@ import { trpc } from '@utils/trpc'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
+import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
 
 const DynamicViewRepository = dynamic(() => import('@components/Views/ViewAllCollections'), { suspense: true })
 
@@ -150,12 +151,19 @@ const Page = () => {
         ]}
       />
       <Layout.Title>
-        <div className='flex justify-between items-center space-y-2 w-full -ml-5 py-12'>
-          <div className='space-y-6 w-full'>
-            <span className='text-2xl font-bold'>Choose Collection to view</span>
-            <DynamicViewRepository />
+        {currentViewSection === CollectionNavigationEnum.enum.Preview ? (
+          <div className='flex justify-between items-center space-y-2 w-full -ml-5 py-12'>
+            <div className='space-y-6 w-full'>
+              <span className='text-2xl font-bold'>Choose Collection to view</span>
+              <DynamicViewRepository />
+            </div>
           </div>
-        </div>
+        ) : (
+          <SectionHeader
+            title={CollectionTitleContent[currentViewSection].title}
+            description={CollectionTitleContent[currentViewSection].description}
+          />
+        )}
       </Layout.Title>
       <Layout.Body>
         <PageImplementation repositoryName={repositoryName} collectionName={collectionName} routes={routes} />

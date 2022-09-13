@@ -12,10 +12,7 @@ const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
-  const { data: repositories } = trpc.useQuery([
-    'repository.getAllRepositoriesByOrganisationName',
-    { name: organisationName },
-  ])
+  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   if (!repositories) return <></>
   const filteredRepositories =
     query === ''
@@ -49,7 +46,7 @@ const ViewAllRepositories = () => {
         {filteredRepositories.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index}>
-              <Link href={`/${organisationName}/${repository.name}`} external>
+              <Link href={`/${organisationName}/${repository.name}/preview`} external>
                 <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
@@ -91,16 +88,11 @@ const ViewAllRepositories = () => {
                         <li key={event.id}>
                           <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
                             {eventIdx !== 2 ? (
-                              <span
-                                className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black'
-                                aria-hidden='true'
-                              />
+                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
                             ) : null}
                             <div className='relative flex items-center space-x-5'>
                               <div>
-                                <span
-                                  className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}
-                                >
+                                <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
                                   <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
                                 </span>
                               </div>
