@@ -1,5 +1,7 @@
 import Button from '@components/UI/Button'
+import Loading from '@components/UI/Loading'
 import { TrashIcon } from '@heroicons/react/outline'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
@@ -79,29 +81,17 @@ export const TraitRulesDisplayPerItem = ({
   )
 }
 
-export const TraitRulesDisplayAll = ({
-  title,
-  traitElements,
-}: {
-  title: string
-  traitElements: (TraitElement & {
-    rulesPrimary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-    rulesSecondary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-  })[]
-}) => {
+const RuleDisplayAll = () => {
+  const { currentLayer, isLoading, isError } = useCurrentLayer()
+  const { name, traitElements } = currentLayer
+  if (isLoading || !currentLayer || !traitElements) return <Loading />
+  if (isError) return <div>Error...</div>
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <span className={`block text-xs font-semibold uppercase text-darkGrey`}>{title}</span>
+      <span className={`block text-xs font-semibold uppercase text-darkGrey`}>Applied Rules</span>
       {traitElements
         .filter(
-          ({ rulesPrimary, rulesSecondary }) =>
-            (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
+          ({ rulesPrimary, rulesSecondary }) => (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
         )
         .map(
           ({
@@ -159,3 +149,5 @@ export const TraitRulesDisplayAll = ({
     </div>
   )
 }
+
+export default RuleDisplayAll

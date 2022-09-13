@@ -3,79 +3,46 @@ import Button from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import { useQueryRepositoryLayer } from '@hooks/useMutateRepositoryLayer'
-import { useNotification } from '@hooks/useNotification'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
+import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Rules, TraitElement } from '@prisma/client'
+import { TraitElement } from '@prisma/client'
 import { classNames } from '@utils/format'
-import { trpc } from '@utils/trpc'
-import router from 'next/router'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { RulesEnum, RulesType } from 'src/types/enums'
 
-export const TraitRulesSelector = ({
-  title,
-  traitElements,
-}: {
-  title: string
-  traitElements: (TraitElement & {
-    rulesPrimary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-    rulesSecondary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-  })[]
-}) => {
+const RuleSelector = () => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { data: layers } = useQueryRepositoryLayer()
+  const { currentLayer } = useCurrentLayer()
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const { notifySuccess, notifyError } = useNotification()
+  const { mutate, isLoading } = useMutateRepositoryRule()
+
   if (!layers) return null
   const allRightTraitElements = layers
     .filter((_, index) => index !== currentLayerPriority)
     .flatMap((layer) => layer.traitElements)
-  const ctx = trpc.useContext()
-
-  const mutation = trpc.useMutation('trait.setRuleById', {
-    onSuccess: (data, variables) => {
-      const primaryLayer = data.layers.filter((layer) => layer.id === (data.primary?.layerElement.id || ''))[0]
-      const secondaryLayer = data.layers.filter((layer) => layer.id === (data.secondary?.layerElement.id || ''))[0]
-      if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
-      if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
-      notifySuccess(
-        <div>
-          <span className='text-blueHighlight text-semibold'>{data.primary?.name}</span>
-          <span>{` now ${variables.type} `}</span>
-          <span className='font-semibold'>{data.secondary?.name}</span>
-        </div>,
-        'new rule'
-      )
-      setSelectedRightTrait(null)
-    },
-    onError: () => {
-      notifyError('Something went wrong')
-    },
-  })
 
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <span className='block text-xs font-semibold uppercase'>{title}</span>
+      <span className='block text-xs font-semibold uppercase'>Create a condition</span>
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
-          <TraitSelector traitElements={traitElements} selected={selectedLeftTrait} onChange={setSelectedLeftTrait} />
+          <RuleSelectorCombobox
+            traitElements={currentLayer.traitElements}
+            selected={selectedLeftTrait}
+            onChange={setSelectedLeftTrait}
+          />
         </div>
         <div className='col-span-2 relative mt-1'>
-          <TraitSelectorCondition selected={selectedCondition} onChange={setSelectedCondition} />
+          <RuleSelectorConditionCombobox selected={selectedCondition} onChange={setSelectedCondition} />
         </div>
         <div className='col-span-4 relative mt-1'>
-          <TraitSelector
+          <RuleSelectorCombobox
             traitElements={allRightTraitElements}
             selected={selectedRightTrait}
             onChange={setSelectedRightTrait}
@@ -84,14 +51,16 @@ export const TraitRulesSelector = ({
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
           <Button
             className='w-full'
-            disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || mutation.isLoading}
+            disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
-              mutation.mutate({
+              mutate({
                 repositoryId: repositoryId,
-                primaryTraitElementId: selectedLeftTrait.id,
                 type: selectedCondition,
+                primaryTraitElementId: selectedLeftTrait.id,
+                primaryLayerElementId: selectedLeftTrait.layerElementId,
                 secondaryTraitElementId: selectedRightTrait.id,
+                secondaryLayerElementId: selectedRightTrait.layerElementId,
               })
             }}
           >
@@ -103,7 +72,7 @@ export const TraitRulesSelector = ({
   )
 }
 
-export const TraitSelectorCondition = ({
+export const RuleSelectorConditionCombobox = ({
   selected,
   onChange,
 }: {
@@ -143,10 +112,7 @@ export const TraitSelectorCondition = ({
             key={index}
             value={option.name}
             className={({ active }) =>
-              classNames(
-                'relative cursor-default select-none py-2 pl-3 pr-9',
-                active ? 'text-blueHighlight' : 'text-black'
-              )
+              classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-black')
             }
           >
             {({ active, selected }) => (
@@ -171,7 +137,7 @@ export const TraitSelectorCondition = ({
   )
 }
 
-export const TraitSelector = ({
+export const RuleSelectorCombobox = ({
   traitElements,
   selected,
   onChange,
@@ -181,22 +147,15 @@ export const TraitSelector = ({
   onChange: Dispatch<SetStateAction<TraitElement | null | undefined>>
 }) => {
   const [query, setQuery] = useState('')
-  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: layers } = useQueryRepositoryLayer()
   const filteredTraits =
     query === ''
       ? traitElements
       : traitElements.filter((traitElement) => {
           return traitElement.name.toLowerCase().includes(query.toLowerCase())
         })
-
-  useEffect(() => onChange(null), [currentLayerPriority])
-
+  useDeepCompareEffect(() => onChange(null), [traitElements])
   if (!layers) return null
-
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
@@ -215,10 +174,7 @@ export const TraitSelector = ({
               key={traitElement.id}
               value={traitElement}
               className={({ active }) =>
-                classNames(
-                  'relative cursor-default select-none py-2 pl-3 pr-9',
-                  active ? 'text-blueHighlight' : 'text-darkGrey'
-                )
+                classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-darkGrey')
               }
             >
               {({ active, selected }) => (
@@ -226,14 +182,10 @@ export const TraitSelector = ({
                   <div className='flex flex-row items-center space-x-3'>
                     <SmallAdvancedImage url={`${traitElement.layerElementId}/${traitElement.id}`} />
                     <div className='flex flex-row space-x-2 items-center'>
-                      <span
-                        className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}
-                      >
+                      <span className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}>
                         {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
                       </span>
-                      <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>
-                        {traitElement.name}
-                      </span>
+                      <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{traitElement.name}</span>
                     </div>
                   </div>
                   {selected && (
@@ -255,3 +207,5 @@ export const TraitSelector = ({
     </Combobox>
   )
 }
+
+export default RuleSelector

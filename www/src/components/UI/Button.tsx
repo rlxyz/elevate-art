@@ -33,9 +33,7 @@ export type ButtonHTMLType<C extends ButtonComponentType = 'button'> = C extends
 
 type ButtonFC<C extends ButtonComponentType = 'button'> = FC<ButtonHTMLType<C> & ButtonProps<C>>
 
-type ButtonType = <C extends ButtonComponentType = 'button'>(
-  ...args: Parameters<ButtonFC<C>>
-) => ReturnType<ButtonFC<C>>
+type ButtonType = <C extends ButtonComponentType = 'button'>(...args: Parameters<ButtonFC<C>>) => ReturnType<ButtonFC<C>>
 
 const Button: ButtonFC = (props) => {
   const {
@@ -61,7 +59,7 @@ const Button: ButtonFC = (props) => {
     size == 'lg' && 'h-11 leading-11 text-xs',
     variant === 'secondary' && 'bg-white text-black border border-black',
     variant === 'primary' && 'bg-black',
-    variant === 'icon' && 'bg-inherit text-mediumGrey',
+    variant === 'icon' && 'bg-white text-mediumGrey disabled:bg-white disabled:text-mediumGrey',
     className
   )
 

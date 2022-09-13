@@ -1,8 +1,7 @@
 import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { trpc } from '@utils/trpc'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router, { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -83,12 +82,7 @@ export const ReorderItem = ({
 }
 
 const LayerFolderSelector = () => {
-  const { repositoryId } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-    }
-  })
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: layers } = useQueryRepositoryLayer()
   const { currentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
@@ -101,7 +95,6 @@ const LayerFolderSelector = () => {
 
   useEffect(() => {
     if (!layers) return
-    console.log('layerfolderselector', layers)
     setItems(layers.map((layer) => layer.id))
   }, [layers])
 

@@ -26,18 +26,16 @@ const PageImplementation = ({
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
   const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-  const { setLayerIds, setLayerNames, layerNames, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore(
-    (state) => {
-      return {
-        setRepositoryId: state.setRepositoryId,
-        setCollectionId: state.setCollectionId,
-        setLayerIds: state.setLayerIds,
-        setLayerNames: state.setLayerNames,
-        layerIds: state.layerIds,
-        layerNames: state.layerNames,
-      }
+  const { setLayerIds, setLayerNames, layerNames, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
+    return {
+      setRepositoryId: state.setRepositoryId,
+      setCollectionId: state.setCollectionId,
+      setLayerIds: state.setLayerIds,
+      setLayerNames: state.setLayerNames,
+      layerIds: state.layerIds,
+      layerNames: state.layerNames,
     }
-  )
+  })
 
   const { setCurrentLayerPriority, setCurrentViewSection } = useCollectionNavigationStore((state) => {
     return {
@@ -93,7 +91,7 @@ const PageImplementation = ({
     if (!repositoryData) return
     if (!repositoryData.collections) return
     const layers = repositoryData.layers
-    const collection = repositoryData.collections[0]
+    const collection = repositoryData.collections?.find((collection) => collection.name === collectionName)
     if (!collection) return
     if (!layers || layers.length == 0) return
     setLayerIds(layers.map((layer) => layer.id))

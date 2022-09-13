@@ -1,4 +1,4 @@
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useMutateRepositoryLayer'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
@@ -37,7 +37,6 @@ const CollectionPreviewImplementation = ({
   useDeepCompareEffect(() => {
     if (!collection || !layers) return
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
-    console.log(tokens)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,

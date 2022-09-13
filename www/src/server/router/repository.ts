@@ -15,8 +15,7 @@ export const repositoryRouter = createRouter()
             select: { id: true, name: true },
           },
           collections: {
-            where: { name: 'main' },
-            select: { id: true },
+            select: { id: true, name: true },
             orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
           },
         },
@@ -163,5 +162,24 @@ export const repositoryRouter = createRouter()
           })
         })
       )
+    },
+  })
+  .mutation('createRule', {
+    input: z.object({
+      type: z.string(),
+      primaryLayerElementId: z.string(),
+      primaryTraitElementId: z.string(),
+      secondaryLayerElementId: z.string(),
+      secondaryTraitElementId: z.string(),
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.rules.create({
+        data: {
+          condition: input.type,
+          primaryTraitElementId: input.primaryTraitElementId,
+          secondaryTraitElementId: input.secondaryTraitElementId,
+        },
+      })
     },
   })

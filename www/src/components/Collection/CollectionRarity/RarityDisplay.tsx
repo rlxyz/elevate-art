@@ -1,7 +1,9 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
-import { useMutateRepositoryLayer, useQueryCollection } from '@hooks/useMutateRepositoryLayer'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
+import { useMutateRepositoryLayersWeight, useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
@@ -9,24 +11,22 @@ import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } fr
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
-export const RarityDisplay = ({ traitElements, layerId }: { traitElements: TraitElement[]; layerId: string }) => {
-  const { repositoryId } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-    }
-  })
+export const RarityDisplay = () => {
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const { data: collectionData } = useQueryCollection()
-  const { mutate } = useMutateRepositoryLayer()
+  const { currentLayer } = useCurrentLayer()
+  const { traitElements, id: layerId } = currentLayer
+  const { mutate } = useMutateRepositoryLayersWeight()
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     setSummedRarityWeightage(calculateSumArray(traitElements))
   }, [traitElements])
 
@@ -47,9 +47,7 @@ export const RarityDisplay = ({ traitElements, layerId }: { traitElements: Trait
                   <th
                     key={item}
                     scope='col'
-                    className={`${
-                      index === 3 ? 'text-right' : 'text-left'
-                    }  text-xs font-semibold uppercase text-darkGrey pb-8`}
+                    className={`${index === 3 ? 'text-right' : 'text-left'}  text-xs font-semibold uppercase text-darkGrey pb-8`}
                   >
                     {item}
                   </th>
@@ -76,7 +74,7 @@ export const RarityDisplay = ({ traitElements, layerId }: { traitElements: Trait
         <Formik
           enableReinitialize
           initialValues={{
-            traits: traitElements.map((traitElement: TraitElement) => {
+            traits: currentLayer.traitElements.map((traitElement: TraitElement) => {
               return {
                 id: traitElement.id,
                 weight: Number(
@@ -109,19 +107,7 @@ export const RarityDisplay = ({ traitElements, layerId }: { traitElements: Trait
             )
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            initialTouched,
-            initialValues,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            submitForm,
-            resetForm,
-          }) => (
+          {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (
             <>
               <div className='flex flex-col pb-14'>
                 <div className='inline-block min-w-full align-middle'>
