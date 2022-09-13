@@ -7,7 +7,7 @@ const EPOCHS = [
   ['second', 1],
 ]
 const getDuration = (timeAgoInSeconds: number) => {
-  for (let [name, seconds] of EPOCHS) {
+  for (const [name, seconds] of EPOCHS) {
     const interval = Math.floor(timeAgoInSeconds / (seconds as number))
     if (interval >= 1) {
       return {

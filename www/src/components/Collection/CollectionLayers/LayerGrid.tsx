@@ -66,7 +66,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
       ) : (
         traitElements.map((trait: TraitElement, index: number) => {
           return (
-            <div className='relative col-span-1'>
+            <div key={index} className='relative col-span-1'>
               <div className='pb-[100%] blocks'>
                 <div className='absolute h-full w-full'>
                   <Formik

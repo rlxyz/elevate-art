@@ -105,6 +105,7 @@ const InfiniteScrollGridItems = ({
         })
         return (
           <div
+            key={index}
             className='cursor-pointer relative col-span-1'
             onClick={() => setSelectedToken({ traitElements: token })}
           >
