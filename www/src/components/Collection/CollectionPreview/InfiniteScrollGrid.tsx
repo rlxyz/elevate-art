@@ -1,9 +1,68 @@
+import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
-import { useEffect, useState } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import Image from 'next/image'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import CollectionInfiniteScrollItem from './InfiniteScrollGridItem'
+import { useInView } from 'react-intersection-observer'
+import { clientEnv } from 'src/env/schema.mjs'
+
+const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
+  const controls = useAnimation()
+  const [ref, inView] = useInView()
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('show')
+    }
+  }, [controls, inView])
+
+  const item = {
+    hidden: {
+      opacity: 0,
+      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
+    },
+    show: {
+      opacity: 1,
+      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
+    },
+  }
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
+  return (
+    <>
+      <motion.div
+        className='relative flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] w-full h-full'
+        variants={item}
+        initial='hidden'
+        animate={controls}
+        ref={ref}
+      >
+        <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
+          {token.map(({ layerElementId, id }: TraitElement, index: number) => {
+            return (
+              <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
+                <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
+                  <Image
+                    priority
+                    src={cld
+                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                      .toURL()}
+                    layout='fill'
+                    className='rounded-[5px]'
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </motion.div>
+    </>
+  )
+}
 
 const InfiniteScrollGridItems = ({
   collection,
@@ -30,25 +89,91 @@ const InfiniteScrollGridItems = ({
       tokens: state.tokens,
     }
   })
-
+  const [selectedToken, setSelectedToken] = useState<{ traitElements: TraitElement[] }>({
+    traitElements: [],
+  })
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 4xl:grid-cols-6 xl:gap-y-6 xl:gap-x-6 overflow-hidden'>
+    <div className='grid grid-cols-5 gap-y-6 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
+        const token = createToken({
+          id: Number(tokens[index]),
+          name: collection.name,
+          generation: collection.generations,
+          layers,
+        })
         return (
-          <CollectionInfiniteScrollItem
-            key={`${index}`}
-            token={createToken({
-              id: Number(tokens[index]),
-              name: collection.name,
-              generation: collection.generations,
-              layers,
-            })}
-            name={`#${tokens[index] || 0}`}
-          />
+          <div
+            key={index}
+            className='cursor-pointer relative col-span-1'
+            onClick={() => setSelectedToken({ traitElements: token })}
+          >
+            <div className='pb-[100%] blocks'>
+              <div className='absolute h-full w-full'>
+                <InfiniteScrollGridItem
+                  key={`${index}`}
+                  token={createToken({
+                    id: Number(tokens[index]),
+                    name: collection.name,
+                    generation: collection.generations,
+                    layers,
+                  })}
+                  name={`#${tokens[index] || 0}`}
+                />
+              </div>
+              {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
+            </div>
+          </div>
         )
       })}
+      <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
+        <Dialog
+          as='div'
+          className='relative z-10'
+          onClose={() =>
+            setSelectedToken({
+              traitElements: [],
+            })
+          }
+        >
+          <Transition.Child
+            as={Fragment}
+            enter='ease-out duration-300'
+            enterFrom='opacity-0'
+            enterTo='opacity-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100'
+            leaveTo='opacity-0'
+          >
+            <div className='fixed inset-0 bg-black bg-opacity-50' />
+          </Transition.Child>
+
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex items-end sm:items-center justify-center min-h-full text-center'>
+              <Transition.Child
+                as={Fragment}
+                enter='ease-out duration-300'
+                enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+                enterTo='opacity-100 translate-y-0 sm:scale-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100 translate-y-0 sm:scale-100'
+                leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+              >
+                <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
+                  <div className='space-y-4'>
+                    <div className='pb-[100%] blocks'>
+                      <div className='absolute h-full w-full'>
+                        <InfiniteScrollGridItem token={selectedToken.traitElements} name={'#1'} />
+                      </div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   )
 }
@@ -101,9 +226,7 @@ export const InfiniteScrollGrid = ({
     <InfiniteScrollComponent.default
       dataLength={tokensOnDisplay.length}
       next={() => {
-        console.log(tokensOnDisplay.length)
         fetchMoreData(page)
-        console.log('InfiniteScrollGrid next')
       }}
       hasMore={hasMore}
       loader={<></>}

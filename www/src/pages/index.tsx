@@ -1,4 +1,4 @@
-import { Header } from '@components/Layout/Header'
+// import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Link } from '@components/UI/Link'
 import type { NextPage } from 'next'
@@ -65,12 +65,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.Header>
-          <Header />
-        </Layout.Header>
+        <Layout.Header />
         <Layout.Body>
-          <div className='space-y-20'>
-            <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col justify-center items-center'>
+          <div className='space-y-20 h-full flex'>
+            <div className='w-full flex flex-col justify-center items-center'>
               <div className='w-[50%]'>
                 <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
               </div>

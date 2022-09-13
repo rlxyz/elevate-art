@@ -1,29 +1,21 @@
 // src/pages/_app.tsx
-import { withTRPC } from '@trpc/next'
-import type { AppRouter } from '../server/router'
-import type { AppType } from 'next/dist/shared/lib/utils'
-import superjson from 'superjson'
-import { SessionProvider } from 'next-auth/react'
-import '../styles/globals.css'
+import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
+import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
+import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
+import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import {
-  connectorsForWallets,
-  getDefaultWallets,
-  RainbowKitProvider,
-  wallet,
-} from '@rainbow-me/rainbowkit'
+import { withTRPC } from '@trpc/next'
+import { SessionProvider } from 'next-auth/react'
+import type { AppType } from 'next/dist/shared/lib/utils'
+import { env } from 'src/env/client.mjs'
+import superjson from 'superjson'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import { RepositoryContext, createRepositoryStore } from '@hooks/useRepositoryStore'
-import { Layout } from '@components/Layout/Layout'
-import {
-  createRepositoryRouterStore,
-  RepositoryRouterContext,
-} from '@hooks/useRepositoryRouterStore'
-import { Toaster } from 'react-hot-toast'
-import { env } from 'src/env/client.mjs'
+import type { AppRouter } from '../server/router'
+import '../styles/globals.css'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
@@ -61,17 +53,16 @@ const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageP
   return (
     <SessionProvider session={session}>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          appInfo={appInfo}
-          chains={chains}
-          initialChain={env.NEXT_PUBLIC_NETWORK_ID}
-        >
-          <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
-            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <Component {...pageProps} />
-              <Toaster />
-            </RepositoryContext.Provider>
-          </RepositoryRouterContext.Provider>
+        <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+          <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+            <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+              <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                  <Component {...pageProps} />
+                </RepositoryContext.Provider>
+              </CollectionRouterContext.Provider>
+            </RepositoryRouterContext.Provider>
+          </OrganisationRouterContext.Provider>
         </RainbowKitProvider>
       </WagmiConfig>
     </SessionProvider>

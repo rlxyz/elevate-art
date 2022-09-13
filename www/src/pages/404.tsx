@@ -1,13 +1,10 @@
-import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import Link from 'next/link'
 
 export default function NotFound() {
   return (
     <Layout>
-      <Layout.Header>
-        <Header />
-      </Layout.Header>
+      <Layout.Header />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7.5rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
@@ -17,9 +14,7 @@ export default function NotFound() {
                   <p className='text-base font-semibold'>404</p>
                   <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
                   <div className=' mt-4 flex flex-col'>
-                    <span className='text-sm font-semibold'>
-                      “Control can sometimes be an illusion.
-                    </span>
+                    <span className='text-sm font-semibold'>“Control can sometimes be an illusion.</span>
                     <span className='text-sm font-semibold'>
                       But sometimes you need illusion to gain control.” &#8212; Mr. Robot
                     </span>
