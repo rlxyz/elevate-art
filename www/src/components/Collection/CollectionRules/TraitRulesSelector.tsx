@@ -3,6 +3,7 @@ import Button from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from '@hooks/useMutateRepositoryLayer'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Rules, TraitElement } from '@prisma/client'
@@ -32,7 +33,7 @@ export const TraitRulesSelector = ({
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: layers } = useQueryRepositoryLayer()
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { notifySuccess, notifyError } = useNotification()
   if (!layers) return null

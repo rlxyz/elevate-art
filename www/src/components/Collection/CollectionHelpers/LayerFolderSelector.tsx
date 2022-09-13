@@ -101,6 +101,7 @@ const LayerFolderSelector = () => {
 
   useEffect(() => {
     if (!layers) return
+    console.log('layerfolderselector', layers)
     setItems(layers.map((layer) => layer.id))
   }, [layers])
 

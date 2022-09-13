@@ -6,11 +6,8 @@ const Index = () => {
   const { currentLayer, refetch } = useCurrentLayer()
   const { id, name, traitElements } = currentLayer
   return (
-    <CollectionViewContent
-      title={name}
-      description='Set how often you want certain images to appear in the generation'
-    >
-      <RarityDisplay layerName={name} layerId={id} traitElements={traitElements} />
+    <CollectionViewContent title={name} description='Set how often you want certain images to appear in the generation'>
+      <RarityDisplay layerId={id} traitElements={traitElements} />
     </CollectionViewContent>
   )
 }

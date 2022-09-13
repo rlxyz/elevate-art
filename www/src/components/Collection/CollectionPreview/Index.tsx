@@ -1,8 +1,8 @@
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useMutateRepositoryLayer'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
-import { trpc } from '@utils/trpc'
 import { useDeepCompareEffect } from '../../../hooks/useDeepCompareEffect'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
@@ -69,16 +69,8 @@ const CollectionPreviewImplementation = ({
 }
 
 const Index = () => {
-  const { collectionId, repositoryId } = useRepositoryStore((state) => {
-    return {
-      collectionId: state.collectionId,
-      repositoryId: state.repositoryId,
-    }
-  })
-
-  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
-
+  const { data: layers } = useQueryRepositoryLayer()
+  const { data: collection } = useQueryCollection()
   return (
     <CollectionViewContent
       title='Generate your Collection'
