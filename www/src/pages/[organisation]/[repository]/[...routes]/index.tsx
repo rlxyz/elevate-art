@@ -3,6 +3,7 @@ import { Layout } from '@components/Layout/Layout'
 import Loading from '@components/UI/Loading'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
@@ -15,12 +16,10 @@ const DynamicViewRepository = dynamic(() => import('@components/Views/ViewAllCol
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
-  organisationName,
   collectionName,
   repositoryName,
   routes,
 }: {
-  organisationName: string
   repositoryName: string
   collectionName: string
   routes: any
@@ -47,7 +46,7 @@ const PageImplementation = ({
   })
 
   // sync routing with store
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!layerNames || layerNames.length === 0 || !routes) return
 
     const parse = CollectionNavigationEnum.safeParse(routes[0])
@@ -89,7 +88,7 @@ const PageImplementation = ({
   }, [routes, layerNames])
 
   // sync repository to store
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!repositoryData) return
     if (!repositoryData.collections) return
     const layers = repositoryData.layers
@@ -100,7 +99,7 @@ const PageImplementation = ({
     setLayerNames(layers.map((layer) => layer.name))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
-  }, [repositoryData])
+  }, [repositoryData, collectionName])
 
   return <Index />
 }
@@ -109,7 +108,7 @@ const PageImplementation = ({
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const collectionName: string = router.query.collection as string
+  const collectionName: string = (router.query.collection as string) || 'main'
   const repositoryName: string = router.query.repository as string
   const routes: string | string[] | undefined = router.query.routes
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
@@ -125,34 +124,29 @@ const Page = () => {
       <Layout.Header
         internalRoutes={[
           { current: organisationName, href: `/${organisationName}` },
-          { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-          { current: collectionName, options: ['main'], href: `` },
+          { current: repositoryName, options: [repositoryName], href: `/${organisationName}/${repositoryName}` },
         ]}
         internalNavigation={[
           {
             name: CollectionNavigationEnum.enum.Preview,
-            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Preview}`,
+            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}`,
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
           },
           {
             name: CollectionNavigationEnum.enum.Layers,
-            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
           },
           {
             name: CollectionNavigationEnum.enum.Rarity,
-            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
           },
           {
             name: CollectionNavigationEnum.enum.Rules,
-            href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
           },
-          // {
-          //   name: LayerSectionEnum.enum.Settings,
-          //   route: `${LayerSectionEnum.enum.Settings}`,
-          // },
         ]}
       />
       <Layout.Title>
@@ -162,18 +156,9 @@ const Page = () => {
             <DynamicViewRepository />
           </div>
         </div>
-        {/* <SectionHeader
-          title={CollectionTitleContent[currentViewSection].title}
-          description={CollectionTitleContent[currentViewSection].description}
-        /> */}
       </Layout.Title>
       <Layout.Body>
-        <PageImplementation
-          organisationName={organisationName}
-          repositoryName={repositoryName}
-          collectionName={collectionName}
-          routes={routes}
-        />
+        <PageImplementation repositoryName={repositoryName} collectionName={collectionName} routes={routes} />
       </Layout.Body>
     </Layout>
   ) : (

@@ -70,6 +70,7 @@ const ViewAllRepositories = () => {
         <div className='col-span-1 h-full w-full'>
           <Button
             className='w-full'
+            disabled
             onClick={(e: any) => {
               e.preventDefault()
               setIsOpen(true)
@@ -173,7 +174,7 @@ const ViewAllRepositories = () => {
           .map((collection, index) => {
             return (
               <div className='w-[20rem]' key={index}>
-                <Link href={`/${organisationName}/${repositoryName}/${collection.name}/preview`} external>
+                <Link href={`/${organisationName}/${repositoryName}/preview?collection=${collection.name}`} external>
                   <div className='border border-mediumGrey rounded-[5px] p-6 space-y-4'>
                     <div className='flex items-center space-x-3'>
                       <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
