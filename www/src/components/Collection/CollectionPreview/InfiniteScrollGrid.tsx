@@ -15,6 +15,8 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
   useEffect(() => {
     if (inView) {
       controls.start('show')
+    } else {
+      controls.stop()
     }
   }, [controls, inView])
 
