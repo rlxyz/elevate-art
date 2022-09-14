@@ -17,7 +17,7 @@ export const CollectionViewContent = ({
 }) => {
   return (
     <CollectionViewContentWrapper>
-      <div className='flex flex-col border border-mediumGrey rounded-[5px] p-5'>
+      <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
           <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{title || '...'}</h1>
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>{description || '...'}</p>

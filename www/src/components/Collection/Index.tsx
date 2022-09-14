@@ -20,19 +20,12 @@ const DynamicLayerFolder = dynamic(() => import('@components/Collection/Collecti
 const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
   ssr: false,
 })
-const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
-  ssr: false,
-})
 const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
   ssr: false,
 })
 
 const Index = () => {
-  const { currentViewSection } = useCollectionNavigationStore((state) => {
-    return {
-      currentViewSection: state.currentViewSection,
-    }
-  })
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { data: collection } = useQueryCollection()
   const { data: layers } = useQueryRepositoryLayer()
   const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
@@ -52,7 +45,6 @@ const Index = () => {
       tokenIdMap,
       traitMap,
     })
-    console.log('refreshing')
     const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
     setTokenRanking(rankings)
     setTokens(
@@ -103,8 +95,9 @@ const Index = () => {
       </div>
       <div className='col-span-8'>
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
-        {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
-        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
+        {[CollectionNavigationEnum.enum.Layers, CollectionNavigationEnum.enum.Rarity].includes(currentViewSection) && (
+          <DynamicCollectionLayers />
+        )}
         {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
       </div>
     </div>

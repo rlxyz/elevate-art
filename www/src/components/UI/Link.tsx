@@ -26,24 +26,26 @@ export const Link = ({
   return (
     <NextLink.default href={href}>
       {external ? (
-        <a>{children}</a>
+        <a className={clsx(className)}>{children}</a>
       ) : (
-        <div
-          className={clsx(
-            `cursor-pointer flex flex-row rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`,
-            enabled ? 'font-semibold' : '',
-            size === 'sm' ? 'py-3' : 'py-2',
-            enabled && hover ? 'bg-mediumGrey bg-opacity-40' : '',
-            className
-          )}
-        >
-          {title && (
-            <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
-              <span>{pascalCase ? toPascalCaseWithSpace(title) : title}</span>
-            </div>
-          )}
-          {children}
-        </div>
+        <a>
+          <div
+            className={clsx(
+              `cursor-pointer flex flex-row rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`,
+              enabled ? 'font-semibold' : '',
+              size === 'sm' ? 'py-3' : 'py-2',
+              enabled && hover ? 'bg-mediumGrey bg-opacity-40' : '',
+              className
+            )}
+          >
+            {title && (
+              <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+                <span>{pascalCase ? toPascalCaseWithSpace(title) : title}</span>
+              </div>
+            )}
+            {children}
+          </div>
+        </a>
       )}
     </NextLink.default>
   )
