@@ -1,11 +1,13 @@
+import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
+import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
@@ -15,8 +17,6 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
   useEffect(() => {
     if (inView) {
       controls.start('show')
-    } else {
-      controls.stop()
     }
   }, [controls, inView])
 
@@ -105,25 +105,27 @@ const InfiniteScrollGridItems = ({
             className='cursor-pointer relative col-span-1'
             onClick={() => setSelectedToken({ traitElements: token })}
           >
-            <div className='pb-[100%] blocks'>
-              <div className='absolute h-full w-full'>
-                <InfiniteScrollGridItem
-                  key={`${index}`}
-                  token={createToken({
-                    id: Number(tokens[index]),
-                    name: collection.name,
-                    generation: collection.generations,
-                    layers,
-                  })}
-                  name={`#${tokens[index] || 0}`}
-                />
+            <RenderIfVisible>
+              <div className='pb-[100%] blocks'>
+                <div className='absolute h-full w-full'>
+                  <InfiniteScrollGridItem
+                    key={`${index}`}
+                    token={createToken({
+                      id: Number(tokens[index]),
+                      name: collection.name,
+                      generation: collection.generations,
+                      layers,
+                    })}
+                    name={`#${tokens[index] || 0}`}
+                  />
+                </div>
+                {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
               </div>
-              {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
-            </div>
+            </RenderIfVisible>
           </div>
         )
       })}
-      {/* <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
+      <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
         <Dialog
           as='div'
           className='relative z-10'
@@ -169,7 +171,7 @@ const InfiniteScrollGridItems = ({
             </div>
           </div>
         </Dialog>
-      </Transition> */}
+      </Transition>
     </div>
   )
 }
