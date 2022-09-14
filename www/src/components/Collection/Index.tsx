@@ -1,5 +1,9 @@
 import ViewAllRepositories from '@components/Views/ViewAllCollections'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
 import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
@@ -29,6 +33,47 @@ const Index = () => {
       currentViewSection: state.currentViewSection,
     }
   })
+  const { data: collection } = useQueryCollection()
+  const { data: layers } = useQueryRepositoryLayer()
+  const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
+    return {
+      tokenRanking: state.tokenRanking,
+      rarityFilter: state.rarityFilter,
+      setTokens: state.setTokens,
+      setTokenRanking: state.setTokenRanking,
+      setTraitMapping: state.setTraitMapping,
+    }
+  })
+  useDeepCompareEffect(() => {
+    if (!collection || !layers) return
+    const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
+    const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+    setTraitMapping({
+      tokenIdMap,
+      traitMap,
+    })
+    console.log('refreshing')
+    const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
+    setTokenRanking(rankings)
+    setTokens(
+      rankings.slice(
+        rarityFilter === 'Top 10'
+          ? 0
+          : rarityFilter === 'Middle 10'
+          ? parseInt((rankings.length / 2 - 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? rankings.length - 10
+          : 0,
+        rarityFilter === 'Top 10'
+          ? 10
+          : rarityFilter === 'Middle 10'
+          ? parseInt((rankings.length / 2 + 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? rankings.length
+          : rankings.length
+      )
+    )
+  }, [collection, layers])
 
   return (
     <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>

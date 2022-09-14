@@ -1,11 +1,9 @@
-import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
-import Image from 'next/image'
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
 import { clientEnv } from 'src/env/schema.mjs'
@@ -45,12 +43,10 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
           {token.map(({ layerElementId, id }: TraitElement, index: number) => {
             return (
               <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
-                <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
-                  <Image
-                    priority
-                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
-                    layout='fill'
+                <div className={`relative h-full w-full`}>
+                  <img
                     className='rounded-[5px]'
+                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
                   />
                 </div>
               </div>
@@ -125,7 +121,7 @@ const InfiniteScrollGridItems = ({
           </div>
         )
       })}
-      <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
+      {/* <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
         <Dialog
           as='div'
           className='relative z-10'
@@ -171,7 +167,7 @@ const InfiniteScrollGridItems = ({
             </div>
           </div>
         </Dialog>
-      </Transition>
+      </Transition> */}
     </div>
   )
 }
