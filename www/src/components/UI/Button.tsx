@@ -13,7 +13,7 @@ export type ButtonComponentType = 'button' | 'a' | JSXElementConstructor<any>
 export interface ButtonProps<C extends ButtonComponentType = 'button'> {
   href?: string
   className?: string
-  variant?: 'primary' | 'secondary' | 'success' | 'icon'
+  variant?: 'primary' | 'secondary' | 'success' | 'icon' | 'ghost'
   size?: 'xs' | 'sm' | 'md' | 'lg'
   active?: boolean
   type?: 'submit' | 'reset' | 'button'
@@ -52,14 +52,15 @@ const Button: ButtonFC = (props) => {
 
   const rootClassName = cn(
     // missing transition
-    'relative inline-flex items-center justify-center cursor-pointer p-3 text-white rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 h-10',
+    'relative inline-flex items-center cursor-pointer p-3 text-white rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 h-10',
     'disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white',
     size == 'sm' && 'h-9 leading-9 text-xs min-width-[auto] px-1 py-2',
     size == 'md' && 'h-10 leading-10 text-xs',
     size == 'lg' && 'h-11 leading-11 text-xs',
     variant === 'secondary' && 'bg-white text-black border border-black',
-    variant === 'primary' && 'bg-black',
+    variant === 'primary' && 'bg-black justify-center',
     variant === 'icon' && 'bg-white text-mediumGrey disabled:bg-white disabled:text-mediumGrey',
+    variant === 'ghost' && 'border border-mediumGrey bg-opacity-20 text-black',
     className
   )
 

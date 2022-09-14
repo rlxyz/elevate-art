@@ -8,12 +8,9 @@ import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { trpc } from '@utils/trpc'
-import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
-
-const DynamicViewRepository = dynamic(() => import('@components/Views/ViewAllCollections'), { suspense: true })
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -151,19 +148,10 @@ const Page = () => {
         ]}
       />
       <Layout.Title>
-        {currentViewSection === CollectionNavigationEnum.enum.Preview ? (
-          <div className='flex justify-between items-center space-y-2 w-full -ml-5 py-12'>
-            <div className='space-y-6 w-full'>
-              <span className='text-2xl font-bold'>Choose Collection to view</span>
-              <DynamicViewRepository />
-            </div>
-          </div>
-        ) : (
-          <SectionHeader
-            title={CollectionTitleContent[currentViewSection].title}
-            description={CollectionTitleContent[currentViewSection].description}
-          />
-        )}
+        <SectionHeader
+          title={CollectionTitleContent[currentViewSection].title}
+          description={CollectionTitleContent[currentViewSection].description}
+        />
       </Layout.Title>
       <Layout.Body>
         <PageImplementation repositoryName={repositoryName} collectionName={collectionName} routes={routes} />

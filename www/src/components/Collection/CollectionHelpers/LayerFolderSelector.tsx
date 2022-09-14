@@ -91,15 +91,15 @@ const LayerFolderSelector = () => {
 
   return (
     <aside>
-      <div className='space-y-2'>
-        <div className='flex items-center justify-between'>
+      <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
+        {/* <div className='flex items-center justify-between'>
           <div className='space-x-1 flex items-center'>
-            {/* <button onClick={() => setOpenReordering(!openReordering)}>
+            <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
                   <SwitchVerticalIcon className='text-darkGrey w-2 h-2' />
                   </div>
-                </button> */}
-            {/* <button
+                </button>
+            <button
                 onClick={() => {
                   setOpenUpload(true)
                 }}
@@ -107,9 +107,9 @@ const LayerFolderSelector = () => {
                 <div className='border rounded-[5px] border-lightGray p-1'>
                 <PlusIcon className='text-darkGrey w-2 h-2' />
                 </div>
-              </button> */}
+              </button>
           </div>
-        </div>
+        </div> */}
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
             <Reorder.Group axis='y' values={items} onReorder={setItems}>

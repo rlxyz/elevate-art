@@ -48,9 +48,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
                 <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
                   <Image
                     priority
-                    src={cld
-                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
-                      .toURL()}
+                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
                     layout='fill'
                     className='rounded-[5px]'
                   />
@@ -199,6 +197,12 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const { hasPreviewLoaded, setHasPreviewLoaded } = useRepositoryStore((state) => {
+    return {
+      setHasPreviewLoaded: state.setHasPreviewLoaded,
+      hasPreviewLoaded: state.hasPreviewLoaded,
+    }
+  })
 
   const fetch = (start: number) => {
     if (!collection) return
@@ -220,6 +224,7 @@ export const InfiniteScrollGrid = ({
 
   useEffect(() => {
     fetch(page)
+    setHasPreviewLoaded(true)
   }, [])
 
   return (

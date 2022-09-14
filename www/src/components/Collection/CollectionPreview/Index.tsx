@@ -25,8 +25,9 @@ const CollectionPreviewImplementation = ({
     })[]
   })[]
 }) => {
-  const { setTokens, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
+  const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
     return {
+      tokenRanking: state.tokenRanking,
       rarityFilter: state.rarityFilter,
       setTokens: state.setTokens,
       setTokenRanking: state.setTokenRanking,
@@ -35,32 +36,32 @@ const CollectionPreviewImplementation = ({
   })
 
   useDeepCompareEffect(() => {
-    console.log(collection)
     if (!collection || !layers) return
+    // if (tokenRanking) return // stops the compiler from running again
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,
       traitMap,
     })
-    const tokenRanking = getTokenRanking(tokens, traitMap, collection.totalSupply)
-    setTokenRanking(tokenRanking)
+    const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
+    setTokenRanking(rankings)
     setTokens(
-      tokenRanking.slice(
+      rankings.slice(
         rarityFilter === 'Top 10'
           ? 0
           : rarityFilter === 'Middle 10'
-          ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+          ? parseInt((rankings.length / 2 - 5).toFixed(0))
           : rarityFilter === 'Bottom 10'
-          ? tokenRanking.length - 10
+          ? rankings.length - 10
           : 0,
         rarityFilter === 'Top 10'
           ? 10
           : rarityFilter === 'Middle 10'
-          ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+          ? parseInt((rankings.length / 2 + 5).toFixed(0))
           : rarityFilter === 'Bottom 10'
-          ? tokenRanking.length
-          : tokenRanking.length
+          ? rankings.length
+          : rankings.length
       )
     )
   }, [layers, collection])

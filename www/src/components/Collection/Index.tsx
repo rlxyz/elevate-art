@@ -1,6 +1,8 @@
+import ViewAllRepositories from '@components/Views/ViewAllCollections'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
+import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
   ssr: false,
@@ -12,9 +14,6 @@ const DynamicLayerFolder = dynamic(() => import('@components/Collection/Collecti
   ssr: false,
 })
 const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
-  ssr: false,
-})
-const DynamicCollectionFilters = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionFilters'), {
   ssr: false,
 })
 const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
@@ -44,23 +43,24 @@ const Index = () => {
           </div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
-          <div className='flex flex-col space-y-6 justify-between'>
+          <div className='relative flex flex-col space-y-3 justify-between'>
+            <ViewAllRepositories />
             <DynamicRegenerateButton />
-            <DynamicCollectionFilters />
+            <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
+              <FilterByRarity />
+              <div className='px-3'>
+                <div className='bg-mediumGrey h-[0.25px] w-full' />
+              </div>
+              <FilterByTrait />
+            </div>
           </div>
         )}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && (
-          <div className='flex flex-col space-y-6 justify-between'>
-            <SettingsNavigations />
-          </div>
-        )} */}
       </div>
       <div className='col-span-8'>
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
         {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
         {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
         {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />} */}
       </div>
     </div>
   )
