@@ -14,6 +14,7 @@ import { getSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { LayerSectionEnum } from 'src/types/enums'
+import { prisma } from '../../../../../server/db/client'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -181,20 +182,24 @@ const Page = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
   const token = await getToken({ req: context.req })
-  const address = token?.sub ?? null
-  if (!address) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
+  const userId = token?.sub ?? null
+  if (!userId) return { redirect: { destination: '/', permanent: false } }
+  const { organisation, repository, collection } = context.query
+  const valid = await prisma.collection.findFirst({
+    where: {
+      name: collection as string,
+      repository: {
+        name: repository as string,
+        organisation: {
+          name: organisation as string,
+        },
       },
-    }
-  }
-  console.log(session)
-
+    },
+  })
+  if (!valid) return { redirect: { destination: `/404`, permanent: false } }
   return {
     props: {
-      address,
+      userId,
       session,
     },
   }
