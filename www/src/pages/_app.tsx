@@ -55,7 +55,7 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: 'sign in to elevate.art',
 })
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider refetchInterval={0} session={pageProps.session}>
@@ -121,4 +121,4 @@ export default withTRPC<AppRouter>({
    * @link https://trpc.io/docs/ssr
    */
   ssr: false,
-})(MyApp)
+})(ElevateCompilerApp)

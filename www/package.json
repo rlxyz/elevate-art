@@ -9,7 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "push": "prisma db push",
-    "postpush": "node prisma/seed",
+    "push:seed": "node prisma/seed",
     "migrate": "prisma migrate",
     "format": "prettier --write ."
   },

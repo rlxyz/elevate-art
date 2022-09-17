@@ -3,7 +3,7 @@
 
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+    previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
 }
 
 datasource db {
@@ -12,55 +12,38 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-model Example {
-    id String @id @default(cuid())
-}
-
-// Necessary for Next auth
-model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? //@db.Text
-    access_token      String? //@db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? //@db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-}
-
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model User {
-    id            String         @id @default(cuid())
-    address       String         @unique @db.VarChar(42) // number of hexademical characters in eth address
-    name          String?        @unique
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @default(now())
+    id            String    @id @default(cuid())
+    address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
+    name          String?   @unique
+    email         String?   @unique
+    emailVerified DateTime?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @default(now())
     image         String?
-    accounts      Account[]
-    sessions      Session[]
-    organisations Organisation[]
+
+    admins  OrganisationAdmin[]
+    members OrganisationMember[]
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model OrganisationAdmin {
+    id             String       @id @default(cuid())
+    user           User         @relation(fields: [userId], references: [id])
+    userId         String
+    organisation   Organisation @relation(fields: [organisationId], references: [id])
+    organisationId String
 
-    @@unique([identifier, token])
+    @@unique([userId, organisationId])
+}
+
+model OrganisationMember {
+    id             String       @id @default(cuid())
+    user           User         @relation(fields: [userId], references: [id])
+    userId         String
+    organisation   Organisation @relation(fields: [organisationId], references: [id])
+    organisationId String
+
+    @@unique([userId, organisationId])
 }
 
 model Organisation {
@@ -70,9 +53,8 @@ model Organisation {
     updatedAt DateTime @updatedAt
 
     repositories Repository[]
-
-    owner   User   @relation(fields: [ownerId], references: [id])
-    ownerId String @db.VarChar(255)
+    admins       OrganisationAdmin[]
+    members      OrganisationMember[]
 
     @@map(name: "organisations")
 }

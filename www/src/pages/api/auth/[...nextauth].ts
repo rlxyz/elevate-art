@@ -1,4 +1,3 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
@@ -6,10 +5,11 @@ import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, token }) {
+    session({ session, user, token }) {
       if (session.user && token.sub) {
         session.user = {
           id: token.sub,
+          address: token.name,
         }
       }
       return session
@@ -21,7 +21,6 @@ export const authOptions: NextAuthOptions = {
     updateAge: 24 * 60 * 60, // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'Ethereum',
@@ -58,8 +57,43 @@ export const authOptions: NextAuthOptions = {
           // }
 
           await siwe.validate(credentials?.signature || '')
+
+          const user = await prisma.user.findUnique({
+            where: {
+              address: siwe.address,
+            },
+            select: {
+              id: true,
+              address: true,
+            },
+          })
+
+          // create if user doesnt exists
+          if (!user) {
+            const newUser = await prisma.$transaction(async (tx) => {
+              const { address } = siwe
+              const user = await tx.user.create({
+                data: { address },
+                select: { id: true, address: true },
+              })
+              const organisation = await tx.organisation.create({
+                data: { name: address },
+              })
+              await tx.organisationAdmin.create({
+                data: { organisationId: organisation.id, userId: user.id },
+              })
+              return { ...user }
+            })
+            return {
+              id: newUser.id,
+              name: newUser.address,
+            }
+          }
+
+          // return user
           return {
-            id: siwe.address,
+            id: user.id,
+            name: user.address,
           }
         } catch (e) {
           return null
