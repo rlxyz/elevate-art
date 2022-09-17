@@ -192,6 +192,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         name: repository as string,
         organisation: {
           name: organisation as string,
+          admins: {
+            some: {
+              userId: userId,
+            },
+          },
         },
       },
     },
