@@ -1,21 +1,23 @@
 // src/pages/_app.tsx
-import { withTRPC } from '@trpc/next'
-import type { AppRouter } from '../server/router'
-import type { AppProps } from 'next/app'
-import superjson from 'superjson'
-import { SessionProvider } from 'next-auth/react'
-import { RainbowKitSiweNextAuthProvider, GetSiweMessageOptions } from '@rainbow-me/rainbowkit-siwe-next-auth'
-import '../styles/globals.css'
-import '@rainbow-me/rainbowkit/styles.css'
+import { createRepositoryRouterStore, RepositoryRouterContext } from '@hooks/useRepositoryRouterStore'
+import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
+import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
+import '@rainbow-me/rainbowkit/styles.css'
+import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
+import { loggerLink } from '@trpc/client/links/loggerLink'
+import { withTRPC } from '@trpc/next'
+import { SessionProvider } from 'next-auth/react'
+import { AppProps } from 'next/app'
+import { Toaster } from 'react-hot-toast'
+import { env } from 'src/env/client.mjs'
+import superjson from 'superjson'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import { RepositoryContext, createRepositoryStore } from '@hooks/useRepositoryStore'
-import { createRepositoryRouterStore, RepositoryRouterContext } from '@hooks/useRepositoryRouterStore'
-import { Toaster } from 'react-hot-toast'
-import { env } from 'src/env/client.mjs'
+import type { AppRouter } from '../server/router'
+import '../styles/globals.css'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
@@ -50,10 +52,10 @@ const wagmiClient = createClient({
 })
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: 'Sign in to Elevate.art',
+  statement: 'sign in to elevate.art',
 })
 
-const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider refetchInterval={0} session={pageProps.session}>
@@ -79,7 +81,7 @@ const getBaseUrl = () => {
 }
 
 export default withTRPC<AppRouter>({
-  config() {
+  config({ ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
@@ -87,16 +89,36 @@ export default withTRPC<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`
 
     return {
+      links: [
+        loggerLink({
+          enabled: (opts) =>
+            process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
+        }),
+        httpBatchLink({ url }),
+      ],
       url,
       transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+
+      // To use SSR properly you need to forward the client's headers to the server
+      // headers: () => {
+      //   if (ctx?.req) {
+      //     const headers = ctx?.req?.headers;
+      //     delete headers?.connection;
+      //     return {
+      //       ...headers,
+      //       "x-ssr": "1",
+      //     };
+      //   }
+      //   return {};
+      // }
     }
   },
   /**
    * @link https://trpc.io/docs/ssr
    */
   ssr: false,
-})(ElevateCompilerApp)
+})(MyApp)
