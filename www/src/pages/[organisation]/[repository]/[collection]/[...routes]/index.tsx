@@ -185,6 +185,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = token?.sub ?? null
   if (!userId) return { redirect: { destination: '/', permanent: false } }
   const { organisation, repository, collection } = context.query
+  // todo: ensure this doesnt run all the time.
   const valid = await prisma.collection.findFirst({
     where: {
       name: collection as string,
