@@ -1,12 +1,14 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
+import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
+import { clientEnv } from 'src/env/schema.mjs'
 
 const LayerGridLoading = () => {
   return (
@@ -14,7 +16,7 @@ const LayerGridLoading = () => {
       {Array.from(Array(10).keys()).map((index) => {
         return (
           <div key={`${index}`} className='flex flex-col items-center opacity-70'>
-            <div className='z-1'>
+            <div className='z-1 animate-pulse'>
               <AdvancedImage url='/images/logo.png' />
             </div>
             <span className='py-2 text-xs invisible'>{'...'}</span>
@@ -27,6 +29,7 @@ const LayerGridLoading = () => {
 
 const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]; layerName: string }) => {
   const router: NextRouter = useRouter()
+  const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
@@ -57,33 +60,39 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
   })
 
   return (
-    <div className='grid grid-cols-6 gap-x-8 gap-y-8'>
+    <div className='grid grid-cols-6 gap-6'>
       {!traitElements.length ? (
         <LayerGridLoading />
       ) : (
         traitElements.map((trait: TraitElement, index: number) => {
           return (
-            <Formik
-              enableReinitialize
-              initialValues={{ name: trait.name }}
-              onSubmit={({ name }) => {
-                mutation.mutate({ id: trait.id, newName: name, oldName: trait.name, repositoryId: repositoryId })
-              }}
-              key={index}
-            >
-              {({ values, handleChange }) => (
-                <Form>
-                  <div key={`${trait.name}-${index}`} className='flex flex-col items-center'>
-                    <div
-                      onMouseEnter={() => {
-                        setShow(index)
-                      }}
-                      onMouseLeave={() => {
-                        setShow(null)
-                      }}
-                      className='relative'
-                    >
-                      {/* <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
+            <div key={index} className='relative col-span-1'>
+              <div className='pb-[100%] blocks'>
+                <div className='absolute h-full w-full'>
+                  <Formik
+                    enableReinitialize
+                    initialValues={{ name: trait.name }}
+                    onSubmit={({ name }) => {
+                      mutation.mutate({ id: trait.id, newName: name, oldName: trait.name, repositoryId: repositoryId })
+                    }}
+                    key={index}
+                  >
+                    {({ values, handleChange }) => (
+                      <Form>
+                        <div
+                          key={`${trait.name}-${index}`}
+                          className='absolute flex flex-col items-center justify-center h-full w-full'
+                        >
+                          <div
+                            onMouseEnter={() => {
+                              setShow(index)
+                            }}
+                            onMouseLeave={() => {
+                              setShow(null)
+                            }}
+                            className={`relative border-[1px] border-mediumGrey rounded-[5px] h-full w-full`}
+                          >
+                            {/* <div className={`absolute z-10 right-0 p-1 ${show === index ? '' : 'hidden'}`}>
                         <Popover className='relative'>
                           <Popover.Button className='bg-lightGray border border-mediumGrey rounded-[3px] w-5 h-5 group inline-flex items-center justify-center'>
                             <DotsHorizontalIcon className='w-3 h-3 text-darkGrey' />
@@ -109,35 +118,47 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                           </Transition>
                         </Popover>
                       </div> */}
-                      <div className='z-1 cursor-pointer' onDoubleClick={() => console.log('test')}>
-                        <AdvancedImage url={`${trait.layerElementId}/${trait.id}`} />
-                      </div>
-                    </div>
-                    {canEdit === index ? (
-                      <Textbox
-                        className='p-2 text-xs text-center text-black focus:outline-none'
-                        id={`name`}
-                        type='string'
-                        name={`name`}
-                        value={values.name}
-                        onBlur={resetCanEdit}
-                        onChange={(e) => {
-                          e.persist()
-                          handleChange(e)
-                        }}
-                      />
-                    ) : (
-                      <span
-                        onDoubleClick={() => setCanEdit(index)}
-                        className='p-2 cursor-pointer text-xs text-center text-black'
-                      >
-                        {values.name}
-                      </span>
+                            {/* <div className='z-1 cursor-pointer' onDoubleClick={() => console.log('test')}> */}
+                            <Image
+                              priority
+                              src={cld
+                                .image(
+                                  `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}/${trait.id}.png`
+                                )
+                                .toURL()}
+                              layout='fill'
+                              className='rounded-[5px]'
+                            />
+                            {/* </div> */}
+                          </div>
+                          {/* {canEdit === index ? (
+                            <Textbox
+                              className='p-2 text-xs text-center text-black focus:outline-none'
+                              id={`name`}
+                              type='string'
+                              name={`name`}
+                              value={values.name}
+                              onBlur={resetCanEdit}
+                              onChange={(e) => {
+                                e.persist()
+                                handleChange(e)
+                              }}
+                            />
+                          ) : (
+                            <span
+                              onDoubleClick={() => setCanEdit(index)}
+                              className='p-2 cursor-pointer text-xs text-center text-black'
+                            >
+                              {values.name}
+                            </span>
+                          )} */}
+                        </div>
+                      </Form>
                     )}
-                  </div>
-                </Form>
-              )}
-            </Formik>
+                  </Formik>
+                </div>
+              </div>
+            </div>
           )
         })
       )}

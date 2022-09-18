@@ -1,4 +1,4 @@
-import useRepositoryRouterStore from '@hooks/useRepositoryRouterStore'
+import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import ordinal from 'ordinal'
 
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
@@ -7,18 +7,16 @@ import LayerGrid from './LayerGrid'
 
 const Index = () => {
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
-  const currentLayerPriority = useRepositoryRouterStore((state) => state.currentLayerPriority)
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { name, traitElements } = currentLayer
-
   return (
     <CollectionViewContent
+      isLoading={isLoading}
       title={name}
       description={
         <span>
           There are {traitElements.length} {name} that make up the{' '}
-          <span className='text-blueHighlight border-b'>{`${ordinal(
-            currentLayerPriority + 1
-          )} layer`}</span>
+          <span className='text-blueHighlight border-b'>{`${ordinal(currentLayerPriority + 1)} layer`}</span>
         </span>
       }
     >

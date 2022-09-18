@@ -1,14 +1,17 @@
 // src/pages/_app.tsx
-import { createRepositoryRouterStore, RepositoryRouterContext } from '@hooks/useRepositoryRouterStore'
+import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
+import { loggerLink } from '@trpc/client/links/loggerLink'
+import { SessionProvider } from 'next-auth/react'
+import { AppProps } from 'next/app'
+import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
+import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
-import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
-import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
 import { SessionProvider } from 'next-auth/react'
-import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
@@ -61,12 +64,16 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
       <SessionProvider refetchInterval={0} session={pageProps.session}>
         <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
           <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
-            <RepositoryRouterContext.Provider createStore={() => createRepositoryRouterStore}>
-              <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                <Component {...pageProps} />
-                <Toaster />
-              </RepositoryContext.Provider>
-            </RepositoryRouterContext.Provider>
+            <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+              <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                    <Component {...pageProps} />
+                    <Toaster />
+                  </RepositoryContext.Provider>
+                </CollectionRouterContext.Provider>
+              </RepositoryRouterContext.Provider>
+            </OrganisationRouterContext.Provider>
           </RainbowKitProvider>
         </RainbowKitSiweNextAuthProvider>
       </SessionProvider>

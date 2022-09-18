@@ -1,27 +1,11 @@
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useEffect } from 'react'
 
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { isEqual } from 'lodash'
-import { useRef } from 'react'
+import { useDeepCompareEffect } from '../../../hooks/useDeepCompareEffect'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
-
-export function useDeepEqualMemo<T>(value: T) {
-  const ref = useRef<T | undefined>(undefined)
-
-  if (!isEqual(ref.current, value)) {
-    ref.current = value
-  }
-
-  return ref.current
-}
-
-export function useDeepCompareEffect(callback: () => void, dependencies: any) {
-  useEffect(callback, dependencies.map(useDeepEqualMemo))
-}
 
 const CollectionPreviewImplementation = ({
   layers,
@@ -53,6 +37,7 @@ const CollectionPreviewImplementation = ({
   useDeepCompareEffect(() => {
     if (!collection || !layers) return
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
+    console.log(tokens)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,

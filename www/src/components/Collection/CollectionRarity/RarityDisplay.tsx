@@ -1,5 +1,5 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
-import { Button } from '@components/UI/Button'
+import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -73,7 +73,7 @@ export const RarityDisplay = ({
               {[
                 'Image',
                 'Name',
-                'Quantity in Collection',
+                'Esimate in Collection',
                 // 'Rarity Score',
                 'Percentage',
               ].map((item, index) => {
@@ -91,7 +91,7 @@ export const RarityDisplay = ({
               })}
             </tr>
           </thead>
-          <tbody className='divide-y divide-mediumGrey'>
+          <tbody className='divide-y divide-mediumGrey animate-pulse'>
             {Array.from(Array(5).keys()).map((index) => {
               return (
                 <tr key={index}>
@@ -243,7 +243,7 @@ export const RarityDisplay = ({
                       },
                     },
                   }}
-                  className='fixed bottom-0 h-[10%] 2xl:w-[calc(51vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey p-4'
+                  className='fixed bottom-0 h-[7.5%] 2xl:w-[calc(55vw)] 3xl:w-[calc(39vw)] lg:w-[calc(58vw)] md:w-[calc(70vw)] flex justify-end space-x-3 rounded-[5px] bg-hue-light border border-mediumGrey'
                 >
                   <div className='flex items-center space-x-3'>
                     {calculateSumArray(values.traits) > calculateSumArray(initialValues.traits) && (
@@ -270,10 +270,11 @@ export const RarityDisplay = ({
                       </>
                     )}
                   </div>
-                  <div className='flex space-x-3 py-6'>
+                  <div className='flex space-x-3 items-center px-6'>
                     <Button
                       type='button'
-                      onClick={(e) => {
+                      variant='secondary'
+                      onClick={(e: any) => {
                         e.preventDefault()
                         resetForm()
                         setHasFormChange(false)
@@ -282,16 +283,19 @@ export const RarityDisplay = ({
                       Reset
                     </Button>
                     <Button
+                      variant='primary'
                       disabled={
                         (calculateSumArray(values.traits) == calculateSumArray(initialValues.traits) ? false : true) ||
                         isSubmitting
                       }
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.preventDefault()
                         handleSubmit()
                       }}
                     >
-                      Save
+                      <span className='flex items-center justify-center space-x-2 px-4 py-4'>
+                        <span className='text-xs'>Confirm</span>
+                      </span>
                     </Button>
                   </div>
                 </motion.div>

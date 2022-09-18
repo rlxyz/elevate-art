@@ -1,6 +1,23 @@
 import * as z from 'zod'
 
-const LayerSection = Object.freeze({
+const OrganisationNavigation = Object.freeze({
+  Dashboard: 'dashboard',
+  Activity: 'activity',
+  Settings: 'account',
+  New: 'new',
+})
+
+export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
+
+const RepositoryNavigation = Object.freeze({
+  Dashboard: 'dashboard',
+})
+
+export const RepositoryNavigationEnum = z.nativeEnum(RepositoryNavigation)
+export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
+
+const CollectionNavigation = Object.freeze({
   Preview: 'preview',
   Layers: 'layers',
   Rarity: 'rarity',
@@ -8,14 +25,14 @@ const LayerSection = Object.freeze({
   Settings: 'settings',
 })
 
-export const LayerSectionEnum = z.nativeEnum(LayerSection)
-export type LayerSectionType = z.infer<typeof LayerSectionEnum>
+export const CollectionNavigationEnum = z.nativeEnum(CollectionNavigation)
+export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
 
 const RepositorySection = Object.freeze({
   Overview: 'overview',
 })
 export const RepositorySectionEnum = z.nativeEnum(RepositorySection)
-export type RepositorySectionType = z.infer<typeof LayerSectionEnum>
+export type RepositorySectionType = z.infer<typeof CollectionNavigationEnum>
 
 const Rules = Object.freeze({
   'cannot mix with': 'cannot mix with',
@@ -24,3 +41,23 @@ const Rules = Object.freeze({
 
 export const RulesEnum = z.nativeEnum(Rules)
 export type RulesType = z.infer<typeof RulesEnum>
+
+export const CollectionTitleContent = Object.freeze({
+  preview: {
+    title: 'Preview Collection',
+    description: 'Create different token sets before finalising the collection',
+  },
+  layers: { title: 'All Layers', description: 'View and edit layers of your collection' },
+  rarity: {
+    title: 'Rarity',
+    description: 'Set how often you want certain images to appear in the generation',
+  },
+  rules: {
+    title: 'Custom Rules',
+    description: 'Add custom rules for your traits so it layers perfectly!',
+  },
+  settings: {
+    title: 'Collection Settings',
+    description: '',
+  },
+})

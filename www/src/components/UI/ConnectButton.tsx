@@ -1,6 +1,6 @@
-import { Button } from '@components/UI/Button'
-import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
-import React from 'react'
+// import Button from '@components/UI/Button'
+// import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
+// import React from 'react'
 
 interface ConnectButtonProps {
   normalButton?: boolean

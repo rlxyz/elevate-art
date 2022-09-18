@@ -1,13 +1,11 @@
 import { z } from 'zod'
 import { createRouter } from './context'
 
-export const getRepositoryByNameSchema = z.object({
-  name: z.string(),
-})
-
 export const repositoryRouter = createRouter()
   .query('getRepositoryByName', {
-    input: getRepositoryByNameSchema,
+    input: z.object({
+      name: z.string(),
+    }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.repository.findFirst({
         where: { ...input },
@@ -20,6 +18,28 @@ export const repositoryRouter = createRouter()
             where: { name: 'main' },
             select: { id: true },
             orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
+          },
+        },
+      })
+    },
+  })
+  .query('getAllRepositoriesByOrganisationName', {
+    input: z.object({
+      name: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.repository.findMany({
+        where: { organisation: { name: input.name } },
+        include: {
+          _count: {
+            select: { layers: true, collections: true },
+          },
+          layers: {
+            include: {
+              _count: {
+                select: { traitElements: true },
+              },
+            },
           },
         },
       })
@@ -81,6 +101,40 @@ export const repositoryRouter = createRouter()
       return await ctx.prisma.repository.findFirst({
         where: {
           ...input,
+        },
+      })
+    },
+  })
+  .mutation('create', {
+    input: z.object({
+      name: z.string(),
+      organisationId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const repository = await ctx.prisma.repository.create({
+        data: {
+          name: input.name,
+          tokenName: input.name,
+          organisationId: input.organisationId,
+        },
+      })
+      await ctx.prisma.collection.create({
+        data: {
+          name: 'main',
+          repositoryId: repository.id,
+        },
+      })
+      return repository
+    },
+  })
+  .mutation('deleteRepositoryById', {
+    input: z.object({
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.repository.delete({
+        where: {
+          id: input.repositoryId,
         },
       })
     },

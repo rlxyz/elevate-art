@@ -25,12 +25,11 @@ const AdvancedImage = ({ url }: { url: string }) => {
   const cld = createCloudinary()
   if (!repositoryId) return <></>
   return (
-    <div className={`rounded-[5px] border-[1px] border-mediumGrey h-[125px] w-[125px]`}>
+    <div className={`relative rounded-[5px] border-[1px] border-mediumGrey h-[125px] w-[125px]`}>
       <Image
         priority
         src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}.png`).toURL()}
-        width={130}
-        height={130}
+        layout='fill'
         className='rounded-[5px]'
       />
     </div>
