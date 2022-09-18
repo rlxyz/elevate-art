@@ -149,10 +149,6 @@ const Page = () => {
             href: `/${organisationName}/${repositoryName}/${collectionName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
           },
-          // {
-          //   name: LayerSectionEnum.enum.Settings,
-          //   route: `${LayerSectionEnum.enum.Settings}`,
-          // },
         ]}
       />
       <Layout.Title>
@@ -174,5 +170,37 @@ const Page = () => {
     <Loading />
   )
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const session = await getSession(context)
+//   const token = await getToken({ req: context.req })
+//   const userId = token?.sub ?? null
+//   if (!userId) return { redirect: { destination: '/', permanent: false } }
+//   const { organisation, repository, collection } = context.query
+//   // todo: ensure this doesnt run all the time.
+//   const valid = await prisma.collection.findFirst({
+//     where: {
+//       name: collection as string,
+//       repository: {
+//         name: repository as string,
+//         organisation: {
+//           name: organisation as string,
+//           admins: {
+//             some: {
+//               userId: userId,
+//             },
+//           },
+//         },
+//       },
+//     },
+//   })
+//   if (!valid) return { redirect: { destination: `/404`, permanent: false } }
+//   return {
+//     props: {
+//       userId,
+//       session,
+//     },
+//   }
+// }
 
 export default Page
