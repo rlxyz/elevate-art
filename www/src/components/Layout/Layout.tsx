@@ -53,7 +53,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 
 const LayoutHeader = (props: HeaderProps) => (
   <LayoutContainer className='header min-h-[3.5rem]'>
-    <div className='-ml-2'>{<DynamicHeader {...props} />}</div>
+    <div className='-ml-2'>{<DynamicHeader connectButton {...props} />}</div>
   </LayoutContainer>
 )
 

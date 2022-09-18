@@ -65,9 +65,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.Header>
-          <Header connectButton />
-        </Layout.Header>
+        <Layout.Header />
         <Layout.Body>
           <div className='space-y-20 h-full flex'>
             <div className='w-full flex flex-col justify-center items-center'>
