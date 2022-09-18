@@ -1,4 +1,5 @@
 import { Layout } from '@components/Layout/Layout'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function NotFound() {
@@ -31,8 +32,9 @@ export default function NotFound() {
             </main>
           </div>
           <div className='hidden lg:block lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2'>
-            <img
+            <Image
               className='absolute inset-0 h-full object-cover'
+              layout='fill'
               src='/images/protoglyph.png'
               alt='protoglyph-by-larvalabs'
             />

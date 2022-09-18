@@ -16,10 +16,7 @@ const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
                 <Link enabled={enabled} title={name} size='md' href={href}></Link>
               </div>
               {enabled && (
-                <motion.div
-                  className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0'
-                  layoutId='underline'
-                />
+                <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
               )}
             </li>
           )

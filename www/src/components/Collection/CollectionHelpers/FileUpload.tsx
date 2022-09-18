@@ -1,117 +1,10 @@
-import { LayerElement, Repository, TraitElement } from '@prisma/client'
+import { Repository, TraitElement } from '@prisma/client'
+import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
-import { Dispatch, ReactNode, SetStateAction, useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
-
-const formatBytes = (a: number, b = 2) => {
-  if (!+a) return '0 Bytes'
-  const c = 0 > b ? 0 : b,
-    d = Math.floor(Math.log(a) / Math.log(1024))
-  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${
-    ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]
-  }`
-}
-
-const FileUpload = ({
-  repositoryId,
-  layers,
-  children,
-  type = 'new',
-}: {
-  repositoryId?: string
-  layers?: (LayerElement & { traitElements: TraitElement[] })[]
-  children?: ReactNode
-  type: 'new' | 'edit'
-}) => {
-  const uploadCollectionLayerImageCloudinary = ({
-    allTraits,
-    layerName,
-    fileName,
-    file,
-  }: {
-    allTraits: TraitElement[]
-    layerName: string
-    fileName: string
-    file: any
-  }) => {
-    return new Promise((resolve, reject) => {
-      // find the layer & trait element id
-      const trait = allTraits.filter((trait) => trait.name === fileName)[0]
-      if (!trait) return // todo: this returns if havent added trait to db. should add it if not
-      const key = `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}`
-      const data = new FormData()
-      data.append('file', file)
-      data.append('public_id', trait.id)
-      data.append('original_filename', fileName)
-      data.append('upload_preset', 'collection-upload')
-      data.append('cloud_name', 'rlxyz')
-      data.append('folder', key)
-      fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
-        method: 'post',
-        body: data,
-      })
-        .then((response) => {
-          resolve(response.json())
-        })
-        .catch((err) => {
-          reject(err)
-        })
-    })
-  }
-
-  const onDrop = useCallback(async (files: any) => {
-    const allTraits = layers?.flatMap((map) => map.traitElements.flatMap((map) => map))
-    files.forEach((file: any) => {
-      const reader = new FileReader()
-      const pathArray = String(file.path).split('/')
-      const layerName = pathArray[1]
-      const fileName = pathArray[2]?.replace('.png', '')
-      // reader.onabort = () => console.log('file reading was aborted')
-      // reader.onerror = () => console.log('file reading has failed')
-      reader.onload = async () => {
-        if (!fileName || !layerName) return // todo: throw error
-        uploadCollectionLayerImageCloudinary({
-          allTraits: allTraits || [],
-          fileName: fileName,
-          layerName: layerName,
-          file: file,
-        })
-          .then((_) => {
-            // todo: handle upload success
-            // console.log(response)
-          })
-          .catch((_) => {
-            // todo: handle error
-            // console.error(err)
-          })
-      }
-      reader.readAsArrayBuffer(file)
-    })
-  }, [])
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      'image/png': ['.png'],
-    },
-    noClick: true,
-    noDrag: false,
-  })
-
-  return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      {children}
-      {/* {isDragActive ? (
-        <p className='text-xs ml-5'>Drop the files here ...</p>
-      ) : (
-        <p className='text-xs ml-5'>Drag and drop some files here, or click to select files</p>
-      )} */}
-    </div>
-  )
-}
 
 export const FolderUpload = ({
   setRepository,
@@ -120,7 +13,7 @@ export const FolderUpload = ({
 }: {
   organisationId: string
   onSuccess: () => void
-  setRepository: Dispatch<SetStateAction<Repository | null>>
+  setRepository?: Dispatch<SetStateAction<Repository | null>>
 }) => {
   const [layers, setLayers] = useState<
     {
@@ -132,7 +25,7 @@ export const FolderUpload = ({
     }[]
   >([])
   const mr = trpc.useMutation('repository.create', {
-    onSuccess: (data, variables) => setRepository(data),
+    onSuccess: (data, variables) => setRepository && setRepository(data),
   })
 
   const ml = trpc.useMutation('layer.createMany', {
@@ -313,4 +206,4 @@ export const FolderUpload = ({
   )
 }
 
-export default FileUpload
+export default FolderUpload

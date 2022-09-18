@@ -19,23 +19,14 @@ export const createToken = (opts: {
   })[]
 }) => {
   const { id, name, generation, layers } = opts
-
-  // const allRules = layers
-  //   .map((layer) => layer.traitElements.map((trait) => trait.rulesPrimary))
-  //   .flatMap((map) => map)
-  //   .filter((arr) => arr.length > 0)
-  //   .flatMap((map) => map)
-
   const random = seedrandom(`${name}.${generation}.${id}`)
   const elements: TraitElement[] = []
   layers.forEach(({ traitElements, name }, index: number) => {
     // exclusion
     const filtered = traitElements.filter((traitElement) => {
       const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
-        if (rule.primaryTraitElementId === traitElement.id)
-          return index > rule.secondaryTraitElement.layerElement.priority
-        if (rule.secondaryTraitElementId === traitElement.id)
-          return index > rule.primaryTraitElement.layerElement.priority
+        if (rule.primaryTraitElementId === traitElement.id) return index > rule.secondaryTraitElement.layerElement.priority
+        if (rule.secondaryTraitElementId === traitElement.id) return index > rule.primaryTraitElement.layerElement.priority
       })
       return rules.every((rule) => {
         if (rule.primaryTraitElementId === traitElement.id) {
@@ -96,8 +87,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
     elements.forEach((element: TraitElement) => {
       const { id: t, layerElementId: l } = element
 
-      tokenIdMap.get(l) ||
-        (tokenIdMap.set(l, new Map<string, number[]>([])), traitMap.set(l, new Map<string, number>()))
+      tokenIdMap.get(l) || (tokenIdMap.set(l, new Map<string, number[]>([])), traitMap.set(l, new Map<string, number>()))
 
       // update tokenIdMap - push to array
       tokenIdMap.get(l)?.get(t)
@@ -111,11 +101,7 @@ export const getTraitMappings = (allElements: TraitElement[][]) => {
   return { tokenIdMap, traitMap }
 }
 
-export const getTokenRanking = (
-  tokens: TraitElement[][],
-  traitMap: Map<string, Map<string, number>>,
-  totalSupply: number
-) => {
+export const getTokenRanking = (tokens: TraitElement[][], traitMap: Map<string, Map<string, number>>, totalSupply: number) => {
   return tokens
     .map((token, index) => {
       return {

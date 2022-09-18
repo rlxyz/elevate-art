@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
 
@@ -21,9 +21,8 @@ export const FilterByTrait = () => {
         setTraitFilters: state.setTraitFilters,
       }
     })
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
-  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-
+  const { data: layers } = useQueryRepositoryLayer()
+  const { data: collection } = useQueryCollection()
   if (!collection || !layers) return null
 
   return (
@@ -135,7 +134,7 @@ export const FilterByTrait = () => {
                           layerDropdown === optionIdx ? 'font-semibold' : ''
                         }`}
                       >
-                        <div className='pr-1 pl-5 flex justify-between'>
+                        <div className='px-3 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
                           <div className='flex items-center space-x-2'>
                             <span className='text-xs'>{traitMapping.traitMap?.get(layer.id)?.size || 0}</span>
@@ -159,7 +158,7 @@ export const FilterByTrait = () => {
                             <div key={index}>
                               <div
                                 key={traitElement.id}
-                                className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
+                                className='flex flex-row justify-between items-center py-3 px-3 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
                               >
                                 <span>{traitElement.name}</span>
                                 <div className='flex items-center space-x-2'>
@@ -194,8 +193,8 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } = useRepositoryStore(
+    (state) => {
       return {
         traitFilteredTokens: state.traitFilteredTokens,
         rarityFilter: state.rarityFilter,
@@ -207,8 +206,9 @@ export const FilterByRarity = () => {
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    })
-  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+    }
+  )
+  const { data: collectionData } = useQueryCollection()
   const filters: { value: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All' }[] = [
     { value: 'All' },
     { value: 'Top 10' },
@@ -281,7 +281,7 @@ export const FilterByRarity = () => {
                   {filters.map(({ value }, optionIdx: number) => (
                     <div key={optionIdx} className='flex flex-col text-xs'>
                       <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
-                        <div className='pr-1 pl-5 flex justify-between'>
+                        <div className='px-3 flex justify-between'>
                           <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>
                           <div className='flex items-center space-x-2'>
                             <span className='text-xs'>
@@ -309,14 +309,3 @@ export const FilterByRarity = () => {
     </Formik>
   )
 }
-
-const CollectionFilters = () => {
-  return (
-    <>
-      <FilterByRarity />
-      <FilterByTrait />
-    </>
-  )
-}
-
-export default CollectionFilters

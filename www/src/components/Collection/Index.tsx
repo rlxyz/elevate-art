@@ -1,6 +1,12 @@
+import ViewAllRepositories from '@components/Views/ViewAllCollections'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
+import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
   ssr: false,
@@ -14,22 +20,52 @@ const DynamicLayerFolder = dynamic(() => import('@components/Collection/Collecti
 const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
   ssr: false,
 })
-const DynamicCollectionFilters = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionFilters'), {
-  ssr: false,
-})
-const DynamicCollectionRarity = dynamic(() => import('@components/Collection/CollectionRarity/Index'), {
-  ssr: false,
-})
 const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
   ssr: false,
 })
 
 const Index = () => {
-  const { currentViewSection } = useCollectionNavigationStore((state) => {
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
+  const { data: collection } = useQueryCollection()
+  const { data: layers } = useQueryRepositoryLayer()
+  const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
     return {
-      currentViewSection: state.currentViewSection,
+      tokenRanking: state.tokenRanking,
+      rarityFilter: state.rarityFilter,
+      setTokens: state.setTokens,
+      setTokenRanking: state.setTokenRanking,
+      setTraitMapping: state.setTraitMapping,
     }
   })
+  useDeepCompareEffect(() => {
+    if (!collection || !layers) return
+    const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
+    const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+    setTraitMapping({
+      tokenIdMap,
+      traitMap,
+    })
+    const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
+    setTokenRanking(rankings)
+    setTokens(
+      rankings.slice(
+        rarityFilter === 'Top 10'
+          ? 0
+          : rarityFilter === 'Middle 10'
+          ? parseInt((rankings.length / 2 - 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? rankings.length - 10
+          : 0,
+        rarityFilter === 'Top 10'
+          ? 10
+          : rarityFilter === 'Middle 10'
+          ? parseInt((rankings.length / 2 + 5).toFixed(0))
+          : rarityFilter === 'Bottom 10'
+          ? rankings.length
+          : rankings.length
+      )
+    )
+  }, [collection, layers])
 
   return (
     <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
@@ -44,23 +80,25 @@ const Index = () => {
           </div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
-          <div className='flex flex-col space-y-6 justify-between'>
+          <div className='relative flex flex-col space-y-3 justify-between'>
+            <ViewAllRepositories />
             <DynamicRegenerateButton />
-            <DynamicCollectionFilters />
+            <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
+              <FilterByRarity />
+              <div className='px-3'>
+                <div className='bg-mediumGrey h-[0.25px] w-full' />
+              </div>
+              <FilterByTrait />
+            </div>
           </div>
         )}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && (
-          <div className='flex flex-col space-y-6 justify-between'>
-            <SettingsNavigations />
-          </div>
-        )} */}
       </div>
       <div className='col-span-8'>
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
-        {currentViewSection === CollectionNavigationEnum.enum.Layers && <DynamicCollectionLayers />}
-        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionRarity />}
+        {[CollectionNavigationEnum.enum.Layers, CollectionNavigationEnum.enum.Rarity].includes(currentViewSection) && (
+          <DynamicCollectionLayers />
+        )}
         {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
-        {/* {currentViewSection === CollectionNavigationEnum.enum.Settings && <CollectionSettings />} */}
       </div>
     </div>
   )
