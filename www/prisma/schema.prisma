@@ -128,17 +128,3 @@ model Rules {
 
     @@unique([primaryTraitElementId, secondaryTraitElementId])
 }
-
-// model TraitElementRule {
-//     id String @id @default(cuid())
-
-//     type String
-
-//     traitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "forwardRules")
-//     traitElementId String
-
-//     linkedTraitElement   TraitElement @relation(fields: [traitElementId], references: [id], name: "backwardRules")
-//     linkedTraitElementId String
-
-//     createdAt DateTime @default(now())
-// }
