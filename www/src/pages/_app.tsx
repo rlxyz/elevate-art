@@ -4,10 +4,14 @@ import { createOrganisationNavigationStore, OrganisationRouterContext } from '@h
 import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
+import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
+import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
+import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
 import { SessionProvider } from 'next-auth/react'
-import type { AppType } from 'next/dist/shared/lib/utils'
+import { AppProps } from 'next/app'
+import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
@@ -49,23 +53,30 @@ const wagmiClient = createClient({
   provider,
 })
 
-const ElevateCompilerApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: 'sign in to elevate.art',
+})
+
+const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <SessionProvider session={session}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
-          <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-            <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
-              <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                  <Component {...pageProps} />
-                </RepositoryContext.Provider>
-              </CollectionRouterContext.Provider>
-            </RepositoryRouterContext.Provider>
-          </OrganisationRouterContext.Provider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </SessionProvider>
+    <WagmiConfig client={wagmiClient}>
+      <SessionProvider refetchInterval={0} session={pageProps.session}>
+        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+          <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+            <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+              <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                    <Component {...pageProps} />
+                    <Toaster />
+                  </RepositoryContext.Provider>
+                </CollectionRouterContext.Provider>
+              </RepositoryRouterContext.Provider>
+            </OrganisationRouterContext.Provider>
+          </RainbowKitProvider>
+        </RainbowKitSiweNextAuthProvider>
+      </SessionProvider>
+    </WagmiConfig>
   )
 }
 
@@ -76,7 +87,7 @@ const getBaseUrl = () => {
 }
 
 export default withTRPC<AppRouter>({
-  config() {
+  config({ ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
@@ -84,12 +95,32 @@ export default withTRPC<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`
 
     return {
+      links: [
+        loggerLink({
+          enabled: (opts) =>
+            process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
+        }),
+        httpBatchLink({ url }),
+      ],
       url,
       transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+
+      // To use SSR properly you need to forward the client's headers to the server
+      // headers: () => {
+      //   if (ctx?.req) {
+      //     const headers = ctx?.req?.headers;
+      //     delete headers?.connection;
+      //     return {
+      //       ...headers,
+      //       "x-ssr": "1",
+      //     };
+      //   }
+      //   return {};
+      // }
     }
   },
   /**
