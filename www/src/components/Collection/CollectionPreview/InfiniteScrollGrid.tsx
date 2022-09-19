@@ -4,10 +4,10 @@ import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
 import { motion, useAnimation } from 'framer-motion'
-import Image from 'next/image'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import { useInView } from 'react-intersection-observer'
+import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
@@ -45,14 +45,10 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
           {token.map(({ layerElementId, id }: TraitElement, index: number) => {
             return (
               <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
-                <div className={`relative border-[1px] border-mediumGrey h-full w-full`}>
-                  <Image
-                    priority
-                    src={cld
-                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
-                      .toURL()}
-                    layout='fill'
+                <div className={`relative h-full w-full`}>
+                  <img
                     className='rounded-[5px]'
+                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
                   />
                 </div>
               </div>
@@ -109,21 +105,23 @@ const InfiniteScrollGridItems = ({
             className='cursor-pointer relative col-span-1'
             onClick={() => setSelectedToken({ traitElements: token })}
           >
-            <div className='pb-[100%] blocks'>
-              <div className='absolute h-full w-full'>
-                <InfiniteScrollGridItem
-                  key={`${index}`}
-                  token={createToken({
-                    id: Number(tokens[index]),
-                    name: collection.name,
-                    generation: collection.generations,
-                    layers,
-                  })}
-                  name={`#${tokens[index] || 0}`}
-                />
+            <RenderIfVisible>
+              <div className='pb-[100%] blocks'>
+                <div className='absolute h-full w-full'>
+                  <InfiniteScrollGridItem
+                    key={`${index}`}
+                    token={createToken({
+                      id: Number(tokens[index]),
+                      name: collection.name,
+                      generation: collection.generations,
+                      layers,
+                    })}
+                    name={`#${tokens[index] || 0}`}
+                  />
+                </div>
+                {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
               </div>
-              {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
-            </div>
+            </RenderIfVisible>
           </div>
         )
       })}
@@ -199,6 +197,12 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const { hasPreviewLoaded, setHasPreviewLoaded } = useRepositoryStore((state) => {
+    return {
+      setHasPreviewLoaded: state.setHasPreviewLoaded,
+      hasPreviewLoaded: state.hasPreviewLoaded,
+    }
+  })
 
   const fetch = (start: number) => {
     if (!collection) return
@@ -220,6 +224,7 @@ export const InfiniteScrollGrid = ({
 
   useEffect(() => {
     fetch(page)
+    setHasPreviewLoaded(true)
   }, [])
 
   return (

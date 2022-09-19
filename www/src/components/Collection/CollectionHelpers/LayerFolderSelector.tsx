@@ -1,8 +1,7 @@
 import { Link } from '@components/UI/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { trpc } from '@utils/trpc'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router, { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -55,19 +54,8 @@ export const ReorderItem = ({
   const collectionName: string = router.query.collection as string
 
   return (
-    <Reorder.Item
-      value={item}
-      id={item.toString()}
-      style={{ boxShadow, y }}
-      dragListener={false}
-      dragControls={dragControls}
-    >
-      <Link
-        href={`/${organisationName}/${repositoryName}/${collectionName}/${currentViewSection}/${name}`}
-        enabled={enabled}
-        hover
-        title={name}
-      >
+    <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
+      <Link href={`/${organisationName}/${repositoryName}/${currentViewSection}/${name}`} enabled={enabled} hover title={name}>
         {canReorder && (
           <DotsHorizontalIcon
             className='ml-1 w-5 h-5'
@@ -83,12 +71,7 @@ export const ReorderItem = ({
 }
 
 const LayerFolderSelector = () => {
-  const { repositoryId } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-    }
-  })
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: layers } = useQueryRepositoryLayer()
   const { currentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
@@ -108,15 +91,15 @@ const LayerFolderSelector = () => {
 
   return (
     <aside>
-      <div className='space-y-2'>
-        <div className='flex items-center justify-between'>
+      <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
+        {/* <div className='flex items-center justify-between'>
           <div className='space-x-1 flex items-center'>
-            {/* <button onClick={() => setOpenReordering(!openReordering)}>
+            <button onClick={() => setOpenReordering(!openReordering)}>
                   <div className='border rounded-[5px] border-lightGray p-1'>
                   <SwitchVerticalIcon className='text-darkGrey w-2 h-2' />
                   </div>
-                </button> */}
-            {/* <button
+                </button>
+            <button
                 onClick={() => {
                   setOpenUpload(true)
                 }}
@@ -124,9 +107,9 @@ const LayerFolderSelector = () => {
                 <div className='border rounded-[5px] border-lightGray p-1'>
                 <PlusIcon className='text-darkGrey w-2 h-2' />
                 </div>
-              </button> */}
+              </button>
           </div>
-        </div>
+        </div> */}
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
             <Reorder.Group axis='y' values={items} onReorder={setItems}>

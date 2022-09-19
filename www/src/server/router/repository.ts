@@ -15,31 +15,8 @@ export const repositoryRouter = createRouter()
             select: { id: true, name: true },
           },
           collections: {
-            where: { name: 'main' },
-            select: { id: true },
+            select: { id: true, name: true },
             orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
-          },
-        },
-      })
-    },
-  })
-  .query('getAllRepositoriesByOrganisationName', {
-    input: z.object({
-      name: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findMany({
-        where: { organisation: { name: input.name } },
-        include: {
-          _count: {
-            select: { layers: true, collections: true },
-          },
-          layers: {
-            include: {
-              _count: {
-                select: { traitElements: true },
-              },
-            },
           },
         },
       })
@@ -93,6 +70,28 @@ export const repositoryRouter = createRouter()
       })
     },
   })
+  .query('getAllRepositoriesByOrganisationName', {
+    input: z.object({
+      name: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.repository.findMany({
+        where: { organisation: { name: input.name } },
+        include: {
+          _count: {
+            select: { layers: true, collections: true },
+          },
+          layers: {
+            include: {
+              _count: {
+                select: { traitElements: true },
+              },
+            },
+          },
+        },
+      })
+    },
+  })
   .query('getRepositoryById', {
     input: z.object({
       id: z.string(),
@@ -135,6 +134,51 @@ export const repositoryRouter = createRouter()
       await ctx.prisma.repository.delete({
         where: {
           id: input.repositoryId,
+        },
+      })
+    },
+  })
+  .mutation('updateLayer', {
+    input: z.object({
+      layerId: z.string(),
+      repositoryId: z.string(),
+      traits: z.array(
+        z.object({
+          id: z.string(),
+          weight: z.number(),
+        })
+      ),
+    }),
+    async resolve({ ctx, input }) {
+      return Promise.all(
+        input.traits.map(async ({ id, weight }) => {
+          return await ctx.prisma.traitElement.update({
+            where: {
+              id,
+            },
+            data: {
+              weight,
+            },
+          })
+        })
+      )
+    },
+  })
+  .mutation('createRule', {
+    input: z.object({
+      type: z.string(),
+      primaryLayerElementId: z.string(),
+      primaryTraitElementId: z.string(),
+      secondaryLayerElementId: z.string(),
+      secondaryTraitElementId: z.string(),
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.rules.create({
+        data: {
+          condition: input.type,
+          primaryTraitElementId: input.primaryTraitElementId,
+          secondaryTraitElementId: input.secondaryTraitElementId,
         },
       })
     },

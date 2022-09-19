@@ -121,7 +121,7 @@ const CreateNewCollection = () => {
                 </Button>
                 <Button
                   className='p-4 disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white bg-black text-white font-semibold rounded-[5px] items-center flex justify-center'
-                  onClick={() => router.push(`/${organisationName}/${repository?.name}/main/preview`)} // todo: should go to collection creation page
+                  onClick={() => router.push(`/${organisationName}/${repository?.name}/preview`)} // todo: should go to collection creation page
                   disabled={repository !== null && createProjectDisabled}
                 >
                   Create Project

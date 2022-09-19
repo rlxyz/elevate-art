@@ -13,6 +13,8 @@ interface CompilerViewInterface {
   currentLayer: LayerElement & {
     traitElements: TraitElement[]
   }
+  hasPreviewLoaded: boolean
+  setHasPreviewLoaded: (value: boolean) => void
   regenerate: boolean
   regenerateFilterIndex: { start: number; end: number }
   regenerateFilter: boolean
@@ -49,6 +51,8 @@ interface CompilerViewInterface {
 
 export const createRepositoryStore = create<CompilerViewInterface>()(
   persist((set) => ({
+    hasPreviewLoaded: false,
+    setHasPreviewLoaded: (value: boolean) => set({ hasPreviewLoaded: value }),
     rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
     traitFilteredTokens: [],
     setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),

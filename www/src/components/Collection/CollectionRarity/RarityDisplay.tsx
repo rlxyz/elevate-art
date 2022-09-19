@@ -1,66 +1,32 @@
 import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
-import { useNotification } from '@hooks/useNotification'
+import { useCurrentLayer } from '@hooks/useCurrentLayer'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
+import { useMutateRepositoryLayersWeight, useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { toPascalCaseWithSpace } from '@utils/format'
 import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } from '@utils/math'
-import { trpc } from '@utils/trpc'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import router from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
-export const RarityDisplay = ({
-  traitElements,
-  layerName,
-  layerId,
-}: {
-  traitElements: TraitElement[]
-  layerName: string
-  layerId: string
-}) => {
-  const { collectionId, repositoryId } = useRepositoryStore((state) => {
-    return {
-      repositoryId: state.repositoryId,
-      collectionId: state.collectionId,
-    }
-  })
-  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const collectionName: string = router.query.collection as string
-  const ctx = trpc.useContext()
+export const RarityDisplay = () => {
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const { notifySuccess, notifyError } = useNotification()
+  const { data: collectionData } = useQueryCollection()
+  const { currentLayer } = useCurrentLayer()
+  const { traitElements, id: layerId } = currentLayer
+  const { mutate } = useMutateRepositoryLayersWeight()
 
-  const mutation = trpc.useMutation('layer.setAllTraits', {
-    onSuccess: (data, variables) => {
-      ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data.changedLayer)
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
-      setHasFormChange(false)
-      notifySuccess(
-        <div>
-          <span>{`Successfully updated `}</span>
-          <span className='text-blueHighlight text-semibold'>{data.changedLayer?.name}</span>
-          <span className='font-semibold'>{` rarities`}</span>
-        </div>,
-        'rarity changed'
-      )
-    },
-    onError: () => {
-      notifyError('Something went wrong')
-    },
-  })
-
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     setSummedRarityWeightage(calculateSumArray(traitElements))
   }, [traitElements])
 
@@ -73,7 +39,7 @@ export const RarityDisplay = ({
               {[
                 'Image',
                 'Name',
-                'Esimate in Collection',
+                'Estimate in Collection',
                 // 'Rarity Score',
                 'Percentage',
               ].map((item, index) => {
@@ -81,9 +47,7 @@ export const RarityDisplay = ({
                   <th
                     key={item}
                     scope='col'
-                    className={`${
-                      index === 3 ? 'text-right' : 'text-left'
-                    }  text-xs font-semibold uppercase text-darkGrey pb-8`}
+                    className={`${index === 3 ? 'text-right' : 'text-left'}  text-xs font-semibold uppercase text-darkGrey pb-8`}
                   >
                     {item}
                   </th>
@@ -110,7 +74,7 @@ export const RarityDisplay = ({
         <Formik
           enableReinitialize
           initialValues={{
-            traits: traitElements.map((traitElement: TraitElement) => {
+            traits: currentLayer.traitElements.map((traitElement: TraitElement) => {
               return {
                 id: traitElement.id,
                 weight: Number(
@@ -124,31 +88,26 @@ export const RarityDisplay = ({
             }),
           }}
           onSubmit={(values) => {
-            mutation.mutate({
-              repositoryId,
-              layerId,
-              traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
-                return {
-                  id,
-                  weight: (weight / calculateSumArray(values.traits)) * 100,
-                }
-              }),
-            })
+            mutate(
+              {
+                repositoryId,
+                layerId,
+                traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
+                  return {
+                    id,
+                    weight: (weight / calculateSumArray(values.traits)) * 100,
+                  }
+                }),
+              },
+              {
+                onSuccess: (data, variables) => {
+                  setHasFormChange(false)
+                },
+              }
+            )
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            initialTouched,
-            initialValues,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            submitForm,
-            resetForm,
-          }) => (
+          {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (
             <>
               <div className='flex flex-col pb-14'>
                 <div className='inline-block min-w-full align-middle'>
@@ -159,7 +118,7 @@ export const RarityDisplay = ({
                           {[
                             'Image',
                             'Name',
-                            'Quantity in Collection',
+                            'Estimate in Collection',
                             // 'Rarity Score',
                             'Percentage',
                           ].map((item, index) => {

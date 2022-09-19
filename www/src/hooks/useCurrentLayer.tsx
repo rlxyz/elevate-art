@@ -1,30 +1,16 @@
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { trpc } from '@utils/trpc'
+import { useQueryRepositoryLayer } from './useRepositoryFeatures'
 
 export const useCurrentLayer = () => {
-  const layerIds = useRepositoryStore((state) => state.layerIds)
   const currentLayerPriority: number = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const currentLayerPriorityId: string = layerIds[currentLayerPriority] || ''
-
-  const { data, isLoading, isError, refetch } = trpc.useQuery([
-    'layer.getLayerById',
-    {
-      id: currentLayerPriorityId,
-    },
-  ])
-
-  layerIds.forEach((id: string) => {
-    trpc.useQuery(['layer.getLayerById', { id }])
-  })
-
+  const { data: layers, isLoading, isError, refetch } = useQueryRepositoryLayer()
   return {
-    currentLayer: data || {
+    currentLayer: layers?.find((l) => l.priority === currentLayerPriority) || {
       id: '',
       name: '',
       traitElements: [],
     },
-    isLoading: !data || isLoading,
+    isLoading: !layers || isLoading,
     isError,
     refetch,
   }

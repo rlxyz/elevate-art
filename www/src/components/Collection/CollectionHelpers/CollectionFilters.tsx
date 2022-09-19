@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import { Field, Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
 
@@ -21,15 +21,13 @@ export const FilterByTrait = () => {
         setTraitFilters: state.setTraitFilters,
       }
     })
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
-  const { data: collection } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
-
-  if (!collection || !layers) return null
-
+  const { data: layers } = useQueryRepositoryLayer()
+  const { data: collection } = useQueryCollection()
   return (
     <Formik
       initialValues={{ checked: [] }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
+        if (!collection || !layers) return
         if (!checked.length) {
           const filteredRarity = tokenRanking.slice(
             rarityFilter === 'Top 10'
@@ -112,81 +110,74 @@ export const FilterByTrait = () => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
-          {layers.length &&
-            traitMapping.tokenIdMap.size > 0 &&
-            traitMapping.traitMap.size > 0 &&
-            [{ name: 'Traits', id: 'something' }].map((section: any, sectionIdx: number) => (
-              <div className='space-y-2' key={`${section.name}-${sectionIdx}`}>
-                {/* <span className={`text-xs font-normal text-darkGrey uppercase`}>
-                    {section.name}
-                  </span> */}
-                <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
-                  {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
-                    <div key={layer.id} className='flex flex-col text-xs'>
-                      <div
-                        onClick={() => {
-                          if (layerDropdown === optionIdx) {
-                            setLayerDropdown(null)
-                          } else {
-                            setLayerDropdown(optionIdx)
-                          }
-                        }}
-                        className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
-                          layerDropdown === optionIdx ? 'font-semibold' : ''
-                        }`}
-                      >
-                        <div className='pr-1 pl-5 flex justify-between'>
-                          <label htmlFor={`${section.id}-${optionIdx}`}>{layer.name}</label>
+          <div className='rounded-[5px] min-h-[30vh] max-h-[70vh] overflow-y-scroll no-scrollbar'>
+            {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
+              <div key={layer.id} className='flex flex-col text-xs'>
+                <div
+                  onClick={() => {
+                    if (layerDropdown === optionIdx) {
+                      setLayerDropdown(null)
+                    } else {
+                      setLayerDropdown(optionIdx)
+                    }
+                  }}
+                  className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3 ${
+                    layerDropdown === optionIdx ? 'font-semibold' : ''
+                  }`}
+                >
+                  <div className='px-3 flex justify-between'>
+                    <label>{layer.name}</label>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-xs'>
+                        {traitMapping.traitMap.size > 0 && (traitMapping.traitMap.get(layer.id)?.size || 0)}
+                      </span>
+                      {layerDropdown !== optionIdx ? (
+                        <ChevronDownIcon className='w-3 h-3' />
+                      ) : (
+                        <ChevronUpIcon className='w-3 h-3' />
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={
+                    layerDropdown === optionIdx
+                      ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
+                      : 'hidden'
+                  }
+                >
+                  {layer.traitElements.map((traitElement: TraitElement, index) => {
+                    return (
+                      <div key={index}>
+                        <div
+                          key={traitElement.id}
+                          className='flex flex-row justify-between items-center py-3 px-3 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
+                        >
+                          <span>{traitElement.name}</span>
                           <div className='flex items-center space-x-2'>
-                            <span className='text-xs'>{traitMapping.traitMap?.get(layer.id)?.size || 0}</span>
-                            {layerDropdown !== optionIdx ? (
-                              <ChevronDownIcon className='w-3 h-3' />
-                            ) : (
-                              <ChevronUpIcon className='w-3 h-3' />
-                            )}
+                            <span className='text-darkGrey text-xs'>
+                              {traitMapping.traitMap.size > 0 &&
+                                (traitMapping?.traitMap.get(layer.id)?.get(traitElement.id) || 0)}
+                            </span>
+                            <Field
+                              type='checkbox'
+                              name='checked'
+                              value={`${layer.id}/${traitElement.id}`}
+                              className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                              onChange={(e: any) => {
+                                handleChange(e)
+                                submitForm()
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
-                      <div
-                        className={
-                          layerDropdown === optionIdx
-                            ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
-                            : 'hidden'
-                        }
-                      >
-                        {layer.traitElements.map((traitElement: TraitElement, index) => {
-                          return (
-                            <div key={index}>
-                              <div
-                                key={traitElement.id}
-                                className='flex flex-row justify-between items-center py-3 pr-1 pl-5 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
-                              >
-                                <span>{traitElement.name}</span>
-                                <div className='flex items-center space-x-2'>
-                                  <span className='text-darkGrey text-xs'>
-                                    {traitMapping.traitMap?.get(layer.id)?.get(traitElement.id) || 0}
-                                  </span>
-                                  <Field
-                                    type='checkbox'
-                                    name='checked'
-                                    value={`${layer.id}/${traitElement.id}`}
-                                    className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                                    onChange={(e: any) => {
-                                      handleChange(e)
-                                      submitForm()
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             ))}
+          </div>
         </Form>
       )}
     </Formik>
@@ -194,8 +185,8 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } = useRepositoryStore(
+    (state) => {
       return {
         traitFilteredTokens: state.traitFilteredTokens,
         rarityFilter: state.rarityFilter,
@@ -207,8 +198,8 @@ export const FilterByRarity = () => {
         traitFilters: state.traitFilters,
         setTraitFilters: state.setTraitFilters,
       }
-    })
-  const { data: collectionData } = trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
+    }
+  )
   const filters: { value: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All' }[] = [
     { value: 'All' },
     { value: 'Top 10' },
@@ -220,8 +211,6 @@ export const FilterByRarity = () => {
     setRarityFilter('All')
   }, [])
 
-  if (!collectionData) return null
-
   return (
     <Formik
       initialValues={{ checked: 'All' }}
@@ -229,7 +218,6 @@ export const FilterByRarity = () => {
         const filter = filters.filter((val) => val.value === checked)[0]
         if (!filter) return
         setRarityFilter(filter.value)
-        // todo:cleanup
         if (!traitFilteredTokens.length) {
           setTokens(
             tokenRanking.slice(
@@ -273,50 +261,33 @@ export const FilterByRarity = () => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
-          {traitMapping.tokenIdMap.size > 0 &&
-            traitMapping.traitMap.size > 0 &&
-            [{ name: 'Rarity', id: 'rarity' }].map((section: any, sectionIdx: number) => (
-              <div className='space-y-2' key={`${section.name}-${sectionIdx}`}>
-                <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
-                  {filters.map(({ value }, optionIdx: number) => (
-                    <div key={optionIdx} className='flex flex-col text-xs'>
-                      <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
-                        <div className='pr-1 pl-5 flex justify-between'>
-                          <label htmlFor={`${section.id}-${optionIdx}`}>{value}</label>
-                          <div className='flex items-center space-x-2'>
-                            <span className='text-xs'>
-                              <Field
-                                type='radio'
-                                name='checked'
-                                value={value}
-                                className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                                onChange={(e: any) => {
-                                  handleChange(e)
-                                  submitForm()
-                                }}
-                              />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+          <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
+            {filters.map(({ value }, optionIdx: number) => (
+              <div key={optionIdx} className='flex flex-col text-xs'>
+                <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
+                  <div className='px-3 flex justify-between'>
+                    <label>{value}</label>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-xs'>
+                        <Field
+                          type='radio'
+                          name='checked'
+                          value={value}
+                          className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                          onChange={(e: any) => {
+                            handleChange(e)
+                            submitForm()
+                          }}
+                        />
+                      </span>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
         </Form>
       )}
     </Formik>
   )
 }
-
-const CollectionFilters = () => {
-  return (
-    <>
-      <FilterByRarity />
-      <FilterByTrait />
-    </>
-  )
-}
-
-export default CollectionFilters
