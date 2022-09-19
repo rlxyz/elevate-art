@@ -79,7 +79,7 @@ const Index = () => {
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { mutate } = useMutateCreateCollection({
+  const { mutate, isLoading } = useMutateCreateCollection({
     onMutate: () => setIsOpen(false),
   })
   useDeepCompareEffect(() => {
@@ -150,6 +150,7 @@ const Index = () => {
                 <div className='pt-2'>
                   {data && data.collections && (
                     <Button
+                      disabled={isLoading}
                       variant='primary'
                       className='w-full px-2'
                       size='sm'
@@ -239,7 +240,7 @@ const Index = () => {
                           </div>
                           <div className='pt-6 flex justify-between'>
                             <div className='ml-[auto]'>
-                              <Button>
+                              <Button disabled={isLoading}>
                                 <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                                   <span className='text-xs'>Confirm</span>
                                 </span>
