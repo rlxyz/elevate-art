@@ -80,14 +80,11 @@ const InfiniteScrollGridItems = ({
     })[]
   })[]
 }) => {
-  const { tokens } = useRepositoryStore((state) => {
-    return {
-      tokens: state.tokens,
-    }
-  })
+  const tokens = useRepositoryStore((state) => state.tokens)
   const [selectedToken, setSelectedToken] = useState<{ traitElements: TraitElement[] }>({
     traitElements: [],
   })
+
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (

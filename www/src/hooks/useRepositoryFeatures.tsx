@@ -17,7 +17,6 @@ export const useQueryRepositoryLayer = () => {
 
 export const useQueryCollection = () => {
   const collectionId = useRepositoryStore((state) => state.collectionId)
-  console.log({ collectionId })
   return trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 }
 
@@ -124,7 +123,6 @@ export const useMutateRepositoryRule = () => {
           },
         })
       })
-      // console.log({ b: backup[primaryId]?.traitElements[primaryTraitId], n: next[primaryId]?.traitElements[primaryTraitId] })
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
 
       // Notify Success

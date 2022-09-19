@@ -7,20 +7,28 @@ import Image from 'next/image'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 
-const RegegenerateButton = () => {
-  const { collectionId } = useRepositoryStore((state) => {
-    return {
-      collectionId: state.collectionId,
-    }
-  })
-  const [isOpen, setIsOpen] = useState(false)
-  const { notifySuccess } = useNotification()
+export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
-
-  const mutation = trpc.useMutation('collection.incrementGeneration', {
+  const { notifySuccess } = useNotification()
+  return trpc.useMutation('collection.incrementGeneration', {
+    // Optimistic Update
+    onMutate: async (input) => {
+      const backup = ctx.getQueryData(['collection.getCollectionById', { id: input.id }])
+      if (!backup) return { backup }
+      ctx.setQueryData(['collection.getCollectionById', { id: input.id }], {
+        ...backup,
+        generation: backup.generations + 1,
+      })
+      console.log('gen', backup.generations + 1)
+      onMutate && onMutate()
+      return { backup }
+    },
+    onError: (err, variables, context) => {
+      if (!context?.backup) return
+      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], context.backup)
+    },
+    onSettled: () => ctx.invalidateQueries(['collection.getCollectionById']),
     onSuccess: (data, variables) => {
-      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], data)
-      setIsOpen(false)
       notifySuccess(
         <span>
           <span className='text-blueHighlight'>Successfully</span>
@@ -33,7 +41,16 @@ const RegegenerateButton = () => {
       )
     },
   })
+}
 
+const RegegenerateButton = () => {
+  const { collectionId } = useRepositoryStore((state) => {
+    return {
+      collectionId: state.collectionId,
+    }
+  })
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate, isLoading } = useMutateGenerationIncrement({ onMutate: () => setIsOpen(false) })
   return (
     <>
       <div className='flex items-center border border-mediumGrey rounded-[5px] px-4 py-3'>
@@ -44,7 +61,7 @@ const RegegenerateButton = () => {
             </div>
             <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
             {/* <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}> */}
-            <Button disabled={mutation.isLoading} onClick={() => setIsOpen(true)}>
+            <Button disabled={isLoading} onClick={() => setIsOpen(true)}>
               <span className='flex items-center justify-center space-x-2'>
                 <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />
                 <span className='text-xs'>elevate.art</span>
@@ -87,7 +104,7 @@ const RegegenerateButton = () => {
                       </div>
                       <div className='flex justify-between'>
                         <div className='ml-[auto]'>
-                          <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}>
+                          <Button disabled={isLoading} onClick={() => mutate({ id: collectionId })}>
                             <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                               <span className='text-xs'>Confirm</span>
                             </span>
