@@ -1,4 +1,5 @@
 // src/pages/_app.tsx
+import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
 import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
@@ -9,6 +10,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
 import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
+import { H } from 'highlight.run'
 import { SessionProvider } from 'next-auth/react'
 import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
@@ -20,6 +22,18 @@ import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import type { AppRouter } from '../server/router'
 import '../styles/globals.css'
+
+if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
+  H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
+    environment: env.NEXT_PUBLIC_NODE_ENV,
+    networkRecording: {
+      enabled: true,
+      recordHeadersAndBody: true,
+    },
+    version: (process.env.VERCEL_GIT_COMMIT_SHA as string) || env.NEXT_PUBLIC_NODE_ENV, // default to production
+    // enableStrictPrivacy: false, see: https://docs.highlight.run/privacy#pU2Cn
+  })
+}
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
@@ -59,24 +73,26 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
 
 const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <SessionProvider refetchInterval={0} session={pageProps.session}>
-        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
-          <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
-            <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-              <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
-                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                    <Component {...pageProps} />
-                    <Toaster />
-                  </RepositoryContext.Provider>
-                </CollectionRouterContext.Provider>
-              </RepositoryRouterContext.Provider>
-            </OrganisationRouterContext.Provider>
-          </RainbowKitProvider>
-        </RainbowKitSiweNextAuthProvider>
-      </SessionProvider>
-    </WagmiConfig>
+    <ErrorBoundary showDialog>
+      <WagmiConfig client={wagmiClient}>
+        <SessionProvider refetchInterval={0} session={pageProps.session}>
+          <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+            <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+              <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+                <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
+                  <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                    <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                      <Component {...pageProps} />
+                      <Toaster />
+                    </RepositoryContext.Provider>
+                  </CollectionRouterContext.Provider>
+                </RepositoryRouterContext.Provider>
+              </OrganisationRouterContext.Provider>
+            </RainbowKitProvider>
+          </RainbowKitSiweNextAuthProvider>
+        </SessionProvider>
+      </WagmiConfig>
+    </ErrorBoundary>
   )
 }
 

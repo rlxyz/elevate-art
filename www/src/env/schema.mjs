@@ -27,6 +27,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_CLOUDINARY_URL: z.string(),
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.string(),
+  NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string(),
 })
 
 /**
@@ -45,4 +46,5 @@ export const clientEnv = {
   NEXT_PUBLIC_CLOUDINARY_URL: process.env.NEXT_PUBLIC_CLOUDINARY_URL,
   NEXT_PUBLIC_APP_NAME: 'elevate.art',
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
+  NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || '',
 }
