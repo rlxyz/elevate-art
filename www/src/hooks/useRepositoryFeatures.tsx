@@ -20,7 +20,7 @@ export const useQueryCollection = () => {
   return trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 }
 
-export const useMutateRepositoryLayersWeight = () => {
+export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
   const { data: layers } = useQueryRepositoryLayer()
   const { notifySuccess } = useNotification()
@@ -49,7 +49,7 @@ export const useMutateRepositoryLayersWeight = () => {
             .sort((a, b) => a.weight - b.weight) || []
       })
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
-
+      onMutate && onMutate()
       // return backup
       return { backup }
     },
@@ -71,7 +71,7 @@ export const useMutateRepositoryLayersWeight = () => {
   })
 }
 
-export const useMutateRepositoryRule = () => {
+export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) => {
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
   return trpc.useMutation('repository.createRule', {
@@ -128,15 +128,13 @@ export const useMutateRepositoryRule = () => {
       // Notify Success
       notifySuccess(
         <div>
-          <span className='text-blueHighlight text-semibold'>
-            {backup[primaryId]?.traitElements[Number(primaryTrait.id)]?.name || ''}
-          </span>
+          <span className='text-blueHighlight text-semibold'>{primaryTrait?.name || ''}</span>
           <span>{` now ${input.type} `}</span>
-          <span className='font-semibold'>{backup[secondaryId]?.traitElements[Number(secondaryTrait.id)]?.name}</span>
+          <span className='font-semibold'>{secondaryTrait?.name}</span>
         </div>,
         'new rule'
       )
-
+      onMutate && onMutate()
       return { backup }
     },
     onError: (err, variables, context) => {
