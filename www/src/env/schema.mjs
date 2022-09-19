@@ -9,7 +9,7 @@ export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: z.string(),
-  NEXTAUTH_URL: z.string().url(),
+  // NEXTAUTH_URL: z.string().url(),
 })
 
 /**
@@ -18,7 +18,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  // NEXT_PUBLIC_BAR: z.string(),
   NEXT_PUBLIC_ETHEREUM_RPC_URL: z.string(),
   NEXT_PUBLIC_INFURA_ID: z.string(),
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),

@@ -6,8 +6,8 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
+import { useQueryRepository } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { trpc } from '@utils/trpc'
 import { GetServerSideProps } from 'next'
 import { getToken } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
@@ -28,8 +28,8 @@ const PageImplementation = ({
 }) => {
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
-  const { data: repositoryData } = trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
-  const { setLayerIds, setLayerNames, layerNames, layerIds, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
+  const { data: repositoryData } = useQueryRepository()
+  const { setLayerIds, setLayerNames, layerNames, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
     return {
       setRepositoryId: state.setRepositoryId,
       setCollectionId: state.setCollectionId,
@@ -170,7 +170,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
   const token = await getToken({ req: context.req })
   const userId = token?.sub ?? null
-  if (!userId) return { redirect: { destination: '/', permanent: false } }
+  if (!userId) return { redirect: { destination: '/404', permanent: false } }
   const { organisation, repository, collection } = context.query
   const valid = await prisma.collection.findFirst({
     where: {

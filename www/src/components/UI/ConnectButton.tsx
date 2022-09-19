@@ -41,7 +41,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disa
                     <button disabled={disabled} onClick={openConnectModal} type='button'>
                       <img
                         src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
+                      className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
                         alt='Wallet'
                       />
                     </button>

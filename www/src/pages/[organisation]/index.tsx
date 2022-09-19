@@ -18,6 +18,7 @@ const Page: NextPage = () => {
     <>
       <Layout>
         <Layout.Header
+          connectButton
           internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]}
           internalNavigation={[
             {
