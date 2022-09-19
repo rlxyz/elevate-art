@@ -1,5 +1,7 @@
 import Button from '@components/UI/Button'
+import { UserCircleIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
+import { useSession } from 'next-auth/react'
 import React from 'react'
 
 interface ConnectButtonProps {
@@ -8,6 +10,7 @@ interface ConnectButtonProps {
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disabled = false }) => {
+  const { data: session } = useSession()
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
@@ -46,22 +49,23 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disa
                 )
               }
 
-              if (chain.unsupported) {
-                return (
-                  <button disabled={disabled} onClick={openChainModal} type='button'>
-                    Wrong network
-                  </button>
-                )
-              }
-
               return (
-                <button disabled={disabled} onClick={openAccountModal} type='button' className='flex items-center'>
+                <button
+                  disabled={disabled}
+                  onClick={chain.unsupported ? openChainModal : openAccountModal}
+                  type='button'
+                  className='flex items-center'
+                >
                   {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
-                  <img
-                    src='/images/lightGray-wallet.svg'
-                    className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
-                    alt='Wallet'
-                  />
+                  {session ? (
+                    <UserCircleIcon className='w-4 h-4 text-darkGrey' />
+                  ) : (
+                    <img
+                      src='/images/lightGray-wallet.svg'
+                      className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
+                      alt='Wallet'
+                    />
+                  )}
                 </button>
               )
             })()}
