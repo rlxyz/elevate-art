@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
                 select: { id: true, address: true },
               })
               const organisation = await tx.organisation.create({
-                data: { name: `elevate-${address.substring(2, 8)}-${address.substring(8, 14)}` },
+                data: { name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1).toString(36).substring(6)}` },
               })
               await tx.organisationAdmin.create({
                 data: { organisationId: organisation.id, userId: user.id },
