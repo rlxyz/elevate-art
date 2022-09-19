@@ -40,8 +40,7 @@ export const authOptions: NextAuthOptions = {
         try {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
 
-          const nextAuthUrl =
-            process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+          const nextAuthUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
           if (!nextAuthUrl) {
             return null
           }
@@ -77,7 +76,7 @@ export const authOptions: NextAuthOptions = {
                 select: { id: true, address: true },
               })
               const organisation = await tx.organisation.create({
-                data: { name: address },
+                data: { name: `elevate-${address.substring(2, 8)}-${address.substring(8, 14)}` },
               })
               await tx.organisationAdmin.create({
                 data: { organisationId: organisation.id, userId: user.id },

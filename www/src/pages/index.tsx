@@ -1,7 +1,9 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Link } from '@components/UI/Link'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
+import { getToken } from 'next-auth/jwt'
+import { getSession } from 'next-auth/react'
 
 const Guide = () => {
   return (
@@ -11,12 +13,12 @@ const Guide = () => {
       <span className='font-bold text-4xl'>Start with creating your collection</span>
       <div className='mt-8 w-[60%] grid grid-cols-2 space-x-4'>
         <div className='col-span-1 text-sm'>
-          Developers love Next.js, the open source React framework Vercel built together with Google and Facebook.
-          Next.js powers the biggest websites like Patreon, for use cases in e-commerce, travel, news, and marketing.
+          Developers love Next.js, the open source React framework Vercel built together with Google and Facebook. Next.js powers
+          the biggest websites like Patreon, for use cases in e-commerce, travel, news, and marketing.
         </div>
         <div className='col-span-1 text-sm'>
-          Vercel is the best place to deploy any frontend app. Start by deploying with zero configuration to our global
-          edge network. Scale dynamically to millions of pages without breaking a sweat.
+          Vercel is the best place to deploy any frontend app. Start by deploying with zero configuration to our global edge
+          network. Scale dynamically to millions of pages without breaking a sweat.
         </div>
       </div>
       <div className='mt-8 grid grid-cols-2 space-x-16'>
@@ -87,6 +89,19 @@ const Home: NextPage = () => {
       </Layout>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+  const token = await getToken({ req: context.req })
+  const userId = token?.sub ?? null
+  if (userId) return { redirect: { destination: `/${session?.user?.address}`, permanent: false } }
+  return {
+    props: {
+      userId,
+      session,
+    },
+  }
 }
 
 export default Home
