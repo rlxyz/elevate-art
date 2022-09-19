@@ -1,9 +1,7 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Link } from '@components/UI/Link'
-import type { GetServerSideProps, NextPage } from 'next'
-import { getToken } from 'next-auth/jwt'
-import { getSession } from 'next-auth/react'
+import type { NextPage } from 'next'
 
 const Guide = () => {
   return (
@@ -89,19 +87,6 @@ const Home: NextPage = () => {
       </Layout>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
-  const token = await getToken({ req: context.req })
-  const userId = token?.sub ?? null
-  if (userId) return { redirect: { destination: `/${session?.user?.address}`, permanent: false } }
-  return {
-    props: {
-      userId,
-      session,
-    },
-  }
 }
 
 export default Home
