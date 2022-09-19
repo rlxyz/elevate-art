@@ -30,7 +30,7 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIG
       enabled: true,
       recordHeadersAndBody: true,
     },
-    version: (process.env.VERCEL_GIT_COMMIT_SHA as string) || env.NEXT_PUBLIC_NODE_ENV, // default to production
+    // version: (process.env.VERCEL_GIT_COMMIT_SHA as string) || env.NEXT_PUBLIC_NODE_ENV, // default to production
     // enableStrictPrivacy: false, see: https://docs.highlight.run/privacy#pU2Cn
   })
 }
