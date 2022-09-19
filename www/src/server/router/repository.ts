@@ -22,28 +22,6 @@ export const repositoryRouter = createRouter()
       })
     },
   })
-  .query('getAllRepositoriesByOrganisationName', {
-    input: z.object({
-      name: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findMany({
-        where: { organisation: { name: input.name } },
-        include: {
-          _count: {
-            select: { layers: true, collections: true },
-          },
-          layers: {
-            include: {
-              _count: {
-                select: { traitElements: true },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
   .query('getRepositoryLayers', {
     input: z.object({
       id: z.string(),
@@ -85,6 +63,28 @@ export const repositoryRouter = createRouter()
                     },
                   },
                 },
+              },
+            },
+          },
+        },
+      })
+    },
+  })
+  .query('getAllRepositoriesByOrganisationName', {
+    input: z.object({
+      name: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.repository.findMany({
+        where: { organisation: { name: input.name } },
+        include: {
+          _count: {
+            select: { layers: true, collections: true },
+          },
+          layers: {
+            include: {
+              _count: {
+                select: { traitElements: true },
               },
             },
           },

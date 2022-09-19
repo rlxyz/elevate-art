@@ -1,7 +1,14 @@
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
+import { NextRouter, useRouter } from 'next/router'
 import { useNotification } from './useNotification'
 import useRepositoryStore from './useRepositoryStore'
+
+export const useQueryRepository = () => {
+  const router: NextRouter = useRouter()
+  const repositoryName: string = router.query.repository as string
+  return trpc.useQuery(['repository.getRepositoryByName', { name: repositoryName }])
+}
 
 export const useQueryRepositoryLayer = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)

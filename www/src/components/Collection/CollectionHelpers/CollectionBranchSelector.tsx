@@ -4,6 +4,7 @@ import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useNotification } from '@hooks/useNotification'
+import { useQueryRepository } from '@hooks/useRepositoryFeatures'
 import { Collection } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { NextRouter, useRouter } from 'next/router'
@@ -24,10 +25,10 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
   const { notifySuccess } = useNotification()
   const mutation = trpc.useMutation('collection.create', {
     onSuccess: (data, variables) => {
-      ctx.setQueryData(
-        ['collection.getCollectionByRepositoryNameAndOrganisationName', { organisationName, repositoryName }],
-        [...(collections || []), data]
-      )
+      // ctx.setQueryData(
+      //   ['collection.getCollectionByRepositoryNameAndOrganisationName', { organisationName, repositoryName }],
+      //   [...(collections || []), data]
+      // )
       setIsOpen(false)
       notifySuccess(
         <span>
@@ -147,97 +148,88 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
   )
 }
 
-const ViewAllRepositories = () => {
+const Index = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = (router.query.collection as string) || 'main'
   const [query, setQuery] = useState('')
-  const { data: collections } = trpc.useQuery([
-    'collection.getCollectionByRepositoryNameAndOrganisationName',
-    { organisationName, repositoryName },
-  ])
-  const [selectedCollection, setSelectedPerson] = useState<null | Collection>(null)
+  const { data } = useQueryRepository()
+  const [selectedCollection, setSelectedPerson] = useState<null | { name: string; id: string }>(null)
 
   useDeepCompareEffect(() => {
-    setSelectedPerson(collections?.find((collection) => collection.name === collectionName) || null)
-  }, [collections, collectionName])
+    if (!data?.collections) return
+    setSelectedPerson(data.collections?.find((collection) => collection.name === collectionName) || null)
+  }, [data?.collections, collectionName])
 
-  if (!collections) return <></>
   const filteredCollections =
     query === ''
-      ? collections
-      : collections.filter((collection) => {
+      ? data?.collections
+      : data?.collections?.filter((collection) => {
           return collection.name.toLowerCase().includes(query.toLowerCase())
         })
 
   return (
-    <>
-      <Listbox value={selectedCollection} onChange={setSelectedPerson}>
-        <Listbox.Button as={Button} variant='ghost' className='pl-5'>
-          <div className='flex justify-between w-full items-center'>
-            <div className='flex space-x-2'>
-              <img src='/images/branch.svg' className='w-4 h-4' />
-              <span className='text-xs font-semibold text-black'>{selectedCollection?.name}</span>
-            </div>
-            <div>
-              <ChevronDownIcon className='w-4 h-4' />
-            </div>
+    <Listbox value={selectedCollection} onChange={setSelectedPerson}>
+      <Listbox.Button as={Button} variant='ghost' className='pl-5'>
+        <div className='flex justify-between w-full items-center'>
+          <div className='flex space-x-2'>
+            <img src='/images/branch.svg' className='w-4 h-4' />
+            <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
           </div>
-        </Listbox.Button>
-        <Transition
-          as={Fragment}
-          enter='transition ease-out duration-200'
-          enterFrom='opacity-0 translate-y-1'
-          enterTo='opacity-100 translate-y-0'
-          leave='transition ease-in duration-150'
-          leaveFrom='opacity-100 translate-y-0'
-          leaveTo='opacity-0 translate-y-1'
-        >
-          <Listbox.Options className='absolute z-10 w-56 py-6'>
-            <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-              <div className='relative bg-white'>
-                <div className='p-2 divide-y divide-mediumGrey space-y-2'>
-                  <input
-                    placeholder='Search...'
-                    onChange={(e) => {
-                      e.preventDefault(), setQuery(e.target.value)
-                    }}
-                    className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-xs py-2 text-darkGrey'
-                  />
-                  <div className='space-y-2 pt-1'>
-                    <span className='text-xs text-darkGrey'>Collections</span>
-                    <div>
-                      {filteredCollections
-                        .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
-                        .map((collection: Collection) => (
-                          <Listbox.Option key={collection.id} value={collection}>
-                            <Link
-                              hover={true}
-                              enabled={collection.name === selectedCollection?.name}
-                              pascalCase={false}
-                              href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${collection.name}`}
-                            >
-                              <div className='flex flex-row justify-between px-2 w-full'>
-                                <span className='text-xs'>{collection.name}</span>
-                                <div>{collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
-                              </div>
-                            </Link>
-                          </Listbox.Option>
-                        ))}
-                    </div>
-                  </div>
-                  <div className='pt-2'>
-                    <AddCollectionButton collections={collections} />
+          <div>
+            <ChevronDownIcon className='w-4 h-4' />
+          </div>
+        </div>
+      </Listbox.Button>
+      <Transition
+        as={Fragment}
+        enter='transition ease-out duration-200'
+        enterFrom='opacity-0 translate-y-1'
+        enterTo='opacity-100 translate-y-0'
+        leave='transition ease-in duration-150'
+        leaveFrom='opacity-100 translate-y-0'
+        leaveTo='opacity-0 translate-y-1'
+      >
+        <Listbox.Options className='absolute z-10 w-56 py-6'>
+          <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
+            <div className='relative bg-white'>
+              <div className='p-2 divide-y divide-mediumGrey space-y-2'>
+                <input
+                  placeholder='Search...'
+                  onChange={(e) => {
+                    e.preventDefault(), setQuery(e.target.value)
+                  }}
+                  className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-xs py-2 text-darkGrey'
+                />
+                <div className='space-y-2 pt-1'>
+                  <span className='text-xs text-darkGrey'>Collections</span>
+                  <div>
+                    {filteredCollections?.map(({ id, name }) => (
+                      <Listbox.Option key={id} value={name}>
+                        <Link
+                          hover={true}
+                          enabled={name === selectedCollection?.name}
+                          pascalCase={false}
+                          href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${name}`}
+                        >
+                          <div className='flex flex-row justify-between px-2 w-full'>
+                            <span className='text-xs'>{name}</span>
+                            <div>{name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
+                          </div>
+                        </Link>
+                      </Listbox.Option>
+                    ))}
                   </div>
                 </div>
+                {/* <div className='pt-2'>{collections && <AddCollectionButton collections={collections} />}</div> */}
               </div>
             </div>
-          </Listbox.Options>
-        </Transition>
-      </Listbox>
-    </>
+          </div>
+        </Listbox.Options>
+      </Transition>
+    </Listbox>
   )
 }
 
-export default ViewAllRepositories
+export default Index

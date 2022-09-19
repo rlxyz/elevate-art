@@ -1,4 +1,3 @@
-import ViewAllRepositories from '@components/Views/ViewAllCollections'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
@@ -9,6 +8,9 @@ import { CollectionNavigationEnum } from '../../types/enums'
 import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
+  ssr: false,
+})
+const DynamicBranchSelector = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionBranchSelector'), {
   ssr: false,
 })
 const DynamicCollectionLayers = dynamic(() => import('@components/Collection/CollectionLayers/Index'), {
@@ -81,7 +83,7 @@ const Index = () => {
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
           <div className='relative flex flex-col space-y-3 justify-between'>
-            <ViewAllRepositories />
+            <DynamicBranchSelector />
             <DynamicRegenerateButton />
             <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
               <FilterByRarity />
