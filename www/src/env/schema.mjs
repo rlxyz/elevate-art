@@ -18,7 +18,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_ETHEREUM_RPC_URL: z.string(),
   NEXT_PUBLIC_INFURA_ID: z.string(),
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),
   NEXT_PUBLIC_ENABLE_TESTNETS: z.boolean(),
@@ -37,7 +36,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_ETHEREUM_RPC_URL: process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL,
   NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
   NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
   NEXT_PUBLIC_ENABLE_TESTNETS: Boolean(process.env.NEXT_PUBLIC_ENABLE_TESTNETS),
