@@ -32,6 +32,7 @@ const ViewAllRepositories = () => {
         </div>
         <div className='col-span-1 h-full w-full'>
           <Button
+            disabled
             className='w-full'
             onClick={(e: any) => {
               e.preventDefault()

@@ -67,7 +67,7 @@ const Index = () => {
           : rankings.length
       )
     )
-  }, [collection, layers])
+  }, [collection?.totalSupply, collection?.generations, collection?.name, layers])
 
   return (
     <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>

@@ -17,6 +17,7 @@ export const useQueryRepositoryLayer = () => {
 
 export const useQueryCollection = () => {
   const collectionId = useRepositoryStore((state) => state.collectionId)
+  console.log({ collectionId })
   return trpc.useQuery(['collection.getCollectionById', { id: collectionId }])
 }
 
