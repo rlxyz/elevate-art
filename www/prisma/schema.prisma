@@ -69,7 +69,7 @@ model Repository {
     layers      LayerElement[]
     collections Collection[]
 
-    organisation   Organisation @relation(fields: [organisationId], references: [id])
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
     @@unique([organisationId, name], name: "repositoryIdentifier")

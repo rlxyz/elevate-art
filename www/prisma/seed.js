@@ -31,14 +31,7 @@ const cleanDb = async () => {
   }
 }
 
-const main = async (
-  address,
-  organisationName,
-  repositoryName,
-  tokenName,
-  totalSupply,
-  layerConfig
-) => {
+const main = async (address, organisationName, repositoryName, tokenName, totalSupply, layerConfig) => {
   try {
     const userData = {
       address: address,
@@ -75,10 +68,7 @@ const main = async (
 
     Promise.all(layerElements).then((elements) => {
       elements.forEach(async (element) => {
-        const total = layerConfig[element.priority].traits.reduce(
-          (acc, trait) => acc + trait.weight,
-          0
-        )
+        const total = layerConfig[element.priority].traits.reduce((acc, trait) => acc + trait.weight, 0)
         await prisma.traitElement.createMany({
           data: layerConfig[element.priority].traits.map((trait) => {
             return {
@@ -152,14 +142,7 @@ const main = async (
 }
 
 cleanDb().then(async () => {
-  await main(
-    '0xb21B6a39ae2f164357f8e616E30521baECfd7f87',
-    'sekured',
-    'roboghosts',
-    'RoboGhost',
-    5555,
-    roboghostData
-  )
+  await main('0xb21B6a39ae2f164357f8e616E30521baECfd7f87', 'sekured', 'roboghosts', 'RoboGhost', 5555, roboghostData)
   // await main(
   //   '0x1fdf89Dd0Eba85603CBdE7f9F5cE5D830ffc7643',
   //   'dreamlab',
