@@ -19,7 +19,7 @@ const AddNewTrait = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <Button disabled className='px-5' variant='primary' size='sm' onClick={() => setIsOpen(true)}>
+      <Button disabled className='px-5 h-full' variant='primary' size='sm' onClick={() => setIsOpen(true)}>
         <span className='text-xs'>Add new...</span>
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
@@ -99,12 +99,12 @@ const LayerLayout = () => {
         </div>
       </div>
       <div className='col-span-2 w-full flex justify-end'>
-        <div className='flex w-full justify-end items-center space-x-2'>
+        <div className='flex w-full justify-end items-center space-x-2 h-1/2'>
           <Link
             href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`}
             external
             className={clsx(
-              'h-8 w-8 border border-mediumGrey rounded-[5px] flex items-center justify-center',
+              'h-full w-full border border-mediumGrey rounded-[5px] flex items-center justify-center',
               currentViewSection === CollectionNavigationEnum.enum.Layers && 'bg-mediumGrey bg-opacity-50'
             )}
           >
@@ -114,7 +114,7 @@ const LayerLayout = () => {
               viewBox='0 0 24 24'
               strokeWidth={1.25}
               stroke='currentColor'
-              className='w-3 h-3'
+              className='w-5 h-5 px-1'
             >
               <path
                 strokeLinecap='round'
@@ -127,7 +127,7 @@ const LayerLayout = () => {
             href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`}
             external
             className={clsx(
-              'h-8 w-8 border border-mediumGrey rounded-[5px] flex items-center justify-center',
+              'h-full w-full border border-mediumGrey rounded-[5px] flex items-center justify-center',
               currentViewSection === CollectionNavigationEnum.enum.Rarity && 'bg-mediumGrey bg-opacity-50'
             )}
           >
@@ -137,7 +137,7 @@ const LayerLayout = () => {
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className='w-3 h-3'
+              className='w-5 h-5 px-1'
             >
               <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
             </svg>

@@ -24,7 +24,6 @@ import type { AppRouter } from '../server/router'
 import '../styles/globals.css'
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
-  console.log('running')
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
     environment: env.NEXT_PUBLIC_NODE_ENV,
     networkRecording: {

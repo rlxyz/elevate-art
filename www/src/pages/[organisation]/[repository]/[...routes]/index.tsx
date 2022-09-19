@@ -8,13 +8,9 @@ import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
 import { useQueryRepository } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { GetServerSideProps } from 'next'
-import { getToken } from 'next-auth/jwt'
-import { getSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
-import { prisma } from '../../../../server/db/client'
 
 // wrapper to hydate organisation & repository data
 const PageImplementation = ({
@@ -166,35 +162,35 @@ const Page = () => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
-  const token = await getToken({ req: context.req })
-  const userId = token?.sub ?? null
-  if (!userId) return { redirect: { destination: '/404', permanent: false } }
-  const { organisation, repository, collection } = context.query
-  const valid = await prisma.collection.findFirst({
-    where: {
-      name: collection as string,
-      repository: {
-        name: repository as string,
-        organisation: {
-          name: organisation as string,
-          admins: {
-            some: {
-              userId: userId,
-            },
-          },
-        },
-      },
-    },
-  })
-  if (!valid) return { redirect: { destination: `/404`, permanent: false } }
-  return {
-    props: {
-      userId,
-      session,
-    },
-  }
-}
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const session = await getSession(context)
+//   const token = await getToken({ req: context.req })
+//   const userId = token?.sub ?? null
+//   if (!userId) return { redirect: { destination: '/404', permanent: false } }
+//   const { organisation, repository, collection } = context.query
+//   const valid = await prisma.collection.findFirst({
+//     where: {
+//       name: collection as string,
+//       repository: {
+//         name: repository as string,
+//         organisation: {
+//           name: organisation as string,
+//           admins: {
+//             some: {
+//               userId: userId,
+//             },
+//           },
+//         },
+//       },
+//     },
+//   })
+//   if (!valid) return { redirect: { destination: `/404`, permanent: false } }
+//   return {
+//     props: {
+//       userId,
+//       session,
+//     },
+//   }
+// }
 
 export default Page

@@ -5,36 +5,57 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useNotification } from '@hooks/useNotification'
 import { useQueryRepository } from '@hooks/useRepositoryFeatures'
-import { Collection } from '@prisma/client'
 import { trpc } from '@utils/trpc'
+import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CollectionNavigationEnum } from 'src/types/enums'
 
-const AddCollectionButton = ({ collections }: { collections: Collection[] }) => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
+  const router: NextRouter = useRouter()
   const { notifySuccess } = useNotification()
-  const mutation = trpc.useMutation('collection.create', {
+  return trpc.useMutation('collection.create', {
+    // Optimistic Update
+    onMutate: async (input) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await ctx.cancelQuery(['repository.getRepositoryByName', { name: input.repositoryName }])
+
+      // Snapshot the previous value
+      const backup = ctx.getQueryData(['repository.getRepositoryByName', { name: input.repositoryName }])
+      if (!backup) return { backup }
+
+      // Optimistically update to the new value
+      const next = produce(backup, (draft) => {
+        draft.collections = [...draft.collections, { id: input.name, name: input.name }]
+      })
+      ctx.setQueryData(['repository.getRepositoryByName', { name: input.repositoryName }], next)
+      return { backup }
+    },
+    onError: (err, variables, context) => {
+      if (!context?.backup) return
+      ctx.setQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }], context.backup)
+    },
+    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
     onSuccess: (data, variables) => {
-      // ctx.setQueryData(
-      //   ['collection.getCollectionByRepositoryNameAndOrganisationName', { organisationName, repositoryName }],
-      //   [...(collections || []), data]
-      // )
-      setIsOpen(false)
+      ctx.setQueryData(['collection.getCollectionById', { id: data.id }], data)
+      const backup = ctx.getQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }])
+      if (!backup) return
+      const next = produce(backup, (draft) => {
+        const index = draft.collections.findIndex((collection) => collection.id === variables.name)
+        draft.collections[index] = {
+          id: data.id,
+          name: data.name,
+        }
+      })
+      ctx.setQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }], next)
+      router.push(`/${variables.organisationName}/${variables.repositoryName}/preview?collection=${variables.name}`)
+      onMutate && onMutate()
       notifySuccess(
         <span>
           <span className='text-blueHighlight'>Successfully</span>
           <span>
-            {' '}
             created a <span className='font-semibold'>new collection!</span>
           </span>
         </span>,
@@ -42,20 +63,112 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
       )
     },
   })
+}
+
+const Index = () => {
+  const router: NextRouter = useRouter()
+  const organisationName: string = router.query.organisation as string
+  const repositoryName: string = router.query.repository as string
+  const collectionName: string = (router.query.collection as string) || 'main'
+  const [query, setQuery] = useState('')
+  const { data } = useQueryRepository()
+  const [selectedCollection, setSelectedPerson] = useState<null | { name: string; id: string }>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  const { mutate, isLoading } = useMutateCreateCollection({
+    onMutate: () => setIsOpen(false),
+  })
+  useDeepCompareEffect(() => {
+    if (!data?.collections) return
+    setSelectedPerson(data.collections?.find((collection) => collection.name === collectionName) || null)
+  }, [data?.collections, collectionName])
+
+  const filteredCollections =
+    query === ''
+      ? data?.collections
+      : data?.collections?.filter((collection) => {
+          return collection.name.toLowerCase().includes(query.toLowerCase())
+        })
+
   return (
-    <>
-      <Button
-        variant='primary'
-        className='w-full px-2'
-        size='sm'
-        onClick={(e: any) => {
-          e.preventDefault()
-          setIsOpen(true)
-        }}
+    <Listbox value={selectedCollection} onChange={setSelectedPerson}>
+      <Listbox.Button as={Button} variant='ghost' className='pl-5'>
+        <div className='flex justify-between w-full items-center'>
+          <div className='flex space-x-2'>
+            <img src='/images/branch.svg' className='w-4 h-4' />
+            <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
+          </div>
+          <div>
+            <ChevronDownIcon className='w-4 h-4' />
+          </div>
+        </div>
+      </Listbox.Button>
+      <Transition
+        as={Fragment}
+        enter='transition ease-out duration-200'
+        enterFrom='opacity-0 translate-y-1'
+        enterTo='opacity-100 translate-y-0'
+        leave='transition ease-in duration-150'
+        leaveFrom='opacity-100 translate-y-0'
+        leaveTo='opacity-0 translate-y-1'
       >
-        <span className='text-xs'>Add New...</span>
-      </Button>
+        <Listbox.Options className='absolute z-10 w-56 py-6'>
+          <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5 max-h-[20rem] overflow-y-scroll no-scrollbar'>
+            <div className='relative bg-white'>
+              <div className='p-2 divide-y divide-mediumGrey space-y-2'>
+                <input
+                  placeholder='Search...'
+                  onChange={(e) => {
+                    e.preventDefault(), setQuery(e.target.value)
+                  }}
+                  className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-xs py-2 text-darkGrey'
+                />
+                <div className='space-y-2 pt-1'>
+                  <span className='text-xs text-darkGrey'>Collections</span>
+                  <div>
+                    {filteredCollections?.map(({ id, name }) => (
+                      <Listbox.Option key={id} value={name}>
+                        <Link
+                          hover={true}
+                          enabled={name === selectedCollection?.name}
+                          pascalCase={false}
+                          href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${name}`}
+                        >
+                          <div className='flex flex-row justify-between px-2 w-full'>
+                            <span className='text-xs'>{name}</span>
+                            <div>{name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
+                          </div>
+                        </Link>
+                      </Listbox.Option>
+                    ))}
+                  </div>
+                </div>
+                <div className='pt-2'>
+                  {data && data.collections && (
+                    <Button
+                      disabled={isLoading}
+                      variant='primary'
+                      className='w-full px-2'
+                      size='sm'
+                      onClick={(e: any) => {
+                        e.preventDefault()
+                        setIsOpen(true)
+                      }}
+                    >
+                      <span className='text-xs'>Add New...</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Listbox.Options>
+      </Transition>
+
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
           <Transition.Child
@@ -88,7 +201,7 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
                     </Dialog.Title>
                     <form
                       onSubmit={handleSubmit((data) => {
-                        mutation.mutate({
+                        mutate({
                           name: data.name,
                           organisationName,
                           repositoryName,
@@ -127,7 +240,7 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
                           </div>
                           <div className='pt-6 flex justify-between'>
                             <div className='ml-[auto]'>
-                              <Button>
+                              <Button disabled={isLoading}>
                                 <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                                   <span className='text-xs'>Confirm</span>
                                 </span>
@@ -143,90 +256,6 @@ const AddCollectionButton = ({ collections }: { collections: Collection[] }) => 
             </div>
           </div>
         </Dialog>
-      </Transition>
-    </>
-  )
-}
-
-const Index = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const collectionName: string = (router.query.collection as string) || 'main'
-  const [query, setQuery] = useState('')
-  const { data } = useQueryRepository()
-  const [selectedCollection, setSelectedPerson] = useState<null | { name: string; id: string }>(null)
-
-  useDeepCompareEffect(() => {
-    if (!data?.collections) return
-    setSelectedPerson(data.collections?.find((collection) => collection.name === collectionName) || null)
-  }, [data?.collections, collectionName])
-
-  const filteredCollections =
-    query === ''
-      ? data?.collections
-      : data?.collections?.filter((collection) => {
-          return collection.name.toLowerCase().includes(query.toLowerCase())
-        })
-
-  return (
-    <Listbox value={selectedCollection} onChange={setSelectedPerson}>
-      <Listbox.Button as={Button} variant='ghost' className='pl-5'>
-        <div className='flex justify-between w-full items-center'>
-          <div className='flex space-x-2'>
-            <img src='/images/branch.svg' className='w-4 h-4' />
-            <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
-          </div>
-          <div>
-            <ChevronDownIcon className='w-4 h-4' />
-          </div>
-        </div>
-      </Listbox.Button>
-      <Transition
-        as={Fragment}
-        enter='transition ease-out duration-200'
-        enterFrom='opacity-0 translate-y-1'
-        enterTo='opacity-100 translate-y-0'
-        leave='transition ease-in duration-150'
-        leaveFrom='opacity-100 translate-y-0'
-        leaveTo='opacity-0 translate-y-1'
-      >
-        <Listbox.Options className='absolute z-10 w-56 py-6'>
-          <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-            <div className='relative bg-white'>
-              <div className='p-2 divide-y divide-mediumGrey space-y-2'>
-                <input
-                  placeholder='Search...'
-                  onChange={(e) => {
-                    e.preventDefault(), setQuery(e.target.value)
-                  }}
-                  className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-xs py-2 text-darkGrey'
-                />
-                <div className='space-y-2 pt-1'>
-                  <span className='text-xs text-darkGrey'>Collections</span>
-                  <div>
-                    {filteredCollections?.map(({ id, name }) => (
-                      <Listbox.Option key={id} value={name}>
-                        <Link
-                          hover={true}
-                          enabled={name === selectedCollection?.name}
-                          pascalCase={false}
-                          href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${name}`}
-                        >
-                          <div className='flex flex-row justify-between px-2 w-full'>
-                            <span className='text-xs'>{name}</span>
-                            <div>{name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
-                          </div>
-                        </Link>
-                      </Listbox.Option>
-                    ))}
-                  </div>
-                </div>
-                {/* <div className='pt-2'>{collections && <AddCollectionButton collections={collections} />}</div> */}
-              </div>
-            </div>
-          </div>
-        </Listbox.Options>
       </Transition>
     </Listbox>
   )

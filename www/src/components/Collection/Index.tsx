@@ -39,6 +39,7 @@ const Index = () => {
       setTraitMapping: state.setTraitMapping,
     }
   })
+
   useDeepCompareEffect(() => {
     if (!collection || !layers) return
     const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
@@ -67,7 +68,7 @@ const Index = () => {
           : rankings.length
       )
     )
-  }, [collection, layers])
+  }, [collection])
 
   return (
     <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>

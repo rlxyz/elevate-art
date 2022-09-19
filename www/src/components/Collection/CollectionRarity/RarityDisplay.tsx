@@ -24,7 +24,7 @@ export const RarityDisplay = () => {
   const { data: collectionData } = useQueryCollection()
   const { currentLayer } = useCurrentLayer()
   const { traitElements, id: layerId } = currentLayer
-  const { mutate } = useMutateRepositoryLayersWeight()
+  const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
 
   useDeepCompareEffect(() => {
     setSummedRarityWeightage(calculateSumArray(traitElements))
@@ -88,23 +88,16 @@ export const RarityDisplay = () => {
             }),
           }}
           onSubmit={(values) => {
-            mutate(
-              {
-                repositoryId,
-                layerId,
-                traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
-                  return {
-                    id,
-                    weight: (weight / calculateSumArray(values.traits)) * 100,
-                  }
-                }),
-              },
-              {
-                onSuccess: (data, variables) => {
-                  setHasFormChange(false)
-                },
-              }
-            )
+            mutate({
+              repositoryId,
+              layerId,
+              traits: values.traits.map(({ id, weight }: { id: string; weight: number }) => {
+                return {
+                  id,
+                  weight: (weight / calculateSumArray(values.traits)) * 100,
+                }
+              }),
+            })
           }}
         >
           {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (

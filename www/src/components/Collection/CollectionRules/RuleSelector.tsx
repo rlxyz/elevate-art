@@ -20,7 +20,13 @@ const RuleSelector = () => {
   const { data: layers } = useQueryRepositoryLayer()
   const { currentLayer } = useCurrentLayer()
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const { mutate, isLoading } = useMutateRepositoryRule()
+  const { mutate, isLoading } = useMutateRepositoryRule({
+    onMutate: () => {
+      setSelectedCondition(null)
+      setSelectedLeftTrait(null)
+      setSelectedRightTrait(null)
+    },
+  })
 
   if (!layers) return null
   const allRightTraitElements = layers
