@@ -19,7 +19,7 @@ const AddNewTrait = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <Button className='px-5' variant='primary' size='sm' onClick={() => setIsOpen(true)}>
+      <Button disabled className='px-5' variant='primary' size='sm' onClick={() => setIsOpen(true)}>
         <span className='text-xs'>Add new...</span>
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
