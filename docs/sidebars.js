@@ -133,6 +133,7 @@ module.exports = {
       type: 'category',
       label: 'Zora API',
       items: [
+        'mint-client/intro',
         'zora-api/intro',
         'zora-api/query-formatting',
         'zora-api/media-encoding',
