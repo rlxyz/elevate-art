@@ -9,14 +9,14 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/logo_white.svg',
-  organizationName: 'ourzora',
-  projectName: 'Zora Docs',
+  favicon: 'img/Logo_White.svg',
+  organizationName: 'elevate.art',
+  projectName: 'Elevate Art Docs',
   themeConfig: {
     navbar: {
       logo: {
-        alt: 'Zora Docs Logo',
-        src: 'img/logo_white.svg',
+        alt: 'Elevat Art Logo',
+        src: 'img/Logo_White.svg',
       },
       items: [
         {
