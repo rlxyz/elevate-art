@@ -4,7 +4,6 @@ import HomepageLogo from '../../static/img/Logo_Text_White.svg'
 import { GettingStartedCards } from '../components/GettingStartedCards'
 import ProjectsCards from '../components/ProjectsCards'
 import { ShaderComponent } from '../components/ShaderComponent'
-import { ToolsCards } from '../components/ToolsCards'
 import styles from './index.module.css'
 
 export default function Home() {
@@ -24,8 +23,8 @@ export default function Home() {
             </a>
           </div>
           <GettingStartedCards />
-          <p className={styles.tools}>Tools</p>
-          <ToolsCards />
+          {/* <p className={styles.tools}>Tools</p> */}
+          {/* <ToolsCards /> */}
           <p className={styles.projects}>Projects Building on Elevate.Art</p>
           <ProjectsCards />
         </div>

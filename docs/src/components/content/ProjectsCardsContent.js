@@ -1,9 +1,6 @@
 import DreamLab from '@site/static/img/projects/dreamlab.jpeg'
-import Fellowship from '@site/static/img/projects/fellowship.jpeg'
 import FortuneFriends from '@site/static/img/projects/ffc.gif'
-import NGV from '@site/static/img/projects/ngv_logo_variations_2.gif'
 import Proof from '@site/static/img/projects/proof.jpeg'
-import Rektguy from '@site/static/img/projects/rekt.jpeg'
 import Roboghosts from '@site/static/img/projects/roboghosts.jpeg'
 
 export const projectsContent = [
@@ -11,10 +8,10 @@ export const projectsContent = [
     project: Proof,
     link: 'https://collective.proof.xyz/grails',
   },
-  {
-    project: Fellowship,
-    link: 'https://fellowship.xyz/',
-  },
+  // {
+  //   project: Fellowship,
+  //   link: 'https://fellowship.xyz/',
+  // },
   {
     project: DreamLab,
     link: 'https://dreamlab.art/',
@@ -23,18 +20,18 @@ export const projectsContent = [
     project: FortuneFriends,
     link: 'https://fortunefriends.club//',
   },
-  {
-    project: Rektguy,
-    link: 'https://www.rektguy.com/',
-  },
+  // {
+  //   project: Rektguy,
+  //   link: 'https://www.rektguy.com/',
+  // },
   {
     project: Roboghosts,
     link: 'https://www.roboghosts.com/',
   },
-  {
-    project: NGV,
-    link: 'https://ngv.vic.gov.au/',
-  },
+  // {
+  //   project: NGV,
+  //   link: 'https://ngv.vic.gov.au/',
+  // },
   // {
   //   project: BrightMoments,
   //   link: 'https://live.brightmoments.io/',
