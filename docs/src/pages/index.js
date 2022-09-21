@@ -1,11 +1,11 @@
-import React from 'react'
 import Layout from '@theme/Layout'
-import styles from './index.module.css'
+import React from 'react'
+import HomepageLogo from '../../static/img/Logo_Text_White.svg'
 import { GettingStartedCards } from '../components/GettingStartedCards'
-import { ToolsCards } from '../components/ToolsCards'
-import { ShaderComponent } from '../components/ShaderComponent'
 import ProjectsCards from '../components/ProjectsCards'
-import HomepageLogo from '../../static/img/logo_text_white.svg'
+import { ShaderComponent } from '../components/ShaderComponent'
+import { ToolsCards } from '../components/ToolsCards'
+import styles from './index.module.css'
 
 export default function Home() {
   return (
