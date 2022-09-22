@@ -47,7 +47,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
               <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
                 <div className={`relative h-full w-full`}>
                   <img
-                    className='rounded-[5px]'
+                    className='rounded-t-[5px]'
                     src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
                   />
                 </div>
@@ -103,20 +103,24 @@ const InfiniteScrollGridItems = ({
             onClick={() => setSelectedToken({ traitElements: token })}
           >
             <RenderIfVisible>
-              <div className='pb-[100%] blocks'>
-                <div className='absolute h-full w-full'>
-                  <InfiniteScrollGridItem
-                    key={`${index}`}
-                    token={createToken({
-                      id: Number(tokens[index]),
-                      name: collection.name,
-                      generation: collection.generations,
-                      layers,
-                    })}
-                    name={`#${tokens[index] || 0}`}
-                  />
+              <div className='flex flex-col'>
+                <div className='pb-[100%] blocks'>
+                  <div className='absolute h-full w-full'>
+                    <InfiniteScrollGridItem
+                      key={`${index}`}
+                      token={createToken({
+                        id: Number(tokens[index]),
+                        name: collection.name,
+                        generation: collection.generations,
+                        layers,
+                      })}
+                      name={`#${tokens[index] || 0}`}
+                    />
+                  </div>
                 </div>
-                {/* <span className='p-2 text-xs font-semibold'>{`#${tokens[index] || 0}`}</span> */}
+                <span className='flex text-xs py-1 font-semibold items-center justify-center w-full'>{`#${
+                  tokens[index] || 0
+                }`}</span>
               </div>
             </RenderIfVisible>
           </div>
