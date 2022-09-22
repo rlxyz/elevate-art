@@ -35,7 +35,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
   return (
     <>
       <motion.div
-        className='relative flex flex-col justify-center items-center border border-mediumGrey rounded-[5px] w-full h-full'
+        className='relative flex flex-col justify-center items-center w-full h-full'
         variants={item}
         initial='hidden'
         animate={controls}
@@ -97,33 +97,32 @@ const InfiniteScrollGridItems = ({
           layers,
         })
         return (
-          <div
-            key={index}
-            className='cursor-pointer relative col-span-1'
-            onClick={() => setSelectedToken({ traitElements: token })}
-          >
-            <RenderIfVisible>
+          <RenderIfVisible>
+            <div
+              key={index}
+              className='cursor-pointer relative col-span-1 border border-mediumGrey rounded-[5px]'
+              onClick={() => setSelectedToken({ traitElements: token })}
+            >
               <div className='flex flex-col'>
-                <div className='pb-[100%] blocks'>
-                  <div className='absolute h-full w-full'>
-                    <InfiniteScrollGridItem
-                      key={`${index}`}
-                      token={createToken({
-                        id: Number(tokens[index]),
-                        name: collection.name,
-                        generation: collection.generations,
-                        layers,
-                      })}
-                      name={`#${tokens[index] || 0}`}
-                    />
-                  </div>
+                <div className='absolute h-full w-full'>
+                  <InfiniteScrollGridItem
+                    key={`${index}`}
+                    token={createToken({
+                      id: Number(tokens[index]),
+                      name: collection.name,
+                      generation: collection.generations,
+                      layers,
+                    })}
+                    name={`#${tokens[index] || 0}`}
+                  />
                 </div>
-                <span className='flex text-xs py-1 font-semibold items-center justify-center w-full'>{`#${
+                <div className='pb-[100%] blocks'></div>
+                <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
                   tokens[index] || 0
                 }`}</span>
               </div>
-            </RenderIfVisible>
-          </div>
+            </div>
+          </RenderIfVisible>
         )
       })}
       <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>
