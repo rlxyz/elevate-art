@@ -6,18 +6,22 @@ import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryLayersWeight, useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { toPascalCaseWithSpace } from '@utils/format'
-import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage } from '@utils/math'
+import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage, calculateTraitRarityScore } from '@utils/math'
+import clsx from 'clsx'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useState } from 'react'
+import { clientEnv } from 'src/env/schema.mjs'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
 export const RarityDisplay = () => {
+  const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
@@ -104,41 +108,65 @@ export const RarityDisplay = () => {
             <>
               <div className='flex flex-col pb-14'>
                 <div className='inline-block min-w-full align-middle'>
-                  <Form onSubmit={handleSubmit}>
-                    <table className='w-full table-fixed divide-y divide-mediumGrey'>
+                  <Form onSubmit={handleSubmit} className='overflow-hidden'>
+                    <table className='min-w-full table-fixed divide-y divide-mediumGrey'>
                       <thead>
-                        <tr>
-                          {[
-                            'Image',
-                            'Name',
-                            'Estimate in Collection',
-                            // 'Rarity Score',
-                            'Percentage',
-                          ].map((item, index) => {
+                        <tr className='bg-lightGray border border-mediumGrey'>
+                          <th className='pl-3'>
+                            <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
+                          </th>
+                          {['Image', 'Name', 'Estimate in Collection', 'Rarity Score', '%'].map((item, index) => {
                             return (
                               <th
                                 key={item}
                                 scope='col'
-                                className={`${
-                                  index === 3 ? 'text-right' : 'text-left'
-                                }  text-xs font-semibold uppercase text-darkGrey pb-8`}
+                                className={clsx('text-left text-xs font-normal uppercase text-darkGrey py-3')}
                               >
                                 {item}
                               </th>
                             )
                           })}
+                          <th className='pr-3'>
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='w-4 h-4 text-darkGrey'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                              />
+                            </svg>
+                          </th>
                         </tr>
                       </thead>
                       <tbody className='divide-y divide-mediumGrey'>
-                        {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
+                        {traitElements.map(({ name, id, layerElementId, updatedAt }: TraitElement, index: number) => (
                           <tr key={index}>
-                            <td className='py-8'>
-                              <AdvancedImage url={`${layerElementId}/${id}`} />
+                            <th className='pl-3'>
+                              <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
+                            </th>
+                            <td className='py-3'>
+                              <div className='relative h-8 w-8 border border-mediumGrey rounded-[5px]'>
+                                <Image
+                                  src={cld
+                                    .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                                    .toURL()}
+                                  layout='fill'
+                                  className='rounded-[5px]'
+                                />
+                              </div>
                             </td>
-                            <td className='whitespace-nowrap text-sm font-medium'>{toPascalCaseWithSpace(name)}</td>
-                            <td className='whitespace-nowrap text-sm font-medium'>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
+                              {toPascalCaseWithSpace(name)}
+                            </td>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>
-                                <div className='w-24'>
+                                <div className='w-16'>
                                   <Textbox
                                     id={`traits.${index}.weight`}
                                     type='number'
@@ -154,22 +182,38 @@ export const RarityDisplay = () => {
                                 <span>out of {collectionData.totalSupply}</span>
                               </div>
                             </td>
-                            {/* <td className='whitespace-nowrap text-sm font-medium'>
-                                {calculateTraitRarityScore(
-                                    values.traits[index]?.weight,
-                                    calculateSumArray(values.traits),
-                                    collection.totalSupply
-                                  )
-                                    .toFixed(2)
-                                    .toString()}
-                                </td> */}
-                            <td className='whitespace-nowrap text-right text-sm font-medium'>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                              {calculateTraitRarityScore(
+                                Number(values.traits[index]?.weight),
+                                calculateSumArray(values.traits),
+                                collectionData.totalSupply
+                              )
+                                .toFixed(2)
+                                .toString()}
+                            </td>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               {calculateTraitRarityPercentage(
                                 Number(values.traits[index]?.weight),
                                 calculateSumArray(values.traits)
                               ).toFixed(2)}
                               %
                             </td>
+                            <th className='pr-3'>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                strokeWidth={1.5}
+                                stroke='currentColor'
+                                className='w-4 h-4 text-darkGrey'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                                />
+                              </svg>
+                            </th>
                           </tr>
                         ))}
                       </tbody>
