@@ -97,9 +97,8 @@ const InfiniteScrollGridItems = ({
           layers,
         })
         return (
-          <RenderIfVisible>
+          <RenderIfVisible key={index}>
             <div
-              key={index}
               className='cursor-pointer relative col-span-1 border border-mediumGrey rounded-[5px]'
               onClick={() => setSelectedToken({ traitElements: token })}
             >
