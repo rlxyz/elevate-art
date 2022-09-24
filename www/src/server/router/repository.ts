@@ -121,6 +121,7 @@ export const repositoryRouter = createRouter()
         data: {
           name: 'main',
           repositoryId: repository.id,
+          totalSupply: 10000,
         },
       })
       return repository

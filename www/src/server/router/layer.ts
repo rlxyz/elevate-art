@@ -60,12 +60,12 @@ export const layerElementRouter = createRouter()
       repositoryId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      // todo: should be wrapped in a transaction
       await ctx.prisma.layerElement.createMany({
-        data: input.layers.map(({ layerName: name }) => {
+        data: input.layers.map(({ layerName: name }, index) => {
           return {
             name,
             repositoryId: input.repositoryId,
+            priority: index,
           }
         }),
         skipDuplicates: true,

@@ -112,7 +112,6 @@ const Page = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false)
   const { currentLayer } = useCurrentLayer()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
-
   useEffect(() => {
     setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
   }, [organisationName, repositoryName, collectionName])

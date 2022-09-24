@@ -25,24 +25,22 @@ export const FolderUpload = ({
     }[]
   >([])
   const mr = trpc.useMutation('repository.create', {
-    onSuccess: (data, variables) => setRepository && setRepository(data),
+    onSuccess: (data) => setRepository && setRepository(data),
   })
-
-  const ml = trpc.useMutation('layer.createMany', {
-    onSuccess: (data, variables) => console.log('created all layers'),
-  })
-
+  const ml = trpc.useMutation('layer.createMany')
   const uploadCollectionLayerImageCloudinary = ({
+    repositoryId,
     layerName,
     trait,
     file,
   }: {
+    repositoryId: string
     layerName: string
     file: any
     trait: TraitElement
   }) => {
     return new Promise((resolve, reject) => {
-      const key = `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${organisationId}/${trait.layerElementId}`
+      const key = `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}`
       const data = new FormData()
       data.append('file', file)
       data.append('public_id', trait.id)
@@ -112,7 +110,7 @@ export const FolderUpload = ({
           ml.mutate(
             { repositoryId: data.id, layers: layerNames },
             {
-              onSuccess: (data) => {
+              onSuccess: (data, variables) => {
                 files.map((file: any) => {
                   const reader = new FileReader()
                   const pathArray = String(file.path).split('/')
@@ -125,6 +123,7 @@ export const FolderUpload = ({
                     const trait = data.filter((item) => item.name === traitName)[0]
                     if (!trait) return // todo: throw error
                     uploadCollectionLayerImageCloudinary({
+                      repositoryId: variables.repositoryId,
                       layerName,
                       trait,
                       file,
