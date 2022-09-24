@@ -47,7 +47,7 @@ const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: 
               <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
                 <div className={`relative h-full w-full`}>
                   <img
-                    className='rounded-t-[5px]'
+                    className='rounded-[5px]'
                     src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
                   />
                 </div>
@@ -88,7 +88,7 @@ const InfiniteScrollGridItems = ({
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
-    <div className='grid grid-cols-5 gap-y-6 gap-x-6 overflow-hidden'>
+    <div className='grid grid-cols-5 gap-y-1 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
         const token = createToken({
           id: Number(tokens[index]),
@@ -98,10 +98,7 @@ const InfiniteScrollGridItems = ({
         })
         return (
           <RenderIfVisible key={index}>
-            <div
-              className='cursor-pointer relative col-span-1 border border-mediumGrey rounded-[5px]'
-              onClick={() => setSelectedToken({ traitElements: token })}
-            >
+            <div className='cursor-pointer relative col-span-1' onClick={() => setSelectedToken({ traitElements: token })}>
               <div className='flex flex-col'>
                 <div className='absolute h-full w-full'>
                   <InfiniteScrollGridItem

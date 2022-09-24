@@ -16,9 +16,6 @@ const DynamicBranchSelector = dynamic(() => import('@components/Collection/Colle
 const DynamicCollectionLayers = dynamic(() => import('@components/Collection/CollectionLayers/Index'), {
   ssr: false,
 })
-const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
-  ssr: false,
-})
 const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
   ssr: false,
 })
@@ -71,38 +68,31 @@ const Index = () => {
   }, [collection])
 
   return (
-    <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-      <div className='col-span-2 py-8 -ml-4'>
-        {[
-          CollectionNavigationEnum.enum.Layers,
-          CollectionNavigationEnum.enum.Rarity,
-          CollectionNavigationEnum.enum.Rules,
-        ].includes(currentViewSection) && (
-          <div className='flex flex-col space-y-6 justify-between'>
-            <DynamicLayerFolder />
-          </div>
-        )}
-        {currentViewSection === CollectionNavigationEnum.enum.Preview && (
-          <div className='relative flex flex-col space-y-3 justify-between'>
-            <DynamicBranchSelector />
-            <DynamicRegenerateButton />
-            <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
-              <FilterByRarity />
-              <div className='px-3'>
-                <div className='bg-mediumGrey h-[0.25px] w-full' />
+    <div className='w-full h-full'>
+      {currentViewSection === CollectionNavigationEnum.enum.Preview && (
+        <div className='grid grid-flow-row-dense grid-cols-10 grid-rows-1 gap-x-6'>
+          <div className='col-span-2 py-8'>
+            <div className='relative flex flex-col space-y-3 justify-between'>
+              <DynamicBranchSelector />
+              <DynamicRegenerateButton />
+              <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
+                <FilterByRarity />
+                <div className='px-3'>
+                  <div className='bg-mediumGrey h-[0.25px] w-full' />
+                </div>
+                <FilterByTrait />
               </div>
-              <FilterByTrait />
             </div>
           </div>
-        )}
-      </div>
-      <div className='col-span-8'>
-        {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
-        {[CollectionNavigationEnum.enum.Layers, CollectionNavigationEnum.enum.Rarity].includes(currentViewSection) && (
-          <DynamicCollectionLayers />
-        )}
-        {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
-      </div>
+          <div className='col-span-8'>
+            <DynamicCollectionPreview />
+          </div>
+        </div>
+      )}
+      {[CollectionNavigationEnum.enum.Layers, CollectionNavigationEnum.enum.Rarity].includes(currentViewSection) && (
+        <DynamicCollectionLayers />
+      )}
+      {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
     </div>
   )
 }

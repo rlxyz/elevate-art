@@ -3,6 +3,7 @@ import { Link } from '@components/UI/Link'
 import { Dialog, Transition } from '@headlessui/react'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
@@ -12,6 +13,10 @@ import { FolderUpload } from '../CollectionHelpers/FileUpload'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
 import { RarityDisplay } from '../CollectionRarity/RarityDisplay'
 import LayerGrid from './LayerGrid'
+
+const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
+  ssr: false,
+})
 
 const AddNewTrait = () => {
   const { currentLayer } = useCurrentLayer()
@@ -156,10 +161,17 @@ const Index = () => {
   return (
     <CollectionViewContentWrapper>
       <LayerLayout />
-      {currentViewSection === CollectionNavigationEnum.enum.Layers && (
-        <LayerGrid traitElements={traitElements} layerName={name} />
-      )}
-      {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RarityDisplay />}
+      <div className='grid grid-cols-10 gap-x-6'>
+        <div className='col-span-2'>
+          <DynamicLayerFolder />
+        </div>
+        <div className='col-span-8'>
+          {currentViewSection === CollectionNavigationEnum.enum.Layers && (
+            <LayerGrid traitElements={traitElements} layerName={name} />
+          )}
+          {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RarityDisplay />}
+        </div>
+      </div>
     </CollectionViewContentWrapper>
   )
 }

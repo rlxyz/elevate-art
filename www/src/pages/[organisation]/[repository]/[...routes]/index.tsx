@@ -131,11 +131,6 @@ const Page = () => {
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
           },
           {
-            name: CollectionNavigationEnum.enum.Layers,
-            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
-            enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
-          },
-          {
             name: CollectionNavigationEnum.enum.Rarity,
             href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,

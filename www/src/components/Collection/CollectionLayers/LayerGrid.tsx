@@ -66,7 +66,7 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
       ) : (
         traitElements.map((trait: TraitElement, index: number) => {
           return (
-            <div key={index} className='cursor-pointer relative col-span-1  border border-mediumGrey rounded-[5px]'>
+            <div key={index} className='cursor-pointer relative col-span-1'>
               <div className='flex flex-col'>
                 <div className='pb-[100%] blocks'>
                   <div className='absolute h-full w-full'>
@@ -80,12 +80,12 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
                     >
                       {({ values, handleChange }) => {
                         return (
-                          <Form className='relative flex flex-col justify-center items-center border-mediumGrey rounded'>
+                          <Form className='relative flex flex-col justify-center items-center'>
                             <div className='overflow-hidden w-full h-full'>
                               <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
                                 <div className={`relative h-full w-full`}>
                                   <img
-                                    className='rounded-t-[5px]'
+                                    className='rounded-[5px] border border-mediumGrey'
                                     src={cld
                                       .image(
                                         `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}/${trait.id}.png`

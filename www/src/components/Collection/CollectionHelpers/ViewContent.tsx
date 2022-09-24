@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 export const CollectionViewContentWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <main className='space-y-9 pl-8 py-8 min-h-[calc(100vh-19rem)]'>{children}</main>
+  return <main className='space-y-9 py-8 min-h-[calc(100vh-19rem)]'>{children}</main>
 }
 
 export const CollectionViewContent = ({
@@ -23,7 +23,7 @@ export const CollectionViewContent = ({
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>{description || '...'}</p>
         </div>
       </div>
-      <div>{children}</div>
+      <div className='w-full'>{children}</div>
     </CollectionViewContentWrapper>
   )
 }

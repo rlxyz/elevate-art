@@ -16,7 +16,7 @@ const SectionHeaderHelper = () => {
 
 export const SectionHeader = ({ title, description }: { title: string; description: string }) => {
   return (
-    <main className='pointer-events-auto'>
+    <main className='pointer-events-auto -ml-2'>
       <div className='flex justify-between items-center h-[10rem] space-y-2'>
         <div className='flex flex-col space-y-1'>
           <span className='text-3xl font-semibold'>{title}</span>
