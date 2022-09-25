@@ -1,10 +1,12 @@
 import Button from '@components/UI/Button'
+import Loading from '@components/UI/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import { Organisation, Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
@@ -12,14 +14,6 @@ import { FileWithPath, useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const MAX_BYTES_ALLOWED = 9990000
-const getRepositoryLayerObjects = (files: any): { [key: string]: string[] } => {
-  return files.reduce(
-    (acc: any, cur: any) => (
-      (acc[cur.path.split('/')[2]] = [...(acc[cur.path.split('/')[2]] || []), cur.path.split('/')[3].replace('.png', '')]), acc
-    ),
-    {}
-  )
-}
 
 const validateFiles = (files: FileWithPath[]): boolean => {
   return files.filter((file) => file.path?.split('/').length !== 4 || file.size > MAX_BYTES_ALLOWED).length === 0
@@ -46,8 +40,10 @@ const getRepositoryLayerObjectUrls = (
   }, {})
 }
 
-const getRepositoryLayerNames = (fileObject: { [key: string]: string[] }): { layerName: string; traitNames: string[] }[] => {
-  return Object.entries(fileObject).map(([key, value]) => ({ layerName: key, traitNames: value }))
+const getRepositoryLayerNames = (fileObject: {
+  [key: string]: { name: string }[]
+}): { layerName: string; traitNames: string[] }[] => {
+  return Object.entries(fileObject).map(([key, values]) => ({ layerName: key, traitNames: values.map((x) => x.name) }))
 }
 
 const createCloudinaryFormData = (file: any, trait: TraitElement, repositoryId: string) => {
@@ -62,16 +58,7 @@ const createCloudinaryFormData = (file: any, trait: TraitElement, repositoryId: 
   return data
 }
 
-export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organisation; onSuccess: () => void }) => {
-  const [layers, setLayers] = useState<
-    {
-      name: string
-      size: number
-      current: number
-      total: number
-      progress: string
-    }[]
-  >([])
+export const FolderUpload = ({ organisation }: { organisation: Organisation }) => {
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: {
       name: string
@@ -89,8 +76,7 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
       router.push(`/${organisation.name}`)
     },
   })
-
-  const { notifySuccess, notifyError } = useNotification()
+  const { notifyError } = useNotification()
   const uploadCollectionLayerImageCloudinary = ({
     repositoryId,
     layerName,
@@ -109,25 +95,22 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
         body: data,
       })
         .then(async (response) => {
-          const data = await response.json()
-          const { bytes } = data
-          setLayers((prev) => {
-            const layer = prev.find((layer) => layer.name === layerName)
-            const index = prev.findIndex((layer) => layer.name === layerName)
-            if (!layer || !index) return [...prev]
-            return [
-              ...prev.slice(0, index),
+          setUploadedFiles((prev) => {
+            if (!prev) return prev
+            const index = prev[layerName]?.findIndex((x) => x.name === trait.name)
+            const item = prev[layerName]?.find((x) => x.name === trait.name)
+            if (typeof index === 'undefined' || !item) return prev
+            prev[layerName] = [
+              ...(prev[layerName]?.slice(0, index) || []),
               {
-                name: layer.name,
-                size: layer.size + bytes,
-                current: layer.current + 1,
-                total: layer.total,
-                progress: `w-[${Math.round((((layer.current + 1) / layer.total) * 100) / 10) * 10}%]`,
+                ...item,
+                uploaded: true,
               },
-              ...prev.slice(index + 1),
+              ...(prev[layerName]?.slice(index + 1) || []),
             ]
+            return prev
           })
-          resolve(data)
+          resolve(response)
         })
         .catch((err) => {
           reject(err)
@@ -136,21 +119,15 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
   }
   const [repository, setRepository] = useState<Repository>()
 
-  const onDrop = useCallback(async (files: any) => {
+  const onDrop = useCallback(async (files: FileWithPath[]) => {
+    // step 1: validate files
     if (!validateFiles(files)) {
       alert("Something wrong with the format you've uploaded")
       return
     }
 
-    // notifySuccess(
-    //   <div>
-    //     <span>Successfully</span> uploaded <span className='text-blueHighlight'>{files.length} files</span>
-    //   </div>,
-    //   'new files'
-    // )
-
     // step 2: get repository name
-    const repositoryName: string = files[0].path.split('/')[1] as string
+    const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
 
     // step 3: create repository
     createRepository(
@@ -158,51 +135,35 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
       {
         onSuccess: (data) => {
           // step 4: set repository data
-          setUploadedFiles(getRepositoryLayerObjectUrls(files))
+          const layers = getRepositoryLayerObjectUrls(files)
+          setUploadedFiles(layers)
           setRepository(data)
-
-          return
-          // step 5: get layer objects
-          const layers: { layerName: string; traitNames: string[] }[] = getRepositoryLayerNames(getRepositoryLayerObjects(files))
-
-          // step 6: set layers
-          setLayers(
-            layers.map((layer) => {
-              return {
-                name: layer.layerName,
-                size: 0,
-                current: 0,
-                total: layer.traitNames.length,
-                progress: 'w-[5%]',
-              }
-            })
-          )
 
           // step 7: create layers
           createLayers(
-            { repositoryId: data.id, layers },
+            { repositoryId: data.id, layers: getRepositoryLayerNames(layers) },
             {
               onSuccess: (data, variables) => {
-                files.map((file: any) => {
+                files.map((file: FileWithPath) => {
                   const reader = new FileReader()
                   const pathArray = String(file.path).split('/')
                   const layerName = pathArray[2]
                   const traitName = pathArray[3]?.replace('.png', '')
-                  // reader.onabort = () => console.log('file reading was aborted')
-                  reader.onerror = () => console.log('file reading has failed')
+                  // reader.onabort = () => console.error('file reading was aborted')
+                  // reader.onerror = () => console.error('file reading has failed')
                   reader.onload = async () => {
-                    if (!traitName || !layerName) return // todo: throw error
+                    if (!traitName || !layerName) return
                     const trait = data.filter((item) => item.name === traitName)[0]
-                    if (!trait) return // todo: throw error
+                    if (!trait) return
                     uploadCollectionLayerImageCloudinary({
                       repositoryId: variables.repositoryId,
                       layerName,
                       trait,
                       file,
                     })
+                    // .then(() => console.log('uploaded', layerName, trait.name))
                   }
                   reader.readAsArrayBuffer(file)
-                  onSuccess()
                 })
               },
             }
@@ -215,7 +176,7 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
     )
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],
@@ -226,17 +187,22 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
 
   return (
     <div className='space-y-6 w-full'>
-      {!uploadedFiles && (
+      {!uploadedFiles ? (
         <div className='h-[20rem]' {...getRootProps()}>
           <input {...getInputProps()} />
           <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
-            <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
-            <span> to upload</span>
-            <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
+            {acceptedFiles.length > 0 ? (
+              <Loading />
+            ) : (
+              <>
+                <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
+                <span> to upload</span>
+                <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
+              </>
+            )}
           </div>
         </div>
-      )}
-      {uploadedFiles ? (
+      ) : (
         <div className='divide-y divide-mediumGrey space-y-3'>
           <div className='flex flex-row justify-between items-end'>
             <div className='flex flex-col space-y-2'>
@@ -257,9 +223,8 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
                 Cancel
               </Button>
               <Button
-                // onClick={() => router.push(`/${organisationName}/${repository?.name}/preview`)} // todo: should go to collection creation page
-                // disabled={repository === null && createProjectDisabled}
-                disabled
+                onClick={() => router.push(`/${organisation.name}/${repository?.name}/preview`)} // todo: should go to collection creation page
+                disabled={Object.entries(uploadedFiles).some(([, value]) => value.some((x) => !x.uploaded))}
               >
                 Create Project
               </Button>
@@ -286,8 +251,11 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
                               </span>
                             </div>
                           </div>
-                          <div className='w-full rounded-[5px] h-1 bg-lightGray'>
-                            <div className={`bg-blueHighlight h-1 w-[1%]`}></div>
+                          <div className='rounded-[5px] h-1 bg-lightGray text-left'>
+                            <motion.div
+                              style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
+                              className={`bg-blueHighlight h-1 w-full`}
+                            />
                           </div>
                         </div>
                         <div className='col-span-1 flex flex-col'>
@@ -321,7 +289,9 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
                                   <div className='relative border border-mediumGrey rounded-[5px]'>
                                     <div className='pb-[100%]' />
                                     <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
-                                    {/* <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' /> */}
+                                    {item.uploaded && (
+                                      <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
+                                    )}
                                     {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
                                   </div>
                                   <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
@@ -338,8 +308,6 @@ export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organi
             })}
           </div>
         </div>
-      ) : (
-        <></>
       )}
     </div>
   )
