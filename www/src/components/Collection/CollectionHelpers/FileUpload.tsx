@@ -1,11 +1,12 @@
 import { Disclosure, Transition } from '@headlessui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { useNotification } from '@hooks/useNotification'
 import { Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { FileWithPath, useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const getRepositoryLayerObjects = (files: any): { [key: string]: string[] } => {
@@ -17,12 +18,20 @@ const getRepositoryLayerObjects = (files: any): { [key: string]: string[] } => {
   )
 }
 
-const getRepositoryLayerObjectUrls = (files: File[]): { [key: string]: { name: string; src: string }[] } => {
+const getRepositoryLayerObjectUrls = (
+  files: FileWithPath[]
+): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
   return files.reduce(
-    (acc: any, cur: any) => (
-      (acc[cur.path.split('/')[2]] = [
-        ...(acc[cur.path.split('/')[2]] || []),
-        { name: cur.path.split('/')[3].replace('.png', ''), src: URL.createObjectURL(cur) },
+    (acc: any, cur: FileWithPath) => (
+      (acc[cur.path?.split('/')[2] || ''] = [
+        ...(acc[cur.path?.split('/')[2] || ''] || []),
+        {
+          name: cur.name.replace('.png', ''),
+          imageUrl: URL.createObjectURL(cur),
+          path: cur.path,
+          size: cur.size,
+          uploaded: false,
+        },
       ]),
       acc
     ),
@@ -64,9 +73,18 @@ export const FolderUpload = ({
       progress: string
     }[]
   >([])
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    [key: string]: {
+      name: string
+      imageUrl: string
+      path: string
+      size: number
+      uploaded: boolean
+    }[]
+  } | null>()
   const { mutate: createRepository } = trpc.useMutation('repository.create')
   const { mutate: createLayers } = trpc.useMutation('layer.createMany')
-
+  const { notifySuccess, notifyError } = useNotification()
   const uploadCollectionLayerImageCloudinary = ({
     repositoryId,
     layerName,
@@ -112,6 +130,14 @@ export const FolderUpload = ({
   }
 
   const onDrop = useCallback(async (files: any) => {
+    setUploadedFiles(getRepositoryLayerObjectUrls(files))
+    notifySuccess(
+      <div>
+        <span className='text-blueHighlight'>Successfully</span> uploaded{' '}
+        <span className='text-blueHighlight'>{files.length} files</span>
+      </div>,
+      'new files'
+    )
     return
     // step 1: do checks if repository name is valid -- must be depth 4
     if (files[0].path.split('/').length !== 4) {
@@ -201,7 +227,7 @@ export const FolderUpload = ({
           </div>
         </div>
       )}
-      {acceptedFiles.length && (
+      {acceptedFiles.length ? (
         <>
           <div className='flex flex-col space-y-2'>
             <span className='text-2xl font-semibold'>All Layers & Traits</span>
@@ -223,7 +249,9 @@ export const FolderUpload = ({
                             </div>
                             <div className='w-full items-start flex flex-col space-y-1'>
                               <span className='text-sm font-semibold'>{files[0]}</span>
-                              <span className='text-xs text-darkGrey'>{formatBytes(0)}</span>
+                              <span className='text-xs text-darkGrey'>
+                                {formatBytes(files[1].reduce((a, b) => a + b.size, 0))}
+                              </span>
                             </div>
                           </div>
                           <div className='w-full rounded-[5px] h-1 bg-lightGray'>
@@ -238,7 +266,9 @@ export const FolderUpload = ({
                               <ChevronDownIcon className='w-3 h-3 row-span-1' />
                             )}
                             <div />
-                            <span className='text-sm'>{files[1].length}</span>
+                            <span className='text-sm'>
+                              {files[1].filter((file) => file.uploaded).length} / {files[1].length}
+                            </span>
                           </div>
                         </div>
                       </Disclosure.Button>
@@ -258,7 +288,7 @@ export const FolderUpload = ({
                                 <div className='flex flex-col space-y-1'>
                                   <div className='relative border border-mediumGrey rounded-[5px]'>
                                     <div className='pb-[100%]' />
-                                    <Image layout='fill' src={item.src} className='rounded-[5px]' />
+                                    <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
                                     {/* <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' /> */}
                                     {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
                                   </div>
@@ -276,6 +306,8 @@ export const FolderUpload = ({
             })}
           </div>
         </>
+      ) : (
+        <></>
       )}
     </div>
   )

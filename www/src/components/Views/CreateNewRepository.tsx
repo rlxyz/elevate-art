@@ -60,7 +60,7 @@ const CreateNewRepository = () => {
   if (!organisation) return <div>loading...</div>
   return (
     <div>
-      <div className='py-24'>
+      <div className='h-[40vh] flex items-center'>
         <div className='space-y-6'>
           <span className='text-5xl font-bold'>Lets build something new.</span>
           <p className='text-md'>
@@ -68,8 +68,7 @@ const CreateNewRepository = () => {
           </p>
         </div>
       </div>
-      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12'>
-        {/* <div className='text-4xl font-semibold'>Import layers</div> */}
+      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12 min-h-[50vh]'>
         <FolderUpload
           setRepository={setRepository}
           onSuccess={() => setCreateProjectDisabled(false)}
