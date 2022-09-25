@@ -1,14 +1,17 @@
+import Button from '@components/UI/Button'
 import { Disclosure, Transition } from '@headlessui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
-import { Repository, TraitElement } from '@prisma/client'
+import { Organisation, Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
-import { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
+const MAX_BYTES_ALLOWED = 9990000
 const getRepositoryLayerObjects = (files: any): { [key: string]: string[] } => {
   return files.reduce(
     (acc: any, cur: any) => (
@@ -18,25 +21,29 @@ const getRepositoryLayerObjects = (files: any): { [key: string]: string[] } => {
   )
 }
 
+const validateFiles = (files: FileWithPath[]): boolean => {
+  return files.filter((file) => file.path?.split('/').length !== 4 || file.size > MAX_BYTES_ALLOWED).length === 0
+}
+
 const getRepositoryLayerObjectUrls = (
   files: FileWithPath[]
 ): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
-  return files.reduce(
-    (acc: any, cur: FileWithPath) => (
-      (acc[cur.path?.split('/')[2] || ''] = [
-        ...(acc[cur.path?.split('/')[2] || ''] || []),
-        {
-          name: cur.name.replace('.png', ''),
-          imageUrl: URL.createObjectURL(cur),
-          path: cur.path,
-          size: cur.size,
-          uploaded: false,
-        },
-      ]),
-      acc
-    ),
-    {}
-  )
+  return files.reduce((acc: any, file: FileWithPath) => {
+    const pathArray = file.path?.split('/') || []
+    const layerName: string = pathArray[2] || ''
+    const traitName: string = pathArray[3]?.replace('.png', '') || ''
+    acc[layerName] = [
+      ...(acc[layerName] || []),
+      {
+        name: traitName,
+        imageUrl: URL.createObjectURL(file),
+        path: file.path,
+        size: file.size,
+        uploaded: false,
+      },
+    ]
+    return acc
+  }, {})
 }
 
 const getRepositoryLayerNames = (fileObject: { [key: string]: string[] }): { layerName: string; traitNames: string[] }[] => {
@@ -55,15 +62,7 @@ const createCloudinaryFormData = (file: any, trait: TraitElement, repositoryId: 
   return data
 }
 
-export const FolderUpload = ({
-  setRepository,
-  onSuccess,
-  organisationId,
-}: {
-  organisationId: string
-  onSuccess: () => void
-  setRepository?: Dispatch<SetStateAction<Repository | null>>
-}) => {
+export const FolderUpload = ({ onSuccess, organisation }: { organisation: Organisation; onSuccess: () => void }) => {
   const [layers, setLayers] = useState<
     {
       name: string
@@ -82,8 +81,15 @@ export const FolderUpload = ({
       uploaded: boolean
     }[]
   } | null>()
+  const router = useRouter()
   const { mutate: createRepository } = trpc.useMutation('repository.create')
   const { mutate: createLayers } = trpc.useMutation('layer.createMany')
+  const { mutate: deleteRepository } = trpc.useMutation('repository.delete', {
+    onSuccess: () => {
+      router.push(`/${organisation.name}`)
+    },
+  })
+
   const { notifySuccess, notifyError } = useNotification()
   const uploadCollectionLayerImageCloudinary = ({
     repositoryId,
@@ -128,34 +134,34 @@ export const FolderUpload = ({
         })
     })
   }
+  const [repository, setRepository] = useState<Repository>()
 
   const onDrop = useCallback(async (files: any) => {
-    setUploadedFiles(getRepositoryLayerObjectUrls(files))
-    notifySuccess(
-      <div>
-        <span className='text-blueHighlight'>Successfully</span> uploaded{' '}
-        <span className='text-blueHighlight'>{files.length} files</span>
-      </div>,
-      'new files'
-    )
-    return
-    // step 1: do checks if repository name is valid -- must be depth 4
-    if (files[0].path.split('/').length !== 4) {
-      alert('Please follow this guide to upload a folder')
+    if (!validateFiles(files)) {
+      alert("Something wrong with the format you've uploaded")
       return
     }
+
+    // notifySuccess(
+    //   <div>
+    //     <span>Successfully</span> uploaded <span className='text-blueHighlight'>{files.length} files</span>
+    //   </div>,
+    //   'new files'
+    // )
 
     // step 2: get repository name
     const repositoryName: string = files[0].path.split('/')[1] as string
 
     // step 3: create repository
     createRepository(
-      { organisationId, name: repositoryName },
+      { organisationId: organisation.id, name: repositoryName },
       {
         onSuccess: (data) => {
           // step 4: set repository data
-          setRepository && setRepository(data)
+          setUploadedFiles(getRepositoryLayerObjectUrls(files))
+          setRepository(data)
 
+          return
           // step 5: get layer objects
           const layers: { layerName: string; traitNames: string[] }[] = getRepositoryLayerNames(getRepositoryLayerObjects(files))
 
@@ -202,11 +208,14 @@ export const FolderUpload = ({
             }
           )
         },
+        onError: (error) => {
+          notifyError('Something went wrong')
+        },
       }
     )
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       'image/png': ['.png'],
@@ -217,7 +226,7 @@ export const FolderUpload = ({
 
   return (
     <div className='space-y-6 w-full'>
-      {!acceptedFiles.length && (
+      {!uploadedFiles && (
         <div className='h-[20rem]' {...getRootProps()}>
           <input {...getInputProps()} />
           <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
@@ -227,14 +236,37 @@ export const FolderUpload = ({
           </div>
         </div>
       )}
-      {acceptedFiles.length ? (
-        <>
-          <div className='flex flex-col space-y-2'>
-            <span className='text-2xl font-semibold'>All Layers & Traits</span>
-            <span className='text-xs'>Upload will start once all traits have been indexed</span>
+      {uploadedFiles ? (
+        <div className='divide-y divide-mediumGrey space-y-3'>
+          <div className='flex flex-row justify-between items-end'>
+            <div className='flex flex-col space-y-2'>
+              <span className='text-2xl font-semibold'>All Layers & Traits</span>
+              <span className='text-xs'>Upload will start once all traits have been indexed</span>
+            </div>
+            <div className='flex space-x-3'>
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  if (repository) {
+                    deleteRepository({ repositoryId: repository.id })
+                  } else {
+                    router.push(`/${organisation.name}`)
+                  }
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                // onClick={() => router.push(`/${organisationName}/${repository?.name}/preview`)} // todo: should go to collection creation page
+                // disabled={repository === null && createProjectDisabled}
+                disabled
+              >
+                Create Project
+              </Button>
+            </div>
           </div>
-          <div className='space-y-6'>
-            {Object.entries(getRepositoryLayerObjectUrls(acceptedFiles)).map((files) => {
+          <div className='space-y-6 py-3'>
+            {Object.entries(uploadedFiles).map((files) => {
               return (
                 <Disclosure key={files[0]}>
                   {({ open }) => (
@@ -305,7 +337,7 @@ export const FolderUpload = ({
               )
             })}
           </div>
-        </>
+        </div>
       ) : (
         <></>
       )}

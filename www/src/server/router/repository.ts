@@ -127,7 +127,7 @@ export const repositoryRouter = createRouter()
       return repository
     },
   })
-  .mutation('deleteRepositoryById', {
+  .mutation('delete', {
     input: z.object({
       repositoryId: z.string(),
     }),

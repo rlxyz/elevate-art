@@ -51,12 +51,6 @@ const CreateNewRepository = () => {
   const [repository, setRepository] = useState<Repository | null>(null)
   const [createProjectDisabled, setCreateProjectDisabled] = useState(true)
 
-  const mutate = trpc.useMutation('repository.deleteRepositoryById', {
-    onSuccess: () => {
-      router.push(`/${organisationName}`)
-    },
-  })
-
   if (!organisation) return <div>loading...</div>
   return (
     <div>
@@ -69,11 +63,7 @@ const CreateNewRepository = () => {
         </div>
       </div>
       <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12 min-h-[50vh]'>
-        <FolderUpload
-          setRepository={setRepository}
-          onSuccess={() => setCreateProjectDisabled(false)}
-          organisationId={organisation.id}
-        />
+        <FolderUpload onSuccess={() => setCreateProjectDisabled(false)} organisation={organisation} />
         {/* <div className='py-12 pr-12 absolute bottom-0 right-0'>
           <div className='flex justify-end space-x-3'>
             <Button
