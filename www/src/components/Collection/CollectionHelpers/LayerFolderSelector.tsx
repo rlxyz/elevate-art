@@ -39,17 +39,13 @@ export function useRaisedShadow(value: MotionValue<number>) {
 export const ReorderItem = ({
   item,
   name,
-  index,
   enabled,
   canReorder,
-  setReordered,
 }: {
-  index: number
   item: string
   name: string
   enabled: boolean
   canReorder: boolean
-  setReordered: () => void
 }) => {
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
@@ -57,8 +53,6 @@ export const ReorderItem = ({
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const collectionName: string = router.query.collection as string
-  const setCurrentLayerPriority = useCollectionNavigationStore((state) => state.setCurrentLayerPriority)
   return (
     <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
       <Link href={`/${organisationName}/${repositoryName}/${currentViewSection}/${name}`} enabled={enabled} hover title={name}>
@@ -68,11 +62,6 @@ export const ReorderItem = ({
             onPointerDown={(e) => {
               e.preventDefault()
               dragControls.start(e)
-              setReordered()
-            }}
-            onPointerUp={(e) => {
-              e.preventDefault()
-              // setCurrentLayerPriority(index)
             }}
           />
         )}
@@ -109,10 +98,8 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
             layer.priority = index
           }
         })
-        // draft.sort((a, b) => a.priority - b.priority)
+        draft.sort((a, b) => a.priority - b.priority)
       })
-
-      // console.log(backup, next)
 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
 
@@ -142,10 +129,10 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
               if (!openReordering) {
                 setOpenReordering(true)
               } else {
-                // reorderLayer({
-                //   layerIdsInOrder: items.map((i) => layers[i]?.id || ''),
-                //   repositoryId,
-                // })
+                reorderLayer({
+                  layerIdsInOrder: items,
+                  repositoryId,
+                })
                 setOpenReordering(false)
               }
             }}
@@ -169,25 +156,15 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
       <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
-            <Reorder.Group
-              axis='y'
-              layoutScroll
-              style={{ overflowY: 'scroll' }}
-              onReorder={(v) => {
-                setItems(v)
-              }}
-              values={items}
-            >
+            <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
               {items.map((item, index) => {
                 return (
                   <ReorderItem
                     canReorder={openReordering}
                     key={item}
-                    index={index}
                     name={layers.find((x) => x.id === item)?.name || ''}
                     item={item}
                     enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
-                    setReordered={() => setSetReordered(item)}
                   />
                 )
               })}

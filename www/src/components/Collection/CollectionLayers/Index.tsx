@@ -93,7 +93,7 @@ const LayerLayout = () => {
             <span>
               There are {traitElements.length} {name} that make up the{' '}
               <span className='text-blueHighlight'>{`${ordinal(
-                layers?.findIndex((x) => x.id === currentLayerPriority) || 0 + 1
+                (layers?.findIndex((x) => x.id === currentLayerPriority) || 0) + 1
               )} layer`}</span>
             </span>
           </p>
