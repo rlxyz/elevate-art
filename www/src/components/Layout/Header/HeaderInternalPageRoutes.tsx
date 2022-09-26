@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 
 export interface HeaderInternalPageRoutesProps {
-  links: { name: string; enabled: boolean; href: string; forceDisabled: boolean }[]
+  links: { name: string; enabled: boolean; href: string; forceDisabled?: boolean }[]
 }
 
 const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {

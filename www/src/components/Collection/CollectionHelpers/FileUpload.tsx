@@ -287,9 +287,9 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
                       >
                         <Disclosure.Panel>
                           <div className='grid grid-cols-12 gap-x-3 gap-y-3'>
-                            {files[1].map((item) => {
+                            {files[1].map((item, index) => {
                               return (
-                                <div className='flex flex-col space-y-1'>
+                                <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
                                   <div className='relative border border-mediumGrey rounded-[5px]'>
                                     <div className='pb-[100%]' />
                                     <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
