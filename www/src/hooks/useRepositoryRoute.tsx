@@ -62,5 +62,9 @@ export const useRepositoryRoute = () => {
     router.push('/404')
   }, [routes, layers])
 
-  return { mainRepositoryHref: `/${organisationName}/${repositoryName}`, collectionName }
+  return {
+    isLoading: organisationName && repositoryName && collectionName,
+    mainRepositoryHref: `/${organisationName}/${repositoryName}`,
+    collectionName,
+  }
 }

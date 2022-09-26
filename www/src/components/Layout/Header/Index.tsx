@@ -23,7 +23,7 @@ export interface HeaderProps {
     options?: string[]
   }[]
   connectButton?: boolean
-  internalNavigation?: { name: string; enabled: boolean; href: string; forceDisabled?: boolean }[]
+  internalNavigation?: { name: string; enabled: boolean; href?: string; forceDisabled?: boolean }[]
 }
 
 const Header = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {

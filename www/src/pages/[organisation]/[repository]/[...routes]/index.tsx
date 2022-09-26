@@ -13,7 +13,7 @@ const Page = () => {
   const repositoryName: string = router.query.repository as string
   const { currentLayer, isLoading } = useCurrentLayer()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
-  const { mainRepositoryHref } = useRepositoryRoute()
+  const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
 
   return (
     <Layout>
@@ -25,25 +25,25 @@ const Page = () => {
         internalNavigation={[
           {
             name: CollectionNavigationEnum.enum.Preview,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
+            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
             forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Layers,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
             forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rarity,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
             forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rules,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
             forceDisabled: isLoading,
           },
