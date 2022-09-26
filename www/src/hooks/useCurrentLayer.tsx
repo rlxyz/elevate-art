@@ -2,10 +2,10 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useQueryRepositoryLayer } from './useRepositoryFeatures'
 
 export const useCurrentLayer = () => {
-  const currentLayerPriority: number = useCollectionNavigationStore((state) => state.currentLayerPriority)
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { data: layers, isLoading, isError, refetch } = useQueryRepositoryLayer()
   return {
-    currentLayer: layers?.find((l) => l.priority === currentLayerPriority) || {
+    currentLayer: layers?.find((l) => l.id === currentLayerPriority) || {
       id: '',
       name: '',
       traitElements: [],

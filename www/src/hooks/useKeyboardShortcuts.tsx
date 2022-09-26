@@ -1,53 +1,51 @@
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import useCollectionNavigationStore from './useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from './useRepositoryFeatures'
 
 export const useKeybordShortcuts = () => {
-  const { setRegeneratePreview, setRegenerateCollection, layerIds } = useRepositoryStore((state) => {
+  const { data: layers } = useQueryRepositoryLayer()
+
+  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
-      layerIds: state.layerIds,
-      setRegeneratePreview: state.setRegeneratePreview,
-      setRegenerateCollection: state.setRegenerateCollection,
+      setCurrentViewSection: state.setCurrentViewSection,
+      setCurrentLayerPriority: state.setCurrentLayerPriority,
+      currentLayerPriority: state.currentLayerPriority,
+      currentViewSection: state.currentViewSection,
     }
   })
 
-  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useCollectionNavigationStore(
-    (state) => {
-      return {
-        setCurrentViewSection: state.setCurrentViewSection,
-        setCurrentLayerPriority: state.setCurrentLayerPriority,
-        currentLayerPriority: state.currentLayerPriority,
-        currentViewSection: state.currentViewSection,
-      }
-    }
-  )
+  const getLayerId = (index: number) => {
+    if (!layers) return ''
+    if (index === -1) return layers[-1]?.id || ''
+    return layers.find((layer) => layer.priority === index)?.id || ''
+  }
 
-  useHotkeys('shift+1', () => layerIds.length > 0 && setCurrentLayerPriority(0))
-  useHotkeys('shift+2', () => layerIds.length > 1 && setCurrentLayerPriority(1))
-  useHotkeys('shift+3', () => layerIds.length > 3 && setCurrentLayerPriority(2))
-  useHotkeys('shift+4', () => layerIds.length > 4 && setCurrentLayerPriority(3))
-  useHotkeys('shift+5', () => layerIds.length > 5 && setCurrentLayerPriority(4))
-  useHotkeys('shift+6', () => layerIds.length > 6 && setCurrentLayerPriority(5))
-  useHotkeys('shift+7', () => layerIds.length > 7 && setCurrentLayerPriority(6))
-  useHotkeys('shift+8', () => layerIds.length > 8 && setCurrentLayerPriority(7))
-  useHotkeys('shift+9', () => layerIds.length > 9 && setCurrentLayerPriority(layerIds.length - 1))
-  useHotkeys(
-    'shift+cmd+up',
-    () => currentLayerPriority > 0 && setCurrentLayerPriority(currentLayerPriority - 1),
-    {
-      keydown: true,
-    },
-    [currentLayerPriority, setCurrentLayerPriority]
-  )
-  useHotkeys(
-    'shift+cmd+down',
-    () => currentLayerPriority + 1 < layerIds.length && setCurrentLayerPriority(currentLayerPriority + 1),
-    {
-      keydown: true,
-    },
-    [currentLayerPriority, setCurrentLayerPriority]
-  )
+  useHotkeys('shift+1', () => layers && layers.length > 0 && setCurrentLayerPriority(getLayerId(0)))
+  useHotkeys('shift+2', () => layers && layers.length > 1 && setCurrentLayerPriority(getLayerId(1)))
+  useHotkeys('shift+3', () => layers && layers.length > 3 && setCurrentLayerPriority(getLayerId(2)))
+  useHotkeys('shift+4', () => layers && layers.length > 4 && setCurrentLayerPriority(getLayerId(3)))
+  useHotkeys('shift+5', () => layers && layers.length > 5 && setCurrentLayerPriority(getLayerId(4)))
+  useHotkeys('shift+6', () => layers && layers.length > 6 && setCurrentLayerPriority(getLayerId(5)))
+  useHotkeys('shift+7', () => layers && layers.length > 7 && setCurrentLayerPriority(getLayerId(6)))
+  useHotkeys('shift+8', () => layers && layers.length > 8 && setCurrentLayerPriority(getLayerId(7)))
+  useHotkeys('shift+9', () => layers && layers.length > 9 && setCurrentLayerPriority(getLayerId(-1)))
+  // useHotkeys(
+  //   'shift+cmd+up',
+  //   () => currentLayerPriority > 0 && setCurrentLayerPriority(currentLayerPriority - 1),
+  //   {
+  //     keydown: true,
+  //   },
+  //   [currentLayerPriority, setCurrentLayerPriority]
+  // )
+  // useHotkeys(
+  //   'shift+cmd+down',
+  //   () => currentLayerPriority + 1 < layers && layers\.length && setCurrentLayerPriority(currentLayerPriority + 1),
+  //   {
+  //     keydown: true,
+  //   },
+  //   [currentLayerPriority, setCurrentLayerPriority]
+  // )
   // useHotkeys(
   //   'shift+cmd+right',
   //   () => currentViewSection + 1 < 4 && setCurrentViewSection(currentViewSection + 1),
@@ -68,6 +66,6 @@ export const useKeybordShortcuts = () => {
   useHotkeys('ctrl+2', () => setCurrentViewSection(CollectionNavigationEnum.enum.Layers))
   useHotkeys('ctrl+3', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rarity))
   useHotkeys('ctrl+4', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rules))
-  useHotkeys('ctrl+g', () => setRegenerateCollection(true))
-  useHotkeys('ctrl+r', () => setRegeneratePreview(true))
+  // useHotkeys('ctrl+g', () => setRegenerateCollection(true))
+  // useHotkeys('ctrl+r', () => setRegeneratePreview(true))
 }

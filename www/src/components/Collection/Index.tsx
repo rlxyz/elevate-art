@@ -5,7 +5,6 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
-import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
   ssr: false,
@@ -25,14 +24,16 @@ const DynamicRegenerateButton = dynamic(() => import('@components/Collection/Col
 const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
   ssr: false,
 })
+const DynamicFilter = dynamic(() => import('@components/Collection/CollectionPreview/PreviewFilter'), {
+  ssr: false,
+})
 
 const Index = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { data: collection } = useQueryCollection()
   const { data: layers } = useQueryRepositoryLayer()
-  const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
+  const { setTokens, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
     return {
-      tokenRanking: state.tokenRanking,
       rarityFilter: state.rarityFilter,
       setTokens: state.setTokens,
       setTokenRanking: state.setTokenRanking,
@@ -78,21 +79,13 @@ const Index = () => {
           CollectionNavigationEnum.enum.Rarity,
           CollectionNavigationEnum.enum.Rules,
         ].includes(currentViewSection) && (
-          <div className='flex flex-col space-y-6 justify-between'>
-            <DynamicLayerFolder />
-          </div>
+          <div className='flex flex-col space-y-6 justify-between'>{layers && <DynamicLayerFolder layers={layers} />}</div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
           <div className='relative flex flex-col space-y-3 justify-between'>
             <DynamicBranchSelector />
             <DynamicRegenerateButton />
-            <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
-              <FilterByRarity />
-              <div className='px-3'>
-                <div className='bg-mediumGrey h-[0.25px] w-full' />
-              </div>
-              <FilterByTrait />
-            </div>
+            <DynamicFilter />
           </div>
         )}
       </div>

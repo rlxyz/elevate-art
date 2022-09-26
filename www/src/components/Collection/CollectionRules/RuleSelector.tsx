@@ -30,7 +30,7 @@ const RuleSelector = () => {
 
   if (!layers) return null
   const allRightTraitElements = layers
-    .filter((_, index) => index !== currentLayerPriority)
+    .filter((layer, index) => layer.id !== currentLayerPriority)
     .flatMap((layer) => layer.traitElements)
 
   return (

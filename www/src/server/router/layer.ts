@@ -103,3 +103,23 @@ export const layerElementRouter = createRouter()
       })
     },
   })
+  .mutation('reorder', {
+    input: z.object({
+      layerIdsInOrder: z.array(z.string()),
+      repositoryId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return Promise.all(
+        input.layerIdsInOrder.map(async (layerId, index) => {
+          return await ctx.prisma.layerElement.update({
+            where: {
+              id: layerId,
+            },
+            data: {
+              priority: index,
+            },
+          })
+        })
+      )
+    },
+  })

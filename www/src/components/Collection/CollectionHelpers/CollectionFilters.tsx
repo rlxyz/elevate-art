@@ -1,11 +1,11 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { Field, Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
 
-export const FilterByTrait = () => {
+export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
   const { traitMapping, setTraitFilteredTokens, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens } =
     useRepositoryStore((state) => {
@@ -21,7 +21,6 @@ export const FilterByTrait = () => {
         setTraitFilters: state.setTraitFilters,
       }
     })
-  const { data: layers } = useQueryRepositoryLayer()
   const { data: collection } = useQueryCollection()
   return (
     <Formik
@@ -110,7 +109,7 @@ export const FilterByTrait = () => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
-          <div className='rounded-[5px] min-h-[30vh] max-h-[70vh] overflow-y-scroll no-scrollbar'>
+          <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
               <div key={layer.id} className='flex flex-col text-xs'>
                 <div
@@ -185,21 +184,15 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { traitMapping, tokenRanking, traitFilteredTokens, setRarityFilter, collectionId, setTokens } = useRepositoryStore(
-    (state) => {
-      return {
-        traitFilteredTokens: state.traitFilteredTokens,
-        rarityFilter: state.rarityFilter,
-        setRarityFilter: state.setRarityFilter,
-        tokenRanking: state.tokenRanking,
-        collectionId: state.collectionId,
-        setTokens: state.setTokens,
-        traitMapping: state.traitMapping,
-        traitFilters: state.traitFilters,
-        setTraitFilters: state.setTraitFilters,
-      }
+  const { tokenRanking, traitFilteredTokens, setRarityFilter, setTokens } = useRepositoryStore((state) => {
+    return {
+      traitFilteredTokens: state.traitFilteredTokens,
+      setRarityFilter: state.setRarityFilter,
+      tokenRanking: state.tokenRanking,
+      setTokens: state.setTokens,
     }
-  )
+  })
+
   const filters: { value: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All' }[] = [
     { value: 'All' },
     { value: 'Top 10' },
