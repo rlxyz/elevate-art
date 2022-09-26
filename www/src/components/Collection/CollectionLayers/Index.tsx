@@ -2,8 +2,10 @@ import Button from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
 import { Dialog, Transition } from '@headlessui/react'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
+import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
@@ -81,6 +83,7 @@ const LayerLayout = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+  const { data: layers } = useQueryRepositoryLayer()
   return (
     <div className='grid grid-cols-10'>
       <div className='col-span-8 flex flex-col'>
@@ -89,7 +92,9 @@ const LayerLayout = () => {
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
             <span>
               There are {traitElements.length} {name} that make up the{' '}
-              {/* <span className='text-blueHighlight'>{`${ordinal(currentLayerPriority + 1)} layer`}</span> */}
+              <span className='text-blueHighlight'>{`${ordinal(
+                layers?.findIndex((x) => x.id === currentLayerPriority) || 0 + 1
+              )} layer`}</span>
             </span>
           </p>
         </div>
