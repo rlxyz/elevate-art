@@ -2,6 +2,7 @@ import Button from '@components/UI/Button'
 import Loading from '@components/UI/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useNotification } from '@hooks/useNotification'
 import { Organisation, Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
@@ -67,7 +68,7 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
       size: number
       uploaded: boolean
     }[]
-  } | null>()
+  }>({})
   const router = useRouter()
   const { mutate: createRepository } = trpc.useMutation('repository.create')
   const { mutate: createLayers } = trpc.useMutation('layer.createMany')
@@ -95,21 +96,6 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
         body: data,
       })
         .then(async (response) => {
-          setUploadedFiles((prev) => {
-            if (!prev) return prev
-            const index = prev[layerName]?.findIndex((x) => x.name === trait.name)
-            const item = prev[layerName]?.find((x) => x.name === trait.name)
-            if (typeof index === 'undefined' || !item) return prev
-            prev[layerName] = [
-              ...(prev[layerName]?.slice(0, index) || []),
-              {
-                ...item,
-                uploaded: true,
-              },
-              ...(prev[layerName]?.slice(index + 1) || []),
-            ]
-            return prev
-          })
           resolve(response)
         })
         .catch((err) => {
@@ -118,7 +104,9 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
     })
   }
   const [repository, setRepository] = useState<Repository>()
-
+  useDeepCompareEffect(() => {
+    console.log({ uploadedFiles })
+  }, [uploadedFiles])
   const onDrop = useCallback(async (files: FileWithPath[]) => {
     // step 1: validate files
     if (!validateFiles(files)) {
@@ -160,8 +148,24 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
                       layerName,
                       trait,
                       file,
+                    }).then(() => {
+                      setUploadedFiles((prev) => {
+                        if (!prev) return prev
+                        const index = prev[layerName]?.findIndex((x) => x.name === trait.name)
+                        const item = prev[layerName]?.find((x) => x.name === trait.name)
+                        if (typeof index === 'undefined' || !item) return prev
+                        prev[layerName] = [
+                          ...(prev[layerName]?.slice(0, index) || []),
+                          {
+                            ...item,
+                            uploaded: true,
+                          },
+                          ...(prev[layerName]?.slice(index + 1) || []),
+                        ]
+                        console.log({ prev })
+                        return prev
+                      })
                     })
-                    // .then(() => console.log('uploaded', layerName, trait.name))
                   }
                   reader.readAsArrayBuffer(file)
                 })
@@ -187,7 +191,7 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
 
   return (
     <div className='space-y-6 w-full'>
-      {!uploadedFiles ? (
+      {Object.entries(uploadedFiles).length === 0 ? (
         <div className='h-[20rem]' {...getRootProps()}>
           <input {...getInputProps()} />
           <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
