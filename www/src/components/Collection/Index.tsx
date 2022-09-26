@@ -32,9 +32,8 @@ const Index = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { data: collection } = useQueryCollection()
   const { data: layers } = useQueryRepositoryLayer()
-  const { setTokens, tokenRanking, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
+  const { setTokens, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
     return {
-      tokenRanking: state.tokenRanking,
       rarityFilter: state.rarityFilter,
       setTokens: state.setTokens,
       setTokenRanking: state.setTokenRanking,

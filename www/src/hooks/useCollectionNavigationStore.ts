@@ -3,7 +3,6 @@ import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
-// export type RepositoryRouterView = 'preview' | 'layers' | 'rarity' | 'rules'
 interface CollectionNavigationInterface {
   currentViewSection: CollectionNavigationType
   currentLayerPriority: string

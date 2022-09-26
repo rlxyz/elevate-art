@@ -1,121 +1,21 @@
 import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
 import Index from '@components/Collection/Index'
 import { Layout } from '@components/Layout/Layout'
-import Loading from '@components/UI/Loading'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
-import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import { useQueryRepository, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
+import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
 
-// wrapper to hydate organisation & repository data
-const PageImplementation = ({
-  collectionName,
-  repositoryName,
-  routes,
-}: {
-  repositoryName: string
-  collectionName: string
-  routes: any
-}) => {
-  useKeybordShortcuts()
-  const router: NextRouter = useRouter()
-  const { data: repositoryData } = useQueryRepository()
-  const { data: layers } = useQueryRepositoryLayer()
-  const { setLayerIds, setLayerNames, layerNames, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-      setCollectionId: state.setCollectionId,
-      setLayerIds: state.setLayerIds,
-      setLayerNames: state.setLayerNames,
-      layerIds: state.layerIds,
-      layerNames: state.layerNames,
-    }
-  })
-
-  const { setCurrentLayerPriority, setCurrentViewSection } = useCollectionNavigationStore((state) => {
-    return {
-      setCurrentLayerPriority: state.setCurrentLayerPriority,
-      setCurrentViewSection: state.setCurrentViewSection,
-    }
-  })
-
-  // sync routing with store
-  useDeepCompareEffect(() => {
-    if (!layers || layers.length === 0 || !routes) return
-
-    const parse = CollectionNavigationEnum.safeParse(routes[0])
-    if (!parse.success) {
-      router.push('/404')
-      return
-    }
-
-    if (routes.length === 1) {
-      const route = parse.data
-
-      switch (route) {
-        case CollectionNavigationEnum.enum.Preview:
-          setCurrentViewSection(parse.data)
-          return
-        case CollectionNavigationEnum.enum.Settings:
-          setCurrentViewSection(parse.data)
-          return
-      }
-
-      router.push('/404')
-    }
-
-    if (routes.length == 2) {
-      const name: string = routes[1] as string
-      const layer = layerNames.filter((layer) => layer === name)[0]
-
-      if (!layer) {
-        router.push('/404')
-        return
-      }
-
-      setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(layers.find((x) => x.name === name)?.id || '')
-      return
-    }
-
-    router.push('/404')
-  }, [routes, layerNames])
-
-  // sync repository to store
-  useDeepCompareEffect(() => {
-    if (!repositoryData) return
-    if (!repositoryData.collections) return
-    const layers = repositoryData.layers
-    const collection = repositoryData.collections?.find((collection) => collection.name === collectionName)
-    if (!collection) return
-    if (!layers || layers.length == 0) return
-    setRepositoryId(repositoryData.id)
-    setCollectionId(collection.id)
-  }, [repositoryData, collectionName])
-
-  return <Index />
-}
-
-// wrapper to hydate routes
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const collectionName: string = (router.query.collection as string) || 'main'
   const repositoryName: string = router.query.repository as string
-  const routes: string | string[] | undefined = router.query.routes
-  const [hasHydrated, setHasHydrated] = useState<boolean>(false)
-  const { currentLayer } = useCurrentLayer()
+  const { currentLayer, isLoading } = useCurrentLayer()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
-  useEffect(() => {
-    setHasHydrated(Boolean(organisationName) && Boolean(repositoryName) && Boolean(collectionName))
-  }, [organisationName, repositoryName, collectionName])
+  const { mainRepositoryHref } = useRepositoryRoute()
 
-  return hasHydrated ? (
+  return (
     <Layout>
       <Layout.Header
         internalRoutes={[
@@ -125,23 +25,27 @@ const Page = () => {
         internalNavigation={[
           {
             name: CollectionNavigationEnum.enum.Preview,
-            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}`,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
+            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Layers,
-            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
+            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rarity,
-            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
+            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rules,
-            href: `/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
+            forceDisabled: isLoading,
           },
         ]}
       />
@@ -152,11 +56,9 @@ const Page = () => {
         />
       </Layout.Title>
       <Layout.Body>
-        <PageImplementation repositoryName={repositoryName} collectionName={collectionName} routes={routes} />
+        <Index />
       </Layout.Body>
     </Layout>
-  ) : (
-    <Loading />
   )
 }
 
