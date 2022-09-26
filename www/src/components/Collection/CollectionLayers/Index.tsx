@@ -8,7 +8,6 @@ import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
-import { FolderUpload } from '../CollectionHelpers/FileUpload'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
 import { RarityDisplay } from '../CollectionRarity/RarityDisplay'
 import LayerGrid from './LayerGrid'
@@ -54,9 +53,7 @@ const AddNewTrait = () => {
                     <div>
                       <p className='text-sm'>You can upload multiple traits at a time</p>
                     </div>
-                    <div className='h-96'>
-                      <FolderUpload organisationId='' onSuccess={() => console.log('works')} />
-                    </div>
+                    <div className='h-96'>{/* <FolderUpload organisationId='' onSuccess={() => console.log('works')} /> */}</div>
                     <div className='flex justify-between'>
                       <div className='ml-[auto]'>
                         <Button disabled>

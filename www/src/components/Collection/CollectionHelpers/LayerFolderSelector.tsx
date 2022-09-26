@@ -1,9 +1,13 @@
 import { Link } from '@components/UI/Link'
-import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon, PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { LayerElement } from '@prisma/client'
+import { trpc } from '@utils/trpc'
+import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
-import router, { NextRouter, useRouter } from 'next/router'
+import produce from 'immer'
+import router from 'next/router'
 import { useEffect, useState } from 'react'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
@@ -35,15 +39,17 @@ export function useRaisedShadow(value: MotionValue<number>) {
 export const ReorderItem = ({
   item,
   name,
+  index,
   enabled,
   canReorder,
-  id,
+  setReordered,
 }: {
-  item: number
+  index: number
+  item: string
   name: string
   enabled: boolean
-  id: string
   canReorder: boolean
+  setReordered: () => void
 }) => {
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
@@ -52,16 +58,21 @@ export const ReorderItem = ({
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const collectionName: string = router.query.collection as string
-
+  const setCurrentLayerPriority = useCollectionNavigationStore((state) => state.setCurrentLayerPriority)
   return (
     <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
       <Link href={`/${organisationName}/${repositoryName}/${currentViewSection}/${name}`} enabled={enabled} hover title={name}>
         {canReorder && (
           <DotsHorizontalIcon
-            className='ml-1 w-5 h-5'
+            className='text-darkGrey mr-1 w-4 h-4'
             onPointerDown={(e) => {
               e.preventDefault()
               dragControls.start(e)
+              setReordered()
+            }}
+            onPointerUp={(e) => {
+              e.preventDefault()
+              setCurrentLayerPriority(index)
             }}
           />
         )}
@@ -70,58 +81,113 @@ export const ReorderItem = ({
   )
 }
 
-const LayerFolderSelector = () => {
-  const { data: layers } = useQueryRepositoryLayer()
-  const { currentLayerPriority } = useCollectionNavigationStore((state) => {
-    return {
-      currentLayerPriority: state.currentLayerPriority,
-    }
-  })
-  const router: NextRouter = useRouter()
-  const [items, setItems] = useState<string[]>()
+const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
+  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
+  const [setReordered, setSetReordered] = useState('some_random_reordering')
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
   const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
+  const ctx = trpc.useContext()
+
+  const { mutate: reorderLayer } = trpc.useMutation('layer.reorder', {
+    onMutate: async (input) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await ctx.cancelQuery(['repository.getRepositoryLayers', { id: input.repositoryId }])
+
+      // Snapshot the previous value
+      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }])
+      if (!backup) return { backup }
+
+      const { layerIdsInOrder } = input
+
+      // Optimistically update to the new value
+      const next = produce(backup, (draft) => {
+        layerIdsInOrder.forEach((id, index) => {
+          const layer = draft.find((l) => l.id === id)
+          if (layer) {
+            layer.priority = index
+          }
+        })
+        // draft.sort((a, b) => a.priority - b.priority)
+      })
+
+      // console.log(backup, next)
+
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
+
+      // return backup
+      return { backup }
+    },
+    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
+    onError: (err, variables, context) => {
+      if (!context?.backup) return
+      ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
+    },
+  })
 
   useEffect(() => {
-    if (!layers) return
-    setItems(layers.map((layer) => layer.id))
+    console.log({ layers })
   }, [layers])
 
   if (!layers || !items) return null
 
   return (
-    <aside>
+    <aside className='space-y-1'>
+      <div className='flex items-center justify-between'>
+        <div />
+        <div className='space-x-1 flex items-center'>
+          <button
+            onClick={() => {
+              if (!openReordering) {
+                setOpenReordering(true)
+              } else {
+                // reorderLayer({
+                //   layerIdsInOrder: items.map((i) => layers[i]?.id || ''),
+                //   repositoryId,
+                // })
+                setOpenReordering(false)
+              }
+            }}
+            className={clsx(
+              'border rounded-[5px] border-mediumGrey p-1 text-darkGrey',
+              openReordering && 'border-blueHighlight text-blueHighlight'
+            )}
+          >
+            <SwitchVerticalIcon className='w-2 h-2' />
+          </button>
+          <button
+            onClick={() => {
+              setOpenUpload(true)
+            }}
+            className='border rounded-[5px] border-mediumGrey p-1'
+          >
+            <PlusIcon className='text-darkGrey w-2 h-2' />
+          </button>
+        </div>
+      </div>
       <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
-        {/* <div className='flex items-center justify-between'>
-          <div className='space-x-1 flex items-center'>
-            <button onClick={() => setOpenReordering(!openReordering)}>
-                  <div className='border rounded-[5px] border-lightGray p-1'>
-                  <SwitchVerticalIcon className='text-darkGrey w-2 h-2' />
-                  </div>
-                </button>
-            <button
-                onClick={() => {
-                  setOpenUpload(true)
-                }}
-                >
-                <div className='border rounded-[5px] border-lightGray p-1'>
-                <PlusIcon className='text-darkGrey w-2 h-2' />
-                </div>
-              </button>
-          </div>
-        </div> */}
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
-            <Reorder.Group axis='y' values={items} onReorder={setItems}>
+            <Reorder.Group
+              axis='y'
+              layoutScroll
+              style={{ overflowY: 'scroll' }}
+              onReorder={(v) => {
+                setItems(v)
+              }}
+              values={items}
+            >
               {items.map((item, index) => {
                 return (
                   <ReorderItem
                     canReorder={openReordering}
                     key={item}
-                    name={layers[index]?.name || ''}
-                    item={index}
-                    id={item}
-                    enabled={currentLayerPriority === index}
+                    index={index}
+                    name={layers.find((x) => x.id === item)?.name || ''}
+                    item={item}
+                    enabled={currentLayerPriority === layers.findIndex((x) => x.id === item)}
+                    setReordered={() => setSetReordered(item)}
                   />
                 )
               })}

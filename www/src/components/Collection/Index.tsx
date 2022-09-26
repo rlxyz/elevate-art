@@ -78,9 +78,7 @@ const Index = () => {
           CollectionNavigationEnum.enum.Rarity,
           CollectionNavigationEnum.enum.Rules,
         ].includes(currentViewSection) && (
-          <div className='flex flex-col space-y-6 justify-between'>
-            <DynamicLayerFolder />
-          </div>
+          <div className='flex flex-col space-y-6 justify-between'>{layers && <DynamicLayerFolder layers={layers} />}</div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
           <div className='relative flex flex-col space-y-3 justify-between'>
