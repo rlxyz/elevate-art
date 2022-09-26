@@ -26,7 +26,7 @@ const LayerGridLoading = () => {
   )
 }
 
-const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]; layerName: string }) => {
+const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitElement[]; layerName: string }) => {
   const router: NextRouter = useRouter()
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
@@ -164,4 +164,4 @@ const LayerGrid = ({ traitElements, layerName }: { traitElements: TraitElement[]
   )
 }
 
-export default LayerGrid
+export default LayerGridView

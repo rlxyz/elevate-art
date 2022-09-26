@@ -59,7 +59,7 @@ const LayoutHeader = (props: HeaderProps) => (
 
 const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode; hasBorder?: boolean }) => (
   <LayoutContainer className='body min-h-[calc(100vh-7rem)]' hasBorder={hasBorder}>
-    <div className='py-8 -ml-2 h-full space-y-8'>{children}</div>
+    <div className='py-6 -ml-2 h-full space-y-8'>{children}</div>
   </LayoutContainer>
 )
 

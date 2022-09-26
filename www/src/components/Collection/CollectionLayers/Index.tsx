@@ -10,8 +10,8 @@ import { Fragment, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
-import { RarityDisplay } from '../CollectionRarity/RarityDisplay'
-import LayerGrid from './LayerGrid'
+import LayerGridView from './LayerGridView'
+import { LayerRarityTable } from './LayerRarityTable'
 
 const AddNewTrait = () => {
   const { currentLayer } = useCurrentLayer()
@@ -87,7 +87,7 @@ const LayerLayout = () => {
   return (
     <div className='grid grid-cols-10'>
       <div className='col-span-8 flex flex-col'>
-        <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
+        <div className='col-span-6 font-plus-jakarta-sans'>
           <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{name}</h1>
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
             <span>
@@ -154,13 +154,22 @@ const Index = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { currentLayer } = useCurrentLayer()
   const { name, traitElements } = currentLayer
+  const [query, setQuery] = useState('')
+  const filteredTraitElements = traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
     <CollectionViewContentWrapper>
       <LayerLayout />
       {currentViewSection === CollectionNavigationEnum.enum.Layers && (
-        <LayerGrid traitElements={traitElements} layerName={name} />
+        <>
+          {/* <input
+            placeholder='Search...'
+            onChange={(e) => setQuery(e.target.value)}
+            className='py-2 border text-sm h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
+          /> */}
+          <LayerGridView traitElements={filteredTraitElements} layerName={name} />
+        </>
       )}
-      {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RarityDisplay />}
+      {currentViewSection === CollectionNavigationEnum.enum.Rarity && <LayerRarityTable />}
     </CollectionViewContentWrapper>
   )
 }
