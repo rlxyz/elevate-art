@@ -6,7 +6,7 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useKeybordShortcuts } from '@hooks/useKeyboardShortcuts'
-import { useQueryRepository } from '@hooks/useRepositoryFeatures'
+import { useQueryRepository, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -25,6 +25,7 @@ const PageImplementation = ({
   useKeybordShortcuts()
   const router: NextRouter = useRouter()
   const { data: repositoryData } = useQueryRepository()
+  const { data: layers } = useQueryRepositoryLayer()
   const { setLayerIds, setLayerNames, layerNames, setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
     return {
       setRepositoryId: state.setRepositoryId,
@@ -45,7 +46,7 @@ const PageImplementation = ({
 
   // sync routing with store
   useDeepCompareEffect(() => {
-    if (!layerNames || layerNames.length === 0 || !routes) return
+    if (!layers || layers.length === 0 || !routes) return
 
     const parse = CollectionNavigationEnum.safeParse(routes[0])
     if (!parse.success) {
@@ -78,7 +79,7 @@ const PageImplementation = ({
       }
 
       setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(layerNames.findIndex((layer) => layer == name)) // fix!
+      setCurrentLayerPriority(layers.find((x) => x.name === name)?.id || '')
       return
     }
 
@@ -93,8 +94,6 @@ const PageImplementation = ({
     const collection = repositoryData.collections?.find((collection) => collection.name === collectionName)
     if (!collection) return
     if (!layers || layers.length == 0) return
-    setLayerIds(layers.map((layer) => layer.id))
-    setLayerNames(layers.map((layer) => layer.name))
     setRepositoryId(repositoryData.id)
     setCollectionId(collection.id)
   }, [repositoryData, collectionName])

@@ -5,7 +5,6 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import dynamic from 'next/dynamic'
 import { CollectionNavigationEnum } from '../../types/enums'
-import { FilterByRarity, FilterByTrait } from './CollectionHelpers/CollectionFilters'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
   ssr: false,
@@ -23,6 +22,9 @@ const DynamicRegenerateButton = dynamic(() => import('@components/Collection/Col
   ssr: false,
 })
 const DynamicCollectionRules = dynamic(() => import('@components/Collection/CollectionRules/Index'), {
+  ssr: false,
+})
+const DynamicFilter = dynamic(() => import('@components/Collection/CollectionPreview/PreviewFilter'), {
   ssr: false,
 })
 
@@ -84,13 +86,7 @@ const Index = () => {
           <div className='relative flex flex-col space-y-3 justify-between'>
             <DynamicBranchSelector />
             <DynamicRegenerateButton />
-            <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
-              <FilterByRarity />
-              <div className='px-3'>
-                <div className='bg-mediumGrey h-[0.25px] w-full' />
-              </div>
-              <FilterByTrait />
-            </div>
+            <DynamicFilter />
           </div>
         )}
       </div>

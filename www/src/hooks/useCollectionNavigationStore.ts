@@ -6,17 +6,17 @@ import { persist } from 'zustand/middleware'
 // export type RepositoryRouterView = 'preview' | 'layers' | 'rarity' | 'rules'
 interface CollectionNavigationInterface {
   currentViewSection: CollectionNavigationType
-  currentLayerPriority: number
+  currentLayerPriority: string
   setCurrentViewSection: (view: CollectionNavigationType) => void
-  setCurrentLayerPriority: (index: number) => void
+  setCurrentLayerPriority: (index: string) => void
 }
 
 export const createCollectionNavigationStore = create<CollectionNavigationInterface>()(
   persist((set) => ({
     currentViewSection: 'preview',
-    currentLayerPriority: 0,
+    currentLayerPriority: '',
     setCurrentViewSection: (view: CollectionNavigationType) => set((_) => ({ currentViewSection: view })),
-    setCurrentLayerPriority: (index: number) => set((_) => ({ currentLayerPriority: index })),
+    setCurrentLayerPriority: (index: string) => set((_) => ({ currentLayerPriority: index })),
   }))
 )
 

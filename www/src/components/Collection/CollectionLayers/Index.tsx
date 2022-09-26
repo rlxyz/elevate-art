@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
-import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
@@ -90,7 +89,7 @@ const LayerLayout = () => {
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
             <span>
               There are {traitElements.length} {name} that make up the{' '}
-              <span className='text-blueHighlight'>{`${ordinal(currentLayerPriority + 1)} layer`}</span>
+              {/* <span className='text-blueHighlight'>{`${ordinal(currentLayerPriority + 1)} layer`}</span> */}
             </span>
           </p>
         </div>

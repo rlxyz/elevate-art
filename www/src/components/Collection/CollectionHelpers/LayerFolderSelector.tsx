@@ -72,7 +72,7 @@ export const ReorderItem = ({
             }}
             onPointerUp={(e) => {
               e.preventDefault()
-              setCurrentLayerPriority(index)
+              // setCurrentLayerPriority(index)
             }}
           />
         )}
@@ -186,7 +186,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
                     index={index}
                     name={layers.find((x) => x.id === item)?.name || ''}
                     item={item}
-                    enabled={currentLayerPriority === layers.findIndex((x) => x.id === item)}
+                    enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
                     setReordered={() => setSetReordered(item)}
                   />
                 )
