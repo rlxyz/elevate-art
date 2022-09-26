@@ -22,6 +22,7 @@ const Page: NextPage = () => {
               name: OrganisationNavigationEnum.enum.Dashboard,
               href: `/${organisationName}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              loading: false,
             },
           ]}
         />
