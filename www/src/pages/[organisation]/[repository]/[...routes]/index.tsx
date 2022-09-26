@@ -4,6 +4,7 @@ import { Layout } from '@components/Layout/Layout'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { NextRouter, useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
 import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
 
@@ -15,6 +16,9 @@ const Page = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
 
+  useEffect(() => {
+    console.log({ mainRepositoryHref })
+  }, [mainRepositoryHref])
   return (
     <Layout>
       <Layout.Header
@@ -25,27 +29,27 @@ const Page = () => {
         internalNavigation={[
           {
             name: CollectionNavigationEnum.enum.Preview,
-            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
+            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
-            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Layers,
-            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
-            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rarity,
-            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
-            forceDisabled: isLoading,
           },
           {
             name: CollectionNavigationEnum.enum.Rules,
-            href: isRoutesLoading && `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
             enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
-            forceDisabled: isLoading,
           },
         ]}
       />

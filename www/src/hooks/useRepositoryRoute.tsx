@@ -2,6 +2,7 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import { NextRouter, useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 
 export const useRepositoryRoute = () => {
@@ -10,6 +11,7 @@ export const useRepositoryRoute = () => {
   const collectionName: string = (router.query.collection as string) || 'main'
   const repositoryName: string = router.query.repository as string
   const routes: string | string[] | undefined = router.query.routes
+  const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null)
   const { data: layers } = useQueryRepositoryLayer()
 
   const { setCurrentLayerPriority, setCurrentViewSection, currentViewSection } = useCollectionNavigationStore((state) => {
@@ -62,9 +64,15 @@ export const useRepositoryRoute = () => {
     router.push('/404')
   }, [routes, layers])
 
+  useEffect(() => {
+    if (Boolean(organisationName) && Boolean(repositoryName)) {
+      setMainRepositoryHref(`${organisationName}/${repositoryName}`)
+    }
+  }, [organisationName, repositoryName])
+
   return {
-    isLoading: organisationName && repositoryName && collectionName,
-    mainRepositoryHref: `/${organisationName}/${repositoryName}`,
+    isLoading: mainRepositoryHref === null,
+    mainRepositoryHref: mainRepositoryHref,
     collectionName,
   }
 }

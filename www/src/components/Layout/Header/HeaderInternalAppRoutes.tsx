@@ -38,14 +38,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                     <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
                       <div className='p-2 relative bg-white'>
                         {options.map((item) => (
-                          <Link
-                            hover
-                            pascalCase={false}
-                            title={item}
-                            enabled={item === current}
-                            key={item}
-                            href={item}
-                          />
+                          <Link hover pascalCase={false} title={item} enabled={item === current} key={item} href={item} />
                         ))}
                       </div>
                     </div>
