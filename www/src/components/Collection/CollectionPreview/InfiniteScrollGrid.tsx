@@ -193,12 +193,6 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { hasPreviewLoaded, setHasPreviewLoaded } = useRepositoryStore((state) => {
-    return {
-      setHasPreviewLoaded: state.setHasPreviewLoaded,
-      hasPreviewLoaded: state.hasPreviewLoaded,
-    }
-  })
 
   const fetch = (start: number) => {
     if (!collection) return
@@ -220,7 +214,6 @@ export const InfiniteScrollGrid = ({
 
   useEffect(() => {
     fetch(page)
-    setHasPreviewLoaded(true)
   }, [])
 
   return (

@@ -63,9 +63,8 @@ export const useKeybordShortcuts = () => {
   //   [currentViewSection, setCurrentViewSection]
   // )
   useHotkeys('ctrl+1', () => setCurrentViewSection(CollectionNavigationEnum.enum.Preview))
-  useHotkeys('ctrl+2', () => setCurrentViewSection(CollectionNavigationEnum.enum.Layers))
-  useHotkeys('ctrl+3', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rarity))
-  useHotkeys('ctrl+4', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rules))
+  useHotkeys('ctrl+2', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rarity))
+  useHotkeys('ctrl+3', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rules))
   // useHotkeys('ctrl+g', () => setRegenerateCollection(true))
   // useHotkeys('ctrl+r', () => setRegeneratePreview(true))
 }

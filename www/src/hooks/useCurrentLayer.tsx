@@ -2,7 +2,7 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useQueryRepositoryLayer } from './useRepositoryFeatures'
 
 export const useCurrentLayer = () => {
-  const currentLayerPriority: string = useCollectionNavigationStore((state) => state.currentLayerPriority)
+  const currentLayerPriority: string | null = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { data: layers, isLoading, isError, refetch } = useQueryRepositoryLayer()
   // console.log({
   //   // layers,
