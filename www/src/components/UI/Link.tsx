@@ -10,7 +10,6 @@ export const Link = ({
   size = 'sm',
   enabled = false,
   external = false,
-//  pascalCase = true,
   hover = false,
 }: {
   href: string
@@ -22,7 +21,6 @@ export const Link = ({
   title?: string
   size?: 'sm' | 'md'
   hover?: boolean
-//  pascalCase?: boolean
 }) => {
   return disabled ? (
     <div
