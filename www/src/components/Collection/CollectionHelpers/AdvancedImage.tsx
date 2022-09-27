@@ -8,7 +8,7 @@ export const SmallAdvancedImage = ({ url }: { url: string }) => {
   const cld = createCloudinary()
   if (!repositoryId) return <></>
   return (
-    <div className={`rounded-[5px] border-[1px] border-mediumGrey h-[35px] w-[35px]`}>
+    <div className={`rounded-[5px] border border-mediumGrey h-[35px] w-[35px]`}>
       <Image
         priority
         src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}`).toURL()}

@@ -1,15 +1,17 @@
 import { SmallAdvancedImage } from '@components/Collection/CollectionHelpers/AdvancedImage'
-import Button from '@components/UI/Button'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { classNames } from '@utils/format'
+import clsx from 'clsx'
+import Image from 'next/image'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum, RulesType } from 'src/types/enums'
 
 const RuleSelector = () => {
@@ -17,8 +19,6 @@ const RuleSelector = () => {
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = useQueryRepositoryLayer()
-  const { currentLayer } = useCurrentLayer()
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { mutate, isLoading } = useMutateRepositoryRule({
     onMutate: () => {
@@ -27,7 +27,7 @@ const RuleSelector = () => {
       setSelectedRightTrait(null)
     },
   })
-
+  const { data: layers } = useQueryRepositoryLayer()
   if (!layers) return null
   const allRightTraitElements = layers
     .filter((layer, index) => layer.id !== currentLayerPriority)
@@ -35,11 +35,10 @@ const RuleSelector = () => {
 
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <span className='block text-xs font-semibold uppercase'>Create a condition</span>
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
           <RuleSelectorCombobox
-            traitElements={currentLayer.traitElements}
+            traitElements={allRightTraitElements}
             selected={selectedLeftTrait}
             onChange={setSelectedLeftTrait}
           />
@@ -55,8 +54,8 @@ const RuleSelector = () => {
           />
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
-          <Button
-            className='w-full'
+          <button
+            className='bg-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
@@ -71,7 +70,7 @@ const RuleSelector = () => {
             }}
           >
             Add Rule
-          </Button>
+          </button>
         </div>
       </div>
     </div>
@@ -104,13 +103,16 @@ export const RuleSelectorConditionCombobox = ({
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
-        className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
+        className={clsx(
+          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+          selected && 'border-blueHighlight'
+        )}
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(value: string) => value}
         placeholder='cannot mix with'
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-        <SelectorIcon className='h-5 w-5 text-mediumGrey' aria-hidden='true' />
+        <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
       </Combobox.Button>
       <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
         {filteredConditions.map((option, index) => (
@@ -143,6 +145,41 @@ export const RuleSelectorConditionCombobox = ({
   )
 }
 
+const ComboboxInput = ({ traitElement, layerName }: { layerName: string; traitElement: TraitElement | null | undefined }) => {
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
+  return (
+    <div
+      className={clsx(
+        'flex items-center space-x-2 w-full rounded-[5px] border border-mediumGrey text-sm bg-hue-light pl-3 pr-10 shadow-sm',
+        traitElement && 'border-blueHighlight'
+      )}
+    >
+      {traitElement ? (
+        <>
+          <div className='flex flex-row items-center space-x-3 py-2'>
+            <Image
+              priority
+              width={18}
+              height={18}
+              src={cld
+                .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`)
+                .toURL()}
+              className='rounded-[3px]'
+            />
+            <div className='flex flex-row space-x-2 items-center'>
+              <span className={clsx('block truncate text-xs tracking-tight text-darkGrey')}>{layerName}</span>
+              <span className={clsx('block truncate text-sm text-black')}>{traitElement.name}</span>
+            </div>
+          </div>
+        </>
+      ) : (
+        <input className='w-full h-full py-2 focus:outline-none' placeholder='Search a trait...' />
+      )}
+    </div>
+  )
+}
+
 export const RuleSelectorCombobox = ({
   traitElements,
   selected,
@@ -165,13 +202,15 @@ export const RuleSelectorCombobox = ({
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
-        className='w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
+        as={ComboboxInput}
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
-        placeholder='Select a Trait or Layer'
+        // placeholder='Search a trait...'
+        traitElement={selected}
+        layerName={layers.find((layer) => layer.id === selected?.layerElementId)?.name || ''}
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-        <SelectorIcon className='h-5 w-5 text-mediumGrey' aria-hidden='true' />
+        <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
       </Combobox.Button>
       {filteredTraits.length > 0 && (
         <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full max-w-[calc(100% + 5rem)] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>

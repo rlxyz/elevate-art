@@ -1,10 +1,8 @@
 import Button from '@components/UI/Button'
-import Loading from '@components/UI/Loading'
 import { TrashIcon } from '@heroicons/react/outline'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Rules, TraitElement } from '@prisma/client'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
 
@@ -81,14 +79,25 @@ export const TraitRulesDisplayPerItem = ({
   )
 }
 
-const RuleDisplayAll = () => {
-  const { currentLayer, isLoading, isError } = useCurrentLayer()
-  const { name, traitElements } = currentLayer
-  if (isLoading || !currentLayer || !traitElements) return <Loading />
-  if (isError) return <div>Error...</div>
+const RuleDisplayAll = ({
+  currentLayer,
+}: {
+  currentLayer: LayerElement & {
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+    })[]
+  }
+}) => {
+  const { traitElements } = currentLayer
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <span className={`block text-xs font-semibold uppercase text-darkGrey`}>Applied Rules</span>
       {traitElements
         .filter(
           ({ rulesPrimary, rulesSecondary }) => (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
