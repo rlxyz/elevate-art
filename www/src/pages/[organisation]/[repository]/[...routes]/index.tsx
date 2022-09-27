@@ -14,7 +14,6 @@ const Page = () => {
   const { currentLayer, isLoading } = useCurrentLayer()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  console.log(currentLayer)
   return (
     <Layout>
       <Layout.Header
