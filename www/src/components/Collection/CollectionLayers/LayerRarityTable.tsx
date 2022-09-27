@@ -105,7 +105,7 @@ export const LayerRarityTable = () => {
         >
           {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (
             <>
-              <div className='flex flex-col pb-14'>
+              <div className='flex flex-col'>
                 <div className='inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit} className='overflow-hidden'>
                     <table className='border-separate border-spacing-x-0 border-spacing-y-1 min-w-full'>

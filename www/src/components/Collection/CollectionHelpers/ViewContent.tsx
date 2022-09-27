@@ -23,7 +23,7 @@ export const CollectionViewContent = ({
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>{description || '...'}</p>
         </div>
       </div>
-      <div className='w-full'>{children}</div>
+      <div>{children}</div>
     </CollectionViewContentWrapper>
   )
 }

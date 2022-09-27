@@ -23,7 +23,7 @@ const AddNewTrait = () => {
   return (
     <>
       <Button disabled variant='primary' onClick={() => setIsOpen(true)}>
-        <span className='text-xs px-2'>Add New...</span>
+        <span className='text-xs'>Add New...</span>
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>

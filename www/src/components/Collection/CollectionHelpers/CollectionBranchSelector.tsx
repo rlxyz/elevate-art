@@ -96,7 +96,7 @@ const Index = () => {
 
   return (
     <Listbox value={selectedCollection} onChange={setSelectedPerson}>
-      <Listbox.Button as={Button} variant='ghost' className='pl-5'>
+      <Listbox.Button as={Button} variant='ghost' className='pl-4 pr-3 py-3'>
         <div className='flex justify-between w-full items-center'>
           <div className='flex space-x-2'>
             <img src='/images/branch.svg' className='w-4 h-4' />

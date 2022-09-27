@@ -1,5 +1,5 @@
 import { Link } from '@components/UI/Link'
-import { DotsHorizontalIcon, PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement } from '@prisma/client'
@@ -139,14 +139,14 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
           >
             <SwitchVerticalIcon className='w-2 h-2' />
           </button>
-          <button
+          {/* <button
             onClick={() => {
               setOpenUpload(true)
             }}
             className='border rounded-[5px] border-mediumGrey p-1'
           >
             <PlusIcon className='text-darkGrey w-2 h-2' />
-          </button>
+          </button> */}
         </div>
       </div>
       <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
