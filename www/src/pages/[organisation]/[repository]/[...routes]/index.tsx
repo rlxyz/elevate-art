@@ -29,12 +29,6 @@ const Page = () => {
             enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
           },
           {
-            name: CollectionNavigationEnum.enum.Layers,
-            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
-            enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
-          },
-          {
             name: CollectionNavigationEnum.enum.Rarity,
             loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
             href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,

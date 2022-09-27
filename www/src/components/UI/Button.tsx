@@ -57,9 +57,9 @@ const Button: ButtonFC = (props) => {
     size == 'sm' && 'leading-9 text-xs min-width-[auto] px-1 py-2',
     size == 'md' && 'h-10 leading-10 text-xs',
     size == 'lg' && 'h-11 leading-11 text-xs',
-    variant === 'secondary' && 'bg-white text-black border border-black',
+    variant === 'secondary' && 'bg-white text-black border border-mediumGrey',
     variant === 'primary' && 'bg-black justify-center',
-    variant === 'icon' && 'bg-white text-mediumGrey disabled:bg-white disabled:text-mediumGrey',
+    variant === 'icon' && 'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
     variant === 'ghost' && 'border border-mediumGrey bg-opacity-20 text-black',
     className
   )

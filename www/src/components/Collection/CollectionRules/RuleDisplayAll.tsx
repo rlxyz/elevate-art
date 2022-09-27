@@ -74,7 +74,7 @@ export const TraitRulesDisplayPerItem = ({
           disabled={mutation.isLoading}
           onClick={() => mutation.mutate({ id, repositoryId })}
         >
-          <TrashIcon className='w-5 h-5' />
+          <TrashIcon className='w-5 h-5 text-mediumGrey' />
         </Button>
       </div>
     </div>

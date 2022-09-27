@@ -72,11 +72,7 @@ const Index = () => {
   return (
     <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
       <div className='col-span-2 py-8 -ml-4'>
-        {[
-          CollectionNavigationEnum.enum.Layers,
-          CollectionNavigationEnum.enum.Rarity,
-          CollectionNavigationEnum.enum.Rules,
-        ].includes(currentViewSection) && (
+        {[CollectionNavigationEnum.enum.Rarity, CollectionNavigationEnum.enum.Rules].includes(currentViewSection) && (
           <div className='flex flex-col space-y-6 justify-between'>{layers && <LayerFolderSelector layers={layers} />}</div>
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && (
@@ -90,9 +86,7 @@ const Index = () => {
         )}
       </div>
       <div className='col-span-8'>
-        {[CollectionNavigationEnum.enum.Layers, CollectionNavigationEnum.enum.Rarity].includes(currentViewSection) && (
-          <DynamicCollectionLayers />
-        )}
+        {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionLayers />}
         {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
         {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
       </div>
