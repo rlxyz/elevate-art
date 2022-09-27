@@ -4,7 +4,6 @@ import { Layout } from '@components/Layout/Layout'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
 import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
 
@@ -15,10 +14,7 @@ const Page = () => {
   const { currentLayer, isLoading } = useCurrentLayer()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-
-  useEffect(() => {
-    console.log({ mainRepositoryHref })
-  }, [mainRepositoryHref])
+  console.log(currentLayer)
   return (
     <Layout>
       <Layout.Header

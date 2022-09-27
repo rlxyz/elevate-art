@@ -1,4 +1,3 @@
-import { toPascalCaseWithSpace } from '@utils/format'
 import clsx from 'clsx'
 import * as NextLink from 'next/link'
 
@@ -11,7 +10,7 @@ export const Link = ({
   size = 'sm',
   enabled = false,
   external = false,
-  pascalCase = true,
+//  pascalCase = true,
   hover = false,
 }: {
   href: string
@@ -23,7 +22,7 @@ export const Link = ({
   title?: string
   size?: 'sm' | 'md'
   hover?: boolean
-  pascalCase?: boolean
+//  pascalCase?: boolean
 }) => {
   return disabled ? (
     <div
@@ -37,7 +36,7 @@ export const Link = ({
     >
       {title && (
         <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
-          <span>{pascalCase ? toPascalCaseWithSpace(title) : title}</span>
+          <span>{title}</span>
         </div>
       )}
       {children}
@@ -59,7 +58,7 @@ export const Link = ({
           >
             {title && (
               <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
-                <span>{pascalCase ? toPascalCaseWithSpace(title) : title}</span>
+                <span>{title}</span>
               </div>
             )}
             {children}
