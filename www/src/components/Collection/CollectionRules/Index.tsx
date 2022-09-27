@@ -1,9 +1,7 @@
 import Loading from '@components/UI/Loading'
-import { Disclosure } from '@headlessui/react'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import clsx from 'clsx'
-import RuleDisplayAll from './RuleDisplayAll'
 import RuleSelector from './RuleSelector'
 
 const Index = () => {
@@ -25,31 +23,33 @@ const Index = () => {
             </div>
           </div>
         </div>
-        <div className='w-full'>
+        {/* <div className='w-full'>
           <div className={clsx('flex justify-center')}>
             <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%]'>
               <div className='space-y-3 pt-3'>
                 <span className='block text-xs font-semibold uppercase'>All rules created</span>
                 <div className='flex flex-col space-y-3'>
                   {layers
-                    ?.filter((l) => l.traitElements.filter((t) => t.rulesPrimary.length || t.rulesSecondary.length).length)
-                    .map((layer) => (
-                      <Disclosure key={layer.name}>
+                    ?.flatMap((x) => x.traitElements)
+                    ?.filter((t) => t.rulesPrimary.length || t.rulesSecondary.length)
+                    .map((trait, index) => (
+                      <Disclosure key={index}>
                         <Disclosure.Button className={`border border-mediumGrey rounded-[5px] p-2 grid grid-cols-10 w-full`}>
                           <div className='px-1 items-start flex'>
-                            <span className='text-xs'>{layer.name}</span>
+                            <span className='text-xs'>{trait.name}</span>
                           </div>
                         </Disclosure.Button>
                         <Disclosure.Panel className='py-2'>
-                          <RuleDisplayAll currentLayer={layer} />
+                          <RuleDisplayAll traitElement={trait} />
                         </Disclosure.Panel>
                       </Disclosure>
                     ))}
+                  {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   )

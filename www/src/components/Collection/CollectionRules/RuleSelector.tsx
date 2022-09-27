@@ -1,7 +1,6 @@
 import { SmallAdvancedImage } from '@components/Collection/CollectionHelpers/AdvancedImage'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -19,7 +18,6 @@ const RuleSelector = () => {
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { mutate, isLoading } = useMutateRepositoryRule({
     onMutate: () => {
       setSelectedCondition(null)
@@ -30,7 +28,10 @@ const RuleSelector = () => {
   const { data: layers } = useQueryRepositoryLayer()
   if (!layers) return null
   const allRightTraitElements = layers
-    .filter((layer, index) => layer.id !== currentLayerPriority)
+    .filter((layer) => {
+      if (!selectedLeftTrait) return true
+      return layer.id !== selectedLeftTrait.layerElementId
+    })
     .flatMap((layer) => layer.traitElements)
 
   return (
@@ -38,7 +39,7 @@ const RuleSelector = () => {
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
           <RuleSelectorCombobox
-            traitElements={allRightTraitElements}
+            traitElements={layers.flatMap((layer) => layer.traitElements)}
             selected={selectedLeftTrait}
             onChange={setSelectedLeftTrait}
           />

@@ -3,7 +3,11 @@ import { TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { createCloudinary } from '@utils/cloudinary'
 import { trpc } from '@utils/trpc'
+import clsx from 'clsx'
+import Image from 'next/image'
+import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum } from 'src/types/enums'
 
 export const TraitRulesDisplayPerItem = ({
@@ -13,9 +17,13 @@ export const TraitRulesDisplayPerItem = ({
   secondary,
 }: {
   id: string
-  primary: string
+  primary: TraitElement & {
+    layerElement: LayerElement
+  }
+  secondary: TraitElement & {
+    layerElement: LayerElement
+  }
   condition: string
-  secondary: string
 }) => {
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
@@ -51,9 +59,7 @@ export const TraitRulesDisplayPerItem = ({
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-          {primary}
-        </div>
+        <ComboboxInput traitElement={primary} layerName={primary.layerElement.name} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
         <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-sm'>
@@ -61,9 +67,7 @@ export const TraitRulesDisplayPerItem = ({
         </div>
       </div>
       <div className='col-span-4 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-          {secondary}
-        </div>
+        <ComboboxInput traitElement={secondary} layerName={secondary.layerElement.name} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <Button
@@ -79,25 +83,66 @@ export const TraitRulesDisplayPerItem = ({
   )
 }
 
-const RuleDisplayAll = ({
-  currentLayer,
+const ComboboxInput = ({
+  traitElement,
+  layerName,
+  highlight = true,
 }: {
-  currentLayer: LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  }
+  highlight?: boolean
+  layerName: string
+  traitElement: TraitElement | null | undefined
 }) => {
-  const { traitElements } = currentLayer
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
   return (
-    <div className='w-full flex flex-col space-y-3'>
+    <div
+      className={clsx(
+        'flex items-center space-x-2 w-full rounded-[5px] border border-mediumGrey text-sm bg-hue-light pl-3 pr-10 shadow-sm',
+        highlight && traitElement && 'border-blueHighlight'
+      )}
+    >
+      {traitElement ? (
+        <>
+          <div className='flex flex-row items-center space-x-3 py-2'>
+            <div className='relative border border-mediumGrey h-[20px] w-[20px] rounded-[3px]'>
+              <Image
+                priority
+                layout='fill'
+                src={cld
+                  .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`)
+                  .toURL()}
+                className='rounded-[3px]'
+              />
+            </div>
+            <div className='flex flex-row space-x-2 items-center'>
+              <span className={clsx('block truncate text-xs tracking-tight text-darkGrey')}>{layerName}</span>
+              <span className={clsx('block truncate text-sm text-black')}>{traitElement.name}</span>
+            </div>
+          </div>
+        </>
+      ) : (
+        <input className='w-full h-full py-2 focus:outline-none' placeholder='Search a trait...' />
+      )}
+    </div>
+  )
+}
+
+const RuleDisplayAll = ({
+  traitElements,
+}: {
+  traitElements: (TraitElement & {
+    rulesPrimary: (Rules & {
+      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+    })[]
+    rulesSecondary: (Rules & {
+      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+    })[]
+  })[]
+}) => {
+  return (
+    <div className='w-full flex flex-col space-y-2'>
       {traitElements
         .filter(
           ({ rulesPrimary, rulesSecondary }) => (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
@@ -108,12 +153,20 @@ const RuleDisplayAll = ({
             rulesSecondary,
           }: TraitElement & {
             rulesPrimary: (Rules & {
-              primaryTraitElement: TraitElement
-              secondaryTraitElement: TraitElement
+              primaryTraitElement: TraitElement & {
+                layerElement: LayerElement
+              }
+              secondaryTraitElement: TraitElement & {
+                layerElement: LayerElement
+              }
             })[]
             rulesSecondary: (Rules & {
-              primaryTraitElement: TraitElement
-              secondaryTraitElement: TraitElement
+              primaryTraitElement: TraitElement & {
+                layerElement: LayerElement
+              }
+              secondaryTraitElement: TraitElement & {
+                layerElement: LayerElement
+              }
             })[]
           }) => {
             return (
@@ -129,25 +182,25 @@ const RuleDisplayAll = ({
                             <TraitRulesDisplayPerItem
                               id={rule.id}
                               key={index}
-                              primary={rule.primaryTraitElement.name}
+                              primary={rule.primaryTraitElement}
                               condition={rule.condition}
-                              secondary={rule.secondaryTraitElement.name}
+                              secondary={rule.secondaryTraitElement}
                             />
                           )
                         })}
-                      {rulesSecondary
+                      {/* {rulesSecondary
                         .filter((rule) => rule.condition === ruleType)
                         .map((rule, index) => {
                           return (
                             <TraitRulesDisplayPerItem
                               id={rule.id}
                               key={index}
-                              primary={rule.secondaryTraitElement.name}
+                              primary={rule.secondaryTraitElement}
                               condition={rule.condition}
-                              secondary={rule.primaryTraitElement.name}
+                              secondary={rule.primaryTraitElement}
                             />
                           )
-                        })}
+                        })} */}
                     </div>
                   )
                 })}
