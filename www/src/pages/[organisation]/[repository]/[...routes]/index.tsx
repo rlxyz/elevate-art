@@ -15,49 +15,51 @@ const Page = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
   return (
-    <Layout>
-      <Layout.Header
-        internalRoutes={[
-          { current: organisationName, href: `/${organisationName}` },
-          { current: repositoryName, options: [repositoryName], href: `/${organisationName}/${repositoryName}` },
-        ]}
-        internalNavigation={[
-          {
-            name: CollectionNavigationEnum.enum.Preview,
-            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
-            enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
-          },
-          {
-            name: CollectionNavigationEnum.enum.Layers,
-            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
-            enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
-          },
-          {
-            name: CollectionNavigationEnum.enum.Rarity,
-            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
-            enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
-          },
-          {
-            name: CollectionNavigationEnum.enum.Rules,
-            loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-            href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
-            enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
-          },
-        ]}
-      />
-      <Layout.Title>
-        <SectionHeader
-          title={CollectionTitleContent[currentViewSection].title}
-          description={CollectionTitleContent[currentViewSection].description}
+    !isRoutesLoading && (
+      <Layout>
+        <Layout.Header
+          internalRoutes={[
+            { current: organisationName, href: `/${organisationName}` },
+            { current: repositoryName, options: [repositoryName], href: `/${organisationName}/${repositoryName}` },
+          ]}
+          internalNavigation={[
+            {
+              name: CollectionNavigationEnum.enum.Preview,
+              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
+              enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
+            },
+            {
+              name: CollectionNavigationEnum.enum.Layers,
+              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Layers === currentViewSection,
+            },
+            {
+              name: CollectionNavigationEnum.enum.Rarity,
+              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
+            },
+            {
+              name: CollectionNavigationEnum.enum.Rules,
+              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+              enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
+            },
+          ]}
         />
-      </Layout.Title>
-      <Layout.Body>
-        <Index />
-      </Layout.Body>
-    </Layout>
+        <Layout.Title>
+          <SectionHeader
+            title={CollectionTitleContent[currentViewSection].title}
+            description={CollectionTitleContent[currentViewSection].description}
+          />
+        </Layout.Title>
+        <Layout.Body>
+          <Index />
+        </Layout.Body>
+      </Layout>
+    )
   )
 }
 
