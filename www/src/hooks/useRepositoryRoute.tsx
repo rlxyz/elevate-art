@@ -38,7 +38,7 @@ export const useRepositoryRoute = () => {
       const route = parse.data
       switch (route) {
         case CollectionNavigationEnum.enum.Preview:
-          ;(currentLayerPriority === '' || !currentLayerPriority) && setCurrentLayerPriority(layers[0]?.id || '')
+          currentLayerPriority === '' && !currentLayerPriority && setCurrentLayerPriority(layers[0]?.id || '')
           setCurrentViewSection(parse.data)
           return
         case CollectionNavigationEnum.enum.Settings:
