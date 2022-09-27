@@ -7,6 +7,8 @@ export const toPascalCaseWithSpace = (name: string) => {
     .replace(new RegExp(/\w/), (s) => s.toUpperCase())
 }
 
+export const capitalize = (s: string) => s[0]?.toUpperCase() + s.slice(1) || ''
+
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ')
 }
