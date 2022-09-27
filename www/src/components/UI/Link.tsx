@@ -6,6 +6,7 @@ export const Link = ({
   children,
   title,
   href,
+  disabled,
   className,
   size = 'sm',
   enabled = false,
@@ -16,6 +17,7 @@ export const Link = ({
   href: string
   enabled?: boolean
   external?: boolean
+  disabled?: boolean
   className?: string
   children?: React.ReactNode
   title?: string
@@ -23,7 +25,24 @@ export const Link = ({
   hover?: boolean
   pascalCase?: boolean
 }) => {
-  return (
+  return disabled ? (
+    <div
+      className={clsx(
+        `cursor-pointer flex flex-row rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`,
+        enabled ? 'font-semibold' : '',
+        size === 'sm' ? 'py-3' : 'py-2',
+        enabled && hover ? 'bg-mediumGrey bg-opacity-40' : '',
+        className
+      )}
+    >
+      {title && (
+        <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+          <span>{pascalCase ? toPascalCaseWithSpace(title) : title}</span>
+        </div>
+      )}
+      {children}
+    </div>
+  ) : (
     <NextLink.default href={href}>
       {external ? (
         <a className={clsx(className)}>{children}</a>

@@ -121,12 +121,13 @@ export const repositoryRouter = createRouter()
         data: {
           name: 'main',
           repositoryId: repository.id,
+          totalSupply: 10000,
         },
       })
       return repository
     },
   })
-  .mutation('deleteRepositoryById', {
+  .mutation('delete', {
     input: z.object({
       repositoryId: z.string(),
     }),

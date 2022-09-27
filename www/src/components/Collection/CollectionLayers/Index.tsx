@@ -2,6 +2,7 @@ import Button from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
 import { Dialog, Transition } from '@headlessui/react'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
@@ -9,10 +10,9 @@ import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
-import { FolderUpload } from '../CollectionHelpers/FileUpload'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
-import { RarityDisplay } from '../CollectionRarity/RarityDisplay'
-import LayerGrid from './LayerGrid'
+import LayerGridView from './LayerGridView'
+import { LayerRarityTable } from './LayerRarityTable'
 
 const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
   ssr: false,
@@ -59,9 +59,7 @@ const AddNewTrait = () => {
                     <div>
                       <p className='text-sm'>You can upload multiple traits at a time</p>
                     </div>
-                    <div className='h-96'>
-                      <FolderUpload organisationId='' onSuccess={() => console.log('works')} />
-                    </div>
+                    <div className='h-96'>{/* <FolderUpload organisationId='' onSuccess={() => console.log('works')} /> */}</div>
                     <div className='flex justify-between'>
                       <div className='ml-[auto]'>
                         <Button disabled>
@@ -90,15 +88,18 @@ const LayerLayout = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
+  const { data: layers } = useQueryRepositoryLayer()
   return (
     <div className='grid grid-cols-10'>
       <div className='col-span-8 flex flex-col'>
-        <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
+        <div className='col-span-6 font-plus-jakarta-sans'>
           <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{name}</h1>
           <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
             <span>
               There are {traitElements.length} {name} that make up the{' '}
-              <span className='text-blueHighlight'>{`${ordinal(currentLayerPriority + 1)} layer`}</span>
+              <span className='text-blueHighlight'>{`${ordinal(
+                (layers?.findIndex((x) => x.id === currentLayerPriority) || 0) + 1
+              )} layer`}</span>
             </span>
           </p>
         </div>
@@ -158,20 +159,22 @@ const Index = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { currentLayer } = useCurrentLayer()
   const { name, traitElements } = currentLayer
+  const [query, setQuery] = useState('')
+  const filteredTraitElements = traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
     <CollectionViewContentWrapper>
       <LayerLayout />
-      <div className='grid grid-cols-10 gap-x-6'>
-        <div className='col-span-2'>
-          <DynamicLayerFolder />
-        </div>
-        <div className='col-span-8'>
-          {currentViewSection === CollectionNavigationEnum.enum.Layers && (
-            <LayerGrid traitElements={traitElements} layerName={name} />
-          )}
-          {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RarityDisplay />}
-        </div>
-      </div>
+      {currentViewSection === CollectionNavigationEnum.enum.Layers && (
+        <>
+          {/* <input
+            placeholder='Search...'
+            onChange={(e) => setQuery(e.target.value)}
+            className='py-2 border text-sm h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
+          /> */}
+          <LayerGridView traitElements={filteredTraitElements} layerName={name} />
+        </>
+      )}
+      {currentViewSection === CollectionNavigationEnum.enum.Rarity && <LayerRarityTable />}
     </CollectionViewContentWrapper>
   )
 }

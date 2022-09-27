@@ -20,7 +20,7 @@ const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
-export const RarityDisplay = () => {
+export const LayerRarityTable = () => {
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
@@ -109,10 +109,10 @@ export const RarityDisplay = () => {
               <div className='flex flex-col pb-14'>
                 <div className='inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit} className='overflow-hidden'>
-                    <table className='min-w-full table-fixed divide-y divide-mediumGrey'>
-                      <thead>
-                        <tr className='bg-lightGray border border-mediumGrey'>
-                          <th className='pl-3'>
+                    <table className='border-separate border-spacing-x-0 border-spacing-y-1 min-w-full'>
+                      <thead className='bg-lightGray'>
+                        <tr>
+                          <th className='border-t border-l border-b rounded-l-[5px] border-mediumGrey pl-3'>
                             <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                           </th>
                           {['Image', 'Name', 'Estimate in Collection', 'Rarity Score', '%'].map((item, index) => {
@@ -120,13 +120,15 @@ export const RarityDisplay = () => {
                               <th
                                 key={item}
                                 scope='col'
-                                className={clsx('text-left text-xs font-normal uppercase text-darkGrey py-3')}
+                                className={clsx(
+                                  'text-left border-t border-b border-mediumGrey text-xs text-black font-normal uppercase py-3'
+                                )}
                               >
                                 {item}
                               </th>
                             )
                           })}
-                          <th className='pr-3'>
+                          <th className='pr-3 border-t border-r border-b rounded-r-[5px] border-mediumGrey'>
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               fill='none'
