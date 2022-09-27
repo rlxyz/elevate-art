@@ -44,15 +44,6 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
         tokenIdMap: new Map(),
         traitMap: new Map(),
       },
-      collection: {
-        id: '',
-        name: '',
-        totalSupply: 0,
-        repositoryId: '',
-        generations: 0,
-        createdAt: new Date(-1),
-        updatedAt: new Date(-1),
-      },
       tokenRanking: [], // start with true to ensure that on hydrate preview is populated
       traitFilters: [], // start with true to ensure that on hydrate preview is populated
       setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
