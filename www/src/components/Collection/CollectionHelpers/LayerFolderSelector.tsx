@@ -113,10 +113,6 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
     },
   })
 
-  useEffect(() => {
-    console.log({ layers })
-  }, [layers])
-
   if (!layers || !items) return null
 
   return (

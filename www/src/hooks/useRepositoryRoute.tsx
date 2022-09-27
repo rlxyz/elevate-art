@@ -14,13 +14,15 @@ export const useRepositoryRoute = () => {
   const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null)
   const { data: layers } = useQueryRepositoryLayer()
 
-  const { setCurrentLayerPriority, setCurrentViewSection, currentViewSection } = useCollectionNavigationStore((state) => {
-    return {
-      currentViewSection: state.currentViewSection,
-      setCurrentLayerPriority: state.setCurrentLayerPriority,
-      setCurrentViewSection: state.setCurrentViewSection,
-    }
-  })
+  const { setCurrentLayerPriority, currentLayerPriority, setCurrentViewSection, currentViewSection } =
+    useCollectionNavigationStore((state) => {
+      return {
+        currentLayerPriority: state.currentLayerPriority,
+        currentViewSection: state.currentViewSection,
+        setCurrentLayerPriority: state.setCurrentLayerPriority,
+        setCurrentViewSection: state.setCurrentViewSection,
+      }
+    })
 
   // sync routing with store
   useDeepCompareEffect(() => {
@@ -34,12 +36,15 @@ export const useRepositoryRoute = () => {
 
     if (routes.length === 1) {
       const route = parse.data
-
       switch (route) {
         case CollectionNavigationEnum.enum.Preview:
+          if (currentLayerPriority === '' || !currentLayerPriority) {
+            setCurrentLayerPriority(layers[0]?.id || '')
+          }
           setCurrentViewSection(parse.data)
           return
         case CollectionNavigationEnum.enum.Settings:
+          setCurrentLayerPriority(layers[0]?.id || '')
           setCurrentViewSection(parse.data)
           return
       }

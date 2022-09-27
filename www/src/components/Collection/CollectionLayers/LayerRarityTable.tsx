@@ -7,7 +7,6 @@ import { useMutateRepositoryLayersWeight, useQueryCollection } from '@hooks/useR
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
-import { toPascalCaseWithSpace } from '@utils/format'
 import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage, calculateTraitRarityScore } from '@utils/math'
 import clsx from 'clsx'
 import { Form, Formik } from 'formik'
@@ -164,7 +163,7 @@ export const LayerRarityTable = () => {
                               </div>
                             </td>
                             <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
-                              {toPascalCaseWithSpace(name)}
+                              {name}
                             </td>
                             <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>

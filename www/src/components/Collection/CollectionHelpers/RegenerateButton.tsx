@@ -19,7 +19,6 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
         ...backup,
         generation: backup.generations + 1,
       })
-      console.log('gen', backup.generations + 1)
       onMutate && onMutate()
       return { backup }
     },

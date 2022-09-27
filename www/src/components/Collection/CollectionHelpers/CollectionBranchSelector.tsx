@@ -135,7 +135,6 @@ const Index = () => {
                         <Link
                           hover={true}
                           enabled={name === selectedCollection?.name}
-                          pascalCase={false}
                           href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${name}`}
                         >
                           <div className='flex flex-row justify-between px-2 w-full'>

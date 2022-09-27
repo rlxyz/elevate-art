@@ -2,7 +2,6 @@ import Button from '@components/UI/Button'
 import Loading from '@components/UI/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useNotification } from '@hooks/useNotification'
 import { Organisation, Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
@@ -104,9 +103,7 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
     })
   }
   const [repository, setRepository] = useState<Repository>()
-  useDeepCompareEffect(() => {
-    console.log({ uploadedFiles })
-  }, [uploadedFiles])
+
   const onDrop = useCallback(async (files: FileWithPath[]) => {
     // step 1: validate files
     if (!validateFiles(files)) {
@@ -162,7 +159,6 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
                           },
                           ...(prev[layerName]?.slice(index + 1) || []),
                         ]
-                        console.log({ prev })
                         return prev
                       })
                     })
