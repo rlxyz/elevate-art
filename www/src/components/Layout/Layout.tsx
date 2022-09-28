@@ -57,11 +57,21 @@ const LayoutHeader = (props: HeaderProps) => (
   </LayoutContainer>
 )
 
-const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode; hasBorder?: boolean }) => (
-  <LayoutContainer className='body min-h-[calc(100vh-7rem)]' hasBorder={hasBorder}>
-    <div className='-ml-2 h-full space-y-8'>{children}</div>
-  </LayoutContainer>
-)
+const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode[] | React.ReactNode; hasBorder?: boolean }) => {
+  const childrens = React.Children.toArray(children)
+
+  return (
+    <main className='min-h-[calc(100vh-7rem)]'>
+      {childrens.map((child) => {
+        return (
+          <LayoutContainer hasBorder={hasBorder}>
+            <div className='-ml-2 h-full space-y-8'>{child}</div>
+          </LayoutContainer>
+        )
+      })}
+    </main>
+  )
+}
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
   <LayoutContainer className='title'>{children}</LayoutContainer>

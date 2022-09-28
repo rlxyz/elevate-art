@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 export const CollectionViewContentWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <main className='space-y-6 py-8 pl-8 min-h-[calc(100vh-19rem)]'>{children}</main>
+  return <main className='space-y-6 py-8 pl-8'>{children}</main>
 }
 
 export const CollectionViewContent = ({

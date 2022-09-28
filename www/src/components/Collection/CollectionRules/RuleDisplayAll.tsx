@@ -142,25 +142,14 @@ const RuleDisplayAll = ({
   })[]
 }) => {
   return (
-    <div className='w-full flex flex-col space-y-2'>
+    <div className='w-full flex flex-col space-y-2 z-[-1]'>
       {traitElements
-        .filter(
-          ({ rulesPrimary, rulesSecondary }) => (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
-        )
+        .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
         .map(
           ({
             rulesPrimary,
-            rulesSecondary,
           }: TraitElement & {
             rulesPrimary: (Rules & {
-              primaryTraitElement: TraitElement & {
-                layerElement: LayerElement
-              }
-              secondaryTraitElement: TraitElement & {
-                layerElement: LayerElement
-              }
-            })[]
-            rulesSecondary: (Rules & {
               primaryTraitElement: TraitElement & {
                 layerElement: LayerElement
               }
@@ -188,19 +177,6 @@ const RuleDisplayAll = ({
                             />
                           )
                         })}
-                      {/* {rulesSecondary
-                        .filter((rule) => rule.condition === ruleType)
-                        .map((rule, index) => {
-                          return (
-                            <TraitRulesDisplayPerItem
-                              id={rule.id}
-                              key={index}
-                              primary={rule.secondaryTraitElement}
-                              condition={rule.condition}
-                              secondary={rule.primaryTraitElement}
-                            />
-                          )
-                        })} */}
                     </div>
                   )
                 })}
