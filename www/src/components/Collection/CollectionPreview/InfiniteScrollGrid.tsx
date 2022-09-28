@@ -3,62 +3,10 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
-import { motion, useAnimation } from 'framer-motion'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { useInView } from 'react-intersection-observer'
 import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
-
-const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
-  const controls = useAnimation()
-  const [ref, inView] = useInView()
-
-  useEffect(() => {
-    if (inView) {
-      controls.start('show')
-    }
-  }, [controls, inView])
-
-  const item = {
-    hidden: {
-      opacity: 0,
-      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
-    },
-    show: {
-      opacity: 1,
-      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
-    },
-  }
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-  return (
-    <>
-      <motion.div
-        className='relative flex flex-col justify-center items-center w-full h-full'
-        variants={item}
-        initial='hidden'
-        animate={controls}
-        ref={ref}
-      >
-        <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
-          {token.map(({ layerElementId, id }: TraitElement, index: number) => {
-            return (
-              <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
-                <div className={`relative h-full w-full`}>
-                  <img
-                    className='rounded-[5px]'
-                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </motion.div>
-    </>
-  )
-}
 
 const InfiniteScrollGridItems = ({
   collection,
@@ -84,7 +32,8 @@ const InfiniteScrollGridItems = ({
   const [selectedToken, setSelectedToken] = useState<{ traitElements: TraitElement[] }>({
     traitElements: [],
   })
-
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
@@ -100,17 +49,17 @@ const InfiniteScrollGridItems = ({
           <RenderIfVisible key={index}>
             <div className='cursor-pointer relative col-span-1' onClick={() => setSelectedToken({ traitElements: token })}>
               <div className='flex flex-col'>
-                <div className='absolute h-full w-full'>
-                  <InfiniteScrollGridItem
-                    key={`${index}`}
-                    token={createToken({
-                      id: Number(tokens[index]),
-                      name: collection.name,
-                      generation: collection.generations,
-                      layers,
-                    })}
-                    name={`#${tokens[index] || 0}`}
-                  />
+                <div className='relative flex flex-col items-center justify-center h-full w-full' key={index}>
+                  {token.map(({ layerElementId, id }: TraitElement) => {
+                    return (
+                      <div className='absolute h-full w-full'>
+                        <img
+                          className='rounded-[5px]'
+                          src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
                 <div className='pb-[100%] blocks'></div>
                 <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
@@ -158,7 +107,18 @@ const InfiniteScrollGridItems = ({
                   <div className='space-y-4'>
                     <div className='pb-[100%] blocks'>
                       <div className='absolute h-full w-full'>
-                        <InfiniteScrollGridItem token={selectedToken.traitElements} name={'#1'} />
+                        {selectedToken.traitElements.map(({ layerElementId, id }: TraitElement, index: number) => {
+                          return (
+                            <div className='absolute h-full w-full'>
+                              <img
+                                className='rounded-[5px]'
+                                src={cld
+                                  .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                                  .toURL()}
+                              />
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
