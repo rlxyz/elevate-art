@@ -9,6 +9,8 @@ import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
+import LayerGridView from './LayerGridView'
+import LayerRarityTable from './LayerRarityTable'
 
 const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
   ssr: false,
@@ -161,10 +163,10 @@ const Index = () => {
             onChange={(e) => setQuery(e.target.value)}
             className='py-2 border text-sm h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           /> */}
-          <DynamicGridView traitElements={filteredTraitElements} layerName={name} />
+          <LayerGridView traitElements={filteredTraitElements} layerName={name} />
         </>
       )}
-      {currentView === 'rarity' && <DynamicRarityTable />}
+      {currentView === 'rarity' && <LayerRarityTable />}
     </CollectionViewContentWrapper>
   )
 }
