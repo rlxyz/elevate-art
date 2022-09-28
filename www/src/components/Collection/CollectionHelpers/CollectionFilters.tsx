@@ -110,7 +110,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
       {({ handleChange, submitForm }) => (
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
-            {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
+            {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
               <div key={layer.id} className='flex flex-col text-xs'>
                 <div
                   onClick={() => {

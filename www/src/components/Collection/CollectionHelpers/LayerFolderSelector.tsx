@@ -72,10 +72,8 @@ export const ReorderItem = ({
 
 const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const [setReordered, setSetReordered] = useState('some_random_reordering')
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
-  const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const ctx = trpc.useContext()
 
@@ -139,14 +137,6 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
           >
             <SwitchVerticalIcon className='w-2 h-2' />
           </button>
-          {/* <button
-            onClick={() => {
-              setOpenUpload(true)
-            }}
-            className='border rounded-[5px] border-mediumGrey p-1'
-          >
-            <PlusIcon className='text-darkGrey w-2 h-2' />
-          </button> */}
         </div>
       </div>
       <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
