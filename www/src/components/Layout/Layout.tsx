@@ -22,14 +22,21 @@ interface LayoutProps {
 export const LayoutContainer = ({
   className,
   children,
-  hasBorder = true,
+  border = 'lower',
 }: {
-  hasBorder?: boolean
+  border?: 'upper' | 'lower'
   className?: string
   children: React.ReactNode
 }) => {
   return (
-    <div className={clsx('flex justify-center', className, hasBorder && 'border-b border-mediumGrey')}>
+    <div
+      className={clsx(
+        'flex justify-center',
+        className,
+        border === 'lower' && 'border-b border-mediumGrey',
+        border === 'upper' && 'border-t border-mediumGrey'
+      )}
+    >
       <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%]'>{children}</div>
     </div>
   )
@@ -40,7 +47,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
     <main className='layout'>
       {children}
       {hasFooter ? (
-        <LayoutContainer>
+        <LayoutContainer border='upper'>
           <DynamicFooter />
         </LayoutContainer>
       ) : (
@@ -61,10 +68,10 @@ const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode[
   const childrens = React.Children.toArray(children)
 
   return (
-    <main className='min-h-[calc(100vh-7rem)] py-8'>
+    <main className='min-h-[calc(100vh-19.25rem)] py-8'>
       {childrens.map((child, index) => {
         return (
-          <LayoutContainer hasBorder={hasBorder} key={index}>
+          <LayoutContainer key={index}>
             <div className='-ml-2 h-full space-y-8'>{child}</div>
           </LayoutContainer>
         )

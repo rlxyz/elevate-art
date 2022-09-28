@@ -151,7 +151,11 @@ const Page = () => {
             </>
           )}
           {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleSelectorContainer />}
-          {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleDisplayContainer />}
+          {layers &&
+          layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length &&
+          currentViewSection === CollectionNavigationEnum.enum.Rules ? (
+            <RuleDisplayContainer />
+          ) : null}
         </Layout.Body>
       </>
     </Layout>

@@ -8,7 +8,7 @@ export const RuleSelectorContainer = () => {
   return (
     <div className='w-full py-16'>
       <div className='flex justify-center'>
-        <div className='space-y-1 w-full -translate-y-2'>
+        <div className='space-y-1 w-full -translate-y-6'>
           <span className='text-xs font-semibold uppercase'>Create a condition</span>
           <RuleSelector layers={layers} />
         </div>
