@@ -2,7 +2,7 @@ import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
-interface CompilerViewInterface {
+interface RepositoryStoreStateInterface {
   rarityFilter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All'
   traitFilteredTokens: number[]
   collectionId: string
@@ -14,6 +14,9 @@ interface CompilerViewInterface {
   }
   tokenRanking: number[]
   tokens: number[]
+}
+
+interface RepositoryStoreFunctionInterface {
   setTokens: (tokens: number[]) => void
   setTraitMapping: ({
     tokenIdMap,
@@ -28,24 +31,31 @@ interface CompilerViewInterface {
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setTraitFilteredTokens: (tokens: number[]) => void
+  reset: () => void
 }
 
-export const createRepositoryStore = create<CompilerViewInterface>()(
+interface RepositoryStoreInterface extends RepositoryStoreFunctionInterface, RepositoryStoreStateInterface {}
+
+const initialState: RepositoryStoreStateInterface = {
+  rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
+  traitFilteredTokens: [],
+  repositoryId: '',
+  collectionId: '',
+  tokens: [],
+  traitMapping: {
+    tokenIdMap: new Map(),
+    traitMap: new Map(),
+  },
+  tokenRanking: [], // start with true to ensure that on hydrate preview is populated
+  traitFilters: [], // start with true to ensure that on hydrate preview is populated
+}
+
+export const createRepositoryStore = create<RepositoryStoreInterface>()(
   persist(
     (set) => ({
-      rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
-      traitFilteredTokens: [],
+      ...initialState,
       setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),
       setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
-      repositoryId: '',
-      collectionId: '',
-      tokens: [],
-      traitMapping: {
-        tokenIdMap: new Map(),
-        traitMap: new Map(),
-      },
-      tokenRanking: [], // start with true to ensure that on hydrate preview is populated
-      traitFilters: [], // start with true to ensure that on hydrate preview is populated
       setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
       setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
       setTraitMapping: ({
@@ -58,6 +68,7 @@ export const createRepositoryStore = create<CompilerViewInterface>()(
       setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
       setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
       setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
+      reset: () => set(initialState),
     }),
     { name: 'repositoryStore' }
   )
