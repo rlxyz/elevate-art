@@ -180,8 +180,8 @@ export const InfiniteScrollGrid = ({
   }
 
   useEffect(() => {
-    fetch(page)
-  }, [])
+    fetch(0)
+  }, [traitFilters])
 
   return (
     <>
@@ -201,13 +201,12 @@ export const InfiniteScrollGrid = ({
         ))}
       </div>
       <InfiniteScrollComponent.default
-        dataLength={tokensOnDisplay.slice(0, tokens.length).length}
+        dataLength={tokens.length}
         next={() => {
           fetchMoreData(page)
         }}
         hasMore={hasMore}
         loader={<></>}
-        // refreshFunction={true}
       >
         <InfiniteScrollGridItems
           tokensOnDisplay={tokensOnDisplay.slice(0, tokens.length)}
