@@ -2,6 +2,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
+import { truncate } from '@utils/format'
 import { Field, Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
 
@@ -125,7 +126,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
                   }`}
                 >
                   <div className='px-3 flex justify-between'>
-                    <label>{layer.name}</label>
+                    <label>{truncate(layer.name)}</label>
                     <div className='flex items-center space-x-2'>
                       <span className='text-xs'>
                         {traitMapping.traitMap.size > 0 && (traitMapping.traitMap.get(layer.id)?.size || 0)}
@@ -152,7 +153,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
                           key={traitElement.id}
                           className='flex flex-row justify-between items-center py-3 px-3 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
                         >
-                          <span>{traitElement.name}</span>
+                          <span>{truncate(traitElement.name)}</span>
                           <div className='flex items-center space-x-2'>
                             <span className='text-darkGrey text-xs'>
                               {traitMapping.traitMap.size > 0 &&

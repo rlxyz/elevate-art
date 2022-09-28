@@ -3,6 +3,7 @@ import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement } from '@prisma/client'
+import { truncate } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
@@ -148,12 +149,12 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
             <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
-              {items.map((item, index) => {
+              {items.map((item) => {
                 return (
                   <ReorderItem
                     canReorder={openReordering}
                     key={item}
-                    name={layers.find((x) => x.id === item)?.name || ''}
+                    name={truncate(layers.find((x) => x.id === item)?.name || '')}
                     item={item}
                     enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
                   />
