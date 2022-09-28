@@ -61,7 +61,7 @@ const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode[
   const childrens = React.Children.toArray(children)
 
   return (
-    <main className='min-h-[calc(100vh-7rem)]'>
+    <main className='min-h-[calc(100vh-7rem)] py-8'>
       {childrens.map((child, index) => {
         return (
           <LayoutContainer hasBorder={hasBorder} key={index}>

@@ -1,5 +1,6 @@
 import { Layout } from '@components/Layout/Layout'
 import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
+import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
@@ -11,6 +12,7 @@ const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
+  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   return (
     <>
       <Layout>
@@ -26,9 +28,7 @@ const Page: NextPage = () => {
             },
           ]}
         />
-        <Layout.Body>
-          <DynamicViewOrganisation />
-        </Layout.Body>
+        <Layout.Body>{repositories && <DynamicViewOrganisation />}</Layout.Body>
       </Layout>
     </>
   )
