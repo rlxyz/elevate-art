@@ -1,64 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
-import { motion, useAnimation } from 'framer-motion'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { useInView } from 'react-intersection-observer'
 import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
-
-const InfiniteScrollGridItem = ({ token, name }: { token: TraitElement[]; name: string }) => {
-  const controls = useAnimation()
-  const [ref, inView] = useInView()
-
-  useEffect(() => {
-    if (inView) {
-      controls.start('show')
-    }
-  }, [controls, inView])
-
-  const item = {
-    hidden: {
-      opacity: 0,
-      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
-    },
-    show: {
-      opacity: 1,
-      transition: { ease: [0.78, 0.14, 0.15, 0.86] },
-    },
-  }
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-  return (
-    <>
-      <motion.div
-        className='relative flex flex-col justify-center items-center w-full h-full'
-        variants={item}
-        initial='hidden'
-        animate={controls}
-        ref={ref}
-      >
-        <div className='overflow-hidden w-full h-full' style={{ transformStyle: 'preserve-3d' }}>
-          {token.map(({ layerElementId, id }: TraitElement, index: number) => {
-            return (
-              <div className='absolute flex flex-col items-center justify-center h-full w-full' key={index}>
-                <div className={`relative h-full w-full`}>
-                  <img
-                    className='rounded-t-[5px]'
-                    src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </motion.div>
-    </>
-  )
-}
 
 const InfiniteScrollGridItems = ({
   collection,
@@ -84,12 +33,13 @@ const InfiniteScrollGridItems = ({
   const [selectedToken, setSelectedToken] = useState<{ traitElements: TraitElement[] }>({
     traitElements: [],
   })
-
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const cld = createCloudinary()
   if (!tokens || !tokens.length || !collection) return <></>
 
   return (
-    <div className='grid grid-cols-5 gap-y-6 gap-x-6 overflow-hidden'>
-      {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
+    <div className='grid grid-cols-5 gap-y-1 gap-x-6 overflow-hidden'>
+      {tokensOnDisplay.map((index: number) => {
         const token = createToken({
           id: Number(tokens[index]),
           name: collection.name,
@@ -98,22 +48,19 @@ const InfiniteScrollGridItems = ({
         })
         return (
           <RenderIfVisible key={index}>
-            <div
-              className='cursor-pointer relative col-span-1 border border-mediumGrey rounded-[5px]'
-              onClick={() => setSelectedToken({ traitElements: token })}
-            >
+            <div className='cursor-pointer relative col-span-1' onClick={() => setSelectedToken({ traitElements: token })}>
               <div className='flex flex-col'>
-                <div className='absolute h-full w-full'>
-                  <InfiniteScrollGridItem
-                    key={`${index}`}
-                    token={createToken({
-                      id: Number(tokens[index]),
-                      name: collection.name,
-                      generation: collection.generations,
-                      layers,
-                    })}
-                    name={`#${tokens[index] || 0}`}
-                  />
+                <div className='relative flex flex-col items-center justify-center h-full w-full' key={index}>
+                  {token.map(({ layerElementId, id }: TraitElement, index) => {
+                    return (
+                      <div key={index} className='absolute h-full w-full'>
+                        <img
+                          className='rounded-[5px]'
+                          src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
                 <div className='pb-[100%] blocks'></div>
                 <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
@@ -161,7 +108,18 @@ const InfiniteScrollGridItems = ({
                   <div className='space-y-4'>
                     <div className='pb-[100%] blocks'>
                       <div className='absolute h-full w-full'>
-                        <InfiniteScrollGridItem token={selectedToken.traitElements} name={'#1'} />
+                        {selectedToken.traitElements.map(({ layerElementId, id }: TraitElement, index: number) => {
+                          return (
+                            <div key={index} className='absolute h-full w-full'>
+                              <img
+                                className='rounded-[5px]'
+                                src={cld
+                                  .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
+                                  .toURL()}
+                              />
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
@@ -196,10 +154,10 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { hasPreviewLoaded, setHasPreviewLoaded } = useRepositoryStore((state) => {
+  const { tokens, traitFilters } = useRepositoryStore((state) => {
     return {
-      setHasPreviewLoaded: state.setHasPreviewLoaded,
-      hasPreviewLoaded: state.hasPreviewLoaded,
+      tokens: state.tokens,
+      traitFilters: state.traitFilters,
     }
   })
 
@@ -222,20 +180,43 @@ export const InfiniteScrollGrid = ({
   }
 
   useEffect(() => {
-    fetch(page)
-    setHasPreviewLoaded(true)
-  }, [])
+    fetch(0)
+  }, [traitFilters])
 
   return (
-    <InfiniteScrollComponent.default
-      dataLength={tokensOnDisplay.length}
-      next={() => {
-        fetchMoreData(page)
-      }}
-      hasMore={hasMore}
-      loader={<></>}
-    >
-      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} layers={layers} collection={collection} />
-    </InfiniteScrollComponent.default>
+    <>
+      <div className='pb-3 space-x-3'>
+        <span className='text-xs text-darkGrey'>{tokens.length} results</span>
+        {traitFilters.map(({ layer, trait }, index) => (
+          <span
+            key={index}
+            className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'
+          >
+            {trait.name}
+            <button
+              type='button'
+              className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none'
+              onClick={() => console.log('todo remove filter')}
+            >
+              <XIcon className='w-3 h-3 text-darkGrey' />
+            </button>
+          </span>
+        ))}
+      </div>
+      <InfiniteScrollComponent.default
+        dataLength={tokens.length}
+        next={() => {
+          fetchMoreData(page)
+        }}
+        hasMore={hasMore}
+        loader={<></>}
+      >
+        <InfiniteScrollGridItems
+          tokensOnDisplay={tokensOnDisplay.slice(0, tokens.length)}
+          layers={layers}
+          collection={collection}
+        />
+      </InfiniteScrollComponent.default>
+    </>
   )
 }

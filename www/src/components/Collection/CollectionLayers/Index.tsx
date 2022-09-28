@@ -1,17 +1,28 @@
 import Button from '@components/UI/Button'
-import { Link } from '@components/UI/Link'
 import { Dialog, Transition } from '@headlessui/react'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
 import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
 import LayerGridView from './LayerGridView'
-import { LayerRarityTable } from './LayerRarityTable'
+import LayerRarityTable from './LayerRarityTable'
+
+const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
+  ssr: false,
+})
+
+const DynamicRarityTable = dynamic(() => import('./LayerRarityTable'), {
+  ssr: false,
+})
+
+const DynamicGridView = dynamic(() => import('./LayerGridView'), {
+  ssr: false,
+})
 
 const AddNewTrait = () => {
   const { currentLayer } = useCurrentLayer()
@@ -19,8 +30,8 @@ const AddNewTrait = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <Button disabled className='px-5 h-full' variant='primary' size='sm' onClick={() => setIsOpen(true)}>
-        <span className='text-xs'>Add new...</span>
+      <Button disabled variant='primary' onClick={() => setIsOpen(true)}>
+        <span className='text-xs'>Add New...</span>
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
@@ -75,7 +86,7 @@ const AddNewTrait = () => {
   )
 }
 
-const LayerLayout = () => {
+const Index = () => {
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
   const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
@@ -84,82 +95,68 @@ const LayerLayout = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { data: layers } = useQueryRepositoryLayer()
-  return (
-    <div className='grid grid-cols-10'>
-      <div className='col-span-8 flex flex-col'>
-        <div className='col-span-6 font-plus-jakarta-sans'>
-          <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{name}</h1>
-          <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
-            <span>
-              There are {traitElements.length} {name} that make up the{' '}
-              <span className='text-blueHighlight'>{`${ordinal(
-                (layers?.findIndex((x) => x.id === currentLayerPriority) || 0) + 1
-              )} layer`}</span>
-            </span>
-          </p>
-        </div>
-      </div>
-      <div className='col-span-2 w-full flex justify-end'>
-        <div className='flex w-full justify-end items-center space-x-2 h-1/2'>
-          <Link
-            href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Layers}/${currentLayer.name}`}
-            external
-            className={clsx(
-              'h-full w-full border border-mediumGrey rounded-[5px] flex items-center justify-center',
-              currentViewSection === CollectionNavigationEnum.enum.Layers && 'bg-mediumGrey bg-opacity-50'
-            )}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.25}
-              stroke='currentColor'
-              className='w-5 h-5 px-1'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z'
-              />
-            </svg>
-          </Link>
-          <Link
-            href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`}
-            external
-            className={clsx(
-              'h-full w-full border border-mediumGrey rounded-[5px] flex items-center justify-center',
-              currentViewSection === CollectionNavigationEnum.enum.Rarity && 'bg-mediumGrey bg-opacity-50'
-            )}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='w-5 h-5 px-1'
-            >
-              <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
-            </svg>
-          </Link>
-          <AddNewTrait />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const Index = () => {
-  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
-  const { currentLayer } = useCurrentLayer()
-  const { name, traitElements } = currentLayer
   const [query, setQuery] = useState('')
+  const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
   const filteredTraitElements = traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
     <CollectionViewContentWrapper>
-      <LayerLayout />
-      {currentViewSection === CollectionNavigationEnum.enum.Layers && (
+      <div className='grid grid-cols-10'>
+        <div className='col-span-8 flex flex-col'>
+          <div className='col-span-6 font-plus-jakarta-sans'>
+            <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{name}</h1>
+            <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
+              <span>
+                There are {traitElements.length} {name} that make up the{' '}
+                <span className='text-blueHighlight'>{`${ordinal(
+                  (layers?.findIndex((x) => x.id === currentLayerPriority) || 0) + 1
+                )} layer`}</span>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div className='col-span-2 w-full flex justify-end items-end'>
+          <div className='flex space-x-2'>
+            <Button
+              variant='secondary'
+              onClick={() => setCurrentView('rarity')}
+              className={clsx(currentView === 'rarity' && 'bg-mediumGrey bg-opacity-40 border-blueHighlight')}
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className={clsx('w-5 h-5 p-0.5', currentView === 'rarity' ? 'text-blueHighlight' : 'text-darkGrey')}
+              >
+                <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
+              </svg>
+            </Button>
+            <Button
+              variant='secondary'
+              onClick={() => setCurrentView('layers')}
+              className={clsx(currentView === 'layers' && 'bg-mediumGrey bg-opacity-40 border-blueHighlight')}
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.25}
+                stroke='currentColor'
+                className={clsx('w-5 h-5 p-0.5', currentView === 'layers' ? 'text-blueHighlight' : 'text-darkGrey')}
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z'
+                />
+              </svg>
+            </Button>
+            <AddNewTrait />
+          </div>
+        </div>
+      </div>
+      {currentView === 'layers' && (
         <>
           {/* <input
             placeholder='Search...'
@@ -169,7 +166,7 @@ const Index = () => {
           <LayerGridView traitElements={filteredTraitElements} layerName={name} />
         </>
       )}
-      {currentViewSection === CollectionNavigationEnum.enum.Rarity && <LayerRarityTable />}
+      {currentView === 'rarity' && <LayerRarityTable />}
     </CollectionViewContentWrapper>
   )
 }

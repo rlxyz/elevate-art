@@ -1,22 +1,35 @@
-import { CollectionNavigationType } from 'src/types/enums'
+import { CollectionNavigationEnum, CollectionNavigationType } from 'src/types/enums'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
-interface CollectionNavigationInterface {
+interface CollectionNavigationStateInterface {
   currentViewSection: CollectionNavigationType
-  currentLayerPriority: string
+  currentLayerPriority: string | null
+}
+
+interface CollectionNavigationFunctionInterface {
   setCurrentViewSection: (view: CollectionNavigationType) => void
   setCurrentLayerPriority: (index: string) => void
 }
 
+interface CollectionNavigationInterface extends CollectionNavigationFunctionInterface, CollectionNavigationStateInterface {}
+
+const initialState: CollectionNavigationStateInterface = {
+  currentViewSection: CollectionNavigationEnum.enum.Preview,
+  currentLayerPriority: null,
+}
+
 export const createCollectionNavigationStore = create<CollectionNavigationInterface>()(
-  persist((set) => ({
-    currentViewSection: 'preview',
-    currentLayerPriority: '',
-    setCurrentViewSection: (view: CollectionNavigationType) => set((_) => ({ currentViewSection: view })),
-    setCurrentLayerPriority: (index: string) => set((_) => ({ currentLayerPriority: index })),
-  }))
+  persist(
+    (set) => ({
+      ...initialState,
+      setCurrentViewSection: (view: CollectionNavigationType) => set((_) => ({ currentViewSection: view })),
+      setCurrentLayerPriority: (priority: string) => set((_) => ({ currentLayerPriority: priority })),
+      reset: () => set(initialState),
+    }),
+    { name: 'collectionStore' }
+  )
 )
 
 export const CollectionRouterContext = createContext<typeof createCollectionNavigationStore>()

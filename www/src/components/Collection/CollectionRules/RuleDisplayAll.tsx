@@ -1,12 +1,11 @@
 import Button from '@components/UI/Button'
-import Loading from '@components/UI/Loading'
 import { TrashIcon } from '@heroicons/react/outline'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Rules, TraitElement } from '@prisma/client'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
+import { ComboboxInput } from './ComboboxInput'
 
 export const TraitRulesDisplayPerItem = ({
   id,
@@ -15,9 +14,13 @@ export const TraitRulesDisplayPerItem = ({
   secondary,
 }: {
   id: string
-  primary: string
+  primary: TraitElement & {
+    layerElement: LayerElement
+  }
+  secondary: TraitElement & {
+    layerElement: LayerElement
+  }
   condition: string
-  secondary: string
 }) => {
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
@@ -48,14 +51,10 @@ export const TraitRulesDisplayPerItem = ({
     },
   })
 
-  if (!repositoryId) return null
-
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-          {primary}
-        </div>
+        <ComboboxInput traitElement={primary} layerName={primary.layerElement.name} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
         <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-sm'>
@@ -63,52 +62,60 @@ export const TraitRulesDisplayPerItem = ({
         </div>
       </div>
       <div className='col-span-4 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-sm'>
-          {secondary}
-        </div>
+        <ComboboxInput traitElement={secondary} layerName={secondary.layerElement.name} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <Button
           variant='icon'
-          className='w-full bg-inherit'
+          className='w-full'
           disabled={mutation.isLoading}
-          onClick={() => mutation.mutate({ id, repositoryId })}
+          onClick={() => {
+            mutation.mutate({ id, repositoryId })
+          }}
         >
-          <TrashIcon className='w-5 h-5' />
+          <TrashIcon className='w-5 h-5 text-mediumGrey' />
         </Button>
       </div>
     </div>
   )
 }
 
-const RuleDisplayAll = () => {
-  const { currentLayer, isLoading, isError } = useCurrentLayer()
-  const { name, traitElements } = currentLayer
-  if (isLoading || !currentLayer || !traitElements) return <Loading />
-  if (isError) return <div>Error...</div>
+const RuleDisplayAll = ({
+  traitElements,
+}: {
+  traitElements: (TraitElement & {
+    rulesPrimary: (Rules & {
+      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+    })[]
+    rulesSecondary: (Rules & {
+      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+    })[]
+  })[]
+}) => {
   return (
-    <div className='w-full flex flex-col space-y-3'>
-      <span className={`block text-xs font-semibold uppercase text-darkGrey`}>Applied Rules</span>
+    <div className='w-full flex flex-col space-y-2'>
       {traitElements
-        .filter(
-          ({ rulesPrimary, rulesSecondary }) => (rulesPrimary && rulesPrimary.length) || (rulesSecondary && rulesSecondary.length)
-        )
+        .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
         .map(
-          ({
-            rulesPrimary,
-            rulesSecondary,
-          }: TraitElement & {
-            rulesPrimary: (Rules & {
-              primaryTraitElement: TraitElement
-              secondaryTraitElement: TraitElement
-            })[]
-            rulesSecondary: (Rules & {
-              primaryTraitElement: TraitElement
-              secondaryTraitElement: TraitElement
-            })[]
-          }) => {
+          (
+            {
+              rulesPrimary,
+            }: TraitElement & {
+              rulesPrimary: (Rules & {
+                primaryTraitElement: TraitElement & {
+                  layerElement: LayerElement
+                }
+                secondaryTraitElement: TraitElement & {
+                  layerElement: LayerElement
+                }
+              })[]
+            },
+            index
+          ) => {
             return (
-              <>
+              <div key={index}>
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
                 {[RulesEnum.enum['cannot mix with']].map((ruleType: string, index) => {
                   return (
@@ -120,29 +127,16 @@ const RuleDisplayAll = () => {
                             <TraitRulesDisplayPerItem
                               id={rule.id}
                               key={index}
-                              primary={rule.primaryTraitElement.name}
+                              primary={rule.primaryTraitElement}
                               condition={rule.condition}
-                              secondary={rule.secondaryTraitElement.name}
-                            />
-                          )
-                        })}
-                      {rulesSecondary
-                        .filter((rule) => rule.condition === ruleType)
-                        .map((rule, index) => {
-                          return (
-                            <TraitRulesDisplayPerItem
-                              id={rule.id}
-                              key={index}
-                              primary={rule.secondaryTraitElement.name}
-                              condition={rule.condition}
-                              secondary={rule.primaryTraitElement.name}
+                              secondary={rule.secondaryTraitElement}
                             />
                           )
                         })}
                     </div>
                   )
                 })}
-              </>
+              </div>
             )
           }
         )}

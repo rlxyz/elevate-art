@@ -9,10 +9,13 @@ interface OrganisationNavigationInterface {
 }
 
 export const createOrganisationNavigationStore = create<OrganisationNavigationInterface>()(
-  persist((set) => ({
-    currentRoute: 'dashboard',
-    setCurrentRoute: (view: OrganisationNavigationType) => set((_) => ({ currentRoute: view })),
-  }))
+  persist(
+    (set) => ({
+      currentRoute: 'dashboard',
+      setCurrentRoute: (view: OrganisationNavigationType) => set((_) => ({ currentRoute: view })),
+    }),
+    { name: 'organisationStore' }
+  )
 )
 
 export const OrganisationRouterContext = createContext<typeof createOrganisationNavigationStore>()

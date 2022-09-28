@@ -27,7 +27,6 @@ export const useRepositoryRoute = () => {
   // sync routing with store
   useDeepCompareEffect(() => {
     if (!layers || layers.length === 0 || !routes) return
-
     const parse = CollectionNavigationEnum.safeParse(routes[0])
     if (!parse.success) {
       router.push('/404')
@@ -38,9 +37,7 @@ export const useRepositoryRoute = () => {
       const route = parse.data
       switch (route) {
         case CollectionNavigationEnum.enum.Preview:
-          if (currentLayerPriority === '' || !currentLayerPriority) {
-            setCurrentLayerPriority(layers[0]?.id || '')
-          }
+          setCurrentLayerPriority(layers[0]?.id || '')
           setCurrentViewSection(parse.data)
           return
         case CollectionNavigationEnum.enum.Settings:

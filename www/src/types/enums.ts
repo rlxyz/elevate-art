@@ -19,7 +19,7 @@ export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
 const CollectionNavigation = Object.freeze({
   Preview: 'preview',
-  Layers: 'layers',
+  // Layers: 'layers',
   Rarity: 'rarity',
   Rules: 'rules',
   Settings: 'settings',

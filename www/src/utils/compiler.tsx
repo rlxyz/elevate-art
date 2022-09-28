@@ -47,7 +47,7 @@ export const createToken = (opts: {
       return true
     })
   })
-  return elements
+  return elements.reverse() // reverse cause we want the highest priority first
 }
 
 export const createManyTokens = (

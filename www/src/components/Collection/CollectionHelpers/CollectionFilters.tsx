@@ -2,25 +2,25 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
+import { truncate } from '@utils/format'
 import { Field, Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
 
 export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, setTraitFilteredTokens, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
+    (state) => {
       return {
+        setTraitFilters: state.setTraitFilters,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
         tokenRanking: state.tokenRanking,
         rarityFilter: state.rarityFilter,
-        repositoryId: state.repositoryId,
-        collectionId: state.collectionId,
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
         traitFilters: state.traitFilters,
-        setTraitFilters: state.setTraitFilters,
       }
-    })
+    }
+  )
   const { data: collection } = useQueryCollection()
   return (
     <Formik
@@ -46,6 +46,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
           )
           setTokens(filteredRarity)
           setTraitFilteredTokens([])
+          setTraitFilters([])
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -54,6 +55,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
           const trait = layer?.traitElements.filter((trait: TraitElement) => trait.id === value.split('/')[1])[0]
           if (layer && trait) filters.push({ layer, trait })
         })
+        setTraitFilters(filters)
         const allTokenIdsArray = Object.values(
           filters
             .map(({ layer: { id: l }, trait: { id: t } }) => {
@@ -110,7 +112,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
       {({ handleChange, submitForm }) => (
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
-            {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
+            {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
               <div key={layer.id} className='flex flex-col text-xs'>
                 <div
                   onClick={() => {
@@ -125,7 +127,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
                   }`}
                 >
                   <div className='px-3 flex justify-between'>
-                    <label>{layer.name}</label>
+                    <label>{truncate(layer.name)}</label>
                     <div className='flex items-center space-x-2'>
                       <span className='text-xs'>
                         {traitMapping.traitMap.size > 0 && (traitMapping.traitMap.get(layer.id)?.size || 0)}
@@ -152,7 +154,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
                           key={traitElement.id}
                           className='flex flex-row justify-between items-center py-3 px-3 hover:bg-mediumGrey hover:bg-opacity-30 w-full rounded-[5px]'
                         >
-                          <span>{traitElement.name}</span>
+                          <span>{truncate(traitElement.name)}</span>
                           <div className='flex items-center space-x-2'>
                             <span className='text-darkGrey text-xs'>
                               {traitMapping.traitMap.size > 0 &&

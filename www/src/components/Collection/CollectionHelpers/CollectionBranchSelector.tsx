@@ -3,67 +3,12 @@ import { Link } from '@components/UI/Link'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
-import { useNotification } from '@hooks/useNotification'
 import { useQueryRepository } from '@hooks/useRepositoryFeatures'
-import { trpc } from '@utils/trpc'
-import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CollectionNavigationEnum } from 'src/types/enums'
-
-export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
-  const ctx = trpc.useContext()
-  const router: NextRouter = useRouter()
-  const { notifySuccess } = useNotification()
-  return trpc.useMutation('collection.create', {
-    // Optimistic Update
-    onMutate: async (input) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryByName', { name: input.repositoryName }])
-
-      // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryByName', { name: input.repositoryName }])
-      if (!backup) return { backup }
-
-      // Optimistically update to the new value
-      const next = produce(backup, (draft) => {
-        draft.collections = [...draft.collections, { id: input.name, name: input.name }]
-      })
-      ctx.setQueryData(['repository.getRepositoryByName', { name: input.repositoryName }], next)
-      return { backup }
-    },
-    onError: (err, variables, context) => {
-      if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }], context.backup)
-    },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
-    onSuccess: (data, variables) => {
-      ctx.setQueryData(['collection.getCollectionById', { id: data.id }], data)
-      const backup = ctx.getQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }])
-      if (!backup) return
-      const next = produce(backup, (draft) => {
-        const index = draft.collections.findIndex((collection) => collection.id === variables.name)
-        draft.collections[index] = {
-          id: data.id,
-          name: data.name,
-        }
-      })
-      ctx.setQueryData(['repository.getRepositoryByName', { name: variables.repositoryName }], next)
-      router.push(`/${variables.organisationName}/${variables.repositoryName}/preview?collection=${variables.name}`)
-      onMutate && onMutate()
-      notifySuccess(
-        <span>
-          <span className='text-blueHighlight'>Successfully</span>
-          <span>
-            created a <span className='font-semibold'>new collection!</span>
-          </span>
-        </span>,
-        'new collection'
-      )
-    },
-  })
-}
+import { useMutateCreateCollection } from '../../../hooks/mutations/useMutateCreateCollection'
 
 const Index = () => {
   const router: NextRouter = useRouter()
@@ -96,7 +41,7 @@ const Index = () => {
 
   return (
     <Listbox value={selectedCollection} onChange={setSelectedPerson}>
-      <Listbox.Button as={Button} variant='ghost' className='pl-5'>
+      <Listbox.Button as={Button} variant='ghost' className='pl-4 pr-3 py-3'>
         <div className='flex justify-between w-full items-center'>
           <div className='flex space-x-2'>
             <img src='/images/branch.svg' className='w-4 h-4' />
@@ -221,10 +166,16 @@ const Index = () => {
                               className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
                               defaultValue='development'
                               type='string'
-                              {...register('name', { required: true, maxLength: 20, minLength: 3 })}
+                              {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
                             />
                             {errors.name && (
-                              <span className='text-xs text-redError'>Must be between 3 and 20 characters long</span>
+                              <span className='text-xs text-redError'>
+                                {errors.name.type === 'required'
+                                  ? 'This field is required'
+                                  : errors.name.type === 'pattern'
+                                  ? 'We only accept - and / for special characters'
+                                  : 'Must be between 3 and 20 characters long'}
+                              </span>
                             )}
                           </div>
                           <div className='space-y-1 flex flex-col'>
@@ -233,7 +184,7 @@ const Index = () => {
                               className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
                               defaultValue={10000}
                               type='number'
-                              {...register('totalSupply', { required: true, min: 1, max: 10000 })}
+                              {...register('totalSupply', { required: true, min: 1, max: 20000 })}
                             />
                             {errors.totalSupply && <span className='text-xs text-redError'>Must be smaller than 10000</span>}
                           </div>

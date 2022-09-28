@@ -2,7 +2,6 @@
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
-import { createRepositoryNavigationStore, RepositoryRouterContext } from '@hooks/useRepositoryNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
@@ -79,14 +78,12 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
             <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-                <RepositoryRouterContext.Provider createStore={() => createRepositoryNavigationStore}>
-                  <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-                    <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                      <Component {...pageProps} />
-                      <Toaster />
-                    </RepositoryContext.Provider>
-                  </CollectionRouterContext.Provider>
-                </RepositoryRouterContext.Provider>
+                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                    <Component {...pageProps} />
+                    <Toaster />
+                  </RepositoryContext.Provider>
+                </CollectionRouterContext.Provider>
               </OrganisationRouterContext.Provider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>

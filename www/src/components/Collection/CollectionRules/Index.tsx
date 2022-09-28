@@ -1,27 +1,31 @@
-import Loading from '@components/UI/Loading'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import RuleDisplayAll from './RuleDisplayAll'
 import RuleSelector from './RuleSelector'
 
-const Index = () => {
-  const { currentLayer, isLoading, isError } = useCurrentLayer()
-
-  if (isLoading || !currentLayer) return <Loading />
-  if (isError) return <div>Error...</div>
-
-  const { name } = currentLayer
-
+export const RuleSelectorContainer = () => {
+  const { data: layers, isLoading } = useQueryRepositoryLayer()
+  if (isLoading || !layers) return <></>
   return (
-    <CollectionViewContent title={name} description='Set how often you want certain images to appear in the generation'>
-      <div className='flex flex-col divide-y divide-mediumGrey space-y-6'>
-        <RuleSelector />
-        <div className='py-8'>
-          <RuleDisplayAll />
+    <div className='w-full py-16'>
+      <div className='flex justify-center'>
+        <div className='space-y-1 w-full -translate-y-6'>
+          <span className='text-xs font-semibold uppercase'>Create a condition</span>
+          <RuleSelector layers={layers} />
         </div>
       </div>
-    </CollectionViewContent>
+    </div>
   )
 }
 
-export default Index
+export const RuleDisplayContainer = () => {
+  const { data: layers, isLoading } = useQueryRepositoryLayer()
+  if (isLoading || !layers) return <></>
+  return (
+    <div className='w-full py-16'>
+      <div className='space-y-3 w-full flex flex-col justify-center'>
+        <span className='text-xs font-semibold uppercase'>All rules created</span>
+        <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />
+      </div>
+    </div>
+  )
+}

@@ -1,8 +1,11 @@
 import { Layout } from '@components/Layout/Layout'
 import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
+import useRepositoryStore from '@hooks/useRepositoryStore'
+import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'), { suspense: true })
@@ -11,6 +14,13 @@ const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
+  const reset = useRepositoryStore((state) => state.reset)
+
+  useEffect(() => {
+    reset()
+  }, [])
+
+  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   return (
     <>
       <Layout>
@@ -26,9 +36,7 @@ const Page: NextPage = () => {
             },
           ]}
         />
-        <Layout.Body>
-          <DynamicViewOrganisation />
-        </Layout.Body>
+        <Layout.Body>{repositories && <DynamicViewOrganisation />}</Layout.Body>
       </Layout>
     </>
   )

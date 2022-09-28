@@ -19,17 +19,24 @@ interface LayoutProps {
   hasFooter?: boolean
 }
 
-const LayoutContainer = ({
+export const LayoutContainer = ({
   className,
   children,
-  hasBorder = true,
+  border = 'lower',
 }: {
-  hasBorder?: boolean
+  border?: 'upper' | 'lower' | 'none'
   className?: string
   children: React.ReactNode
 }) => {
   return (
-    <div className={clsx('flex justify-center', className, hasBorder && 'border-b border-mediumGrey')}>
+    <div
+      className={clsx(
+        'flex justify-center',
+        className,
+        border === 'lower' && 'border-b border-mediumGrey',
+        border === 'upper' && 'border-t border-mediumGrey'
+      )}
+    >
       <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%]'>{children}</div>
     </div>
   )
@@ -40,7 +47,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
     <main className='layout'>
       {children}
       {hasFooter ? (
-        <LayoutContainer>
+        <LayoutContainer border='upper'>
           <DynamicFooter />
         </LayoutContainer>
       ) : (
@@ -57,11 +64,26 @@ const LayoutHeader = (props: HeaderProps) => (
   </LayoutContainer>
 )
 
-const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode; hasBorder?: boolean }) => (
-  <LayoutContainer className='body min-h-[calc(100vh-7rem)]' hasBorder={hasBorder}>
-    <div className='py-6 -ml-2 h-full space-y-8'>{children}</div>
-  </LayoutContainer>
-)
+const LayoutBody = ({
+  children,
+  border = 'none',
+}: {
+  children: React.ReactNode[] | React.ReactNode
+  border?: 'upper' | 'lower' | 'none'
+}) => {
+  const childrens = React.Children.toArray(children)
+  return (
+    <main className='min-h-[calc(100vh-19.25rem)]'>
+      {childrens.map((child, index) => {
+        return (
+          <LayoutContainer border={border} key={index}>
+            <div className='-ml-2 h-full space-y-8'>{child}</div>
+          </LayoutContainer>
+        )
+      })}
+    </main>
+  )
+}
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
   <LayoutContainer className='title'>{children}</LayoutContainer>

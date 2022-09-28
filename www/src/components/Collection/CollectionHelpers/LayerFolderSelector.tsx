@@ -1,8 +1,9 @@
 import { Link } from '@components/UI/Link'
-import { DotsHorizontalIcon, PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement } from '@prisma/client'
+import { truncate } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
@@ -72,10 +73,8 @@ export const ReorderItem = ({
 
 const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const [setReordered, setSetReordered] = useState('some_random_reordering')
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
-  const [openUpload, setOpenUpload] = useState(false)
   const [openReordering, setOpenReordering] = useState(false)
   const ctx = trpc.useContext()
 
@@ -98,7 +97,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
             layer.priority = index
           }
         })
-        draft.sort((a, b) => a.priority - b.priority)
+        draft = draft.sort((a, b) => a.priority - b.priority)
       })
 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
@@ -114,6 +113,11 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   })
 
   if (!layers || !items) return null
+  // console.log(
+  //   layers.map((x) => {
+  //     return { priority: x.priority, id: x.name }
+  //   })
+  // )
 
   return (
     <aside className='space-y-1'>
@@ -139,26 +143,18 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
           >
             <SwitchVerticalIcon className='w-2 h-2' />
           </button>
-          <button
-            onClick={() => {
-              setOpenUpload(true)
-            }}
-            className='border rounded-[5px] border-mediumGrey p-1'
-          >
-            <PlusIcon className='text-darkGrey w-2 h-2' />
-          </button>
         </div>
       </div>
       <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
         <div className='max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
             <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
-              {items.map((item, index) => {
+              {items.map((item) => {
                 return (
                   <ReorderItem
                     canReorder={openReordering}
                     key={item}
-                    name={layers.find((x) => x.id === item)?.name || ''}
+                    name={truncate(layers.find((x) => x.id === item)?.name || '')}
                     item={item}
                     enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
                   />
