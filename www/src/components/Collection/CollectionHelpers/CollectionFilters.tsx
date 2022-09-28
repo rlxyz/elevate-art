@@ -8,20 +8,19 @@ import { useEffect, useState } from 'react'
 
 export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, setTraitFilteredTokens, tokenRanking, rarityFilter, collectionId, repositoryId, setTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
+    (state) => {
       return {
+        setTraitFilters: state.setTraitFilters,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
         tokenRanking: state.tokenRanking,
         rarityFilter: state.rarityFilter,
-        repositoryId: state.repositoryId,
-        collectionId: state.collectionId,
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
         traitFilters: state.traitFilters,
-        setTraitFilters: state.setTraitFilters,
       }
-    })
+    }
+  )
   const { data: collection } = useQueryCollection()
   return (
     <Formik
@@ -47,6 +46,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
           )
           setTokens(filteredRarity)
           setTraitFilteredTokens([])
+          setTraitFilters([])
           return
         }
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
@@ -55,6 +55,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
           const trait = layer?.traitElements.filter((trait: TraitElement) => trait.id === value.split('/')[1])[0]
           if (layer && trait) filters.push({ layer, trait })
         })
+        setTraitFilters(filters)
         const allTokenIdsArray = Object.values(
           filters
             .map(({ layer: { id: l }, trait: { id: t } }) => {

@@ -1,4 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
@@ -38,7 +39,7 @@ const InfiniteScrollGridItems = ({
 
   return (
     <div className='grid grid-cols-5 gap-y-1 gap-x-6 overflow-hidden'>
-      {tokensOnDisplay.slice(0, tokens.length).map((index: number) => {
+      {tokensOnDisplay.map((index: number) => {
         const token = createToken({
           id: Number(tokens[index]),
           name: collection.name,
@@ -153,7 +154,12 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const tokens = useRepositoryStore((state) => state.tokens)
+  const { tokens, traitFilters } = useRepositoryStore((state) => {
+    return {
+      tokens: state.tokens,
+      traitFilters: state.traitFilters,
+    }
+  })
 
   const fetch = (start: number) => {
     if (!collection) return
@@ -179,18 +185,35 @@ export const InfiniteScrollGrid = ({
 
   return (
     <>
-      <div className='pb-3'>
+      <div className='pb-3 space-x-3'>
         <span className='text-xs text-darkGrey'>{tokens.length} results</span>
+        {traitFilters.map(({ layer, trait }) => (
+          <span className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'>
+            {trait.name}
+            <button
+              type='button'
+              className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none'
+              onClick={() => console.log('todo remove filter')}
+            >
+              <XIcon className='w-3 h-3 text-darkGrey' />
+            </button>
+          </span>
+        ))}
       </div>
       <InfiniteScrollComponent.default
-        dataLength={tokensOnDisplay.length}
+        dataLength={tokensOnDisplay.slice(0, tokens.length).length}
         next={() => {
           fetchMoreData(page)
         }}
         hasMore={hasMore}
         loader={<></>}
+        // refreshFunction={true}
       >
-        <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} layers={layers} collection={collection} />
+        <InfiniteScrollGridItems
+          tokensOnDisplay={tokensOnDisplay.slice(0, tokens.length)}
+          layers={layers}
+          collection={collection}
+        />
       </InfiniteScrollComponent.default>
     </>
   )

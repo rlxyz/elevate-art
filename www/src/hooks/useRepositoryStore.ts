@@ -1,3 +1,4 @@
+import { LayerElement, TraitElement } from '@prisma/client'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
@@ -7,7 +8,7 @@ interface RepositoryStoreStateInterface {
   traitFilteredTokens: number[]
   collectionId: string
   repositoryId: string
-  traitFilters: { trait_type: string; value: string }[]
+  traitFilters: { layer: LayerElement; trait: TraitElement }[]
   traitMapping: {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
@@ -27,7 +28,7 @@ interface RepositoryStoreFunctionInterface {
   }) => void
   setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => void
   setTokenRanking: (indices: number[]) => void
-  setTraitFilters: ({ trait_type, value }: { trait_type: string; value: string }) => void
+  setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setTraitFilteredTokens: (tokens: number[]) => void
@@ -57,7 +58,8 @@ export const createRepositoryStore = create<RepositoryStoreInterface>()(
       setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),
       setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
       setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
-      setTraitFilters: (filter) => set((state) => ({ traitFilters: [...state.traitFilters, filter] })),
+      setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) =>
+        set((state) => ({ traitFilters: [...filters] })),
       setTraitMapping: ({
         tokenIdMap,
         traitMap,
