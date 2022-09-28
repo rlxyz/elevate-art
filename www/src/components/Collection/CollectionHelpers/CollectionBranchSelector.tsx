@@ -184,7 +184,7 @@ const Index = () => {
                               className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
                               defaultValue={10000}
                               type='number'
-                              {...register('totalSupply', { required: true, min: 1, max: 10000 })}
+                              {...register('totalSupply', { required: true, min: 1, max: 20000 })}
                             />
                             {errors.totalSupply && <span className='text-xs text-redError'>Must be smaller than 10000</span>}
                           </div>

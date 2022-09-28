@@ -44,3 +44,5 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
     )
   }
 )
+
+ComboboxInput.displayName = 'ComboboxInput'

@@ -14,7 +14,7 @@ const Page: NextPage = () => {
     <>
       <Layout hasFooter={false}>
         <Layout.Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
-        <Layout.Body hasBorder={false}>
+        <Layout.Body>
           <DynamicCreateNewRepository />
         </Layout.Body>
       </Layout>

@@ -69,7 +69,7 @@ const LayoutBody = ({
   border = 'none',
 }: {
   children: React.ReactNode[] | React.ReactNode
-  border: 'upper' | 'lower' | 'none'
+  border?: 'upper' | 'lower' | 'none'
 }) => {
   const childrens = React.Children.toArray(children)
   return (

@@ -49,8 +49,8 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
       ) : (
         traitElements.map((trait: TraitElement, index: number) => {
           return (
-            <div className='flex flex-col space-y-1'>
-              <div key={index} className='cursor-pointer relative col-span-1'>
+            <div key={index} className='flex flex-col space-y-1'>
+              <div className='cursor-pointer relative col-span-1'>
                 <div className='flex flex-col'>
                   <div className='pb-[100%] blocks border border-mediumGrey rounded-[5px]'>
                     <Image

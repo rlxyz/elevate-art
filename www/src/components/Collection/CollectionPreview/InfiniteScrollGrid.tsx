@@ -51,9 +51,9 @@ const InfiniteScrollGridItems = ({
             <div className='cursor-pointer relative col-span-1' onClick={() => setSelectedToken({ traitElements: token })}>
               <div className='flex flex-col'>
                 <div className='relative flex flex-col items-center justify-center h-full w-full' key={index}>
-                  {token.map(({ layerElementId, id }: TraitElement) => {
+                  {token.map(({ layerElementId, id }: TraitElement, index) => {
                     return (
-                      <div className='absolute h-full w-full'>
+                      <div key={index} className='absolute h-full w-full'>
                         <img
                           className='rounded-[5px]'
                           src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
@@ -110,7 +110,7 @@ const InfiniteScrollGridItems = ({
                       <div className='absolute h-full w-full'>
                         {selectedToken.traitElements.map(({ layerElementId, id }: TraitElement, index: number) => {
                           return (
-                            <div className='absolute h-full w-full'>
+                            <div key={index} className='absolute h-full w-full'>
                               <img
                                 className='rounded-[5px]'
                                 src={cld
@@ -187,8 +187,11 @@ export const InfiniteScrollGrid = ({
     <>
       <div className='pb-3 space-x-3'>
         <span className='text-xs text-darkGrey'>{tokens.length} results</span>
-        {traitFilters.map(({ layer, trait }) => (
-          <span className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'>
+        {traitFilters.map(({ layer, trait }, index) => (
+          <span
+            key={index}
+            className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'
+          >
             {trait.name}
             <button
               type='button'
