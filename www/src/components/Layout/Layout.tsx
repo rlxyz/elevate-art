@@ -31,13 +31,13 @@ export const LayoutContainer = ({
   return (
     <div
       className={clsx(
-        'flex justify-center',
+        'flex justify-center h-full w-full',
         className,
         border === 'lower' && 'border-b border-mediumGrey',
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%]'>{children}</div>
+      <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%] h-full'>{children}</div>
     </div>
   )
 }
@@ -48,7 +48,9 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
       {children}
       {hasFooter ? (
         <LayoutContainer border='upper'>
-          <DynamicFooter />
+          <div className='min-h-[3.5rem] flex items-center'>
+            <DynamicFooter />
+          </div>
         </LayoutContainer>
       ) : (
         <></>
@@ -73,15 +75,17 @@ const LayoutBody = ({
 }) => {
   const childrens = React.Children.toArray(children)
   return (
-    <main className='min-h-[calc(100vh-19.25rem)]'>
-      {childrens.map((child, index) => {
-        return (
-          <LayoutContainer border={border} key={index}>
-            <div className='-ml-2 h-full space-y-8'>{child}</div>
-          </LayoutContainer>
-        )
-      })}
-    </main>
+    <div className='min-h-[calc(100vh-7rem)]'>
+      <div className='h-full'>
+        {childrens.map((child, index) => {
+          return (
+            <LayoutContainer border={index === childrens.length - 1 ? 'none' : border} key={index}>
+              <div className='-ml-2 h-full space-y-8'>{child}</div>
+            </LayoutContainer>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 

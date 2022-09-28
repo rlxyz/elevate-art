@@ -36,7 +36,9 @@ const Page: NextPage = () => {
             },
           ]}
         />
-        <Layout.Body>{repositories && <DynamicViewOrganisation />}</Layout.Body>
+        <Layout.Body>
+          <div className='py-8 space-y-8'>{repositories && <DynamicViewOrganisation />}</div>
+        </Layout.Body>
       </Layout>
     </>
   )

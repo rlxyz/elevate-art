@@ -67,7 +67,7 @@ const Home: NextPage = () => {
       <Layout>
         <Layout.Header />
         <Layout.Body>
-          <div className='space-y-20 h-full flex'>
+          <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
             <div className='w-full flex flex-col justify-center items-center'>
               <div className='w-[50%]'>
                 <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
