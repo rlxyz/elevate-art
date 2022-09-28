@@ -24,7 +24,7 @@ export const LayoutContainer = ({
   children,
   border = 'lower',
 }: {
-  border?: 'upper' | 'lower'
+  border?: 'upper' | 'lower' | 'none'
   className?: string
   children: React.ReactNode
 }) => {
@@ -64,14 +64,19 @@ const LayoutHeader = (props: HeaderProps) => (
   </LayoutContainer>
 )
 
-const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode[] | React.ReactNode; hasBorder?: boolean }) => {
+const LayoutBody = ({
+  children,
+  border = 'none',
+}: {
+  children: React.ReactNode[] | React.ReactNode
+  border: 'upper' | 'lower' | 'none'
+}) => {
   const childrens = React.Children.toArray(children)
-
   return (
-    <main className='min-h-[calc(100vh-19.25rem)] py-8'>
+    <main className='min-h-[calc(100vh-19.25rem)]'>
       {childrens.map((child, index) => {
         return (
-          <LayoutContainer key={index}>
+          <LayoutContainer border={border} key={index}>
             <div className='-ml-2 h-full space-y-8'>{child}</div>
           </LayoutContainer>
         )
