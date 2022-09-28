@@ -153,6 +153,7 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const tokens = useRepositoryStore((state) => state.tokens)
 
   const fetch = (start: number) => {
     if (!collection) return
@@ -177,15 +178,20 @@ export const InfiniteScrollGrid = ({
   }, [])
 
   return (
-    <InfiniteScrollComponent.default
-      dataLength={tokensOnDisplay.length}
-      next={() => {
-        fetchMoreData(page)
-      }}
-      hasMore={hasMore}
-      loader={<></>}
-    >
-      <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} layers={layers} collection={collection} />
-    </InfiniteScrollComponent.default>
+    <>
+      <div className='pb-3'>
+        <span className='text-xs text-darkGrey'>{tokens.length} results</span>
+      </div>
+      <InfiniteScrollComponent.default
+        dataLength={tokensOnDisplay.length}
+        next={() => {
+          fetchMoreData(page)
+        }}
+        hasMore={hasMore}
+        loader={<></>}
+      >
+        <InfiniteScrollGridItems tokensOnDisplay={tokensOnDisplay} layers={layers} collection={collection} />
+      </InfiniteScrollComponent.default>
+    </>
   )
 }
