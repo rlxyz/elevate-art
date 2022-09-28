@@ -4,17 +4,64 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { LayerElement, TraitElement } from '@prisma/client'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { RulesEnum, RulesType } from 'src/types/enums'
 import { ComboboxInput } from './ComboboxInput'
 
-const RuleSelector = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
+const RuleSelector = ({
+  layers,
+}: {
+  layers: (LayerElement & {
+    traitElements: (TraitElement & {
+      rulesPrimary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+      rulesSecondary: (Rules & {
+        primaryTraitElement: TraitElement & { layerElement: LayerElement }
+        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      })[]
+    })[]
+  })[]
+}) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
-  const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
-  const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
+  const [selectedLeftTrait, setSelectedLeftTrait] = useState<
+    | null
+    | (TraitElement & {
+        rulesPrimary: (Rules & {
+          primaryTraitElement: TraitElement & { layerElement: LayerElement }
+          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        })[]
+        rulesSecondary: (Rules & {
+          primaryTraitElement: TraitElement & { layerElement: LayerElement }
+          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        })[]
+      })
+  >()
+  const [selectedRightTrait, setSelectedRightTrait] = useState<
+    | null
+    | (TraitElement & {
+        rulesPrimary: (Rules & {
+          primaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+          secondaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+        })[]
+        rulesSecondary: (Rules & {
+          primaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+          secondaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+        })[]
+      })
+  >()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate, isLoading } = useMutateRepositoryRule({
     onMutate: () => {
@@ -23,12 +70,37 @@ const RuleSelector = ({ layers }: { layers: (LayerElement & { traitElements: Tra
       setSelectedRightTrait(null)
     },
   })
-  const allRightTraitElements = layers
-    .filter((layer) => {
-      if (!selectedLeftTrait) return true
-      return layer.id !== selectedLeftTrait.layerElementId
+
+  // note: this will transform all rules in the selected trait to a standard format and return the trait ids that are already selected
+  const allInvalidRightTraitElements = [...(selectedLeftTrait?.rulesPrimary || []), ...(selectedLeftTrait?.rulesSecondary || [])]
+    .map((rule) => {
+      if (selectedLeftTrait?.id === rule.primaryTraitElementId) {
+        return {
+          condition: rule.condition,
+          from: rule.primaryTraitElementId,
+          with: rule.secondaryTraitElementId,
+        }
+      } else {
+        return {
+          condition: rule.condition,
+          from: rule.secondaryTraitElementId,
+          with: rule.primaryTraitElementId,
+        }
+      }
     })
+    .filter((rule) => {
+      if (!selectedCondition) return true
+      return rule.condition === selectedCondition
+    })
+    .map((rule) => rule.with)
+
+  const allRightTraitElements = layers
+    .filter((layer) => !selectedLeftTrait || (selectedLeftTrait && layer.id !== selectedLeftTrait.layerElementId))
     .flatMap((layer) => layer.traitElements)
+    .filter((trait) => {
+      if (!selectedLeftTrait) return true
+      return !allInvalidRightTraitElements.includes(trait.id)
+    })
 
   return (
     <div className='w-full flex flex-col space-y-3'>
@@ -148,8 +220,51 @@ export const RuleSelectorCombobox = ({
   onChange,
 }: {
   traitElements: TraitElement[]
-  selected: TraitElement | null | undefined
-  onChange: Dispatch<SetStateAction<TraitElement | null | undefined>>
+  selected:
+    | null
+    | undefined
+    | (TraitElement & {
+        rulesPrimary: (Rules & {
+          primaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+          secondaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+        })[]
+        rulesSecondary: (Rules & {
+          primaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+          secondaryTraitElement: TraitElement & {
+            layerElement: LayerElement
+          }
+        })[]
+      })
+  onChange: Dispatch<
+    SetStateAction<
+      | (TraitElement & {
+          rulesPrimary: (Rules & {
+            primaryTraitElement: TraitElement & {
+              layerElement: LayerElement
+            }
+            secondaryTraitElement: TraitElement & {
+              layerElement: LayerElement
+            }
+          })[]
+          rulesSecondary: (Rules & {
+            primaryTraitElement: TraitElement & {
+              layerElement: LayerElement
+            }
+            secondaryTraitElement: TraitElement & {
+              layerElement: LayerElement
+            }
+          })[]
+        })
+      | null
+      | undefined
+    >
+  >
 }) => {
   const [query, setQuery] = useState('')
   const { data: layers } = useQueryRepositoryLayer()
