@@ -5,13 +5,11 @@ import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
-import { createCloudinary } from '@utils/cloudinary'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
-import Image from 'next/image'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum, RulesType } from 'src/types/enums'
+import { ComboboxInput } from './ComboboxInput'
 
 const RuleSelector = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
@@ -144,41 +142,6 @@ export const RuleSelectorConditionCombobox = ({
   )
 }
 
-const ComboboxInput = ({ traitElement, layerName }: { layerName: string; traitElement: TraitElement | null | undefined }) => {
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-  return (
-    <div
-      className={clsx(
-        'flex items-center space-x-2 w-full rounded-[5px] border border-mediumGrey text-sm bg-hue-light pl-3 pr-10 shadow-sm',
-        traitElement && 'border-blueHighlight'
-      )}
-    >
-      {traitElement ? (
-        <>
-          <div className='flex flex-row items-center space-x-3 py-2'>
-            <Image
-              priority
-              width={18}
-              height={18}
-              src={cld
-                .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`)
-                .toURL()}
-              className='rounded-[3px]'
-            />
-            <div className='flex flex-row space-x-2 items-center'>
-              <span className={clsx('block truncate text-xs tracking-tight text-darkGrey')}>{layerName}</span>
-              <span className={clsx('block truncate text-sm text-black')}>{traitElement.name}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <input className='w-full h-full py-2 focus:outline-none' placeholder='Search a trait...' />
-      )}
-    </div>
-  )
-}
-
 export const RuleSelectorCombobox = ({
   traitElements,
   selected,
@@ -204,7 +167,7 @@ export const RuleSelectorCombobox = ({
         as={ComboboxInput}
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
-        // placeholder='Search a trait...'
+        placeholder='Search a trait...'
         traitElement={selected}
         layerName={layers.find((layer) => layer.id === selected?.layerElementId)?.name || ''}
       />

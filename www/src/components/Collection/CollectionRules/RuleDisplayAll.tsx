@@ -3,12 +3,9 @@ import { TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/useNotification'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
-import { createCloudinary } from '@utils/cloudinary'
 import { trpc } from '@utils/trpc'
-import clsx from 'clsx'
-import Image from 'next/image'
-import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum } from 'src/types/enums'
+import { ComboboxInput } from './ComboboxInput'
 
 export const TraitRulesDisplayPerItem = ({
   id,
@@ -81,50 +78,6 @@ export const TraitRulesDisplayPerItem = ({
           <TrashIcon className='w-5 h-5 text-mediumGrey' />
         </Button>
       </div>
-    </div>
-  )
-}
-
-const ComboboxInput = ({
-  traitElement,
-  layerName,
-  highlight = true,
-}: {
-  highlight?: boolean
-  layerName: string
-  traitElement: TraitElement | null | undefined
-}) => {
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-  return (
-    <div
-      className={clsx(
-        'flex items-center space-x-2 w-full rounded-[5px] border border-mediumGrey text-sm bg-hue-light pl-3 pr-10 shadow-sm',
-        highlight && traitElement && 'border-blueHighlight'
-      )}
-    >
-      {traitElement ? (
-        <>
-          <div className='flex flex-row items-center space-x-3 py-2'>
-            <div className='relative border border-mediumGrey h-[20px] w-[20px] rounded-[3px]'>
-              <Image
-                priority
-                layout='fill'
-                src={cld
-                  .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`)
-                  .toURL()}
-                className='rounded-[3px]'
-              />
-            </div>
-            <div className='flex flex-row space-x-2 items-center'>
-              <span className={clsx('block truncate text-xs tracking-tight text-darkGrey')}>{layerName}</span>
-              <span className={clsx('block truncate text-sm text-black')}>{traitElement.name}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <input className='w-full h-full py-2 focus:outline-none' placeholder='Search a trait...' />
-      )}
     </div>
   )
 }
