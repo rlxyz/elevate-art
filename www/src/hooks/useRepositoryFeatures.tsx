@@ -117,7 +117,7 @@ export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) 
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        draft[primaryId]?.traitElements[Number(primaryTrait.id)]?.rulesPrimary.push({
+        draft[primaryId]?.traitElements[Number(primaryId)]?.rulesPrimary.push({
           id: 'temp',
           condition: input.type,
           secondaryTraitElementId: input.secondaryTraitElementId,
@@ -146,6 +146,7 @@ export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) 
           },
         })
       })
+
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
 
       // Notify Success

@@ -31,7 +31,7 @@ export const repositoryRouter = createRouter()
         where: {
           repositoryId: input.id,
         },
-        orderBy: { priority: 'desc' }, // desc cause the highest priority layer should be on top
+        orderBy: { priority: 'asc' },
         include: {
           traitElements: {
             orderBy: { weight: 'asc' }, // guarantee rarest first

@@ -51,8 +51,6 @@ export const TraitRulesDisplayPerItem = ({
     },
   })
 
-  if (!repositoryId) return null
-
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>

@@ -96,7 +96,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
             layer.priority = index
           }
         })
-        draft.sort((a, b) => a.priority - b.priority)
+        draft = draft.sort((a, b) => a.priority - b.priority)
       })
 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
@@ -112,6 +112,11 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   })
 
   if (!layers || !items) return null
+  // console.log(
+  //   layers.map((x) => {
+  //     return { priority: x.priority, id: x.name }
+  //   })
+  // )
 
   return (
     <aside className='space-y-1'>
