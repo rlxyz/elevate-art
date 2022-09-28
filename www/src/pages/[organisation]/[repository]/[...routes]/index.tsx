@@ -143,8 +143,8 @@ const Page = () => {
             </div>
             <div className='col-span-8'>
               {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionLayers />}
-              {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
               {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
+              {currentViewSection === CollectionNavigationEnum.enum.Rules && <DynamicCollectionRules />}
             </div>
           </div>
         </Layout.Body>
