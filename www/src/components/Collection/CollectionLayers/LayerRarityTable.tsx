@@ -1,9 +1,8 @@
-import AdvancedImage from '@components/Collection/CollectionHelpers/AdvancedImage'
 import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
+import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
-import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import { useQueryCollection } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
@@ -20,7 +19,7 @@ const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
-export const LayerRarityTable = () => {
+const LayerRarityTable = () => {
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
@@ -36,45 +35,7 @@ export const LayerRarityTable = () => {
 
   return (
     <>
-      {!summedRarityWeightage || !collectionData ? (
-        <table className='w-full table-fixed divide-y divide-mediumGrey'>
-          <thead>
-            <tr>
-              {[
-                'Image',
-                'Name',
-                'Estimate in Collection',
-                // 'Rarity Score',
-                'Percentage',
-              ].map((item, index) => {
-                return (
-                  <th
-                    key={item}
-                    scope='col'
-                    className={`${index === 3 ? 'text-right' : 'text-left'}  text-xs font-semibold uppercase text-darkGrey pb-8`}
-                  >
-                    {item}
-                  </th>
-                )
-              })}
-            </tr>
-          </thead>
-          <tbody className='divide-y divide-mediumGrey animate-pulse'>
-            {Array.from(Array(5).keys()).map((index) => {
-              return (
-                <tr key={index}>
-                  <td className='py-8'>
-                    <AdvancedImage url='/images/logo.png' />
-                  </td>
-                  <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
-                  <td className='whitespace-nowrap text-sm font-medium'>{'...'}</td>
-                  <td className='whitespace-nowrap text-right text-sm font-medium'>{'...'}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      ) : (
+      {!summedRarityWeightage || !collectionData ? null : (
         <Formik
           enableReinitialize
           initialValues={{
@@ -305,3 +266,5 @@ export const LayerRarityTable = () => {
     </>
   )
 }
+
+export default LayerRarityTable
