@@ -62,9 +62,9 @@ const LayoutBody = ({ children, hasBorder = true }: { children: React.ReactNode[
 
   return (
     <main className='min-h-[calc(100vh-7rem)]'>
-      {childrens.map((child) => {
+      {childrens.map((child, index) => {
         return (
-          <LayoutContainer hasBorder={hasBorder}>
+          <LayoutContainer hasBorder={hasBorder} key={index}>
             <div className='-ml-2 h-full space-y-8'>{child}</div>
           </LayoutContainer>
         )

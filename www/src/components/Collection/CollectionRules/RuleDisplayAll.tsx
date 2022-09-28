@@ -72,9 +72,11 @@ export const TraitRulesDisplayPerItem = ({
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <Button
           variant='icon'
-          className='w-full bg-inherit'
+          className='w-full'
           disabled={mutation.isLoading}
-          onClick={() => mutation.mutate({ id, repositoryId })}
+          onClick={() => {
+            mutation.mutate({ id, repositoryId })
+          }}
         >
           <TrashIcon className='w-5 h-5 text-mediumGrey' />
         </Button>
@@ -142,24 +144,27 @@ const RuleDisplayAll = ({
   })[]
 }) => {
   return (
-    <div className='w-full flex flex-col space-y-2 z-[-1]'>
+    <div className='w-full flex flex-col space-y-2'>
       {traitElements
         .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
         .map(
-          ({
-            rulesPrimary,
-          }: TraitElement & {
-            rulesPrimary: (Rules & {
-              primaryTraitElement: TraitElement & {
-                layerElement: LayerElement
-              }
-              secondaryTraitElement: TraitElement & {
-                layerElement: LayerElement
-              }
-            })[]
-          }) => {
+          (
+            {
+              rulesPrimary,
+            }: TraitElement & {
+              rulesPrimary: (Rules & {
+                primaryTraitElement: TraitElement & {
+                  layerElement: LayerElement
+                }
+                secondaryTraitElement: TraitElement & {
+                  layerElement: LayerElement
+                }
+              })[]
+            },
+            index
+          ) => {
             return (
-              <>
+              <div key={index}>
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
                 {[RulesEnum.enum['cannot mix with']].map((ruleType: string, index) => {
                   return (
@@ -180,7 +185,7 @@ const RuleDisplayAll = ({
                     </div>
                   )
                 })}
-              </>
+              </div>
             )
           }
         )}

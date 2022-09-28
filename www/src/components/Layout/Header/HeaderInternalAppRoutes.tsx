@@ -1,5 +1,6 @@
 import { Link } from '@components/UI/Link'
 import { Popover, Transition } from '@headlessui/react'
+import { SelectorIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { Fragment } from 'react'
@@ -26,20 +27,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
               {options ? (
                 <Popover className='relative'>
                   <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke-width='1.5'
-                      stroke='currentColor'
-                      className='w-4 h-4 text-black'
-                    >
-                      <path
-                        stroke-linecap='round'
-                        stroke-linejoin='round'
-                        d='M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9'
-                      />
-                    </svg>
+                    <SelectorIcon className='text-black w-4 h-4' />
                   </Popover.Button>
                   <Transition
                     as={Fragment}

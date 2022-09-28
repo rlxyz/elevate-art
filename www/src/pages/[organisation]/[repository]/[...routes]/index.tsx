@@ -14,16 +14,16 @@ import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enum
 import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
-  ssr: false,
+  ssr: true,
 })
 const DynamicBranchSelector = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionBranchSelector'), {
   ssr: false,
 })
 const DynamicCollectionLayers = dynamic(() => import('@components/Collection/CollectionLayers/Index'), {
-  ssr: false,
+  ssr: true,
 })
 const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
-  ssr: false,
+  ssr: true,
 })
 const DynamicFilter = dynamic(() => import('@components/Collection/CollectionPreview/PreviewFilter'), {
   ssr: false,
@@ -150,8 +150,8 @@ const Page = () => {
               </div>
             </>
           )}
-          {currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleSelectorContainer />}
-          {currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleDisplayContainer />}
+          {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleSelectorContainer />}
+          {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleDisplayContainer />}
         </Layout.Body>
       </>
     </Layout>

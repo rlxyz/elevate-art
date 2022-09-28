@@ -4,7 +4,7 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useMutateRepositoryRule, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { TraitElement } from '@prisma/client'
+import { LayerElement, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum, RulesType } from 'src/types/enums'
 
-const RuleSelector = () => {
+const RuleSelector = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>()
   const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>()
@@ -25,8 +25,6 @@ const RuleSelector = () => {
       setSelectedRightTrait(null)
     },
   })
-  const { data: layers } = useQueryRepositoryLayer()
-  if (!layers) return null
   const allRightTraitElements = layers
     .filter((layer) => {
       if (!selectedLeftTrait) return true
