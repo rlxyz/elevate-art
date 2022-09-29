@@ -1,4 +1,3 @@
-import { Cloudinary } from '@cloudinary/url-gen'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -8,25 +7,7 @@ import { createToken } from '@utils/compiler'
 import Image from 'next/image'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
-
-const PreviewImage = ({ token, repositoryId, cld }: { cld: Cloudinary; token: TraitElement[]; repositoryId: string }) => {
-  return (
-    <>
-      {token.map((item) => {
-        return (
-          <Image
-            priority
-            layout='fill'
-            className='rounded-[5px] object-cover'
-            src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`).toURL()}
-          />
-        )
-      })}
-    </>
-  )
-}
 
 const InfiniteScrollGridItems = ({
   collection,
@@ -58,26 +39,67 @@ const InfiniteScrollGridItems = ({
     <div className='grid grid-cols-5 gap-y-1 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.map((index: number) => {
         return (
-          <RenderIfVisible key={`${tokens[index]}-${collection.generations}`}>
-            <div className='cursor-pointer relative' onClick={() => setSelectedToken(tokens[index] || null)}>
-              <div className='relative flex flex-col items-center justify-center'>
-                <div className='pb-[100%] blocks' />
-                <PreviewImage
-                  token={createToken({
-                    id: Number(tokens[index]),
-                    name: collection.name,
-                    generation: collection.generations,
-                    layers,
-                  })}
-                  repositoryId={repositoryId}
-                  cld={cld}
-                />
-              </div>
-              <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
-                tokens[index] || 0
-              }`}</span>
+          <div className='col-span-1'>
+            <div
+              className='relative flex flex-col items-center justify-center'
+              onClick={() => setSelectedToken(tokens[index] || null)}
+            >
+              {createToken({
+                id: Number(tokens[index]),
+                name: collection.name,
+                generation: collection.generations,
+                layers,
+              }).map((item) => {
+                return (
+                  <Image
+                    key={item.id}
+                    priority
+                    layout='fill'
+                    className='rounded-[5px] object-cover'
+                    src={cld
+                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
+                      .toURL()}
+                  />
+                )
+              })}
+              <div className='pb-[100%]' />
             </div>
-          </RenderIfVisible>
+            <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>
+              {`#${tokens[index] || 0}`}
+            </span>
+            {/* <RenderIfVisible
+            key={`${tokens[index]}-${collection.generations}`}
+            rootElementClass='cursor-pointer relative col-span-1 border'
+          >
+            <div
+              className='relative flex flex-col items-center justify-center'
+              onClick={() => setSelectedToken(tokens[index] || null)}
+            >
+              {createToken({
+                id: Number(tokens[index]),
+                name: collection.name,
+                generation: collection.generations,
+                layers,
+              }).map((item) => {
+                return (
+                  <Image
+                    key={item.id}
+                    priority
+                    layout='fill'
+                    className='rounded-[5px] object-cover'
+                    src={cld
+                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
+                      .toURL()}
+                  />
+                )
+              })}
+            </div>
+            <div className='pb-[100%] blocks' />
+            <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
+              tokens[index] || 0
+            }`}</span>
+          </RenderIfVisible> */}
+          </div>
         )
       })}
       {selectedToken ? (
@@ -109,16 +131,24 @@ const InfiniteScrollGridItems = ({
                   <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
                     <div className='space-y-4'>
                       <div className='pb-[100%] blocks' />
-                      <PreviewImage
-                        token={createToken({
-                          id: selectedToken,
-                          name: collection.name,
-                          generation: collection.generations,
-                          layers,
-                        })}
-                        repositoryId={repositoryId}
-                        cld={cld}
-                      />
+                      {createToken({
+                        id: Number(selectedToken),
+                        name: collection.name,
+                        generation: collection.generations,
+                        layers,
+                      }).map((item) => {
+                        return (
+                          <Image
+                            key={item.id}
+                            priority
+                            layout='fill'
+                            className='rounded-[5px] object-cover'
+                            src={cld
+                              .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
+                              .toURL()}
+                          />
+                        )
+                      })}
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>

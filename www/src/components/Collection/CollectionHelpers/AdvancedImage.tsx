@@ -14,26 +14,9 @@ export const SmallAdvancedImage = ({ url }: { url: string }) => {
         src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}`).toURL()}
         width={35}
         height={35}
+        alt={`small-image-${url}`}
         className='rounded-[3px]'
       />
     </div>
   )
 }
-
-const AdvancedImage = ({ url }: { url: string }) => {
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-  if (!repositoryId) return <></>
-  return (
-    <div className={`relative rounded-[5px] border-[1px] border-mediumGrey h-[125px] w-[125px]`}>
-      <Image
-        priority
-        src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${url}.png`).toURL()}
-        layout='fill'
-        className='rounded-[5px]'
-      />
-    </div>
-  )
-}
-
-export default AdvancedImage
