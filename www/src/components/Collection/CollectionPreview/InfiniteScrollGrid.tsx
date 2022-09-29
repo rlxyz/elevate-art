@@ -15,15 +15,13 @@ const PreviewImage = ({ id }: { id: number }) => {
     <>
       {images.map((image) => {
         return (
-          <div className='absolute'>
-            <AdvancedImage
-              key={image.toURL()}
-              priority
-              layout='fill'
-              className={clsx('rounded-[5px] object-cover')}
-              cldImg={image}
-            />
-          </div>
+          <AdvancedImage
+            key={image.toURL()}
+            priority
+            layout='fill'
+            className={clsx('absolute rounded-[5px] object-cover')}
+            cldImg={image}
+          />
         )
       })}
     </>
