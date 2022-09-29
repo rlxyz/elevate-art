@@ -42,12 +42,6 @@ module.exports = {
       '5xl': '2560px',
     },
   },
-  extends: {
-    gridTemplateColumns: {
-      // Simple 16 column grid
-      preview: '200px minmax(900px, 1fr) 100px',
-    },
-  },
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
