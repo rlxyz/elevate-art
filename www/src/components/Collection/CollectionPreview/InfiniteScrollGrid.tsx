@@ -178,10 +178,11 @@ export const InfiniteScrollGrid = ({
   const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { tokens, traitFilters } = useRepositoryStore((state) => {
+  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
     return {
       tokens: state.tokens,
       traitFilters: state.traitFilters,
+      rarityFilter: state.rarityFilter,
     }
   })
 
@@ -209,7 +210,21 @@ export const InfiniteScrollGrid = ({
   return (
     <>
       <div className='pb-3 space-x-3'>
-        <span className='text-xs text-darkGrey'>{tokens.length} results</span>
+        {rarityFilter !== 'All' ? (
+          <span className='text-xs text-darkGrey'>
+            {`${tokens.length} results `}
+            {traitFilters.length > 0 ? (
+              <span>
+                for
+                <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
+              </span>
+            ) : (
+              ''
+            )}
+          </span>
+        ) : (
+          <span className='text-xs text-darkGrey'>{`${tokens.length} results`}</span>
+        )}
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}

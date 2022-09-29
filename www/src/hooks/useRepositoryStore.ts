@@ -38,7 +38,6 @@ interface RepositoryStoreFunctionInterface {
 interface RepositoryStoreInterface extends RepositoryStoreFunctionInterface, RepositoryStoreStateInterface {}
 
 const initialState: RepositoryStoreStateInterface = {
-  rarityFilter: 'All', // start with true to ensure that on hydrate preview is populated
   traitFilteredTokens: [],
   repositoryId: '',
   collectionId: '',
@@ -47,8 +46,9 @@ const initialState: RepositoryStoreStateInterface = {
     tokenIdMap: new Map(),
     traitMap: new Map(),
   },
-  tokenRanking: [], // start with true to ensure that on hydrate preview is populated
-  traitFilters: [], // start with true to ensure that on hydrate preview is populated
+  tokenRanking: [],
+  traitFilters: [],
+  rarityFilter: 'All',
 }
 
 export const createRepositoryStore = create<RepositoryStoreInterface>()(

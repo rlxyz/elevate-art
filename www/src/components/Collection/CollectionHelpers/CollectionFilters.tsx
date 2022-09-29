@@ -109,7 +109,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
         setTokens(filteredRarity.map((x) => x.tokenId))
       }}
     >
-      {({ values, handleChange, submitForm }) => (
+      {({ handleChange, submitForm }) => (
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
