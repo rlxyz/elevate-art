@@ -1,84 +1,95 @@
+import { Cloudinary, CloudinaryImage } from '@cloudinary/url-gen'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import useRepositoryStore from '@hooks/useRepositoryStore'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import seedrandom from 'seedrandom'
+import { clientEnv } from 'src/env/schema.mjs'
+import { createCloudinary } from './cloudinary'
 
-export const createToken = (opts: {
-  id: number
-  name: string
-  generation: number
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[]
-}) => {
-  // const { data: layers } = useQueryRepositoryLayer()
-  const { id, name, generation, layers } = opts
-  const random = seedrandom(`${name}.${generation}.${id}`)
+const useCloudinaryHelper = (): { cld: Cloudinary } => {
+  const cld = createCloudinary()
+  return { cld }
+}
+
+export const useCreateToken = ({ id }: { id: number }): { images: CloudinaryImage[] | null; hash: string | null } => {
+  const { cld } = useCloudinaryHelper()
+  const { data: layers } = useQueryRepositoryLayer()
+  const { data: collection } = useQueryCollection()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  if (!collection || !layers) return { images: null, hash: null }
+
+  const { id: collectionId, generations } = collection
+  const random = seedrandom(`${collectionId}.${generations}.${id}`)
   const elements: TraitElement[] = []
-  layers.forEach(({ traitElements, name }, index: number) => {
-    // exclusion
-    const filtered = traitElements.filter((traitElement) => {
-      const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
-        if (rule.primaryTraitElementId === traitElement.id) return index > rule.secondaryTraitElement.layerElement.priority
-        if (rule.secondaryTraitElementId === traitElement.id) return index > rule.primaryTraitElement.layerElement.priority
-      })
-      return rules.every((rule) => {
-        if (rule.primaryTraitElementId === traitElement.id) {
-          return elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
-        }
-        if (rule.secondaryTraitElementId === traitElement.id) {
-          return elements[rule.primaryTraitElement.layerElement.priority]?.id !== rule.primaryTraitElementId
-        }
-      })
-    })
-    let r = random() * filtered.reduce((a, b) => a + b.weight, 0)
-    filtered.every((traitElement) => {
-      r -= traitElement.weight
-      if (r < 0) {
-        elements.push(traitElement)
-        return false
+  layers &&
+    layers.forEach(
+      (
+        {
+          traitElements,
+        }: {
+          traitElements: (TraitElement & {
+            rulesSecondary: (Rules & {
+              secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+              primaryTraitElement: TraitElement & { layerElement: LayerElement }
+            })[]
+            rulesPrimary: (Rules & {
+              secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+              primaryTraitElement: TraitElement & { layerElement: LayerElement }
+            })[]
+          })[]
+          name: string
+        },
+        index: number
+      ) => {
+        // exclusion
+        const filtered = traitElements.filter((traitElement) => {
+          const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
+            if (rule.primaryTraitElementId === traitElement.id) return index > rule.secondaryTraitElement.layerElement.priority
+            if (rule.secondaryTraitElementId === traitElement.id) return index > rule.primaryTraitElement.layerElement.priority
+          })
+          return rules.every((rule) => {
+            if (rule.primaryTraitElementId === traitElement.id) {
+              return elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
+            }
+            if (rule.secondaryTraitElementId === traitElement.id) {
+              return elements[rule.primaryTraitElement.layerElement.priority]?.id !== rule.primaryTraitElementId
+            }
+          })
+        })
+        let r = random() * filtered.reduce((a, b) => a + b.weight, 0)
+        filtered.every((traitElement) => {
+          r -= traitElement.weight
+          if (r < 0) {
+            elements.push(traitElement)
+            return false
+          }
+          return true
+        })
       }
-      return true
-    })
-  })
-  return elements.reverse() // reverse cause we want the highest priority first
+    )
+
+  return {
+    images: elements.reverse().map(
+      (e) => cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${e.layerElementId}/${e.id}.png`).format('png')
+      // .delivery(Delivery.quality('auto:low'))
+    ),
+    hash: keccak256(
+      toUtf8Bytes(
+        elements
+          .reverse()
+          .map((e) => e.id)
+          .join('.')
+      )
+    ),
+  }
 }
 
-export const createManyTokens = (
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[],
-  totalSupply: number,
-  name: string,
-  generation: number
-): TraitElement[][] => {
-  // // sort all layers by priority & trait elements by weight
-  // layers
-  //   .sort((a, b) => a.priority - b.priority)
-  //   .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
-  //     traitElements.sort((a, b) => a.weight - b.weight)
-  //   )
-
-  return Array.from(Array(totalSupply).keys()).map((id: number) => {
-    return createToken({ id, name, generation, layers })
-  })
-}
+// export const useCreateManyTokens = (totalSupply: number): TraitElement[][] => {
+//   return Array.from(Array(totalSupply).keys()).map((id: number) => {
+//     return useCreateToken({ id })
+//   })
+// }
 
 export const getTraitMappings = (allElements: TraitElement[][]) => {
   const tokenIdMap = new Map<string, Map<string, number[]>>()

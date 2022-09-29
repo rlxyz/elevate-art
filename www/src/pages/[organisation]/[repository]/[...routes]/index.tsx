@@ -6,7 +6,6 @@ import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
 import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { createManyTokens, getTokenRanking, getTraitMappings } from '@utils/compiler'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -52,35 +51,35 @@ const Page = () => {
     setHasMounted(true)
   }, [])
 
-  useEffect(() => {
-    if (!collection || !layers) return
-    const tokens = createManyTokens(layers, collection.totalSupply, collection.name, collection.generations)
-    const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-    setTraitMapping({
-      tokenIdMap,
-      traitMap,
-    })
-    const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
-    setTokenRanking(rankings)
-    setTokens(
-      rankings.slice(
-        rarityFilter === 'Top 10'
-          ? 0
-          : rarityFilter === 'Middle 10'
-          ? parseInt((rankings.length / 2 - 5).toFixed(0))
-          : rarityFilter === 'Bottom 10'
-          ? rankings.length - 10
-          : 0,
-        rarityFilter === 'Top 10'
-          ? 10
-          : rarityFilter === 'Middle 10'
-          ? parseInt((rankings.length / 2 + 5).toFixed(0))
-          : rarityFilter === 'Bottom 10'
-          ? rankings.length
-          : rankings.length
-      )
-    )
-  }, [collection?.generations])
+  // useEffect(() => {
+  //   if (!collection || !layers) return
+  //   const tokens = useCreateManyTokens(collection.totalSupply)
+  //   const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+  //   setTraitMapping({
+  //     tokenIdMap,
+  //     traitMap,
+  //   })
+  //   const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
+  //   setTokenRanking(rankings)
+  //   setTokens(
+  //     rankings.slice(
+  //       rarityFilter === 'Top 10'
+  //         ? 0
+  //         : rarityFilter === 'Middle 10'
+  //         ? parseInt((rankings.length / 2 - 5).toFixed(0))
+  //         : rarityFilter === 'Bottom 10'
+  //         ? rankings.length - 10
+  //         : 0,
+  //       rarityFilter === 'Top 10'
+  //         ? 10
+  //         : rarityFilter === 'Middle 10'
+  //         ? parseInt((rankings.length / 2 + 5).toFixed(0))
+  //         : rarityFilter === 'Bottom 10'
+  //         ? rankings.length
+  //         : rankings.length
+  //     )
+  //   )
+  // }, [collection?.generations])
 
   return hasMounted ? (
     <Layout>

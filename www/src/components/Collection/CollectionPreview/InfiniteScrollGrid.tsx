@@ -1,107 +1,53 @@
 import { AdvancedImage } from '@cloudinary/react'
-import { Cloudinary } from '@cloudinary/url-gen'
-import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
-import { createCloudinary } from '@utils/cloudinary'
-import { createToken } from '@utils/compiler'
+import { useCreateToken } from '@utils/compiler'
 import clsx from 'clsx'
-import Image from 'next/image'
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import RenderIfVisible from 'react-render-if-visible'
-import { clientEnv } from 'src/env/schema.mjs'
 
-const PreviewImage = ({ tokens, cld, repositoryId }: { tokens: TraitElement[]; cld: Cloudinary; repositoryId: string }) => {
-  const [loaded, setLoaded] = useState(0)
+const PreviewImage = ({ id }: { id: number }) => {
+  const { images } = useCreateToken({ id })
+  if (!images) return null
   return (
     <>
-      {tokens.map((item) => {
+      {images.map((image) => {
         return (
-          <AdvancedImage
-            key={item.id}
-            priority
-            onLoad={() => {
-              setLoaded((prev) => prev + 1)
-            }}
-            layout='fill'
-            className={clsx('absolute rounded-[5px] object-cover')}
-            cldImg={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)}
-          />
+          <div className='absolute'>
+            <AdvancedImage
+              key={image.toURL()}
+              priority
+              layout='fill'
+              className={clsx('rounded-[5px] object-cover')}
+              cldImg={image}
+            />
+          </div>
         )
       })}
     </>
   )
 }
 
-const InfiniteScrollGridItems = ({
-  name,
-  generation,
-  collection,
-  displayTokens,
-  layers,
-}: {
-  name: string
-  generation: number
-  displayTokens: number[]
-  collection: Collection | null | undefined
-  layers:
-    | (LayerElement & {
-        traitElements: (TraitElement & {
-          rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-          rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-        })[]
-      })[]
-    | null
-    | undefined
-}) => {
+const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const cld = createCloudinary()
-
+  const tokens = useRepositoryStore((state) => state.tokens)
   return (
-    <div className='grid grid-cols-5 gap-y-2 gap-x-6 overflow-hidden'>
-      {displayTokens.map((item) => {
+    <div className='grid grid-cols-5 gap-6 overflow-hidden'>
+      {tokens.slice(0, length).map((item, index) => {
         return (
-          <RenderIfVisible key={item} rootElementClass='col-span-1'>
+          <RenderIfVisible key={index} rootElementClass='col-span-1'>
             <div
-              className='relative flex flex-col items-center justify-center cursor-pointer'
+              className='relative flex flex-col items-center justify-center cursor-pointer w-full h-full'
               onClick={() => setSelectedToken(item || null)}
             >
-              {layers && collection ? (
-                <>
-                  <div className='pb-[100%] border border-mediumGrey pl-[100%] shadow-lg rounded-[5px]' />
-                  <PreviewImage
-                    tokens={createToken({
-                      id: item,
-                      name,
-                      generation,
-                      layers,
-                    })}
-                    cld={cld}
-                    repositoryId={repositoryId}
-                  />
-                </>
-              ) : (
-                <div className='border animate-pulse shadow-md bg-lightGray border-mediumGrey rounded-[5px] pb-[100%] w-full' />
-              )}
+              <PreviewImage id={item} />
             </div>
-            <span
-              className={clsx(
-                collection && layers ? '' : 'animate-pulse font-semibold',
-                'flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'
-              )}
-            >
-              {collection && layers ? `#${item || 0}` : '...'}
+            <span className={'flex text-xs items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'}>
+              {`#${item || 0}`}
             </span>
+            <div className='pb-[100%]' />
           </RenderIfVisible>
         )
       })}
@@ -141,7 +87,7 @@ const InfiniteScrollGridItems = ({
           </RenderIfVisible>
         )
       })} */}
-      {selectedToken && collection && layers ? (
+      {/* {selectedToken && collection && layers ? (
         <Transition appear show as={Fragment}>
           <Dialog as='div' className='relative z-10' onClose={() => setSelectedToken(null)}>
             <Transition.Child
@@ -195,7 +141,7 @@ const InfiniteScrollGridItems = ({
             </div>
           </Dialog>
         </Transition>
-      ) : null}
+      ) : null} */}
     </div>
   )
 }
@@ -204,8 +150,6 @@ export const InfiniteScrollGrid = () => {
   const { data: layers } = useQueryRepositoryLayer()
   const { data: collection } = useQueryCollection()
   const [displayLength, setDisplayLength] = useState<number>(0)
-  const [currentCollectionName, setCurrentCollectionName] = useState(collection?.name)
-  const [currentCollectionGeneration, setCurrentCollectionGeneration] = useState(collection?.generations)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [hasHydrated, setHasHydrated] = useState(true)
@@ -227,8 +171,6 @@ export const InfiniteScrollGrid = () => {
   const reset = () => {
     setPage(0)
     setDisplayLength(0)
-    setCurrentCollectionGeneration(collection?.generations)
-    setCurrentCollectionName(collection?.name)
     setHasMore(true)
   }
 
@@ -289,15 +231,7 @@ export const InfiniteScrollGrid = () => {
         hasMore={hasMore}
         loader={<></>}
       >
-        {hasHydrated && (
-          <InfiniteScrollGridItems
-            generation={currentCollectionGeneration || 0}
-            name={currentCollectionName || ''}
-            displayTokens={tokens.slice(0, displayLength)}
-            layers={layers}
-            collection={collection}
-          />
-        )}
+        <InfiniteScrollGridItems length={displayLength} />
       </InfiniteScrollComponent.default>
     </>
   )
