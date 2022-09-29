@@ -99,6 +99,9 @@ export const layerElementRouter = createRouter()
           where: {
             layerElementId: { in: layerElementIds },
           },
+          include: {
+            layerElement: true,
+          },
         })
       })
     },
