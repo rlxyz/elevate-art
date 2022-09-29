@@ -7,6 +7,7 @@ import { createToken } from '@utils/compiler'
 import Image from 'next/image'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const InfiniteScrollGridItems = ({
@@ -39,7 +40,7 @@ const InfiniteScrollGridItems = ({
     <div className='grid grid-cols-5 gap-y-1 gap-x-6 overflow-hidden'>
       {tokensOnDisplay.map((index: number) => {
         return (
-          <div className='col-span-1'>
+          <RenderIfVisible key={index} rootElementClass='col-span-1'>
             <div
               className='relative flex flex-col items-center justify-center'
               onClick={() => setSelectedToken(tokens[index] || null)}
@@ -67,39 +68,7 @@ const InfiniteScrollGridItems = ({
             <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>
               {`#${tokens[index] || 0}`}
             </span>
-            {/* <RenderIfVisible
-            key={`${tokens[index]}-${collection.generations}`}
-            rootElementClass='cursor-pointer relative col-span-1 border'
-          >
-            <div
-              className='relative flex flex-col items-center justify-center'
-              onClick={() => setSelectedToken(tokens[index] || null)}
-            >
-              {createToken({
-                id: Number(tokens[index]),
-                name: collection.name,
-                generation: collection.generations,
-                layers,
-              }).map((item) => {
-                return (
-                  <Image
-                    key={item.id}
-                    priority
-                    layout='fill'
-                    className='rounded-[5px] object-cover'
-                    src={cld
-                      .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
-                      .toURL()}
-                  />
-                )
-              })}
-            </div>
-            <div className='pb-[100%] blocks' />
-            <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
-              tokens[index] || 0
-            }`}</span>
-          </RenderIfVisible> */}
-          </div>
+          </RenderIfVisible>
         )
       })}
       {selectedToken ? (
