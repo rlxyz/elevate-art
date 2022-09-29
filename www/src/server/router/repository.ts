@@ -70,6 +70,19 @@ export const repositoryRouter = createRouter()
       })
     },
   })
+  .query('getRepositoryCollections', {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.collection.findMany({
+        where: {
+          repositoryId: input.id,
+        },
+        orderBy: { createdAt: 'asc' },
+      })
+    },
+  })
   .query('getAllRepositoriesByOrganisationName', {
     input: z.object({
       name: z.string(),
