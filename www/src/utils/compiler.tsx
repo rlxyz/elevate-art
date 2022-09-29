@@ -1,4 +1,5 @@
 import { Cloudinary, CloudinaryImage } from '@cloudinary/url-gen'
+import { useCurrentCollection } from '@hooks/useCurrentCollection'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
 import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
@@ -187,7 +188,7 @@ export const useTokens = () => {
   const [hasHydrated, setHasHydrated] = useState(false)
 
   const { data: layers } = useQueryRepositoryLayer()
-  const { data: collection } = useQueryCollection()
+  const { collection } = useCurrentCollection()
 
   useEffect(() => {
     if (hasHydrated) return

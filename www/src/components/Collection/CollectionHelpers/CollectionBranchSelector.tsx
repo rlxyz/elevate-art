@@ -2,8 +2,9 @@ import Button from '@components/UI/Button'
 import { Link } from '@components/UI/Link'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
+import { useCurrentCollection } from '@hooks/useCurrentCollection'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
-import { useQueryCollection, useQueryRepository, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryRepository, useQueryRepositoryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { getTokenRanking, getTraitMappings, runMany } from '@utils/compiler'
 import { NextRouter, useRouter } from 'next/router'
@@ -20,7 +21,8 @@ const Index = () => {
   const [query, setQuery] = useState('')
   const { data } = useQueryRepository()
   const { data: layers } = useQueryRepositoryLayer()
-  const { data: collection } = useQueryCollection()
+  const { collection } = useCurrentCollection()
+  const { data: collections } = useQueryRepositoryCollection()
   const [selectedCollection, setSelectedPerson] = useState<null | { name: string; id: string }>(null)
   const [isOpen, setIsOpen] = useState(false)
   const {
@@ -31,10 +33,12 @@ const Index = () => {
   const { mutate, isLoading } = useMutateCreateCollection({
     onMutate: () => setIsOpen(false),
   })
+
   useDeepCompareEffect(() => {
-    if (!data?.collections) return
-    setSelectedPerson(data.collections?.find((collection) => collection.name === collectionName) || null)
-  }, [data?.collections, collectionName])
+    if (!collections) return
+    setSelectedPerson(collections?.find((collection) => collection.name === collectionName) || null)
+  }, [collections, collectionName])
+
   const { setTraitMapping, setTokenRanking } = useRepositoryStore((state) => {
     return {
       setTokenRanking: state.setTokenRanking,
@@ -43,11 +47,13 @@ const Index = () => {
   })
   const filteredCollections =
     query === ''
-      ? data?.collections
-      : data?.collections?.filter((collection) => {
+      ? collections
+      : collections?.filter((collection) => {
           return collection.name.toLowerCase().includes(query.toLowerCase())
         })
+
   if (!collection || !layers) return null
+
   return (
     <Listbox value={selectedCollection} onChange={setSelectedPerson}>
       <Listbox.Button as={Button} variant='ghost' className='pl-4 pr-3 py-3'>
@@ -84,12 +90,12 @@ const Index = () => {
                 <div className='space-y-2 pt-1'>
                   <span className='text-xs text-darkGrey'>Collections</span>
                   <div>
-                    {filteredCollections?.map(({ id, name }) => (
-                      <Listbox.Option key={id} value={name}>
+                    {filteredCollections?.map((collection) => (
+                      <Listbox.Option key={collection.id} value={collection.name}>
                         <Link
                           hover={true}
-                          enabled={name === selectedCollection?.name}
-                          href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${name}`}
+                          enabled={collection.name === selectedCollection?.name}
+                          href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Preview}?collection=${collection.name}`}
                         >
                           <div
                             className='flex flex-row justify-between px-2 w-full'
@@ -104,8 +110,8 @@ const Index = () => {
                               setTokenRanking(rankings)
                             }}
                           >
-                            <span className='text-xs'>{name}</span>
-                            <div>{name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
+                            <span className='text-xs'>{collection.name}</span>
+                            <div>{collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4' />}</div>
                           </div>
                         </Link>
                       </Listbox.Option>
@@ -113,7 +119,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div className='pt-2'>
-                  {data && data.collections && (
+                  {collections && (
                     <Button
                       disabled={isLoading}
                       variant='primary'
