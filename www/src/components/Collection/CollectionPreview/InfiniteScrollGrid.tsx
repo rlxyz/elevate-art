@@ -46,7 +46,7 @@ const InfiniteScrollGridItems = ({
         return (
           <RenderIfVisible key={index} rootElementClass='col-span-1'>
             <div
-              className='relative flex flex-col items-center justify-center'
+              className='relative flex flex-col items-center justify-center cursor-pointer'
               onClick={() => setSelectedToken(tokens[index] || null)}
             >
               {layers && collection ? (
@@ -85,15 +85,6 @@ const InfiniteScrollGridItems = ({
             </span>
           </RenderIfVisible>
         )
-        //   {Array.from(Array(50).keys()).map((index) => (
-        //     <div key={index}>
-        //       <div className='pb-[100%] border animate-pulse bg-mediumGrey bg-opacity-70 border-mediumGrey rounded-[5px] h-full' />
-        //       <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>
-        //         ...
-        //       </span>
-        //     </div>
-        //   ))}
-        // </>
       })}
       {selectedToken && collection && layers ? (
         <Transition appear show as={Fragment}>
