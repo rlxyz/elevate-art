@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 const DynamicCreateNewRepository = dynamic(() => import('@components/Views/CreateNewRepository'), {
   ssr: false,
-  suspense: true,
 })
 
 const Page: NextPage = () => {

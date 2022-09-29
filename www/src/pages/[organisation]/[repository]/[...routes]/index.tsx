@@ -26,7 +26,7 @@ const DynamicRegenerateButton = dynamic(() => import('@components/Collection/Col
   ssr: true,
 })
 const DynamicFilter = dynamic(() => import('@components/Collection/CollectionPreview/PreviewFilter'), {
-  ssr: false,
+  ssr: true,
 })
 
 const Page = () => {

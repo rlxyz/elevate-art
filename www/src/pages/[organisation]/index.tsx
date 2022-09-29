@@ -8,7 +8,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
-const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'), { suspense: true })
+const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'))
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()

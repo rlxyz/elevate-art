@@ -4,15 +4,8 @@ import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
 import { HeaderProps } from './Header/Index'
 
-const DynamicHeader = dynamic(() => import('./Header/Index'), {
-  suspense: true,
-  ssr: false,
-})
-
-const DynamicFooter = dynamic(() => import('./Footer'), {
-  ssr: false,
-  suspense: true,
-})
+const DynamicHeader = dynamic(() => import('./Header/Index'))
+const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {
   children: React.ReactElement[] | React.ReactElement

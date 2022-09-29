@@ -59,7 +59,6 @@ const RegegenerateButton = () => {
               <span className='font-semibold'>Generate</span>
             </div>
             <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
-            {/* <Button disabled={mutation.isLoading} onClick={() => mutation.mutate({ id: collectionId })}> */}
             <Button disabled={isLoading} onClick={() => setIsOpen(true)}>
               <span className='flex items-center justify-center space-x-2'>
                 <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />

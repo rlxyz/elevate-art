@@ -3,18 +3,9 @@ import { Link } from '@components/UI/Link'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
-const DynamicHeaderExternalRoutes = dynamic(() => import('./HeaderExternalRoutes'), {
-  suspense: true,
-  ssr: false,
-})
-
-const DynamicHeaderInternalPageRoutes = dynamic(() => import('./HeaderInternalPageRoutes'), {
-  suspense: true,
-})
-
-const DynamicHeaderInternalRoutes = dynamic(() => import('./HeaderInternalAppRoutes'), {
-  suspense: true,
-})
+const DynamicHeaderExternalRoutes = dynamic(() => import('./HeaderExternalRoutes'))
+const DynamicHeaderInternalPageRoutes = dynamic(() => import('./HeaderInternalPageRoutes'))
+const DynamicHeaderInternalRoutes = dynamic(() => import('./HeaderInternalAppRoutes'))
 
 export interface HeaderProps {
   internalRoutes?: {
