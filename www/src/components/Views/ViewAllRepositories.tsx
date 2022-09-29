@@ -25,7 +25,7 @@ const ViewAllRepositories = () => {
       <div className='grid grid-cols-10 space-x-3 items-center'>
         <div className='col-span-9 h-full w-full'>
           <input
-            placeholder='Search...'
+            placeholder='Search Projects'
             onChange={(e) => setQuery(e.target.value)}
             className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           />
@@ -38,7 +38,7 @@ const ViewAllRepositories = () => {
               router.push(`${organisationName}/new`)
             }}
           >
-            Add New...
+            Add New
           </Button>
         </div>
       </div>

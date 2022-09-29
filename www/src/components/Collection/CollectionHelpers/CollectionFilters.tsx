@@ -143,7 +143,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
                 <div
                   className={
                     layerDropdown === optionIdx
-                      ? 'h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
+                      ? 'max-h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey rounded-[5px] space-y-3'
                       : 'hidden'
                   }
                 >

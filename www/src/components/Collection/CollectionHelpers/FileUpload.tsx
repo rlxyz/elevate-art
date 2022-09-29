@@ -138,7 +138,7 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
                   // reader.onerror = () => console.error('file reading has failed')
                   reader.onload = async () => {
                     if (!traitName || !layerName) return
-                    const trait = data.filter((item) => item.name === traitName)[0]
+                    const trait = data.filter((item) => item.name === traitName && item.layerElement.name === layerName)[0]
                     if (!trait) return
                     uploadCollectionLayerImageCloudinary({
                       repositoryId: variables.repositoryId,
@@ -226,7 +226,7 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
                 onClick={() => router.push(`/${organisation.name}/${repository?.name}/preview`)} // todo: should go to collection creation page
                 disabled={Object.entries(uploadedFiles).some(([, value]) => value.some((x) => !x.uploaded))}
               >
-                Create Project
+                Continue
               </Button>
             </div>
           </div>
