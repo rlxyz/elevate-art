@@ -18,6 +18,7 @@ export const createToken = (opts: {
     })[]
   })[]
 }) => {
+  // const { data: layers } = useQueryRepositoryLayer()
   const { id, name, generation, layers } = opts
   const random = seedrandom(`${name}.${generation}.${id}`)
   const elements: TraitElement[] = []

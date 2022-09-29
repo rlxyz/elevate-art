@@ -1,5 +1,8 @@
+import { AdvancedImage } from '@cloudinary/react'
+import { Cloudinary } from '@cloudinary/url-gen'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
@@ -11,12 +14,38 @@ import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
 
+const PreviewImage = ({ tokens, cld, repositoryId }: { tokens: TraitElement[]; cld: Cloudinary; repositoryId: string }) => {
+  const [loaded, setLoaded] = useState(0)
+  return (
+    <>
+      {tokens.map((item) => {
+        return (
+          <AdvancedImage
+            key={item.id}
+            priority
+            onLoad={() => {
+              setLoaded((prev) => prev + 1)
+            }}
+            layout='fill'
+            className={clsx('absolute rounded-[5px] object-cover')}
+            cldImg={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)}
+          />
+        )
+      })}
+    </>
+  )
+}
+
 const InfiniteScrollGridItems = ({
+  name,
+  generation,
   collection,
-  tokensOnDisplay,
+  displayTokens,
   layers,
 }: {
-  tokensOnDisplay: number[]
+  name: string
+  generation: number
+  displayTokens: number[]
   collection: Collection | null | undefined
   layers:
     | (LayerElement & {
@@ -34,17 +63,51 @@ const InfiniteScrollGridItems = ({
     | null
     | undefined
 }) => {
-  const tokens = useRepositoryStore((state) => state.tokens)
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const cld = createCloudinary()
-  if (!tokens || !tokens.length) return <></>
 
   return (
     <div className='grid grid-cols-5 gap-y-2 gap-x-6 overflow-hidden'>
-      {tokensOnDisplay.map((index: number) => {
+      {displayTokens.map((item) => {
         return (
-          <RenderIfVisible key={index} rootElementClass='col-span-1'>
+          <RenderIfVisible key={item} rootElementClass='col-span-1'>
+            <div
+              className='relative flex flex-col items-center justify-center cursor-pointer'
+              onClick={() => setSelectedToken(item || null)}
+            >
+              {layers && collection ? (
+                <>
+                  <div className='pb-[100%] border border-mediumGrey pl-[100%] shadow-lg rounded-[5px]' />
+                  <PreviewImage
+                    tokens={createToken({
+                      id: item,
+                      name,
+                      generation,
+                      layers,
+                    })}
+                    cld={cld}
+                    repositoryId={repositoryId}
+                  />
+                </>
+              ) : (
+                <div className='border animate-pulse shadow-md bg-lightGray border-mediumGrey rounded-[5px] pb-[100%] w-full' />
+              )}
+            </div>
+            <span
+              className={clsx(
+                collection && layers ? '' : 'animate-pulse font-semibold',
+                'flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'
+              )}
+            >
+              {collection && layers ? `#${item || 0}` : '...'}
+            </span>
+          </RenderIfVisible>
+        )
+      })}
+      {/* {tokensOnDisplay.map((index: number) => {
+        return (
+          <RenderIfVisible key={tokens[index]} rootElementClass='col-span-1'>
             <div
               className='relative flex flex-col items-center justify-center cursor-pointer'
               onClick={() => setSelectedToken(tokens[index] || null)}
@@ -52,24 +115,16 @@ const InfiniteScrollGridItems = ({
               {layers && collection ? (
                 <>
                   <div className='pb-[100%] border border-mediumGrey pl-[100%] shadow-lg rounded-[5px]' />
-                  {createToken({
-                    id: Number(tokens[index]),
-                    name: collection.name,
-                    generation: collection.generations,
-                    layers,
-                  }).map((item) => {
-                    return (
-                      <Image
-                        key={item.id}
-                        priority
-                        layout='fill'
-                        className='rounded-[5px] object-cover'
-                        src={cld
-                          .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
-                          .toURL()}
-                      />
-                    )
-                  })}
+                  <PreviewImage
+                    tokens={createToken({
+                      id: Number(tokens[index]),
+                      name: collection.name,
+                      generation: collection.generations,
+                      layers,
+                    })}
+                    cld={cld}
+                    repositoryId={repositoryId}
+                  />
                 </>
               ) : (
                 <div className='border animate-pulse shadow-md bg-lightGray border-mediumGrey rounded-[5px] pb-[100%] w-full' />
@@ -85,7 +140,7 @@ const InfiniteScrollGridItems = ({
             </span>
           </RenderIfVisible>
         )
-      })}
+      })} */}
       {selectedToken && collection && layers ? (
         <Transition appear show as={Fragment}>
           <Dialog as='div' className='relative z-10' onClose={() => setSelectedToken(null)}>
@@ -145,58 +200,52 @@ const InfiniteScrollGridItems = ({
   )
 }
 
-export const InfiniteScrollGrid = ({
-  collection,
-  layers,
-}: {
-  collection: Collection | null | undefined
-  layers:
-    | (LayerElement & {
-        traitElements: (TraitElement & {
-          rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-          rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & { layerElement: LayerElement }
-            secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-          })[]
-        })[]
-      })[]
-    | null
-    | undefined
-}) => {
-  const [tokensOnDisplay, setTokensOnDisplay] = useState<number[]>([])
+export const InfiniteScrollGrid = () => {
+  const { data: layers } = useQueryRepositoryLayer()
+  const { data: collection } = useQueryCollection()
+  const [displayLength, setDisplayLength] = useState<number>(0)
+  const [currentCollectionName, setCurrentCollectionName] = useState(collection?.name)
+  const [currentCollectionGeneration, setCurrentCollectionGeneration] = useState(collection?.generations)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
+  const [hasHydrated, setHasHydrated] = useState(true)
+  const { tokens, traitFilters, rarityFilter, collectionId } = useRepositoryStore((state) => {
     return {
       tokens: state.tokens,
       traitFilters: state.traitFilters,
       rarityFilter: state.rarityFilter,
+      collectionId: state.collectionId,
     }
   })
 
-  const fetch = (start: number) => {
-    const startPointIndex = start
-    const endPointIndex = start + 1
-    const startPoint = startPointIndex * 50
-    const endPoint = endPointIndex * 50
-    setTokensOnDisplay([...tokensOnDisplay, ...[...Array(endPoint - startPoint)].map((_, i) => i + startPoint)])
+  const fetch = (type: 'new' | 'append') => {
     setPage((p) => p + 1)
+    setDisplayLength((prev) => prev + 25)
+    if (type === 'new') setHasHydrated(true)
   }
 
-  const fetchMoreData = (page: number) => {
-    if (!collection || page * 50 >= collection.totalSupply) {
+  const reset = () => {
+    setPage(0)
+    setDisplayLength(0)
+    setCurrentCollectionGeneration(collection?.generations)
+    setCurrentCollectionName(collection?.name)
+    setHasMore(true)
+  }
+
+  const fetchMoreData = () => {
+    if (!collection) return
+    if (displayLength + 25 > collection?.totalSupply) {
       setHasMore(false)
       return
     }
-    return fetch(page)
+    return fetch('new')
   }
 
   useEffect(() => {
-    fetch(0)
-  }, [collection])
+    setHasHydrated(false)
+    reset()
+    fetch('new')
+  }, [collection?.id])
 
   return (
     <>
@@ -233,18 +282,22 @@ export const InfiniteScrollGrid = ({
         ))}
       </div>
       <InfiniteScrollComponent.default
-        dataLength={tokensOnDisplay.length}
+        dataLength={displayLength}
         next={() => {
-          fetchMoreData(page)
+          fetchMoreData()
         }}
         hasMore={hasMore}
         loader={<></>}
       >
-        <InfiniteScrollGridItems
-          tokensOnDisplay={tokensOnDisplay.slice(0, tokens.length)}
-          layers={layers}
-          collection={collection}
-        />
+        {hasHydrated && (
+          <InfiniteScrollGridItems
+            generation={currentCollectionGeneration || 0}
+            name={currentCollectionName || ''}
+            displayTokens={tokens.slice(0, displayLength)}
+            layers={layers}
+            collection={collection}
+          />
+        )}
       </InfiniteScrollComponent.default>
     </>
   )
