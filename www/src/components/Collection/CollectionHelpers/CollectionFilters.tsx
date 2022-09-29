@@ -24,7 +24,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
   const { data: collection } = useQueryCollection()
   return (
     <Formik
-      initialValues={{ checked: traitFilters.map((t) => `${t.layer.name}/${t.trait.name}`) }}
+      initialValues={{ checked: traitFilters.map((t) => `${t.layer.id}/${t.trait.id}`) }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!collection || !layers) return
         if (!checked.length) {
