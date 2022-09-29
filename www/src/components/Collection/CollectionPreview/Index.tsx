@@ -11,7 +11,7 @@ const Index = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      {collection && layers && <InfiniteScrollGrid collection={collection} layers={layers} />}
+      <InfiniteScrollGrid collection={collection} layers={layers} />
     </CollectionViewContent>
   )
 }
