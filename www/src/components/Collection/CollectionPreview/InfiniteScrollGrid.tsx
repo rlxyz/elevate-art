@@ -4,10 +4,32 @@ import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { createToken } from '@utils/compiler'
+import clsx from 'clsx'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import RenderIfVisible from 'react-render-if-visible'
 import { clientEnv } from 'src/env/schema.mjs'
+
+const PreviewImage = ({ token, repositoryId }: { token: TraitElement[]; repositoryId: string }) => {
+  const cld = createCloudinary()
+  const [itemsLoaded, setItemsLoaded] = useState(token.length)
+  return (
+    <div className={clsx(itemsLoaded !== token.length * 2 && 'invisible', 'flex items-center justify-center')}>
+      {token.map(({ layerElementId, id }: TraitElement, index) => {
+        return (
+          <div key={index} className='absolute h-full w-full'>
+            <img
+              onLoad={() => {
+                setItemsLoaded((prev) => prev + 1)
+              }}
+              className='rounded-[5px]'
+              src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
+            />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 const InfiniteScrollGridItems = ({
   collection,
@@ -47,20 +69,12 @@ const InfiniteScrollGridItems = ({
           layers,
         })
         return (
-          <RenderIfVisible key={index}>
+          <div key={token.map((t) => t.id).join('-')}>
+            {/* <RenderIfVisible> */}
             <div className='cursor-pointer relative col-span-1' onClick={() => setSelectedToken({ traitElements: token })}>
               <div className='flex flex-col'>
                 <div className='relative flex flex-col items-center justify-center h-full w-full' key={index}>
-                  {token.map(({ layerElementId, id }: TraitElement, index) => {
-                    return (
-                      <div key={index} className='absolute h-full w-full'>
-                        <img
-                          className='rounded-[5px]'
-                          src={cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`).toURL()}
-                        />
-                      </div>
-                    )
-                  })}
+                  <PreviewImage token={token} repositoryId={repositoryId} />
                 </div>
                 <div className='pb-[100%] blocks'></div>
                 <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>{`#${
@@ -68,7 +82,8 @@ const InfiniteScrollGridItems = ({
                 }`}</span>
               </div>
             </div>
-          </RenderIfVisible>
+            {/* </RenderIfVisible> */}
+          </div>
         )
       })}
       <Transition appear show={selectedToken.traitElements.length > 0} as={Fragment}>

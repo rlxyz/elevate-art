@@ -8,23 +8,23 @@ import { useEffect, useState } from 'react'
 
 export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
-    (state) => {
+  const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } =
+    useRepositoryStore((state) => {
       return {
         setTraitFilters: state.setTraitFilters,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
         tokenRanking: state.tokenRanking,
+        traitFilters: state.traitFilters,
         rarityFilter: state.rarityFilter,
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
-        traitFilters: state.traitFilters,
       }
-    }
-  )
+    })
+
   const { data: collection } = useQueryCollection()
   return (
     <Formik
-      initialValues={{ checked: [] }}
+      initialValues={{ checked: traitFilters.map((t) => `${t.layer.name}/${t.trait.name}`) }}
       onSubmit={async ({ checked }: { checked: string[] }) => {
         if (!collection || !layers) return
         if (!checked.length) {
@@ -109,7 +109,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
         setTokens(filteredRarity.map((x) => x.tokenId))
       }}
     >
-      {({ handleChange, submitForm }) => (
+      {({ values, handleChange, submitForm }) => (
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
