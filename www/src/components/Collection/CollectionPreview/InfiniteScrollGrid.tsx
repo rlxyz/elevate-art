@@ -6,7 +6,6 @@ import { useCreateToken } from '@utils/compiler'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import RenderIfVisible from 'react-render-if-visible'
 
 const PreviewImage = ({ id }: { id: number }) => {
   const { images } = useCreateToken({ id })
@@ -30,12 +29,12 @@ const PreviewImage = ({ id }: { id: number }) => {
 
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const tokens = useRepositoryStore((state) => state.tokens)
+  const tokenRanking = useRepositoryStore((state) => state.tokenRanking)
   return (
     <div className='grid grid-cols-5 gap-6 overflow-hidden'>
-      {tokens.slice(0, length).map((item, index) => {
+      {tokenRanking.slice(0, length).map((item, index) => {
         return (
-          <RenderIfVisible key={index} rootElementClass='col-span-1'>
+          <div key={`${item}-${index}`} className='col-span-1'>
             <div
               className='relative flex flex-col items-center justify-center cursor-pointer w-full h-full'
               onClick={() => setSelectedToken(item || null)}
@@ -46,7 +45,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
               {`#${item || 0}`}
             </span>
             <div className='pb-[100%]' />
-          </RenderIfVisible>
+          </div>
         )
       })}
       {/* {tokensOnDisplay.map((index: number) => {

@@ -1,7 +1,7 @@
 import { Cloudinary, CloudinaryImage } from '@cloudinary/url-gen'
 import { useCurrentCollection } from '@hooks/useCurrentCollection'
 import { useDeepCompareEffect } from '@hooks/useDeepCompareEffect'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
@@ -105,7 +105,7 @@ const run = (
 export const useCreateToken = ({ id }: { id: number }): { images: CloudinaryImage[] | null; hash: string | null } => {
   const { cld } = useCloudinaryHelper()
   const { data: layers } = useQueryRepositoryLayer()
-  const { data: collection } = useQueryCollection()
+  const { collection } = useCurrentCollection()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   if (!collection || !layers) return { images: null, hash: null }
 

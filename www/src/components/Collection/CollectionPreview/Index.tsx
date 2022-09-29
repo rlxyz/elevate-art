@@ -1,5 +1,6 @@
 import { useTokens } from '@utils/compiler'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
+import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 
 const Index = () => {
   const { tokens } = useTokens()
@@ -8,7 +9,7 @@ const Index = () => {
       title='Generate your Collection'
       description='Create different token sets before finalising the collection'
     >
-      {/* <InfiniteScrollGrid /> */}
+      <InfiniteScrollGrid />
     </CollectionViewContent>
   )
 }
