@@ -1,12 +1,14 @@
 import { AdvancedImage } from '@cloudinary/react'
+import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
+import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 
 const PreviewImage = ({
@@ -25,15 +27,7 @@ const PreviewImage = ({
   return (
     <>
       {images.map((image) => {
-        return (
-          <AdvancedImage
-            key={image.toURL()}
-            priority
-            layout='fill'
-            className={clsx('absolute rounded-[5px] object-cover')}
-            cldImg={image}
-          />
-        )
+        return <AdvancedImage key={image.toURL()} priority className={clsx('absolute rounded-t-[5px]')} cldImg={image} />
       })}
     </>
   )
@@ -43,6 +37,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
+  const { current } = useQueryRepository()
   const { tokens, repositoryId } = useRepositoryStore((state) => {
     return {
       tokens: state.tokens,
@@ -56,55 +51,19 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         return (
           <div key={`${item}-${index}`} className='col-span-1'>
             <div
-              className='relative flex flex-col items-center justify-center cursor-pointer w-full h-full'
+              className='border rounded-[5px] border-mediumGrey relative cursor-pointer'
               onClick={() => setSelectedToken(item || null)}
             >
               <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
+              <div className='pb-[100%]' />
+              <div className={'pl-2 flex flex-col items-center space-y-1 w-full py-1'}>
+                <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>
+              </div>
             </div>
-            <span className={'flex text-xs items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'}>
-              {`#${item || 0}`}
-            </span>
-            <div className='pb-[100%]' />
           </div>
         )
       })}
-      {/* {tokensOnDisplay.map((index: number) => {
-        return (
-          <RenderIfVisible key={tokens[index]} rootElementClass='col-span-1'>
-            <div
-              className='relative flex flex-col items-center justify-center cursor-pointer'
-              onClick={() => setSelectedToken(tokens[index] || null)}
-            >
-              {layers && collection ? (
-                <>
-                  <div className='pb-[100%] border border-mediumGrey pl-[100%] shadow-lg rounded-[5px]' />
-                  <PreviewImage
-                    tokens={createToken({
-                      id: Number(tokens[index]),
-                      name: collection.name,
-                      generation: collection.generations,
-                      layers,
-                    })}
-                    cld={cld}
-                    repositoryId={repositoryId}
-                  />
-                </>
-              ) : (
-                <div className='border animate-pulse shadow-md bg-lightGray border-mediumGrey rounded-[5px] pb-[100%] w-full' />
-              )}
-            </div>
-            <span
-              className={clsx(
-                collection && layers ? '' : 'animate-pulse font-semibold',
-                'flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'
-              )}
-            >
-              {collection && layers ? `#${tokens[index] || 0}` : '...'}
-            </span>
-          </RenderIfVisible>
-        )
-      })} */}
-      {/* {selectedToken && collection && layers ? (
+      {selectedToken && collection && layers ? (
         <Transition appear show as={Fragment}>
           <Dialog as='div' className='relative z-10' onClose={() => setSelectedToken(null)}>
             <Transition.Child
@@ -131,26 +90,9 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
-                    <div className='space-y-4'>
+                    <div>
+                      <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId} />
                       <div className='pb-[100%] blocks' />
-                      {createToken({
-                        id: Number(selectedToken),
-                        name: collection.name,
-                        generation: collection.generations,
-                        layers,
-                      }).map((item) => {
-                        return (
-                          <Image
-                            key={item.id}
-                            priority
-                            layout='fill'
-                            className='rounded-[5px] object-cover'
-                            src={cld
-                              .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${item.layerElementId}/${item.id}.png`)
-                              .toURL()}
-                          />
-                        )
-                      })}
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>
@@ -158,7 +100,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
             </div>
           </Dialog>
         </Transition>
-      ) : null} */}
+      ) : null}
     </div>
   )
 }
