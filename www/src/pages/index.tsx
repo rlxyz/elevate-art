@@ -1,6 +1,6 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import { Link } from '@components/Layout/UI/Link'
+import { Link } from '@components/Layout/Link'
 import type { NextPage } from 'next'
 
 const Guide = () => {

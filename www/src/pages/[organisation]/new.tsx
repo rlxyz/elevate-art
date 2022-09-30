@@ -2,7 +2,7 @@ import { Layout } from '@components/Layout/Layout'
 import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
-const DynamicCreateNewRepository = dynamic(() => import('@components/Views/CreateNewRepository'), {
+const DynamicCreateNewRepository = dynamic(() => import('@components/Organisation/OrganisationCreateNewRepository'), {
   ssr: false,
 })
 

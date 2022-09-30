@@ -1,5 +1,5 @@
-import Button from '@components/Layout/UI/Button'
-import { Link } from '@components/Layout/UI/Link'
+import Button from '@components/Layout/Button'
+import { Link } from '@components/Layout/Link'
 import { CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
