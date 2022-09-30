@@ -7,9 +7,11 @@ import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector
 import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
 import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
 import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
+import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
@@ -21,9 +23,26 @@ const Page = () => {
   const repositoryName: string = router.query.repository as string
   const [hasMounted, setHasMounted] = useState(false)
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
-  const { current: collection, isLoading: isLoadingCollection } = useQueryRepositoryCollection()
-  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
+  const { isLoading: isRepositoryLoading } = useQueryRepository()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+  const { setCollectionId } = useRepositoryStore((state) => {
+    return {
+      setCollectionId: state.setCollectionId,
+    }
+  })
+  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
+  const { collectionName } = useRepositoryRoute()
+  const isLoading = isLoadingLayers && isLoadingCollection && isRepositoryLoading && isRoutesLoading
+
+  useEffect(() => {
+    if (!collections) return
+    if (!collections.length) return
+    const collection = collections.find((collection) => collection.name === collectionName)
+    if (!collection) return
+    setCollectionId(collection.id)
+    mutate({ collection })
+  }, [isLoading])
 
   useEffect(() => {
     setHasMounted(true)
@@ -40,19 +59,19 @@ const Page = () => {
           internalNavigation={[
             {
               name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
+              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
               enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
+              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
               enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
+              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${layer?.name}`,
               enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
             },

@@ -1,3 +1,4 @@
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
@@ -5,6 +6,7 @@ import produce from 'immer'
 
 export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { mutate } = useQueryRepositoryCollection()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
   return trpc.useMutation('collection.incrementGeneration', {
@@ -24,6 +26,8 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
         collection.generations = collection?.generations + 1
       })
 
+      const collection = next.find((c) => c.id === input.id)
+      if (collection) mutate({ collection })
       ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
 
       onMutate && onMutate()
@@ -41,8 +45,8 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: variables.id }], context.backup)
+      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryCollections']),
+    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryCollections', { id: repositoryId }]),
   })
 }

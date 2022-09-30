@@ -2,7 +2,6 @@ import { AdvancedImage } from '@cloudinary/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
@@ -31,6 +30,7 @@ const PreviewImage = ({ id }: { id: number }) => {
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const tokenRanking = useRepositoryStore((state) => state.tokenRanking)
+
   return (
     <div className='grid grid-cols-5 gap-6 overflow-hidden'>
       {tokenRanking.slice(0, length).map((item, index) => {
@@ -145,12 +145,10 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 }
 
 export const InfiniteScrollGrid = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const [hasHydrated, setHasHydrated] = useState(true)
   const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
     return {
       tokens: state.tokens,
@@ -159,10 +157,14 @@ export const InfiniteScrollGrid = () => {
     }
   })
 
+  useEffect(() => {
+    reset()
+    fetch('new')
+  }, [collection?.id])
+
   const fetch = (type: 'new' | 'append') => {
     setPage((p) => p + 1)
     setDisplayLength((prev) => prev + 25)
-    if (type === 'new') setHasHydrated(true)
   }
 
   const reset = () => {
@@ -180,45 +182,42 @@ export const InfiniteScrollGrid = () => {
     return fetch('new')
   }
 
-  useEffect(() => {
-    setHasHydrated(false)
-    reset()
-    fetch('new')
-  }, [collection?.id])
-
   return (
     <>
-      <div className='pb-3 space-x-3'>
-        {rarityFilter !== 'All' ? (
-          <span className='text-xs text-darkGrey'>
-            {`${tokens.length} results `}
-            {traitFilters.length > 0 ? (
-              <span>
-                for
-                <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
-              </span>
-            ) : (
-              ''
-            )}
-          </span>
-        ) : (
-          <span className='text-xs text-darkGrey'>{`${tokens.length} results`}</span>
-        )}
-        {traitFilters.map(({ layer, trait }, index) => (
-          <span
-            key={index}
-            className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'
-          >
-            {trait.name}
-            <button
-              type='button'
-              className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none'
-              onClick={() => console.log('todo remove filter')}
+      <div className='pb-2 space-x-2 flex items-baseline'>
+        <span className='text-xs text-darkGrey'>{collection?.generations} generations</span>
+        <div className='slace-x-3'>
+          {rarityFilter !== 'All' ? (
+            <span className='text-xs text-darkGrey'>
+              {`${tokens.length} results `}
+              {traitFilters.length > 0 ? (
+                <span>
+                  for
+                  <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
+                </span>
+              ) : (
+                ''
+              )}
+            </span>
+          ) : (
+            <span className='text-xs text-black'>{`${5000} results`}</span>
+          )}
+          {traitFilters.map(({ layer, trait }, index) => (
+            <span
+              key={index}
+              className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'
             >
-              <XIcon className='w-3 h-3 text-darkGrey' />
-            </button>
-          </span>
-        ))}
+              {trait.name}
+              <button
+                type='button'
+                className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none'
+                onClick={() => console.log('todo remove filter')}
+              >
+                <XIcon className='w-3 h-3 text-darkGrey' />
+              </button>
+            </span>
+          ))}
+        </div>
       </div>
       <InfiniteScrollComponent.default
         dataLength={displayLength}

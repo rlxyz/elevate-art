@@ -6,12 +6,12 @@ import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCol
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 const Index = () => {
   const [query, setQuery] = useState('')
   const { all: layers, isLoading } = useQueryRepositoryLayer()
-  const { all: collections, current: collection, mutate } = useQueryRepositoryCollection()
+  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryRepositoryCollection()
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
   const [isOpen, setIsOpen] = useState(false)
   const filteredCollections =
@@ -20,6 +20,11 @@ const Index = () => {
       : collections?.filter((collection: Collection) => {
           return collection.name.toLowerCase().includes(query.toLowerCase())
         })
+
+  useEffect(() => {
+    setSelectedPerson(collection)
+  }, [isLoadingCollections])
+
   if (!collection || !layers) return null
 
   return (
@@ -32,7 +37,7 @@ const Index = () => {
               <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
             </div>
             <div>
-              <ChevronDownIcon className='w-4 h-4' />
+              <ChevronDownIcon className='w-4 h-4 text-darkGrey' />
             </div>
           </div>
         </Listbox.Button>

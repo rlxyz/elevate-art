@@ -17,6 +17,8 @@ export const useQueryRenderSingleToken = ({ id }: { id: number }): { images: Clo
 
   const { id: collectionId, generations } = collection
   const random = seedrandom(`${collectionId}.${generations}.${id}`)
+  // console.log(`${collectionId}.${generations}.${id}`)
+
   const elements: TraitElement[] = []
   layers &&
     layers.forEach(
