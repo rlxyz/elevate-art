@@ -24,10 +24,11 @@ const Page = () => {
   const [hasMounted, setHasMounted] = useState(false)
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
-  const { isLoading: isRepositoryLoading } = useQueryRepository()
+  const { current: repository, isLoading: isRepositoryLoading } = useQueryRepository()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  const { setCollectionId } = useRepositoryStore((state) => {
+  const { setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
     return {
+      setRepositoryId: state.setRepositoryId,
       setCollectionId: state.setCollectionId,
     }
   })
@@ -42,7 +43,12 @@ const Page = () => {
     if (!collection) return
     setCollectionId(collection.id)
     mutate({ collection })
-  }, [isLoading])
+  }, [isLoadingCollection])
+
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isRepositoryLoading])
 
   useEffect(() => {
     setHasMounted(true)

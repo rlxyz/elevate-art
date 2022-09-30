@@ -204,7 +204,7 @@ export const InfiniteScrollGrid = () => {
 
   return (
     <>
-      <span className='text-xs text-darkGrey'>{`${collection?.generations} generations`}</span>
+      <span className='text-xs text-darkGrey'>{`${collection?.generations || 0} generations`}</span>
       <div className='min-h-6 space-x-2 flex items-center max-w-full'>
         <div className='space-x-3 flex items-center'>
           <div className='whitespace-nowrap text-ellipsis'>
