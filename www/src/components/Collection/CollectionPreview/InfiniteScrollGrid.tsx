@@ -145,7 +145,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 }
 
 export const InfiniteScrollGrid = () => {
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [page, setPage] = useState(0)

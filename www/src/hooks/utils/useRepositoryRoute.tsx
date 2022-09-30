@@ -12,7 +12,7 @@ export const useRepositoryRoute = () => {
   const repositoryName: string = router.query.repository as string
   const routes: string | string[] | undefined = router.query.routes
   const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null)
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
 
   const { setCurrentLayerPriority, currentLayerPriority, setCurrentViewSection, currentViewSection } =
     useCollectionNavigationStore((state) => {

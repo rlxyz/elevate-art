@@ -127,7 +127,7 @@ const Index = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const [query, setQuery] = useState('')
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const setCollectionId = useRepositoryStore((state) => state.setCollectionId)
   const { all: collections, current: collection, mutate } = useQueryRepositoryCollection()
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)

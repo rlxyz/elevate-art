@@ -1,9 +1,8 @@
 import Button from '@components/UI/Button'
 import { Textbox } from '@components/UI/Textbox'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { useQueryCollection } from '@hooks/query/useQueryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
@@ -22,16 +21,14 @@ const calculateSumArray = (values: { id: string; weight: number }[]) => {
 const LayerRarityTable = () => {
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const [summedRarityWeightage, setSummedRarityWeightage] = useState<number>(0)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const { data: collectionData } = useQueryCollection()
-  const { currentLayer } = useCurrentLayer()
-  const { traitElements, id: layerId } = currentLayer
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
+  const { current: layer } = useQueryRepositoryLayer()
 
-  useDeepCompareEffect(() => {
-    setSummedRarityWeightage(calculateSumArray(traitElements))
-  }, [traitElements])
+  if (!layer) return null
+  const { traitElements, id: layerId } = layer
+  const summedRarityWeightage = calculateSumArray(traitElements)
 
   return (
     <>
@@ -39,7 +36,7 @@ const LayerRarityTable = () => {
         <Formik
           enableReinitialize
           initialValues={{
-            traits: currentLayer.traitElements.map((traitElement: TraitElement) => {
+            traits: traitElements.map((traitElement: TraitElement) => {
               return {
                 id: traitElement.id,
                 weight: Number(

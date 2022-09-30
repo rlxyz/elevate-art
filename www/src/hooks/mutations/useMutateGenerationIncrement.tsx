@@ -12,7 +12,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
       setTraitMapping: state.setTraitMapping,
     }
   })
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { data: collection } = useQueryCollection()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()

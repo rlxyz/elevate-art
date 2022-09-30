@@ -1,33 +1,18 @@
 import Button from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
-import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
-import { NextRouter, useRouter } from 'next/router'
 import ordinal from 'ordinal'
 import { Fragment, useState } from 'react'
-import { useCurrentLayer } from '../../../hooks/useCurrentLayer'
 import { CollectionViewContentWrapper } from '../CollectionHelpers/ViewContent'
 import LayerGridView from './LayerGridView'
 import LayerRarityTable from './LayerRarityTable'
 
-const DynamicLayerFolder = dynamic(() => import('@components/Collection/CollectionHelpers/LayerFolderSelector'), {
-  ssr: false,
-})
-
-const DynamicRarityTable = dynamic(() => import('./LayerRarityTable'), {
-  ssr: false,
-})
-
-const DynamicGridView = dynamic(() => import('./LayerGridView'), {
-  ssr: false,
-})
-
 const AddNewTrait = () => {
-  const { currentLayer } = useCurrentLayer()
-
+  const { current: layer } = useQueryRepositoryLayer()
   const [isOpen, setIsOpen] = useState(false)
+  if (!layer) return null
   return (
     <>
       <Button disabled variant='primary' onClick={() => setIsOpen(true)}>
@@ -60,7 +45,7 @@ const AddNewTrait = () => {
                 <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-lightGray'>
                   <div className='space-y-4'>
                     <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
-                      Upload to <span className='underline text-blueHighlight'>{currentLayer.name}</span> layer
+                      Upload to <span className='underline text-blueHighlight'>{layer.name}</span> layer
                     </Dialog.Title>
                     <div>
                       <p className='text-sm'>You can upload multiple traits at a time</p>
@@ -87,26 +72,21 @@ const AddNewTrait = () => {
 }
 
 const Index = () => {
-  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
-  const { currentLayer, isLoading, isError, refetch } = useCurrentLayer()
-  const { name, traitElements } = currentLayer
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, current: layer, isLoading } = useQueryRepositoryLayer()
   const [query, setQuery] = useState('')
   const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
-  const filteredTraitElements = traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
+  if (!layer) return null
+  const filteredTraitElements = layer.traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
     <CollectionViewContentWrapper>
       <div className='grid grid-cols-10'>
         <div className='col-span-8 flex flex-col'>
           <div className='col-span-6 font-plus-jakarta-sans'>
-            <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{name}</h1>
+            <h1 className={clsx('text-2xl font-bold text-black', isLoading && 'animate-pulse')}>{layer.name}</h1>
             <p className={clsx('text-sm text-darkGrey', isLoading && 'animate-pulse')}>
               <span>
-                There are {traitElements.length} {name} that make up the{' '}
+                There are {layer.traitElements.length} {layer?.name} that make up the{' '}
                 <span className='text-blueHighlight'>{`${ordinal(
                   (layers?.findIndex((x) => x.id === currentLayerPriority) || 0) + 1
                 )} layer`}</span>
@@ -163,7 +143,7 @@ const Index = () => {
             onChange={(e) => setQuery(e.target.value)}
             className='py-2 border text-sm h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           /> */}
-          <LayerGridView traitElements={filteredTraitElements} layerName={name} />
+          <LayerGridView traitElements={filteredTraitElements} layerName={layer?.name} />
         </>
       )}
       {currentView === 'rarity' && <LayerRarityTable />}

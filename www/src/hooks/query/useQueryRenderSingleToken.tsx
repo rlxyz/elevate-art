@@ -10,7 +10,7 @@ import { useCloudinaryHelper } from '../utils/useCloudinaryHelper'
 
 export const useQueryRenderSingleToken = ({ id }: { id: number }): { images: CloudinaryImage[] | null; hash: string | null } => {
   const { cld } = useCloudinaryHelper()
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   if (!collection || !layers) return { images: null, hash: null }

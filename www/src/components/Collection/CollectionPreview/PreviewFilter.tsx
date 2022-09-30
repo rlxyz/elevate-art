@@ -3,7 +3,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { FilterByRarity, FilterByTrait } from '../CollectionHelpers/CollectionFilters'
 
 const PreviewFilter = () => {
-  const { data: layers, isLoading } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return (
     <>

@@ -268,7 +268,7 @@ export const RuleSelectorCombobox = ({
   >
 }) => {
   const [query, setQuery] = useState('')
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
   const filteredTraits =
     query === ''
       ? traitElements

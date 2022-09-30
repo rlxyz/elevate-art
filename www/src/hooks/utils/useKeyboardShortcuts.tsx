@@ -4,7 +4,7 @@ import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '../store/useCollectionNavigationStore'
 
 export const useKeybordShortcuts = () => {
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
 
   const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useCollectionNavigationStore((state) => {
     return {

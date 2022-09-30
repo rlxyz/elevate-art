@@ -3,7 +3,7 @@ import RuleDisplayAll from './RuleDisplayAll'
 import RuleSelector from './RuleSelector'
 
 export const RuleSelectorContainer = () => {
-  const { data: layers, isLoading } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   if (isLoading || !layers) return <></>
   return (
     <div className='w-full py-16'>
@@ -18,7 +18,7 @@ export const RuleSelectorContainer = () => {
 }
 
 export const RuleDisplayContainer = () => {
-  const { data: layers, isLoading } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   if (isLoading || !layers) return <></>
   return (
     <div className='w-full py-16'>

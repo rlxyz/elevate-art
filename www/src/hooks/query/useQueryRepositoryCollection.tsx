@@ -1,8 +1,8 @@
 import { Collection } from '@prisma/client'
 import { getTokenRanking, getTraitMappings, renderManyToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
 import useRepositoryStore from '../store/useRepositoryStore'
+import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
 
 export const useQueryRepositoryCollection = () => {
   const { setTraitMapping, setTokenRanking, repositoryId, collectionId, setCollectionId } = useRepositoryStore((state) => {
@@ -14,7 +14,7 @@ export const useQueryRepositoryCollection = () => {
       setCollectionId: state.setCollectionId,
     }
   })
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
 
   // update the current tokens
   const mutate = ({ collection }: { collection: Collection }) => {
