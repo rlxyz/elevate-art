@@ -1,47 +1,32 @@
-import { useQueryCollection } from '@hooks/query/useQueryCollection'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
-import { getTokenRanking, getTraitMappings, renderManyToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
+import produce from 'immer'
 
 export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
-  const { setTraitMapping, setTokenRanking } = useRepositoryStore((state) => {
-    return {
-      setTokenRanking: state.setTokenRanking,
-      setTraitMapping: state.setTraitMapping,
-    }
-  })
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  const { data: collection } = useQueryCollection()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
   return trpc.useMutation('collection.incrementGeneration', {
     // Optimistic Update
     onMutate: async (input) => {
-      const backup = ctx.getQueryData(['collection.getCollectionById', { id: input.id }])
-      if (!backup || !layers || !collection) return { backup }
-      ctx.setQueryData(['collection.getCollectionById', { id: input.id }], {
-        ...backup,
-        generation: backup.generations + 1,
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await ctx.cancelQuery(['repository.getRepositoryCollections', { id: repositoryId }])
+
+      // Snapshot the previous value
+      const backup = ctx.getQueryData(['repository.getRepositoryCollections', { id: repositoryId }])
+      if (!backup) return { backup }
+
+      // Optimistically update to the new value
+      const next = produce(backup, (draft) => {
+        const collection = draft.find((c) => c.id === input.id)
+        if (!collection) return
+        collection.generations = collection?.generations + 1
       })
-      const tokens = renderManyToken(layers, collection)
-      const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-      setTraitMapping({
-        tokenIdMap,
-        traitMap,
-      })
-      const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
-      setTokenRanking(rankings)
+
+      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
+
       onMutate && onMutate()
-      return { backup }
-    },
-    onError: (err, variables, context) => {
-      if (!context?.backup) return
-      ctx.setQueryData(['collection.getCollectionById', { id: variables.id }], context.backup)
-    },
-    onSettled: () => ctx.invalidateQueries(['collection.getCollectionById']),
-    onSuccess: (data, variables) => {
       notifySuccess(
         <span>
           <span className='text-blueHighlight'>Successfully</span>
@@ -50,8 +35,14 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
             generated a <span className='font-semibold'>new collection!</span>
           </span>
         </span>,
-        'elevate'
+        'generate'
       )
+      return { backup }
     },
+    onError: (err, variables, context) => {
+      if (!context?.backup) return
+      ctx.setQueryData(['repository.getRepositoryCollections', { id: variables.id }], context.backup)
+    },
+    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryCollections']),
   })
 }

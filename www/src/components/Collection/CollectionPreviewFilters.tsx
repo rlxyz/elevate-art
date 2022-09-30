@@ -1,5 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { useQueryCollection } from '@hooks/query/useQueryCollection'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { truncate } from '@utils/format'
@@ -21,7 +22,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
       }
     })
 
-  const { data: collection } = useQueryCollection()
+  const { current: collection } = useQueryRepositoryCollection()
   return (
     <Formik
       initialValues={{ checked: traitFilters.map((t) => `${t.layer.id}/${t.trait.id}`) }}
@@ -286,3 +287,25 @@ export const FilterByRarity = () => {
     </Formik>
   )
 }
+
+const Index = () => {
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  return (
+    <>
+      {!isLoading && layers && repositoryId && (
+        <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
+          <>
+            <FilterByRarity />
+            <div className='px-3'>
+              <div className='bg-mediumGrey h-[0.25px] w-full' />
+            </div>
+            <FilterByTrait layers={layers} />
+          </>
+        </div>
+      )}
+    </>
+  )
+}
+
+export default Index

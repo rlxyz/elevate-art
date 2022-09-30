@@ -1,4 +1,4 @@
-import Button from '@components/UI/Button'
+import Button from '@components/Layout/Button'
 import { TrashIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'

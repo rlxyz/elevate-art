@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import Button from '@components/UI/Button'
+import Button from '@components/Layout/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'

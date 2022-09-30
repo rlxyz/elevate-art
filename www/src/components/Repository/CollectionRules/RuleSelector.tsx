@@ -1,4 +1,4 @@
-import { SmallAdvancedImage } from '@components/Collection/CollectionHelpers/AdvancedImage'
+import { SmallAdvancedImage } from '@components/Repository/CollectionHelpers/AdvancedImage'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useMutateRepositoryRule } from '@hooks/mutations/useMutateRepositoryRule'

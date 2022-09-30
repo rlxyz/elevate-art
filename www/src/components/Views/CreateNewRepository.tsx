@@ -1,4 +1,4 @@
-import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUpload'
+import { FolderUpload } from '@components/Repository/CollectionHelpers/FileUpload'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { Repository } from '@prisma/client'
 import { trpc } from '@utils/trpc'

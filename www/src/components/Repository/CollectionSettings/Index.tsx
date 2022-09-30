@@ -1,4 +1,4 @@
-import { CollectionViewContentWrapper } from '@components/Collection/CollectionHelpers/ViewContent'
+import { CollectionViewContentWrapper } from '@components/Repository/CollectionHelpers/ViewContent'
 import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
 

@@ -1,4 +1,4 @@
-import { Link } from '@components/UI/Link'
+import { Link } from '@components/Layout/Link'
 import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'

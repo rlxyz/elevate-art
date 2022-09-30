@@ -1,5 +1,5 @@
-import Button from '@components/UI/Button'
-import Loading from '@components/UI/Loading'
+import Button from '@components/Layout/UI/Button'
+import Loading from '@components/Layout/UI/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'

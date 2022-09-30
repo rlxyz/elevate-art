@@ -1,5 +1,12 @@
-import { Link } from '@components/UI/Link'
-import { ReactNode } from 'react'
+import { Popover, Transition } from '@headlessui/react'
+import { SelectorIcon } from '@heroicons/react/outline'
+import { capitalize } from '@utils/format'
+import clsx from 'clsx'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import { Fragment, ReactNode } from 'react'
+import { ConnectButton } from './ConnectButton'
+import { Link } from './Link'
 
 const externalRoutes = [
   {
@@ -70,4 +77,111 @@ const HeaderExternalRoutes = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export default HeaderExternalRoutes
+type HeaderInternalAppRoutesProps = {
+  routes: {
+    current: string
+    href: string
+    options?: string[]
+  }[]
+}
+const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
+  if (!routes.length) return <></>
+  return (
+    <>
+      {routes.map(({ current, href, options }, index) => {
+        return (
+          <div key={index} className='flex items-center justify-center'>
+            <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
+            <div className='space-x-1 flex'>
+              <Link href={href} enabled={false} external>
+                <div className={clsx(options ? 'text-black' : 'text-darkGrey')}>{current}</div>
+              </Link>
+              {options ? (
+                <Popover className='relative'>
+                  <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
+                    <SelectorIcon className='text-black w-4 h-4' />
+                  </Popover.Button>
+                  <Transition
+                    as={Fragment}
+                    enter='transition ease-out duration-200'
+                    enterFrom='opacity-0 translate-y-1'
+                    enterTo='opacity-100 translate-y-0'
+                    leave='transition ease-in duration-150'
+                    leaveFrom='opacity-100 translate-y-0'
+                    leaveTo='opacity-0 translate-y-1'
+                  >
+                    <Popover.Panel className='absolute left-1/4 z-10 w-screen max-w-xs -translate-x-1/4 transform'>
+                      <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
+                        <div className='p-2 relative bg-white'>
+                          {options.map((item) => (
+                            <Link hover title={item} enabled={item === current} key={item} href={item} />
+                          ))}
+                        </div>
+                      </div>
+                    </Popover.Panel>
+                  </Transition>
+                </Popover>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+export interface HeaderInternalPageRoutesProps {
+  links: { name: string; enabled: boolean; href: string; loading: boolean }[]
+}
+
+const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
+  return (
+    <aside className='-ml-5'>
+      <ul className='flex list-none'>
+        {links.map(({ name, enabled, href, loading }, index: number) => {
+          return (
+            <li key={index} className={enabled ? 'flex space-between items-center relative' : ''}>
+              <div className={clsx('mb-1', loading && 'pointer-events-none')}>
+                <Link disabled={loading} enabled={enabled} title={capitalize(name)} size='md' href={href} />
+              </div>
+              {enabled && (
+                <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </aside>
+  )
+}
+
+export interface HeaderProps {
+  internalRoutes?: {
+    current: string
+    href: string
+    options?: string[]
+  }[]
+  connectButton?: boolean
+  internalNavigation?: { name: string; enabled: boolean; href: string; loading: boolean }[]
+}
+
+const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {
+  return (
+    <header className='pointer-events-auto'>
+      <div className='flex justify-between items-center'>
+        <div className='flex items-center text-xs font-semibold space-x-1'>
+          <Link className='' external={true} href='/'>
+            <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
+          </Link>
+          <HeaderInternalAppRoutes routes={internalRoutes} />
+        </div>
+        <HeaderExternalRoutes>{connectButton && <ConnectButton />}</HeaderExternalRoutes>
+      </div>
+      {internalNavigation && <HeaderInternalPageRoutes links={internalNavigation} />}
+    </header>
+  )
+}
+
+export default Index

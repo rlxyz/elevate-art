@@ -1,7 +1,7 @@
-import Button from '@components/UI/Button'
-import { Textbox } from '@components/UI/Textbox'
+import Button from '@components/Layout/Button'
+import { Textbox } from '@components/Layout/Textbox'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
-import { useQueryCollection } from '@hooks/query/useQueryCollection'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
@@ -22,7 +22,7 @@ const LayerRarityTable = () => {
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const { data: collectionData } = useQueryCollection()
+  const { current: collection } = useQueryRepositoryCollection()
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   const { current: layer } = useQueryRepositoryLayer()
 
@@ -32,7 +32,7 @@ const LayerRarityTable = () => {
 
   return (
     <>
-      {!summedRarityWeightage || !collectionData ? null : (
+      {!summedRarityWeightage || !collection ? null : (
         <Formik
           enableReinitialize
           initialValues={{
@@ -40,11 +40,9 @@ const LayerRarityTable = () => {
               return {
                 id: traitElement.id,
                 weight: Number(
-                  calculateTraitQuantityInCollection(
-                    traitElement.weight,
-                    summedRarityWeightage,
-                    collectionData.totalSupply
-                  ).toFixed(0)
+                  calculateTraitQuantityInCollection(traitElement.weight, summedRarityWeightage, collection.totalSupply).toFixed(
+                    0
+                  )
                 ),
               }
             }),
@@ -139,14 +137,14 @@ const LayerRarityTable = () => {
                                     }}
                                   />
                                 </div>
-                                <span>out of {collectionData.totalSupply}</span>
+                                <span>out of {collection.totalSupply}</span>
                               </div>
                             </td>
                             <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               {calculateTraitRarityScore(
                                 Number(values.traits[index]?.weight),
                                 calculateSumArray(values.traits),
-                                collectionData.totalSupply
+                                collection.totalSupply
                               )
                                 .toFixed(2)
                                 .toString()}
