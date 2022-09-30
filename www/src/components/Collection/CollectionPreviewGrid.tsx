@@ -64,7 +64,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   })
   if (!collection || !layers || isLoading) return null
   return (
-    <div className='grid grid-cols-4 gap-6 overflow-hidden'>
+    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
       {tokens.slice(0, length).map((item, index) => {
         return (
           <div key={`${item}-${index}`} className='col-span-1'>
