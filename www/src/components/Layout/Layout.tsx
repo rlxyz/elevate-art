@@ -2,9 +2,9 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
-import { HeaderProps } from './Header/Index'
+import { HeaderProps } from './Header'
 
-const DynamicHeader = dynamic(() => import('./Header/Index'))
+const DynamicHeader = dynamic(() => import('./Header'))
 const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {

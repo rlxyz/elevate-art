@@ -1,85 +1,33 @@
-import LayerFolderSelector from '@components/Collection/CollectionHelpers/LayerFolderSelector'
-import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
-import { RuleDisplayContainer, RuleSelectorContainer } from '@components/Collection/CollectionRules/Index'
+import CollectionBranchSelectorCard from '@components/Collection/CollectionBranchSelectorCard'
+import CollectionGenerateCard from '@components/Collection/CollectionGenerateCard'
+import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
+import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
 import { Layout } from '@components/Layout/Layout'
-import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import dynamic from 'next/dynamic'
+import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
+import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
+import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
+import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
-import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
-
-const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
-  ssr: true,
-})
-const DynamicBranchSelector = dynamic(() => import('@components/Collection/CollectionHelpers/CollectionBranchSelector'), {
-  ssr: false,
-})
-const DynamicCollectionLayers = dynamic(() => import('@components/Collection/CollectionLayers/Index'), {
-  ssr: true,
-})
-const DynamicRegenerateButton = dynamic(() => import('@components/Collection/CollectionHelpers/RegenerateButton'), {
-  ssr: true,
-})
-const DynamicFilter = dynamic(() => import('@components/Collection/CollectionPreview/PreviewFilter'), {
-  ssr: true,
-})
+import { useRepositoryRoute } from '../../../../hooks/utils/useRepositoryRoute'
 
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const [hasMounted, setHasMounted] = useState(false)
-  const { currentLayer, isLoading } = useCurrentLayer()
+  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
+  const { current: collection, isLoading: isLoadingCollection } = useQueryRepositoryCollection()
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  const { data: collection } = useQueryCollection()
-  const { data: layers } = useQueryRepositoryLayer()
-  const { setTokens, setTraitMapping, rarityFilter, setTokenRanking } = useRepositoryStore((state) => {
-    return {
-      rarityFilter: state.rarityFilter,
-      setTokens: state.setTokens,
-      setTokenRanking: state.setTokenRanking,
-      setTraitMapping: state.setTraitMapping,
-    }
-  })
 
   useEffect(() => {
     setHasMounted(true)
   }, [])
-
-  // useEffect(() => {
-  //   if (!collection || !layers) return
-  //   const tokens = useCreateManyTokens(collection.totalSupply)
-  //   const { tokenIdMap, traitMap } = getTraitMappings(tokens)
-  //   setTraitMapping({
-  //     tokenIdMap,
-  //     traitMap,
-  //   })
-  //   const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
-  //   setTokenRanking(rankings)
-  //   setTokens(
-  //     rankings.slice(
-  //       rarityFilter === 'Top 10'
-  //         ? 0
-  //         : rarityFilter === 'Middle 10'
-  //         ? parseInt((rankings.length / 2 - 5).toFixed(0))
-  //         : rarityFilter === 'Bottom 10'
-  //         ? rankings.length - 10
-  //         : 0,
-  //       rarityFilter === 'Top 10'
-  //         ? 10
-  //         : rarityFilter === 'Middle 10'
-  //         ? parseInt((rankings.length / 2 + 5).toFixed(0))
-  //         : rarityFilter === 'Bottom 10'
-  //         ? rankings.length
-  //         : rankings.length
-  //     )
-  //   )
-  // }, [collection?.generations])
 
   return hasMounted ? (
     <Layout>
@@ -92,20 +40,20 @@ const Page = () => {
           internalNavigation={[
             {
               name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
+              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Preview}`,
               enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${currentLayer.name}`,
+              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
               enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading || isRoutesLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${currentLayer.name}`,
+              loading: mainRepositoryHref === null || isLoadingLayers || isLoadingCollection || isRoutesLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}/${layer?.name}`,
               enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
             },
           ]}
@@ -113,10 +61,14 @@ const Page = () => {
         {currentViewSection !== CollectionNavigationEnum.enum.Preview ? (
           <>
             <Layout.Title>
-              <SectionHeader
-                title={CollectionTitleContent[currentViewSection].title}
-                description={CollectionTitleContent[currentViewSection].description}
-              />
+              <main className='pointer-events-auto -ml-2'>
+                <div className='flex justify-between items-center h-[10rem] space-y-2'>
+                  <div className='flex flex-col space-y-1'>
+                    <span className='text-3xl font-semibold'>{CollectionTitleContent[currentViewSection].title}</span>
+                    <span className='text-sm text-darkGrey'>{CollectionTitleContent[currentViewSection].description}</span>
+                  </div>
+                </div>
+              </main>
             </Layout.Title>
           </>
         ) : (
@@ -124,11 +76,11 @@ const Page = () => {
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Rules ? (
           <Layout.Body border='lower'>
-            {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleSelectorContainer />}
+            {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RepositoryRuleCreateView />}
             {layers &&
             layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length &&
             currentViewSection === CollectionNavigationEnum.enum.Rules ? (
-              <RuleDisplayContainer />
+              <RepositoryRuleDisplayView />
             ) : null}
           </Layout.Body>
         ) : (
@@ -143,16 +95,18 @@ const Page = () => {
                 {currentViewSection === CollectionNavigationEnum.enum.Preview && (
                   <div>
                     <div className='relative flex flex-col space-y-3 justify-between'>
-                      <DynamicBranchSelector />
-                      <DynamicRegenerateButton />
-                      <DynamicFilter />
+                      <CollectionBranchSelectorCard />
+                      <CollectionGenerateCard />
+                      <CollectionPreviewFilters />
                     </div>
                   </div>
                 )}
               </div>
               <div className='col-span-8'>
-                {currentViewSection === CollectionNavigationEnum.enum.Rarity && <DynamicCollectionLayers />}
-                {currentViewSection === CollectionNavigationEnum.enum.Preview && <DynamicCollectionPreview />}
+                <main className='space-y-6 py-8 pl-8'>
+                  {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RepositoryRarityView />}
+                  {currentViewSection === CollectionNavigationEnum.enum.Preview && <CollectionPreviewGrid />}
+                </main>
               </div>
             </div>
           </Layout.Body>

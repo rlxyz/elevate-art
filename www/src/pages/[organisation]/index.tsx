@@ -1,20 +1,23 @@
 import { Layout } from '@components/Layout/Layout'
-import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
-import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-
-const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'))
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
   const reset = useRepositoryStore((state) => state.reset)
+
+  const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
+  useEffect(() => {
+    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
+  }, [])
 
   useEffect(() => {
     reset()
@@ -37,7 +40,7 @@ const Page: NextPage = () => {
           ]}
         />
         <Layout.Body>
-          <div className='py-8 space-y-8'>{repositories && <DynamicViewOrganisation />}</div>
+          <div className='py-8 space-y-8'>{repositories && <ViewAllRepositories />}</div>
         </Layout.Body>
       </Layout>
     </>
