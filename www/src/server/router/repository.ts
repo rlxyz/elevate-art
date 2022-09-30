@@ -9,16 +9,6 @@ export const repositoryRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.repository.findFirst({
         where: { ...input },
-        include: {
-          layers: {
-            orderBy: { priority: 'asc' }, // guarantee layer order correctness
-            select: { id: true, name: true },
-          },
-          collections: {
-            select: { id: true, name: true },
-            orderBy: { createdAt: 'asc' }, // get most recent updated organisation first
-          },
-        },
       })
     },
   })

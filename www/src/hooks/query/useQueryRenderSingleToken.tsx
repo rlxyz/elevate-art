@@ -18,7 +18,7 @@ export const useQueryRenderSingleToken = ({
 }): { images: CloudinaryImage[] | null; hash: string | null } => {
   const { id: collectionId, generations } = collection
   const { cld } = useCloudinaryHelper()
-  const random = seedrandom(`${collectionId}.${generations}.${id}`)
+  const random = seedrandom(`${repositoryId}.${collection.name}.${generations}.${id}`)
   const elements: TraitElement[] = []
   layers.forEach(({ traitElements }: { traitElements: TraitElements }, index: number) => {
     // exclusion

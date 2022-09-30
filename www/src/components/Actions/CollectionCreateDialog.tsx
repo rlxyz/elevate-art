@@ -14,7 +14,7 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { mutate, isLoading } = useMutateCreateCollection({
+  const { mutate } = useMutateCreateCollection({
     onMutate: () => setIsOpen(false),
   })
 
@@ -96,7 +96,7 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
                         </div>
                         <div className='pt-6 flex justify-between'>
                           <div className='ml-[auto]'>
-                            <Button disabled={isLoading}>
+                            <Button>
                               <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                                 <span className='text-xs'>Confirm</span>
                               </span>

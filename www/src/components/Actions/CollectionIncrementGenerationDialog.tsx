@@ -47,7 +47,7 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
                   </div>
                   <div className='flex justify-between'>
                     <div className='ml-[auto]'>
-                      <Button onClick={() => mutate({ id: collectionId })}>
+                      <Button disabled={isLoading} onClick={() => mutate({ id: collectionId })}>
                         <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                           <span className='text-xs'>Confirm</span>
                         </span>

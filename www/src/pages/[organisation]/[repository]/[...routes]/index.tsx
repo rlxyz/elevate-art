@@ -7,6 +7,7 @@ import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector
 import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
 import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
 import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -24,17 +25,29 @@ const Page = () => {
   const [hasMounted, setHasMounted] = useState(false)
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
-  const { current: repository, isLoading: isRepositoryLoading } = useQueryRepository()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
+  const { current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  const { setCollectionId, setRepositoryId } = useRepositoryStore((state) => {
+  const { setCollectionId, setRepositoryId, setOrganisationId } = useRepositoryStore((state) => {
     return {
+      setOrganisationId: state.setOrganisationId,
       setRepositoryId: state.setRepositoryId,
       setCollectionId: state.setCollectionId,
     }
   })
   const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const { collectionName } = useRepositoryRoute()
-  const isLoading = isLoadingLayers && isLoadingCollection && isRepositoryLoading && isRoutesLoading
+  const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
+
+  useEffect(() => {
+    if (!organisation) return
+    setOrganisationId(organisation.id)
+  }, [isLoadingOrganisation])
+
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isLoadingRepository])
 
   useEffect(() => {
     if (!collections) return
@@ -44,11 +57,6 @@ const Page = () => {
     setCollectionId(collection.id)
     mutate({ collection })
   }, [isLoadingCollection])
-
-  useEffect(() => {
-    if (!repository) return
-    setRepositoryId(repository.id)
-  }, [isRepositoryLoading])
 
   useEffect(() => {
     setHasMounted(true)
