@@ -1,6 +1,32 @@
-import { CollectionViewContentWrapper } from '@components/Repository/CollectionHelpers/ViewContent'
-import Link from 'next/link'
+import { Link } from '@components/Layout/Link'
 import { NextRouter, useRouter } from 'next/router'
+
+export const SettingsNavigations = () => {
+  return (
+    <div>
+      {[
+        { name: 'General', selected: true },
+        { name: 'Integrations', selected: false },
+        { name: 'Git', selected: false },
+      ].map(({ name, selected }, index) => {
+        return (
+          <div
+            key={index}
+            className={`hover:bg-lightGray hober:bg-opacity-30 hover:text-black rounded-[5px] ${
+              selected ? 'text-black font-semibold' : 'text-darkGrey'
+            }`}
+          >
+            <div className='px-1 py-2'>
+              <Link href='#'>
+                <span className='text-sm'>{name}</span>
+              </Link>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 const CollectionSettingsContentItem = ({
   children,
@@ -48,24 +74,22 @@ const CollectionSettings = () => {
   const collectionName: string = router.query.collection as string
   const repositoryName: string = router.query.repository as string
   return (
-    <CollectionViewContentWrapper>
-      <CollectionSettingsContentItem
-        title='Collection Name'
-        description='Used to identify your collection on the repository dashboard'
-      >
-        <div className='w-full border border-mediumGrey rounded-[5px]'>
-          <div className='h-full grid grid-cols-10 text-sm'>
-            <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
-              <span className='px-4 py-2'>{`elevate.art/${organisationName}/${repositoryName}/`}</span>
-            </div>
-            <div className='col-span-6 flex items-center'>
-              <span className='px-4 py-2'>{collectionName}</span>
-            </div>
-            {/* <input className='col-span-6 p-2'>Test</input> */}
+    <CollectionSettingsContentItem
+      title='Collection Name'
+      description='Used to identify your collection on the repository dashboard'
+    >
+      <div className='w-full border border-mediumGrey rounded-[5px]'>
+        <div className='h-full grid grid-cols-10 text-sm'>
+          <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
+            <span className='px-4 py-2'>{`elevate.art/${organisationName}/${repositoryName}/`}</span>
           </div>
+          <div className='col-span-6 flex items-center'>
+            <span className='px-4 py-2'>{collectionName}</span>
+          </div>
+          {/* <input className='col-span-6 p-2'>Test</input> */}
         </div>
-      </CollectionSettingsContentItem>
-    </CollectionViewContentWrapper>
+      </div>
+    </CollectionSettingsContentItem>
   )
 }
 

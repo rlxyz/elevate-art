@@ -1,13 +1,14 @@
 import Button from '@components/Layout/Button'
 import { TrashIcon } from '@heroicons/react/outline'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
-import { ComboboxInput } from './ComboboxInput'
+import { ComboboxInput } from './RepositoryRuleCombobox'
 
-export const TraitRulesDisplayPerItem = ({
+const TraitRulesDisplayPerItem = ({
   id,
   primary,
   condition,
@@ -144,4 +145,15 @@ const RuleDisplayAll = ({
   )
 }
 
-export default RuleDisplayAll
+export const RepositoryRuleDisplayView = () => {
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  if (isLoading || !layers) return <></>
+  return (
+    <div className='w-full py-16'>
+      <div className='space-y-3 w-full flex flex-col justify-center'>
+        <span className='text-xs font-semibold uppercase'>All rules created</span>
+        <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />
+      </div>
+    </div>
+  )
+}

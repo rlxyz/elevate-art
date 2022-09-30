@@ -3,9 +3,10 @@ import CollectionGenerateCard from '@components/Collection/CollectionGenerateCar
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
 import { Layout } from '@components/Layout/Layout'
-import LayerFolderSelector from '@components/Repository/CollectionHelpers/LayerFolderSelector'
-import { RuleDisplayContainer, RuleSelectorContainer } from '@components/Repository/CollectionRules/Index'
+import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
+import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
+import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
@@ -75,11 +76,11 @@ const Page = () => {
         )}
         {currentViewSection === CollectionNavigationEnum.enum.Rules ? (
           <Layout.Body border='lower'>
-            {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RuleSelectorContainer />}
+            {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RepositoryRuleCreateView />}
             {layers &&
             layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length &&
             currentViewSection === CollectionNavigationEnum.enum.Rules ? (
-              <RuleDisplayContainer />
+              <RepositoryRuleDisplayView />
             ) : null}
           </Layout.Body>
         ) : (
@@ -102,8 +103,10 @@ const Page = () => {
                 )}
               </div>
               <div className='col-span-8'>
-                {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RepositoryRarityView />}
-                {currentViewSection === CollectionNavigationEnum.enum.Preview && <CollectionPreviewGrid />}
+                <main className='space-y-6 py-8 pl-8'>
+                  {currentViewSection === CollectionNavigationEnum.enum.Rarity && <RepositoryRarityView />}
+                  {currentViewSection === CollectionNavigationEnum.enum.Preview && <CollectionPreviewGrid />}
+                </main>
               </div>
             </div>
           </Layout.Body>

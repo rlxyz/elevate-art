@@ -1,16 +1,18 @@
-import { SmallAdvancedImage } from '@components/Repository/CollectionHelpers/AdvancedImage'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useMutateRepositoryRule } from '@hooks/mutations/useMutateRepositoryRule'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
+import Image from 'next/image'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum, RulesType } from 'src/types/enums'
-import { ComboboxInput } from './ComboboxInput'
+import { ComboboxInput } from './RepositoryRuleCombobox'
 
 const RuleSelector = ({
   layers,
@@ -269,6 +271,8 @@ export const RuleSelectorCombobox = ({
 }) => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryRepositoryLayer()
+  const { cld } = useCloudinaryHelper()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const filteredTraits =
     query === ''
       ? traitElements
@@ -303,7 +307,19 @@ export const RuleSelectorCombobox = ({
               {({ active, selected }) => (
                 <>
                   <div className='flex flex-row items-center space-x-3'>
-                    <SmallAdvancedImage url={`${traitElement.layerElementId}/${traitElement.id}`} />
+                    <div className='relative h-[35px] w-[35px]'>
+                      <div className='absolute w-full h-full border border-mediumGrey rounded-[5px]'>
+                        <Image
+                          src={cld
+                            .image(
+                              `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`
+                            )
+                            .toURL()}
+                          layout='fill'
+                          className='rounded-[3px]'
+                        />
+                      </div>
+                    </div>
                     <div className='flex flex-row space-x-2 items-center'>
                       <span className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}>
                         {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
@@ -331,4 +347,17 @@ export const RuleSelectorCombobox = ({
   )
 }
 
-export default RuleSelector
+export const RepositoryRuleCreateView = () => {
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  if (isLoading || !layers) return <></>
+  return (
+    <div className='w-full py-16'>
+      <div className='flex justify-center'>
+        <div className='space-y-1 w-full'>
+          <span className='text-xs font-semibold uppercase'>Create a condition</span>
+          <RuleSelector layers={layers} />
+        </div>
+      </div>
+    </div>
+  )
+}

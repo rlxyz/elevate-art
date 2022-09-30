@@ -7,7 +7,6 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { CollectionViewContent } from '../Repository/CollectionHelpers/ViewContent'
 
 const PreviewImage = ({ id }: { id: number }) => {
   const { images } = useQueryRenderSingleToken({ id })
@@ -237,12 +236,17 @@ export const InfiniteScrollGrid = () => {
 
 const Index = () => {
   return (
-    <CollectionViewContent
-      title='Generate your Collection'
-      description='Create different token sets before finalising the collection'
-    >
-      <InfiniteScrollGrid />
-    </CollectionViewContent>
+    <main className='space-y-6'>
+      <div className='flex flex-col'>
+        <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
+          <h1 className={clsx('text-2xl font-bold text-black')}>Generate your Collection</h1>
+          <p className={clsx('text-sm text-darkGrey')}>Create different token sets before finalising the collection</p>
+        </div>
+      </div>
+      <div>
+        <InfiniteScrollGrid />
+      </div>
+    </main>
   )
 }
 

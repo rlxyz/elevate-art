@@ -5,9 +5,8 @@ import clsx from 'clsx'
 import ordinal from 'ordinal'
 import { useState } from 'react'
 import { RepositoryCreateTrait } from '../Actions/RepositoryCreateTrait'
-import { CollectionViewContentWrapper } from './CollectionHelpers/ViewContent'
-import LayerGridView from './CollectionLayers/LayerGridView'
-import LayerRarityTable from './CollectionLayers/LayerRarityTable'
+import LayerGridView from './RepositoryRarityLayer'
+import LayerRarityTable from './RepositoryRarityTable'
 
 const Index = () => {
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
@@ -17,7 +16,7 @@ const Index = () => {
   if (!layer) return null
   const filteredTraitElements = layer.traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
-    <CollectionViewContentWrapper>
+    <>
       <div className='grid grid-cols-10'>
         <div className='col-span-8 flex flex-col'>
           <div className='col-span-6 font-plus-jakarta-sans'>
@@ -85,7 +84,7 @@ const Index = () => {
         </>
       )}
       {currentView === 'rarity' && <LayerRarityTable />}
-    </CollectionViewContentWrapper>
+    </>
   )
 }
 
