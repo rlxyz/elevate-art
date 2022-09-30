@@ -1,8 +1,8 @@
 import { AdvancedImage } from '@cloudinary/react'
 import { XIcon } from '@heroicons/react/outline'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryRepositoryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
 import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useCreateToken } from '@utils/compiler'
+import { useCreateToken } from '@hooks/useCreateToken'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
@@ -145,17 +145,16 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 
 export const InfiniteScrollGrid = () => {
   const { data: layers } = useQueryRepositoryLayer()
-  const { data: collection } = useQueryCollection()
+  const { current: collection } = useQueryRepositoryCollection()
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [hasHydrated, setHasHydrated] = useState(true)
-  const { tokens, traitFilters, rarityFilter, collectionId } = useRepositoryStore((state) => {
+  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
     return {
       tokens: state.tokens,
       traitFilters: state.traitFilters,
       rarityFilter: state.rarityFilter,
-      collectionId: state.collectionId,
     }
   })
 

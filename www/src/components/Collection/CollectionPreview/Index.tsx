@@ -1,4 +1,4 @@
-import { useTokens } from '@utils/compiler'
+import { useTokens } from '@hooks/useTokens'
 import { CollectionViewContent } from '../CollectionHelpers/ViewContent'
 import { InfiniteScrollGrid } from './InfiniteScrollGrid'
 

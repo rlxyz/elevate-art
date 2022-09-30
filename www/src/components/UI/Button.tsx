@@ -13,7 +13,7 @@ export type ButtonComponentType = 'button' | 'a' | JSXElementConstructor<any>
 export interface ButtonProps<C extends ButtonComponentType = 'button'> {
   href?: string
   className?: string
-  variant?: 'primary' | 'secondary' | 'success' | 'icon' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'success' | 'icon' | 'ghost' | 'link'
   size?: 'xs' | 'sm' | 'md' | 'lg'
   active?: boolean
   type?: 'submit' | 'reset' | 'button'
@@ -61,6 +61,8 @@ const Button: ButtonFC = (props) => {
     variant === 'primary' && 'bg-black justify-center',
     variant === 'icon' && 'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
     variant === 'ghost' && 'border border-mediumGrey bg-opacity-20 text-black',
+    variant === 'link' &&
+      'cursor-pointer flex flex-row w-full rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30',
     className
   )
 
