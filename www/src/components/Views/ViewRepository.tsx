@@ -1,4 +1,4 @@
-import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 import ViewAllCollections from '../Collection/CollectionHelpers/CollectionBranchSelector'

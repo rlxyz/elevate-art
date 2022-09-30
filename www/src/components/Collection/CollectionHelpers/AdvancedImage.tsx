@@ -1,4 +1,4 @@
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { createCloudinary } from '@utils/cloudinary'
 import Image from 'next/image'
 import { clientEnv } from 'src/env/schema.mjs'

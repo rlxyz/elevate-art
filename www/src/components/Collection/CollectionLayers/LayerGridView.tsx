@@ -1,5 +1,5 @@
-import { useNotification } from '@hooks/useNotification'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useNotification } from '@hooks/utils/useNotification'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { truncate } from '@utils/format'

@@ -1,8 +1,8 @@
 // src/pages/_app.tsx
 import { ErrorBoundary } from '@highlight-run/react'
-import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
-import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
+import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
+import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'

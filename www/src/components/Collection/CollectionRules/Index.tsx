@@ -1,4 +1,4 @@
-import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import RuleDisplayAll from './RuleDisplayAll'
 import RuleSelector from './RuleSelector'
 

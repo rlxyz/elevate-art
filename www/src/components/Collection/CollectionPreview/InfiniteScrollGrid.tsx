@@ -1,14 +1,15 @@
 import { AdvancedImage } from '@cloudinary/react'
 import { XIcon } from '@heroicons/react/outline'
-import { useQueryRepositoryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { useCreateToken } from '@hooks/useCreateToken'
+import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 
 const PreviewImage = ({ id }: { id: number }) => {
-  const { images } = useCreateToken({ id })
+  const { images } = useQueryRenderSingleToken({ id })
   if (!images) return null
   return (
     <>

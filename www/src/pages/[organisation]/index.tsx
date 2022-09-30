@@ -1,6 +1,6 @@
 import { Layout } from '@components/Layout/Layout'
-import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'

@@ -1,23 +1,11 @@
-import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
+import { Collection, TraitElement } from '@prisma/client'
 import seedrandom from 'seedrandom'
 
-type LayerElements = (LayerElement & { traitElements: TraitElements; name: string })[]
-type TraitElements = (TraitElement & {
-  rulesSecondary: (Rules & {
-    secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-    primaryTraitElement: TraitElement & { layerElement: LayerElement }
-  })[]
-  rulesPrimary: (Rules & {
-    secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-    primaryTraitElement: TraitElement & { layerElement: LayerElement }
-  })[]
-})[]
-
-export const runMany = (layers: LayerElements, collection: Collection) => {
-  return Array.from({ length: collection.totalSupply }, (_, i) => run(layers, collection, i))
+export const renderManyToken = (layers: LayerElements, collection: Collection) => {
+  return Array.from({ length: collection.totalSupply }, (_, i) => renderSingleToken(layers, collection, i))
 }
 
-const run = (layers: LayerElements, collection: Collection, id: number) => {
+const renderSingleToken = (layers: LayerElements, collection: Collection, id: number) => {
   const { id: collectionId, generations } = collection
   const random = seedrandom(`${collectionId}.${generations}.${id}`)
   const elements: TraitElement[] = []

@@ -1,5 +1,5 @@
 import Button from '@components/UI/Button'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import Image from 'next/image'
 
 import { Dialog, Transition } from '@headlessui/react'

@@ -1,13 +1,14 @@
 import { CloudinaryImage } from '@cloudinary/url-gen'
-import { useQueryRepositoryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import seedrandom from 'seedrandom'
 import { clientEnv } from 'src/env/schema.mjs'
-import { useCloudinaryHelper } from './useCloudinaryHelper'
+import { useCloudinaryHelper } from '../utils/useCloudinaryHelper'
 
-export const useCreateToken = ({ id }: { id: number }): { images: CloudinaryImage[] | null; hash: string | null } => {
+export const useQueryRenderSingleToken = ({ id }: { id: number }): { images: CloudinaryImage[] | null; hash: string | null } => {
   const { cld } = useCloudinaryHelper()
   const { data: layers } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()

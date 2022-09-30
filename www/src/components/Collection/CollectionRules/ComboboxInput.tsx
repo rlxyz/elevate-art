@@ -1,4 +1,4 @@
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import clsx from 'clsx'

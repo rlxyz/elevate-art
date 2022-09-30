@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { useQueryCollection } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import { useQueryCollection } from '@hooks/query/useQueryCollection'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { truncate } from '@utils/format'
 import { Field, Form, Formik } from 'formik'

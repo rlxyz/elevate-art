@@ -2,14 +2,15 @@ import LayerFolderSelector from '@components/Collection/CollectionHelpers/LayerF
 import { SectionHeader } from '@components/Collection/CollectionHelpers/SectionHeader'
 import { RuleDisplayContainer, RuleSelectorContainer } from '@components/Collection/CollectionRules/Index'
 import { Layout } from '@components/Layout/Layout'
-import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import { useCurrentLayer } from '@hooks/useCurrentLayer'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
+import { useQueryCollection } from '@hooks/query/useQueryCollection'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
-import { useRepositoryRoute } from '../../../../hooks/useRepositoryRoute'
+import { useRepositoryRoute } from '../../../../hooks/utils/useRepositoryRoute'
 
 const DynamicCollectionPreview = dynamic(() => import('@components/Collection/CollectionPreview/Index'), {
   ssr: true,

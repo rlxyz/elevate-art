@@ -58,8 +58,7 @@ export const createRepositoryStore = create<RepositoryStoreInterface>()(
       setTraitFilteredTokens: (tokens: number[]) => set((_) => ({ traitFilteredTokens: tokens })),
       setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
       setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
-      setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) =>
-        set((state) => ({ traitFilters: [...filters] })),
+      setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => set((_) => ({ traitFilters: [...filters] })),
       setTraitMapping: ({
         tokenIdMap,
         traitMap,

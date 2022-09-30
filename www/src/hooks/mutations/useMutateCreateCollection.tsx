@@ -1,4 +1,4 @@
-import { useNotification } from '@hooks/useNotification'
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'

@@ -1,5 +1,5 @@
 import { FolderUpload } from '@components/Collection/CollectionHelpers/FileUpload'
-import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { Repository } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'

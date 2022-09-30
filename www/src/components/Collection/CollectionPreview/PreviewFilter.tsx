@@ -1,5 +1,5 @@
-import { useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { FilterByRarity, FilterByTrait } from '../CollectionHelpers/CollectionFilters'
 
 const PreviewFilter = () => {

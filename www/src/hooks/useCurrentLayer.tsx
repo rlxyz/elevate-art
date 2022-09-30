@@ -1,5 +1,5 @@
-import useCollectionNavigationStore from '@hooks/useCollectionNavigationStore'
-import { useQueryRepositoryLayer } from './useRepositoryFeatures'
+import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
+import { useQueryRepositoryLayer } from './query/useQueryRepositoryLayer'
 
 export const useCurrentLayer = () => {
   const currentLayerPriority: string | null = useCollectionNavigationStore((state) => state.currentLayerPriority)

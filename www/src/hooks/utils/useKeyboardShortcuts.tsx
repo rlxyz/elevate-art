@@ -1,7 +1,7 @@
 import { useHotkeys } from 'react-hotkeys-hook'
 import { CollectionNavigationEnum } from 'src/types/enums'
-import useCollectionNavigationStore from './useCollectionNavigationStore'
-import { useQueryRepositoryLayer } from './useRepositoryFeatures'
+import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
+import useCollectionNavigationStore from '../store/useCollectionNavigationStore'
 
 export const useKeybordShortcuts = () => {
   const { data: layers } = useQueryRepositoryLayer()

@@ -1,7 +1,7 @@
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useNotification } from '../useNotification'
-import { useQueryRepositoryLayer } from '../useRepositoryFeatures'
+import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 
 export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()

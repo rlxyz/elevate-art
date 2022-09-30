@@ -2,7 +2,7 @@
 import Button from '@components/UI/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { XCircleIcon } from '@heroicons/react/outline'
-import useRepositoryStore from '@hooks/useRepositoryStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'

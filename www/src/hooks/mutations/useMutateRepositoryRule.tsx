@@ -1,6 +1,6 @@
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useNotification } from '../useNotification'
 
 export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) => {
   const ctx = trpc.useContext()

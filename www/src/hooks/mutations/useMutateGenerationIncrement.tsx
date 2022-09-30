@@ -1,7 +1,8 @@
-import { useNotification } from '@hooks/useNotification'
-import { useQueryCollection, useQueryRepositoryLayer } from '@hooks/useRepositoryFeatures'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { getTokenRanking, getTraitMappings, runMany } from '@utils/compiler'
+import { useQueryCollection } from '@hooks/query/useQueryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useNotification } from '@hooks/utils/useNotification'
+import { getTokenRanking, getTraitMappings, renderManyToken } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 
 export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
@@ -24,7 +25,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
         ...backup,
         generation: backup.generations + 1,
       })
-      const tokens = runMany(layers, collection)
+      const tokens = renderManyToken(layers, collection)
       const { tokenIdMap, traitMap } = getTraitMappings(tokens)
       setTraitMapping({
         tokenIdMap,
