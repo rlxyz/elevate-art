@@ -113,11 +113,6 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   })
 
   if (!layers || !items) return null
-  // console.log(
-  //   layers.map((x) => {
-  //     return { priority: x.priority, id: x.name }
-  //   })
-  // )
 
   return (
     <aside className='space-y-1'>

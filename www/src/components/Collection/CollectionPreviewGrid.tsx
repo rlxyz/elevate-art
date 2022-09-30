@@ -2,13 +2,25 @@ import { AdvancedImage } from '@cloudinary/react'
 import { XIcon } from '@heroicons/react/outline'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { Collection } from '@prisma/client'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 
-const PreviewImage = ({ id }: { id: number }) => {
-  const { images } = useQueryRenderSingleToken({ id })
+const PreviewImage = ({
+  id,
+  collection,
+  layers,
+  repositoryId,
+}: {
+  id: number
+  collection: Collection
+  repositoryId: string
+  layers: LayerElements
+}) => {
+  const { images } = useQueryRenderSingleToken({ id, collection, layers, repositoryId })
   if (!images) return null
   return (
     <>
@@ -29,18 +41,25 @@ const PreviewImage = ({ id }: { id: number }) => {
 
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const tokenRanking = useRepositoryStore((state) => state.tokenRanking)
-
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const { current: collection } = useQueryRepositoryCollection()
+  const { tokens, repositoryId } = useRepositoryStore((state) => {
+    return {
+      tokens: state.tokens,
+      repositoryId: state.repositoryId,
+    }
+  })
+  if (!collection || !layers || isLoading) return null
   return (
     <div className='grid grid-cols-5 gap-6 overflow-hidden'>
-      {tokenRanking.slice(0, length).map((item, index) => {
+      {tokens.slice(0, length).map((item, index) => {
         return (
           <div key={`${item}-${index}`} className='col-span-1'>
             <div
               className='relative flex flex-col items-center justify-center cursor-pointer w-full h-full'
               onClick={() => setSelectedToken(item || null)}
             >
-              <PreviewImage id={item} />
+              <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
             </div>
             <span className={'flex text-xs items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'}>
               {`#${item || 0}`}
@@ -149,8 +168,9 @@ export const InfiniteScrollGrid = () => {
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
+  const { tokens, tokenRanking, traitFilters, rarityFilter } = useRepositoryStore((state) => {
     return {
+      tokenRanking: state.tokenRanking,
       tokens: state.tokens,
       traitFilters: state.traitFilters,
       rarityFilter: state.rarityFilter,
@@ -184,39 +204,42 @@ export const InfiniteScrollGrid = () => {
 
   return (
     <>
-      <div className='pb-2 space-x-2 flex items-baseline'>
-        <span className='text-xs text-darkGrey'>{collection?.generations} generations</span>
-        <div className='slace-x-3'>
-          {rarityFilter !== 'All' ? (
-            <span className='text-xs text-darkGrey'>
-              {`${tokens.length} results `}
-              {traitFilters.length > 0 ? (
-                <span>
-                  for
-                  <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
-                </span>
-              ) : (
-                ''
-              )}
-            </span>
-          ) : (
-            <span className='text-xs text-black'>{`${5000} results`}</span>
-          )}
-          {traitFilters.map(({ layer, trait }, index) => (
-            <span
-              key={index}
-              className='inline-flex items-center rounded-full bg-lightGray border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium'
-            >
-              {trait.name}
-              <button
-                type='button'
-                className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none'
-                onClick={() => console.log('todo remove filter')}
+      <span className='text-xs text-darkGrey'>{`${collection?.generations} generations`}</span>
+      <div className='min-h-6 space-x-2 flex items-center max-w-full'>
+        <div className='space-x-3 flex items-center'>
+          <div className='whitespace-nowrap text-ellipsis'>
+            {rarityFilter !== 'All' ? (
+              <span className='text-xs text-black'>
+                {`${tokens.length} results `}
+                {traitFilters.length > 0 ? (
+                  <span>
+                    for
+                    <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
+                  </span>
+                ) : (
+                  ''
+                )}
+              </span>
+            ) : (
+              <span className='text-xs text-black'>{`${tokens.length} results`}</span>
+            )}
+          </div>
+          <div className='space-x-2 ml-2 space-y-1 max-w-full'>
+            {traitFilters.map(({ layer, trait }, index) => (
+              <span
+                key={index}
+                className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium text-black'
               >
-                <XIcon className='w-3 h-3 text-darkGrey' />
-              </button>
-            </span>
-          ))}
+                {trait.name}
+                <button
+                  type='button'
+                  className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400'
+                >
+                  <XIcon className='w-3 h-3 text-darkGrey' />
+                </button>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
       <InfiniteScrollComponent.default
@@ -235,7 +258,7 @@ export const InfiniteScrollGrid = () => {
 
 const Index = () => {
   return (
-    <main className='space-y-6'>
+    <main className='space-y-3'>
       <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
           <h1 className={clsx('text-2xl font-bold text-black')}>Generate your Collection</h1>
