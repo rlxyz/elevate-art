@@ -5,7 +5,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { truncate } from '@utils/format'
 import { Field, Form, Formik } from 'formik'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
@@ -187,10 +187,11 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
 }
 
 export const FilterByRarity = () => {
-  const { tokenRanking, traitFilteredTokens, setRarityFilter, setTokens } = useRepositoryStore((state) => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, setTokens } = useRepositoryStore((state) => {
     return {
       traitFilteredTokens: state.traitFilteredTokens,
       setRarityFilter: state.setRarityFilter,
+      rarityFilter: state.rarityFilter,
       tokenRanking: state.tokenRanking,
       setTokens: state.setTokens,
     }
@@ -203,13 +204,9 @@ export const FilterByRarity = () => {
     { value: 'Bottom 10' },
   ]
 
-  useEffect(() => {
-    setRarityFilter('All')
-  }, [])
-
   return (
     <Formik
-      initialValues={{ checked: 'All' }}
+      initialValues={{ checked: rarityFilter ? rarityFilter : 'All' }}
       onSubmit={async ({ checked }: { checked: string }) => {
         const filter = filters.filter((val) => val.value === checked)[0]
         if (!filter) return
