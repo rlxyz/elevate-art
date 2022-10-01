@@ -60,6 +60,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
   const user = session?.user ?? null
   if (!user) return { redirect: { destination: `/`, permanent: true } }
+  const admin = await prisma?.organisationAdmin.findFirst({
+    where: { organisation: { name: organisationName }, user: { id: user.id } },
+  })
+  if (!admin) return { redirect: { destination: `/`, permanent: true } }
   return {
     props: {
       session,

@@ -1,5 +1,5 @@
 import { Popover, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
+import { CheckIcon, PlusCircleIcon, SelectorIcon } from '@heroicons/react/outline'
 import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment, ReactNode } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
+import Button from './Button'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
 
@@ -114,7 +115,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   >
                     <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-                        <div className='p-2 relative bg-white space-y-2 divide-y divide-mediumGrey'>
+                        <div className='p-2 relative bg-white space-y-3 divide-y divide-mediumGrey'>
                           <div className='space-y-1'>
                             <span className='text-xs text-darkGrey'>Personal</span>
                             <div>
@@ -133,22 +134,34 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                 ))}
                             </div>
                           </div>
-                          <div className='pt-3 space-y-1'>
-                            <span className='text-xs text-darkGrey'>Team</span>
-                            <div>
-                              {organisations
-                                .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
-                                .map(({ name }) => (
-                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
-                                    <div className='px-2 flex flex-row justify-between items-center w-full'>
-                                      <div className='flex space-x-2 items-center'>
-                                        <div className='rounded-full h-5 w-5 bg-blueHighlight' />
-                                        <span>{name}</span>
+                          {organisations.filter((x) => x.type === OrganisationDatabaseEnum.enum.Team).length > 0 ? (
+                            <div className='pt-3 space-y-1'>
+                              <span className='text-xs text-darkGrey'>Team</span>
+                              <div>
+                                {organisations
+                                  .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
+                                  .map(({ name }) => (
+                                    <Link hover enabled={name === current} key={name} href={`/${name}`}>
+                                      <div className='px-2 flex flex-row justify-between items-center w-full'>
+                                        <div className='flex space-x-2 items-center'>
+                                          <div className='rounded-full h-5 w-5 bg-blueHighlight' />
+                                          <span>{name}</span>
+                                        </div>
+                                        {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
                                       </div>
-                                      {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
-                                    </div>
-                                  </Link>
-                                ))}
+                                    </Link>
+                                  ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                          <div className='pt-3'>
+                            <div className='py-1 border border-mediumGrey rounded-[5px] bg-lightGray flex space-x-2 items-center'>
+                              <Button variant='ghost' className='space-x-2'>
+                                <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
+                                <span className='text-black'>Create Team</span>
+                              </Button>
                             </div>
                           </div>
                         </div>
