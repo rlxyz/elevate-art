@@ -1,14 +1,18 @@
 import { z } from 'zod'
 import { createRouter } from '../context'
 
-export const organisationRouter = createRouter().query('getOrganisationByName', {
+export const organisationRouter = createRouter().query('getManyOrganisationByUserId', {
   input: z.object({
-    name: z.string(),
+    id: z.string(),
   }),
   async resolve({ ctx, input }) {
-    return await ctx.prisma.organisation.findFirst({
+    return await ctx.prisma.organisation.findMany({
       where: {
-        ...input,
+        admins: {
+          some: {
+            userId: input.id,
+          },
+        },
       },
     })
   },

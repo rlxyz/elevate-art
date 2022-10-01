@@ -1,5 +1,6 @@
 import { Layout } from '@components/Layout/Layout'
 import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { trpc } from '@utils/trpc'
@@ -7,14 +8,15 @@ import type { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
   const reset = useRepositoryStore((state) => state.reset)
-
+  const { all: organisations, isLoading } = useQueryOrganisation()
+  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
@@ -24,7 +26,6 @@ const Page: NextPage = () => {
     reset()
   }, [])
 
-  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   return (
     <>
       <Layout>
@@ -34,7 +35,7 @@ const Page: NextPage = () => {
             {
               current: organisationName,
               href: `/${organisationName}`,
-              options: [{ name: organisationName, type: OrganisationDatabaseEnum.enum.Personal }],
+              organisations,
             },
           ]}
           internalNavigation={[

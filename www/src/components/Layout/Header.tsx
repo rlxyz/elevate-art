@@ -1,11 +1,12 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
+import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment, ReactNode } from 'react'
-import { OrganisationDatabaseEnum, OrganisationDatabaseType } from 'src/types/enums'
+import { OrganisationDatabaseEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
 
@@ -82,22 +83,22 @@ type HeaderInternalAppRoutesProps = {
   routes: {
     current: string
     href: string
-    options?: { name: string; type: OrganisationDatabaseType }[]
+    organisations?: Organisation[]
   }[]
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   if (!routes.length) return <></>
   return (
     <>
-      {routes.map(({ current, href, options }, index) => {
+      {routes.map(({ current, href, organisations }, index) => {
         return (
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
             <div className='space-x-1 flex'>
               <Link href={href} enabled={false} external>
-                <div className={clsx(options ? 'text-black' : 'text-darkGrey')}>{current}</div>
+                <div className={clsx(organisations ? 'text-black' : 'text-darkGrey')}>{current}</div>
               </Link>
-              {options ? (
+              {organisations ? (
                 <Popover className='relative'>
                   <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
                     <SelectorIcon className='text-black w-4 h-4' />
@@ -114,10 +115,10 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                     <Popover.Panel className='absolute z-10 w-screen max-w-xs -translate-x-1/2 transform'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
                         <div className='p-2 relative bg-white space-y-2 divide-y divide-mediumGrey'>
-                          <div className='space-y-2'>
+                          <div className='space-y-1'>
                             <span className='text-xs text-darkGrey'>Personal</span>
                             <div>
-                              {options
+                              {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
                                 .map(({ name }) => (
                                   <Link hover enabled={name === current} key={name} href={name}>
@@ -126,7 +127,25 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                         <div className='rounded-full h-4 w-4 bg-blueHighlight' />
                                         <span>{name}</span>
                                       </div>
-                                      <CheckIcon className='text-blueHighlight h-4 w-4' />
+                                      {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
+                                    </div>
+                                  </Link>
+                                ))}
+                            </div>
+                          </div>
+                          <div className='pt-3 space-y-1'>
+                            <span className='text-xs text-darkGrey'>Personal</span>
+                            <div>
+                              {organisations
+                                .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
+                                .map(({ name }) => (
+                                  <Link hover enabled={name === current} key={name} href={name}>
+                                    <div className='px-2 flex flex-row justify-between items-center w-full'>
+                                      <div className='flex space-x-2'>
+                                        <div className='rounded-full h-4 w-4 bg-blueHighlight' />
+                                        <span>{name}</span>
+                                      </div>
+                                      {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
                                     </div>
                                   </Link>
                                 ))}
@@ -177,7 +196,7 @@ export interface HeaderProps {
   internalRoutes?: {
     current: string
     href: string
-    options?: { name: string; type: OrganisationDatabaseType }[]
+    organisations?: Organisation[]
   }[]
   connectButton?: boolean
   internalNavigation?: { name: string; enabled: boolean; href: string; loading: boolean }[]

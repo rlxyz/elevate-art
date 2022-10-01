@@ -27,7 +27,7 @@ const ViewAllRepositories = () => {
           <input
             placeholder='Search Projects'
             onChange={(e) => setQuery(e.target.value)}
-            className='border h-full w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
+            className='border h-full text-xs w-full border-mediumGrey rounded-[5px] flex items-center pl-4 text-darkGrey'
           />
         </div>
         <div className='col-span-1 h-full w-full'>

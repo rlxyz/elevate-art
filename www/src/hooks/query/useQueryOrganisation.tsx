@@ -1,9 +1,11 @@
 import { trpc } from '@utils/trpc'
-import { NextRouter, useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 export const useQueryOrganisation = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const { data, isLoading, isError } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
-  return { current: data, isLoading, isError }
+  const { data: session } = useSession()
+  const { data, isLoading, isError } = trpc.useQuery([
+    'organisation.getManyOrganisationByUserId',
+    { id: session?.user?.id || '' },
+  ])
+  return { all: data, isLoading, isError }
 }
