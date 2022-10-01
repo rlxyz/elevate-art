@@ -53,12 +53,11 @@ const Index = () => {
         <Listbox.Button
           ref={buttonRef}
           onClick={() => setOpenState(true)}
-          // variant='ghost'
-          className='relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 border border-mediumGrey bg-opacity-20 text-black'
+          className='w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 border border-mediumGrey bg-opacity-20 text-black'
         >
           <div className='flex justify-between w-full items-center'>
-            <div className='flex space-x-2'>
-              <img src='/images/branch.svg' className='w-4 h-4' />
+            <div className='flex space-x-2 items-center justify-start'>
+              <div className='rounded-full h-4 w-4 bg-blueHighlight' />
               <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
             </div>
             <div>
@@ -77,7 +76,7 @@ const Index = () => {
             leaveFrom='opacity-100 translate-y-0'
             leaveTo='opacity-0 translate-y-1'
           >
-            <Listbox.Options className='absolute z-10 w-56 py-6'>
+            <Listbox.Options className='absolute z-10 w-56 py-2'>
               <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5 max-h-[20rem] overflow-y-scroll no-scrollbar'>
                 <div className='relative bg-white'>
                   <div className='p-2 divide-y divide-mediumGrey space-y-2'>
@@ -113,7 +112,9 @@ const Index = () => {
                                       {'master'}
                                     </span>
                                   )}
-                                  {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-black' />}
+                                  {collection.name === selectedCollection?.name && (
+                                    <CheckIcon className='w-4 h-4 text-blueHighlight' />
+                                  )}
                                 </div>
                               </div>
                             </Button>

@@ -1,5 +1,5 @@
 import CollectionBranchSelectorCard from '@components/Collection/CollectionBranchSelectorCard'
-import CollectionGenerateCard from '@components/Collection/CollectionGenerateCard'
+import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
 import { Layout } from '@components/Layout/Layout'
@@ -128,8 +128,15 @@ const Page = () => {
                 {currentViewSection === CollectionNavigationEnum.enum.Preview && (
                   <div>
                     <div className='relative flex flex-col space-y-3 justify-between'>
-                      <CollectionBranchSelectorCard />
-                      <CollectionGenerateCard />
+                      <div className='grid grid-cols-8 gap-x-2 w-full h-full'>
+                        <div className='col-span-6'>
+                          <CollectionBranchSelectorCard />
+                        </div>
+                        <div className='col-span-2'>
+                          <GenerateButton />
+                        </div>
+                      </div>
+                      {/* <CollectionGenerateCard /> */}
                       <CollectionPreviewFilters />
                     </div>
                   </div>
