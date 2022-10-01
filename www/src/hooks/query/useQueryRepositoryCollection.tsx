@@ -23,7 +23,7 @@ export const useQueryRepositoryCollection = () => {
   // update the current tokens
   const mutate = ({ collection }: { collection: Collection }) => {
     if (!layers) return
-    const tokens = renderManyToken(layers, collection)
+    const tokens = renderManyToken(layers, collection, repositoryId)
     const { tokenIdMap, traitMap } = getTraitMappings(tokens)
     setTraitMapping({
       tokenIdMap,

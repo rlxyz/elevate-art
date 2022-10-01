@@ -8,7 +8,6 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
-import { motion } from 'framer-motion'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 
@@ -17,31 +16,14 @@ const PreviewImage = ({
   collection,
   layers,
   repositoryId,
-  hover = false,
 }: {
-  hover?: boolean
   id: number
   collection: Collection
   repositoryId: string
   layers: LayerElements
 }) => {
-  const { images } = useQueryRenderSingleToken({ id, collection, layers, repositoryId })
+  const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
   if (!images) return null
-
-  if (hover)
-    return (
-      <motion.div
-        whileHover={{
-          scale: 1.025,
-          transition: { duration: 0.75 },
-        }}
-      >
-        {images.map((image) => {
-          return <AdvancedImage key={image.toURL()} priority className={clsx('absolute rounded-t-[5px]')} cldImg={image} />
-        })}
-      </motion.div>
-    )
-
   return (
     <>
       {images.map((image) => {
@@ -72,7 +54,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
               className='border rounded-[5px] border-mediumGrey relative cursor-pointer shadow-sm'
               onClick={() => setSelectedToken(item || null)}
             >
-              <PreviewImage hover id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
+              <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
               <div className='pb-[100%]' />
               <div className={'pl-2 flex flex-col items-center space-y-1 w-full py-2'}>
                 <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>

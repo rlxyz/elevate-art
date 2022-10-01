@@ -1,13 +1,28 @@
 import { Collection, TraitElement } from '@prisma/client'
 import seedrandom from 'seedrandom'
 
-export const renderManyToken = (layers: LayerElements, collection: Collection) => {
-  return Array.from({ length: collection.totalSupply }, (_, i) => renderSingleToken(layers, collection, i))
+export const createSeed = ({
+  repositoryId,
+  collectionName,
+  collectionGenerations,
+  tokenId,
+}: {
+  repositoryId: string
+  collectionName: string
+  collectionGenerations: number
+  tokenId: number
+}) => {
+  return `${repositoryId}.${collectionName}.${collectionGenerations}.${tokenId}`
 }
 
-const renderSingleToken = (layers: LayerElements, collection: Collection, id: number) => {
-  const { id: collectionId, generations } = collection
-  const random = seedrandom(`${collectionId}.${generations}.${id}`)
+export const renderManyToken = (layers: LayerElements, collection: Collection, repositoryId: string) => {
+  return Array.from({ length: collection.totalSupply }, (_, i) => renderSingleToken(layers, collection, i, repositoryId))
+}
+
+const renderSingleToken = (layers: LayerElements, collection: Collection, id: number, repositoryId: string) => {
+  const random = seedrandom(
+    createSeed({ repositoryId, collectionName: collection.name, collectionGenerations: collection.generations, tokenId: id })
+  )
   const elements: TraitElement[] = []
   layers.forEach(({ traitElements }: { traitElements: TraitElements; name: string }, index: number) => {
     // exclusion
