@@ -72,7 +72,7 @@ const LayoutBody = ({
       <div className='h-full'>
         {childrens.map((child, index) => {
           return (
-            <LayoutContainer border={index === childrens.length - 1 ? 'none' : border} key={index}>
+            <LayoutContainer border={border} key={index}>
               <div className='-ml-2 h-full space-y-8'>{child}</div>
             </LayoutContainer>
           )

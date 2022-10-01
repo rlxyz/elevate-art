@@ -2,127 +2,94 @@ import Button from '@components/Layout/Button'
 import Loading from '@components/Layout/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import { useQueryRepository } from '@hooks/query/useQueryRepository'
+import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useNotification } from '@hooks/utils/useNotification'
-import { Organisation, Repository, TraitElement } from '@prisma/client'
 import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
-import { clientEnv } from 'src/env/schema.mjs'
+import {
+  getRepositoryLayerNames,
+  getRepositoryLayerObjectUrls,
+  uploadCollectionLayerImageCloudinary,
+  validateFiles,
+} from '../../utils/cloudinary'
 
-const MAX_BYTES_ALLOWED = 9990000
+const useMutateAddTraits = ({
+  setUploadedFiles,
+}: {
+  setUploadedFiles: Dispatch<
+    SetStateAction<{
+      [key: string]: {
+        name: string
+        imageUrl: string
+        path: string
+        size: number
+        uploaded: boolean
+      }[]
+    }>
+  >
+}) => {
+  const { current: collection } = useQueryRepositoryCollection()
+  const { mutate: createManyTrait } = trpc.useMutation('layer.createManyTrait')
 
-const validateFiles = (files: FileWithPath[]): boolean => {
-  return files.filter((file) => file.path?.split('/').length !== 4 || file.size > MAX_BYTES_ALLOWED).length === 0
-}
-
-const getRepositoryLayerObjectUrls = (
-  files: FileWithPath[]
-): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
-  return files.reduce((acc: any, file: FileWithPath) => {
-    const pathArray = file.path?.split('/') || []
-    const layerName: string = pathArray[2] || ''
-    const traitName: string = pathArray[3]?.replace('.png', '') || ''
-    acc[layerName] = [
-      ...(acc[layerName] || []),
-      {
-        name: traitName,
-        imageUrl: URL.createObjectURL(file),
-        path: file.path,
-        size: file.size,
-        uploaded: false,
-      },
-    ]
-    return acc
-  }, {})
-}
-
-const getRepositoryLayerNames = (fileObject: {
-  [key: string]: { name: string }[]
-}): { layerName: string; traitNames: string[] }[] => {
-  return Object.entries(fileObject).map(([key, values]) => ({ layerName: key, traitNames: values.map((x) => x.name) }))
-}
-
-const createCloudinaryFormData = (file: any, trait: TraitElement, repositoryId: string) => {
-  const { id, name, layerElementId } = trait
-  const data = new FormData()
-  data.append('file', file)
-  data.append('public_id', id)
-  data.append('original_filename', name)
-  data.append('upload_preset', 'collection-upload')
-  data.append('cloud_name', 'rlxyz')
-  data.append('folder', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`)
-  return data
-}
-
-export const FolderUpload = ({ organisation }: { organisation: Organisation }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<{
-    [key: string]: {
-      name: string
-      imageUrl: string
-      path: string
-      size: number
-      uploaded: boolean
-    }[]
-  }>({})
-  const router = useRouter()
-  const { mutate: createRepository } = trpc.useMutation('repository.create')
-  const { mutate: createLayers } = trpc.useMutation('layer.createMany')
-  const { mutate: deleteRepository } = trpc.useMutation('repository.delete', {
-    onSuccess: () => {
-      router.push(`/${organisation.name}`)
-    },
-  })
-  const { notifyError } = useNotification()
-  const uploadCollectionLayerImageCloudinary = ({
-    repositoryId,
-    layerName,
-    trait,
-    file,
-  }: {
-    repositoryId: string
-    layerName: string
-    file: any
-    trait: TraitElement
-  }) => {
-    return new Promise((resolve, reject) => {
-      const data = createCloudinaryFormData(file, trait, repositoryId)
-      fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
-        method: 'post',
-        body: data,
-      })
-        .then(async (response) => {
-          resolve(response)
-        })
-        .catch((err) => {
-          reject(err)
-        })
-    })
-  }
-  const [repository, setRepository] = useState<Repository>()
-
-  const onDrop = useCallback(async (files: FileWithPath[]) => {
+  const mutate = ({ files }: { files: FileWithPath[] }) => {
     // step 1: validate files
-    if (!validateFiles(files)) {
+    if (!validateFiles(files, 1)) {
       alert("Something wrong with the format you've uploaded")
       return
     }
 
-    // step 2: get repository name
+    // step 4: set repository data
+    const layers = getRepositoryLayerObjectUrls(files)
+    setUploadedFiles(layers)
+  }
+  return { mutate }
+}
+
+const useMutateCreateNewRepositoryAndLayers = ({
+  setUploadedFiles,
+}: {
+  setUploadedFiles: Dispatch<
+    SetStateAction<{
+      [key: string]: {
+        name: string
+        imageUrl: string
+        path: string
+        size: number
+        uploaded: boolean
+      }[]
+    }>
+  >
+}) => {
+  const ctx = trpc.useContext()
+  const { mutate: createRepository } = trpc.useMutation('repository.create')
+  const { mutate: createLayers } = trpc.useMutation('layer.createMany')
+  const { notifyError } = useNotification()
+  const mutate = ({ files, organisationId }: { files: FileWithPath[]; organisationId: string }) => {
+    // step 1: validate files
+    if (!validateFiles(files, 3)) {
+      alert("Something wrong with the format you've uploaded")
+      return
+    }
+
     const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
 
-    // step 3: create repository
     createRepository(
-      { organisationId: organisation.id, name: repositoryName },
+      { organisationId: organisationId, name: repositoryName },
       {
         onSuccess: (data) => {
+          // step 4: set the repository data
+          ctx.setQueryData(['repository.getRepositoryByName', { name: data.name }], data)
+
           // step 4: set repository data
           const layers = getRepositoryLayerObjectUrls(files)
           setUploadedFiles(layers)
-          setRepository(data)
 
           // step 7: create layers
           createLayers(
@@ -174,6 +141,51 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
         },
       }
     )
+  }
+
+  return { mutate }
+}
+
+// Depth
+// - if 1, then image images only
+// - if 2, then layer folder
+// - if 3, then a root folder with layer folder and then images
+export const FolderUpload = () => {
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    [key: string]: {
+      name: string
+      imageUrl: string
+      path: string
+      size: number
+      uploaded: boolean
+    }[]
+  }>({})
+  const router = useRouter()
+  const { current: organisation } = useQueryOrganisation()
+  const { current: repository } = useQueryRepository()
+  const { mutate: createNewRepositoryAndLayers } = useMutateCreateNewRepositoryAndLayers({
+    setUploadedFiles,
+  })
+  const { mutate: createNewTraits } = useMutateAddTraits({
+    setUploadedFiles,
+  })
+
+  const onDrop = useCallback(async (files: FileWithPath[]) => {
+    // step 0: validate organisation
+    if (!organisation) {
+      alert('We coudlnt find your team. Please refresh the page to try again.')
+      return
+    }
+
+    // step 1: find the folder depth length
+    const folderDepth = files[0]?.path?.split('/').length
+
+    switch (folderDepth) {
+      case 4:
+        createNewRepositoryAndLayers({ files, organisationId: organisation.id })
+      case 2:
+        createNewTraits({ files, organisationId: organisation.id })
+    }
   }, [])
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
@@ -187,128 +199,120 @@ export const FolderUpload = ({ organisation }: { organisation: Organisation }) =
 
   return (
     <div className='space-y-6 w-full'>
-      {Object.entries(uploadedFiles).length === 0 ? (
-        <div className='h-[20rem]' {...getRootProps()}>
-          <input {...getInputProps()} />
-          <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
-            {acceptedFiles.length > 0 ? (
-              <Loading />
-            ) : (
-              <>
-                <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
-                <span> to upload</span>
-                <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
-              </>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className='divide-y divide-mediumGrey space-y-3'>
-          <div className='flex flex-row justify-between items-end'>
-            <div className='flex flex-col space-y-2'>
-              <span className='text-2xl font-semibold'>All Layers & Traits</span>
-              <span className='text-xs'>Upload will start once all traits have been indexed</span>
+      {organisation ? (
+        <>
+          {Object.entries(uploadedFiles).length === 0 ? (
+            <div className='h-[20rem]' {...getRootProps()}>
+              <input {...getInputProps()} />
+              <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
+                {acceptedFiles.length > 0 ? (
+                  <Loading />
+                ) : (
+                  <>
+                    <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
+                    <span> to upload</span>
+                    <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
+                  </>
+                )}
+              </div>
             </div>
-            <div className='flex space-x-3'>
-              <Button
-                variant='secondary'
-                onClick={() => {
-                  if (repository) {
-                    deleteRepository({ repositoryId: repository.id })
-                  } else {
-                    router.push(`/${organisation.name}`)
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => router.push(`/${organisation.name}/${repository?.name}/preview`)} // todo: should go to collection creation page
-                disabled={Object.entries(uploadedFiles).some(([, value]) => value.some((x) => !x.uploaded))}
-              >
-                Continue
-              </Button>
-            </div>
-          </div>
-          <div className='space-y-6 py-3'>
-            {Object.entries(uploadedFiles).map((files) => {
-              return (
-                <Disclosure key={files[0]}>
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className={`border border-mediumGrey rounded-[5px] p-2 grid grid-cols-10 w-full`}>
-                        <div className='col-span-9 space-y-3 flex flex-col'>
-                          <div className='flex space-x-3'>
-                            <div className='flex items-center'>
-                              <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
-                                <Image src={'/images/not-found.svg'} width={15} height={15} />
+          ) : (
+            <div className='divide-y divide-mediumGrey space-y-3'>
+              <div className='flex flex-row justify-between items-end'>
+                <div className='flex flex-col space-y-2'>
+                  <span className='text-2xl font-semibold'>All Layers & Traits</span>
+                  <span className='text-xs'>Upload will start once all traits have been indexed</span>
+                </div>
+                <div className='flex space-x-3'>
+                  <Button
+                    onClick={() => router.push(`/${organisation.name}/${repository?.name}/preview`)} // todo: should go to collection creation page
+                    disabled={Object.entries(uploadedFiles).some(([, value]) => value.some((x) => !x.uploaded))}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+              <div className='space-y-6 py-3'>
+                {Object.entries(uploadedFiles).map((files) => {
+                  return (
+                    <Disclosure key={files[0]}>
+                      {({ open }) => (
+                        <>
+                          <Disclosure.Button className={`border border-mediumGrey rounded-[5px] p-2 grid grid-cols-10 w-full`}>
+                            <div className='col-span-9 space-y-3 flex flex-col'>
+                              <div className='flex space-x-3'>
+                                <div className='flex items-center'>
+                                  <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
+                                    <Image src={'/images/not-found.svg'} width={15} height={15} />
+                                  </div>
+                                </div>
+                                <div className='w-full items-start flex flex-col space-y-1'>
+                                  <span className='text-sm font-semibold'>{files[0]}</span>
+                                  <span className='text-xs text-darkGrey'>
+                                    {formatBytes(files[1].reduce((a, b) => a + b.size, 0))}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='rounded-[5px] h-1 bg-lightGray text-left'>
+                                <motion.div
+                                  style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
+                                  className={`bg-blueHighlight h-1 w-full`}
+                                />
                               </div>
                             </div>
-                            <div className='w-full items-start flex flex-col space-y-1'>
-                              <span className='text-sm font-semibold'>{files[0]}</span>
-                              <span className='text-xs text-darkGrey'>
-                                {formatBytes(files[1].reduce((a, b) => a + b.size, 0))}
-                              </span>
+                            <div className='col-span-1 flex flex-col'>
+                              <div className='grid grid-rows-3 justify-items-end'>
+                                {open ? (
+                                  <ChevronUpIcon className='w-3 h-3 row-span-1' />
+                                ) : (
+                                  <ChevronDownIcon className='w-3 h-3 row-span-1' />
+                                )}
+                                <div />
+                                <span className='text-sm'>
+                                  {files[1].filter((file) => file.uploaded).length} / {files[1].length}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className='rounded-[5px] h-1 bg-lightGray text-left'>
-                            <motion.div
-                              style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
-                              className={`bg-blueHighlight h-1 w-full`}
-                            />
-                          </div>
-                        </div>
-                        <div className='col-span-1 flex flex-col'>
-                          <div className='grid grid-rows-3 justify-items-end'>
-                            {open ? (
-                              <ChevronUpIcon className='w-3 h-3 row-span-1' />
-                            ) : (
-                              <ChevronDownIcon className='w-3 h-3 row-span-1' />
-                            )}
-                            <div />
-                            <span className='text-sm'>
-                              {files[1].filter((file) => file.uploaded).length} / {files[1].length}
-                            </span>
-                          </div>
-                        </div>
-                      </Disclosure.Button>
-                      <Transition
-                        show={open}
-                        enter='transition duration-100 ease-out'
-                        enterFrom='transform scale-95 opacity-0'
-                        enterTo='transform scale-100 opacity-100'
-                        leave='transition duration-75 ease-out'
-                        leaveFrom='transform scale-100 opacity-100'
-                        leaveTo='transform scale-95 opacity-0'
-                      >
-                        <Disclosure.Panel>
-                          <div className='grid grid-cols-12 gap-x-3 gap-y-3'>
-                            {files[1].map((item, index) => {
-                              return (
-                                <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
-                                  <div className='relative border border-mediumGrey rounded-[5px]'>
-                                    <div className='pb-[100%]' />
-                                    <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
-                                    {item.uploaded && (
-                                      <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
-                                    )}
-                                    {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
-                                  </div>
-                                  <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </Disclosure.Panel>
-                      </Transition>
-                    </>
-                  )}
-                </Disclosure>
-              )
-            })}
-          </div>
-        </div>
-      )}
+                          </Disclosure.Button>
+                          <Transition
+                            show={open}
+                            enter='transition duration-100 ease-out'
+                            enterFrom='transform scale-95 opacity-0'
+                            enterTo='transform scale-100 opacity-100'
+                            leave='transition duration-75 ease-out'
+                            leaveFrom='transform scale-100 opacity-100'
+                            leaveTo='transform scale-95 opacity-0'
+                          >
+                            <Disclosure.Panel>
+                              <div className='grid grid-cols-12 gap-x-3 gap-y-3'>
+                                {files[1].map((item, index) => {
+                                  return (
+                                    <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
+                                      <div className='relative border border-mediumGrey rounded-[5px]'>
+                                        <div className='pb-[100%]' />
+                                        <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
+                                        {item.uploaded && (
+                                          <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
+                                        )}
+                                        {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
+                                      </div>
+                                      <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </Disclosure.Panel>
+                          </Transition>
+                        </>
+                      )}
+                    </Disclosure>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </>
+      ) : null}
     </div>
   )
 }

@@ -3,10 +3,11 @@ import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRep
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { trpc } from '@utils/trpc'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
+import { getSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
@@ -29,7 +30,13 @@ const Page: NextPage = () => {
       <Layout>
         <Layout.Header
           connectButton
-          internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]}
+          internalRoutes={[
+            {
+              current: organisationName,
+              href: `/${organisationName}`,
+              options: [{ name: organisationName, type: OrganisationDatabaseEnum.enum.Personal }],
+            },
+          ]}
           internalNavigation={[
             {
               name: OrganisationNavigationEnum.enum.Dashboard,
@@ -47,17 +54,17 @@ const Page: NextPage = () => {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { organisation } = context.query
-//   const session = await getSession(context)
-//   const token = await getToken({ req: context.req })
-//   const userId = token?.sub ?? null
-//   if (!userId) return { redirect: { destination: '/404', permanent: false } }
-//   const data = await prisma.organisation.findFirst({
-//     where: { name: organisation as string, admins: { some: { userId: userId } } },
-//   })
-//   if (!data) return { redirect: { destination: `/404`, permanent: false } }
-//   return { props: { userId, session } }
-// }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const organisationName = context.query.organisation as string
+  const session = await getSession(context)
+  const user = session?.user ?? null
+  if (!user) return { redirect: { destination: `/`, permanent: true } }
+  return {
+    props: {
+      session,
+      organisationName,
+    },
+  }
+}
 
 export default Page

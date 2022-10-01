@@ -4,7 +4,6 @@ import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationSt
 import clsx from 'clsx'
 import ordinal from 'ordinal'
 import { useState } from 'react'
-import { RepositoryCreateTrait } from '../Actions/RepositoryCreateTrait'
 import LayerGridView from './RepositoryRarityLayer'
 import LayerRarityTable from './RepositoryRarityTable'
 
@@ -13,6 +12,7 @@ const Index = () => {
   const { all: layers, current: layer, isLoading } = useQueryRepositoryLayer()
   const [query, setQuery] = useState('')
   const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
+  const [isOpen, setIsOpen] = useState(false)
   if (!layer) return null
   const filteredTraitElements = layer.traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
@@ -69,7 +69,6 @@ const Index = () => {
                 />
               </svg>
             </Button>
-            <RepositoryCreateTrait />
           </div>
         </div>
       </div>

@@ -2,17 +2,16 @@
 import superjson from 'superjson'
 import { createRouter } from './context'
 
-import { collectionRouter } from './collection'
-import { layerElementRouter } from './layer'
-import { organisationRouter } from './organisation'
-import { repositoryRouter } from './repository'
-import { traitElementRouter } from './trait'
+import { collectionRouter } from './core/collection'
+import { layerElementRouter } from './core/layer'
+import { organisationRouter } from './core/organisation'
+import { repositoryRouter } from './core/repository'
+import { traitElementRouter } from './core/trait'
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge('organisation.', organisationRouter)
   .merge('repository.', repositoryRouter)
-  // .merge('auth.', protectedExampleRouter)
   .merge('trait.', traitElementRouter)
   .merge('layer.', layerElementRouter)
   .merge('collection.', collectionRouter)

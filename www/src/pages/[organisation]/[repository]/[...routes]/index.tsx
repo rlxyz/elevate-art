@@ -121,7 +121,7 @@ const Page = () => {
             <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
               <div className='col-span-2 py-8 -ml-4'>
                 {[CollectionNavigationEnum.enum.Rarity, CollectionNavigationEnum.enum.Rules].includes(currentViewSection) && (
-                  <div className='flex flex-col space-y-6 justify-between'>
+                  <div className='flex flex-col space-y-3 justify-between'>
                     {layers && <LayerFolderSelector layers={layers} />}
                   </div>
                 )}

@@ -5,6 +5,7 @@ import { Collection } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'
+import { CollectionDatabaseEnum } from 'src/types/enums'
 
 export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
@@ -30,6 +31,7 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
       const collection: Collection = {
         id: `${repositoryId}-${input.name}`,
         name: input.name,
+        type: CollectionDatabaseEnum.enum.Development,
         totalSupply: input.totalSupply,
         generations: 1,
         createdAt: new Date(),

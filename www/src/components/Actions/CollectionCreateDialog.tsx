@@ -1,5 +1,6 @@
 import Button from '@components/Layout/Button'
 import { Dialog, Transition } from '@headlessui/react'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
@@ -14,9 +15,10 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { mutate } = useMutateCreateCollection({
+  const { mutate: createCollection } = useMutateCreateCollection({
     onMutate: onClose,
   })
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -51,10 +53,9 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                   </Dialog.Title>
                   <form
                     onSubmit={handleSubmit((data) => {
-                      mutate({
+                      createCollection({
                         name: data.name,
-                        organisationName,
-                        repositoryName,
+                        repositoryId,
                         totalSupply: Number(data.totalSupply),
                       })
                     })}

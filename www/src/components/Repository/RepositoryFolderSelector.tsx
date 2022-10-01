@@ -1,13 +1,12 @@
 import { Link } from '@components/Layout/Link'
 import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
+import { useMutateReorderLayers } from '@hooks/mutations/useMutateReorderLayers'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement } from '@prisma/client'
 import { truncate } from '@utils/format'
-import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
-import produce from 'immer'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -76,42 +75,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
   const [openReordering, setOpenReordering] = useState(false)
-  const ctx = trpc.useContext()
-
-  const { mutate: reorderLayer } = trpc.useMutation('layer.reorder', {
-    onMutate: async (input) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryLayers', { id: input.repositoryId }])
-
-      // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }])
-      if (!backup) return { backup }
-
-      const { layerIdsInOrder } = input
-
-      // Optimistically update to the new value
-      const next = produce(backup, (draft) => {
-        layerIdsInOrder.forEach((id, index) => {
-          const layer = draft.find((l) => l.id === id)
-          if (layer) {
-            layer.priority = index
-          }
-        })
-        draft = draft.sort((a, b) => a.priority - b.priority)
-      })
-
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
-
-      // return backup
-      return { backup }
-    },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
-    onError: (err, variables, context) => {
-      if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
-    },
-  })
-
+  const { mutate: reorderLayer } = useMutateReorderLayers()
   if (!layers || !items) return null
 
   return (
@@ -124,10 +88,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
               if (!openReordering) {
                 setOpenReordering(true)
               } else {
-                reorderLayer({
-                  layerIdsInOrder: items,
-                  repositoryId,
-                })
+                reorderLayer({ layerIdsInOrder: items })
                 setOpenReordering(false)
               }
             }}
@@ -136,7 +97,7 @@ const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
               openReordering && 'border-blueHighlight text-blueHighlight'
             )}
           >
-            <SwitchVerticalIcon className='w-2 h-2' />
+            <SwitchVerticalIcon className='w-3 h-3 text-darkGrey' />
           </button>
         </div>
       </div>

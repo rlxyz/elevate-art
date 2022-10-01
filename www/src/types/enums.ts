@@ -1,5 +1,20 @@
 import * as z from 'zod'
 
+const OrganisationDatabase = Object.freeze({
+  Personal: 'personal',
+  Team: 'team',
+})
+
+export const OrganisationDatabaseEnum = z.nativeEnum(OrganisationDatabase)
+export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
+
+const CollectionDatabase = Object.freeze({
+  Default: 'default',
+  Development: 'development',
+})
+export const CollectionDatabaseEnum = z.nativeEnum(CollectionDatabase)
+export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
+
 const OrganisationNavigation = Object.freeze({
   Dashboard: 'dashboard',
   Activity: 'activity',
@@ -19,7 +34,6 @@ export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
 const CollectionNavigation = Object.freeze({
   Preview: 'preview',
-  // Layers: 'layers',
   Rarity: 'rarity',
   Rules: 'rules',
   Settings: 'settings',

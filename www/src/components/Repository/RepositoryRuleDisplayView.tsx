@@ -28,15 +28,15 @@ const TraitRulesDisplayPerItem = ({
   const ctx = trpc.useContext()
   const mutation = trpc.useMutation('trait.deleteRuleById', {
     onSuccess: (data) => {
-      const primaryLayer = data.layers.filter(
-        (layer) => layer.id === (data.deletedRule.primaryTraitElement?.layerElement.id || '')
-      )[0]
-      const secondaryLayer = data.layers.filter(
-        (layer) => layer.id === (data.deletedRule.secondaryTraitElement?.layerElement.id || '')
-      )[0]
-      if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
-      if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
+      // const primaryLayer = data.layers.filter(
+      //   (layer) => layer.id === (data.deletedRule.primaryTraitElement?.layerElement.id || '')
+      // )[0]
+      // const secondaryLayer = data.layers.filter(
+      //   (layer) => layer.id === (data.deletedRule.secondaryTraitElement?.layerElement.id || '')
+      // )[0]
+      // if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
+      // if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
+      // ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       notifySuccess(
         <div>
           <span>{`Removed `}</span>

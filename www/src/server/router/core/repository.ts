@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createRouter } from './context'
+import { createRouter } from '../context'
 
 export const repositoryRouter = createRouter()
   .query('getRepositoryByName', {
@@ -73,6 +73,7 @@ export const repositoryRouter = createRouter()
       })
     },
   })
+  // to be removed!
   .query('getAllRepositoriesByOrganisationName', {
     input: z.object({
       name: z.string(),
@@ -95,39 +96,40 @@ export const repositoryRouter = createRouter()
       })
     },
   })
-  .query('getRepositoryById', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findFirst({
-        where: {
-          ...input,
-        },
-      })
-    },
-  })
   .mutation('create', {
     input: z.object({
-      name: z.string(),
       organisationId: z.string(),
+      name: z.string(),
+      layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
     }),
     async resolve({ ctx, input }) {
-      const repository = await ctx.prisma.repository.create({
+      const { name, organisationId, layerElements } = input
+      await ctx.prisma.repository.create({
         data: {
-          name: input.name,
-          tokenName: input.name,
-          organisationId: input.organisationId,
+          organisationId,
+          name,
+          tokenName: name,
+          collections: {
+            create: {
+              name: 'main',
+              totalSupply: 10000,
+              type: 'default', // when collection created, it is default branch
+            },
+          },
+          layers: {
+            create: layerElements.map(({ name, traitElements }, index) => ({
+              name,
+              priority: index,
+              traits: {
+                create: traitElements.map(({ name }) => ({
+                  name,
+                  weight: 1,
+                })),
+              },
+            })),
+          },
         },
       })
-      await ctx.prisma.collection.create({
-        data: {
-          name: 'main',
-          repositoryId: repository.id,
-          totalSupply: 10000,
-        },
-      })
-      return repository
     },
   })
   .mutation('delete', {
@@ -142,6 +144,7 @@ export const repositoryRouter = createRouter()
       })
     },
   })
+  // todo: refactor to use transactions
   .mutation('updateLayer', {
     input: z.object({
       layerId: z.string(),
@@ -168,6 +171,7 @@ export const repositoryRouter = createRouter()
       )
     },
   })
+  // todo: better naming conventions?
   .mutation('createRule', {
     input: z.object({
       type: z.string(),
