@@ -98,7 +98,7 @@ const Index = () => {
                               variant='link'
                               onClick={() => mutate({ collection })}
                             >
-                              <div className='flex flex-row justify-between px-1 w-full'>
+                              <div className='flex flex-row items-center justify-between px-1 w-full'>
                                 <span
                                   className={clsx(
                                     'text-xs text-black',
@@ -107,7 +107,14 @@ const Index = () => {
                                 >
                                   {collection.name}
                                 </span>
-                                {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-black' />}
+                                <div className='flex items-center'>
+                                  {collection.name === 'main' && (
+                                    <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black mr-1'>
+                                      {'master'}
+                                    </span>
+                                  )}
+                                  {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-black' />}
+                                </div>
                               </div>
                             </Button>
                           </Listbox.Option>

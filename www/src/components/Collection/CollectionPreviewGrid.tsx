@@ -1,6 +1,5 @@
 import { AdvancedImage } from '@cloudinary/react'
 import { Dialog, Transition } from '@headlessui/react'
-import { XIcon } from '@heroicons/react/outline'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -110,7 +109,7 @@ export const InfiniteScrollGrid = () => {
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { tokens, tokenRanking, traitFilters, rarityFilter } = useRepositoryStore((state) => {
+  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
     return {
       tokenRanking: state.tokenRanking,
       tokens: state.tokens,
@@ -156,7 +155,7 @@ export const InfiniteScrollGrid = () => {
                 {traitFilters.length > 0 ? (
                   <span>
                     for
-                    <span className='text-blueHighlight underline'> {rarityFilter}</span> with filters
+                    <span className='text-blueHighlight'> {rarityFilter}</span> with filters
                   </span>
                 ) : (
                   ''
@@ -170,15 +169,18 @@ export const InfiniteScrollGrid = () => {
             {traitFilters.map(({ layer, trait }, index) => (
               <span
                 key={index}
-                className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 pl-2.5 pr-1 text-xs font-medium text-black'
+                className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'
               >
-                {trait.name}
-                <button
+                <div>
+                  <span className='text-darkGrey mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}
+                </div>
+                {/* <button
                   type='button'
                   className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400'
+                  onClick={() => console.log(trait.name)}
                 >
                   <XIcon className='w-3 h-3 text-darkGrey' />
-                </button>
+                </button> */}
               </span>
             ))}
           </div>
