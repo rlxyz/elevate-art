@@ -42,6 +42,7 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
         draft.push(collection)
       })
 
+      setCollectionId(collection.id)
       mutate({ collection })
       onMutate && onMutate()
       ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)

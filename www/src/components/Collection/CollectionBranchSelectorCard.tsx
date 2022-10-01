@@ -23,7 +23,7 @@ const Index = () => {
 
   useEffect(() => {
     setSelectedPerson(collection)
-  }, [isLoadingCollections])
+  }, [isLoadingCollections, collection?.name])
 
   if (!collection || !layers) return null
 
