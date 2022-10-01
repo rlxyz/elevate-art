@@ -11,6 +11,7 @@ import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
 import { H } from 'highlight.run'
 import { SessionProvider } from 'next-auth/react'
+import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
@@ -80,6 +81,20 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
                 <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
                   <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                    <DefaultSeo
+                      title='elevate.art'
+                      description='a general purpose image compiler for nft projects'
+                      openGraph={{
+                        type: 'website',
+                        locale: 'en_US',
+                        url: 'https://elevate.art/',
+                        site_name: 'elevate.art',
+                      }}
+                      twitter={{
+                        handle: '@elevate_art',
+                        cardType: 'summary',
+                      }}
+                    />
                     <Component {...pageProps} />
                     <Toaster />
                   </RepositoryContext.Provider>
@@ -123,21 +138,21 @@ export default withTRPC<AppRouter>({
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
 
       // To use SSR properly you need to forward the client's headers to the server
-      // headers: () => {
-      //   if (ctx?.req) {
-      //     const headers = ctx?.req?.headers;
-      //     delete headers?.connection;
-      //     return {
-      //       ...headers,
-      //       "x-ssr": "1",
-      //     };
-      //   }
-      //   return {};
-      // }
+      headers: () => {
+        if (ctx?.req) {
+          const headers = ctx?.req?.headers
+          delete headers?.connection
+          return {
+            ...headers,
+            'x-ssr': '1',
+          }
+        }
+        return {}
+      },
     }
   },
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: false,
+  ssr: true,
 })(ElevateCompilerApp)
