@@ -1,6 +1,6 @@
 import Button from '@components/Layout/Button'
 import { Link } from '@components/Layout/Link'
-import { CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
+import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -8,12 +8,46 @@ import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import { timeAgo } from '../../utils/time'
 
+const NoRepositoryExistPlaceholder = ({ organisationName }: { organisationName: string }) => {
+  return (
+    <div className='h-full w-full flex flex-col items-center min-h-[calc(100vh-14rem)] justify-center'>
+      <div className='flex flex-col space-y-6'>
+        <div className='space-y-3 flex flex-col items-center'>
+          <div className='w-[50%]'>
+            <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
+          </div>
+          <span className='text-md'>
+            We created a team for you called <span className='text-blueHighlight font-bold'>{organisationName}</span>
+          </span>
+        </div>
+        <div className='space-y-3 flex flex-col items-center'>
+          <Link external className='px-6 space-x-1' href={`${organisationName}/new`}>
+            <div className='border flex items-center justify-center border-mediumGrey rounded-[5px] p-3 bg-black'>
+              <span className='text-sm text-white'>Create a Project</span>
+              <ChevronRightIcon className='text-white h-4 w-4' />
+            </div>
+          </Link>
+        </div>
+        <div className='space-y-3 flex flex-col items-center'>
+          <span className='text-xs'>
+            <Link external href='https://docs.elevate.art'>
+              <span className='text-blueHighlight font-semibold'>Learn</span>
+            </Link>{' '}
+            about elevate.art
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
   const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
-  if (!repositories) return <></>
+  if (!repositories || repositories.length === 0) return <NoRepositoryExistPlaceholder organisationName={organisationName} />
+
   const filteredRepositories =
     query === ''
       ? repositories

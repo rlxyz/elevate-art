@@ -123,8 +123,8 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                 .map(({ name }) => (
                                   <Link hover enabled={name === current} key={name} href={name}>
                                     <div className='px-2 flex flex-row justify-between items-center w-full'>
-                                      <div className='flex space-x-2'>
-                                        <div className='rounded-full h-4 w-4 bg-blueHighlight' />
+                                      <div className='flex space-x-2 items-center'>
+                                        <div className='rounded-full h-5 w-5 bg-blueHighlight' />
                                         <span>{name}</span>
                                       </div>
                                       {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
@@ -134,15 +134,15 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                             </div>
                           </div>
                           <div className='pt-3 space-y-1'>
-                            <span className='text-xs text-darkGrey'>Personal</span>
+                            <span className='text-xs text-darkGrey'>Team</span>
                             <div>
                               {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
                                 .map(({ name }) => (
                                   <Link hover enabled={name === current} key={name} href={name}>
                                     <div className='px-2 flex flex-row justify-between items-center w-full'>
-                                      <div className='flex space-x-2'>
-                                        <div className='rounded-full h-4 w-4 bg-blueHighlight' />
+                                      <div className='flex space-x-2 items-center'>
+                                        <div className='rounded-full h-5 w-5 bg-blueHighlight' />
                                         <span>{name}</span>
                                       </div>
                                       {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
