@@ -115,7 +115,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   >
                     <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-                        <div className='p-2 relative bg-white space-y-3 divide-y divide-mediumGrey'>
+                        <div className='p-2 relative bg-white space-y-1 divide-y divide-mediumGrey'>
                           <div className='space-y-1'>
                             <span className='text-xs text-darkGrey'>Personal</span>
                             <div>
@@ -156,7 +156,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                           ) : (
                             <></>
                           )}
-                          <div className='pt-3'>
+                          <div className='pt-2'>
                             <div className='py-1 border border-mediumGrey rounded-[5px] bg-lightGray flex space-x-2 items-center'>
                               <Button variant='ghost' className='space-x-2'>
                                 <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
