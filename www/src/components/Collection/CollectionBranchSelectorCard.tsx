@@ -6,14 +6,16 @@ import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCol
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 
 const Index = () => {
   const [query, setQuery] = useState('')
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryRepositoryCollection()
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [isOpenListboxOptions, setIsOpenListboxOptions] = useState(false)
+  const listBoxRef = useRef()
   const filteredCollections =
     query === ''
       ? collections
@@ -30,7 +32,7 @@ const Index = () => {
   return (
     <>
       <Listbox value={selectedCollection} onChange={setSelectedPerson}>
-        <Listbox.Button as={Button} variant='ghost' className='pl-4 pr-3 py-3'>
+        <Listbox.Button as={Button} onClick={() => setIsOpenListboxOptions(true)} variant='ghost' className='pl-4 pr-3 py-3'>
           <div className='flex justify-between w-full items-center'>
             <div className='flex space-x-2'>
               <img src='/images/branch.svg' className='w-4 h-4' />
@@ -42,6 +44,7 @@ const Index = () => {
           </div>
         </Listbox.Button>
         <Transition
+          show={isOpenListboxOptions}
           as={Fragment}
           enter='transition ease-out duration-200'
           enterFrom='opacity-0 translate-y-1'
@@ -94,7 +97,8 @@ const Index = () => {
                       size='sm'
                       onClick={(e: any) => {
                         e.preventDefault()
-                        setIsOpen(true)
+                        setIsOpenListboxOptions(false)
+                        setIsOpenDialog(true)
                       }}
                     >
                       <span className='text-xs'>Add New...</span>
@@ -106,7 +110,12 @@ const Index = () => {
           </Listbox.Options>
         </Transition>
       </Listbox>
-      <CollectionCreateDialog setIsOpen={setIsOpen} isOpen={isOpen} />
+      <CollectionCreateDialog
+        onClose={() => {
+          setIsOpenDialog(false)
+        }}
+        isOpen={isOpenDialog}
+      />
     </>
   )
 }

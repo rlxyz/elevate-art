@@ -1,11 +1,11 @@
 import Button from '@components/Layout/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import { NextRouter, useRouter } from 'next/router'
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutateCreateCollection } from '../../hooks/mutations/useMutateCreateCollection'
 
-const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
+const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
@@ -15,12 +15,12 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
     formState: { errors },
   } = useForm()
   const { mutate } = useMutateCreateCollection({
-    onMutate: () => setIsOpen(false),
+    onMutate: onClose,
   })
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
+      <Dialog as='div' className='relative z-10' onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter='ease-out duration-300'
