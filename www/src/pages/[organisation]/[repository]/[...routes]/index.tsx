@@ -26,7 +26,7 @@ const Page = () => {
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
   const { setCollectionId, setRepositoryId, setOrganisationId } = useRepositoryStore((state) => {
     return {
@@ -67,7 +67,7 @@ const Page = () => {
       <>
         <Layout.Header
           internalRoutes={[
-            { current: organisationName, href: `/${organisationName}`, options: [organisationName] },
+            { current: organisationName, href: `/${organisationName}`, organisations },
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
           internalNavigation={[

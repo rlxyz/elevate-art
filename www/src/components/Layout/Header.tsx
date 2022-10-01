@@ -94,12 +94,12 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
         return (
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
-            <div className='space-x-1 flex'>
+            <Popover className='flex space-x-1'>
               <Link href={href} enabled={false} external>
                 <div className={clsx(organisations ? 'text-black' : 'text-darkGrey')}>{current}</div>
               </Link>
               {organisations ? (
-                <Popover className='relative'>
+                <>
                   <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
                     <SelectorIcon className='text-black w-4 h-4' />
                   </Popover.Button>
@@ -112,7 +112,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                     leaveFrom='opacity-100 translate-y-0'
                     leaveTo='opacity-0 translate-y-1'
                   >
-                    <Popover.Panel className='absolute z-10 w-screen max-w-xs -translate-x-1/2 transform'>
+                    <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
                         <div className='p-2 relative bg-white space-y-2 divide-y divide-mediumGrey'>
                           <div className='space-y-1'>
@@ -121,7 +121,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
                                 .map(({ name }) => (
-                                  <Link hover enabled={name === current} key={name} href={name}>
+                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
                                     <div className='px-2 flex flex-row justify-between items-center w-full'>
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
@@ -139,7 +139,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
                                 .map(({ name }) => (
-                                  <Link hover enabled={name === current} key={name} href={name}>
+                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
                                     <div className='px-2 flex flex-row justify-between items-center w-full'>
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
@@ -155,11 +155,9 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                       </div>
                     </Popover.Panel>
                   </Transition>
-                </Popover>
-              ) : (
-                <></>
-              )}
-            </div>
+                </>
+              ) : null}
+            </Popover>
           </div>
         )
       })}

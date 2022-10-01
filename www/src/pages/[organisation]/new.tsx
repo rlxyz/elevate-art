@@ -1,37 +1,57 @@
 import { Layout } from '@components/Layout/Layout'
-import type { NextPage } from 'next'
-import dynamic from 'next/dynamic'
+import CreateNewRepository from '@components/Organisation/OrganisationCreateNewRepository'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import type { GetServerSideProps, NextPage } from 'next'
+import { getSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
-const DynamicCreateNewRepository = dynamic(() => import('@components/Organisation/OrganisationCreateNewRepository'), {
-  ssr: false,
-})
-
+import { useEffect } from 'react'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
+  const { all: organisations, isLoading } = useQueryOrganisation()
+  const { setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
+    return {
+      setCurrentRoute: state.setCurrentRoute,
+      currentRoute: state.currentRoute,
+    }
+  })
+  useEffect(() => {
+    setCurrentRoute(OrganisationNavigationEnum.enum.New)
+  }, [])
   return (
     <>
       <Layout hasFooter={false}>
-        <Layout.Header internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]} />
+        <Layout.Header
+          connectButton
+          internalRoutes={[
+            {
+              current: organisationName,
+              href: `/${organisationName}`,
+              organisations,
+            },
+          ]}
+        />
         <Layout.Body>
-          <DynamicCreateNewRepository />
+          <CreateNewRepository />
         </Layout.Body>
       </Layout>
     </>
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { organisation } = context.query
-//   const session = await getSession(context)
-//   const token = await getToken({ req: context.req })
-//   const userId = token?.sub ?? null
-//   if (!userId) return { redirect: { destination: '/404', permanent: false } }
-//   const data = await prisma.organisation.findFirst({
-//     where: { name: organisation as string, admins: { some: { userId: userId } } },
-//   })
-//   if (!data) return { redirect: { destination: `/404`, permanent: false } }
-//   return { props: { userId, session } }
-// }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const organisationName = context.query.organisation as string
+  const session = await getSession(context)
+  const user = session?.user ?? null
+  if (!user) return { redirect: { destination: `/`, permanent: true } }
+  return {
+    props: {
+      session,
+      organisationName,
+    },
+  }
+}
 
 export default Page

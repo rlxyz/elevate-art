@@ -1,7 +1,7 @@
 import { FolderUpload } from '@components/Repository/RepositoryFolderUpload'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { Repository } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -43,7 +43,7 @@ const CloneTemplate = () => {
 const CreateNewRepository = () => {
   const router: NextRouter = useRouter()
   const organisationName = router.query.organisation as string
-  const { data: organisation } = trpc.useQuery(['organisation.getOrganisationByName', { name: organisationName }])
+  const { current: organisation } = useQueryOrganisation()
   const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
@@ -63,7 +63,7 @@ const CreateNewRepository = () => {
         </div>
       </div>
       <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12 min-h-[50vh]'>
-        <FolderUpload organisation={organisation} />
+        <FolderUpload />
         {/* <div className='py-12 pr-12 absolute bottom-0 right-0'>
           <div className='flex justify-end space-x-3'>
             <Button
