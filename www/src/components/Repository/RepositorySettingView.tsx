@@ -1,5 +1,6 @@
 import { Link } from '@components/Layout/Link'
-import { NextRouter, useRouter } from 'next/router'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import { useForm } from 'react-hook-form'
 
 export const SettingsNavigations = () => {
   return (
@@ -9,87 +10,67 @@ export const SettingsNavigations = () => {
         { name: 'Integrations', selected: false },
         { name: 'Git', selected: false },
       ].map(({ name, selected }, index) => {
-        return (
-          <div
-            key={index}
-            className={`hover:bg-lightGray hober:bg-opacity-30 hover:text-black rounded-[5px] ${
-              selected ? 'text-black font-semibold' : 'text-darkGrey'
-            }`}
-          >
-            <div className='px-1 py-2'>
-              <Link href='#'>
-                <span className='text-sm'>{name}</span>
-              </Link>
-            </div>
-          </div>
-        )
+        return <Link href='#' title={name} enabled={selected} />
       })}
     </div>
   )
 }
 
-const CollectionSettingsContentItem = ({
-  children,
-  title,
-  description,
-}: {
-  children: React.ReactNode
-  title: string
-  description: React.ReactNode
-}) => {
+const CollectionSettings = () => {
+  const { current: organisation } = useQueryOrganisation()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
   return (
-    <div className='w-full rounded-[5px] border border-mediumGrey'>
-      <div className='p-6 space-y-4'>
-        <div className='flex flex-col'>
-          <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
-            <h1 className='text-xl font-semibold text-black'>{title || '...'}</h1>
-            <p className='text-sm text-black'>{description || '...'}</p>
+    <form
+      onSubmit={handleSubmit((data) => {
+        console.log(data)
+      })}
+    >
+      <div className='w-full rounded-[5px] border border-mediumGrey'>
+        <div className='p-6 space-y-4'>
+          <div className='flex flex-col'>
+            <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
+              <h1 className='text-lg font-semibold text-black'>{'Project Name'}</h1>
+              <p className='text-xs text-black'>{'Used to identify your teams name on elevate.art'}</p>
+            </div>
+          </div>
+          <div className='w-full border border-mediumGrey rounded-[5px]'>
+            <div className='h-full grid grid-cols-10 text-sm'>
+              <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
+                <span className='px-4 py-2'>{`elevate.art/`}</span>
+              </div>
+              <div className='col-span-6 flex items-center'>
+                <input
+                  className='text-xs px-2 w-full h-full rounded-[5px]'
+                  defaultValue={organisation?.name || ''}
+                  type='string'
+                  {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <div>{children}</div>
-      </div>
-      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs  justify-between border-t border-t-mediumGrey'>
-        <div className='flex'>
-          <span>{`Learn more about`}&nbsp;</span>
-          <Link href='#'>
+        <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs  justify-between border-t border-t-mediumGrey'>
+          <div className='flex items-center'>
+            <span>{`Learn more about`}&nbsp;</span>
+            {/* <Link href='https://docs.elevate.art/team'> */}
             <div className='flex items-center text-blueHighlight'>
-              <span>{title}</span>
+              <span>{'Team Name'}</span>
               {/* <ArrowTopRightOnSquare className='w-3 h-3' /> */}
             </div>
-          </Link>
-        </div>
-        <div>
-          <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
-            <span className='text-darkGrey'>Save</span>
+            {/* </Link> */}
           </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
-
-const CollectionSettings = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const collectionName: string = router.query.collection as string
-  const repositoryName: string = router.query.repository as string
-  return (
-    <CollectionSettingsContentItem
-      title='Collection Name'
-      description='Used to identify your collection on the repository dashboard'
-    >
-      <div className='w-full border border-mediumGrey rounded-[5px]'>
-        <div className='h-full grid grid-cols-10 text-sm'>
-          <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
-            <span className='px-4 py-2'>{`elevate.art/${organisationName}/${repositoryName}/`}</span>
+          <div>
+            <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
+              <span className='text-darkGrey'>Save</span>
+            </div>
           </div>
-          <div className='col-span-6 flex items-center'>
-            <span className='px-4 py-2'>{collectionName}</span>
-          </div>
-          {/* <input className='col-span-6 p-2'>Test</input> */}
-        </div>
+        </footer>
       </div>
-    </CollectionSettingsContentItem>
+    </form>
   )
 }
 

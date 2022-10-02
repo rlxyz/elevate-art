@@ -73,29 +73,6 @@ export const repositoryRouter = createRouter()
       })
     },
   })
-  // to be removed!
-  .query('getAllRepositoriesByOrganisationName', {
-    input: z.object({
-      name: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findMany({
-        where: { organisation: { name: input.name } },
-        include: {
-          _count: {
-            select: { layers: true, collections: true },
-          },
-          layers: {
-            include: {
-              _count: {
-                select: { traitElements: true },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
   .mutation('create', {
     input: z.object({
       organisationId: z.string(),

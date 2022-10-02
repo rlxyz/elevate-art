@@ -1,7 +1,7 @@
 import Button from '@components/Layout/Button'
 import { Link } from '@components/Layout/Link'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
-import { trpc } from '@utils/trpc'
+import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
@@ -45,7 +45,7 @@ const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
-  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
+  const { all: repositories } = useQueryOrganisationsRepository()
   if (!repositories || repositories.length === 0) return <NoRepositoryExistPlaceholder organisationName={organisationName} />
 
   const filteredRepositories =

@@ -4,6 +4,12 @@ import { SiweMessage } from 'siwe'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
 import { prisma } from '../../../server/db/client'
 
+const whitelist = [
+  '0xf8cA77ED09429aDe0d5C01ADB1D284C45324F608',
+  '0xb21B6a39ae2f164357f8e616E30521baECfd7f87',
+  '0x32B281867C16617F0540a10BB67c42B8fb8bf0dd',
+]
+
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user, token }) {
@@ -49,7 +55,7 @@ export const authOptions: NextAuthOptions = {
 
           await siwe.validate(credentials?.signature || '')
           const { address } = siwe
-
+          if (!whitelist.includes(address)) return null
           // https://github.com/prisma/prisma-client-js/issues/85#issuecomment-660057346
           const user = await prisma.user.upsert({
             where: { address },

@@ -18,7 +18,7 @@ export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
 const OrganisationNavigation = Object.freeze({
   Dashboard: 'dashboard',
   Activity: 'activity',
-  Settings: 'account',
+  Settings: 'settings',
   New: 'new',
 })
 

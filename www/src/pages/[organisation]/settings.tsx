@@ -1,5 +1,5 @@
 import { Layout } from '@components/Layout/Layout'
-import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
+import CollectionSettings, { SettingsNavigations } from '@components/Repository/RepositorySettingView'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -26,7 +26,7 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
   })
 
   useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
+    setCurrentRoute(OrganisationNavigationEnum.enum.Settings)
     reset()
     setHasMounted(true)
     setOrganisationId(organisationId)
@@ -64,7 +64,18 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
         ]}
       />
       <Layout.Body>
-        <div className='py-8 space-y-8'>{repositories && <ViewAllRepositories />}</div>
+        <div className='py-8 space-y-8'>
+          {
+            <div className='grid grid-cols-10 gap-x-6'>
+              <div className='col-span-2'>
+                <SettingsNavigations />
+              </div>
+              <div className='col-span-8'>
+                <CollectionSettings />
+              </div>
+            </div>
+          }
+        </div>
       </Layout.Body>
     </Layout>
   )
