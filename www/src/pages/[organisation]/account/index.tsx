@@ -66,10 +66,8 @@ const Page = () => {
                 </div>
                 <div className='col-span-8'>
                   <div className='space-y-1'>
-                    <span className='text-sm font-semibold'>We intent to implement this page soon.</span>
-                    <p className='text-xs text-darkGrey'>
-                      If the universe doesn't become a black hole in the meantime, you will be able to set a username.
-                    </p>
+                    <span className='text-sm font-semibold'>We intend to implement this page soon.</span>
+                    <p className='text-xs text-darkGrey'>Hopefully the universe doesn't collapse into a black in the meantime.</p>
                   </div>
                 </div>
               </div>

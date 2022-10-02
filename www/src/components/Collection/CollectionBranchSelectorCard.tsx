@@ -1,4 +1,4 @@
-import CollectionCreateDialog from '@components/Actions/CollectionCreateDialog'
+import CollectionCreateDialog from '@components/Collection/CollectionCreateDialog'
 import Button from '@components/Layout/Button'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
