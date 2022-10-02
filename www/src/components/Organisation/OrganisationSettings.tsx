@@ -2,11 +2,15 @@ import { Link } from '@components/Layout/Link'
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
+import { OrganisationMember, User } from '@prisma/client'
+import { getAddressFromEns, getEnsName } from '@utils/ethers'
 import { capitalize } from '@utils/format'
 import { timeAgo } from '@utils/time'
 import { trpc } from '@utils/trpc'
+import clsx from 'clsx'
 import { ethers } from 'ethers'
-import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { OrganisationDatabaseRoleEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
@@ -135,12 +139,25 @@ export const OrganisationTeamAddUser = () => {
 
   return organisation ? (
     <form
-      onSubmit={handleSubmit((data) => {
-        mutate({
-          address: data.address,
-          organisationId: organisation?.id,
-          role: data.role,
-        })
+      onSubmit={handleSubmit(async (data) => {
+        if (String(data.address).endsWith('.eth')) {
+          const address = await getAddressFromEns(data.address)
+          if (!address) {
+            setError('address', { type: 'manual', message: 'Address not found' })
+            return
+          }
+          mutate({
+            organisationId: organisation.id,
+            address,
+            role: data.role,
+          })
+        } else {
+          mutate({
+            organisationId: organisation.id,
+            address: data.address,
+            role: data.role,
+          })
+        }
       })}
     >
       <div className='flex space-y-6 flex-col'>
@@ -153,7 +170,7 @@ export const OrganisationTeamAddUser = () => {
             <div className='flex flex-col'>
               <div className='col-span-6 font-plus-jakarta-sans divide-y divide-mediumGrey space-y-3'>
                 <h1 className='text-sm font-semibold text-black'>Add new</h1>
-                <p className='py-3 text-xs text-black'>Add Team Members using Ethereum address.</p>
+                <p className='py-3 text-xs text-black'>Add Team Members using Ethereum address or ENS.</p>
               </div>
             </div>
             <div className='h-full grid grid-cols-10 gap-x-2 text-sm'>
@@ -163,12 +180,14 @@ export const OrganisationTeamAddUser = () => {
                   <div className='flex items-center border border-mediumGrey rounded-[5px]'>
                     <input
                       className='text-xs p-2 w-full h-full rounded-[5px]'
-                      // defaultValue={organisation?.name || ''}
                       type='string'
-                      placeholder='0xd2a08007eeeaf1f81eeF54Ba6A8c4Effa1e545C6'
+                      placeholder='0xd2a420... or alpha.eth...'
                       {...register('address', {
                         required: true,
-                        validate: (v) => ethers.utils.isAddress(v),
+                        validate: async (v) => {
+                          const address = await getAddressFromEns(v)
+                          return (address && ethers.utils.isAddress(address)) || ethers.utils.isAddress(v)
+                        },
                         onChange: () => {
                           clearErrors('exists')
                         },
@@ -233,20 +252,59 @@ export const OrganisationTeamAddUser = () => {
 
 export const OrganisationTeamDisplayUsers = () => {
   const { current: organisation } = useQueryOrganisation()
-  const session = useSession()
+  const [allMembers, setAllMembers] = useState<
+    | {
+        ens: string | null
+        id: string
+        userId: string
+        organisationId: string
+        createdAt: Date
+        updatedAt: Date
+        type: string
+        user: User
+      }[]
+    | undefined
+  >(undefined)
+
+  useDeepCompareEffect(() => {
+    const resolveAddress = async () => {
+      if (!organisation) return
+      return Promise.all(
+        organisation.members.map(
+          async (
+            x: OrganisationMember & {
+              user: User
+            }
+          ) => {
+            return {
+              ...x,
+              ens: await getEnsName(x.user.address),
+            }
+          }
+        )
+      )
+    }
+    resolveAddress().then((pending) => {
+      setAllMembers(pending)
+    })
+  }, [organisation])
+
   return (
     <div>
       <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-mediumGrey rounded-t-[5px]'>
         <span className='text-darkGrey'>All</span>
       </div>
       <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
-        {organisation?.members.map(({ id, user: { address }, createdAt, type }) => (
+        {allMembers?.map(({ id, user: { address }, ens, createdAt, type }) => (
           <div key={id} className='px-6 py-4 flex justify-between items-center'>
             <div className='flex items-center space-x-2'>
               <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
               <div className='flex flex-col space-y-1'>
                 <span className='text-xs font-semibold'>{address}</span>
-                <span className='text-xs text-darkGrey'>{timeAgo(createdAt)}</span>
+                <div className={clsx('flex items-baseline', ens && 'space-x-1')}>
+                  <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+                  {ens ? <span className='text-xs font-normal text-blueHighlight'>{ens}</span> : null}
+                </div>
               </div>
             </div>
             <span className='text-xs text-darkGrey'>{capitalize(type)}</span>
@@ -259,24 +317,58 @@ export const OrganisationTeamDisplayUsers = () => {
 
 export const OrganisationTeamDisplayPending = () => {
   const { current: organisation } = useQueryOrganisation()
+  const [pending, setPending] = useState<
+    | {
+        ens: string | null
+        id: string
+        address: string
+        role: string
+        organisationId: string
+        createdAt: Date
+        updatedAt: Date
+      }[]
+    | undefined
+  >(undefined)
+  useDeepCompareEffect(() => {
+    const resolveAddress = async () => {
+      if (!organisation) return
+      return Promise.all(
+        organisation.pendings.map(async (x) => {
+          return {
+            ...x,
+            ens: await getEnsName(x.address),
+          }
+        })
+      )
+    }
+    resolveAddress().then((pending) => {
+      setPending(pending)
+    })
+  }, [organisation])
+
   return (
     <div>
       <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-mediumGrey rounded-t-[5px]'>
         <span className='text-darkGrey'>All</span>
       </div>
       <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
-        {organisation?.pendings.map(({ id, address, role, createdAt }) => (
-          <div key={id} className='px-6 py-4 flex justify-between items-center'>
-            <div className='flex items-center space-x-2'>
-              <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
-              <div className='flex flex-col space-y-1'>
-                <span className='text-xs font-semibold'>{address}</span>
-                <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+        {pending
+          ?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+          .map(({ id, address, ens, role, createdAt }) => (
+            <div key={id} className='px-6 py-4 flex justify-between items-center'>
+              <div className='flex items-center space-x-2'>
+                <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
+                <div className='flex flex-col space-y-1'>
+                  <span className='text-xs font-semibold'>{address}</span>
+                  <div className={clsx('flex items-baseline', ens && 'space-x-1')}>
+                    <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+                    {ens ? <span className='text-xs font-normal text-blueHighlight'>{ens}</span> : null}
+                  </div>
+                </div>
               </div>
+              <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
             </div>
-            <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   )
