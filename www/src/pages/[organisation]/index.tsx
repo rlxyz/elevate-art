@@ -111,7 +111,9 @@ const Page: NextPage = () => {
           }
         />
         <Layout.Body>
-          <div className='py-8 space-y-8'>{repositories && <ViewAllRepositories />}</div>
+          <div className='py-8 space-y-8'>
+            <ViewAllRepositories />
+          </div>
         </Layout.Body>
       </Layout>
     </AuthLayout>

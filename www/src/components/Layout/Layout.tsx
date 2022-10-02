@@ -54,7 +54,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 }
 
 const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem]'>
+  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
     <div className='-ml-2'>{<DynamicHeader connectButton {...props} />}</div>
   </LayoutContainer>
 )
@@ -68,7 +68,7 @@ const LayoutBody = ({
 }) => {
   const childrens = React.Children.toArray(children)
   return (
-    <div className='min-h-[calc(100vh-7rem)]'>
+    <div className='min-h-[calc(100vh-9.14rem)]'>
       <div className='h-full'>
         {childrens.map((child, index) => {
           return (
