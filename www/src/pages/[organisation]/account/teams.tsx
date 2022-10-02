@@ -7,7 +7,7 @@ import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisati
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useEffect, useState } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
   const reset = useRepositoryStore((state) => state.reset)
@@ -43,37 +43,20 @@ const Page = () => {
             organisations,
           },
         ]}
-        internalNavigation={
-          organisation?.type === OrganisationDatabaseEnum.enum.Team
-            ? [
-                {
-                  name: OrganisationNavigationEnum.enum.Dashboard,
-                  href: `/${organisation?.name}`,
-                  enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                  loading: false,
-                },
-                {
-                  name: OrganisationNavigationEnum.enum.Settings,
-                  href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-                  enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-                  loading: false,
-                },
-              ]
-            : [
-                {
-                  name: OrganisationNavigationEnum.enum.Dashboard,
-                  href: `/${organisation?.name}`,
-                  enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                  loading: false,
-                },
-                {
-                  name: OrganisationNavigationEnum.enum.Account,
-                  href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
-                  enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-                  loading: false,
-                },
-              ]
-        }
+        internalNavigation={[
+          {
+            name: OrganisationNavigationEnum.enum.Dashboard,
+            href: `/${organisation?.name}`,
+            enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+            loading: isLoadingOrganisations,
+          },
+          {
+            name: OrganisationNavigationEnum.enum.Account,
+            href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
+            enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+            loading: isLoadingOrganisations,
+          },
+        ]}
       />
       <Layout.Body>
         <div className='-ml-4 py-8 space-y-8'>

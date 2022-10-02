@@ -3,16 +3,13 @@ import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRep
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import type { NextPage } from 'next'
-import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { AuthLayout } from '../../components/Layout/AuthLayout'
 
 const Page: NextPage = () => {
-  const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
+  const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {
     return {
       organisationId: state.organisationId,
       setOrganisationId: state.setOrganisationId,
@@ -20,11 +17,12 @@ const Page: NextPage = () => {
       currentRoute: state.currentRoute,
     }
   })
-  const { data: session } = useSession()
-  const [hasMounted, setHasMounted] = useState(false)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  const isLoading = isLoadingOrganisations && isLoadingRepositories
+  const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
+
+  useEffect(() => {
+    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
+  }, [])
 
   return (
     <AuthLayout>
@@ -45,13 +43,13 @@ const Page: NextPage = () => {
                     name: OrganisationNavigationEnum.enum.Dashboard,
                     href: `/${organisation?.name}`,
                     enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                    loading: false,
+                    loading: isLoadingOrganisations,
                   },
                   {
                     name: OrganisationNavigationEnum.enum.Settings,
                     href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
                     enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-                    loading: false,
+                    loading: isLoadingOrganisations,
                   },
                 ]
               : [
@@ -59,13 +57,13 @@ const Page: NextPage = () => {
                     name: OrganisationNavigationEnum.enum.Dashboard,
                     href: `/${organisation?.name}`,
                     enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                    loading: false,
+                    loading: isLoadingOrganisations,
                   },
                   {
                     name: OrganisationNavigationEnum.enum.Account,
                     href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
                     enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-                    loading: false,
+                    loading: isLoadingOrganisations,
                   },
                 ]
           }

@@ -36,7 +36,7 @@ export const SettingsNavigations = () => {
 }
 
 export const AccountNavigation = () => {
-  const { current: organisation } = useQueryOrganisation()
+  const { current: organisation, isLoading } = useQueryOrganisation()
   const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
   return (
     <div>

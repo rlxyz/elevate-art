@@ -5,8 +5,8 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useEffect, useState } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { useEffect } from 'react'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
   const reset = useRepositoryStore((state) => state.reset)
@@ -27,10 +27,8 @@ const Page = () => {
     setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General)
   }, [])
 
-  const [hasMounted, setHasMounted] = useState(false)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  const isLoading = isLoadingOrganisations && isLoadingRepositories
 
   return (
     <AuthLayout>
@@ -44,37 +42,20 @@ const Page = () => {
               organisations,
             },
           ]}
-          internalNavigation={
-            organisation?.type === OrganisationDatabaseEnum.enum.Team
-              ? [
-                  {
-                    name: OrganisationNavigationEnum.enum.Dashboard,
-                    href: `/${organisation?.name}`,
-                    enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                    loading: false,
-                  },
-                  {
-                    name: OrganisationNavigationEnum.enum.Settings,
-                    href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-                    enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-                    loading: false,
-                  },
-                ]
-              : [
-                  {
-                    name: OrganisationNavigationEnum.enum.Dashboard,
-                    href: `/${organisation?.name}`,
-                    enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-                    loading: false,
-                  },
-                  {
-                    name: OrganisationNavigationEnum.enum.Account,
-                    href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
-                    enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-                    loading: false,
-                  },
-                ]
-          }
+          internalNavigation={[
+            {
+              name: OrganisationNavigationEnum.enum.Dashboard,
+              href: `/${organisation?.name}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              loading: isLoadingOrganisations,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Account,
+              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+              loading: isLoadingOrganisations,
+            },
+          ]}
         />
         <Layout.Body>
           <div className='-ml-4 py-8 space-y-8'>
@@ -83,7 +64,14 @@ const Page = () => {
                 <div className='col-span-2'>
                   <AccountNavigation />
                 </div>
-                <div className='col-span-8'>Nothing...</div>
+                <div className='col-span-8'>
+                  <div className='space-y-1'>
+                    <span className='text-sm font-semibold'>We intent to implement this page soon.</span>
+                    <p className='text-xs text-darkGrey'>
+                      If the universe doesn't become a black hole in the meantime, you will be able to set a username.
+                    </p>
+                  </div>
+                </div>
               </div>
             }
           </div>
