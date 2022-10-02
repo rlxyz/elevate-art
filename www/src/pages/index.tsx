@@ -4,6 +4,7 @@ import { Link } from '@components/Layout/Link'
 import type { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
+import { useAuthenticated } from '../hooks/utils/useAuthenticated'
 
 const Guide = () => {
   return (
@@ -64,6 +65,7 @@ const CoolShit = () => {
 }
 
 const Home: NextPage = () => {
+  const { isLoggedIn } = useAuthenticated()
   return (
     <>
       <Layout>
@@ -102,4 +104,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!personal) return { props: {} }
   return { redirect: { destination: `/${personal.name}`, permanent: true } }
 }
+
 export default Home

@@ -95,9 +95,9 @@ const OrganisationAccountDisplayPendingInvites = () => {
                     <div className='flex flex-row space-x-2'>
                       {session?.data?.user?.address ? (
                         <>
-                          <button className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
+                          {/* <button className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
                             Decline
-                          </button>
+                          </button> */}
                           <button
                             onClick={() => {
                               mutate({ organisationId: pending.organisation.id, address: session?.data?.user?.address || '' })
