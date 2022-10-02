@@ -1,17 +1,115 @@
 import { Layout } from '@components/Layout/Layout'
+import { Link } from '@components/Layout/Link'
 import { AccountNavigation } from '@components/Organisation/OrganisationSettings'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { trpc } from '@utils/trpc'
 import type { GetServerSideProps, NextPage } from 'next'
-import { getSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 type OrganisationPageProp = {
   userId: string
   organisationId: string
+}
+
+const OrganisationAccountTeam = () => {
+  const { all: organisations } = useQueryOrganisation()
+  const [query, setQuery] = useState('')
+  const filteredOrganisaitons = organisations?.filter(
+    (x) => x.name.toLowerCase().includes(query.toLowerCase()) && x.type === OrganisationDatabaseEnum.enum.Team
+  )
+  return organisations ? (
+    <div className='space-y-6'>
+      <div className='space-y-2'>
+        <span className='text-xl font-semibold'>Your Teams</span>
+        <p className='text-xs'>Manage the Teams that you're a part of, join suggested ones, or create a new one.</p>
+      </div>
+      <input
+        onChange={(e) => setQuery(e.target.value)}
+        className='text-xs border w-full border-mediumGrey rounded-[5px] p-2'
+        placeholder='Search'
+      />
+      {filteredOrganisaitons && filteredOrganisaitons.length ? (
+        <div className='border border-mediumGrey rounded-[5px] divide-y divide-mediumGrey'>
+          {filteredOrganisaitons?.map((organisation) => {
+            return (
+              <div className='p-4 flex flex-row items-center justify-between'>
+                <div className='flex flex-row space-y-1 items-center space-x-3'>
+                  <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                  <div className='flex flex-col space-y-1'>
+                    <span className='text-xs font-bold'>{organisation.name}</span>
+                    <span className='text-xs text-darkGrey'>{organisation.name}</span>
+                  </div>
+                </div>
+                <Link
+                  href={`/${organisation.name}`}
+                  className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                >
+                  View
+                </Link>
+              </div>
+            )
+          })}
+        </div>
+      ) : null}
+    </div>
+  ) : null
+}
+
+const OrganisationAccountDisplayPendingInvites = () => {
+  const { pendings } = useQueryOrganisation()
+  const session = useSession()
+  const { mutate } = trpc.useMutation('organisation.acceptInvitation', {
+    onMutate: () => {},
+  })
+  return (
+    <>
+      {pendings?.length ? (
+        <div className='space-y-6'>
+          <div className='space-y-2'>
+            <span className='text-xl font-semibold'>Pending Invites</span>
+            <p className='text-xs'>Join teams you've been invited to.</p>
+            <div className='border border-mediumGrey rounded-[5px] divide-y divide-mediumGrey'>
+              {pendings.map((pending) => {
+                return (
+                  <div className='p-4 flex flex-row items-center justify-between'>
+                    <div className='flex flex-row space-y-1 items-center space-x-3'>
+                      <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                      <div className='flex flex-col space-y-1'>
+                        <span className='text-xs font-bold'>{pending.organisation.name}</span>
+                        <span className='text-xs text-darkGrey'>{pending.role}</span>
+                      </div>
+                    </div>
+                    <div className='flex flex-row space-x-2'>
+                      {session?.data?.user?.address ? (
+                        <>
+                          <button className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
+                            Decline
+                          </button>
+                          <button
+                            onClick={() => {
+                              mutate({ organisationId: pending.organisation.id, address: session?.data?.user?.address || '' })
+                            }}
+                            className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                          >
+                            Accept
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
+  )
 }
 
 const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
@@ -27,7 +125,6 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
       }
     }
   )
-
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Account)
     setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.Teams)
@@ -92,7 +189,10 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
                 <AccountNavigation />
               </div>
               <div className='col-span-8'>
-                <div className='space-y-6'>Hi</div>
+                <div className='space-y-9'>
+                  <OrganisationAccountTeam />
+                  <OrganisationAccountDisplayPendingInvites />
+                </div>
               </div>
             </div>
           }

@@ -10,5 +10,9 @@ export const useQueryOrganisation = () => {
     isLoading,
     isError,
   } = trpc.useQuery(['organisation.getManyOrganisationByUserId', { id: session?.user?.id || '' }])
-  return { all: organisations, current: organisations?.find((o) => o.id === organisationId), isLoading, isError }
+  const { data: pendings } = trpc.useQuery([
+    'organisation.getManyPendingOrganisationByUserId',
+    { address: session?.user?.address || '' },
+  ])
+  return { all: organisations, pendings, current: organisations?.find((o) => o.id === organisationId), isLoading, isError }
 }

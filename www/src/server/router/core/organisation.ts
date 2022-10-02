@@ -3,6 +3,83 @@ import { z } from 'zod'
 import { createRouter } from '../context'
 
 export const organisationRouter = createRouter()
+  .query('getManyPendingOrganisationByUserId', {
+    input: z.object({
+      address: z.string(),
+    }),
+    async resolve({ input: { address }, ctx }) {
+      return await ctx.prisma.organisationPending.findMany({
+        where: {
+          address,
+        },
+        include: {
+          organisation: true,
+        },
+      })
+    },
+  })
+  .mutation('acceptInvitation', {
+    input: z.object({
+      organisationId: z.string(),
+      address: z.string(),
+    }),
+    async resolve({ input: { organisationId, address }, ctx }) {
+      const pending = await ctx.prisma.organisationPending.findUnique({
+        where: {
+          address_organisationId: {
+            organisationId,
+            address,
+          },
+        },
+      })
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          address,
+        },
+      })
+      if (!pending || !user) return null
+      console.log({ pending, user })
+      await ctx.prisma.$transaction(async (tx) => {
+        await tx.organisationPending.delete({
+          where: {
+            address_organisationId: {
+              organisationId,
+              address,
+            },
+          },
+        })
+        console.log('creating', pending.role, user.address)
+        if (pending.role === OrganisationDatabaseRoleEnum.enum.Admin) {
+          const a = await tx.organisation.update({
+            where: {
+              id: organisationId,
+            },
+            data: {
+              admins: {
+                create: {
+                  userId: user.id,
+                },
+              },
+            },
+          })
+        }
+        if (pending.role === OrganisationDatabaseRoleEnum.enum.Member) {
+          await tx.organisation.update({
+            where: {
+              id: organisationId,
+            },
+            data: {
+              members: {
+                create: {
+                  userId: user.id,
+                },
+              },
+            },
+          })
+        }
+      })
+    },
+  })
   .query('getManyOrganisationByUserId', {
     input: z.object({
       id: z.string(),
@@ -27,7 +104,11 @@ export const organisationRouter = createRouter()
               user: true,
             },
           },
-          pendings: true,
+          pendings: {
+            include: {
+              organisation: true,
+            },
+          },
         },
       })
     },
