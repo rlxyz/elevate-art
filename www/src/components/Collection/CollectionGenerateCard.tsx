@@ -1,8 +1,8 @@
-import CollectionIncrementGenerationDialog from '@components/Actions/CollectionIncrementGenerationDialog'
 import Button from '@components/Layout/Button'
 import Image from 'next/image'
 
 import { useState } from 'react'
+import CollectionIncrementGenerationDialog from './CollectionIncrementGenerationDialog'
 
 export const GenerateButton = () => {
   const [isOpen, setIsOpen] = useState(false)

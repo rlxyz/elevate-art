@@ -8,6 +8,7 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
   const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
+  const repositoryName = router.query.repositoryName as string
   const { all: organisations, isLoading } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {

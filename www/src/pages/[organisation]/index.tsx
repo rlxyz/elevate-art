@@ -3,6 +3,7 @@ import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRep
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
@@ -21,6 +22,16 @@ const Page: NextPage = () => {
   const { data: session } = useSession()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
+
+  const { reset } = useRepositoryStore((state) => {
+    return {
+      reset: state.reset,
+    }
+  })
+
+  useEffect(() => {
+    reset()
+  }, [])
 
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
