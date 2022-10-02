@@ -40,7 +40,7 @@ const Page = () => {
           internalRoutes={[
             {
               current: organisation?.name || '',
-              href: `/${organisation?.name}`,
+              href: `/${organisation?.name || ''}`,
               organisations,
             },
           ]}

@@ -33,12 +33,18 @@ export const organisationRouter = createRouter()
   })
   .query('getManyPendingOrganisationByUserId', {
     input: z.object({
-      address: z.string(),
+      id: z.string(),
     }),
-    async resolve({ input: { address }, ctx }) {
+    async resolve({ input: { id }, ctx }) {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      })
+      if (!user) return
       return await ctx.prisma.organisationPending.findMany({
         where: {
-          address,
+          address: user.address,
         },
         include: {
           organisation: true,
@@ -48,37 +54,25 @@ export const organisationRouter = createRouter()
   })
   .mutation('acceptInvitation', {
     input: z.object({
-      organisationId: z.string(),
-      address: z.string(),
+      pendingId: z.string(),
     }),
-    async resolve({ input: { organisationId, address }, ctx }) {
-      const pending = await ctx.prisma.organisationPending.findUnique({
+    async resolve({ input: { pendingId }, ctx }) {
+      const pending = await ctx.prisma.organisationPending.findFirst({
         where: {
-          address_organisationId: {
-            organisationId,
-            address,
-          },
+          id: pendingId,
         },
       })
+      if (!pending) return null
       const user = await ctx.prisma.user.findUnique({
         where: {
-          address,
+          address: pending?.address,
         },
       })
-      if (!pending || !user) return null
+      if (!user) return null
       await ctx.prisma.$transaction(async (tx) => {
-        await tx.organisationPending.delete({
-          where: {
-            address_organisationId: {
-              organisationId,
-              address,
-            },
-          },
-        })
+        await tx.organisationPending.delete({ where: { id: pendingId } })
         await tx.organisation.update({
-          where: {
-            id: organisationId,
-          },
+          where: { id: pending.organisationId },
           data: {
             members: {
               create: {
