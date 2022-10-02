@@ -38,7 +38,6 @@ export const organisationRouter = createRouter()
         },
       })
       if (!pending || !user) return null
-      console.log({ pending, user })
       await ctx.prisma.$transaction(async (tx) => {
         await tx.organisationPending.delete({
           where: {
@@ -48,35 +47,22 @@ export const organisationRouter = createRouter()
             },
           },
         })
-        console.log('creating', pending.role, user.address)
-        if (pending.role === OrganisationDatabaseRoleEnum.enum.Admin) {
-          const a = await tx.organisation.update({
-            where: {
-              id: organisationId,
-            },
-            data: {
-              admins: {
-                create: {
-                  userId: user.id,
-                },
+        await tx.organisation.update({
+          where: {
+            id: organisationId,
+          },
+          data: {
+            members: {
+              create: {
+                userId: user.id,
+                type:
+                  pending.role === OrganisationDatabaseRoleEnum.enum.Admin
+                    ? OrganisationDatabaseRoleEnum.enum.Admin
+                    : OrganisationDatabaseRoleEnum.enum.Curator,
               },
             },
-          })
-        }
-        if (pending.role === OrganisationDatabaseRoleEnum.enum.Member) {
-          await tx.organisation.update({
-            where: {
-              id: organisationId,
-            },
-            data: {
-              members: {
-                create: {
-                  userId: user.id,
-                },
-              },
-            },
-          })
-        }
+          },
+        })
       })
     },
   })
@@ -87,18 +73,13 @@ export const organisationRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.organisation.findMany({
         where: {
-          admins: {
+          members: {
             some: {
               userId: input.id,
             },
           },
         },
         include: {
-          admins: {
-            include: {
-              user: true,
-            },
-          },
           members: {
             include: {
               user: true,

@@ -2,7 +2,7 @@ import * as z from 'zod'
 
 const OrganisationDatabaseRole = Object.freeze({
   Admin: 'admin',
-  Member: 'member',
+  Curator: 'curator',
 })
 
 export const OrganisationDatabaseRoleEnum = z.nativeEnum(OrganisationDatabaseRole)

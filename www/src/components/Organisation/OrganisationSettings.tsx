@@ -187,8 +187,8 @@ export const OrganisationTeamAddUser = () => {
                     <option value={OrganisationDatabaseRoleEnum.enum.Admin}>
                       {capitalize(OrganisationDatabaseRoleEnum.enum.Admin)}
                     </option>
-                    <option value={OrganisationDatabaseRoleEnum.enum.Member}>
-                      {capitalize(OrganisationDatabaseRoleEnum.enum.Member)}
+                    <option value={OrganisationDatabaseRoleEnum.enum.Curator}>
+                      {capitalize(OrganisationDatabaseRoleEnum.enum.Curator)}
                     </option>
                   </select>
                 </div>
@@ -240,33 +240,16 @@ export const OrganisationTeamDisplayUsers = () => {
         <span className='text-darkGrey'>All</span>
       </div>
       <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
-        {organisation?.admins.map(({ id, user: { id: userId, address }, createdAt }) => (
+        {organisation?.members.map(({ id, user: { address }, createdAt, type }) => (
           <div key={id} className='px-6 py-4 flex justify-between items-center'>
             <div className='flex items-center space-x-2'>
               <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
               <div className='flex flex-col space-y-1'>
                 <span className='text-xs font-semibold'>{address}</span>
-                <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
-              </div>
-              {session.data?.user?.id === userId ? (
-                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'>
-                  You
-                </span>
-              ) : null}
-            </div>
-            <span className='text-xs text-darkGrey'>Admin</span>
-          </div>
-        ))}
-        {organisation?.members.map(({ id, user, createdAt }) => (
-          <div key={id} className='px-6 py-4 flex justify-between items-center'>
-            <div className='flex items-center space-x-2'>
-              <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
-              <div className='flex flex-col space-y-1'>
-                <span className='text-xs font-semibold'>{user.address}</span>
-                <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+                <span className='text-xs text-darkGrey'>{timeAgo(createdAt)}</span>
               </div>
             </div>
-            <span className='text-xs text-darkGrey'>Member</span>
+            <span className='text-xs text-darkGrey'>{capitalize(type)}</span>
           </div>
         ))}
       </div>
@@ -295,29 +278,6 @@ export const OrganisationTeamDisplayPending = () => {
           </div>
         ))}
       </div>
-    </div>
-  )
-}
-
-export const OrganisationTeamSettings = () => {
-  const { current: organisation } = useQueryOrganisation()
-  return (
-    <div className='space-y-6'>
-      <OrganisationTeamAddUser />
-      <div className='space-y-1'>
-        <span className='text-xs'>Team Members</span>
-        <OrganisationTeamDisplayUsers />
-      </div>
-      {organisation?.pendings?.length ? (
-        <>
-          <div className='space-y-1'>
-            <span className='text-xs'>Pending</span>
-            <OrganisationTeamDisplayPending />
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
     </div>
   )
 }

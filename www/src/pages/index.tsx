@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = session?.user ?? null
   if (!user) return { props: {} }
   const personal = await prisma?.organisation.findFirst({
-    where: { type: OrganisationDatabaseEnum.enum.Personal, admins: { some: { userId: user.id } } },
+    where: { type: OrganisationDatabaseEnum.enum.Personal, members: { some: { userId: user.id } } },
     select: { name: true },
   })
   if (!personal) return { props: {} }

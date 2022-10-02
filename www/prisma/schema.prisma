@@ -22,7 +22,6 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    admins  OrganisationAdmin[]
     members OrganisationMember[]
 }
 
@@ -34,23 +33,10 @@ model Organisation {
     type      String   @default("personal") @db.VarChar(255)
 
     repositories Repository[]
-    admins       OrganisationAdmin[]
     members      OrganisationMember[]
     pendings     OrganisationPending[]
 
     @@map(name: "organisations")
-}
-
-model OrganisationAdmin {
-    id             String       @id @default(cuid())
-    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId         String
-    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
-    organisationId String
-    createdAt      DateTime     @default(now())
-    updatedAt      DateTime     @default(now())
-
-    @@unique([userId, organisationId])
 }
 
 model OrganisationMember {
@@ -61,6 +47,7 @@ model OrganisationMember {
     organisationId String
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @default(now())
+    type           String       @default("admin") @db.VarChar(255)
 
     @@unique([userId, organisationId])
 }

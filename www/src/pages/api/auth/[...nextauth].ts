@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
-import { OrganisationDatabaseEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
@@ -55,8 +55,9 @@ export const authOptions: NextAuthOptions = {
             update: {},
             create: {
               address,
-              admins: {
+              members: {
                 create: {
+                  type: OrganisationDatabaseRoleEnum.enum.Admin,
                   organisation: {
                     create: {
                       type: OrganisationDatabaseEnum.enum.Personal,

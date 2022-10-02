@@ -5,6 +5,8 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { Organisation, OrganisationMember, User } from '@prisma/client'
+import { capitalize } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import type { GetServerSideProps, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
@@ -22,6 +24,12 @@ const OrganisationAccountTeam = () => {
   const filteredOrganisaitons = organisations?.filter(
     (x) => x.name.toLowerCase().includes(query.toLowerCase()) && x.type === OrganisationDatabaseEnum.enum.Team
   )
+  const session = useSession()
+
+  const getUserRoleInOrganisation = (organisation: Organisation & { members: (OrganisationMember & { user: User })[] }) => {
+    return organisation.members.find((x) => x.userId === session?.data?.user?.id)?.type
+  }
+
   return organisations ? (
     <div className='space-y-6'>
       <div className='space-y-2'>
@@ -42,7 +50,7 @@ const OrganisationAccountTeam = () => {
                   <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
                   <div className='flex flex-col space-y-1'>
                     <span className='text-xs font-bold'>{organisation.name}</span>
-                    <span className='text-xs text-darkGrey'>{organisation.name}</span>
+                    <span className='text-xs text-darkGrey'>{capitalize(getUserRoleInOrganisation(organisation) || '')}</span>
                   </div>
                 </div>
                 <Link
@@ -81,7 +89,7 @@ const OrganisationAccountDisplayPendingInvites = () => {
                       <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
                       <div className='flex flex-col space-y-1'>
                         <span className='text-xs font-bold'>{pending.organisation.name}</span>
-                        <span className='text-xs text-darkGrey'>{pending.role}</span>
+                        <span className='text-xs text-darkGrey'>{capitalize(pending.role)}</span>
                       </div>
                     </div>
                     <div className='flex flex-row space-x-2'>
@@ -94,7 +102,7 @@ const OrganisationAccountDisplayPendingInvites = () => {
                             onClick={() => {
                               mutate({ organisationId: pending.organisation.id, address: session?.data?.user?.address || '' })
                             }}
-                            className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                            className='text-white bg-blueHighlight border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
                           >
                             Accept
                           </button>
@@ -207,7 +215,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context)
   const user = session?.user ?? null
   if (!user) return { redirect: { destination: `/`, permanent: true } }
-  const admin = await prisma?.organisationAdmin.findFirst({
+  const admin = await prisma?.organisationMember.findFirst({
     where: { organisation: { name: organisationName, type: OrganisationDatabaseEnum.enum.Personal }, user: { id: user.id } },
     select: { organisationId: true },
   })
