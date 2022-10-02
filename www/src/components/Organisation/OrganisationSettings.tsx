@@ -64,11 +64,7 @@ export const OrganisationGeneralSettings = () => {
     formState: { errors },
   } = useForm()
   return (
-    <form
-      onSubmit={handleSubmit((data) => {
-        console.log(data)
-      })}
-    >
+    <form onSubmit={handleSubmit((data) => {})}>
       <div className='w-full rounded-[5px] border border-mediumGrey'>
         <div className='p-6 space-y-4'>
           <div className='flex flex-col'>

@@ -8,8 +8,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import { trpc } from '@utils/trpc'
-import type { GetServerSideProps, NextPage } from 'next'
-import { getSession, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
@@ -120,7 +119,7 @@ const OrganisationAccountDisplayPendingInvites = () => {
   )
 }
 
-const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
+const Page = () => {
   const reset = useRepositoryStore((state) => state.reset)
   const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
     (state) => {
@@ -136,10 +135,7 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Account)
     setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.Teams)
-    reset()
-    setHasMounted(true)
-    setOrganisationId(organisationId)
-  }, [organisationId])
+  }, [])
 
   const [hasMounted, setHasMounted] = useState(false)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
@@ -208,21 +204,6 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
       </Layout.Body>
     </Layout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const organisationName = context.query.organisation as string
-  const session = await getSession(context)
-  const user = session?.user ?? null
-  if (!user) return { redirect: { destination: `/`, permanent: true } }
-  const admin = await prisma?.organisationMember.findFirst({
-    where: { organisation: { name: organisationName, type: OrganisationDatabaseEnum.enum.Personal }, user: { id: user.id } },
-    select: { organisationId: true },
-  })
-  if (!admin) return { redirect: { destination: `/`, permanent: true } }
-  return {
-    props: { organisationId: admin.organisationId, userId: user.id },
-  }
 }
 
 export default Page

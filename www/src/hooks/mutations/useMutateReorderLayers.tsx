@@ -36,7 +36,6 @@ export const useMutateReorderLayers = () => {
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers', { id: repositoryId }]),
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      console.log('onError', err)
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], context.backup)
     },
   })

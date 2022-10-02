@@ -4,51 +4,11 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { ReactNode, useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-
-const AuthLayout = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn } = useAuthenticated()
-  const router = useRouter()
-  const organisationName = router.query.organisation as string
-  const { all: organisations, isLoading } = useQueryOrganisation()
-  const { setOrganisationId, setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      organisationId: state.organisationId,
-      setOrganisationId: state.setOrganisationId,
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
-    }
-  })
-  useEffect(() => {
-    if (isLoading) {
-      return
-    }
-    const organisation = organisations?.find((organisation) => organisation.name === organisationName)
-    if (!organisation) {
-      router.push('/')
-      return
-    }
-    setOrganisationId(organisation.id)
-  }, [isLoading])
-
-  useEffect(() => {
-    if (!organisationName) {
-      router.push('/404')
-      return
-    }
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
-  }, [organisationName])
-
-  if (isLoggedIn) {
-    return <>{children}</>
-  }
-
-  return null
-}
+import { AuthLayout } from '../../components/Layout/AuthLayout'
 
 const Page: NextPage = () => {
   const reset = useRepositoryStore((state) => state.reset)
@@ -60,7 +20,7 @@ const Page: NextPage = () => {
       currentRoute: state.currentRoute,
     }
   })
-
+  const { data: session } = useSession()
   const [hasMounted, setHasMounted] = useState(false)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
@@ -119,20 +79,5 @@ const Page: NextPage = () => {
     </AuthLayout>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const organisationName = context.query.organisation as string
-//   const session = await getSession(context)
-//   const user = session?.user ?? null
-//   if (!user) return { redirect: { destination: `/`, permanent: true } }
-//   const admin = await prisma?.organisationMember.findFirst({
-//     where: { organisation: { name: organisationName }, user: { id: user.id } },
-//     select: { organisationId: true },
-//   })
-//   if (!admin) return { redirect: { destination: `/`, permanent: true } }
-//   return {
-//     props: { organisationId: admin.organisationId, userId: user.id },
-//   }
-// }
 
 export default Page

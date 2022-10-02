@@ -91,7 +91,6 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   return (
     <>
       {routes.map(({ current, href, organisations }, index) => {
-        console.log(current === '')
         return (
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
