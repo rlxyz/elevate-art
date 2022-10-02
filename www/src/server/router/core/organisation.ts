@@ -15,6 +15,18 @@ export const organisationRouter = createRouter()
             },
           },
         },
+        include: {
+          admins: {
+            include: {
+              user: true,
+            },
+          },
+          members: {
+            include: {
+              user: true,
+            },
+          },
+        },
       })
     },
   })

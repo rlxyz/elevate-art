@@ -32,6 +32,8 @@ model OrganisationAdmin {
     userId         String
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
 
     @@unique([userId, organisationId])
 }
@@ -42,6 +44,8 @@ model OrganisationMember {
     userId         String
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
 
     @@unique([userId, organisationId])
 }
