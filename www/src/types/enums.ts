@@ -27,15 +27,19 @@ const OrganisationNavigation = Object.freeze({
   Dashboard: 'dashboard',
   Activity: 'activity',
   Settings: 'settings',
+  Account: 'account',
   New: 'new',
 })
+
 export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 const OrganisationSettingsNavigation = Object.freeze({
   General: 'general',
   Team: 'members',
+  Teams: 'teams', // only for personal organisations
 })
+
 export const OrganisationSettingsNavigationEnum = z.nativeEnum(OrganisationSettingsNavigation)
 export type OrganisationSettingsNavigationType = z.infer<typeof OrganisationSettingsNavigationEnum>
 

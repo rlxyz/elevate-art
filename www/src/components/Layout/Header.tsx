@@ -1,5 +1,5 @@
 import { Popover, Transition } from '@headlessui/react'
-import { CheckIcon, PlusCircleIcon, SelectorIcon } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
 import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment, ReactNode } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
-import Button from './Button'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
 
@@ -136,7 +135,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                           </div>
                           {organisations.filter((x) => x.type === OrganisationDatabaseEnum.enum.Team).length > 0 ? (
                             <div className='pt-3 space-y-1'>
-                              <span className='text-xs text-darkGrey'>Team</span>
+                              <span className='text-xs text-darkGrey'>Teams</span>
                               <div>
                                 {organisations
                                   .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
@@ -156,14 +155,14 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                           ) : (
                             <></>
                           )}
-                          <div className='pt-2'>
+                          {/* <div className='pt-2'>
                             <div className='py-1 border border-mediumGrey rounded-[5px] bg-lightGray flex space-x-2 items-center'>
                               <Button variant='ghost' className='space-x-2'>
                                 <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
                                 <span className='text-black'>Create Team</span>
                               </Button>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </Popover.Panel>

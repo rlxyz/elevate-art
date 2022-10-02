@@ -1,5 +1,10 @@
 import { Layout } from '@components/Layout/Layout'
-import { OrganisationGeneralSettings, SettingsNavigations } from '@components/Organisation/OrganisationSettings'
+import {
+  OrganisationTeamAddUser,
+  OrganisationTeamDisplayPending,
+  OrganisationTeamDisplayUsers,
+  SettingsNavigations,
+} from '@components/Organisation/OrganisationSettings'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -75,7 +80,23 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
                 <SettingsNavigations />
               </div>
               <div className='col-span-8'>
-                <OrganisationGeneralSettings />
+                <div className='space-y-6'>
+                  <OrganisationTeamAddUser />
+                  <div className='space-y-1'>
+                    <span className='text-xs'>Team Members</span>
+                    <OrganisationTeamDisplayUsers />
+                  </div>
+                  {organisation?.pendings?.length ? (
+                    <>
+                      <div className='space-y-1'>
+                        <span className='text-xs'>Pending</span>
+                        <OrganisationTeamDisplayPending />
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
           }

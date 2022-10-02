@@ -31,6 +31,27 @@ export const SettingsNavigations = () => {
   )
 }
 
+export const AccountNavigation = () => {
+  const { current: organisation } = useQueryOrganisation()
+  const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
+  return (
+    <div>
+      {[
+        {
+          name: OrganisationSettingsNavigationEnum.enum.General,
+          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
+        },
+        {
+          name: OrganisationSettingsNavigationEnum.enum.Teams,
+          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}/${OrganisationSettingsNavigationEnum.enum.Teams}`,
+        },
+      ].map(({ name, href }) => {
+        return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />
+      })}
+    </div>
+  )
+}
+
 export const OrganisationGeneralSettings = () => {
   const { current: organisation } = useQueryOrganisation()
   const {
@@ -90,7 +111,7 @@ export const OrganisationGeneralSettings = () => {
   )
 }
 
-const OrganisationTeamAddUser = () => {
+export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisation()
   const {
     register,
@@ -210,7 +231,7 @@ const OrganisationTeamAddUser = () => {
   )
 }
 
-const OrganisationTeamDisplayUsers = () => {
+export const OrganisationTeamDisplayUsers = () => {
   const { current: organisation } = useQueryOrganisation()
   const session = useSession()
   return (
@@ -253,7 +274,7 @@ const OrganisationTeamDisplayUsers = () => {
   )
 }
 
-const OrganisationTeamDisplayPending = () => {
+export const OrganisationTeamDisplayPending = () => {
   const { current: organisation } = useQueryOrganisation()
   return (
     <div>

@@ -1,5 +1,5 @@
 import { Layout } from '@components/Layout/Layout'
-import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
+import { AccountNavigation } from '@components/Organisation/OrganisationSettings'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -7,7 +7,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import type { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 type OrganisationPageProp = {
   userId: string
@@ -16,17 +16,21 @@ type OrganisationPageProp = {
 
 const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
   const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      organisationId: state.organisationId,
-      setOrganisationId: state.setOrganisationId,
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
+  const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
+    (state) => {
+      return {
+        organisationId: state.organisationId,
+        setOrganisationId: state.setOrganisationId,
+        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
+        setCurrentRoute: state.setCurrentRoute,
+        currentRoute: state.currentRoute,
+      }
     }
-  })
+  )
 
   useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
+    setCurrentRoute(OrganisationNavigationEnum.enum.Account)
+    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.Teams)
     reset()
     setHasMounted(true)
     setOrganisationId(organisationId)
@@ -81,7 +85,18 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
         }
       />
       <Layout.Body>
-        <div className='py-8 space-y-8'>{repositories && <ViewAllRepositories />}</div>
+        <div className='-ml-4 py-8 space-y-8'>
+          {
+            <div className='grid grid-cols-10 gap-x-6'>
+              <div className='col-span-2'>
+                <AccountNavigation />
+              </div>
+              <div className='col-span-8'>
+                <div className='space-y-6'>Hi</div>
+              </div>
+            </div>
+          }
+        </div>
       </Layout.Body>
     </Layout>
   )
@@ -93,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = session?.user ?? null
   if (!user) return { redirect: { destination: `/`, permanent: true } }
   const admin = await prisma?.organisationAdmin.findFirst({
-    where: { organisation: { name: organisationName }, user: { id: user.id } },
+    where: { organisation: { name: organisationName, type: OrganisationDatabaseEnum.enum.Personal }, user: { id: user.id } },
     select: { organisationId: true },
   })
   if (!admin) return { redirect: { destination: `/`, permanent: true } }
