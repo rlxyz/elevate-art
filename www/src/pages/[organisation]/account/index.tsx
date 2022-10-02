@@ -5,6 +5,7 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
@@ -29,7 +30,7 @@ const Page = () => {
 
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-
+  const { data: session } = useSession()
   return (
     <AuthLayout>
       <Layout>
@@ -37,7 +38,7 @@ const Page = () => {
           connectButton
           internalRoutes={[
             {
-              current: organisation?.name || '',
+              current: session?.user?.address || '',
               href: `/${organisation?.name || ''}`,
               organisations,
             },

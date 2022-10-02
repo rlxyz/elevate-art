@@ -4,6 +4,7 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { AuthLayout } from '../../components/Layout/AuthLayout'
@@ -17,6 +18,7 @@ const Page: NextPage = () => {
       currentRoute: state.currentRoute,
     }
   })
+  const { data: session } = useSession()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
 
@@ -31,7 +33,8 @@ const Page: NextPage = () => {
           connectButton
           internalRoutes={[
             {
-              current: organisation?.name || '',
+              current:
+                organisation?.type === OrganisationDatabaseEnum.enum.Team ? organisation?.name : session?.user?.address || '',
               href: `/${organisation?.name}`,
               organisations,
             },

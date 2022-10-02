@@ -1,11 +1,14 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
+import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { Organisation } from '@prisma/client'
+import { getEnsName } from '@utils/ethers'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Fragment, ReactNode } from 'react'
+import { Fragment, ReactNode, useState } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
@@ -87,6 +90,17 @@ type HeaderInternalAppRoutesProps = {
   }[]
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
+  const { data: session } = useSession()
+  const [ensName, setEnsName] = useState<string | null>(null)
+  useDeepCompareEffect(() => {
+    const resolveAddress = async () => {
+      if (!session?.user?.address) return null
+      return await getEnsName(session.user.address)
+    }
+    resolveAddress().then((pending) => {
+      setEnsName(pending)
+    })
+  }, [session?.user?.address])
   if (!routes.length) return <></>
   return (
     <>
@@ -100,7 +114,9 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   <div className='w-36 animate-pulse h-5 rounded-[5px] bg-mediumGrey' />
                 ) : (
                   <>
-                    <div className={clsx(organisations ? 'text-black' : 'text-darkGrey', 'py-1')}>{current}</div>
+                    <div className={clsx(organisations ? 'text-black' : 'text-darkGrey', 'py-1')}>
+                      {current === session?.user?.address && ensName ? ensName : current}
+                    </div>
                   </>
                 )}
               </Link>
@@ -131,7 +147,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                     <div className='px-2 flex flex-row justify-between items-center w-full'>
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
-                                        <span>{name}</span>
+                                        <span>You</span>
                                       </div>
                                       {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
                                     </div>

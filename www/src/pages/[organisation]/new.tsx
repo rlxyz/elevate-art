@@ -1,34 +1,39 @@
+import { AuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import CreateNewRepository from '@components/Organisation/OrganisationCreateNewRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import type { GetServerSideProps, NextPage } from 'next'
-import { getSession } from 'next-auth/react'
+import type { NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 const Page: NextPage = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const { all: organisations, isLoading } = useQueryOrganisation()
+  const { all: organisations, current: organisation, isLoading } = useQueryOrganisation()
   const { setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
     return {
       setCurrentRoute: state.setCurrentRoute,
       currentRoute: state.currentRoute,
     }
   })
+  const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
+  const { data: session } = useSession()
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
   }, [])
   return (
-    <>
+    <AuthLayout>
       <Layout hasFooter={false}>
         <Layout.Header
           connectButton
           internalRoutes={[
             {
-              current: organisationName,
-              href: `/${organisationName}`,
+              current:
+                organisation?.type === OrganisationDatabaseEnum.enum.Team ? organisation?.name : session?.user?.address || '',
+              href: `/${organisation?.name}`,
               organisations,
             },
           ]}
@@ -37,21 +42,8 @@ const Page: NextPage = () => {
           <CreateNewRepository />
         </Layout.Body>
       </Layout>
-    </>
+    </AuthLayout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const organisationName = context.query.organisation as string
-  const session = await getSession(context)
-  const user = session?.user ?? null
-  if (!user) return { redirect: { destination: `/`, permanent: true } }
-  return {
-    props: {
-      session,
-      organisationName,
-    },
-  }
 }
 
 export default Page
