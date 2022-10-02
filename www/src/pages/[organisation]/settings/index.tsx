@@ -1,5 +1,5 @@
 import { Layout } from '@components/Layout/Layout'
-import CollectionSettings, { SettingsNavigations } from '@components/Repository/RepositorySettingView'
+import { OrganisationGeneralSettings, SettingsNavigations } from '@components/Organisation/OrganisationSettings'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -7,7 +7,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import type { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 type OrganisationPageProp = {
   userId: string
@@ -16,17 +16,21 @@ type OrganisationPageProp = {
 
 const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
   const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentRoute, currentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      organisationId: state.organisationId,
-      setOrganisationId: state.setOrganisationId,
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
+  const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
+    (state) => {
+      return {
+        organisationId: state.organisationId,
+        setOrganisationId: state.setOrganisationId,
+        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
+        setCurrentRoute: state.setCurrentRoute,
+        currentRoute: state.currentRoute,
+      }
     }
-  })
+  )
 
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Settings)
+    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General)
     reset()
     setHasMounted(true)
     setOrganisationId(organisationId)
@@ -64,14 +68,14 @@ const Page: NextPage<OrganisationPageProp> = ({ organisationId, userId }) => {
         ]}
       />
       <Layout.Body>
-        <div className='py-8 space-y-8'>
+        <div className='-ml-4 py-8 space-y-8'>
           {
             <div className='grid grid-cols-10 gap-x-6'>
               <div className='col-span-2'>
                 <SettingsNavigations />
               </div>
               <div className='col-span-8'>
-                <CollectionSettings />
+                <OrganisationGeneralSettings />
               </div>
             </div>
           }

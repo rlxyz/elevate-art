@@ -1,4 +1,9 @@
-import { OrganisationNavigationType } from 'src/types/enums'
+import {
+  OrganisationNavigationEnum,
+  OrganisationNavigationType,
+  OrganisationSettingsNavigationEnum,
+  OrganisationSettingsNavigationType,
+} from 'src/types/enums'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
@@ -6,6 +11,8 @@ import { persist } from 'zustand/middleware'
 interface OrganisationNavigationInterface {
   organisationId: string | null
   currentRoute: OrganisationNavigationType
+  currentSettingsRoute: OrganisationSettingsNavigationType
+  setCurrentSettingsRoute: (view: OrganisationSettingsNavigationType) => void
   setCurrentRoute: (view: OrganisationNavigationType) => void
   setOrganisationId: (id: string) => void
 }
@@ -14,8 +21,10 @@ export const createOrganisationNavigationStore = create<OrganisationNavigationIn
   persist(
     (set) => ({
       organisationId: null,
-      currentRoute: 'dashboard',
+      currentRoute: OrganisationNavigationEnum.enum.Dashboard,
+      currentSettingsRoute: OrganisationSettingsNavigationEnum.enum.General,
       setOrganisationId: (id: string) => set((_) => ({ organisationId: id })),
+      setCurrentSettingsRoute: (view: OrganisationSettingsNavigationType) => set((_) => ({ currentSettingsRoute: view })),
       setCurrentRoute: (view: OrganisationNavigationType) => set((_) => ({ currentRoute: view })),
     }),
     { name: 'organisationStore' }
