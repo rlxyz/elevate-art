@@ -1,5 +1,13 @@
 import * as z from 'zod'
 
+const OrganisationDatabaseRole = Object.freeze({
+  Admin: 'admin',
+  Member: 'member',
+})
+
+export const OrganisationDatabaseRoleEnum = z.nativeEnum(OrganisationDatabaseRole)
+export type OrganisationDatabaseRoleEnumType = z.infer<typeof OrganisationDatabaseRoleEnum>
+
 const OrganisationDatabase = Object.freeze({
   Personal: 'personal',
   Team: 'team',

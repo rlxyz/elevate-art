@@ -4,9 +4,11 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { capitalize } from '@utils/format'
 import { timeAgo } from '@utils/time'
+import { trpc } from '@utils/trpc'
 import { ethers } from 'ethers'
+import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { OrganisationDatabaseRoleEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 export const SettingsNavigations = () => {
   const { current: organisation } = useQueryOrganisation()
@@ -46,7 +48,7 @@ export const OrganisationGeneralSettings = () => {
         <div className='p-6 space-y-4'>
           <div className='flex flex-col'>
             <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
-              <h1 className='text-lg font-semibold text-black'>{'Team Name'}</h1>
+              <h1 className='text-lg font-semibold text-black'>Team Name</h1>
               <p className='text-xs text-black'>{'Used to identify your teams name on elevate.art'}</p>
             </div>
           </div>
@@ -56,12 +58,13 @@ export const OrganisationGeneralSettings = () => {
                 <span className='px-4 py-2'>{`elevate.art/`}</span>
               </div>
               <div className='col-span-6 flex items-center'>
-                <input
+                {/* <input
                   className='text-xs px-2 w-full h-full rounded-[5px]'
                   defaultValue={organisation?.name || ''}
                   type='string'
                   {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
-                />
+                /> */}
+                <span className='text-xs px-2 w-full h-full items-center flex rounded-[5px]'>{organisation?.name}</span>
               </div>
             </div>
           </div>
@@ -88,15 +91,35 @@ export const OrganisationGeneralSettings = () => {
 }
 
 const OrganisationTeamAddUser = () => {
+  const { current: organisation } = useQueryOrganisation()
   const {
     register,
+    setError,
+    clearErrors,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm()
-  return (
+  const { mutate } = trpc.useMutation('organisation.addUser', {
+    onMutate: () => {
+      clearErrors('exists')
+    },
+    onSuccess: () => {
+      reset()
+    },
+    onError: () => {
+      setError('exists', { type: 'manual', message: 'Something went wrong, possibly the address is already added' })
+    },
+  })
+
+  return organisation ? (
     <form
       onSubmit={handleSubmit((data) => {
-        console.log(data)
+        mutate({
+          address: data.address,
+          organisationId: organisation?.id,
+          role: data.role,
+        })
       })}
     >
       <div className='flex space-y-6 flex-col'>
@@ -122,7 +145,13 @@ const OrganisationTeamAddUser = () => {
                       // defaultValue={organisation?.name || ''}
                       type='string'
                       placeholder='0xd2a08007eeeaf1f81eeF54Ba6A8c4Effa1e545C6'
-                      {...register('address', { required: true, validate: (v) => ethers.utils.isAddress(v) })}
+                      {...register('address', {
+                        required: true,
+                        validate: (v) => ethers.utils.isAddress(v),
+                        onChange: () => {
+                          clearErrors('exists')
+                        },
+                      })}
                     />
                   </div>
                 </div>
@@ -134,8 +163,12 @@ const OrganisationTeamAddUser = () => {
                     {...register('role', { required: true })}
                     className='text-xs p-2 w-full h-full rounded-[5px] border border-mediumGrey'
                   >
-                    <option value={'Admin'}>Admin</option>
-                    <option value={'Member'}>Member</option>
+                    <option value={OrganisationDatabaseRoleEnum.enum.Admin}>
+                      {capitalize(OrganisationDatabaseRoleEnum.enum.Admin)}
+                    </option>
+                    <option value={OrganisationDatabaseRoleEnum.enum.Member}>
+                      {capitalize(OrganisationDatabaseRoleEnum.enum.Member)}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -151,35 +184,54 @@ const OrganisationTeamAddUser = () => {
                   <span>Please choose a role for this address</span>
                 </span>
               ) : null}
+              {errors.exists ? (
+                <>
+                  <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
+                    <ExclamationCircleIcon className='text-redError w-4 h-4' />
+                    <span>Something went wrong, possibly the address is already added</span>
+                  </span>
+                </>
+              ) : null}
             </div>
           </div>
           <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-mediumGrey'>
-            <button className='bg-blueHighlight border border-mediumGrey px-4 py-1.5 rounded-[5px]'>
-              <span className='text-white'>Save</span>
+            <button
+              type='submit'
+              className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-mediumGrey px-4 py-1.5 rounded-[5px]'
+            >
+              Save
             </button>
           </div>
         </div>
       </div>
     </form>
+  ) : (
+    <></>
   )
 }
 
 const OrganisationTeamDisplayUsers = () => {
   const { current: organisation } = useQueryOrganisation()
+  const session = useSession()
   return (
     <div>
       <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-mediumGrey rounded-t-[5px]'>
         <span className='text-darkGrey'>All</span>
       </div>
       <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
-        {organisation?.admins.map(({ id, user, createdAt }) => (
+        {organisation?.admins.map(({ id, user: { id: userId, address }, createdAt }) => (
           <div key={id} className='px-6 py-4 flex justify-between items-center'>
             <div className='flex items-center space-x-2'>
               <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
               <div className='flex flex-col space-y-1'>
-                <span className='text-xs font-semibold'>{user.address}</span>
+                <span className='text-xs font-semibold'>{address}</span>
                 <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
               </div>
+              {session.data?.user?.id === userId ? (
+                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'>
+                  You
+                </span>
+              ) : null}
             </div>
             <span className='text-xs text-darkGrey'>Admin</span>
           </div>
@@ -201,12 +253,50 @@ const OrganisationTeamDisplayUsers = () => {
   )
 }
 
+const OrganisationTeamDisplayPending = () => {
+  const { current: organisation } = useQueryOrganisation()
+  return (
+    <div>
+      <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-mediumGrey rounded-t-[5px]'>
+        <span className='text-darkGrey'>All</span>
+      </div>
+      <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
+        {organisation?.pendings.map(({ id, address, role, createdAt }) => (
+          <div key={id} className='px-6 py-4 flex justify-between items-center'>
+            <div className='flex items-center space-x-2'>
+              <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
+              <div className='flex flex-col space-y-1'>
+                <span className='text-xs font-semibold'>{address}</span>
+                <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+              </div>
+            </div>
+            <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export const OrganisationTeamSettings = () => {
   const { current: organisation } = useQueryOrganisation()
   return (
     <div className='space-y-6'>
       <OrganisationTeamAddUser />
-      <OrganisationTeamDisplayUsers />
+      <div className='space-y-1'>
+        <span className='text-xs'>Team Members</span>
+        <OrganisationTeamDisplayUsers />
+      </div>
+      {organisation?.pendings?.length ? (
+        <>
+          <div className='space-y-1'>
+            <span className='text-xs'>Pending</span>
+            <OrganisationTeamDisplayPending />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

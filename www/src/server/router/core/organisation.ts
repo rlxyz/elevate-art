@@ -1,3 +1,4 @@
+import { OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -26,6 +27,7 @@ export const organisationRouter = createRouter()
               user: true,
             },
           },
+          pendings: true,
         },
       })
     },
@@ -46,6 +48,26 @@ export const organisationRouter = createRouter()
               _count: {
                 select: { traitElements: true },
               },
+            },
+          },
+        },
+      })
+    },
+  })
+  .mutation('addUser', {
+    input: z.object({
+      organisationId: z.string(),
+      address: z.string(),
+      role: OrganisationDatabaseRoleEnum,
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.organisation.update({
+        where: { id: input.organisationId },
+        data: {
+          pendings: {
+            create: {
+              address: input.address,
+              role: input.role,
             },
           },
         },

@@ -26,6 +26,21 @@ model User {
     members OrganisationMember[]
 }
 
+model Organisation {
+    id        String   @id @default(cuid())
+    name      String   @unique @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    type      String   @default("personal") @db.VarChar(255)
+
+    repositories Repository[]
+    admins       OrganisationAdmin[]
+    members      OrganisationMember[]
+    pendings     OrganisationPending[]
+
+    @@map(name: "organisations")
+}
+
 model OrganisationAdmin {
     id             String       @id @default(cuid())
     user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -50,18 +65,16 @@ model OrganisationMember {
     @@unique([userId, organisationId])
 }
 
-model Organisation {
-    id        String   @id @default(cuid())
-    name      String   @unique @db.VarChar(255)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    type      String   @default("personal") @db.VarChar(255)
+model OrganisationPending {
+    id             String       @id @default(cuid())
+    address        String       @db.VarChar(42)
+    role           String       @db.VarChar(20) // shouldnt have default value as we can server to explicitly specific
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
 
-    repositories Repository[]
-    admins       OrganisationAdmin[]
-    members      OrganisationMember[]
-
-    @@map(name: "organisations")
+    @@unique([address, organisationId])
 }
 
 model Repository {
