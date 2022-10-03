@@ -1,3 +1,4 @@
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
 import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
@@ -46,11 +47,6 @@ const Page = () => {
   }, [])
 
   useEffect(() => {
-    if (!organisation) return
-    setOrganisationId(organisation.id)
-  }, [isLoadingOrganisation])
-
-  useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
@@ -69,44 +65,46 @@ const Page = () => {
   }, [])
 
   return (
-    <Layout>
-      <>
-        <Layout.Header
-          internalRoutes={[
-            { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-          ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}`,
-              enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
-            },
-          ]}
-        />
-        <Layout.Body border='lower'>
-          {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RepositoryRuleCreateView />}
-          {layers &&
-          layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length &&
-          currentViewSection === CollectionNavigationEnum.enum.Rules ? (
-            <RepositoryRuleDisplayView />
-          ) : null}
-        </Layout.Body>
-      </>
-    </Layout>
+    <OrganisationAuthLayout>
+      <Layout>
+        <>
+          <Layout.Header
+            internalRoutes={[
+              { current: organisationName, href: `/${organisationName}`, organisations },
+              { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+            ]}
+            internalNavigation={[
+              {
+                name: CollectionNavigationEnum.enum.Preview,
+                loading: mainRepositoryHref === null || isLoading,
+                href: `/${mainRepositoryHref}`,
+                enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                loading: mainRepositoryHref === null || isLoading,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                loading: mainRepositoryHref === null || isLoading,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
+              },
+            ]}
+          />
+          <Layout.Body border='lower'>
+            {layers && currentViewSection === CollectionNavigationEnum.enum.Rules && <RepositoryRuleCreateView />}
+            {layers &&
+            layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length &&
+            currentViewSection === CollectionNavigationEnum.enum.Rules ? (
+              <RepositoryRuleDisplayView />
+            ) : null}
+          </Layout.Body>
+        </>
+      </Layout>
+    </OrganisationAuthLayout>
   )
 }
 

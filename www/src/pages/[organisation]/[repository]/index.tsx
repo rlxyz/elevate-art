@@ -2,6 +2,7 @@ import CollectionBranchSelectorCard from '@components/Collection/CollectionBranc
 import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
@@ -48,11 +49,6 @@ const Page = () => {
   }, [])
 
   useEffect(() => {
-    if (!organisation) return
-    setOrganisationId(organisation.id)
-  }, [isLoadingOrganisation])
-
-  useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
@@ -67,8 +63,8 @@ const Page = () => {
   }, [isLoadingCollection])
 
   return (
-    <Layout>
-      <>
+    <OrganisationAuthLayout>
+      <Layout>
         <Layout.Header
           internalRoutes={[
             { current: organisationName, href: `/${organisationName}`, organisations },
@@ -119,8 +115,8 @@ const Page = () => {
             </div>
           </div>
         </Layout.Body>
-      </>
-    </Layout>
+      </Layout>
+    </OrganisationAuthLayout>
   )
 }
 

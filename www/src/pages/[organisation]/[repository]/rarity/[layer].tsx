@@ -1,3 +1,4 @@
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
@@ -46,11 +47,6 @@ const Page = () => {
   }, [])
 
   useEffect(() => {
-    if (!organisation) return
-    setOrganisationId(organisation.id)
-  }, [isLoadingOrganisation])
-
-  useEffect(() => {
     if (layers && layers[0]) setCurrentLayerPriority(layers[0].id)
   }, [isLoadingLayers])
 
@@ -69,8 +65,8 @@ const Page = () => {
   }, [isLoadingCollection])
 
   return (
-    <Layout>
-      <>
+    <OrganisationAuthLayout>
+      <Layout>
         <Layout.Header
           internalRoutes={[
             { current: organisationName, href: `/${organisationName}`, organisations },
@@ -107,23 +103,23 @@ const Page = () => {
             </div>
           </main>
         </Layout.Title>
-      </>
 
-      <Layout.Body border='none'>
-        <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-          <div className='col-span-2 py-8 -ml-4'>
-            <div className='flex flex-col space-y-3 justify-between'>
-              <LayerFolderSelector />
+        <Layout.Body border='none'>
+          <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
+            <div className='col-span-2 py-8 -ml-4'>
+              <div className='flex flex-col space-y-3 justify-between'>
+                <LayerFolderSelector />
+              </div>
+            </div>
+            <div className='col-span-8'>
+              <main className='space-y-6 py-8 pl-8'>
+                <RepositoryRarityView />
+              </main>
             </div>
           </div>
-          <div className='col-span-8'>
-            <main className='space-y-6 py-8 pl-8'>
-              <RepositoryRarityView />
-            </main>
-          </div>
-        </div>
-      </Layout.Body>
-    </Layout>
+        </Layout.Body>
+      </Layout>
+    </OrganisationAuthLayout>
   )
 }
 

@@ -1,5 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { Organisation } from '@prisma/client'
 import { getEnsName } from '@utils/ethers'
@@ -100,6 +101,12 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
       setEnsName(pending)
     })
   }, [session?.user?.address])
+  const { setOrganisationId } = useOrganisationNavigationStore((state) => {
+    return {
+      setOrganisationId: state.setOrganisationId,
+    }
+  })
+
   if (!routes.length) return <></>
   return (
     <>
@@ -141,9 +148,12 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                             <div>
                               {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
-                                .map(({ name }) => (
+                                .map(({ name, id }) => (
                                   <Link hover enabled={name === current} key={name} href={`/${name}`}>
-                                    <div className='px-2 flex flex-row justify-between items-center w-full'>
+                                    <div
+                                      className='px-2 flex flex-row justify-between items-center w-full'
+                                      onClick={() => setOrganisationId(id)}
+                                    >
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
                                         <span>You</span>
@@ -160,9 +170,12 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               <div>
                                 {organisations
                                   .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
-                                  .map(({ name }) => (
+                                  .map(({ name, id }) => (
                                     <Link hover enabled={name === current} key={name} href={`/${name}`}>
-                                      <div className='px-2 flex flex-row justify-between items-center w-full'>
+                                      <div
+                                        className='px-2 flex flex-row justify-between items-center w-full'
+                                        onClick={() => setOrganisationId(id)}
+                                      >
                                         <div className='flex space-x-2 items-center'>
                                           <div className='rounded-full h-5 w-5 bg-blueHighlight' />
                                           <span>{name}</span>

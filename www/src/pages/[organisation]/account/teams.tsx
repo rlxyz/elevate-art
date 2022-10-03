@@ -1,3 +1,4 @@
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import { OrganisationAccountDisplayPendingInvites } from '@components/Organisation/OrganisationAccountDisplayPendingInvites'
 import { OrganisationAccountTeam } from '@components/Organisation/OrganisationAccountTeam'
@@ -34,49 +35,51 @@ const Page = () => {
   const isLoading = isLoadingOrganisations && isLoadingRepositories
   const { data: session } = useSession()
   return (
-    <Layout>
-      <Layout.Header
-        connectButton
-        internalRoutes={[
-          {
-            current: session?.user?.address || '',
-            href: `/${organisation?.name}`,
-            organisations,
-          },
-        ]}
-        internalNavigation={[
-          {
-            name: OrganisationNavigationEnum.enum.Dashboard,
-            href: `/${organisation?.name}`,
-            enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-            loading: isLoadingOrganisations,
-          },
-          {
-            name: OrganisationNavigationEnum.enum.Account,
-            href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
-            enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-            loading: isLoadingOrganisations,
-          },
-        ]}
-      />
-      <Layout.Body>
-        <div className='-ml-4 py-8 space-y-8'>
-          {
-            <div className='grid grid-cols-10 gap-x-6'>
-              <div className='col-span-2'>
-                <AccountNavigation />
-              </div>
-              <div className='col-span-8'>
-                <div className='space-y-9'>
-                  <OrganisationAccountTeam />
-                  <OrganisationAccountDisplayPendingInvites />
+    <OrganisationAuthLayout>
+      <Layout>
+        <Layout.Header
+          connectButton
+          internalRoutes={[
+            {
+              current: session?.user?.address || '',
+              href: `/${organisation?.name}`,
+              organisations,
+            },
+          ]}
+          internalNavigation={[
+            {
+              name: OrganisationNavigationEnum.enum.Dashboard,
+              href: `/${organisation?.name}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              loading: isLoadingOrganisations,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Account,
+              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+              loading: isLoadingOrganisations,
+            },
+          ]}
+        />
+        <Layout.Body>
+          <div className='-ml-4 py-8 space-y-8'>
+            {
+              <div className='grid grid-cols-10 gap-x-6'>
+                <div className='col-span-2'>
+                  <AccountNavigation />
+                </div>
+                <div className='col-span-8'>
+                  <div className='space-y-9'>
+                    <OrganisationAccountTeam />
+                    <OrganisationAccountDisplayPendingInvites />
+                  </div>
                 </div>
               </div>
-            </div>
-          }
-        </div>
-      </Layout.Body>
-    </Layout>
+            }
+          </div>
+        </Layout.Body>
+      </Layout>
+    </OrganisationAuthLayout>
   )
 }
 

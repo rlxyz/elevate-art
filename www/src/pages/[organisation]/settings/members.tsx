@@ -1,3 +1,4 @@
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import {
   OrganisationTeamAddUser,
@@ -36,62 +37,64 @@ const Page: NextPage = () => {
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
 
   return (
-    <Layout>
-      <Layout.Header
-        connectButton
-        internalRoutes={[
-          {
-            current: organisation?.name || '',
-            href: `/${organisation?.name}`,
-            organisations,
-          },
-        ]}
-        internalNavigation={[
-          {
-            name: OrganisationNavigationEnum.enum.Dashboard,
-            href: `/${organisation?.name}`,
-            enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-            loading: isLoadingOrganisations,
-          },
-          {
-            name: OrganisationNavigationEnum.enum.Settings,
-            href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-            enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-            loading: isLoadingOrganisations,
-          },
-        ]}
-      />
-      <Layout.Body>
-        <div className='-ml-4 py-8 space-y-8'>
-          {
-            <div className='grid grid-cols-10 gap-x-6'>
-              <div className='col-span-2'>
-                <SettingsNavigations />
-              </div>
-              <div className='col-span-8'>
-                <div className='space-y-6'>
-                  <OrganisationTeamAddUser />
-                  <div className='space-y-2'>
-                    <span className='text-xs'>Team Members</span>
-                    <OrganisationTeamDisplayUsers />
+    <OrganisationAuthLayout>
+      <Layout>
+        <Layout.Header
+          connectButton
+          internalRoutes={[
+            {
+              current: organisation?.name || '',
+              href: `/${organisation?.name}`,
+              organisations,
+            },
+          ]}
+          internalNavigation={[
+            {
+              name: OrganisationNavigationEnum.enum.Dashboard,
+              href: `/${organisation?.name}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              loading: isLoadingOrganisations,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Settings,
+              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
+              loading: isLoadingOrganisations,
+            },
+          ]}
+        />
+        <Layout.Body>
+          <div className='-ml-4 py-8 space-y-8'>
+            {
+              <div className='grid grid-cols-10 gap-x-6'>
+                <div className='col-span-2'>
+                  <SettingsNavigations />
+                </div>
+                <div className='col-span-8'>
+                  <div className='space-y-6'>
+                    <OrganisationTeamAddUser />
+                    <div className='space-y-2'>
+                      <span className='text-xs'>Team Members</span>
+                      <OrganisationTeamDisplayUsers />
+                    </div>
+                    {organisation?.pendings?.length ? (
+                      <>
+                        <div className='space-y-2'>
+                          <span className='text-xs'>Pending</span>
+                          <OrganisationTeamDisplayPending />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
-                  {organisation?.pendings?.length ? (
-                    <>
-                      <div className='space-y-2'>
-                        <span className='text-xs'>Pending</span>
-                        <OrganisationTeamDisplayPending />
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )}
                 </div>
               </div>
-            </div>
-          }
-        </div>
-      </Layout.Body>
-    </Layout>
+            }
+          </div>
+        </Layout.Body>
+      </Layout>
+    </OrganisationAuthLayout>
   )
 }
 
