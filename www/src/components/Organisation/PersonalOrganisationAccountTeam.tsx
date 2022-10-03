@@ -28,7 +28,7 @@ export const PersonalOrganisationAccountTeam = () => {
         <div
           className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}
         >
-          <p className={clsx(isLoading && 'invisible')}>Manage the Teams that you're a part of.</p>
+          <p className={clsx(isLoading && 'invisible')}>Manage the Teams that you're a part of</p>
         </div>
       </div>
       <input
@@ -46,7 +46,7 @@ export const PersonalOrganisationAccountTeam = () => {
               ?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
               .map((organisation) => {
                 return (
-                  <div className='p-4 flex flex-row items-center justify-between'>
+                  <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
                     <div className='flex flex-row space-y-1 items-center space-x-3'>
                       <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
                       <div className='flex flex-col space-y-1'>
@@ -76,9 +76,10 @@ export const PersonalOrganisationAccountTeam = () => {
       )}
       {isLoading ? (
         <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
-          {Array.from(Array(3).keys()).map(() => {
+          {Array.from(Array(3).keys()).map((index) => {
             return (
               <div
+                key={index}
                 className={clsx(
                   isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
                   'p-4 flex flex-row items-center justify-between'
