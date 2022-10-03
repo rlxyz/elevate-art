@@ -5,14 +5,11 @@ import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import { OrganisationDatabaseEnum } from 'src/types/enums'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisation()
   const [query, setQuery] = useState('')
-  const filteredOrganisaitons = organisations?.filter(
-    (x) => x.name.toLowerCase().includes(query.toLowerCase()) && x.type === OrganisationDatabaseEnum.enum.Team
-  )
+  const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   const session = useSession()
 
   const getUserRoleInOrganisation = (organisation: Organisation & { members: (OrganisationMember & { user: User })[] }) => {
@@ -41,9 +38,9 @@ export const PersonalOrganisationAccountTeam = () => {
         )}
         placeholder={isLoading ? '' : 'Search'}
       />
-      <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
-        {filteredOrganisaitons && filteredOrganisaitons.length ? (
-          <>
+      {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
+        <>
+          <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
             {filteredOrganisaitons?.map((organisation) => {
               return (
                 <div className='p-4 flex flex-row items-center justify-between'>
@@ -63,25 +60,36 @@ export const PersonalOrganisationAccountTeam = () => {
                 </div>
               )
             })}
-          </>
-        ) : (
-          <div
-            className={clsx(
-              isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
-              'p-4 flex flex-row items-center justify-between'
-            )}
-          >
-            <div className={clsx(!'flex flex-row space-y-1 items-center space-x-3 invisible')}>
-              <div className='h-6 w-6 rounded-full' />
-              <div className='flex flex-col space-y-1'>
-                <span className='text-xs font-bold'>{''}</span>
-                <span className='text-xs text-darkGrey'>{''}</span>
-              </div>
-            </div>
-            <div />
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <></>
+      )}
+      {isLoading ? (
+        <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
+          {Array.from(Array(3).keys()).map(() => {
+            return (
+              <div
+                className={clsx(
+                  isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
+                  'p-4 flex flex-row items-center justify-between'
+                )}
+              >
+                <div className={clsx(!'flex flex-row space-y-1 items-center space-x-3 invisible')}>
+                  <div className='h-6 w-6 rounded-full' />
+                  <div className='flex flex-col space-y-1'>
+                    <span className='text-xs font-bold'>{''}</span>
+                    <span className='text-xs text-darkGrey'>{''}</span>
+                  </div>
+                </div>
+                <div />
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

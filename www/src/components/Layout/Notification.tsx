@@ -8,12 +8,8 @@ interface Props {
 
 export const Notification = ({ children, id }: Props) => {
   return (
-    <div
-      id={id}
-      className='relative p-6 w-[350px] max-w-lg rounded-lg border border-lightGray shadow-lg z-5 bg-white'
-      role='alert'
-    >
-      <div className='w-full flex items-center'>{children}</div>
+    <div id={id} className='relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-md z-5 bg-blueHighlight' role='alert'>
+      <div className='w-full flex items-center text-white text-xs'>{children}</div>
     </div>
   )
 }

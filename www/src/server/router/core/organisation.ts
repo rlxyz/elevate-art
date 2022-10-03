@@ -52,42 +52,7 @@ export const organisationRouter = createRouter()
       })
     },
   })
-  .mutation('acceptInvitation', {
-    input: z.object({
-      pendingId: z.string(),
-    }),
-    async resolve({ input: { pendingId }, ctx }) {
-      const pending = await ctx.prisma.organisationPending.findFirst({
-        where: {
-          id: pendingId,
-        },
-      })
-      if (!pending) return null
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          address: pending?.address,
-        },
-      })
-      if (!user) return null
-      await ctx.prisma.$transaction(async (tx) => {
-        await tx.organisationPending.delete({ where: { id: pendingId } })
-        await tx.organisation.update({
-          where: { id: pending.organisationId },
-          data: {
-            members: {
-              create: {
-                userId: user.id,
-                type:
-                  pending.role === OrganisationDatabaseRoleEnum.enum.Admin
-                    ? OrganisationDatabaseRoleEnum.enum.Admin
-                    : OrganisationDatabaseRoleEnum.enum.Curator,
-              },
-            },
-          },
-        })
-      })
-    },
-  })
+
   .query('getManyRepositoryByOrganisationId', {
     input: z.object({
       id: z.string(),
@@ -127,6 +92,44 @@ export const organisationRouter = createRouter()
             },
           },
         },
+      })
+    },
+  })
+  .mutation('acceptInvitation', {
+    input: z.object({
+      pendingId: z.string(),
+    }),
+    async resolve({ input: { pendingId }, ctx }) {
+      const pending = await ctx.prisma.organisationPending.findFirst({
+        where: {
+          id: pendingId,
+        },
+      })
+      // should throw error
+      if (!pending) return null
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          address: pending?.address,
+        },
+      })
+      // should throw error
+      if (!user) return null
+      await ctx.prisma.$transaction(async (tx) => {
+        await tx.organisationPending.delete({ where: { id: pendingId } })
+        await tx.organisation.update({
+          where: { id: pending.organisationId },
+          data: {
+            members: {
+              create: {
+                userId: user.id,
+                type:
+                  pending.role === OrganisationDatabaseRoleEnum.enum.Admin
+                    ? OrganisationDatabaseRoleEnum.enum.Admin
+                    : OrganisationDatabaseRoleEnum.enum.Curator,
+              },
+            },
+          },
+        })
       })
     },
   })

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
-import { HeaderProps } from './Header'
+import Header, { HeaderProps } from './Header'
 
 const DynamicHeader = dynamic(() => import('./Header'))
 const DynamicFooter = dynamic(() => import('./Footer'))
@@ -55,7 +55,9 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 
 const LayoutHeader = (props: HeaderProps) => (
   <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
-    <div className='-ml-2'>{<DynamicHeader connectButton {...props} />}</div>
+    <div className='-ml-2'>
+      <Header connectButton {...props} />
+    </div>
   </LayoutContainer>
 )
 

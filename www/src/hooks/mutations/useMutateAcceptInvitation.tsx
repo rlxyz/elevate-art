@@ -8,7 +8,7 @@ export const useMutateAcceptInvitation = () => {
   const { data: session } = useSession()
   const { pendings } = useQueryOrganisation()
   return trpc.useMutation('organisation.acceptInvitation', {
-    onMutate: async (input) => {
+    onSuccess: async (data, input) => {
       if (!session?.user?.id) return
       const userId = session.user.id
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
