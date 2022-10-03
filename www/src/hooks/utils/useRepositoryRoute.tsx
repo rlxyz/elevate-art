@@ -1,9 +1,7 @@
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
-import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
 
 export const useRepositoryRoute = () => {
   const router: NextRouter = useRouter()
@@ -25,46 +23,46 @@ export const useRepositoryRoute = () => {
     })
 
   // sync routing with store
-  useDeepCompareEffect(() => {
-    if (!layers || layers.length === 0 || !routes) return
-    const parse = CollectionNavigationEnum.safeParse(routes[0])
-    if (!parse.success) {
-      router.push('/404')
-      return
-    }
+  // useDeepCompareEffect(() => {
+  //   if (!layers || layers.length === 0 || !routes) return
+  //   const parse = CollectionNavigationEnum.safeParse(routes[0])
+  //   if (!parse.success) {
+  //     router.push('/404')
+  //     return
+  //   }
 
-    if (routes.length === 1) {
-      const route = parse.data
-      switch (route) {
-        case CollectionNavigationEnum.enum.Preview:
-          setCurrentLayerPriority(layers[0]?.id || '')
-          setCurrentViewSection(parse.data)
-          return
-        case CollectionNavigationEnum.enum.Settings:
-          setCurrentLayerPriority(layers[0]?.id || '')
-          setCurrentViewSection(parse.data)
-          return
-      }
+  //   if (routes.length === 1) {
+  //     const route = parse.data
+  //     switch (route) {
+  //       case CollectionNavigationEnum.enum.Preview:
+  //         setCurrentLayerPriority(layers[0]?.id || '')
+  //         setCurrentViewSection(parse.data)
+  //         return
+  //       case CollectionNavigationEnum.enum.Settings:
+  //         setCurrentLayerPriority(layers[0]?.id || '')
+  //         setCurrentViewSection(parse.data)
+  //         return
+  //     }
 
-      router.push('/404')
-    }
+  //     router.push('/404')
+  //   }
 
-    if (routes.length == 2) {
-      const name: string = routes[1] as string
-      const layer = layers.filter((layer) => layer.name === name)[0]
+  //   if (routes.length == 2) {
+  //     const name: string = routes[1] as string
+  //     const layer = layers.filter((layer) => layer.name === name)[0]
 
-      if (!layer) {
-        router.push('/404')
-        return
-      }
+  //     if (!layer) {
+  //       router.push('/404')
+  //       return
+  //     }
 
-      setCurrentViewSection(parse.data)
-      setCurrentLayerPriority(layers.find((x) => x.name === name)?.id || '')
-      return
-    }
+  //     setCurrentViewSection(parse.data)
+  //     setCurrentLayerPriority(layers.find((x) => x.name === name)?.id || '')
+  //     return
+  //   }
 
-    router.push('/404')
-  }, [routes, layers])
+  //   router.push('/404')
+  // }, [routes, layers])
 
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {

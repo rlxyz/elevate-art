@@ -1,9 +1,9 @@
 import { Link } from '@components/Layout/Link'
 import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import { useMutateReorderLayers } from '@hooks/mutations/useMutateReorderLayers'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { LayerElement } from '@prisma/client'
 import { truncate } from '@utils/format'
 import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
@@ -70,12 +70,17 @@ export const ReorderItem = ({
   )
 }
 
-const LayerFolderSelector = ({ layers }: { layers: LayerElement[] }) => {
+const LayerFolderSelector = () => {
   const currentLayerPriority = useCollectionNavigationStore((state) => state.currentLayerPriority)
+  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
+  const [items, setItems] = useState<string[]>()
   const [openReordering, setOpenReordering] = useState(false)
   const { mutate: reorderLayer } = useMutateReorderLayers()
+  useEffect(() => {
+    if (!layers) return
+    setItems(layers.map((x) => x.id))
+  }, [layers?.length])
   if (!layers || !items) return null
 
   return (

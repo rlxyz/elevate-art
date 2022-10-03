@@ -20,6 +20,9 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
     if (isLoading) {
       return
     }
+    if (!organisations) {
+      return
+    }
     const organisation = organisations?.find((organisation) => organisation.name === organisationName)
     if (!organisation) {
       router.push('/')
@@ -28,12 +31,12 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
     setOrganisationId(organisation.id)
   }, [isLoading])
 
-  useEffect(() => {
-    if (!organisationName) {
-      router.push('/404')
-      return
-    }
-  }, [organisationName])
+  // useEffect(() => {
+  //   if (!organisationName) {
+  //     router.push('/404')
+  //     return
+  //   }
+  // }, [organisationName])
 
   if (isLoggedIn) {
     return <>{children}</>
