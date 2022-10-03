@@ -52,7 +52,7 @@ const Index = () => {
           ref={buttonRef}
           onClick={() => setOpenState(true)}
           className={clsx(
-            !collection && 'animate-pulse rounded-[5px] bg-mediumGrey h-full',
+            !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
             'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 border border-mediumGrey text-black'
           )}
         >

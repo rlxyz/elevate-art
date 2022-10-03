@@ -4,10 +4,11 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { LayerElement, TraitElement } from '@prisma/client'
 import { truncate } from '@utils/format'
+import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
 
-export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitElements: TraitElement[] })[] }) => {
+export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
   const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } =
     useRepositoryStore((state) => {
@@ -21,7 +22,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
         traitMapping: state.traitMapping,
       }
     })
-
+  const { all: layers } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   return (
     <Formik
@@ -113,7 +114,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
       {({ handleChange, submitForm }) => (
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
-            {layers.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
+            {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
               <div key={layer.id} className='flex flex-col text-xs'>
                 <div
                   onClick={() => {
@@ -186,7 +187,7 @@ export const FilterByTrait = ({ layers }: { layers: (LayerElement & { traitEleme
   )
 }
 
-export const FilterByRarity = () => {
+export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
   const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, setTokens } = useRepositoryStore((state) => {
     return {
       traitFilteredTokens: state.traitFilteredTokens,
@@ -263,6 +264,7 @@ export const FilterByRarity = () => {
                     <div className='flex items-center space-x-2'>
                       <span className='text-xs'>
                         <Field
+                          disabled={disabled}
                           type='radio'
                           name='checked'
                           value={value}
@@ -286,21 +288,25 @@ export const FilterByRarity = () => {
 }
 
 const Index = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { all: layers } = useQueryRepositoryLayer()
   return (
     <>
-      {!isLoading && layers && repositoryId && (
-        <div className='border border-mediumGrey rounded-[5px] p-1 space-y-1'>
-          <>
-            <FilterByRarity />
-            <div className='px-3'>
-              <div className='bg-mediumGrey h-[0.25px] w-full' />
-            </div>
-            <FilterByTrait layers={layers} />
-          </>
-        </div>
-      )}
+      <div
+        className={clsx(
+          !layers?.length && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
+          'border border-mediumGrey rounded-[5px] p-1 space-y-1'
+        )}
+      >
+        <FilterByRarity disabled={!layers?.length} />
+      </div>
+      <div
+        className={clsx(
+          !layers?.length && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]',
+          'border border-mediumGrey rounded-[5px] p-1 space-y-1'
+        )}
+      >
+        <FilterByTrait />
+      </div>
     </>
   )
 }

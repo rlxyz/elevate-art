@@ -12,7 +12,7 @@ export const GenerateButton = () => {
   return (
     <div
       className={clsx(
-        !collection && 'animate-pulse rounded-[5px] bg-mediumGrey h-full',
+        !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
         'w-full h-full border border-mediumGrey rounded-[5px] flex items-center justify-center'
       )}
     >
