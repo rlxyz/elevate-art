@@ -1,15 +1,22 @@
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
+import { OrganisationDatabaseEnum, OrganisationDatabaseType } from 'src/types/enums'
 
-export const OrganisationAuthLayout = ({ children }: { children: ReactNode }) => {
+export const OrganisationAuthLayout = ({
+  children,
+  type = OrganisationDatabaseEnum.enum.Team,
+}: {
+  children: ReactNode
+  type?: OrganisationDatabaseType
+}) => {
   const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
-  const { all: organisations, current: organisation, isLoading, isError } = useQueryOrganisation()
-  const { setOrganisationId } = useOrganisationNavigationStore((state) => {
+  const { all: organisations, isLoading, isError } = useQueryOrganisation()
+  const { setOrganisationId } = useRepositoryStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,
     }
@@ -21,10 +28,18 @@ export const OrganisationAuthLayout = ({ children }: { children: ReactNode }) =>
         case true:
           return
         case false:
-          const organisation = organisations?.find((o) => o.name === organisationName)
-          if (organisation) {
-            setOrganisationId(organisation.id)
-            return
+          if (type === OrganisationDatabaseEnum.enum.Team) {
+            const organisation = organisations?.find((o) => o.name === organisationName)
+            if (organisation) {
+              setOrganisationId(organisation.id)
+              return
+            }
+          } else if (type === OrganisationDatabaseEnum.enum.Personal) {
+            const organisation = organisations?.find((o) => o.type === OrganisationDatabaseEnum.enum.Personal)
+            if (organisation) {
+              setOrganisationId(organisation.id)
+              return
+            }
           }
           router.push('/404')
           return

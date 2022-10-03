@@ -35,27 +35,6 @@ export const SettingsNavigations = () => {
   )
 }
 
-export const AccountNavigation = () => {
-  const { current: organisation, isLoading } = useQueryOrganisation()
-  const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
-  return (
-    <div>
-      {[
-        {
-          name: OrganisationSettingsNavigationEnum.enum.General,
-          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
-        },
-        {
-          name: OrganisationSettingsNavigationEnum.enum.Teams,
-          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}/${OrganisationSettingsNavigationEnum.enum.Teams}`,
-        },
-      ].map(({ name, href }) => {
-        return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />
-      })}
-    </div>
-  )
-}
-
 export const OrganisationGeneralSettings = () => {
   const { current: organisation } = useQueryOrganisation()
   const {

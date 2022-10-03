@@ -1,77 +1,78 @@
 import * as z from 'zod'
 
-const OrganisationDatabaseRole = Object.freeze({
-  Admin: 'admin',
-  Curator: 'curator',
-})
-
-export const OrganisationDatabaseRoleEnum = z.nativeEnum(OrganisationDatabaseRole)
+export const OrganisationDatabaseRoleEnum = z.nativeEnum(
+  Object.freeze({
+    Admin: 'admin',
+    Curator: 'curator',
+  })
+)
 export type OrganisationDatabaseRoleEnumType = z.infer<typeof OrganisationDatabaseRoleEnum>
 
-const OrganisationDatabase = Object.freeze({
-  Personal: 'personal',
-  Team: 'team',
-})
-
-export const OrganisationDatabaseEnum = z.nativeEnum(OrganisationDatabase)
+export const OrganisationDatabaseEnum = z.nativeEnum(
+  Object.freeze({
+    Personal: 'personal',
+    Team: 'team',
+  })
+)
 export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
-const CollectionDatabase = Object.freeze({
-  Default: 'default',
-  Development: 'development',
-})
-export const CollectionDatabaseEnum = z.nativeEnum(CollectionDatabase)
+export const CollectionDatabaseEnum = z.nativeEnum(
+  Object.freeze({
+    Default: 'default',
+    Development: 'development',
+  })
+)
 export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
 
-const OrganisationNavigation = Object.freeze({
-  Dashboard: 'dashboard',
-  Activity: 'activity',
-  Settings: 'settings',
-  Account: 'account',
-  New: 'new',
-})
-
-export const OrganisationNavigationEnum = z.nativeEnum(OrganisationNavigation)
+export const OrganisationNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard', // only for personal accounts
+    Activity: 'activity',
+    Settings: 'settings',
+    Account: 'account',
+    New: 'new',
+  })
+)
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
-const OrganisationSettingsNavigation = Object.freeze({
-  General: 'general',
-  Team: 'members',
-  Teams: 'teams', // only for personal organisations
-})
-
-export const OrganisationSettingsNavigationEnum = z.nativeEnum(OrganisationSettingsNavigation)
+export const OrganisationSettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    General: 'general',
+    Team: 'members',
+  })
+)
 export type OrganisationSettingsNavigationType = z.infer<typeof OrganisationSettingsNavigationEnum>
 
-const RepositoryNavigation = Object.freeze({
-  Dashboard: 'dashboard',
-})
-
-export const RepositoryNavigationEnum = z.nativeEnum(RepositoryNavigation)
+export const RepositoryNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard',
+  })
+)
 export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
-const CollectionNavigation = Object.freeze({
-  Preview: 'preview',
-  Rarity: 'rarity',
-  Rules: 'rules',
-  Settings: 'settings',
-})
-
-export const CollectionNavigationEnum = z.nativeEnum(CollectionNavigation)
+export const CollectionNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Preview: 'preview',
+    Rarity: 'rarity',
+    Rules: 'rules',
+    Settings: 'settings',
+  })
+)
 export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
 
-const RepositorySection = Object.freeze({
-  Overview: 'overview',
-})
-export const RepositorySectionEnum = z.nativeEnum(RepositorySection)
+export const RepositorySectionEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+  })
+)
 export type RepositorySectionType = z.infer<typeof CollectionNavigationEnum>
 
-const Rules = Object.freeze({
-  'cannot mix with': 'cannot mix with',
-  // 'only mixes with': 'only mixes with',
-})
-
-export const RulesEnum = z.nativeEnum(Rules)
+export const RulesEnum = z.nativeEnum(
+  Object.freeze({
+    'cannot mix with': 'cannot mix with',
+    // 'only mixes with': 'only mixes with',
+  })
+)
 export type RulesType = z.infer<typeof RulesEnum>
 
 export const CollectionTitleContent = Object.freeze({

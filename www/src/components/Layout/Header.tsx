@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { Fragment, ReactNode, useState } from 'react'
-import { OrganisationDatabaseEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
 const DynamicHeaderInternalPageRoutes = dynamic(() => import('./HeaderInternalPageRoutes'), { ssr: false })
@@ -149,7 +149,12 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               {organisations
                                 .filter((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
                                 .map(({ name, id }) => (
-                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
+                                  <Link
+                                    hover
+                                    enabled={name === current}
+                                    key={name}
+                                    href={`/${OrganisationNavigationEnum.enum.Dashboard}`}
+                                  >
                                     <div
                                       className='px-2 flex flex-row justify-between items-center w-full'
                                       onClick={() => setOrganisationId(id)}

@@ -1,15 +1,13 @@
 import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
-import { OrganisationAccountDisplayPendingInvites } from '@components/Organisation/OrganisationAccountDisplayPendingInvites'
-import { OrganisationAccountTeam } from '@components/Organisation/OrganisationAccountTeam'
-import { AccountNavigation } from '@components/Organisation/OrganisationSettings'
+import { PersonalOrganisationAccountNavigation } from '@components/Organisation/PersonalOrganisationAccountNavigation'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { useEffect } from 'react'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
   const reset = useRepositoryStore((state) => state.reset)
@@ -24,38 +22,37 @@ const Page = () => {
       }
     }
   )
+
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Account)
-    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.Teams)
+    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General)
   }, [])
 
-  const [hasMounted, setHasMounted] = useState(false)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  const isLoading = isLoadingOrganisations && isLoadingRepositories
   const { data: session } = useSession()
   return (
-    <OrganisationAuthLayout>
+    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal}>
       <Layout>
         <Layout.Header
           connectButton
           internalRoutes={[
             {
               current: session?.user?.address || '',
-              href: `/${organisation?.name}`,
+              href: `/${organisation?.name || ''}`,
               organisations,
             },
           ]}
           internalNavigation={[
             {
               name: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name}`,
+              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
               loading: isLoadingOrganisations,
             },
             {
               name: OrganisationNavigationEnum.enum.Account,
-              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Account}`,
+              href: `/${OrganisationNavigationEnum.enum.Account}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
               loading: isLoadingOrganisations,
             },
@@ -66,12 +63,14 @@ const Page = () => {
             {
               <div className='grid grid-cols-10 gap-x-6'>
                 <div className='col-span-2'>
-                  <AccountNavigation />
+                  <PersonalOrganisationAccountNavigation />
                 </div>
                 <div className='col-span-8'>
-                  <div className='space-y-9'>
-                    <OrganisationAccountTeam />
-                    <OrganisationAccountDisplayPendingInvites />
+                  <div className='space-y-1'>
+                    <span className='text-sm font-semibold'>We intend to implement this page soon.</span>
+                    <p className='text-xs text-darkGrey'>
+                      Hopefully the universe doesn't collapse into a black hole in the meantime.
+                    </p>
                   </div>
                 </div>
               </div>

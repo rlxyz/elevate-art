@@ -1,9 +1,9 @@
+import { useMutateAcceptInvitation } from '@hooks/mutations/useMutateAcceptInvitation'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { capitalize } from '@utils/format'
 import { useSession } from 'next-auth/react'
-import { useMutateAcceptInvitation } from '../../hooks/mutations/useMutateAcceptInvitation'
 
-export const OrganisationAccountDisplayPendingInvites = () => {
+export const PersonalOrganisationAccountTeamInvites = () => {
   const { pendings } = useQueryOrganisation()
   const session = useSession()
   const { mutate } = useMutateAcceptInvitation()
