@@ -187,7 +187,7 @@ export const FilterByTrait = () => {
   )
 }
 
-export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
+export const FilterByRarity = () => {
   const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, setTokens } = useRepositoryStore((state) => {
     return {
       traitFilteredTokens: state.traitFilteredTokens,
@@ -255,9 +255,7 @@ export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
-          <div
-            className={clsx(disabled && 'invisible', 'rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}
-          >
+          <div className={clsx('rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}>
             {filters.map(({ value }, optionIdx: number) => (
               <div key={optionIdx} className='flex flex-col text-xs'>
                 <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
@@ -266,7 +264,6 @@ export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
                     <div className='flex items-center space-x-2'>
                       <span className='text-xs'>
                         <Field
-                          disabled={disabled}
                           type='radio'
                           name='checked'
                           value={value}
@@ -291,23 +288,29 @@ export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
 
 const Index = () => {
   const { all: layers } = useQueryRepositoryLayer()
+  const { current: collection } = useQueryRepositoryCollection()
+  const isLoading = !layers?.length || !collection
   return (
     <>
       <div
         className={clsx(
-          !layers?.length ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
           'rounded-[5px] p-1 space-y-1'
         )}
       >
-        <FilterByRarity disabled={!layers?.length} />
+        <div className={clsx(isLoading && 'invisible')}>
+          <FilterByRarity />
+        </div>
       </div>
       <div
         className={clsx(
-          !layers?.length ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
           'rounded-[5px] p-1 space-y-1'
         )}
       >
-        <FilterByTrait />
+        <div className={clsx(isLoading && 'invisible')}>
+          <FilterByTrait />
+        </div>
       </div>
     </>
   )
