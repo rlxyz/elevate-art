@@ -10,7 +10,9 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
+
 const PreviewImage = ({
   id,
   collection,
@@ -33,6 +35,23 @@ const PreviewImage = ({
   )
 }
 
+const InfiniteScrollGridLoading = () => {
+  return (
+    <>
+      {Array.from(Array(25).keys()).map((item, index) => {
+        return (
+          <div key={`${item}-${index}`} className='col-span-1'>
+            <div className={clsx('animate-pulse bg-mediumGrey bg-opacity-50', 'rounded-[5px] relative cursor-pointer shadow-sm')}>
+              <div className='pb-[100%]' />
+              <div className='pl-2 flex flex-col items-center space-y-1 w-full py-2' />
+            </div>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const { all: layers, isLoading } = useQueryRepositoryLayer()
@@ -44,25 +63,33 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
       repositoryId: state.repositoryId,
     }
   })
-  if (!collection || !layers || isLoading) return null
+  // if (!collection || !layers || isLoading) return
   return (
     <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
-      {tokens.slice(0, length).map((item, index) => {
-        return (
-          <div key={`${item}-${index}`} className='col-span-1'>
-            <div
-              className='border rounded-[5px] border-mediumGrey relative cursor-pointer shadow-sm'
-              onClick={() => setSelectedToken(item || null)}
-            >
-              <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
-              <div className='pb-[100%]' />
-              <div className={'pl-2 flex flex-col items-center space-y-1 w-full py-2'}>
-                <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>
+      {!collection || !layers ? (
+        <>
+          <InfiniteScrollGridLoading />
+        </>
+      ) : (
+        <>
+          {tokens.slice(0, length).map((item, index) => {
+            return (
+              <div key={`${item}-${index}`} className='col-span-1'>
+                <div
+                  className='border rounded-[5px] border-mediumGrey relative cursor-pointer shadow-sm'
+                  onClick={() => setSelectedToken(item || null)}
+                >
+                  <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
+                  <div className='pb-[100%]' />
+                  <div className={'pl-2 flex flex-col items-center space-y-1 w-full py-2'}>
+                    <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )
-      })}
+            )
+          })}
+        </>
+      )}
       {selectedToken && collection && layers ? (
         <Transition appear show as={Fragment}>
           <Dialog as='div' className='relative z-10' onClose={() => setSelectedToken(null)}>
@@ -178,7 +205,7 @@ const Index = () => {
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
           <h1
             className={clsx(
-              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
+              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
               'text-2xl font-bold text-black'
             )}
           >

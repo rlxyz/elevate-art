@@ -56,7 +56,7 @@ const Index = () => {
             'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-black'
           )}
         >
-          <div className='flex justify-between w-full items-center'>
+          <div className={clsx(!collection && 'invisible', 'flex justify-between w-full items-center')}>
             <div className='flex space-x-2 items-center justify-start'>
               <div className='rounded-full h-4 w-4 bg-blueHighlight' />
               <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>

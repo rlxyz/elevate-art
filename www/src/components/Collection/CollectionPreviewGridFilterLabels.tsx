@@ -37,7 +37,7 @@ const CollectionPreviewGridFilterLabels = () => {
           )}
         </div>
       </div>
-      <div className='space-x-2 ml-2 space-y-1 max-w-full'>
+      <div className={clsx(!collection && 'invisible', 'space-x-2 ml-2 space-y-1 max-w-full')}>
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}

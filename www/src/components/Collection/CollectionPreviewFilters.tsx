@@ -255,7 +255,9 @@ export const FilterByRarity = ({ disabled = false }: { disabled: boolean }) => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
-          <div className='rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar'>
+          <div
+            className={clsx(disabled && 'invisible', 'rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}
+          >
             {filters.map(({ value }, optionIdx: number) => (
               <div key={optionIdx} className='flex flex-col text-xs'>
                 <div className={`hover:bg-mediumGrey hover:bg-opacity-50 text-xs rounded-[5px] py-3`}>
