@@ -4,12 +4,11 @@ import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 
-export const AuthLayout = ({ children }: { children: ReactNode }) => {
+export const OrganisationAuthLayout = ({ children }: { children: ReactNode }) => {
   const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
-  const repositoryName = router.query.repositoryName as string
-  const { all: organisations, isLoading } = useQueryOrganisation()
+  const { all: organisations, current: organisation, isLoading, isError } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,
@@ -17,26 +16,21 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
   })
 
   useEffect(() => {
-    if (isLoading) {
-      return
+    if (organisations && organisations.length > 0) {
+      switch (isLoading) {
+        case true:
+          return
+        case false:
+          const organisation = organisations?.find((o) => o.name === organisationName)
+          if (organisation) {
+            setOrganisationId(organisation.id)
+            return
+          }
+          router.push('/404')
+          return
+      }
     }
-    if (!organisations) {
-      return
-    }
-    const organisation = organisations?.find((organisation) => organisation.name === organisationName)
-    if (!organisation) {
-      router.push('/')
-      return
-    }
-    setOrganisationId(organisation.id)
   }, [isLoading])
-
-  // useEffect(() => {
-  //   if (!organisationName) {
-  //     router.push('/404')
-  //     return
-  //   }
-  // }, [organisationName])
 
   if (isLoggedIn) {
     return <>{children}</>

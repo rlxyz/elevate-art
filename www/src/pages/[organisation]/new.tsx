@@ -1,4 +1,4 @@
-import { AuthLayout } from '@components/Layout/AuthLayout'
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import CreateNewRepository from '@components/Organisation/OrganisationCreateNewRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -25,7 +25,7 @@ const Page: NextPage = () => {
     setCurrentRoute(OrganisationNavigationEnum.enum.New)
   }, [])
   return (
-    <AuthLayout>
+    <OrganisationAuthLayout>
       <Layout hasFooter={false}>
         <Layout.Header
           connectButton
@@ -42,7 +42,7 @@ const Page: NextPage = () => {
           <CreateNewRepository />
         </Layout.Body>
       </Layout>
-    </AuthLayout>
+    </OrganisationAuthLayout>
   )
 }
 

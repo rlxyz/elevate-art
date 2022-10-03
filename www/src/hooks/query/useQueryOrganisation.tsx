@@ -1,9 +1,10 @@
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { trpc } from '@utils/trpc'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 export const useQueryOrganisation = () => {
-  const organisationId = useOrganisationNavigationStore((state) => state.organisationId)
+  const router = useRouter()
+  const organisationName = router.query.organisation as string
   const { data: session } = useSession()
   const {
     data: organisations,
@@ -11,5 +12,21 @@ export const useQueryOrganisation = () => {
     isError,
   } = trpc.useQuery(['organisation.getManyOrganisationByUserId', { id: session?.user?.id || '' }])
   const { data: pendings } = trpc.useQuery(['organisation.getManyPendingOrganisationByUserId', { id: session?.user?.id || '' }])
-  return { all: organisations, pendings, current: organisations?.find((o) => o.id === organisationId), isLoading, isError }
+
+  if (!session) {
+    return {
+      all: undefined,
+      current: undefined,
+      isLoading: true,
+      isError: false,
+    }
+  }
+
+  return {
+    all: organisations,
+    pendings,
+    current: organisations?.find((o) => o.name === organisationName),
+    isLoading,
+    isError: isError,
+  }
 }

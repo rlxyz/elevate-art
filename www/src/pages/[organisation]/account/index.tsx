@@ -1,4 +1,4 @@
-import { AuthLayout } from '@components/Layout/AuthLayout'
+import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
 import { AccountNavigation } from '@components/Organisation/OrganisationSettings'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -32,7 +32,7 @@ const Page = () => {
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
   const { data: session } = useSession()
   return (
-    <AuthLayout>
+    <OrganisationAuthLayout>
       <Layout>
         <Layout.Header
           connectButton
@@ -78,7 +78,7 @@ const Page = () => {
           </div>
         </Layout.Body>
       </Layout>
-    </AuthLayout>
+    </OrganisationAuthLayout>
   )
 }
 
