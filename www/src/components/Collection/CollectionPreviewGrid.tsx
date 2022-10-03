@@ -7,9 +7,10 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-
+const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 const PreviewImage = ({
   id,
   collection,
@@ -145,45 +146,14 @@ export const InfiniteScrollGrid = () => {
 
   return (
     <>
-      <span className='text-xs text-darkGrey'>{`${collection?.generations || 0} generations`}</span>
+      <span
+        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50', 'text-xs text-darkGrey mb-1')}
+      >
+        <span className={clsx(!collection && 'invisible')}>{`${collection?.generations || 0} generations`}</span>
+      </span>
       <div className='min-h-6 space-x-2 flex items-center max-w-full'>
         <div className='space-x-3 flex items-center'>
-          <div className='whitespace-nowrap text-ellipsis'>
-            {rarityFilter !== 'All' ? (
-              <span className='text-xs text-black'>
-                {`${tokens.length} results `}
-                {traitFilters.length > 0 ? (
-                  <span>
-                    for
-                    <span className='text-blueHighlight'> {rarityFilter}</span> with filters
-                  </span>
-                ) : (
-                  ''
-                )}
-              </span>
-            ) : (
-              <span className='text-xs text-black'>{`${tokens.length} results`}</span>
-            )}
-          </div>
-          <div className='space-x-2 ml-2 space-y-1 max-w-full'>
-            {traitFilters.map(({ layer, trait }, index) => (
-              <span
-                key={index}
-                className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'
-              >
-                <div>
-                  <span className='text-darkGrey mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}
-                </div>
-                {/* <button
-                  type='button'
-                  className='ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-400'
-                  onClick={() => console.log(trait.name)}
-                >
-                  <XIcon className='w-3 h-3 text-darkGrey' />
-                </button> */}
-              </span>
-            ))}
-          </div>
+          <DynamicCollectionPreviewGridFilterLabels />
         </div>
       </div>
       <InfiniteScrollComponent.default
@@ -201,12 +171,27 @@ export const InfiniteScrollGrid = () => {
 }
 
 const Index = () => {
+  const { current: collection } = useQueryRepositoryCollection()
   return (
     <main className='space-y-3'>
       <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
-          <h1 className={clsx('text-2xl font-bold text-black')}>Generate your Collection</h1>
-          <p className={clsx('text-sm text-darkGrey')}>Create different token sets before finalising the collection</p>
+          <h1
+            className={clsx(
+              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
+              'text-2xl font-bold text-black'
+            )}
+          >
+            <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
+          </h1>
+          <p
+            className={clsx(
+              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
+              'text-sm text-darkGrey w-1/2'
+            )}
+          >
+            <span className={clsx(!collection && 'invisible')}>Create different token sets before finalising the collection</span>
+          </p>
         </div>
       </div>
       <div>

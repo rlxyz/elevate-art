@@ -293,16 +293,16 @@ const Index = () => {
     <>
       <div
         className={clsx(
-          !layers?.length && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
-          'border border-mediumGrey rounded-[5px] p-1 space-y-1'
+          !layers?.length ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
+          'rounded-[5px] p-1 space-y-1'
         )}
       >
         <FilterByRarity disabled={!layers?.length} />
       </div>
       <div
         className={clsx(
-          !layers?.length && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]',
-          'border border-mediumGrey rounded-[5px] p-1 space-y-1'
+          !layers?.length ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          'rounded-[5px] p-1 space-y-1'
         )}
       >
         <FilterByTrait />

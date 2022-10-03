@@ -1,6 +1,7 @@
 import CollectionBranchSelectorCard from '@components/Collection/CollectionBranchSelectorCard'
 import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
+import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
 import { Layout } from '@components/Layout/Layout'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
@@ -112,7 +113,9 @@ const Page = () => {
               </div>
             </div>
             <div className='col-span-8'>
-              <main className='space-y-6 py-8 pl-8'>{/* <CollectionPreviewGrid /> */}</main>
+              <main className='space-y-6 py-8 pl-8'>
+                <CollectionPreviewGrid />
+              </main>
             </div>
           </div>
         </Layout.Body>
