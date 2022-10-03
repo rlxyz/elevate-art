@@ -41,7 +41,7 @@ export const OrganisationAuthLayout = ({
               return
             }
           }
-          router.push('/404')
+          // router.push('/404')
           return
       }
     }

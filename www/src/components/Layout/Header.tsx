@@ -1,7 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { Organisation } from '@prisma/client'
 import { getEnsName } from '@utils/ethers'
 import { capitalize } from '@utils/format'
@@ -9,7 +8,7 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
@@ -92,14 +91,21 @@ type HeaderInternalAppRoutesProps = {
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   const { data: session } = useSession()
-  const [ensName, setEnsName] = useState<string | null>(null)
-  useDeepCompareEffect(() => {
+  const { username, setUsername } = useOrganisationNavigationStore((s) => {
+    return {
+      setUsername: s.setUsername,
+      username: s.username,
+    }
+  })
+
+  useEffect(() => {
+    if (username === '') return
     const resolveAddress = async () => {
       if (!session?.user?.address) return null
       return await getEnsName(session.user.address)
     }
     resolveAddress().then((pending) => {
-      setEnsName(pending)
+      setUsername(pending || '')
     })
   }, [session?.user?.address])
 
@@ -123,7 +129,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                 ) : (
                   <>
                     <div className={clsx(organisations ? 'text-black' : 'text-darkGrey', 'py-1')}>
-                      {current === session?.user?.address && ensName ? ensName : current}
+                      {current === session?.user?.address && username ? username : current}
                     </div>
                   </>
                 )}
