@@ -45,15 +45,16 @@ const Index = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   })
 
-  if (!collection || !layers) return null
-
   return (
     <>
       <Listbox value={selectedCollection} onChange={setSelectedPerson}>
         <Listbox.Button
           ref={buttonRef}
           onClick={() => setOpenState(true)}
-          className='w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 border border-mediumGrey bg-opacity-20 text-black'
+          className={clsx(
+            !collection && 'animate-pulse rounded-[5px] bg-mediumGrey h-full',
+            'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 border border-mediumGrey text-black'
+          )}
         >
           <div className='flex justify-between w-full items-center'>
             <div className='flex space-x-2 items-center justify-start'>
