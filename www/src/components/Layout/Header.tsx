@@ -3,16 +3,15 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { Organisation } from '@prisma/client'
 import { getEnsName } from '@utils/ethers'
-import { capitalize } from '@utils/format'
 import clsx from 'clsx'
-import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { Fragment, ReactNode, useState } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
-
+const DynamicHeaderInternalPageRoutes = dynamic(() => import('./HeaderInternalPageRoutes'), { ssr: false })
 const externalRoutes = [
   {
     name: 'Docs',
@@ -203,27 +202,6 @@ export interface HeaderInternalPageRoutesProps {
   links: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
-  return (
-    <aside className='-ml-5'>
-      <ul className='flex list-none'>
-        {links.map(({ name, enabled, href, loading }, index: number) => {
-          return (
-            <li key={index} className={enabled ? 'flex space-between items-center relative' : ''}>
-              <div className={clsx('mb-1', loading && 'pointer-events-none')}>
-                <Link disabled={loading} enabled={enabled} title={capitalize(name)} size='md' href={href} />
-              </div>
-              {enabled && (
-                <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
-              )}
-            </li>
-          )
-        })}
-      </ul>
-    </aside>
-  )
-}
-
 export interface HeaderProps {
   internalRoutes?: {
     current: string
@@ -246,7 +224,7 @@ const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = f
         </div>
         <HeaderExternalRoutes>{connectButton && <ConnectButton />}</HeaderExternalRoutes>
       </div>
-      {internalNavigation && <HeaderInternalPageRoutes links={internalNavigation} />}
+      <DynamicHeaderInternalPageRoutes links={internalNavigation} />
     </header>
   )
 }
