@@ -50,9 +50,9 @@ const Page: NextPage = () => {
           ]}
           internalNavigation={[
             {
-              name: OrganisationNavigationEnum.enum.Dashboard,
+              name: OrganisationNavigationEnum.enum.Overview,
               href: `/${organisation?.name}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
               loading: isLoadingOrganisations,
             },
             {

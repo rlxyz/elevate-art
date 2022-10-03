@@ -17,6 +17,11 @@ export const organisationRouter = createRouter()
           },
         },
         include: {
+          _count: {
+            select: {
+              repositories: true,
+            },
+          },
           members: {
             include: {
               user: true,

@@ -1,5 +1,5 @@
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
@@ -16,7 +16,7 @@ export const OrganisationAuthLayout = ({
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const { all: organisations, isLoading, isError } = useQueryOrganisation()
-  const { setOrganisationId } = useRepositoryStore((state) => {
+  const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,
     }

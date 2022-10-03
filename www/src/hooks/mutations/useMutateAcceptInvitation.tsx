@@ -27,6 +27,9 @@ export const useMutateAcceptInvitation = () => {
       const next = produce(backupOrganisations, (draft) => {
         draft.push({
           ...organisationPending.organisation,
+          _count: {
+            repositories: 0,
+          },
           members: [
             {
               id: organisationPending.id,

@@ -34,7 +34,7 @@ export const PersonalOrganisationAccountTeam = () => {
         onChange={(e) => setQuery(e.target.value)}
         className={clsx(
           isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full' : 'border border-mediumGrey',
-          'text-xs w-full rounded-[5px] p-2'
+          'text-xs w-full rounded-[5px] px-4 py-2'
         )}
         placeholder={isLoading ? '' : 'Search'}
       />

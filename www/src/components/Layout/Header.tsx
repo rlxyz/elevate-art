@@ -9,7 +9,7 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Fragment, ReactNode, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
@@ -59,7 +59,7 @@ const socialRoutes = [
   },
 ]
 
-const HeaderExternalRoutes = ({ children }: { children: ReactNode }) => {
+const HeaderExternalRoutes = () => {
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
       <aside className='flex flex-row items-center justify-center space-x-3'>
@@ -102,6 +102,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
       setEnsName(pending)
     })
   }, [session?.user?.address])
+
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,

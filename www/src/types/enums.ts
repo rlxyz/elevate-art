@@ -27,10 +27,11 @@ export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
 export const OrganisationNavigationEnum = z.nativeEnum(
   Object.freeze({
     Dashboard: 'dashboard', // only for personal accounts
-    Activity: 'activity',
-    Settings: 'settings',
-    Account: 'account',
+    Account: 'account', // only for personal accounts
+    Overview: 'overview', // only for team accounts
+    Settings: 'settings', // only for team accounts
     New: 'new',
+    Activity: 'activity',
   })
 )
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
