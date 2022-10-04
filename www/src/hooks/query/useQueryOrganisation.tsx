@@ -22,7 +22,7 @@ export const useQueryOrganisation = () => {
   }
 
   return {
-    all: organisations,
+    all: organisations?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
     pendings,
     current: organisations?.find((o) => o.name === organisationName),
     isLoading,

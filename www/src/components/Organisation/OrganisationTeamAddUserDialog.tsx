@@ -80,7 +80,7 @@ export const OrganisationTeamAddUserDialog = ({
                       </div>
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                      <button onClick={onClose} className='text-xs text-darkGrey py-6 hover:text-black'>
+                      <button onClick={onClose} className='text-xs text-darkGrey hover:bg-lightGray py-6'>
                         Cancel
                       </button>
                       <button
@@ -96,17 +96,16 @@ export const OrganisationTeamAddUserDialog = ({
                             {
                               onSuccess: () => {
                                 notifySuccess(`Added a new member to the team`)
+                                onClose()
                               },
                               onError: () => {
                                 notifyError("Couldn't add a new member to the team")
-                              },
-                              onSettled: () => {
                                 onClose()
                               },
                             }
                           )
                         }}
-                        className='text-xs text-darkGrey py-6 hover:text-black'
+                        className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
                         {isLoading ? <Loader /> : 'Add'}
                       </button>

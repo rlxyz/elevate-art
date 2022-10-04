@@ -24,7 +24,7 @@ export const OrganisationTeamAddUser = () => {
   return organisation ? (
     <form
       onSubmit={handleSubmit(async (data) => {
-        let address
+        let address: string | null
         if (String(data.address).endsWith('.eth')) {
           address = await getAddressFromEns(data.address)
           if (!address) {
@@ -34,6 +34,22 @@ export const OrganisationTeamAddUser = () => {
         } else {
           address = data.address
         }
+
+        if (!address) return
+
+        // validate address not in member or pending list
+        const isMember = organisation.members.find((member) => member.user.address === address)
+        if (isMember) {
+          setError('address', { type: 'manual', message: 'Address already in member list' })
+          return
+        }
+
+        const isPendingMember = organisation.pendings.find((pending) => pending.address === address)
+        if (isPendingMember) {
+          setError('address', { type: 'manual', message: 'Address already in pending list' })
+          return
+        }
+
         setIsOpen(true)
         setAddNewUserData({
           address,
@@ -73,8 +89,12 @@ export const OrganisationTeamAddUser = () => {
                     {...register('address', {
                       required: true,
                       validate: async (v) => {
-                        const address = await getAddressFromEns(v)
-                        return (address && ethers.utils.isAddress(address)) || ethers.utils.isAddress(v)
+                        if (String(v).endsWith('.eth')) {
+                          const address = await getAddressFromEns(v)
+                          if (!address) return false
+                          return ethers.utils.isAddress(address)
+                        }
+                        return ethers.utils.isAddress(v)
                       },
                     })}
                   />
@@ -99,7 +119,7 @@ export const OrganisationTeamAddUser = () => {
               {errors.address ? (
                 <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
                   <ExclamationCircleIcon className='text-redError w-4 h-4' />
-                  <span>Please add a valid Ethereum address</span>
+                  <span>{String(errors?.address?.message) || 'Please enter a valid Ethereum address'}</span>
                 </span>
               ) : null}
               {errors.role ? (

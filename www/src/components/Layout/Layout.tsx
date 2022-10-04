@@ -54,7 +54,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 }
 
 const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
+  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem] bg-lightGray'>
     <div className='-ml-2'>
       <Header connectButton {...props} />
     </div>

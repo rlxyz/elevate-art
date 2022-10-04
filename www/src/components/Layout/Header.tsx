@@ -1,5 +1,5 @@
 import { Popover, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { Organisation } from '@prisma/client'
 import { getEnsName } from '@utils/ethers'
@@ -150,53 +150,42 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   >
                     <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-                        <div className='p-2 relative bg-white space-y-1 divide-y divide-mediumGrey'>
-                          <div className='space-y-1'>
-                            <span className='text-xs text-darkGrey'>Personal</span>
-                            <div>
-                              {organisations
-                                .filter((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
-                                .map(({ name, id }) => (
-                                  <Link
-                                    hover
-                                    enabled={name === current}
-                                    key={name}
-                                    href={`/${OrganisationNavigationEnum.enum.Dashboard}`}
-                                  >
+                        <div className='py-2 bg-lightGray border-b border-mediumGrey'>
+                          <div className='relative rounded-[5px]'>
+                            <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
+                              <div
+                                className='p-2 flex flex-row justify-between items-center w-full text-darkGrey hover:text-black'
+                                // onClick={() => setOrganisationId(id)}
+                              >
+                                <div className='flex space-x-2 items-center'>
+                                  {/* <div className='rounded-full h-5 w-5 bg-blueHighlight' /> */}
+                                  <UserIcon className='h-3 w-3' />
+                                  <span>Your Dashboard</span>
+                                </div>
+                                {/* {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />} */}
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                        <div className='p-2 relative bg-white space-y-1'>
+                          {organisations.length > 0 ? (
+                            <div className='space-y-1'>
+                              <span className='text-xs text-darkGrey'>Your Teams</span>
+                              <div>
+                                {organisations.map(({ name, type, id }) => (
+                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
                                     <div
                                       className='px-2 flex flex-row justify-between items-center w-full'
                                       onClick={() => setOrganisationId(id)}
                                     >
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
-                                        <span>You</span>
+                                        <span>{type === OrganisationDatabaseEnum.enum.Team ? name : 'You'}</span>
                                       </div>
                                       {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
                                     </div>
                                   </Link>
                                 ))}
-                            </div>
-                          </div>
-                          {organisations.filter((x) => x.type === OrganisationDatabaseEnum.enum.Team).length > 0 ? (
-                            <div className='pt-3 space-y-1'>
-                              <span className='text-xs text-darkGrey'>Teams</span>
-                              <div>
-                                {organisations
-                                  .filter((x) => x.type === OrganisationDatabaseEnum.enum.Team)
-                                  .map(({ name, id }) => (
-                                    <Link hover enabled={name === current} key={name} href={`/${name}`}>
-                                      <div
-                                        className='px-2 flex flex-row justify-between items-center w-full'
-                                        onClick={() => setOrganisationId(id)}
-                                      >
-                                        <div className='flex space-x-2 items-center'>
-                                          <div className='rounded-full h-5 w-5 bg-blueHighlight' />
-                                          <span>{name}</span>
-                                        </div>
-                                        {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
-                                      </div>
-                                    </Link>
-                                  ))}
                               </div>
                             </div>
                           ) : (
