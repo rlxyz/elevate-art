@@ -15,16 +15,15 @@ export const createCloudinary = () => {
 
 export const uploadCollectionLayerImageCloudinary = ({
   repositoryId,
-  trait,
+  traitElement,
   file,
 }: {
   repositoryId: string
-  layerName: string
   file: FileWithPath
-  trait: TraitElement
+  traitElement: TraitElement
 }) => {
   return new Promise((resolve, reject) => {
-    const data = createCloudinaryFormData(file, trait, repositoryId)
+    const data = createCloudinaryFormData(file, traitElement, repositoryId)
     fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
       method: 'post',
       body: data,
@@ -62,11 +61,25 @@ export const getRepositoryLayerObjectUrls = (
     return acc
   }, {})
 }
+
 export const getRepositoryLayerNames = (fileObject: {
   [key: string]: { name: string }[]
-}): { layerName: string; traitNames: string[] }[] => {
-  return Object.entries(fileObject).map(([key, values]) => ({ layerName: key, traitNames: values.map((x) => x.name) }))
+}): {
+  name: string
+  traitElements: {
+    name: string
+  }[]
+}[] => {
+  return Object.entries(fileObject).map(([key, values]) => ({
+    name: key,
+    traitElements: values.map((x) => {
+      return {
+        name: x.name,
+      }
+    }),
+  }))
 }
+
 export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement, repositoryId: string) => {
   const { id, name, layerElementId } = trait
   const data = new FormData()

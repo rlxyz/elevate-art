@@ -15,7 +15,7 @@ export const PersonalOrganisationAccountTeamInvites = () => {
               <span>Pending Invites</span>
             </span>
             <div className={'text-xs text-darkGrey'}>
-              <p>Join teams you've been invited to</p>
+              <p>Join teams youve been invited to</p>
             </div>
           </div>
           <div className='border border-mediumGrey rounded-[5px] divide-y divide-mediumGrey'>

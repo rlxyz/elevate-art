@@ -29,7 +29,7 @@ export const PersonalOrganisationAccountTeam = () => {
         <div
           className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}
         >
-          <p className={clsx(isLoading && 'invisible')}>View the Teams that you're a part of</p>
+          <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
       <SearchInput isLoading={isLoading} setQuery={setQuery} />

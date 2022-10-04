@@ -3,9 +3,10 @@ import Loading from '@components/Layout/Loading'
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
+import { Repository } from '@prisma/client'
 import { formatBytes } from '@utils/format'
 import { trpc } from '@utils/trpc'
 import { motion } from 'framer-motion'
@@ -52,8 +53,10 @@ const useMutateAddTraits = ({
 }
 
 const useMutateCreateNewRepositoryAndLayers = ({
+  setRepository,
   setUploadedFiles,
 }: {
+  setRepository: Dispatch<SetStateAction<null | Repository>>
   setUploadedFiles: Dispatch<
     SetStateAction<{
       [key: string]: {
@@ -68,72 +71,62 @@ const useMutateCreateNewRepositoryAndLayers = ({
 }) => {
   const ctx = trpc.useContext()
   const { mutate: createRepository } = trpc.useMutation('repository.create')
-  const { mutate: createLayers } = trpc.useMutation('layer.createMany')
-  const { notifyError } = useNotification()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  const { notifyError, notifySuccess } = useNotification()
   const mutate = ({ files, organisationId }: { files: FileWithPath[]; organisationId: string }) => {
     // step 1: validate files
     if (!validateFiles(files, 3)) {
       alert("Something wrong with the format you've uploaded")
       return
     }
+    notifySuccess('Folder format is correct. We are creating the project for you.')
 
     const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
-
+    const layers = getRepositoryLayerObjectUrls(files)
+    setUploadedFiles(layers)
     createRepository(
-      { organisationId: organisationId, name: repositoryName },
+      { organisationId: organisationId, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },
       {
-        onSuccess: (data) => {
-          // step 4: set the repository data
+        onSuccess: (data, variables) => {
+          setRepository(data)
+          notifySuccess('We have created the project for you. Starting upload...')
           ctx.setQueryData(['repository.getRepositoryByName', { name: data.name }], data)
-
-          // step 4: set repository data
-          const layers = getRepositoryLayerObjectUrls(files)
-          setUploadedFiles(layers)
-
-          // step 7: create layers
-          createLayers(
-            { repositoryId: data.id, layers: getRepositoryLayerNames(layers) },
-            {
-              onSuccess: (data, variables) => {
-                files.map((file: FileWithPath) => {
-                  const reader = new FileReader()
-                  const pathArray = String(file.path).split('/')
-                  const layerName = pathArray[2]
-                  const traitName = pathArray[3]?.replace('.png', '')
-                  // reader.onabort = () => console.error('file reading was aborted')
-                  // reader.onerror = () => console.error('file reading has failed')
-                  reader.onload = async () => {
-                    if (!traitName || !layerName) return
-                    const trait = data.filter((item) => item.name === traitName && item.layerElement.name === layerName)[0]
-                    if (!trait) return
-                    uploadCollectionLayerImageCloudinary({
-                      repositoryId: variables.repositoryId,
-                      layerName,
-                      trait,
-                      file,
-                    }).then(() => {
-                      setUploadedFiles((prev) => {
-                        if (!prev) return prev
-                        const index = prev[layerName]?.findIndex((x) => x.name === trait.name)
-                        const item = prev[layerName]?.find((x) => x.name === trait.name)
-                        if (typeof index === 'undefined' || !item) return prev
-                        prev[layerName] = [
-                          ...(prev[layerName]?.slice(0, index) || []),
-                          {
-                            ...item,
-                            uploaded: true,
-                          },
-                          ...(prev[layerName]?.slice(index + 1) || []),
-                        ]
-                        return prev
-                      })
-                    })
-                  }
-                  reader.readAsArrayBuffer(file)
+          console.log('data', data)
+          files.map((file: FileWithPath) => {
+            const reader = new FileReader()
+            const pathArray = String(file.path).split('/')
+            const layerName = pathArray[2]
+            const traitName = pathArray[3]?.replace('.png', '')
+            if (!traitName || !layerName) return
+            // reader.onabort = () => console.error('file reading was aborted')
+            // reader.onerror = () => console.error('file reading has failed')
+            reader.onload = async () => {
+              const traitElement = data.layers.find((x) => x.name === layerName)?.traitElements.find((x) => x.name === traitName)
+              if (!traitElement) return
+              uploadCollectionLayerImageCloudinary({
+                file,
+                traitElement,
+                repositoryId: data.id,
+              }).then(() => {
+                setUploadedFiles((prev) => {
+                  if (!prev) return prev
+                  const index = prev[layerName]?.findIndex((x) => x.name === traitElement.name)
+                  const item = prev[layerName]?.find((x) => x.name === traitElement.name)
+                  if (typeof index === 'undefined' || !item) return prev
+                  prev[layerName] = [
+                    ...(prev[layerName]?.slice(0, index) || []),
+                    {
+                      ...item,
+                      uploaded: true,
+                    },
+                    ...(prev[layerName]?.slice(index + 1) || []),
+                  ]
+                  return prev
                 })
-              },
+              })
             }
-          )
+            reader.readAsArrayBuffer(file)
+          })
         },
         onError: (error) => {
           notifyError('Something went wrong')
@@ -161,9 +154,10 @@ export const FolderUpload = () => {
   }>({})
   const router = useRouter()
   const { current: organisation } = useQueryOrganisation()
-  const { current: repository } = useQueryRepository()
+  const [repository, setRepository] = useState<null | Repository>(null)
   const { mutate: createNewRepositoryAndLayers } = useMutateCreateNewRepositoryAndLayers({
     setUploadedFiles,
+    setRepository,
   })
   const { mutate: createNewTraits } = useMutateAddTraits({
     setUploadedFiles,
@@ -182,8 +176,9 @@ export const FolderUpload = () => {
     switch (folderDepth) {
       case 4:
         createNewRepositoryAndLayers({ files, organisationId: organisation.id })
-      case 2:
-        createNewTraits({ files, organisationId: organisation.id })
+        return
+      // case 2:
+      // createNewTraits({ files, organisationId: organisation.id })
     }
   }, [])
 
@@ -224,7 +219,9 @@ export const FolderUpload = () => {
                 </div>
                 <div className='flex space-x-3'>
                   <Button
-                    onClick={() => router.push(`/${organisation.name}/${repository?.name}/preview`)} // todo: should go to collection creation page
+                    onClick={() => {
+                      repository && router.push(`/${organisation.name}/${repository.name}`)
+                    }}
                     disabled={Object.entries(uploadedFiles).some(([, value]) => value.some((x) => !x.uploaded))}
                   >
                     Continue
@@ -252,10 +249,12 @@ export const FolderUpload = () => {
                                   </span>
                                 </div>
                               </div>
-                              <div className='rounded-[5px] h-1 bg-lightGray text-left'>
+                              <div className='flex items-start rounded-[5px] h-1 bg-lightGray text-left'>
                                 <motion.div
-                                  style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
-                                  className={`bg-blueHighlight h-1 w-full`}
+                                  // style={{ scaleX: 1 / 10 }}
+                                  style={{ width: `${(files[1].filter((x) => x.uploaded).length / files[1].length) * 100}%` }}
+                                  // style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
+                                  className={`bg-blueHighlight h-1`}
                                 />
                               </div>
                             </div>

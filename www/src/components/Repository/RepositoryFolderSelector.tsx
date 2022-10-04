@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
+import { CollectionNavigationEnum } from 'src/types/enums'
 
 const inactiveShadow = '0px 0px 0px rgba(0,0,0,0.8)'
 
@@ -50,12 +51,16 @@ export const ReorderItem = ({
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
-  const currentViewSection = useCollectionNavigationStore((state) => state.currentViewSection)
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   return (
     <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
-      <Link href={`/${organisationName}/${repositoryName}/${currentViewSection}/${name}`} enabled={enabled} hover title={name}>
+      <Link
+        href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${name}`}
+        enabled={enabled}
+        hover
+        title={name}
+      >
         {canReorder && (
           <DotsHorizontalIcon
             className='text-darkGrey mr-1 w-4 h-4'

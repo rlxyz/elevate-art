@@ -81,7 +81,7 @@ export const repositoryRouter = createRouter()
     }),
     async resolve({ ctx, input }) {
       const { name, organisationId, layerElements } = input
-      await ctx.prisma.repository.create({
+      return await ctx.prisma.repository.create({
         data: {
           organisationId,
           name,
@@ -97,13 +97,20 @@ export const repositoryRouter = createRouter()
             create: layerElements.map(({ name, traitElements }, index) => ({
               name,
               priority: index,
-              traits: {
-                create: traitElements.map(({ name }) => ({
-                  name,
-                  weight: 1,
-                })),
+              traitElements: {
+                createMany: {
+                  data: traitElements.map(({ name }) => ({ name, weight: 1 })),
+                },
               },
             })),
+          },
+        },
+        include: {
+          collections: true,
+          layers: {
+            include: {
+              traitElements: true,
+            },
           },
         },
       })
