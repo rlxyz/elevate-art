@@ -42,13 +42,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
     },
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
     onSuccess: (data, variables) => {
-      notifySuccess(
-        <div>
-          <span>{`Successfully updated `}</span>
-          <span className='text-blueHighlight text-semibold'>{layers?.find((l) => l.id === variables.layerId)?.name}</span>
-          <span className='font-semibold'>{` rarities`}</span>
-        </div>
-      )
+      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variables.layerId)?.name} rarities`)
     },
   })
 }

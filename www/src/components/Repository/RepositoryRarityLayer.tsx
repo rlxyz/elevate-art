@@ -26,17 +26,11 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
       // ctx.setQueryData(['layer.getLayerById', { id: variables.layerId }], data.changedLayer)
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       resetCanEdit()
-      notifySuccess(
-        <div>
-          <span>{`Successfully updated to `}</span>
-          <span className='text-blueHighlight text-semibold'>{variables.newName}</span>
-          <span className='font-semibold'>{` from ${variables.oldName}`}</span>
-        </div>
-      )
+      notifySuccess(`Successfully updated to ${variables.newName} from ${variables.oldName}`)
     },
     onError: () => {
       resetCanEdit()
-      notifyError('Something went wrong')
+      notifyError('Sorry, we couldnt set the name')
     },
   })
 

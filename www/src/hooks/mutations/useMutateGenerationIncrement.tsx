@@ -31,15 +31,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
       ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
 
       onMutate && onMutate()
-      notifySuccess(
-        <span>
-          <span className='text-blueHighlight'>Successfully</span>
-          <span>
-            {' '}
-            generated a <span className='font-semibold'>new collection!</span>
-          </span>
-        </span>
-      )
+      notifySuccess(`Successfully generated a new collection!`)
       return { backup }
     },
     onError: (err, variables, context) => {

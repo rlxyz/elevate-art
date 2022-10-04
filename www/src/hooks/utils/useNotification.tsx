@@ -8,7 +8,7 @@ export const useNotification = () => {
       (t) => (
         <Notification id={t.id} type='success'>
           <div className='flex justify-between w-full items-center'>
-            <span className='pr-4'>{message}</span>
+            <span>{message}</span>
           </div>
         </Notification>
       ),

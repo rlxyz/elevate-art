@@ -38,16 +38,11 @@ const TraitRulesDisplayPerItem = ({
       // if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
       // ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
       notifySuccess(
-        <div>
-          <span>{`Removed `}</span>
-          <span className='text-blueHighlight text-semibold'>{data?.deletedRule.primaryTraitElement?.name}</span>
-          <span className='text-redError'>{` ${data?.deletedRule.condition} `}</span>
-          <span className='font-semibold'>{data?.deletedRule.secondaryTraitElement?.name}</span>
-        </div>
+        `Removed ${data?.deletedRule.primaryTraitElement?.name} ${data?.deletedRule.condition} ${data?.deletedRule.secondaryTraitElement?.name}`
       )
     },
     onError: () => {
-      notifyError('Something went wrong')
+      notifyError('Sorry we couldnt set the rule')
     },
   })
 

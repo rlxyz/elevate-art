@@ -14,7 +14,7 @@ export const Notification = ({ children, id, type }: Props) => {
       className={clsx(
         type === 'error' && 'bg-redError',
         type === 'success' && 'bg-blueHighlight',
-        'relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-md z-5'
+        'relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-lg z-[1000]'
       )}
       role='alert'
     >
