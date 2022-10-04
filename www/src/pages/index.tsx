@@ -1,9 +1,10 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
 import { Link } from '@components/Layout/Link'
-import type { GetServerSideProps, NextPage } from 'next'
-import { getSession } from 'next-auth/react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 import { useAuthenticated } from '../hooks/utils/useAuthenticated'
 
 const Guide = () => {
@@ -65,44 +66,42 @@ const CoolShit = () => {
 }
 
 const Home: NextPage = () => {
+  const router = useRouter()
   const { isLoggedIn } = useAuthenticated()
-  return (
-    <>
-      <Layout>
-        <Layout.Header />
-        <Layout.Body>
-          <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
-            <div className='w-full flex flex-col justify-center items-center'>
-              <div className='w-[50%]'>
-                <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
-              </div>
-              <span className='text-xs uppercase'>
-                an&nbsp;
-                <Link external={true} href='https://twitter.com/rlxyz_eth'>
-                  <span className='font-extrabold line-through'>RLXYZ</span>
-                </Link>
-                &nbsp;production
-              </span>
-            </div>
-            {/* <Guide /> */}
-            {/* <CoolShit /> */}
-          </div>
-        </Layout.Body>
-      </Layout>
-    </>
-  )
-}
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
-  const user = session?.user ?? null
-  if (!user) return { props: {} }
-  const personal = await prisma?.organisation.findFirst({
-    where: { type: OrganisationDatabaseEnum.enum.Personal, members: { some: { userId: user.id } } },
-    select: { name: true },
-  })
-  if (!personal) return { props: {} }
-  return { redirect: { destination: `/${OrganisationNavigationEnum.enum.Dashboard}`, permanent: true } }
+  useEffect(() => {
+    isLoggedIn && router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
+  }, [isLoggedIn])
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Layout>
+          <Layout.Header />
+          <Layout.Body>
+            <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
+              <div className='w-full flex flex-col justify-center items-center'>
+                <div className='w-[50%]'>
+                  <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
+                </div>
+                <span className='text-xs uppercase'>
+                  an&nbsp;
+                  <Link external={true} href='https://twitter.com/rlxyz_eth'>
+                    <span className='font-extrabold line-through'>RLXYZ</span>
+                  </Link>
+                  &nbsp;production
+                </span>
+              </div>
+              {/* <Guide /> */}
+              {/* <CoolShit /> */}
+            </div>
+          </Layout.Body>
+        </Layout>
+      </>
+    )
+  }
+
+  return null
 }
 
 export default Home

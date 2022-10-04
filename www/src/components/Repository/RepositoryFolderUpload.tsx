@@ -37,7 +37,6 @@ const useMutateAddTraits = ({
 }) => {
   const { current: collection } = useQueryRepositoryCollection()
   const { mutate: createManyTrait } = trpc.useMutation('layer.createManyTrait')
-
   const mutate = ({ files }: { files: FileWithPath[] }) => {
     // step 1: validate files
     if (!validateFiles(files, 1)) {
@@ -198,13 +197,13 @@ export const FolderUpload = () => {
   })
 
   return (
-    <div className='space-y-6 w-full'>
+    <div className='space-y-6 w-full h-full'>
       {organisation ? (
         <>
           {Object.entries(uploadedFiles).length === 0 ? (
-            <div className='h-[20rem]' {...getRootProps()}>
+            <div className='h-[42.5vh]' {...getRootProps()}>
               <input {...getInputProps()} />
-              <div className='border border-dashed border-mediumGrey rounded-[5px]  flex flex-col justify-center items-center h-full'>
+              <div className='border border-dashed hover:bg-lightGray border-blueHighlight rounded-[5px]  flex flex-col justify-center items-center h-full'>
                 {acceptedFiles.length > 0 ? (
                   <Loading />
                 ) : (

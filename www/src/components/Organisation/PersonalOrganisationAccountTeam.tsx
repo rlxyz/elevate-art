@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
+import { SearchInput } from '../Layout/SearchInput'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisation()
@@ -28,17 +29,10 @@ export const PersonalOrganisationAccountTeam = () => {
         <div
           className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}
         >
-          <p className={clsx(isLoading && 'invisible')}>Manage the Teams that you're a part of</p>
+          <p className={clsx(isLoading && 'invisible')}>View the Teams that you're a part of</p>
         </div>
       </div>
-      <input
-        onChange={(e) => setQuery(e.target.value)}
-        className={clsx(
-          isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full' : 'border border-mediumGrey',
-          'text-xs w-full rounded-[5px] px-4 py-2'
-        )}
-        placeholder={isLoading ? '' : 'Search'}
-      />
+      <SearchInput isLoading={isLoading} setQuery={setQuery} />
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>

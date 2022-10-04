@@ -62,34 +62,9 @@ const CreateNewRepository = () => {
           </p>
         </div>
       </div>
-      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12 min-h-[50vh]'>
+      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 drop-shadow-2xl space-y-12 min-h-[53.5vh]'>
         <FolderUpload />
-        {/* <div className='py-12 pr-12 absolute bottom-0 right-0'>
-          <div className='flex justify-end space-x-3'>
-            <Button
-              variant='secondary'
-              onClick={() => {
-                if (repository) {
-                  // should delete repo if created.
-                  mutate.mutate({ repositoryId: repository.id })
-                } else {
-                  router.push(`/${organisationName}`)
-                }
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => router.push(`/${organisationName}/${repository?.name}/preview`)} // todo: should go to collection creation page
-              disabled={repository === null && createProjectDisabled}
-            >
-              Create Project
-            </Button>
-          </div>
-        </div> */}
       </div>
-      {/* <div className='col-span-2'>{<CloneTemplate />}</div> */}
-      {/* <div className='z-[-1] mt-32 bg-lightGray absolute left-0 w-full h-full py-12' /> */}
     </div>
   )
 }

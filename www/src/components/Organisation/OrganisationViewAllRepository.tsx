@@ -1,4 +1,5 @@
 import { Link } from '@components/Layout/Link'
+import { SearchInput } from '@components/Layout/SearchInput'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import clsx from 'clsx'
@@ -59,14 +60,7 @@ const ViewAllRepositories = () => {
     <>
       <div className='grid grid-cols-10 space-x-3 items-center'>
         <div className='col-span-9 h-full w-full'>
-          <input
-            onChange={(e) => setQuery(e.target.value)}
-            className={clsx(
-              isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full' : 'border border-mediumGrey',
-              'text-xs w-full rounded-[5px] px-4 py-2'
-            )}
-            placeholder={isLoading ? '' : 'Search'}
-          />
+          <SearchInput isLoading={isLoading} setQuery={setQuery} />
         </div>
         <div className='col-span-1 h-full flex items-center'>
           <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
