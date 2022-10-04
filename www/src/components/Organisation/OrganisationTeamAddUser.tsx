@@ -2,11 +2,12 @@ import { ExclamationCircleIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { getAddressFromEns } from '@utils/ethers'
 import { capitalize } from '@utils/format'
-import { trpc } from '@utils/trpc'
+import clsx from 'clsx'
 import { ethers } from 'ethers'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { OrganisationDatabaseRoleEnum } from 'src/types/enums'
-
+import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from 'src/types/enums'
+import { OrganisationTeamAddUserDialog } from './OrganisationTeamAddUserDialog'
 export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisation()
   const {
@@ -17,39 +18,30 @@ export const OrganisationTeamAddUser = () => {
     reset,
     formState: { errors },
   } = useForm()
-  const { mutate } = trpc.useMutation('organisation.addUser', {
-    onMutate: () => {
-      clearErrors('exists')
-    },
-    onSuccess: () => {
-      reset()
-    },
-    onError: () => {
-      setError('exists', { type: 'manual', message: 'Something went wrong, possibly the address is already added' })
-    },
-  })
+  const [addNewUserData, setAddNewUserData] = useState<{ address: string; role: OrganisationDatabaseRoleEnumType } | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
 
   return organisation ? (
     <form
       onSubmit={handleSubmit(async (data) => {
+        let address
         if (String(data.address).endsWith('.eth')) {
-          const address = await getAddressFromEns(data.address)
+          address = await getAddressFromEns(data.address)
           if (!address) {
             setError('address', { type: 'manual', message: 'Address not found' })
             return
           }
-          mutate({
-            organisationId: organisation.id,
-            address,
-            role: data.role,
-          })
         } else {
-          mutate({
-            organisationId: organisation.id,
-            address: data.address,
-            role: data.role,
-          })
+          address = data.address
         }
+        setIsOpen(true)
+        setAddNewUserData({
+          address,
+          role:
+            data.role === OrganisationDatabaseRoleEnum.enum.Admin
+              ? OrganisationDatabaseRoleEnum.enum.Admin
+              : OrganisationDatabaseRoleEnum.enum.Curator, // ensure typesafety
+        })
       })}
     >
       <div className='flex space-y-6 flex-col'>
@@ -69,23 +61,23 @@ export const OrganisationTeamAddUser = () => {
               <div className='col-span-7 space-y-1'>
                 <label className='text-[0.7rem] uppercase'>Ethereum Address</label>
                 <div className='w-full'>
-                  <div className='flex items-center border border-mediumGrey rounded-[5px]'>
-                    <input
-                      className='text-xs p-2 w-full h-full rounded-[5px]'
-                      type='string'
-                      placeholder='0xd2a420... or alpha.eth...'
-                      {...register('address', {
-                        required: true,
-                        validate: async (v) => {
-                          const address = await getAddressFromEns(v)
-                          return (address && ethers.utils.isAddress(address)) || ethers.utils.isAddress(v)
-                        },
-                        onChange: () => {
-                          clearErrors('exists')
-                        },
-                      })}
-                    />
-                  </div>
+                  <input
+                    className={clsx(
+                      'text-xs p-2 w-full h-full border border-mediumGrey rounded-[5px]',
+                      'invalid:border-redError invalid:text-redError',
+                      'focus:invalid:border-redError focus:invalid:ring-redError',
+                      'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight'
+                    )}
+                    aria-invalid={errors.address ? 'true' : 'false'}
+                    placeholder='0xd2a420... or alpha.eth...'
+                    {...register('address', {
+                      required: true,
+                      validate: async (v) => {
+                        const address = await getAddressFromEns(v)
+                        return (address && ethers.utils.isAddress(address)) || ethers.utils.isAddress(v)
+                      },
+                    })}
+                  />
                 </div>
               </div>
               <div className='col-span-3 space-y-1'>
@@ -127,12 +119,17 @@ export const OrganisationTeamAddUser = () => {
             </div>
           </div>
           <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-mediumGrey'>
-            <button
-              type='submit'
-              className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-mediumGrey px-4 py-1.5 rounded-[5px]'
-            >
-              Save
+            <button className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-mediumGrey px-4 py-1.5 rounded-[5px]'>
+              Add
             </button>
+            {addNewUserData && (
+              <OrganisationTeamAddUserDialog
+                organisationId={organisation.id}
+                addNewUserData={addNewUserData}
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+              />
+            )}
           </div>
         </div>
       </div>

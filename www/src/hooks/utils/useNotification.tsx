@@ -14,7 +14,7 @@ export const useNotification = () => {
       ),
       {
         position: 'bottom-right',
-        duration: 1000,
+        duration: 2000,
       }
     )
   }
@@ -24,14 +24,11 @@ export const useNotification = () => {
       (t) => (
         <Notification id={t.id} type='error'>
           <div className='flex justify-between w-full items-center'>
-            <div className='font-gilroy-light'>
-              <div className='font-bold'>{message}</div>
-            </div>
+            <span className='pr-4'>{message}</span>
           </div>
         </Notification>
       ),
       {
-        id: 'message-notification-error',
         position: 'bottom-right',
         duration: 2000,
       }
