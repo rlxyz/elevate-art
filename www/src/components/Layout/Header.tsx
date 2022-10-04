@@ -141,10 +141,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                         <div className='py-2 bg-lightGray border-b border-mediumGrey'>
                           <div className='relative rounded-[5px]'>
                             <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
-                              <div
-                                className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-darkGrey hover:text-black'
-                                // onClick={() => setOrganisationId(id)}
-                              >
+                              <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-darkGrey hover:text-black'>
                                 <div className='flex space-x-2 items-center'>
                                   {/* <div className='rounded-full h-5 w-5 bg-blueHighlight' /> */}
                                   <UserIcon className='h-3 w-3' />

@@ -50,7 +50,6 @@ const ViewAllRepositories = () => {
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
   if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories
-
   const filteredRepositories =
     query === ''
       ? repositories
