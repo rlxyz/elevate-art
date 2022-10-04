@@ -1,14 +1,15 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { Organisation } from '@prisma/client'
-import { getEnsName } from '@utils/ethers'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from './ConnectButton'
 import { Link } from './Link'
@@ -91,24 +92,7 @@ type HeaderInternalAppRoutesProps = {
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   const { data: session } = useSession()
-  const { username, setUsername } = useOrganisationNavigationStore((s) => {
-    return {
-      setUsername: s.setUsername,
-      username: s.username,
-    }
-  })
-
-  useEffect(() => {
-    if (username === '') return
-    const resolveAddress = async () => {
-      if (!session?.user?.address) return null
-      return await getEnsName(session.user.address)
-    }
-    resolveAddress().then((pending) => {
-      setUsername(pending || '')
-    })
-  }, [session?.user?.address])
-
+  const { currentHref } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,
@@ -119,17 +103,21 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   return (
     <>
       {routes.map(({ current, href, organisations }, index) => {
+        const isLoading = current === ''
         return (
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
             <Popover className='flex space-x-1'>
               <Link href={href} enabled={false} external>
-                {current === '' ? (
+                {isLoading ? (
                   <div className='w-36 animate-pulse h-5 rounded-[5px] bg-mediumGrey' />
                 ) : (
                   <>
                     <div className={clsx(organisations ? 'text-black' : 'text-darkGrey', 'py-1')}>
-                      {current === session?.user?.address && username ? username : current}
+                      {currentHref === OrganisationNavigationEnum.enum.You ||
+                      current === OrganisationNavigationEnum.enum.Dashboard
+                        ? capitalize(currentHref || current)
+                        : current}
                     </div>
                   </>
                 )}
@@ -154,7 +142,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                           <div className='relative rounded-[5px]'>
                             <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
                               <div
-                                className='p-2 flex flex-row justify-between items-center w-full text-darkGrey hover:text-black'
+                                className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-darkGrey hover:text-black'
                                 // onClick={() => setOrganisationId(id)}
                               >
                                 <div className='flex space-x-2 items-center'>
@@ -162,7 +150,11 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                   <UserIcon className='h-3 w-3' />
                                   <span>Your Dashboard</span>
                                 </div>
-                                {/* {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />} */}
+                                {current === OrganisationNavigationEnum.enum.Dashboard ? (
+                                  <CheckIcon className='text-blueHighlight h-4 w-4' />
+                                ) : (
+                                  <></>
+                                )}
                               </div>
                             </Link>
                           </div>
@@ -180,9 +172,13 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                     >
                                       <div className='flex space-x-2 items-center'>
                                         <div className='rounded-full h-5 w-5 bg-blueHighlight' />
-                                        <span>{type === OrganisationDatabaseEnum.enum.Team ? name : 'You'}</span>
+                                        <span>
+                                          {type === OrganisationDatabaseEnum.enum.Team
+                                            ? name
+                                            : capitalize(OrganisationNavigationEnum.enum.You)}
+                                        </span>
                                       </div>
-                                      {name === current && <CheckIcon className='text-blueHighlight h-4 w-4' />}
+                                      {name === currentHref && <CheckIcon className='text-blueHighlight h-4 w-4' />}
                                     </div>
                                   </Link>
                                 ))}
@@ -248,11 +244,12 @@ export interface HeaderProps {
 }
 
 const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {
+  const { isLoggedIn } = useAuthenticated()
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link className='' external={true} href='/'>
+          <Link className='' external={true} href={isLoggedIn ? `${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </Link>
           <HeaderInternalAppRoutes routes={internalRoutes} />

@@ -12,7 +12,7 @@ export const OrganisationAuthLayout = ({
   children: ReactNode
   type?: OrganisationDatabaseType
 }) => {
-  const { isLoggedIn } = useAuthenticated()
+  const { isLoggedIn, session } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const { all: organisations, isLoading, isError } = useQueryOrganisation()
@@ -41,7 +41,7 @@ export const OrganisationAuthLayout = ({
               return
             }
           }
-          // router.push('/404')
+          router.push('/404')
           return
       }
     }

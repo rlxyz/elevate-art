@@ -36,33 +36,33 @@ export const PersonalOrganisationAccountTeam = () => {
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
-            {filteredOrganisaitons
-              ?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-              .map((organisation) => {
-                return (
-                  <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
-                    <div className='flex flex-row space-y-1 items-center space-x-3'>
-                      <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
-                      <div className='flex flex-col space-y-1'>
-                        <span className='text-xs font-bold'>
-                          {organisation.type === OrganisationDatabaseEnum.enum.Personal ? 'You' : organisation.name}
-                        </span>
-                        <span className='text-xs text-darkGrey'>
-                          {organisation.type === OrganisationDatabaseEnum.enum.Personal
-                            ? 'Personal'
-                            : capitalize(getUserRoleInOrganisation(organisation) || '')}
-                        </span>
-                      </div>
+            {filteredOrganisaitons.map((organisation) => {
+              return (
+                <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
+                  <div className='flex flex-row space-y-1 items-center space-x-3'>
+                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                    <div className='flex flex-col space-y-1'>
+                      <span className='text-xs font-bold'>
+                        {organisation.type === OrganisationDatabaseEnum.enum.Personal
+                          ? capitalize(organisation.name)
+                          : organisation.name}
+                      </span>
+                      <span className='text-xs text-darkGrey'>
+                        {organisation.type === OrganisationDatabaseEnum.enum.Personal
+                          ? capitalize(OrganisationDatabaseEnum.enum.Personal)
+                          : capitalize(getUserRoleInOrganisation(organisation) || '')}
+                      </span>
                     </div>
-                    <Link
-                      href={`/${organisation.name}`}
-                      className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
-                    >
-                      View
-                    </Link>
                   </div>
-                )
-              })}
+                  <Link
+                    href={`/${organisation.name}`}
+                    className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                  >
+                    View
+                  </Link>
+                </div>
+              )
+            })}
           </div>
         </>
       ) : (

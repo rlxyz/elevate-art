@@ -1,6 +1,7 @@
 import { Link } from '@components/Layout/Link'
 import { SearchInput } from '@components/Layout/SearchInput'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -8,7 +9,8 @@ import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import { timeAgo } from '../../utils/time'
 
-const NoRepositoryExistPlaceholder = ({ organisationName }: { organisationName: string }) => {
+const NoRepositoryExistPlaceholder = () => {
+  const { current } = useQueryOrganisation()
   return (
     <div className='h-full w-full flex flex-col items-center min-h-[calc(100vh-14rem)] justify-center'>
       <div className='flex flex-col space-y-6'>
@@ -17,11 +19,11 @@ const NoRepositoryExistPlaceholder = ({ organisationName }: { organisationName: 
             <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
           </div>
           <span className='text-md'>
-            We created a team for you called <span className='text-blueHighlight font-bold'>{organisationName}</span>
+            We created a team for you called <span className='text-blueHighlight font-bold'>{current?.name}</span>
           </span>
         </div>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link external className='px-6 space-x-1' href={`${organisationName}/new`}>
+          <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
             <div className='border flex items-center justify-center border-mediumGrey rounded-[5px] p-3 bg-black'>
               <span className='text-sm text-white'>Create a Project</span>
               <ChevronRightIcon className='text-white h-4 w-4' />
@@ -46,7 +48,7 @@ const ViewAllRepositories = () => {
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder organisationName={organisationName} />
+  if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories
 
   const filteredRepositories =

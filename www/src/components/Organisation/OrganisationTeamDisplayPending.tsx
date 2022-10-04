@@ -45,23 +45,21 @@ export const OrganisationTeamDisplayPending = () => {
           <span className='text-darkGrey'>All</span>
         </div>
         <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-mediumGrey'>
-          {organisation.pendings
-            ?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-            .map(({ id, address, role, createdAt }) => (
-              <div key={id} className='px-6 py-4 flex justify-between items-center'>
-                <div className='flex items-center space-x-2'>
-                  <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
-                  <div className='flex flex-col space-y-1'>
-                    <span className='text-xs font-semibold'>{address}</span>
-                    <div className={clsx('flex items-baseline')}>
-                      <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
-                      {/* {ens ? <span className='text-xs font-normal text-blueHighlight'>{ens}</span> : null} */}
-                    </div>
+          {organisation.pendings.map(({ id, address, role, createdAt }) => (
+            <div key={id} className='px-6 py-4 flex justify-between items-center'>
+              <div className='flex items-center space-x-2'>
+                <div className='border border-mediumGrey rounded-full bg-blueHighlight w-7 h-7' />
+                <div className='flex flex-col space-y-1'>
+                  <span className='text-xs font-semibold'>{address}</span>
+                  <div className={clsx('flex items-baseline')}>
+                    <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+                    {/* {ens ? <span className='text-xs font-normal text-blueHighlight'>{ens}</span> : null} */}
                   </div>
                 </div>
-                <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
               </div>
-            ))}
+              <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

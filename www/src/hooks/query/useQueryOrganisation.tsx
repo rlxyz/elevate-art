@@ -1,6 +1,10 @@
 import { trpc } from '@utils/trpc'
+import produce, { setAutoFreeze } from 'immer'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+
+setAutoFreeze(false)
 
 export const useQueryOrganisation = () => {
   const router = useRouter()
@@ -21,10 +25,25 @@ export const useQueryOrganisation = () => {
     }
   }
 
+  // Little hack: change the name of personal organisation to the "You"
+  const next = produce(organisations, (draft) => {
+    const personal = draft?.find((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
+    if (personal) {
+      personal.name = OrganisationNavigationEnum.enum.You
+    }
+  })
+
   return {
-    all: organisations?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
-    pendings,
-    current: organisations?.find((o) => o.name === organisationName),
+    all: next?.sort((a, b) => {
+      if (a.type === OrganisationDatabaseEnum.enum.Personal) {
+        return -1
+      } else {
+        return a.createdAt.getTime() - b.createdAt.getTime()
+      }
+    }),
+    pendings: pendings?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
+    currentHref: organisationName,
+    current: next?.find((o) => o.name === organisationName),
     isLoading,
     isError: isError,
   }

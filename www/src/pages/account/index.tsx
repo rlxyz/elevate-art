@@ -38,14 +38,14 @@ const Page = () => {
           connectButton
           internalRoutes={[
             {
-              current: session?.user?.address || '',
+              current: OrganisationNavigationEnum.enum.Dashboard,
               href: `/${organisation?.name || ''}`,
               organisations,
             },
           ]}
           internalNavigation={[
             {
-              name: OrganisationNavigationEnum.enum.Dashboard,
+              name: OrganisationNavigationEnum.enum.Overview,
               href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
               loading: isLoadingOrganisations,
