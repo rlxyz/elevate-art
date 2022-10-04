@@ -1,11 +1,9 @@
 import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
-import {
-  OrganisationTeamAddUser,
-  OrganisationTeamDisplayPending,
-  OrganisationTeamDisplayUsers,
-  SettingsNavigations,
-} from '@components/Organisation/OrganisationSettings'
+import { SettingsNavigations } from '@components/Organisation/OrganisationSettings'
+import { OrganisationTeamAddUser } from '@components/Organisation/OrganisationTeamAddUser'
+import { OrganisationTeamDisplayPending } from '@components/Organisation/OrganisationTeamDisplayPending'
+import { OrganisationTeamDisplayUsers } from '@components/Organisation/OrganisationTeamDisplayUsers'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -73,20 +71,8 @@ const Page: NextPage = () => {
                 <div className='col-span-8'>
                   <div className='space-y-6'>
                     <OrganisationTeamAddUser />
-                    <div className='space-y-2'>
-                      <span className='text-xs'>Team Members</span>
-                      <OrganisationTeamDisplayUsers />
-                    </div>
-                    {organisation?.pendings?.length ? (
-                      <>
-                        <div className='space-y-2'>
-                          <span className='text-xs'>Pending</span>
-                          <OrganisationTeamDisplayPending />
-                        </div>
-                      </>
-                    ) : (
-                      <></>
-                    )}
+                    <OrganisationTeamDisplayUsers />
+                    <OrganisationTeamDisplayPending />
                   </div>
                 </div>
               </div>
