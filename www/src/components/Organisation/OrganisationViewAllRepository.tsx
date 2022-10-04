@@ -3,6 +3,7 @@ import { SearchInput } from '@components/Layout/SearchInput'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
@@ -48,6 +49,7 @@ const ViewAllRepositories = () => {
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories
   const filteredRepositories =
@@ -154,7 +156,7 @@ const ViewAllRepositories = () => {
         )}
         {filteredRepositories?.map((repository, index) => {
           return (
-            <div className='col-span-1 w-full' key={index}>
+            <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
               <Link href={`/${organisationName}/${repository.name}`} external>
                 <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>

@@ -1,17 +1,14 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-import { CollectionNavigationEnum } from 'src/types/enums'
 import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '../store/useCollectionNavigationStore'
 
 export const useKeybordShortcuts = () => {
   const { all: layers } = useQueryRepositoryLayer()
 
-  const { setCurrentViewSection, setCurrentLayerPriority, currentLayerPriority } = useCollectionNavigationStore((state) => {
+  const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
-      setCurrentViewSection: state.setCurrentViewSection,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
       currentLayerPriority: state.currentLayerPriority,
-      currentViewSection: state.currentViewSection,
     }
   })
 
@@ -62,9 +59,9 @@ export const useKeybordShortcuts = () => {
   //   },
   //   [currentViewSection, setCurrentViewSection]
   // )
-  useHotkeys('ctrl+1', () => setCurrentViewSection(CollectionNavigationEnum.enum.Preview))
-  useHotkeys('ctrl+2', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rarity))
-  useHotkeys('ctrl+3', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rules))
+  // useHotkeys('ctrl+1', () => setCurrentViewSection(CollectionNavigationEnum.enum.Preview))
+  // useHotkeys('ctrl+2', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rarity))
+  // useHotkeys('ctrl+3', () => setCurrentViewSection(CollectionNavigationEnum.enum.Rules))
   // useHotkeys('ctrl+g', () => setRegenerateCollection(true))
   // useHotkeys('ctrl+r', () => setRegeneratePreview(true))
 }

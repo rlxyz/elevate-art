@@ -6,7 +6,6 @@ import { persist } from 'zustand/middleware'
 interface RepositoryStoreStateInterface {
   rarityFilter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All'
   traitFilteredTokens: number[]
-  organisationId: string
   collectionId: string
   repositoryId: string
   traitFilters: { layer: LayerElement; trait: TraitElement }[]
@@ -30,7 +29,6 @@ interface RepositoryStoreFunctionInterface {
   setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => void
   setTokenRanking: (indices: number[]) => void
   setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => void
-  setOrganisationId: (organisationId: string) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
   setTraitFilteredTokens: (tokens: number[]) => void
@@ -41,7 +39,6 @@ interface RepositoryStoreInterface extends RepositoryStoreFunctionInterface, Rep
 
 const initialState: RepositoryStoreStateInterface = {
   traitFilteredTokens: [],
-  organisationId: '',
   repositoryId: '',
   collectionId: '',
   tokens: [],
@@ -69,13 +66,12 @@ export const createRepositoryStore = create<RepositoryStoreInterface>()(
         tokenIdMap: Map<string, Map<string, number[]>>
         traitMap: Map<string, Map<string, number>>
       }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
-      setOrganisationId: (organisationId: string) => set((_) => ({ organisationId })),
       setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
       setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
       setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
       reset: () => set(initialState),
     }),
-    { name: 'repositoryStore' }
+    { name: 'repositoryStore', getStorage: () => sessionStorage }
   )
 )
 

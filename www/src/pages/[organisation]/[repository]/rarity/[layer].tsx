@@ -9,12 +9,10 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import dynamic from 'next/dynamic'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
-const DynamicRarityView = dynamic(() => import('@components/Repository/RepositoryRarityView'), { ssr: false })
-const DynamicLayerFolderSelector = dynamic(() => import('@components/Repository/RepositoryFolderSelector'), { ssr: false })
+
 const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
@@ -24,27 +22,18 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  const { setCollectionId, setRepositoryId, setOrganisationId } = useRepositoryStore((state) => {
+  const { setRepositoryId } = useRepositoryStore((state) => {
     return {
-      setOrganisationId: state.setOrganisationId,
       setRepositoryId: state.setRepositoryId,
-      setCollectionId: state.setCollectionId,
     }
   })
-  const { setCurrentLayerPriority, setCurrentViewSection, currentViewSection } = useCollectionNavigationStore((state) => {
+  const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
-      currentViewSection: state.currentViewSection,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
-      setCurrentViewSection: state.setCurrentViewSection,
     }
   })
-  const { collectionName } = useRepositoryRoute()
   const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
-
-  useEffect(() => {
-    setCurrentViewSection(CollectionNavigationEnum.enum.Rarity)
-  }, [])
 
   useEffect(() => {
     if (layers && layers[0]) setCurrentLayerPriority(layers[0].id)
@@ -54,15 +43,6 @@ const Page = () => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
-
-  useEffect(() => {
-    if (!collections) return
-    if (!collections.length) return
-    const collection = collections.find((collection) => collection.name === collectionName)
-    if (!collection) return
-    setCollectionId(collection.id)
-    mutate({ collection })
-  }, [isLoadingCollection])
 
   return (
     <OrganisationAuthLayout>
@@ -77,19 +57,19 @@ const Page = () => {
               name: CollectionNavigationEnum.enum.Preview,
               loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}`,
-              enabled: CollectionNavigationEnum.enum.Preview === currentViewSection,
+              enabled: false,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
               loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: CollectionNavigationEnum.enum.Rarity === currentViewSection,
+              enabled: true,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
               loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: CollectionNavigationEnum.enum.Rules === currentViewSection,
+              enabled: false,
             },
           ]}
         />
