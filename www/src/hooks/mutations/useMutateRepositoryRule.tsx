@@ -63,8 +63,7 @@ export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) 
           <span className='text-blueHighlight text-semibold'>{primaryTrait?.name || ''}</span>
           <span>{` now ${input.type} `}</span>
           <span className='font-semibold'>{secondaryTrait?.name}</span>
-        </div>,
-        'new rule'
+        </div>
       )
       onMutate && onMutate()
       return { backup }

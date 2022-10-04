@@ -43,8 +43,7 @@ const TraitRulesDisplayPerItem = ({
           <span className='text-blueHighlight text-semibold'>{data?.deletedRule.primaryTraitElement?.name}</span>
           <span className='text-redError'>{` ${data?.deletedRule.condition} `}</span>
           <span className='font-semibold'>{data?.deletedRule.secondaryTraitElement?.name}</span>
-        </div>,
-        'delete rule'
+        </div>
       )
     },
     onError: () => {

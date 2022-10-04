@@ -38,8 +38,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
             {' '}
             generated a <span className='font-semibold'>new collection!</span>
           </span>
-        </span>,
-        'generate'
+        </span>
       )
       return { backup }
     },

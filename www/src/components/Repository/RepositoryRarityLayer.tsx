@@ -31,8 +31,7 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
           <span>{`Successfully updated to `}</span>
           <span className='text-blueHighlight text-semibold'>{variables.newName}</span>
           <span className='font-semibold'>{` from ${variables.oldName}`}</span>
-        </div>,
-        'rarity changed'
+        </div>
       )
     },
     onError: () => {

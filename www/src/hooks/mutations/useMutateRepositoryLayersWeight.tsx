@@ -47,8 +47,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
           <span>{`Successfully updated `}</span>
           <span className='text-blueHighlight text-semibold'>{layers?.find((l) => l.id === variables.layerId)?.name}</span>
           <span className='font-semibold'>{` rarities`}</span>
-        </div>,
-        'rarity changed'
+        </div>
       )
     },
   })
