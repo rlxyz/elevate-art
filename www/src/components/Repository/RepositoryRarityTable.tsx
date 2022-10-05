@@ -1,4 +1,5 @@
-import { Textbox } from '@components/Layout/Textbox'
+import { Popover, Transition } from '@headlessui/react'
+import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -9,7 +10,7 @@ import { calculateTraitQuantityInCollection } from '@utils/math'
 import clsx from 'clsx'
 import { Form, Formik } from 'formik'
 import Image from 'next/image'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
 
 const calculateSumArray = (values: { id: string; weight: number }[]) => {
@@ -32,7 +33,7 @@ const LayerRarityTable = () => {
     <>
       {!summedRarityWeightage || !collection ? null : (
         <Formik
-          enableReinitialize
+          // enableReinitialize
           initialValues={{
             traits: traitElements.map((traitElement: TraitElement) => {
               return {
@@ -67,21 +68,64 @@ const LayerRarityTable = () => {
                           <th className='border-t border-l border-b rounded-l-[5px] border-mediumGrey pl-3'>
                             <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                           </th>
-                          {['Image', 'Name', 'Rarity Score', '%', 'Estimate in Collection'].map((item, index) => {
+                          {[
+                            { title: '' },
+                            { title: 'Name' },
+                            {
+                              title: 'Estimate in Collection',
+                              description: 'We linearly distribute the rarity changes to the rest of the traits in this layer.',
+                            },
+
+                            {
+                              title: 'Rarity Score',
+                              description:
+                                'This is the rarity score of each trait in this layer. It is based on the OpenRarity standard.',
+                            },
+
+                            { title: '%' },
+                          ].map(({ title, description }, index) => {
                             return (
-                              <th
-                                key={item}
-                                scope='col'
-                                className={clsx(
-                                  'text-left border-t border-b border-mediumGrey text-[0.65rem] uppercase font-normal text-darkGrey py-2'
-                                )}
-                              >
-                                {item}
+                              <th key={title} scope='col' className={clsx('text-left border-t border-b border-mediumGrey py-2')}>
+                                <div className='flex items-center space-x-1'>
+                                  <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
+                                  {description && (
+                                    <Popover>
+                                      <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+                                      <Transition
+                                        as={Fragment}
+                                        enter='transition ease-out duration-200'
+                                        enterFrom='opacity-0 translate-y-1'
+                                        enterTo='opacity-100 translate-y-0'
+                                        leave='transition ease-in duration-150'
+                                        leaveFrom='opacity-100 translate-y-0'
+                                        leaveTo='opacity-0 translate-y-1'
+                                      >
+                                        <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+                                          <div className='p-2 shadow-lg'>
+                                            <p className='text-[0.65rem] text-white font-normal'>{description}</p>
+                                          </div>
+                                        </Popover.Panel>
+                                      </Transition>
+                                    </Popover>
+                                  )}
+                                </div>
                               </th>
                             )
                           })}
                           <th className='pr-3 border-t border-r border-b rounded-r-[5px] border-mediumGrey'>
-                            <div className='relative'>
+                            <button
+                              disabled={!hasFormChange}
+                              className='flex'
+                              onClick={(e: any) => {
+                                e.preventDefault()
+                                handleSubmit()
+                              }}
+                            >
+                              <CheckCircleIcon
+                                className={clsx(hasFormChange ? 'text-blueHighlight' : 'text-darkGrey', 'w-5 h-5')}
+                              />
+                            </button>
+                            {/* <div className='relative'>
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
                                 fill='none'
@@ -99,17 +143,17 @@ const LayerRarityTable = () => {
                               <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
                                 1
                               </span>
-                            </div>
+                            </div> */}
                           </th>
                         </tr>
                       </thead>
                       <tbody className='divide-y divide-mediumGrey'>
                         {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
                           <tr key={index}>
-                            <th className='pl-3'>
+                            <th className='pl-3 border-l border-t border-b border-mediumGrey rounded-l-[5px]'>
                               <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                             </th>
-                            <td className='py-3'>
+                            <td className='py-3  border-t border-b border-mediumGrey'>
                               <div className='relative h-8 w-8 border border-mediumGrey rounded-[5px]'>
                                 <Image
                                   src={cld
@@ -120,31 +164,40 @@ const LayerRarityTable = () => {
                                 />
                               </div>
                             </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
+                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
                               {name}
                             </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium items-center'>
-                              {-Math.log((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)).toFixed(3)}
-                            </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
-                              {(((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)) * 100).toFixed(3)}%
-                            </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>
                                 <div className='w-20'>
-                                  <Textbox
+                                  <input
+                                    className='bg-white text-xs w-full border border-mediumGrey rounded-[5px] p-2'
                                     id={`traits.${index}.weight`}
                                     type='number'
                                     name={`traits.${index}.weight`}
-                                    value={values.traits[index]?.weight.toFixed(2)}
+                                    min={0}
+                                    max={collection.totalSupply}
+                                    value={values.traits[index]?.weight}
                                     onChange={(e) => {
                                       e.persist()
-                                      // !hasFormChange && setHasFormChange(true)
+                                      !hasFormChange && setHasFormChange(true)
+                                      const trait = values.traits.find((x) => x.id === id)
+                                      if (!trait) {
+                                        resetForm()
+                                        return
+                                      }
                                       handleChange(e)
+                                      // if (Number(e.target.value) + calculateSumArray(values.traits) > collection.totalSupply) {
+                                      //   return
+                                      // }
+                                      const difference = trait.weight - Number(e.target.value)
+                                      const linearDistributeLength =
+                                        values.traits.length - values.traits.filter((v) => v.weight === 0).length - 1
                                       values.traits = values.traits.map((t) => {
+                                        if (t.weight === 0) return { ...t, weight: 0 }
                                         return {
                                           id: t.id,
-                                          weight: t.weight - 1 / values.traits.length,
+                                          weight: t.weight + difference / linearDistributeLength,
                                         }
                                       })
                                     }}
@@ -153,7 +206,15 @@ const LayerRarityTable = () => {
                                 <span>out of {collection.totalSupply}</span>
                               </div>
                             </td>
-                            <th className='pr-3'>
+                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium items-center'>
+                              {Number(
+                                -Math.log((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)).toFixed(3)
+                              ) % Infinity || 0}
+                            </td>
+                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                              {(((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)) * 100).toFixed(3)}%
+                            </td>
+                            <th className='pr-3 border-t border-b border-r rounded-r-[5px] border-mediumGrey'>
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
                                 fill='none'

@@ -50,7 +50,7 @@ const Page = () => {
     const collection = collections.find((collection) => collection.name === collectionName)
     if (!collection) return
     setCollectionId(collection.id)
-    if (tokens.length === 0) return
+    // if (tokens.length === 0) return
     mutate({ collection })
   }, [isLoadingCollection])
 
