@@ -26,7 +26,7 @@ const PreviewImage = ({
 }) => {
   const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
   return (
-    <div className={clsx('relative border border-mediumGrey rounded-[5px]', !images && 'pb-[100%]')}>
+    <div className={clsx('relative border border-mediumGrey rounded-[5px]')}>
       {images?.map((image, index) => {
         return (
           <img
