@@ -5,6 +5,7 @@ import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCol
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
+import { truncate } from '@utils/format'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useState } from 'react'
@@ -70,7 +71,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   })
   // if (!collection || !layers || isLoading) return
   return (
-    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
+    <div className='py-2 grid grid-cols-4 gap-y-2 gap-x-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -82,8 +83,10 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
               <div key={`${item}-${index}`} className='col-span-1'>
                 <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
                   <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
-                  <div className={'flex flex-col items-center space-y-1 w-full py-2'}>
-                    <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>
+                  <div
+                    className={'whitespace-nowrap overflow-hidden text-ellipsis flex flex-col items-center space-y-1 w-full py-2'}
+                  >
+                    <span className='text-xs'>{truncate(`${current?.tokenName} #${item || 0}`)}</span>
                   </div>
                 </div>
               </div>
@@ -120,7 +123,6 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
                     <div>
                       <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId} />
-                      <div className='pb-[100%] blocks' />
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>
