@@ -1,4 +1,3 @@
-import Button from '@components/Layout/Button'
 import { Textbox } from '@components/Layout/Textbox'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -6,10 +5,9 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
-import { calculateTraitQuantityInCollection, calculateTraitRarityPercentage, calculateTraitRarityScore } from '@utils/math'
+import { calculateTraitQuantityInCollection } from '@utils/math'
 import clsx from 'clsx'
 import { Form, Formik } from 'formik'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
@@ -40,9 +38,7 @@ const LayerRarityTable = () => {
               return {
                 id: traitElement.id,
                 weight: Number(
-                  calculateTraitQuantityInCollection(traitElement.weight, summedRarityWeightage, collection.totalSupply).toFixed(
-                    0
-                  )
+                  calculateTraitQuantityInCollection(traitElement.weight, summedRarityWeightage, collection.totalSupply)
                 ),
               }
             }),
@@ -63,21 +59,21 @@ const LayerRarityTable = () => {
           {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (
             <>
               <div className='flex flex-col'>
-                <div className='inline-block min-w-full align-middle'>
+                <div className='-mt-3 inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit} className='overflow-hidden'>
-                    <table className='border-separate border-spacing-x-0 border-spacing-y-1 min-w-full'>
-                      <thead className='bg-lightGray'>
+                    <table className='border-separate border-spacing-x-0 border-spacing-y-3 min-w-full'>
+                      <thead className='bg-white'>
                         <tr>
                           <th className='border-t border-l border-b rounded-l-[5px] border-mediumGrey pl-3'>
                             <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                           </th>
-                          {['Image', 'Name', 'Estimate in Collection', 'Rarity Score', '%'].map((item, index) => {
+                          {['Image', 'Name', 'Rarity Score', '%', 'Estimate in Collection'].map((item, index) => {
                             return (
                               <th
                                 key={item}
                                 scope='col'
                                 className={clsx(
-                                  'text-left border-t border-b border-mediumGrey text-xs text-black font-normal uppercase py-3'
+                                  'text-left border-t border-b border-mediumGrey text-[0.65rem] uppercase font-normal text-darkGrey py-2'
                                 )}
                               >
                                 {item}
@@ -85,25 +81,30 @@ const LayerRarityTable = () => {
                             )
                           })}
                           <th className='pr-3 border-t border-r border-b rounded-r-[5px] border-mediumGrey'>
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              fill='none'
-                              viewBox='0 0 24 24'
-                              strokeWidth={1.5}
-                              stroke='currentColor'
-                              className='w-4 h-4 text-darkGrey'
-                            >
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
-                              />
-                            </svg>
+                            <div className='relative'>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                strokeWidth={1.5}
+                                stroke='currentColor'
+                                className='w-4 h-4 text-darkGrey'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                                />
+                              </svg>
+                              <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
+                                1
+                              </span>
+                            </div>
                           </th>
                         </tr>
                       </thead>
                       <tbody className='divide-y divide-mediumGrey'>
-                        {traitElements.map(({ name, id, layerElementId, updatedAt }: TraitElement, index: number) => (
+                        {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
                           <tr key={index}>
                             <th className='pl-3'>
                               <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
@@ -122,39 +123,35 @@ const LayerRarityTable = () => {
                             <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
                               {name}
                             </td>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium items-center'>
+                              {-Math.log((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)).toFixed(3)}
+                            </td>
+                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                              {(((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)) * 100).toFixed(3)}%
+                            </td>
                             <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
                               <div className='flex space-x-3 items-center justify-start'>
-                                <div className='w-16'>
+                                <div className='w-20'>
                                   <Textbox
                                     id={`traits.${index}.weight`}
                                     type='number'
                                     name={`traits.${index}.weight`}
-                                    value={values.traits[index]?.weight}
+                                    value={values.traits[index]?.weight.toFixed(2)}
                                     onChange={(e) => {
                                       e.persist()
-                                      !hasFormChange && setHasFormChange(true)
+                                      // !hasFormChange && setHasFormChange(true)
                                       handleChange(e)
+                                      values.traits = values.traits.map((t) => {
+                                        return {
+                                          id: t.id,
+                                          weight: t.weight - 1 / values.traits.length,
+                                        }
+                                      })
                                     }}
                                   />
                                 </div>
                                 <span>out of {collection.totalSupply}</span>
                               </div>
-                            </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
-                              {calculateTraitRarityScore(
-                                Number(values.traits[index]?.weight),
-                                calculateSumArray(values.traits),
-                                collection.totalSupply
-                              )
-                                .toFixed(2)
-                                .toString()}
-                            </td>
-                            <td className='whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
-                              {calculateTraitRarityPercentage(
-                                Number(values.traits[index]?.weight),
-                                calculateSumArray(values.traits)
-                              ).toFixed(2)}
-                              %
                             </td>
                             <th className='pr-3'>
                               <svg
@@ -179,7 +176,7 @@ const LayerRarityTable = () => {
                   </Form>
                 </div>
               </div>
-              {hasFormChange && (
+              {/* {hasFormChange && (
                 <motion.div
                   initial='hidden'
                   animate='show'
@@ -253,7 +250,7 @@ const LayerRarityTable = () => {
                     </Button>
                   </div>
                 </motion.div>
-              )}
+              )} */}
             </>
           )}
         </Formik>

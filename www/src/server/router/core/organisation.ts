@@ -119,6 +119,31 @@ export const organisationRouter = createRouter()
       })
       // should throw error
       if (!user) return null
+
+      // @todo introduce and test this
+      // await ctx.prisma.organisation.update({
+      //   where: { id: pending.organisationId },
+      //   data: {
+      //     members: {
+      //       create: {
+      //         userId: user.id,
+      //         type:
+      //           pending.role === OrganisationDatabaseRoleEnum.enum.Admin
+      //             ? OrganisationDatabaseRoleEnum.enum.Admin
+      //             : OrganisationDatabaseRoleEnum.enum.Curator,
+      //       },
+      //     },
+      //     pendings: {
+      //       delete: {
+      //         address_organisationId: {
+      //           address: pending.address,
+      //           organisationId: pending.organisationId,
+      //         },
+      //       },
+      //     },
+      //   },
+      // })
+
       await ctx.prisma.$transaction(async (tx) => {
         await tx.organisationPending.delete({ where: { id: pendingId } })
         await tx.organisation.update({

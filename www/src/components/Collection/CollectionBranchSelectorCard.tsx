@@ -2,7 +2,7 @@ import CollectionCreateDialog from '@components/Collection/CollectionCreateDialo
 import Button from '@components/Layout/Button'
 import { SearchInput } from '@components/Layout/SearchInput'
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon } from '@heroicons/react/outline'
+import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Collection } from '@prisma/client'
@@ -79,59 +79,57 @@ const Index = () => {
             leaveTo='opacity-0 translate-y-1'
           >
             <Listbox.Options className='absolute z-10 w-56 py-2'>
-              <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5 max-h-[20rem] overflow-y-scroll no-scrollbar'>
-                <div className='relative bg-white'>
-                  <div className='p-2 divide-y divide-mediumGrey space-y-2'>
-                    <SearchInput isLoading={!collections} setQuery={setQuery} />
-                    <div className='space-y-2 pt-1'>
-                      <span className='text-xs text-darkGrey'>Collections</span>
-                      <div>
-                        {filteredCollections?.map((collection: Collection) => (
-                          <Listbox.Option key={collection.id} value={collection}>
-                            <Button
-                              className={`cursor-pointer flex flex-row w-full rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`}
-                              variant='link'
-                              onClick={() => mutate({ collection })}
-                            >
-                              <div className='flex flex-row items-center justify-between px-1 w-full'>
-                                <span
-                                  className={clsx(
-                                    'text-xs text-black',
-                                    collection.name === selectedCollection?.name ? 'font-semibold' : 'font-normal'
-                                  )}
-                                >
-                                  {collection.name}
-                                </span>
-                                <div className='flex items-center'>
-                                  {collection.name === 'main' && (
-                                    <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black mr-1'>
-                                      {'master'}
-                                    </span>
-                                  )}
-                                  {collection.name === selectedCollection?.name && (
-                                    <CheckIcon className='w-4 h-4 text-blueHighlight' />
-                                  )}
-                                </div>
-                              </div>
-                            </Button>
-                          </Listbox.Option>
-                        ))}
-                      </div>
+              <div className='rounded-[5px] ring-1 ring-mediumGrey shadow-lg max-h-[20rem] overflow-y-scroll no-scrollbar '>
+                <div className=' bg-white divide-y divide-mediumGrey'>
+                  <div className='p-2 grid grid-cols-10 gap-x-1'>
+                    <div className='col-span-8'>
+                      <SearchInput isLoading={!collections} setQuery={setQuery} />
                     </div>
-                    <div className='pt-2'>
-                      <Button
-                        variant='primary'
-                        className='w-full px-2'
-                        size='sm'
+                    <div className='col-span-2'>
+                      <button
+                        className='w-full h-full px-2 border border-mediumGrey rounded-[5px] flex items-center justify-center'
                         onClick={(e: any) => {
                           e.preventDefault()
                           setIsOpenDialog(true)
                           setOpenState(false)
                         }}
                       >
-                        <span className='text-xs'>Add New...</span>
-                      </Button>
+                        <PlusIcon className='w-3 h-3 text-darkGrey' />
+                      </button>
                     </div>
+                  </div>
+                  {/* <span className='text-xs text-darkGrey'>Collections</span> */}
+                  <div className='overflow-y-scroll max-h-[16em] no-scrollbar'>
+                    {filteredCollections?.map((collection: Collection) => (
+                      <Listbox.Option key={collection.id} value={collection}>
+                        <Button
+                          className={`cursor-pointer flex flex-row w-full justify-between`}
+                          variant='link'
+                          onClick={() => mutate({ collection })}
+                        >
+                          <div className='flex flex-row items-center justify-between px-1 w-full'>
+                            <span
+                              className={clsx(
+                                'text-xs text-black',
+                                collection.name === selectedCollection?.name ? 'font-semibold' : 'font-normal'
+                              )}
+                            >
+                              {collection.name}
+                            </span>
+                            <div className='flex items-center'>
+                              {collection.name === 'main' && (
+                                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black mr-1'>
+                                  {'master'}
+                                </span>
+                              )}
+                              {collection.name === selectedCollection?.name && (
+                                <CheckIcon className='w-4 h-4 text-blueHighlight' />
+                              )}
+                            </div>
+                          </div>
+                        </Button>
+                      </Listbox.Option>
+                    ))}
                   </div>
                 </div>
               </div>

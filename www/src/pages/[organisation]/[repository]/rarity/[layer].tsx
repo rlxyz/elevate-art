@@ -1,7 +1,9 @@
 import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
+import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
-import RepositoryRarityView from '@components/Repository/RepositoryRarityView'
+import LayerGridView from '@components/Repository/RepositoryRarityLayer'
+import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -9,8 +11,9 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
+import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enums'
 
 const Page = () => {
@@ -28,6 +31,9 @@ const Page = () => {
       setRepositoryId: state.setRepositoryId,
     }
   })
+  const [query, setQuery] = useState('')
+  const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
+  const [isOpen, setIsOpen] = useState(false)
   const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
@@ -35,7 +41,7 @@ const Page = () => {
     }
   })
   const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
-
+  const filteredTraitElements = layer?.traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   useEffect(() => {
     layers && layerName && setCurrentLayerPriority(layers?.find((l) => l.name === layerName)?.id || '')
   }, [layerName, isLoading])
@@ -78,8 +84,26 @@ const Page = () => {
           <main className='pointer-events-auto -ml-2'>
             <div className='flex justify-between items-center h-[10rem] space-y-2'>
               <div className='flex flex-col space-y-1'>
-                <span className='text-3xl font-semibold'>{CollectionTitleContent['rarity'].title}</span>
+                <span className='text-3xl font-semibold'>{layer?.name}</span>
                 <span className='text-sm text-darkGrey'>{CollectionTitleContent['rarity'].description}</span>
+              </div>
+              <div className='space-y-2'>
+                <div className='flex space-x-1'>
+                  <button
+                    className={clsx(
+                      'flex items-center space-x-2 p-2 text-xs border border-mediumGrey bg-blueHighlight text-white rounded-[5px]'
+                    )}
+                  >
+                    Add Layer
+                  </button>
+                  <button
+                    className={clsx(
+                      'flex items-center space-x-2 p-2 text-darkGrey text-xs border border-mediumGrey rounded-[5px]'
+                    )}
+                  >
+                    Add Trait
+                  </button>
+                </div>
               </div>
             </div>
           </main>
@@ -89,12 +113,62 @@ const Page = () => {
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8 -ml-4'>
               <div className='flex flex-col space-y-3 justify-between'>
+                <div className='flex border bg-white border-mediumGrey rounded-[5px] w-full'>
+                  <button
+                    onClick={() => setCurrentView('rarity')}
+                    className={clsx(
+                      currentView === 'rarity' && 'bg-lightGray text-black',
+                      'flex w-full items-center space-x-2 p-2 text-darkGrey'
+                    )}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className={clsx('w-3 h-3', currentView === 'rarity' ? 'text-black' : 'text-darkGrey')}
+                    >
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
+                    </svg>
+                    <span className='text-xs'>Rarity</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('layers')}
+                    className={clsx(
+                      currentView === 'layers' && 'bg-lightGray text-black',
+                      'flex w-full items-center space-x-2 p-2 text-darkGrey'
+                    )}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.25}
+                      stroke='currentColor'
+                      className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-darkGrey')}
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z'
+                      />
+                    </svg>
+                    <span className='text-xs'>Files</span>
+                  </button>
+                </div>
                 <LayerFolderSelector />
               </div>
             </div>
             <div className='col-span-8'>
               <main className='space-y-6 py-8 pl-8'>
-                <RepositoryRarityView />
+                {currentView === 'layers' && (
+                  <div className='space-y-3'>
+                    <SearchInput setQuery={setQuery} isLoading={!filteredTraitElements} />
+                    <LayerGridView traitElements={filteredTraitElements} layerName={layer?.name || ''} />
+                  </div>
+                )}
+                {currentView === 'rarity' && <LayerRarityTable />}
               </main>
             </div>
           </div>
@@ -105,3 +179,6 @@ const Page = () => {
 }
 
 export default Page
+function setCurrentView(arg0: string): void {
+  throw new Error('Function not implemented.')
+}

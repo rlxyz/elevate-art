@@ -7,7 +7,6 @@ export const Link = ({
   href,
   disabled,
   className,
-  size = 'sm',
   enabled = false,
   external = false,
   hover = false,
@@ -19,19 +18,10 @@ export const Link = ({
   className?: string
   children?: React.ReactNode
   title?: string
-  size?: 'sm' | 'md'
   hover?: boolean
 }) => {
   return disabled ? (
-    <div
-      className={clsx(
-        `cursor-pointer flex flex-row rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`,
-        enabled ? 'font-semibold' : '',
-        size === 'sm' ? 'py-3' : 'py-2',
-        enabled && hover ? 'bg-mediumGrey bg-opacity-40' : '',
-        className
-      )}
-    >
+    <div className={'py-3'}>
       {title && (
         <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
           <span>{title}</span>
@@ -47,10 +37,9 @@ export const Link = ({
         <a>
           <div
             className={clsx(
-              `cursor-pointer flex flex-row rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30`,
+              `cursor-pointer flex flex-row justify-between hover:bg-lightGray py-2`,
               enabled ? 'font-semibold' : '',
-              size === 'sm' ? 'py-3' : 'py-2',
-              enabled && hover ? 'bg-mediumGrey bg-opacity-40' : '',
+              enabled && hover ? 'bg-lightGray' : '',
               className
             )}
           >

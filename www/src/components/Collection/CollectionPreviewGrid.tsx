@@ -68,7 +68,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
       repositoryId: state.repositoryId,
     }
   })
-  // if (!collection || !layers || isLoading) return
+
   return (
     <div className='py-2 grid grid-cols-4 gap-y-2 gap-x-6 overflow-hidden'>
       {!collection || !layers ? (
@@ -137,29 +137,18 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 export const InfiniteScrollGrid = () => {
   const { current: collection } = useQueryRepositoryCollection()
   const [displayLength, setDisplayLength] = useState<number>(0)
-  const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
-    return {
-      tokenRanking: state.tokenRanking,
-      tokens: state.tokens,
-      traitFilters: state.traitFilters,
-      rarityFilter: state.rarityFilter,
-    }
-  })
 
   useEffect(() => {
     reset()
-    fetch('new')
+    fetch()
   }, [collection?.id])
 
-  const fetch = (type: 'new' | 'append') => {
-    setPage((p) => p + 1)
+  const fetch = () => {
     setDisplayLength((prev) => prev + 25)
   }
 
   const reset = () => {
-    setPage(0)
     setDisplayLength(0)
     setHasMore(true)
   }
@@ -170,7 +159,7 @@ export const InfiniteScrollGrid = () => {
       setHasMore(false)
       return
     }
-    return fetch('new')
+    return fetch()
   }
 
   return (

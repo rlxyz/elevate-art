@@ -1,11 +1,10 @@
 import { Link } from '@components/Layout/Link'
-import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import { useMutateReorderLayers } from '@hooks/mutations/useMutateReorderLayers'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { truncate } from '@utils/format'
-import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
@@ -90,7 +89,7 @@ const LayerFolderSelector = () => {
 
   return (
     <aside className='space-y-1'>
-      <div className='flex items-center justify-between'>
+      {/* <div className='flex items-center justify-between'>
         <div />
         <div className='space-x-1 flex items-center'>
           <button
@@ -110,25 +109,23 @@ const LayerFolderSelector = () => {
             <SwitchVerticalIcon className='w-3 h-3 text-darkGrey' />
           </button>
         </div>
-      </div>
-      <div className='space-y-2 border border-mediumGrey rounded-[5px] p-1'>
-        <div className='max-h-[calc(100vh-17.5rem)]'>
-          <AnimatePresence>
-            <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
-              {items.map((item) => {
-                return (
-                  <ReorderItem
-                    canReorder={openReordering}
-                    key={item}
-                    name={truncate(layers.find((x) => x.id === item)?.name || '')}
-                    item={item}
-                    enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
-                  />
-                )
-              })}
-            </Reorder.Group>
-          </AnimatePresence>
-        </div>
+      </div> */}
+      <div className='border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
+        <AnimatePresence>
+          <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
+            {items.map((item) => {
+              return (
+                <ReorderItem
+                  canReorder={openReordering}
+                  key={item}
+                  name={truncate(layers.find((x) => x.id === item)?.name || '')}
+                  item={item}
+                  enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
+                />
+              )
+            })}
+          </Reorder.Group>
+        </AnimatePresence>
       </div>
     </aside>
   )

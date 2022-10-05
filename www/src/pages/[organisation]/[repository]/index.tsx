@@ -34,6 +34,7 @@ const Page = () => {
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
+  const tokens = useRepositoryStore((state) => state.tokens)
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
   const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
@@ -49,6 +50,7 @@ const Page = () => {
     const collection = collections.find((collection) => collection.name === collectionName)
     if (!collection) return
     setCollectionId(collection.id)
+    if (tokens.length === 0) return
     mutate({ collection })
   }, [isLoadingCollection])
 

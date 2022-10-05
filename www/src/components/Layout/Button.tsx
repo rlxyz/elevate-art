@@ -52,17 +52,16 @@ const Button: ButtonFC = (props) => {
 
   const rootClassName = cn(
     // missing transition
-    'relative inline-flex items-center cursor-pointer p-3 text-white rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10',
+    'relative inline-flex items-center cursor-pointer p-3 text-white text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10',
     'disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white',
     size == 'sm' && 'leading-9 text-xs min-width-[auto]',
     size == 'md' && 'h-10 leading-10 text-xs',
     size == 'lg' && 'h-11 leading-11 text-xs',
     variant === 'secondary' && 'bg-white text-black border border-mediumGrey',
-    variant === 'primary' && 'bg-black justify-center',
+    variant === 'primary' && 'rounded-[5px] bg-black justify-center',
     variant === 'icon' && 'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
     variant === 'ghost' && 'text-black',
-    variant === 'link' &&
-      'cursor-pointer flex flex-row w-full rounded-[5px] justify-between hover:bg-mediumGrey hover:bg-opacity-30',
+    variant === 'link' && 'cursor-pointer flex flex-row w-full justify-between hover:bg-lightGray',
     className
   )
 

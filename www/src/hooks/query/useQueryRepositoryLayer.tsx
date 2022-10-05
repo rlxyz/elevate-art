@@ -1,13 +1,15 @@
-import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import { trpc } from '@utils/trpc'
+import { useRouter } from 'next/router'
 import useRepositoryStore from '../store/useRepositoryStore'
 
 export const useQueryRepositoryLayer = () => {
-  const currentLayerPriority: string | null = useCollectionNavigationStore((state) => state.currentLayerPriority)
+  const router = useRouter()
+  const layerName = router.query.layer
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { data: layers, isLoading, isError } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+
   return {
-    current: layers?.find((l) => l.id === currentLayerPriority),
+    current: (layerName && layers?.find((l) => l.name === layerName)) || (layers && layers[0]),
     all: layers,
     isLoading,
     isError,

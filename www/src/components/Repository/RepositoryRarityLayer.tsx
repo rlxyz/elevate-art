@@ -9,7 +9,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
 
-const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitElement[]; layerName: string }) => {
+const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitElement[] | undefined; layerName: string }) => {
   const router: NextRouter = useRouter()
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
@@ -35,25 +35,29 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
   })
 
   return (
-    <div className='grid grid-cols-6 gap-6'>
-      {!traitElements.length ? (
+    <div className='grid grid-cols-6 gap-x-3 gap-y-2'>
+      {!traitElements?.length ? (
         // <LayerGridLoading />
         <></>
       ) : (
-        traitElements.map((trait: TraitElement, index: number) => {
+        traitElements?.map((trait: TraitElement, index: number) => {
           return (
             <div key={index} className='flex flex-col space-y-1'>
               <div className='cursor-pointer relative col-span-1'>
                 <div className='flex flex-col'>
-                  <div className='pb-[100%] blocks border border-mediumGrey rounded-[5px]'>
+                  <div className='pb-[100%] border border-mediumGrey rounded-[5px]' />
+                  <span className='flex flex-col text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>
                     <Image
-                      className='rounded-[5px]'
                       layout='fill'
+                      className='border border-mediumGrey rounded-[5px]'
                       src={cld
                         .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}/${trait.id}.png`)
                         .toURL()}
                     />
-                    {/* <div className='absolute h-full w-full'>
+                    {truncate(trait.name)}
+                  </span>
+                  {/* </div> */}
+                  {/* <div className='absolute h-full w-full'>
                     <Formik
                       enableReinitialize
                       initialValues={{ name: trait.name }}
@@ -136,12 +140,8 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
                       }}
                     </Formik>
                   </div> */}
-                  </div>
                 </div>
               </div>
-              <span className='flex text-xs py-1 items-center justify-center w-full overflow-hidden whitespace-nowrap text-ellipsis'>
-                {truncate(trait.name)}
-              </span>
             </div>
           )
         })

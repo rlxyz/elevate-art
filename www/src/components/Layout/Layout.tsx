@@ -30,7 +30,7 @@ export const LayoutContainer = ({
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[75%] 2xl:w-[70%] 3xl:w-[50%] h-full'>{children}</div>
+      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
     </div>
   )
 }
@@ -54,7 +54,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 }
 
 const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem] bg-lightGray'>
+  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
     <div className='-ml-2'>
       <Header connectButton {...props} />
     </div>
