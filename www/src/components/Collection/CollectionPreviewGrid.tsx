@@ -1,4 +1,3 @@
-import { AdvancedImage } from '@cloudinary/react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
@@ -27,11 +26,17 @@ const PreviewImage = ({
   const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
   if (!images) return null
   return (
-    <>
-      {images.map((image) => {
-        return <AdvancedImage key={image.toURL()} priority className={clsx('absolute rounded-t-[5px]')} cldImg={image} />
+    <div className='relative border border-mediumGrey rounded-[5px]'>
+      {images.map((image, index) => {
+        return (
+          <img
+            key={image.toURL()}
+            className={clsx(index === images.length - 1 ? 'relative' : 'absolute', 'rounded-[5px]')}
+            src={image.toURL()}
+          />
+        )
       })}
-    </>
+    </div>
   )
 }
 
@@ -75,13 +80,9 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
           {tokens.slice(0, length).map((item, index) => {
             return (
               <div key={`${item}-${index}`} className='col-span-1'>
-                <div
-                  className='border rounded-[5px] border-mediumGrey relative cursor-pointer shadow-sm'
-                  onClick={() => setSelectedToken(item || null)}
-                >
+                <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
                   <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
-                  <div className='pb-[100%]' />
-                  <div className={'pl-2 flex flex-col items-center space-y-1 w-full py-2'}>
+                  <div className={'flex flex-col items-center space-y-1 w-full py-2'}>
                     <span className='text-xs'>{`${current?.tokenName} #${item || 0}`}</span>
                   </div>
                 </div>

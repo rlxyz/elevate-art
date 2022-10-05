@@ -15,6 +15,7 @@ import { CollectionNavigationEnum, CollectionTitleContent } from 'src/types/enum
 
 const Page = () => {
   const router: NextRouter = useRouter()
+  const layerName: string = router.query.layer as string
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
@@ -36,8 +37,8 @@ const Page = () => {
   const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
 
   useEffect(() => {
-    if (layers && layers[0]) setCurrentLayerPriority(layers[0].id)
-  }, [isLoadingLayers])
+    layers && layerName && setCurrentLayerPriority(layers?.find((l) => l.name === layerName)?.id || '')
+  }, [layerName, isLoading])
 
   useEffect(() => {
     if (!repository) return

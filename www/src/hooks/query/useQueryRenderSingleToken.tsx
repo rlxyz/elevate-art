@@ -51,7 +51,12 @@ export const useQueryRenderSingleToken = ({
 
   return {
     images: elements.reverse().map(
-      (e) => cld.image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${e.layerElementId}/${e.id}.png`).format('png')
+      (e) =>
+        cld
+          .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${e.layerElementId}/${e.id}.png`)
+          // .format('png')
+          .format('auto')
+          .quality('auto')
       // .delivery(Delivery.quality('auto:low'))
     ),
     hash: keccak256(
