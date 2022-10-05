@@ -25,14 +25,13 @@ const PreviewImage = ({
   layers: LayerElements
 }) => {
   const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
-  if (!images) return null
   return (
-    <div className='relative border border-mediumGrey rounded-[5px]'>
-      {images.map((image, index) => {
+    <div className={clsx('relative border border-mediumGrey rounded-[5px]', !images && 'pb-[100%]')}>
+      {images?.map((image, index) => {
         return (
           <img
             key={image.toURL()}
-            className={clsx(index === images.length - 1 ? 'relative' : 'absolute', 'rounded-[5px]')}
+            className={clsx(index === images?.length - 1 ? 'relative' : 'absolute', 'rounded-[5px]')}
             src={image.toURL()}
           />
         )
