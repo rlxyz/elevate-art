@@ -16,7 +16,7 @@ export const useQueryRenderSingleToken = ({
   collection: Collection
   repositoryId: string
   layers: LayerElements
-}): { images: CloudinaryImage[] | null; hash: string | null } => {
+}): { images: CloudinaryImage[]; hash: string } => {
   const { cld } = useCloudinaryHelper()
   const random = seedrandom(
     createSeed({ repositoryId, collectionName: collection.name, collectionGenerations: collection.generations, tokenId: tokenId })
