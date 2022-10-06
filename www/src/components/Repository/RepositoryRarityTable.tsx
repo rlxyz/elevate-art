@@ -17,7 +17,7 @@ const calculateSumArray = (values: { id: string; weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
-const LayerRarityTable = () => {
+const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | undefined }) => {
   const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
@@ -25,15 +25,15 @@ const LayerRarityTable = () => {
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   const { current: layer } = useQueryRepositoryLayer()
 
-  if (!layer) return null
-  const { traitElements, id: layerId } = layer
-  const summedRarityWeightage = calculateSumArray(traitElements)
+  if (!layer || !traitElements) return null
+  const { id: layerId, traitElements: nonFilteredTraitElements } = layer
+  const summedRarityWeightage = calculateSumArray(nonFilteredTraitElements)
 
   return (
     <>
       {!summedRarityWeightage || !collection ? null : (
         <Formik
-          // enableReinitialize
+          enableReinitialize
           initialValues={{
             traits: traitElements.map((traitElement: TraitElement) => {
               return {
@@ -88,6 +88,17 @@ const LayerRarityTable = () => {
                               <th key={title} scope='col' className={clsx('text-left border-t border-b border-mediumGrey py-2')}>
                                 <div className='flex items-center space-x-1'>
                                   <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
+                                  {hasFormChange && index == 2 && (
+                                    <button
+                                      className='flex'
+                                      onClick={(e: any) => {
+                                        e.preventDefault()
+                                        handleSubmit()
+                                      }}
+                                    >
+                                      <CheckCircleIcon className='text-blueHighlight w-4 h-4' />
+                                    </button>
+                                  )}
                                   {description && (
                                     <Popover>
                                       <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
@@ -113,18 +124,6 @@ const LayerRarityTable = () => {
                             )
                           })}
                           <th className='pr-3 border-t border-r border-b rounded-r-[5px] border-mediumGrey'>
-                            <button
-                              disabled={!hasFormChange}
-                              className='flex'
-                              onClick={(e: any) => {
-                                e.preventDefault()
-                                handleSubmit()
-                              }}
-                            >
-                              <CheckCircleIcon
-                                className={clsx(hasFormChange ? 'text-blueHighlight' : 'text-darkGrey', 'w-5 h-5')}
-                              />
-                            </button>
                             {/* <div className='relative'>
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'

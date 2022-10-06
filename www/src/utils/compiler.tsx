@@ -82,7 +82,7 @@ export const getTokenRanking = (tokens: TraitElement[][], traitMap: Map<string, 
         index,
         value: token.reduce((result, item) => {
           const { layerElementId, id } = item
-          return result + (traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply
+          return result + Math.log((traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply)
         }, 0),
       }
     })

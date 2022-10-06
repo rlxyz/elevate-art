@@ -3,7 +3,7 @@ import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
-import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
@@ -55,10 +55,10 @@ const appInfo = {
 
 const connectors = connectorsForWallets([
   ...wallets,
-  {
-    groupName: 'Other',
-    wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
-  },
+  // {
+  //   groupName: 'Other',
+  //   // wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
+  // },
 ])
 
 const wagmiClient = createClient({
