@@ -35,7 +35,7 @@ const PreviewImage = ({
         {images.map((image) => {
           return <img key={image.toURL()} className={clsx('absolute', 'rounded-[5px] w-full h-auto')} src={image.toURL()} />
         })}
-        <img className='invisible relative' onLoad={() => setHasLoaded(true)} src={images[0]?.toURL()} />
+        <img className='invisible relative w-full h-auto' onLoad={() => setHasLoaded(true)} src={images[0]?.toURL()} />
       </div>
       {hasLoaded && children}
     </div>
