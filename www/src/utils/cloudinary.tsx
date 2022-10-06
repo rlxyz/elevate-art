@@ -3,7 +3,7 @@ import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
-export const MAX_BYTES_ALLOWED = 9990000
+export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
 
 export const createCloudinary = () => {
   return new Cloudinary({
@@ -39,7 +39,13 @@ export const uploadCollectionLayerImageCloudinary = ({
 
 export const validateFiles = (files: FileWithPath[], folderDepth: number): boolean => {
   const depth = folderDepth + 1 // + 1 because we are adding the root folder
-  return files.filter((file) => file.path?.split('/').length !== depth || file.size > MAX_BYTES_ALLOWED).length === 0
+  return (
+    files.filter(
+      (file) =>
+        file.path?.split('/').length !== depth ||
+        file.size > (clientEnv?.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED || DEFAULT_IMAGES_BYTES_ALLOWED)
+    ).length === 0
+  )
 }
 export const getRepositoryLayerObjectUrls = (
   files: FileWithPath[]

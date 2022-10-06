@@ -9,7 +9,7 @@ export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: z.string(),
-  // NEXTAUTH_URL: z.string().url(),
+  NEXTAUTH_URL: z.string().url(),
 })
 
 /**
@@ -28,6 +28,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.string(),
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string(),
+  NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: z.number(),
 })
 
 /**
@@ -47,4 +48,5 @@ export const clientEnv = {
   NEXT_PUBLIC_APP_NAME: 'elevate.art',
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || '',
+  NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: Number(process.env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED) || 9990000,
 }
