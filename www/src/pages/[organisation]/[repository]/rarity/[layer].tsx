@@ -4,7 +4,6 @@ import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'
 import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
-import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -107,25 +106,6 @@ const Page = () => {
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8 -ml-4'>
               <div className='space-y-4'>
-                <div className='flex flex-row justify-between items-end'>
-                  <h3 className='text-md font-semibold'>Your Layers</h3>
-                  <div className='flex space-x-1 w-[30%]'>
-                    <button
-                      className={clsx(
-                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white text-darkGrey rounded-[5px]'
-                      )}
-                    >
-                      <PlusIcon className='w-3 h-3 text-darkGrey' />
-                    </button>
-                    <button
-                      className={clsx(
-                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white text-darkGrey rounded-[5px]'
-                      )}
-                    >
-                      <SwitchVerticalIcon className='w-3 h-3 text-darkGrey' />
-                    </button>
-                  </div>
-                </div>
                 <LayerFolderSelector />
               </div>
             </div>
@@ -135,63 +115,61 @@ const Page = () => {
                   <div className='col-span-2'>
                     <span className='text-xl flex items-end h-full font-semibold'>{layer?.name}</span>
                   </div>
-                  <div className='col-span-4 flex justify-between'>
+                  <div className='col-span-5 flex justify-between'>
                     <div />
                     <div className='w-3/4'>
                       <SearchInput setQuery={setQuery} isLoading={!filteredTraitElements} />
                     </div>
                   </div>
-                  <div className='col-span-2 flex flex-row space-x-3'>
-                    <div className='flex border bg-white border-mediumGrey rounded-[5px]'>
-                      <button
-                        onClick={() => setCurrentView('rarity')}
-                        className={clsx(
-                          currentView === 'rarity' && 'bg-lightGray text-black',
-                          'flex items-center space-x-2 p-2 text-darkGrey'
-                        )}
-                      >
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          strokeWidth={1.5}
-                          stroke='currentColor'
-                          className={clsx('w-3 h-3', currentView === 'rarity' ? 'text-black' : 'text-darkGrey')}
-                        >
-                          <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => setCurrentView('layers')}
-                        className={clsx(
-                          currentView === 'layers' && 'bg-lightGray text-black',
-                          'flex items-center space-x-2 p-2 text-darkGrey'
-                        )}
-                      >
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          strokeWidth={1.25}
-                          stroke='currentColor'
-                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-darkGrey')}
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z'
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                  <div className='flex border bg-white border-mediumGrey rounded-[5px]'>
                     <button
+                      onClick={() => setCurrentView('rarity')}
+                      className={clsx(
+                        currentView === 'rarity' && 'bg-lightGray text-black',
+                        'flex w-full items-center justify-center space-x-2 p-2 text-darkGrey'
+                      )}
+                    >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        strokeWidth={1.5}
+                        stroke='currentColor'
+                        className={clsx('w-3 h-3', currentView === 'rarity' ? 'text-black' : 'text-darkGrey')}
+                      >
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('layers')}
+                      className={clsx(
+                        currentView === 'layers' && 'bg-lightGray text-black',
+                        'flex w-full items-center justify-center space-x-2 p-2 text-darkGrey'
+                      )}
+                    >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        strokeWidth={1.25}
+                        stroke='currentColor'
+                        className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-darkGrey')}
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          d='M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z'
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  {/* <button
                       className={clsx(
                         'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey rounded-[5px] bg-blueHighlight text-white'
                       )}
                     >
                       Add Trait
-                    </button>
-                  </div>
+                    </button> */}
                 </div>
                 {currentView === 'layers' && (
                   <div className='space-y-3'>

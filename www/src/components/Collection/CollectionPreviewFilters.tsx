@@ -147,34 +147,36 @@ export const FilterByTrait = () => {
                       : 'hidden'
                   }
                 >
-                  {layer.traitElements.map((traitElement: TraitElement, index) => {
-                    return (
-                      <div key={index}>
-                        <div
-                          key={traitElement.id}
-                          className='flex flex-row justify-between items-center py-3 px-3 hover:bg-lightGray w-full'
-                        >
-                          <span>{truncate(traitElement.name)}</span>
-                          <div className='flex items-center space-x-2'>
-                            <span className='text-darkGrey text-xs'>
-                              {traitMapping.traitMap.size > 0 &&
-                                (traitMapping?.traitMap.get(layer.id)?.get(traitElement.id) || 0)}
-                            </span>
-                            <Field
-                              type='checkbox'
-                              name='checked'
-                              value={`${layer.id}/${traitElement.id}`}
-                              className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                              onChange={(e: any) => {
-                                handleChange(e)
-                                submitForm()
-                              }}
-                            />
+                  {layer.traitElements
+                    .sort((a, b) => a.weight - b.weight)
+                    .map((traitElement: TraitElement, index) => {
+                      return (
+                        <div key={index}>
+                          <div
+                            key={traitElement.id}
+                            className='flex flex-row justify-between items-center py-3 px-3 hover:bg-lightGray w-full'
+                          >
+                            <span>{truncate(traitElement.name)}</span>
+                            <div className='flex items-center space-x-2'>
+                              <span className='text-darkGrey text-xs'>
+                                {traitMapping.traitMap.size > 0 &&
+                                  (traitMapping?.traitMap.get(layer.id)?.get(traitElement.id) || 0)}
+                              </span>
+                              <Field
+                                type='checkbox'
+                                name='checked'
+                                value={`${layer.id}/${traitElement.id}`}
+                                className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                                onChange={(e: any) => {
+                                  handleChange(e)
+                                  submitForm()
+                                }}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
                 </div>
               </div>
             ))}

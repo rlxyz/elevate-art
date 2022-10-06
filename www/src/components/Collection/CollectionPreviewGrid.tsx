@@ -1,4 +1,5 @@
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Popover, Transition } from '@headlessui/react'
+import { InformationCircleIcon } from '@heroicons/react/outline'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -8,9 +9,9 @@ import { Collection } from '@prisma/client'
 import { truncate } from '@utils/format'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-
+import RenderIfVisible from 'react-render-if-visible'
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
 const PreviewImage = ({
@@ -18,24 +19,25 @@ const PreviewImage = ({
   collection,
   layers,
   repositoryId,
+  children,
 }: {
   id: number
   collection: Collection
   repositoryId: string
   layers: LayerElements
+  children: ReactNode
 }) => {
   const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
+  const [hasLoaded, setHasLoaded] = useState(false)
   return (
-    <div className={clsx('relative border border-mediumGrey rounded-[5px] shadow-lg')}>
-      {images.map((image, index) => {
-        return (
-          <img
-            key={image.toURL()}
-            className={clsx(index === images.length - 1 ? 'relative' : 'absolute', 'rounded-[5px]')}
-            src={image.toURL()}
-          />
-        )
-      })}
+    <div className={clsx('relative rounded-[5px]')}>
+      <div className='border border-mediumGrey'>
+        {images.map((image) => {
+          return <img key={image.toURL()} className={clsx('absolute', 'rounded-[5px] w-full h-auto')} src={image.toURL()} />
+        })}
+        <img className='invisible relative' onLoad={() => setHasLoaded(true)} src={images[0]?.toURL()} />
+      </div>
+      {hasLoaded && children}
     </div>
   )
 }
@@ -79,16 +81,19 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <div key={`${item}-${index}`} className='col-span-1'>
+              <RenderIfVisible key={`${item}-${index}`}>
                 <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
-                  <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId} />
-                  <div
-                    className={'whitespace-nowrap overflow-hidden text-ellipsis flex flex-col items-center space-y-1 w-full py-2'}
-                  >
-                    <span className='text-xs'>{truncate(`${current?.tokenName} #${item || 0}`)}</span>
-                  </div>
+                  <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
+                    <div
+                      className={
+                        'whitespace-nowrap overflow-hidden text-ellipsis flex flex-col items-center space-y-1 w-full py-2'
+                      }
+                    >
+                      <span className='text-xs'>{truncate(`${current?.tokenName} #${item || 0}`)}</span>
+                    </div>
+                  </PreviewImage>
                 </div>
-              </div>
+              </RenderIfVisible>
             )
           })}
         </>
@@ -119,10 +124,10 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveFrom='opacity-100 translate-y-0 sm:scale-100'
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
-                  <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full space-y-6 divide-y divide-lightGray'>
-                    <div>
-                      <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId} />
-                    </div>
+                  <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
+                    <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
+                      <></>
+                    </PreviewImage>
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
@@ -194,14 +199,38 @@ const Index = () => {
     <main className='space-y-3'>
       <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
-          <h1
-            className={clsx(
-              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
-              'text-2xl font-bold text-black'
+          <div className='flex space-x-2'>
+            <h1
+              className={clsx(
+                !collection && 'animate-pulse flex flex-row rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
+                'text-2xl font-bold text-black'
+              )}
+            >
+              <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
+            </h1>
+            {collection && (
+              <Popover>
+                <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+                <Transition
+                  as={Fragment}
+                  enter='transition ease-out duration-200'
+                  enterFrom='opacity-0 translate-y-1'
+                  enterTo='opacity-100 translate-y-0'
+                  leave='transition ease-in duration-150'
+                  leaveFrom='opacity-100 translate-y-0'
+                  leaveTo='opacity-0 translate-y-1'
+                >
+                  <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+                    <div className='p-2 shadow-lg'>
+                      <p className='text-[0.65rem] text-white font-normal'>
+                        {'This collection is sorted by rarity ranking based on OpenRarity.'}
+                      </p>
+                    </div>
+                  </Popover.Panel>
+                </Transition>
+              </Popover>
             )}
-          >
-            <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
-          </h1>
+          </div>
           <p
             className={clsx(
               !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',

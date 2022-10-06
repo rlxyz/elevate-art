@@ -4,7 +4,7 @@ import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
 import { truncate } from '@utils/format'
 import { trpc } from '@utils/trpc'
-import Image from 'next/image'
+import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
@@ -35,27 +35,25 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
   })
 
   return (
-    <div className='grid grid-cols-6 gap-x-3 gap-y-2'>
+    <div className='grid grid-cols-5 gap-x-3 gap-y-2'>
       {!traitElements?.length ? (
         // <LayerGridLoading />
         <></>
       ) : (
         traitElements?.map((trait: TraitElement, index: number) => {
           return (
-            <div key={index} className='flex flex-col space-y-1'>
-              <div className='cursor-pointer relative col-span-1'>
-                <div className='pb-[100%] border border-mediumGrey rounded-[5px]' />
-                <Image
-                  layout='fill'
+            <div key={index} className='flex flex-col space-y-2'>
+              <div className={clsx('relative rounded-[5px]')}>
+                <img
                   className='border border-mediumGrey rounded-[5px]'
                   src={cld
                     .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}/${trait.id}.png`)
                     .toURL()}
                 />
+                <span className='flex flex-col text-xs items-center justify-center overflow-hidden whitespace-nowrap text-ellipsis'>
+                  {truncate(trait.name)}
+                </span>
               </div>
-              <span className='flex flex-col text-xs pb-1 items-center justify-center overflow-hidden whitespace-nowrap text-ellipsis'>
-                {truncate(trait.name)}
-              </span>
             </div>
           )
         })

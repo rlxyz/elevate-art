@@ -10,6 +10,7 @@ export const Link = ({
   enabled = false,
   external = false,
   hover = false,
+  rounded = true,
 }: {
   href: string
   enabled?: boolean
@@ -19,9 +20,10 @@ export const Link = ({
   children?: React.ReactNode
   title?: string
   hover?: boolean
+  rounded?: boolean
 }) => {
   return disabled ? (
-    <div className={'py-3'}>
+    <div className={'py-2'}>
       {title && (
         <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
           <span>{title}</span>
@@ -40,6 +42,7 @@ export const Link = ({
               `cursor-pointer flex flex-row justify-between hover:bg-lightGray py-2`,
               enabled ? 'font-semibold' : '',
               enabled && hover ? 'bg-lightGray' : '',
+              rounded ? 'rounded-[5px]' : '',
               className
             )}
           >

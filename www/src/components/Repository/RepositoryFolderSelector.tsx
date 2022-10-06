@@ -1,10 +1,11 @@
 import { Link } from '@components/Layout/Link'
-import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import { useMutateReorderLayers } from '@hooks/mutations/useMutateReorderLayers'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { truncate } from '@utils/format'
+import clsx from 'clsx'
 import { animate, AnimatePresence, MotionValue, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
@@ -41,7 +42,9 @@ export const ReorderItem = ({
   name,
   enabled,
   canReorder,
+  rounded,
 }: {
+  rounded: boolean
   item: string
   name: string
   enabled: boolean
@@ -57,18 +60,24 @@ export const ReorderItem = ({
       <Link
         href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${name}`}
         enabled={enabled}
+        disabled={canReorder}
         hover
-        title={name}
+        rounded={rounded}
       >
-        {canReorder && (
-          <DotsHorizontalIcon
-            className='text-darkGrey mr-1 w-4 h-4'
-            onPointerDown={(e) => {
-              e.preventDefault()
-              dragControls.start(e)
-            }}
-          />
-        )}
+        <div className={clsx('text-black', 'flex justify-between w-full')}>
+          <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
+            <span>{name}</span>
+          </div>
+          {canReorder && (
+            <DotsHorizontalIcon
+              className='mr-2 w-4 h-4'
+              onPointerDown={(e) => {
+                e.preventDefault()
+                dragControls.start(e)
+              }}
+            />
+          )}
+        </div>
       </Link>
     </Reorder.Item>
   )
@@ -88,11 +97,22 @@ const LayerFolderSelector = () => {
   if (!layers || !items) return null
 
   return (
-    <aside className='space-y-1'>
-      {/* <div className='flex items-center justify-between'>
-        <div />
-        <div className='space-x-1 flex items-center'>
+    <>
+      <div className='flex flex-row justify-between items-end'>
+        <h3 className='text-md font-semibold'>Your Layers</h3>
+        <div className='flex space-x-1 w-[15%]'>
+          {/* <button
+            className={clsx(
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white text-darkGrey rounded-[5px]'
+            )}
+          >
+            <PlusIcon className='w-3 h-3 text-darkGrey' />
+          </button> */}
           <button
+            className={clsx(
+              openReordering ? 'text-blueHighlight border-blueHighlight' : ' text-darkGrey',
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px]'
+            )}
             onClick={() => {
               if (!openReordering) {
                 setOpenReordering(true)
@@ -101,33 +121,32 @@ const LayerFolderSelector = () => {
                 setOpenReordering(false)
               }
             }}
-            className={clsx(
-              'border rounded-[5px] border-mediumGrey p-1 text-darkGrey',
-              openReordering && 'border-blueHighlight text-blueHighlight'
-            )}
           >
-            <SwitchVerticalIcon className='w-3 h-3 text-darkGrey' />
+            <SwitchVerticalIcon className='w-3 h-3' />
           </button>
         </div>
-      </div> */}
-      <div className='border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
-        <AnimatePresence>
-          <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
-            {items.map((item) => {
-              return (
-                <ReorderItem
-                  canReorder={openReordering}
-                  key={item}
-                  name={truncate(layers.find((x) => x.id === item)?.name || '')}
-                  item={item}
-                  enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
-                />
-              )
-            })}
-          </Reorder.Group>
-        </AnimatePresence>
       </div>
-    </aside>
+      <aside className='space-y-1'>
+        <div className='border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
+          <AnimatePresence>
+            <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
+              {items.map((item, index) => {
+                return (
+                  <ReorderItem
+                    rounded={index === 0 || index === items.length - 1 ? true : false}
+                    canReorder={openReordering}
+                    key={item}
+                    name={truncate(layers.find((x) => x.id === item)?.name || '')}
+                    item={item}
+                    enabled={currentLayerPriority === layers.find((x) => x.id === item)?.id}
+                  />
+                )
+              })}
+            </Reorder.Group>
+          </AnimatePresence>
+        </div>
+      </aside>
+    </>
   )
 }
 

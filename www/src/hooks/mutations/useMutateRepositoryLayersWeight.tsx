@@ -34,6 +34,8 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
       onMutate && onMutate()
       // return backup
+      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === input.layerId)?.name} rarities.`)
+      notifySuccess(`We have sorted the rarities by weight.`)
       return { backup }
     },
     onError: (err, variables, context) => {
@@ -41,8 +43,6 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
       ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
     },
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
-    onSuccess: (data, variables) => {
-      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variables.layerId)?.name} rarities`)
-    },
+    onSuccess: (data, variables) => {},
   })
 }

@@ -60,12 +60,12 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
           {({ values, handleChange, initialValues, handleSubmit, isSubmitting, resetForm }) => (
             <>
               <div className='flex flex-col'>
-                <div className='-mt-3 inline-block min-w-full align-middle'>
+                <div className='inline-block min-w-full align-middle'>
                   <Form onSubmit={handleSubmit} className='overflow-hidden'>
-                    <table className='border-separate border-spacing-x-0 border-spacing-y-3 min-w-full'>
+                    <table className='border-separate border-spacing-x-0 border-spacing-y-0 min-w-full'>
                       <thead className='bg-white'>
                         <tr>
-                          <th className='border-t border-l border-b rounded-l-[5px] border-mediumGrey pl-3'>
+                          <th className='border-t border-l rounded-tl-[5px] border-mediumGrey pl-3'>
                             <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                           </th>
                           {[
@@ -85,7 +85,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                             { title: '%' },
                           ].map(({ title, description }, index) => {
                             return (
-                              <th key={title} scope='col' className={clsx('text-left border-t border-b border-mediumGrey py-2')}>
+                              <th key={title} scope='col' className={clsx('text-left border-t border-mediumGrey py-2')}>
                                 <div className='flex items-center space-x-1'>
                                   <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
                                   {hasFormChange && index == 2 && (
@@ -123,7 +123,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                               </th>
                             )
                           })}
-                          <th className='pr-3 border-t border-r border-b rounded-r-[5px] border-mediumGrey'>
+                          <th className='pr-3 border-t border-r rounded-tr-[5px] border-mediumGrey'>
                             {/* <div className='relative'>
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
@@ -149,10 +149,20 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                       <tbody className='divide-y divide-mediumGrey'>
                         {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
                           <tr key={index}>
-                            <th className='pl-3 border-l border-t border-b border-mediumGrey rounded-l-[5px]'>
+                            <th
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b rounded-bl-[5px]',
+                                'pl-3 border-l border-t border-mediumGrey'
+                              )}
+                            >
                               <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
                             </th>
-                            <td className='py-3  border-t border-b border-mediumGrey'>
+                            <td
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b',
+                                'py-3  border-t border-mediumGrey'
+                              )}
+                            >
                               <div className='relative h-8 w-8 border border-mediumGrey rounded-[5px]'>
                                 <Image
                                   src={cld
@@ -163,10 +173,20 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                                 />
                               </div>
                             </td>
-                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'>
+                            <td
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b',
+                                'border-t border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium w-[20%]'
+                              )}
+                            >
                               {name}
                             </td>
-                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                            <td
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b',
+                                'border-t border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'
+                              )}
+                            >
                               <div className='flex space-x-3 items-center justify-start'>
                                 <div className='w-20'>
                                   <input
@@ -205,15 +225,30 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                                 <span>out of {collection.totalSupply}</span>
                               </div>
                             </td>
-                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium items-center'>
+                            <td
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b',
+                                'border-t border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium items-center'
+                              )}
+                            >
                               {Number(
                                 -Math.log((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)).toFixed(3)
                               ) % Infinity || 0}
                             </td>
-                            <td className='border-t border-b border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'>
+                            <td
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b',
+                                'border-t border-mediumGrey whitespace-nowrap overflow-hidden text-ellipsis text-xs font-medium'
+                              )}
+                            >
                               {(((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)) * 100).toFixed(3)}%
                             </td>
-                            <th className='pr-3 border-t border-b border-r rounded-r-[5px] border-mediumGrey'>
+                            <th
+                              className={clsx(
+                                index === traitElements.length - 1 && 'border-b rounded-br-[5px]',
+                                'pr-3 border-t border-r border-mediumGrey'
+                              )}
+                            >
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
                                 fill='none'
