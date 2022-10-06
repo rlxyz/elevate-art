@@ -1,60 +1,64 @@
 import { Layout } from '@components/Layout/Layout'
-import useOrganisationNavigationStore from '@hooks/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/useRepositoryStore'
-import { trpc } from '@utils/trpc'
+import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
-import dynamic from 'next/dynamic'
-import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-
-const DynamicViewOrganisation = dynamic(() => import('@components/Views/ViewOrganisation'), { suspense: true })
+import { OrganisationAuthLayout } from '../../components/Layout/AuthLayout'
 
 const Page: NextPage = () => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const reset = useRepositoryStore((state) => state.reset)
+  const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {
+    return {
+      organisationId: state.organisationId,
+      setOrganisationId: state.setOrganisationId,
+      setCurrentRoute: state.setCurrentRoute,
+      currentRoute: state.currentRoute,
+    }
+  })
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
+  const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
 
   useEffect(() => {
-    reset()
+    setCurrentRoute(OrganisationNavigationEnum.enum.Overview)
   }, [])
 
-  const { data: repositories } = trpc.useQuery(['repository.getAllRepositoriesByOrganisationName', { name: organisationName }])
   return (
-    <>
+    <OrganisationAuthLayout>
       <Layout>
         <Layout.Header
           connectButton
-          internalRoutes={[{ current: organisationName, href: `/${organisationName}` }]}
+          internalRoutes={[
+            {
+              current: organisation?.name || '',
+              href: `/${organisation?.name}`,
+              organisations,
+            },
+          ]}
           internalNavigation={[
             {
-              name: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisationName}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              loading: false,
+              name: OrganisationNavigationEnum.enum.Overview,
+              href: `/${organisation?.name}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
+              loading: isLoadingOrganisations,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Settings,
+              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
+              loading: isLoadingOrganisations,
             },
           ]}
         />
         <Layout.Body>
-          <div className='py-8 space-y-8'>{repositories && <DynamicViewOrganisation />}</div>
+          <div className='py-8 space-y-8'>
+            <ViewAllRepositories />
+          </div>
         </Layout.Body>
       </Layout>
-    </>
+    </OrganisationAuthLayout>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { organisation } = context.query
-//   const session = await getSession(context)
-//   const token = await getToken({ req: context.req })
-//   const userId = token?.sub ?? null
-//   if (!userId) return { redirect: { destination: '/404', permanent: false } }
-//   const data = await prisma.organisation.findFirst({
-//     where: { name: organisation as string, admins: { some: { userId: userId } } },
-//   })
-//   if (!data) return { redirect: { destination: `/404`, permanent: false } }
-//   return { props: { userId, session } }
-// }
 
 export default Page

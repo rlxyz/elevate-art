@@ -1,11 +1,11 @@
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useNotification } from '../useNotification'
-import { useQueryRepositoryLayer } from '../useRepositoryFeatures'
+import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 
 export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
-  const { data: layers } = useQueryRepositoryLayer()
+  const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { notifySuccess } = useNotification()
   return trpc.useMutation('repository.updateLayer', {
     // Optimistic Update
@@ -34,6 +34,8 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
       onMutate && onMutate()
       // return backup
+      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === input.layerId)?.name} rarities.`)
+      notifySuccess(`We have sorted the rarities by weight.`)
       return { backup }
     },
     onError: (err, variables, context) => {
@@ -41,15 +43,5 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
       ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
     },
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
-    onSuccess: (data, variables) => {
-      notifySuccess(
-        <div>
-          <span>{`Successfully updated `}</span>
-          <span className='text-blueHighlight text-semibold'>{layers?.find((l) => l.id === variables.layerId)?.name}</span>
-          <span className='font-semibold'>{` rarities`}</span>
-        </div>,
-        'rarity changed'
-      )
-    },
   })
 }

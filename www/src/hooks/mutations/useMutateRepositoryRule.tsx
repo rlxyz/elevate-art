@@ -1,6 +1,6 @@
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useNotification } from '../useNotification'
 
 export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) => {
   const ctx = trpc.useContext()
@@ -58,14 +58,7 @@ export const useMutateRepositoryRule = ({ onMutate }: { onMutate: () => void }) 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
 
       // Notify Success
-      notifySuccess(
-        <div>
-          <span className='text-blueHighlight text-semibold'>{primaryTrait?.name || ''}</span>
-          <span>{` now ${input.type} `}</span>
-          <span className='font-semibold'>{secondaryTrait?.name}</span>
-        </div>,
-        'new rule'
-      )
+      notifySuccess(`${primaryTrait.name} now ${input.type} ${secondaryTrait.name}`)
       onMutate && onMutate()
       return { backup }
     },

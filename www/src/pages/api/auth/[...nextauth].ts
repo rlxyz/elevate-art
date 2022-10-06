@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
@@ -39,58 +40,36 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
-
           const nextAuthUrl =
             process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-          if (!nextAuthUrl) {
-            return null
-          }
-
-          const nextAuthHost = new URL(nextAuthUrl).host
-          if (siwe.domain !== nextAuthHost) {
-            return null
-          }
-
-          // todo: reintroduce
-          // if (siwe.nonce !== (await getCsrfToken({ req }))) {
-          //   return null
-          // }
+          if (!nextAuthUrl) return null
+          if (siwe.domain !== new URL(nextAuthUrl).host) return null
+          if (!siwe.address.length) return null
 
           await siwe.validate(credentials?.signature || '')
-
-          const user = await prisma.user.findUnique({
-            where: {
-              address: siwe.address,
+          const { address } = siwe
+          // if (!whitelist.includes(address)) return null
+          // https://github.com/prisma/prisma-client-js/issues/85#issuecomment-660057346
+          const user = await prisma.user.upsert({
+            where: { address },
+            update: {},
+            create: {
+              address,
+              members: {
+                create: {
+                  type: OrganisationDatabaseRoleEnum.enum.Admin,
+                  organisation: {
+                    create: {
+                      type: OrganisationDatabaseEnum.enum.Personal,
+                      name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1).toString(36).substring(6)}`,
+                    },
+                  },
+                },
+              },
             },
-            select: {
-              id: true,
-              address: true,
-            },
+            select: { id: true, address: true },
           })
 
-          // create if user doesnt exists
-          if (!user) {
-            const newUser = await prisma.$transaction(async (tx) => {
-              const { address } = siwe
-              const user = await tx.user.create({
-                data: { address },
-                select: { id: true, address: true },
-              })
-              const organisation = await tx.organisation.create({
-                data: { name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1).toString(36).substring(6)}` },
-              })
-              await tx.organisationAdmin.create({
-                data: { organisationId: organisation.id, userId: user.id },
-              })
-              return { ...user }
-            })
-            return {
-              id: newUser.id,
-              name: newUser.address,
-            }
-          }
-
-          // return user
           return {
             id: user.id,
             name: user.address,

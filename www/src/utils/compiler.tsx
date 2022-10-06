@@ -1,27 +1,30 @@
-import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { Collection, TraitElement } from '@prisma/client'
 import seedrandom from 'seedrandom'
 
-export const createToken = (opts: {
-  id: number
-  name: string
-  generation: number
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[]
+export const createSeed = ({
+  repositoryId,
+  collectionName,
+  collectionGenerations,
+  tokenId,
+}: {
+  repositoryId: string
+  collectionName: string
+  collectionGenerations: number
+  tokenId: number
 }) => {
-  const { id, name, generation, layers } = opts
-  const random = seedrandom(`${name}.${generation}.${id}`)
+  return `${repositoryId}.${collectionName}.${collectionGenerations}.${tokenId}`
+}
+
+export const renderManyToken = (layers: LayerElements, collection: Collection, repositoryId: string) => {
+  return Array.from({ length: collection.totalSupply }, (_, i) => renderSingleToken(layers, collection, i, repositoryId))
+}
+
+const renderSingleToken = (layers: LayerElements, collection: Collection, id: number, repositoryId: string) => {
+  const random = seedrandom(
+    createSeed({ repositoryId, collectionName: collection.name, collectionGenerations: collection.generations, tokenId: id })
+  )
   const elements: TraitElement[] = []
-  layers.forEach(({ traitElements, name }, index: number) => {
+  layers.forEach(({ traitElements }: { traitElements: TraitElements; name: string }, index: number) => {
     // exclusion
     const filtered = traitElements.filter((traitElement) => {
       const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
@@ -47,36 +50,7 @@ export const createToken = (opts: {
       return true
     })
   })
-  return elements.reverse() // reverse cause we want the highest priority first
-}
-
-export const createManyTokens = (
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      })[]
-    })[]
-  })[],
-  totalSupply: number,
-  name: string,
-  generation: number
-): TraitElement[][] => {
-  // // sort all layers by priority & trait elements by weight
-  // layers
-  //   .sort((a, b) => a.priority - b.priority)
-  //   .forEach(({ traitElements }: LayerElement & { traitElements: TraitElement[] }) =>
-  //     traitElements.sort((a, b) => a.weight - b.weight)
-  //   )
-
-  return Array.from(Array(totalSupply).keys()).map((id: number) => {
-    return createToken({ id, name, generation, layers })
-  })
+  return elements.reverse()
 }
 
 export const getTraitMappings = (allElements: TraitElement[][]) => {
@@ -108,7 +82,7 @@ export const getTokenRanking = (tokens: TraitElement[][], traitMap: Map<string, 
         index,
         value: token.reduce((result, item) => {
           const { layerElementId, id } = item
-          return result + (traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply
+          return result + Math.log((traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply)
         }, 0),
       }
     })

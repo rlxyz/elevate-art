@@ -1,7 +1,11 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/Layout'
-import { Link } from '@components/UI/Link'
+import { Link } from '@components/Layout/Link'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { OrganisationNavigationEnum } from 'src/types/enums'
+import { useAuthenticated } from '../hooks/utils/useAuthenticated'
 
 const Guide = () => {
   return (
@@ -62,31 +66,42 @@ const CoolShit = () => {
 }
 
 const Home: NextPage = () => {
-  return (
-    <>
-      <Layout>
-        <Layout.Header />
-        <Layout.Body>
-          <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
-            <div className='w-full flex flex-col justify-center items-center'>
-              <div className='w-[50%]'>
-                <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
+  const router = useRouter()
+  const { isLoggedIn } = useAuthenticated()
+
+  useEffect(() => {
+    isLoggedIn && router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
+  }, [isLoggedIn])
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Layout>
+          <Layout.Header />
+          <Layout.Body>
+            <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
+              <div className='w-full flex flex-col justify-center items-center'>
+                <div className='w-[50%]'>
+                  <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
+                </div>
+                <span className='text-xs uppercase'>
+                  an&nbsp;
+                  <Link external={true} href='https://twitter.com/rlxyz_eth'>
+                    <span className='font-extrabold line-through'>RLXYZ</span>
+                  </Link>
+                  &nbsp;production
+                </span>
               </div>
-              <span className='text-xs uppercase'>
-                an&nbsp;
-                <Link external={true} href='https://twitter.com/rlxyz_eth'>
-                  <span className='font-extrabold line-through'>RLXYZ</span>
-                </Link>
-                &nbsp;production
-              </span>
+              {/* <Guide /> */}
+              {/* <CoolShit /> */}
             </div>
-            {/* <Guide /> */}
-            {/* <CoolShit /> */}
-          </div>
-        </Layout.Body>
-      </Layout>
-    </>
-  )
+          </Layout.Body>
+        </Layout>
+      </>
+    )
+  }
+
+  return null
 }
 
 export default Home

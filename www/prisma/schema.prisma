@@ -22,18 +22,21 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    admins  OrganisationAdmin[]
     members OrganisationMember[]
 }
 
-model OrganisationAdmin {
-    id             String       @id @default(cuid())
-    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId         String
-    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
-    organisationId String
+model Organisation {
+    id        String   @id @default(cuid())
+    name      String   @unique @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    type      String   @default("personal") @db.VarChar(255)
 
-    @@unique([userId, organisationId])
+    repositories Repository[]
+    members      OrganisationMember[]
+    pendings     OrganisationPending[]
+
+    @@map(name: "organisations")
 }
 
 model OrganisationMember {
@@ -42,21 +45,23 @@ model OrganisationMember {
     userId         String
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
+    type           String       @default("admin") @db.VarChar(255)
 
     @@unique([userId, organisationId])
 }
 
-model Organisation {
-    id        String   @id @default(cuid())
-    name      String   @unique @db.VarChar(255)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model OrganisationPending {
+    id             String       @id @default(cuid())
+    address        String       @db.VarChar(42)
+    role           String       @db.VarChar(20) // shouldnt have default value as we can server to explicitly specific
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
 
-    repositories Repository[]
-    admins       OrganisationAdmin[]
-    members      OrganisationMember[]
-
-    @@map(name: "organisations")
+    @@unique([address, organisationId])
 }
 
 model Repository {
@@ -79,7 +84,8 @@ model Repository {
 model Collection {
     id          String @id @default(cuid())
     name        String @default("main") @db.VarChar(255)
-    totalSupply Int    @default(1)
+    type        String @default("default") @db.VarChar(255)
+    totalSupply Int    @default(10000)
     generations Int    @default(1)
 
     createdAt DateTime @default(now())

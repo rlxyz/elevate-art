@@ -1,9 +1,9 @@
 // src/pages/_app.tsx
 import { ErrorBoundary } from '@highlight-run/react'
-import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/useCollectionNavigationStore'
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/useOrganisationNavigationStore'
-import { createRepositoryStore, RepositoryContext } from '@hooks/useRepositoryStore'
-import { connectorsForWallets, getDefaultWallets, RainbowKitProvider, wallet } from '@rainbow-me/rainbowkit'
+import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
+import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
+import { connectorsForWallets, getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
@@ -11,6 +11,7 @@ import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
 import { H } from 'highlight.run'
 import { SessionProvider } from 'next-auth/react'
+import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
@@ -54,10 +55,10 @@ const appInfo = {
 
 const connectors = connectorsForWallets([
   ...wallets,
-  {
-    groupName: 'Other',
-    wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
-  },
+  // {
+  //   groupName: 'Other',
+  //   // wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
+  // },
 ])
 
 const wagmiClient = createClient({
@@ -80,6 +81,20 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
                 <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
                   <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                    <DefaultSeo
+                      title='elevate.art'
+                      description='a general purpose image compiler for nft projects'
+                      openGraph={{
+                        type: 'website',
+                        locale: 'en_US',
+                        url: 'https://elevate.art/',
+                        site_name: 'elevate.art',
+                      }}
+                      twitter={{
+                        handle: '@elevate_art',
+                        cardType: 'summary',
+                      }}
+                    />
                     <Component {...pageProps} />
                     <Toaster />
                   </RepositoryContext.Provider>
@@ -123,17 +138,17 @@ export default withTRPC<AppRouter>({
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
 
       // To use SSR properly you need to forward the client's headers to the server
-      // headers: () => {
-      //   if (ctx?.req) {
-      //     const headers = ctx?.req?.headers;
-      //     delete headers?.connection;
-      //     return {
-      //       ...headers,
-      //       "x-ssr": "1",
-      //     };
-      //   }
-      //   return {};
-      // }
+      headers: () => {
+        if (ctx?.req) {
+          const headers = ctx?.req?.headers
+          delete headers?.connection
+          return {
+            ...headers,
+            'x-ssr': '1',
+          }
+        }
+        return {}
+      },
     }
   },
   /**
