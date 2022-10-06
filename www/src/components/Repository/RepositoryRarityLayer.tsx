@@ -45,7 +45,7 @@ const LayerGridView = ({ traitElements, layerName }: { traitElements: TraitEleme
             <div key={index} className='flex flex-col space-y-2'>
               <div className={clsx('relative rounded-[5px]')}>
                 <img
-                  className='border border-mediumGrey rounded-[5px]'
+                  className='border border-mediumGrey w-full h-auto rounded-[5px]'
                   src={cld
                     .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${trait.layerElementId}/${trait.id}.png`)
                     .toURL()}
