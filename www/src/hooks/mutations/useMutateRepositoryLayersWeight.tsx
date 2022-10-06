@@ -43,6 +43,5 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
       ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
     },
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
-    onSuccess: (data, variables) => {},
   })
 }
