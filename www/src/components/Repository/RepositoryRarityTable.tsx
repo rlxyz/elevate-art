@@ -6,14 +6,13 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { createCloudinary } from '@utils/cloudinary'
+import { getImageForTrait } from '@utils/image'
 import { calculateTraitQuantityInCollection } from '@utils/math'
 import clsx from 'clsx'
 import { Form, Formik } from 'formik'
-import Image from 'next/image'
 import { Fragment, useState } from 'react'
-import { clientEnv } from 'src/env/schema.mjs'
 
-const calculateSumArray = (values: { id: string; weight: number }[]) => {
+export const calculateSumArray = (values: { weight: number }[]) => {
   return values.reduce((a, b) => a + Number(b.weight), 0) // change to number incase someone accidently changes how textbox works
 }
 
@@ -163,15 +162,14 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                                 'py-3  border-t border-mediumGrey'
                               )}
                             >
-                              <div className='relative h-8 w-8 border border-mediumGrey rounded-[5px]'>
-                                <Image
-                                  src={cld
-                                    .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${id}.png`)
-                                    .toURL()}
-                                  layout='fill'
-                                  className='rounded-[5px]'
-                                />
-                              </div>
+                              <img
+                                className='w-8 h-auto rounded-[3px]'
+                                src={getImageForTrait({
+                                  r: repositoryId,
+                                  l: layerElementId,
+                                  t: id,
+                                })}
+                              />
                             </td>
                             <td
                               className={clsx(

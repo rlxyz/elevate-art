@@ -18,6 +18,6 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['res.cloudinary.com', 'vercel.com', 'rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com'],
+    domains: ['res.cloudinary.com', 'localhost'],
   },
 })

@@ -4,24 +4,32 @@ import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { clientEnv } from 'src/env/schema.mjs'
 
-const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerAuthSession({ req, res })
-  if (session) {
-    const repositoryId = req.query.r as string
-    const layerElementId = req.query.l as string
-    const traitElementId = req.query.t as string
-    if (repositoryId && layerElementId && traitElementId) {
-      const data = await fetch(
-        `https://res.cloudinary.com/rlxyz/image/upload/f_png/v1/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}/${traitElementId}.png`
-      )
-      res.setHeader('Cache-Control', 'private, max-age=30, stale-while-revalidate')
-      res.setHeader('Content-Type', 'image/png')
-      return res.send(data.body)
-    }
-  }
-  return res.send({
-    error: 'You must be signed in to view the protected content on this page.',
-  })
+const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
+  return `https://res.cloudinary.com/rlxyz/image/upload/c_scale,w_600/q_auto/v1/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
 
-export default restricted
+const index = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerAuthSession({ req, res })
+  if (!session || !session.user) {
+    return res.status(401).send('Unauthorized')
+  }
+
+  // r: repositoryId, l: layerElementId, t: traitElementId
+  const { r, l, t } = req.query as { r: string; l: string; t: string }
+  if (!r || !l || !t) {
+    return res.status(400).send('Bad Request')
+  }
+
+  const data = await fetch(getCldImgUrl({ r, l, t }))
+  if (data.status === 404) {
+    return res.status(404).send('Not Found')
+  }
+
+  if (data.status === 200) {
+    res.setHeader('Cache-Control', 'private, s-maxage=1, stale-while-revalidate=59')
+    res.setHeader('Content-Type', 'image/png')
+    return res.send(data.body)
+  }
+}
+
+export default index

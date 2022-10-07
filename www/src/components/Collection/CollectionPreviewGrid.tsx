@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic'
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 import RenderIfVisible from 'react-render-if-visible'
+import { getImageForTrait } from '../../utils/image'
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
 const PreviewImage = ({
@@ -27,17 +28,43 @@ const PreviewImage = ({
   layers: LayerElements
   children: ReactNode
 }) => {
-  const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
-  const [hasLoaded, setHasLoaded] = useState(false)
+  const { traitElements, hash } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
+  const [hasLoadedRelative, setHasLoadedRelative] = useState(false)
+
+  // useEffect(() => {
+  //   if (traitElements.length === 0) return
+  //   traitElements.forEach((e) => {
+  //     new Image().src = getImageForTrait({ r: repositoryId, l: e.layerElementId, t: e.id })
+  //   })
+  //   setHasLoaded(true)
+  // }, [traitElements.length])
+
   return (
     <div className={clsx('relative rounded-[5px]')}>
-      <div className='border border-mediumGrey'>
-        {images.map((image) => {
-          return <img key={image.toURL()} className={clsx('absolute', 'rounded-[5px] w-full h-auto')} src={image.toURL()} />
+      {hasLoadedRelative &&
+        traitElements.map(({ id: t, layerElementId: l }, index) => {
+          return (
+            <img
+              key={`${hash}-${t}-${index}`}
+              className={clsx('absolute', 'w-full h-auto rounded-[5px]')}
+              src={getImageForTrait({
+                r: repositoryId,
+                l,
+                t,
+              })}
+            />
+          )
         })}
-        <img className='invisible relative w-full h-auto' onLoad={() => setHasLoaded(true)} src={images[0]?.toURL()} />
-      </div>
-      {hasLoaded && children}
+      <img
+        className='invisible relative w-full h-auto'
+        onLoad={() => setHasLoadedRelative(true)}
+        src={getImageForTrait({
+          r: repositoryId,
+          l: traitElements[0]?.layerElementId || '',
+          t: traitElements[0]?.id || '',
+        })}
+      />
+      {hasLoadedRelative && children}
     </div>
   )
 }
