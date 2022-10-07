@@ -5,7 +5,6 @@ import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
-import Image from 'next/image'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import { timeAgo } from '../../utils/time'
@@ -92,13 +91,7 @@ const ViewAllRepositories = () => {
               >
                 <div className={clsx(isLoading && 'invisible', 'rounded-[5px] px-6 py-5 space-y-4')}>
                   <div className='flex items-center space-x-3'>
-                    <div className='relative w-[30px] h-[30px] rounded-full'>
-                      <Image
-                        src='https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg'
-                        layout='fill'
-                        className='rounded-full'
-                      />
-                    </div>
+                    <div className='bg-blueHighlight h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{'no_collection'}</span>
                       <span className='text-xs text-darkGrey'>Last Edited {'0 days ago'}</span>
@@ -160,13 +153,7 @@ const ViewAllRepositories = () => {
               <Link href={`/${organisationName}/${repository.name}`} external>
                 <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
-                    <div className='relative border border-mediumGrey w-[30px] h-[30px] rounded-full'>
-                      <Image
-                        src='https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg'
-                        layout='fill'
-                        className='rounded-full'
-                      />
-                    </div>
+                    <div className='bg-blueHighlight h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
                       <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>

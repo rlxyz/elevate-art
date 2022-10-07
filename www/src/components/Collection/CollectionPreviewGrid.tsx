@@ -6,13 +6,11 @@ import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCol
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
-import { truncate } from '@utils/format'
+import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { Fragment, ReactNode, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import RenderIfVisible from 'react-render-if-visible'
-import { getImageForTrait } from '../../utils/image'
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
 const PreviewImage = ({
@@ -20,33 +18,25 @@ const PreviewImage = ({
   collection,
   layers,
   repositoryId,
-  children,
+  tokenRank,
+  tokenName,
 }: {
   id: number
   collection: Collection
   repositoryId: string
   layers: LayerElements
-  children: ReactNode
+  tokenRank: number
+  tokenName: string
 }) => {
   const { traitElements, hash } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
-  const [hasLoadedRelative, setHasLoadedRelative] = useState(false)
-
-  // useEffect(() => {
-  //   if (traitElements.length === 0) return
-  //   traitElements.forEach((e) => {
-  //     new Image().src = getImageForTrait({ r: repositoryId, l: e.layerElementId, t: e.id })
-  //   })
-  //   setHasLoaded(true)
-  // }, [traitElements.length])
-
   return (
-    <div className={clsx('relative rounded-[5px]')}>
-      {hasLoadedRelative &&
-        traitElements.map(({ id: t, layerElementId: l }, index) => {
+    <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
+      <div className='pb-[100%]'>
+        {traitElements.map(({ id: t, layerElementId: l }, index) => {
           return (
             <img
               key={`${hash}-${t}-${index}`}
-              className={clsx('absolute', 'w-full h-auto rounded-[5px]')}
+              className='translate-y-1/4 absolute w-full h-auto border-t border-b border-mediumGrey'
               src={getImageForTrait({
                 r: repositoryId,
                 l,
@@ -55,16 +45,16 @@ const PreviewImage = ({
             />
           )
         })}
-      <img
-        className='invisible relative w-full h-auto'
-        onLoad={() => setHasLoadedRelative(true)}
-        src={getImageForTrait({
-          r: repositoryId,
-          l: traitElements[0]?.layerElementId || '',
-          t: traitElements[0]?.id || '',
-        })}
-      />
-      {hasLoadedRelative && children}
+      </div>
+      <div className='px-1 flex flex-col space-y-1 mb-3'>
+        <span className='text-xs font-semibold overflow-hidden w-full'>{`${tokenName} #${id || 0}`}</span>
+        <div className='flex flex-col text-[0.6rem]'>
+          <span className='font-semibold overflow-hidden w-full'>
+            <span className='text-darkGrey'>Rank {tokenRank}</span>
+          </span>
+          {/* <span className='text-darkGrey overflow-hidden w-full'>OpenRarity Score {5}</span> */}
+        </div>
+      </div>
     </div>
   )
 }
@@ -91,15 +81,16 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const { current } = useQueryRepository()
-  const { tokens, repositoryId } = useRepositoryStore((state) => {
+  const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {
     return {
+      tokenRanking: state.tokenRanking,
       tokens: state.tokens,
       repositoryId: state.repositoryId,
     }
   })
 
   return (
-    <div className='py-2 grid grid-cols-4 gap-y-2 gap-x-6 overflow-hidden'>
+    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -108,19 +99,16 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <RenderIfVisible key={`${item}-${index}`}>
-                <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
-                  <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
-                    <div
-                      className={
-                        'whitespace-nowrap overflow-hidden text-ellipsis flex flex-col items-center space-y-1 w-full py-2'
-                      }
-                    >
-                      <span className='text-xs'>{truncate(`${current?.tokenName} #${item || 0}`)}</span>
-                    </div>
-                  </PreviewImage>
-                </div>
-              </RenderIfVisible>
+              <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
+                <PreviewImage
+                  id={item}
+                  collection={collection}
+                  layers={layers}
+                  repositoryId={repositoryId}
+                  tokenName={current?.tokenName || ''}
+                  tokenRank={tokenRanking.findIndex((x) => x === item) + 1}
+                />
+              </div>
             )
           })}
         </>
@@ -152,9 +140,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
-                    <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
-                      <></>
-                    </PreviewImage>
+                    {/* <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId} /> */}
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
