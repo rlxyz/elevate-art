@@ -5,7 +5,7 @@ import { getImageForTrait } from '@utils/image'
 import { timeAgo } from '@utils/time'
 import { calculateSumArray } from './RepositoryRarityTable'
 
-const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] }) => {
+const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] | undefined }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return (
     <div className='grid grid-cols-5 gap-3'>

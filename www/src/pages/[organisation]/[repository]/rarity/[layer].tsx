@@ -173,7 +173,7 @@ const Page = () => {
                 </div>
                 {currentView === 'layers' && (
                   <div className='space-y-3'>
-                    <LayerGridView traitElements={filteredTraitElements} layerName={layer?.name || ''} />
+                    <LayerGridView traitElements={filteredTraitElements} />
                   </div>
                 )}
                 {currentView === 'rarity' && <LayerRarityTable traitElements={filteredTraitElements} />}
