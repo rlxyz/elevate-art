@@ -46,7 +46,7 @@ export const FilterByTrait = () => {
               ? tokenRanking.length
               : collection.totalSupply
           )
-          setTokens(filteredRarity)
+          setTokens(filteredRarity.map((x) => x.index))
           setTraitFilteredTokens([])
           setTraitFilters([])
           return
@@ -87,7 +87,7 @@ export const FilterByTrait = () => {
           .map((val) => {
             return {
               tokenId: val,
-              rank: tokenRanking.findIndex((token) => token === val),
+              rank: tokenRanking.findIndex((token) => token.index === val),
             }
           })
           .sort((a, b) => a.rank - b.rank)
@@ -214,22 +214,24 @@ export const FilterByRarity = () => {
         setRarityFilter(filter.value)
         if (!traitFilteredTokens.length) {
           setTokens(
-            tokenRanking.slice(
-              filter.value === 'Top 10'
-                ? 0
-                : filter.value === 'Middle 10'
-                ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
-                : filter.value === 'Bottom 10'
-                ? tokenRanking.length - 10
-                : 0,
-              filter.value === 'Top 10'
-                ? 10
-                : filter.value === 'Middle 10'
-                ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
-                : filter.value === 'Bottom 10'
-                ? tokenRanking.length
-                : tokenRanking.length
-            )
+            tokenRanking
+              .map((x) => x.index)
+              .slice(
+                filter.value === 'Top 10'
+                  ? 0
+                  : filter.value === 'Middle 10'
+                  ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+                  : filter.value === 'Bottom 10'
+                  ? tokenRanking.length - 10
+                  : 0,
+                filter.value === 'Top 10'
+                  ? 10
+                  : filter.value === 'Middle 10'
+                  ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+                  : filter.value === 'Bottom 10'
+                  ? tokenRanking.length
+                  : tokenRanking.length
+              )
           )
         } else {
           setTokens(
