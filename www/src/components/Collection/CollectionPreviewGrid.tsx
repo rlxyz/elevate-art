@@ -8,8 +8,9 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
@@ -18,43 +19,46 @@ const PreviewImage = ({
   collection,
   layers,
   repositoryId,
-  tokenRank,
-  tokenName,
+  children,
+  canHover = false,
 }: {
   id: number
   collection: Collection
   repositoryId: string
   layers: LayerElements
-  tokenRank: number
-  tokenName: string
+  children: ReactNode
+  canHover?: boolean
 }) => {
   const { traitElements, hash } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
   return (
     <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
-      <div className='pb-[100%]'>
-        {traitElements.map(({ id: t, layerElementId: l }, index) => {
-          return (
-            <img
-              key={`${hash}-${t}-${index}`}
-              className='translate-y-1/4 absolute w-full h-auto border-t border-b border-mediumGrey'
-              src={getImageForTrait({
-                r: repositoryId,
-                l,
-                t,
-              })}
-            />
-          )
-        })}
+      <div className='py-8 overflow-hidden'>
+        <motion.div
+          whileHover={{
+            scale: canHover ? 1.05 : 1.0,
+            transition: { duration: 1 },
+          }}
+          className='relative'
+        >
+          {traitElements.map(({ id: t, layerElementId: l }, index) => {
+            return (
+              <img
+                key={`${hash}-${t}-${index}`}
+                className={clsx(
+                  index === traitElements.length - 1 ? 'relative' : 'absolute',
+                  'w-full h-auto border-t border-b border-mediumGrey'
+                )}
+                src={getImageForTrait({
+                  r: repositoryId,
+                  l,
+                  t,
+                })}
+              />
+            )
+          })}
+        </motion.div>
       </div>
-      <div className='px-1 flex flex-col space-y-1 mb-3'>
-        <span className='text-xs font-semibold overflow-hidden w-full'>{`${tokenName} #${id || 0}`}</span>
-        <div className='flex flex-col text-[0.6rem]'>
-          <span className='font-semibold overflow-hidden w-full'>
-            <span className='text-darkGrey'>Rank {tokenRank}</span>
-          </span>
-          {/* <span className='text-darkGrey overflow-hidden w-full'>OpenRarity Score {5}</span> */}
-        </div>
-      </div>
+      {children}
     </div>
   )
 }
@@ -78,7 +82,7 @@ const InfiniteScrollGridLoading = () => {
 
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const { current } = useQueryRepository()
   const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {
@@ -99,15 +103,24 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
-                <PreviewImage
-                  id={item}
-                  collection={collection}
-                  layers={layers}
-                  repositoryId={repositoryId}
-                  tokenName={current?.tokenName || ''}
-                  tokenRank={tokenRanking.findIndex((x) => x === item) + 1}
-                />
+              <div
+                key={`${item}-${index}`}
+                className='flex flex-col rounded-[5px] cursor-pointer'
+                onClick={() => setSelectedToken(item || null)}
+              >
+                <PreviewImage canHover id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
+                  <div className='px-1 flex flex-col space-y-1 mb-3'>
+                    <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
+                      item || 0
+                    }`}</span>
+                    <div className='flex flex-col text-[0.6rem]'>
+                      <span className='font-semibold overflow-hidden w-full'>
+                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x === item) + 1}</span>
+                      </span>
+                      <span className='text-darkGrey overflow-hidden w-full'>OpenRarity Score {5}</span>
+                    </div>
+                  </div>
+                </PreviewImage>
               </div>
             )
           })}
@@ -140,7 +153,9 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
-                    {/* <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId} /> */}
+                    <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
+                      <></>
+                    </PreviewImage>
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
