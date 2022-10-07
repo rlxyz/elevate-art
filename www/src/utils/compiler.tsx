@@ -80,14 +80,14 @@ export const getTokenRanking = (tokens: TraitElement[][], traitMap: Map<string, 
     .map((token, index) => {
       return {
         index,
-        value: token.reduce((result, item) => {
+        openRarityScore: token.reduce((result, item) => {
           const { layerElementId, id } = item
-          return result + Math.log((traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply)
+          return result - Math.log((traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply)
         }, 0),
       }
     })
     .sort((a, b) => {
-      return a.value > b.value ? 1 : a.value == b.value ? 0 : -1
+      return b.openRarityScore - a.openRarityScore
     })
-    .map((map) => map.index)
+  // .map((map) => map.index)
 }

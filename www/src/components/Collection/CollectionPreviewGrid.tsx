@@ -1,17 +1,16 @@
-import { Dialog, Popover, Transition } from '@headlessui/react'
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Collection } from '@prisma/client'
-import { truncate } from '@utils/format'
+import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import RenderIfVisible from 'react-render-if-visible'
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
 const PreviewImage = ({
@@ -20,24 +19,45 @@ const PreviewImage = ({
   layers,
   repositoryId,
   children,
+  canHover = false,
 }: {
   id: number
   collection: Collection
   repositoryId: string
   layers: LayerElements
   children: ReactNode
+  canHover?: boolean
 }) => {
-  const { images } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
-  const [hasLoaded, setHasLoaded] = useState(false)
+  const { traitElements, hash } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
   return (
-    <div className={clsx('relative rounded-[5px]')}>
-      <div className='border border-mediumGrey'>
-        {images.map((image) => {
-          return <img key={image.toURL()} className={clsx('absolute', 'rounded-[5px] w-full h-auto')} src={image.toURL()} />
-        })}
-        <img className='invisible relative w-full h-auto' onLoad={() => setHasLoaded(true)} src={images[0]?.toURL()} />
+    <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
+      <div className='py-8 overflow-hidden'>
+        <motion.div
+          whileHover={{
+            scale: canHover ? 1.05 : 1.0,
+            transition: { duration: 1 },
+          }}
+          className='relative'
+        >
+          {traitElements.map(({ id: t, layerElementId: l }, index) => {
+            return (
+              <img
+                key={`${hash}-${t}-${index}`}
+                className={clsx(
+                  index === traitElements.length - 1 ? 'relative' : 'absolute',
+                  'w-full h-auto border-t border-b border-mediumGrey'
+                )}
+                src={getImageForTrait({
+                  r: repositoryId,
+                  l,
+                  t,
+                })}
+              />
+            )
+          })}
+        </motion.div>
       </div>
-      {hasLoaded && children}
+      {children}
     </div>
   )
 }
@@ -61,18 +81,19 @@ const InfiniteScrollGridLoading = () => {
 
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   const { current } = useQueryRepository()
-  const { tokens, repositoryId } = useRepositoryStore((state) => {
+  const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {
     return {
+      tokenRanking: state.tokenRanking,
       tokens: state.tokens,
       repositoryId: state.repositoryId,
     }
   })
 
   return (
-    <div className='py-2 grid grid-cols-4 gap-y-2 gap-x-6 overflow-hidden'>
+    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -81,19 +102,27 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <RenderIfVisible key={`${item}-${index}`}>
-                <div className='flex flex-col rounded-[5px] cursor-pointer' onClick={() => setSelectedToken(item || null)}>
-                  <PreviewImage id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
-                    <div
-                      className={
-                        'whitespace-nowrap overflow-hidden text-ellipsis flex flex-col items-center space-y-1 w-full py-2'
-                      }
-                    >
-                      <span className='text-xs'>{truncate(`${current?.tokenName} #${item || 0}`)}</span>
+              <div
+                key={`${item}-${index}`}
+                className='flex flex-col rounded-[5px] cursor-pointer'
+                onClick={() => setSelectedToken(item || null)}
+              >
+                <PreviewImage canHover id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
+                  <div className='px-1 flex flex-col space-y-1 mb-3'>
+                    <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
+                      item || 0
+                    }`}</span>
+                    <div className='flex flex-col text-[0.6rem]'>
+                      <span className='font-semibold overflow-hidden w-full'>
+                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
+                      </span>
+                      <span className='text-darkGrey overflow-hidden w-full'>
+                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.openRarityScore.toFixed(3)}
+                      </span>
                     </div>
-                  </PreviewImage>
-                </div>
-              </RenderIfVisible>
+                  </div>
+                </PreviewImage>
+              </div>
             )
           })}
         </>
@@ -208,28 +237,6 @@ const Index = () => {
             >
               <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
             </h1>
-            {collection && (
-              <Popover>
-                <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
-                <Transition
-                  as={Fragment}
-                  enter='transition ease-out duration-200'
-                  enterFrom='opacity-0 translate-y-1'
-                  enterTo='opacity-100 translate-y-0'
-                  leave='transition ease-in duration-150'
-                  leaveFrom='opacity-100 translate-y-0'
-                  leaveTo='opacity-0 translate-y-1'
-                >
-                  <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
-                    <div className='p-2 shadow-lg'>
-                      <p className='text-[0.65rem] text-white font-normal'>
-                        {'This collection is sorted by rarity ranking based on OpenRarity.'}
-                      </p>
-                    </div>
-                  </Popover.Panel>
-                </Transition>
-              </Popover>
-            )}
           </div>
           <p
             className={clsx(

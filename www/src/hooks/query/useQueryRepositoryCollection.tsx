@@ -33,22 +33,24 @@ export const useQueryRepositoryCollection = () => {
     setCollectionId(collection.id)
     setTokenRanking(rankings)
     setTokens(
-      rankings.slice(
-        rarityFilter === 'Top 10'
-          ? 0
-          : rarityFilter === 'Middle 10'
-          ? parseInt((rankings.length / 2 - 5).toFixed(0))
-          : rarityFilter === 'Bottom 10'
-          ? rankings.length - 10
-          : 0,
-        rarityFilter === 'Top 10'
-          ? 10
-          : rarityFilter === 'Middle 10'
-          ? parseInt((rankings.length / 2 + 5).toFixed(0))
-          : rarityFilter === 'Bottom 10'
-          ? rankings.length
-          : rankings.length
-      )
+      rankings
+        .map((x) => x.index)
+        .slice(
+          rarityFilter === 'Top 10'
+            ? 0
+            : rarityFilter === 'Middle 10'
+            ? parseInt((rankings.length / 2 - 5).toFixed(0))
+            : rarityFilter === 'Bottom 10'
+            ? rankings.length - 10
+            : 0,
+          rarityFilter === 'Top 10'
+            ? 10
+            : rarityFilter === 'Middle 10'
+            ? parseInt((rankings.length / 2 + 5).toFixed(0))
+            : rarityFilter === 'Bottom 10'
+            ? rankings.length
+            : rankings.length
+        )
     )
   }
 

@@ -114,9 +114,8 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                 ) : (
                   <>
                     <div className={clsx(organisations ? 'text-black' : 'text-darkGrey', 'py-1')}>
-                      {currentHref === OrganisationNavigationEnum.enum.You ||
-                      current === OrganisationNavigationEnum.enum.Dashboard
-                        ? capitalize(currentHref || current)
+                      {current === OrganisationNavigationEnum.enum.You || current === OrganisationNavigationEnum.enum.Dashboard
+                        ? capitalize(current)
                         : current}
                     </div>
                   </>
@@ -246,7 +245,7 @@ const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = f
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link className='' external={true} href={isLoggedIn ? `${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
+          <Link className='' external={true} href={isLoggedIn ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </Link>
           <HeaderInternalAppRoutes routes={internalRoutes} />

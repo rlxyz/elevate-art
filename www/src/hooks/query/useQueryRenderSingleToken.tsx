@@ -1,10 +1,7 @@
-import { CloudinaryImage } from '@cloudinary/url-gen'
-import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
 import { Collection, TraitElement } from '@prisma/client'
 import { createSeed } from '@utils/compiler'
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import seedrandom from 'seedrandom'
-import { clientEnv } from 'src/env/schema.mjs'
 
 export const useQueryRenderSingleToken = ({
   tokenId,
@@ -16,8 +13,7 @@ export const useQueryRenderSingleToken = ({
   collection: Collection
   repositoryId: string
   layers: LayerElements
-}): { images: CloudinaryImage[]; hash: string } => {
-  const { cld } = useCloudinaryHelper()
+}): { traitElements: TraitElement[]; hash: string } => {
   const random = seedrandom(
     createSeed({ repositoryId, collectionName: collection.name, collectionGenerations: collection.generations, tokenId: tokenId })
   )
@@ -50,15 +46,7 @@ export const useQueryRenderSingleToken = ({
   })
 
   return {
-    images: elements.reverse().map(
-      (e) =>
-        cld
-          .image(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${e.layerElementId}/${e.id}.png`)
-          // .format('png')
-          .format('auto')
-          .quality('auto')
-      // .delivery(Delivery.quality('auto:low'))
-    ),
+    traitElements: elements,
     hash: keccak256(
       toUtf8Bytes(
         elements
