@@ -13,7 +13,7 @@ interface RepositoryStoreStateInterface {
     tokenIdMap: Map<string, Map<string, number[]>>
     traitMap: Map<string, Map<string, number>>
   }
-  tokenRanking: number[]
+  tokenRanking: { openRarityScore: number; index: number }[]
   tokens: number[]
 }
 
@@ -27,7 +27,7 @@ interface RepositoryStoreFunctionInterface {
     traitMap: Map<string, Map<string, number>>
   }) => void
   setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => void
-  setTokenRanking: (indices: number[]) => void
+  setTokenRanking: (indices: { openRarityScore: number; index: number }[]) => void
   setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => void
   setRepositoryId: (repositoryId: string) => void
   setCollectionId: (collectionId: string) => void
@@ -68,7 +68,7 @@ export const createRepositoryStore = create<RepositoryStoreInterface>()(
       }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
       setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
       setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
-      setTokenRanking: (indices: number[]) => set((_) => ({ tokenRanking: indices })),
+      setTokenRanking: (indices: { openRarityScore: number; index: number }[]) => set((_) => ({ tokenRanking: indices })),
       reset: () => set(initialState),
     }),
     { name: 'repositoryStore', getStorage: () => sessionStorage }

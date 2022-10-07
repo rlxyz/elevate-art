@@ -1,5 +1,4 @@
-import { Dialog, Popover, Transition } from '@headlessui/react'
-import { InformationCircleIcon } from '@heroicons/react/outline'
+import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -115,9 +114,11 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                     }`}</span>
                     <div className='flex flex-col text-[0.6rem]'>
                       <span className='font-semibold overflow-hidden w-full'>
-                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x === item) + 1}</span>
+                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
                       </span>
-                      <span className='text-darkGrey overflow-hidden w-full'>OpenRarity Score {5}</span>
+                      <span className='text-darkGrey overflow-hidden w-full'>
+                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.openRarityScore.toFixed(3)}
+                      </span>
                     </div>
                   </div>
                 </PreviewImage>
@@ -236,28 +237,6 @@ const Index = () => {
             >
               <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
             </h1>
-            {collection && (
-              <Popover>
-                <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
-                <Transition
-                  as={Fragment}
-                  enter='transition ease-out duration-200'
-                  enterFrom='opacity-0 translate-y-1'
-                  enterTo='opacity-100 translate-y-0'
-                  leave='transition ease-in duration-150'
-                  leaveFrom='opacity-100 translate-y-0'
-                  leaveTo='opacity-0 translate-y-1'
-                >
-                  <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
-                    <div className='p-2 shadow-lg'>
-                      <p className='text-[0.65rem] text-white font-normal'>
-                        {'This collection is sorted by rarity ranking based on OpenRarity.'}
-                      </p>
-                    </div>
-                  </Popover.Panel>
-                </Transition>
-              </Popover>
-            )}
           </div>
           <p
             className={clsx(
