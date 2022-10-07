@@ -15,9 +15,9 @@ const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] | unde
       ) : (
         traitElements
           ?.sort((a, b) => a.weight - b.weight)
-          .map((trait: TraitElement, index: number) => {
+          .map((trait: TraitElement) => {
             return (
-              <div key={index} className='relative flex-col border border-mediumGrey rounded-[5px] shadow-lg'>
+              <div key={trait.id} className='relative flex-col border border-mediumGrey rounded-[5px] shadow-lg'>
                 <div className='py-4 overflow-hidden'>
                   <img
                     className='relative w-full h-auto border-t border-b border-mediumGrey'

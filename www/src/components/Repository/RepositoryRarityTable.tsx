@@ -147,7 +147,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                       </thead>
                       <tbody className='divide-y divide-mediumGrey'>
                         {traitElements.map(({ name, id, layerElementId }: TraitElement, index: number) => (
-                          <tr key={index}>
+                          <tr key={id}>
                             <th
                               className={clsx(
                                 index === traitElements.length - 1 && 'border-b rounded-bl-[5px]',
