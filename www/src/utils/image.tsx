@@ -1,3 +1,5 @@
+import { clientEnv } from 'src/env/schema.mjs'
+
 export const getImageForTrait = ({ r, l, t }: { r: string; l: string; t: string }) => {
-  return `http://localhost:3000/api/image/${r}/${l}/${t}`
+  return `${clientEnv.NEXT_PUBLIC_API_URL}/image/${r}/${l}/${t}`
 }
