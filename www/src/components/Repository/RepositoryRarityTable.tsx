@@ -163,7 +163,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                               )}
                             >
                               <img
-                                className='w-8 h-auto rounded-[3px]'
+                                className='w-20 h-auto rounded-[3px] border border-mediumGrey'
                                 src={getImageForTrait({
                                   r: repositoryId,
                                   l: layerElementId,
