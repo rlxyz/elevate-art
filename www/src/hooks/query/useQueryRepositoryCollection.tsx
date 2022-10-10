@@ -1,5 +1,5 @@
 import { Collection } from '@prisma/client'
-import { getTokenRanking, getTraitMappings, renderManyToken } from '@utils/compiler'
+import * as v from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import useRepositoryStore from '../store/useRepositoryStore'
 import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
@@ -23,35 +23,51 @@ export const useQueryRepositoryCollection = () => {
   // update the current tokens
   const mutate = ({ collection }: { collection: Collection }) => {
     if (!layers) return
-    const tokens = renderManyToken(layers, collection, repositoryId)
-    const { tokenIdMap, traitMap } = getTraitMappings(tokens)
+
+    // create tokens
+    const tokens = v.many(
+      v.parseLayer(
+        layers.map((l) => ({
+          ...l,
+          traits: l.traitElements.map((t) => ({
+            ...t,
+            rules: [],
+          })),
+        }))
+      ),
+      Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
+    )
+    const occurances = v.occurances(tokens)
+    const rarity = v.rarity(tokens)
+
+    // set state in store
     setTraitMapping({
-      tokenIdMap,
-      traitMap,
+      traitMap: occurances,
+      tokenIdMap: new Map<string, Map<string, number[]>>(),
     })
-    const rankings = getTokenRanking(tokens, traitMap, collection.totalSupply)
-    setCollectionId(collection.id)
-    setTokenRanking(rankings)
+    setTokenRanking(rarity)
+
     setTokens(
-      rankings
+      rarity
         .map((x) => x.index)
         .slice(
           rarityFilter === 'Top 10'
             ? 0
             : rarityFilter === 'Middle 10'
-            ? parseInt((rankings.length / 2 - 5).toFixed(0))
+            ? parseInt((rarity.length / 2 - 5).toFixed(0))
             : rarityFilter === 'Bottom 10'
-            ? rankings.length - 10
+            ? rarity.length - 10
             : 0,
           rarityFilter === 'Top 10'
             ? 10
             : rarityFilter === 'Middle 10'
-            ? parseInt((rankings.length / 2 + 5).toFixed(0))
+            ? parseInt((rarity.length / 2 + 5).toFixed(0))
             : rarityFilter === 'Bottom 10'
-            ? rankings.length
-            : rankings.length
+            ? rarity.length
+            : rarity.length
         )
     )
+    setCollectionId(collection.id)
   }
 
   return {

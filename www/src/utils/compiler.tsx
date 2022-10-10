@@ -1,93 +1,144 @@
-import { Collection, TraitElement } from '@prisma/client'
+//////////////////////////////////////////////////////////////////////////////////////////
+// compiler                                                                         //
+// a general purpose compiler for layering images with traits and rules                 //
+//                                                                                      //
+// @todo move to its own repo                                                           //
+// @todo remove seedrandom & implement own randomness                                   //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
 import seedrandom from 'seedrandom'
+import { z } from 'zod'
 
-export const createSeed = ({
-  repositoryId,
-  collectionName,
-  collectionGenerations,
-  tokenId,
-}: {
-  repositoryId: string
-  collectionName: string
-  collectionGenerations: number
-  tokenId: number
-}) => {
-  return `${repositoryId}.${collectionName}.${collectionGenerations}.${tokenId}`
-}
+const RuleEnum = z.enum(['cannot mix with', 'must mix with'])
 
-export const renderManyToken = (layers: LayerElements, collection: Collection, repositoryId: string) => {
-  return Array.from({ length: collection.totalSupply }, (_, i) => renderSingleToken(layers, collection, i, repositoryId))
-}
+export const Rule = z.object({
+  type: RuleEnum,
+  with: z.string(),
+})
 
-const renderSingleToken = (layers: LayerElements, collection: Collection, id: number, repositoryId: string) => {
-  const random = seedrandom(
-    createSeed({ repositoryId, collectionName: collection.name, collectionGenerations: collection.generations, tokenId: id })
+export const Trait = z.object({
+  id: z.string(),
+  weight: z.number(),
+  rules: z.array(Rule),
+})
+
+export const Layer = z.object({
+  id: z.string(),
+  priority: z.number(),
+  traits: z.array(Trait),
+})
+
+export type Layer = z.infer<typeof Layer>
+export type Trait = z.infer<typeof Trait>
+export type Rule = z.infer<typeof Rule>
+
+export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
+  return layers.map(({ id, traits, priority }) =>
+    Layer.parse({
+      id,
+      priority,
+      traits: traits
+        .map(({ id, weight }) =>
+          Trait.parse({
+            id,
+            weight,
+            rules: [],
+          })
+        )
+        .sort((a, b) => b.weight - a.weight),
+    })
   )
-  const elements: TraitElement[] = []
-  layers.forEach(({ traitElements }: { traitElements: TraitElements; name: string }, index: number) => {
-    // exclusion
-    const filtered = traitElements.filter((traitElement) => {
-      const rules = [...(traitElement.rulesPrimary || []), ...(traitElement.rulesSecondary || [])].filter((rule) => {
-        if (rule.primaryTraitElementId === traitElement.id) return index > rule.secondaryTraitElement.layerElement.priority
-        if (rule.secondaryTraitElementId === traitElement.id) return index > rule.primaryTraitElement.layerElement.priority
-      })
-      return rules.every((rule) => {
-        if (rule.primaryTraitElementId === traitElement.id) {
-          return elements[rule.secondaryTraitElement.layerElement.priority]?.id !== rule.secondaryTraitElementId
-        }
-        if (rule.secondaryTraitElementId === traitElement.id) {
-          return elements[rule.primaryTraitElement.layerElement.priority]?.id !== rule.primaryTraitElementId
-        }
-      })
-    })
-    let r = random() * filtered.reduce((a, b) => a + b.weight, 0)
-    filtered.every((traitElement) => {
-      r -= traitElement.weight
-      if (r < 0) {
-        elements.push(traitElement)
-        return false
-      }
-      return true
-    })
+}
+
+const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
+  return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
+    const exclude = rules.filter(
+      (rule) => rule.type === RuleEnum.enum['cannot mix with'] && !elements.map((x) => x[1]).includes(rule.with)
+    )
+    return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])]
+  }, [])
+}
+
+const combination = (elements: string[], traits: Trait[]): Trait[] => {
+  return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
+    const combine = rules.filter((rule) => rule.type === RuleEnum.enum['must mix with'] && elements.includes(rule.with))
+    return [...acc, ...(combine.length === 0 ? [] : [{ id, rules, weight }])]
+  }, [])
+}
+
+const choose = (traits: Trait[], random: seedrandom.PRNG): string => {
+  let element: string = ''
+  let r = random() * traits.reduce((a, b) => a + b.weight, 0)
+  traits.every(({ id, weight }: Trait) => {
+    r -= weight
+    if (r < 0) {
+      element = id
+      return false
+    }
+    return true
   })
+  return element
+}
+
+export const one = (layers: Layer[], seed: string): [string, string][] => {
+  // step -2: create high-level seed
+  const random = seedrandom(seed)
+
+  // step -1: create element ids
+  const elements: [string, string][] = []
+
+  // step 0: iterate all layers
+  layers.forEach(({ id, traits }) => {
+    // step 1: grab exclusion filtered tokens
+    const filtered = exclude(elements, traits)
+
+    // step 2: find the next element
+    elements.push([id, choose(filtered, random)])
+  })
+
   return elements.reverse()
 }
 
-export const getTraitMappings = (allElements: TraitElement[][]) => {
-  const tokenIdMap = new Map<string, Map<string, number[]>>()
-  const traitMap = new Map<string, Map<string, number>>()
-
-  allElements.forEach((elements: TraitElement[], index: number) => {
-    elements.forEach((element: TraitElement) => {
-      const { id: t, layerElementId: l } = element
-
-      tokenIdMap.get(l) || (tokenIdMap.set(l, new Map<string, number[]>([])), traitMap.set(l, new Map<string, number>()))
-
-      // update tokenIdMap - push to array
-      tokenIdMap.get(l)?.get(t)
-        ? tokenIdMap.get(l)?.set(t, [...(tokenIdMap.get(l)?.get(t) || []), index])
-        : tokenIdMap.get(l)?.set(t, [index])
-
-      // update traitMap - increment by 1 each time
-      traitMap.get(l)?.get(t) ? traitMap.get(l)?.set(t, (traitMap.get(l)?.get(t) || 1) + 1) : traitMap.get(l)?.set(t, 1)
-    })
-  })
-  return { tokenIdMap, traitMap }
+export const many = (layers: Layer[], seeds: string[]): [string, string][][] => {
+  const sorted = layers.sort((a, b) => a.priority - b.priority)
+  return seeds.map((seed) => one(sorted, seed))
 }
 
-export const getTokenRanking = (tokens: TraitElement[][], traitMap: Map<string, Map<string, number>>, totalSupply: number) => {
-  return tokens
+// returns occurances of every trait
+export const occurances = (elements: [string, string][][]): Map<string, number> => {
+  const occurance = new Map<string, number>()
+  elements.flatMap((x) => x).forEach((x) => occurance.set(x[1], (occurance.get(x[1]) || 0) + 1))
+  return occurance
+}
+
+// returns rarity score
+// based on openrarity
+export const rarity = (
+  elements: [string, string][][]
+): {
+  index: number
+  score: number
+}[] => {
+  const max = elements.length
+  const occurs = occurances(elements)
+  return elements
     .map((token, index) => {
       return {
         index,
-        openRarityScore: token.reduce((result, item) => {
-          const { layerElementId, id } = item
-          return result - Math.log((traitMap?.get(layerElementId)?.get(id) || 0) / totalSupply)
+        score: token.reduce((result, item) => {
+          return result - Math.log((occurs.get(item[1]) || 0) / max)
         }, 0),
       }
     })
     .sort((a, b) => {
-      return b.openRarityScore - a.openRarityScore
+      return b.score - a.score
     })
-  // .map((map) => map.index)
+}
+
+export const seed = (...values: (string | number)[]) => {
+  return values.join('.')
+}
+
+export const hash = (elements: [string, string][]) => {
+  return elements.join('.')
 }
