@@ -1,10 +1,7 @@
 import Button from '@components/Layout/Button'
 import { TrashIcon } from '@heroicons/react/outline'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useNotification } from '@hooks/utils/useNotification'
+import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import { RulesEnum } from 'src/types/enums'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
@@ -23,29 +20,7 @@ const TraitRulesDisplayPerItem = ({
   }
   condition: string
 }) => {
-  const { notifySuccess, notifyError } = useNotification()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const ctx = trpc.useContext()
-  const mutation = trpc.useMutation('trait.deleteRuleById', {
-    onSuccess: (data) => {
-      // const primaryLayer = data.layers.filter(
-      //   (layer) => layer.id === (data.deletedRule.primaryTraitElement?.layerElement.id || '')
-      // )[0]
-      // const secondaryLayer = data.layers.filter(
-      //   (layer) => layer.id === (data.deletedRule.secondaryTraitElement?.layerElement.id || '')
-      // )[0]
-      // if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
-      // if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
-      // ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
-      notifySuccess(
-        `Removed ${data?.deletedRule.primaryTraitElement?.name} ${data?.deletedRule.condition} ${data?.deletedRule.secondaryTraitElement?.name}`
-      )
-    },
-    onError: () => {
-      notifyError('Sorry we couldnt set the rule')
-    },
-  })
-
+  const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
@@ -63,9 +38,14 @@ const TraitRulesDisplayPerItem = ({
         <Button
           variant='icon'
           className='w-full'
-          disabled={mutation.isLoading}
           onClick={() => {
-            mutation.mutate({ id, repositoryId })
+            deleteRule({
+              id,
+              primaryLayerElementId: primary.layerElement.id,
+              secondaryLayerElementId: secondary.layerElement.id,
+              primaryTraitElementId: primary.id,
+              secondaryTraitElementId: secondary.id,
+            })
           }}
         >
           <TrashIcon className='w-5 h-5 text-mediumGrey' />
@@ -75,7 +55,7 @@ const TraitRulesDisplayPerItem = ({
   )
 }
 
-const RuleDisplayAll = ({
+export const RuleDisplayAll = ({
   traitElements,
 }: {
   traitElements: (TraitElement & {
@@ -135,19 +115,6 @@ const RuleDisplayAll = ({
             )
           }
         )}
-    </div>
-  )
-}
-
-export const RepositoryRuleDisplayView = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  if (isLoading || !layers) return <></>
-  return (
-    <div className='w-full py-16'>
-      <div className='space-y-3 w-full flex flex-col justify-center'>
-        <span className='text-xs font-semibold uppercase'>All rules created</span>
-        <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />
-      </div>
     </div>
   )
 }

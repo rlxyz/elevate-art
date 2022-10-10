@@ -1,7 +1,7 @@
 import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
 import { Layout } from '@components/Layout/Layout'
-import { RepositoryRuleCreateView } from '@components/Repository/RepositoryRuleCreateView'
-import { RepositoryRuleDisplayView } from '@components/Repository/RepositoryRuleDisplayView'
+import { RuleSelector } from '@components/Repository/RepositoryRuleCreateView'
+import { RuleDisplayAll } from '@components/Repository/RepositoryRuleDisplayView'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -64,11 +64,23 @@ const Page = () => {
             ]}
           />
           <Layout.Body border='lower'>
-            <RepositoryRuleCreateView />
-            {layers &&
-            layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
-              <RepositoryRuleDisplayView />
-            ) : null}
+            <div className='w-full py-16'>
+              <div className='flex justify-center'>
+                <div className='space-y-1 w-full'>
+                  <span className='text-xs font-semibold uppercase'>Create a condition</span>
+                  {layers && <RuleSelector layers={layers} />}
+                </div>
+              </div>
+            </div>
+            {/* {layers && */}
+            {/* layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? ( */}
+            <div className='w-full py-16'>
+              <div className='space-y-3 w-full flex flex-col justify-center'>
+                <span className='text-xs font-semibold uppercase'>All rules created</span>
+                {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
+              </div>
+            </div>
+            {/* ) : null} */}
           </Layout.Body>
         </>
       </Layout>

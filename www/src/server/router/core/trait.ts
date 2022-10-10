@@ -24,82 +24,6 @@ export const traitElementRouter = createRouter()
       })
     },
   })
-  .mutation('deleteRuleById', {
-    input: z.object({
-      repositoryId: z.string(),
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      const data = await ctx.prisma.rules.findFirst({
-        where: {
-          id: input.id,
-        },
-        include: {
-          primaryTraitElement: {
-            include: {
-              layerElement: true,
-            },
-          },
-          secondaryTraitElement: {
-            include: {
-              layerElement: true,
-            },
-          },
-        },
-      })
-
-      await ctx.prisma.rules.delete({
-        where: {
-          id: input.id,
-        },
-      })
-
-      return {
-        deletedRule: { ...data },
-        layers: await ctx.prisma.layerElement.findMany({
-          where: {
-            repositoryId: input.repositoryId,
-          },
-          orderBy: { priority: 'asc' },
-          include: {
-            traitElements: {
-              orderBy: { weight: 'asc' }, // guarantee rarest first
-              include: {
-                rulesPrimary: {
-                  include: {
-                    primaryTraitElement: {
-                      include: {
-                        layerElement: true,
-                      },
-                    },
-                    secondaryTraitElement: {
-                      include: {
-                        layerElement: true,
-                      },
-                    },
-                  },
-                },
-                rulesSecondary: {
-                  include: {
-                    primaryTraitElement: {
-                      include: {
-                        layerElement: true,
-                      },
-                    },
-                    secondaryTraitElement: {
-                      include: {
-                        layerElement: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        }),
-      }
-    },
-  })
   .mutation('setNameById', {
     input: z.object({
       repositoryId: z.string(),
@@ -160,17 +84,5 @@ export const traitElementRouter = createRouter()
           },
         }),
       }
-    },
-  })
-  .query('getTraitManyByLayerElementId', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return ctx.prisma.traitElement.findMany({
-        where: {
-          layerElementId: input.id,
-        },
-      })
     },
   })

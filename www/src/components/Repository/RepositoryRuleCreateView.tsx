@@ -1,6 +1,6 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { useMutateRepositoryRule } from '@hooks/mutations/useMutateRepositoryRule'
+import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
@@ -14,7 +14,7 @@ import { clientEnv } from 'src/env/schema.mjs'
 import { RulesEnum, RulesType } from 'src/types/enums'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
-const RuleSelector = ({
+export const RuleSelector = ({
   layers,
 }: {
   layers: (LayerElement & {
@@ -66,13 +66,7 @@ const RuleSelector = ({
       })
   >()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate, isLoading } = useMutateRepositoryRule({
-    onMutate: () => {
-      setSelectedCondition(null)
-      setSelectedLeftTrait(null)
-      setSelectedRightTrait(null)
-    },
-  })
+  const { mutate, isLoading } = useMutateRepositoryCreateRule()
 
   // note: this will transform all rules in the selected trait to a standard format and return the trait ids that are already selected
   const allInvalidRightTraitElements = [...(selectedLeftTrait?.rulesPrimary || []), ...(selectedLeftTrait?.rulesSecondary || [])]
@@ -131,14 +125,22 @@ const RuleSelector = ({
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
-              mutate({
-                repositoryId: repositoryId,
-                type: selectedCondition,
-                primaryTraitElementId: selectedLeftTrait.id,
-                primaryLayerElementId: selectedLeftTrait.layerElementId,
-                secondaryTraitElementId: selectedRightTrait.id,
-                secondaryLayerElementId: selectedRightTrait.layerElementId,
-              })
+              mutate(
+                {
+                  type: selectedCondition,
+                  primaryTraitElementId: selectedLeftTrait.id,
+                  primaryLayerElementId: selectedLeftTrait.layerElementId,
+                  secondaryTraitElementId: selectedRightTrait.id,
+                  secondaryLayerElementId: selectedRightTrait.layerElementId,
+                },
+                {
+                  onSuccess: () => {
+                    setSelectedLeftTrait(null)
+                    setSelectedRightTrait(null)
+                    setSelectedCondition(null)
+                  },
+                }
+              )
             }}
           >
             Add Rule
@@ -171,7 +173,6 @@ export const RuleSelectorConditionCombobox = ({
         ].filter((conditions) => {
           return conditions.name.toLowerCase().includes(query.toLowerCase())
         })
-
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
@@ -344,20 +345,5 @@ export const RuleSelectorCombobox = ({
         </Combobox.Options>
       )}
     </Combobox>
-  )
-}
-
-export const RepositoryRuleCreateView = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  if (isLoading || !layers) return <></>
-  return (
-    <div className='w-full py-16'>
-      <div className='flex justify-center'>
-        <div className='space-y-1 w-full'>
-          <span className='text-xs font-semibold uppercase'>Create a condition</span>
-          <RuleSelector layers={layers} />
-        </div>
-      </div>
-    </div>
   )
 }
