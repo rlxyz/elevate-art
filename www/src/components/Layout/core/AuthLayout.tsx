@@ -12,10 +12,10 @@ export const OrganisationAuthLayout = ({
   children: ReactNode
   type?: OrganisationDatabaseType
 }) => {
-  const { isLoggedIn, session } = useAuthenticated()
+  const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
-  const { all: organisations, isLoading, isError } = useQueryOrganisation()
+  const { all: organisations, isLoading } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
       setOrganisationId: state.setOrganisationId,
@@ -23,7 +23,7 @@ export const OrganisationAuthLayout = ({
   })
 
   useEffect(() => {
-    if (organisations && organisations.length > 0) {
+    if (isLoggedIn && organisations && organisations.length > 0) {
       switch (isLoading) {
         case true:
           return
