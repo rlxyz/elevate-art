@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const layerElementRouter = createRouter().mutation('reorderMany', {
+export const layerElementRouter = createProtectedRouter().mutation('reorderMany', {
   input: z.object({
     layerIdsInOrder: z.array(z.string()),
   }),

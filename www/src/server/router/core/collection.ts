@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const collectionRouter = createRouter()
+export const collectionRouter = createProtectedRouter()
   .mutation('create', {
     input: z.object({
       repositoryId: z.string(),

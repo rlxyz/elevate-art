@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const traitElementRouter = createRouter()
+export const traitElementRouter = createProtectedRouter()
   .mutation('updateWeightMany', {
     input: z.object({
       traits: z.array(
