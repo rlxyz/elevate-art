@@ -1,6 +1,6 @@
 import Layout from '@theme/Layout'
 import React from 'react'
-import HomepageLogo from '../../static/img/Logo_Text_White.svg'
+import HomepageLogo from '../../static/img/logo_text_white.svg'
 import { GettingStartedCards } from '../components/GettingStartedCards'
 import ProjectsCards from '../components/ProjectsCards'
 import { ShaderComponent } from '../components/ShaderComponent'

@@ -9,14 +9,14 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/Logo_White.svg',
+  favicon: 'img/logo_white.svg',
   organizationName: 'elevate.art',
   projectName: 'Elevate Art Docs',
   themeConfig: {
     navbar: {
       logo: {
         alt: 'Elevat Art Logo',
-        src: 'img/Logo_White.svg',
+        src: 'img/logo_white.svg',
       },
       items: [
         {
