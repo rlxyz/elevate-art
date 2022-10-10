@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
-import ElevateLogo from '../../../static/img/Logo_White.svg'
+import ElevateLogo from '../../../static/img/logo_white.svg'
 import QuestionsIcon from '../../../static/img/questionsIcon.svg'
 import TwitterIcon from '../../../static/img/twitterIcon.svg'
 import styles from './styles.module.css'
