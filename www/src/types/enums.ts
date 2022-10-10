@@ -76,23 +76,3 @@ export const RulesEnum = z.nativeEnum(
   })
 )
 export type RulesType = z.infer<typeof RulesEnum>
-
-export const CollectionTitleContent = Object.freeze({
-  preview: {
-    title: 'Preview Collection',
-    description: 'Create different token sets before finalising the collection',
-  },
-  layers: { title: 'All Layers', description: 'View and edit layers of your collection' },
-  rarity: {
-    title: 'Rarity',
-    description: 'Set how often you want certain images to appear in the generation',
-  },
-  rules: {
-    title: 'Custom Rules',
-    description: 'Add custom rules for your traits so it layers perfectly!',
-  },
-  settings: {
-    title: 'Collection Settings',
-    description: '',
-  },
-})

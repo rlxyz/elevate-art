@@ -20,51 +20,43 @@ export const RuleSelector = ({
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
       })[]
       rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
       })[]
     })[]
   })[]
 }) => {
-  const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
+  const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<
     | null
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
-  >()
+  >(null)
   const [selectedRightTrait, setSelectedRightTrait] = useState<
     | null
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
-  >()
+  >(null)
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate, isLoading } = useMutateRepositoryCreateRule()
 
@@ -127,7 +119,7 @@ export const RuleSelector = ({
               if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
               mutate(
                 {
-                  type: selectedCondition,
+                  condition: selectedCondition,
                   primaryTraitElementId: selectedLeftTrait.id,
                   primaryLayerElementId: selectedLeftTrait.layerElementId,
                   secondaryTraitElementId: selectedRightTrait.id,
@@ -155,23 +147,15 @@ export const RuleSelectorConditionCombobox = ({
   selected,
   onChange,
 }: {
-  selected: undefined | null | string
-  onChange: Dispatch<SetStateAction<string | null | undefined>>
+  selected: 'cannot mix with' | null
+  onChange: Dispatch<SetStateAction<'cannot mix with' | null>>
 }) => {
   const [query, setQuery] = useState('')
-  const filteredConditions =
+  const filteredConditions: RulesType[] =
     query === ''
-      ? [
-          { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          // { id: 1, name: RulesEnum.enum['only mixes with'] },
-          // { id: 3, name: 'always mixes with' },
-        ]
-      : [
-          { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          // { id: 1, name: RulesEnum.enum['only mixes with'] },
-          // { id: 3, name: 'always mixes with' },
-        ].filter((conditions) => {
-          return conditions.name.toLowerCase().includes(query.toLowerCase())
+      ? [RulesEnum.enum['cannot mix with'] as RulesType]
+      : [RulesEnum.enum['cannot mix with'] as RulesType].filter((conditions) => {
+          return conditions.toLowerCase().includes(query.toLowerCase())
         })
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
@@ -181,24 +165,24 @@ export const RuleSelectorConditionCombobox = ({
           selected && 'border-blueHighlight'
         )}
         onChange={(event) => setQuery(event.target.value)}
-        displayValue={(value: string) => value}
-        placeholder='cannot mix with'
+        displayValue={(value: RulesType) => value}
+        placeholder={RulesEnum.enum['cannot mix with']}
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
         <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
       </Combobox.Button>
       <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-        {filteredConditions.map((option, index) => (
+        {filteredConditions.map((condition: RulesType, index: number) => (
           <Combobox.Option
-            key={index}
-            value={option.name}
+            key={condition}
+            value={condition}
             className={({ active }) =>
               classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-black')
             }
           >
             {({ active, selected }) => (
               <>
-                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{option.name}</span>
+                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{condition}</span>
                 {selected && (
                   <span
                     className={classNames(
@@ -226,47 +210,29 @@ export const RuleSelectorCombobox = ({
   traitElements: TraitElement[]
   selected:
     | null
-    | undefined
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
   onChange: Dispatch<
     SetStateAction<
       | (TraitElement & {
           rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
-            secondaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
           })[]
           rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
-            secondaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
           })[]
         })
       | null
-      | undefined
     >
   >
 }) => {

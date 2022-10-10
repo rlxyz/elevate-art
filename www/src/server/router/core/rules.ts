@@ -4,6 +4,7 @@ import { createRouter } from '../context'
 export const rulesRouter = createRouter()
   .mutation('delete', {
     input: z.object({
+      condition: z.string(),
       primaryLayerElementId: z.string(),
       primaryTraitElementId: z.string(),
       secondaryLayerElementId: z.string(),
@@ -21,7 +22,7 @@ export const rulesRouter = createRouter()
   // @todo: better naming conventions?
   .mutation('create', {
     input: z.object({
-      type: z.string(),
+      condition: z.string(),
       primaryLayerElementId: z.string(),
       primaryTraitElementId: z.string(),
       secondaryLayerElementId: z.string(),
@@ -30,7 +31,7 @@ export const rulesRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.rules.create({
         data: {
-          condition: input.type,
+          condition: input.condition,
           primaryTraitElementId: input.primaryTraitElementId,
           secondaryTraitElementId: input.secondaryTraitElementId,
         },
