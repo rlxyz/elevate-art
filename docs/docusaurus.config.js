@@ -23,7 +23,7 @@ module.exports = {
           type: 'doc',
           docId: 'intro',
           position: 'left',
-          label: 'Intro',
+          label: 'Get Started',
           to: '/docs/intro_to_elevate_art',
         },
         {

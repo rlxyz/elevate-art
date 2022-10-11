@@ -27,10 +27,13 @@ module.exports = {
       items: [
         'generator/upload-art',
         'generator/preview-collection',
-        'generator/layers',
-        'generator/traits',
-        'generator/rarity',
-        'generator/custom-rules',
+        {
+          type: 'category',
+          label: 'Rarity',
+          collapsed: false,
+          items: ['generator/layers', 'generator/traits', 'generator/rarity'],
+        },
+        'generator/rules',
         'generator/settings',
         'generator/export',
       ],
