@@ -108,7 +108,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   })
 
   return (
-    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
+    <div className='py-2 grid grid-cols-6 gap-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -117,7 +117,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <div
+            <div
                 key={`${item}-${index}`}
                 className='flex flex-col rounded-[5px] cursor-pointer'
                 onClick={() => setSelectedToken(item || null)}

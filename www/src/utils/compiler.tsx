@@ -101,7 +101,19 @@ export const many = (layers: Layer[], seeds: string[]): [string, string][][] => 
   const sorted = layers
     .map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) }))
     .sort((a, b) => a.priority - b.priority)
-  return seeds.map((seed) => one(sorted, seed))
+  // const elements: [string, string][][] = []
+  // const ids: Set<string> = new Set()
+  // seeds.map((x) => {
+  //   const element = one(sorted, x)
+  //   const id = hash(element)
+  //   if (ids.has(id)) {
+  //     console.log('duplicate')
+  //   } else {
+  //     ids.add(id)
+  //     elements.push(element)
+  //   }
+  // })
+  return seeds.map((x) => one(sorted, x))
 }
 
 // returns occurances of every trait
@@ -115,7 +127,6 @@ occurances.traits = (elements: [string, string][][]): Map<string, number> => {
 
 occurances.tokens = (elements: [string, string][][]): Map<string, Map<string, number[]>> => {
   const occurance = new Map<string, Map<string, number[]>>()
-  const max = elements.length
   elements.forEach((x, i) => {
     x.forEach((x) => {
       occurance.get(x[0]) || occurance.set(x[0], new Map<string, number[]>()),
