@@ -91,7 +91,7 @@ export const RuleDisplayAll = ({
             return (
               <div key={index}>
                 {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
-                {[RulesEnum.enum['cannot mix with']].map((ruleType: string, index) => {
+                {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['must mix with']].map((ruleType: string, index) => {
                   return (
                     <div className='space-y-2' key={index}>
                       {rulesPrimary

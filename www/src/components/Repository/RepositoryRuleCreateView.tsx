@@ -147,16 +147,17 @@ export const RuleSelectorConditionCombobox = ({
   selected,
   onChange,
 }: {
-  selected: 'cannot mix with' | null
-  onChange: Dispatch<SetStateAction<'cannot mix with' | null>>
+  selected: 'cannot mix with' | 'must mix with' | null
+  onChange: Dispatch<SetStateAction<'cannot mix with' | 'must mix with' | null>>
 }) => {
   const [query, setQuery] = useState('')
   const filteredConditions: RulesType[] =
     query === ''
-      ? [RulesEnum.enum['cannot mix with'] as RulesType]
-      : [RulesEnum.enum['cannot mix with'] as RulesType].filter((conditions) => {
+      ? [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['must mix with'] as RulesType]
+      : [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['must mix with'] as RulesType].filter((conditions) => {
           return conditions.toLowerCase().includes(query.toLowerCase())
         })
+
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input

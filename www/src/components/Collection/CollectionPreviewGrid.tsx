@@ -3,7 +3,7 @@ import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { Collection, LayerElement, TraitElement } from '@prisma/client'
+import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import * as v from '@utils/compiler'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
@@ -25,7 +25,7 @@ const PreviewImage = ({
   id: number
   collection: Collection
   repositoryId: string
-  layers: (LayerElement & { traitElements: TraitElement[] })[]
+  layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
   children: ReactNode
   canHover?: boolean
 }) => {
@@ -35,7 +35,12 @@ const PreviewImage = ({
         ...l,
         traits: l.traitElements.map((t) => ({
           ...t,
-          rules: [],
+          rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+              type: condition as v.RuleEnum,
+              with: left === t.id ? right : left,
+            })
+          ),
         })),
       }))
     ),

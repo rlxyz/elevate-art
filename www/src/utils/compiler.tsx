@@ -9,7 +9,8 @@
 import seedrandom from 'seedrandom'
 import { z } from 'zod'
 
-const RuleEnum = z.enum(['cannot mix with', 'must mix with'])
+export const RuleEnum = z.enum(['cannot mix with', 'must mix with'])
+export type RuleEnum = z.infer<typeof RuleEnum>
 
 export const Rule = z.object({
   type: RuleEnum,
@@ -37,11 +38,11 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
     Layer.parse({
       id,
       priority,
-      traits: traits.map(({ id, weight }) =>
+      traits: traits.map(({ id, weight, rules }) =>
         Trait.parse({
           id,
           weight,
-          rules: [],
+          rules,
         })
       ),
     })
@@ -51,16 +52,18 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
 const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
     const exclude = rules.filter(
-      (rule) => rule.type === RuleEnum.enum['cannot mix with'] && !elements.map((x) => x[1]).includes(rule.with)
+      (rule) => rule.type === RuleEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with)
     )
     return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])]
   }, [])
 }
 
-const combination = (elements: string[], traits: Trait[]): Trait[] => {
+const combination = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
-    const combine = rules.filter((rule) => rule.type === RuleEnum.enum['must mix with'] && elements.includes(rule.with))
-    return [...acc, ...(combine.length === 0 ? [] : [{ id, rules, weight }])]
+    const combine = rules.filter(
+      (rule) => rule.type === RuleEnum.enum['must mix with'] && elements.map((x) => x[1]).includes(rule.with)
+    )
+    return [...acc, ...(combine.length > 0 ? [{ id, rules, weight }] : [])]
   }, [])
 }
 
@@ -86,14 +89,18 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
   const elements: [string, string][] = []
 
   // step 0: iterate all layers
-  layers.forEach(({ id, traits }) => {
-    // step 1: grab exclusion filtered tokens
-    const filtered = exclude(elements, traits)
+  layers.forEach(({ id, traits }, index) => {
+    // step 1.1: grab combinations that can happen
+    const combinations = combination(elements, traits)
+
+    // step 1.2: grab exclusion filtered tokens
+    const excludes = exclude(elements, combinations.length > 0 ? combinations : traits)
 
     // step 2: find the next element
-    elements.push([id, choose(filtered, random)])
+    elements.push([id, choose(excludes, random)])
   })
 
+  // ret
   return elements.reverse()
 }
 
@@ -101,41 +108,27 @@ export const many = (layers: Layer[], seeds: string[]): [string, string][][] => 
   const sorted = layers
     .map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) }))
     .sort((a, b) => a.priority - b.priority)
-  // const elements: [string, string][][] = []
-  // const ids: Set<string> = new Set()
-  // seeds.map((x) => {
-  //   const element = one(sorted, x)
-  //   const id = hash(element)
-  //   if (ids.has(id)) {
-  //     console.log('duplicate')
-  //   } else {
-  //     ids.add(id)
-  //     elements.push(element)
-  //   }
-  // })
   return seeds.map((x) => one(sorted, x))
 }
 
-// returns occurances of every trait
-export const occurances = () => {}
-
-occurances.traits = (elements: [string, string][][]): Map<string, number> => {
-  const occurance = new Map<string, number>()
-  elements.flatMap((x) => x).forEach((x) => occurance.set(x[1], (occurance.get(x[1]) || 0) + 1))
-  return occurance
-}
-
-occurances.tokens = (elements: [string, string][][]): Map<string, Map<string, number[]>> => {
-  const occurance = new Map<string, Map<string, number[]>>()
-  elements.forEach((x, i) => {
-    x.forEach((x) => {
-      occurance.get(x[0]) || occurance.set(x[0], new Map<string, number[]>()),
-        occurance.get(x[0])?.get(x[1])
-          ? occurance.get(x[0])?.set(x[1], [...(occurance.get(x[0])?.get(x[1]) || []), i])
-          : occurance.get(x[0])?.set(x[1], [i])
+export const occurances = {
+  tokens: (elements: [string, string][][]): Map<string, Map<string, number[]>> => {
+    const occurance = new Map<string, Map<string, number[]>>()
+    elements.forEach((x, i) => {
+      x.forEach((x) => {
+        occurance.get(x[0]) || occurance.set(x[0], new Map<string, number[]>()),
+          occurance.get(x[0])?.get(x[1])
+            ? occurance.get(x[0])?.set(x[1], [...(occurance.get(x[0])?.get(x[1]) || []), i])
+            : occurance.get(x[0])?.set(x[1], [i])
+      })
     })
-  })
-  return occurance
+    return occurance
+  },
+  traits: (elements: [string, string][][]): Map<string, number> => {
+    const occurance = new Map<string, number>()
+    elements.flatMap((x) => x).forEach((x) => occurance.set(x[1], (occurance.get(x[1]) || 0) + 1))
+    return occurance
+  },
 }
 
 // returns rarity score

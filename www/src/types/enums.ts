@@ -72,7 +72,7 @@ export type RepositorySectionType = z.infer<typeof CollectionNavigationEnum>
 export const RulesEnum = z.nativeEnum(
   Object.freeze({
     'cannot mix with': 'cannot mix with',
-    'only mixes with': 'only mixes with',
+    'must mix with': 'must mix with',
   })
 )
 export type RulesType = z.infer<typeof RulesEnum>

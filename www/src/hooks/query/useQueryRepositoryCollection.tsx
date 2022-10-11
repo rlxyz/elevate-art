@@ -31,7 +31,12 @@ export const useQueryRepositoryCollection = () => {
           ...l,
           traits: l.traitElements.map((t) => ({
             ...t,
-            rules: [],
+            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                type: condition as v.RuleEnum,
+                with: left === t.id ? right : left,
+              })
+            ),
           })),
         }))
       ),
