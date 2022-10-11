@@ -1,13 +1,13 @@
 import DreamLab from '@site/static/img/projects/dreamlab.jpeg'
 import FortuneFriends from '@site/static/img/projects/ffc.gif'
-import Proof from '@site/static/img/projects/proof.jpeg'
+// import Proof from '@site/static/img/projects/proof.jpeg'
 import Roboghosts from '@site/static/img/projects/roboghosts.jpeg'
 
 export const projectsContent = [
-  {
-    project: Proof,
-    link: 'https://collective.proof.xyz/grails',
-  },
+  // {
+  //   project: Proof,
+  //   link: 'https://collective.proof.xyz/grails',
+  // },
   // {
   //   project: Fellowship,
   //   link: 'https://fellowship.xyz/',

@@ -31,16 +31,16 @@ module.exports = {
           label: 'Generator',
           to: '/docs/generator/upload-art',
         },
-        {
-          position: 'left',
-          label: 'Smart Contracts',
-          to: '/docs/smart-contracts/zora-v3',
-        },
-        {
-          position: 'left',
-          label: 'Mint Client',
-          to: '/docs/mint-client/intro',
-        },
+        // {
+        //   position: 'left',
+        //   label: 'Smart Contracts',
+        //   to: '/docs/smart-contracts/zora-v3',
+        // },
+        // {
+        //   position: 'left',
+        //   label: 'Mint Client',
+        //   to: '/docs/mint-client/intro',
+        // },
       ],
     },
     colorMode: {
