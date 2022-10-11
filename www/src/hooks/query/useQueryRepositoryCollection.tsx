@@ -37,13 +37,13 @@ export const useQueryRepositoryCollection = () => {
       ),
       Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
     )
-    const occurances = v.occurances(tokens)
+    const traitMap = v.occurances.traits(tokens)
+    const tokenIdMap = v.occurances.tokens(tokens)
     const rarity = v.rarity(tokens)
 
-    // set state in store
     setTraitMapping({
-      traitMap: occurances,
-      tokenIdMap: new Map<string, Map<string, number[]>>(),
+      traitMap,
+      tokenIdMap,
     })
     setTokenRanking(rarity)
 

@@ -37,15 +37,13 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
     Layer.parse({
       id,
       priority,
-      traits: traits
-        .map(({ id, weight }) =>
-          Trait.parse({
-            id,
-            weight,
-            rules: [],
-          })
-        )
-        .sort((a, b) => b.weight - a.weight),
+      traits: traits.map(({ id, weight }) =>
+        Trait.parse({
+          id,
+          weight,
+          rules: [],
+        })
+      ),
     })
   )
 }
@@ -100,14 +98,32 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
 }
 
 export const many = (layers: Layer[], seeds: string[]): [string, string][][] => {
-  const sorted = layers.sort((a, b) => a.priority - b.priority)
+  const sorted = layers
+    .map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) }))
+    .sort((a, b) => a.priority - b.priority)
   return seeds.map((seed) => one(sorted, seed))
 }
 
 // returns occurances of every trait
-export const occurances = (elements: [string, string][][]): Map<string, number> => {
+export const occurances = () => {}
+
+occurances.traits = (elements: [string, string][][]): Map<string, number> => {
   const occurance = new Map<string, number>()
   elements.flatMap((x) => x).forEach((x) => occurance.set(x[1], (occurance.get(x[1]) || 0) + 1))
+  return occurance
+}
+
+occurances.tokens = (elements: [string, string][][]): Map<string, Map<string, number[]>> => {
+  const occurance = new Map<string, Map<string, number[]>>()
+  const max = elements.length
+  elements.forEach((x, i) => {
+    x.forEach((x) => {
+      occurance.get(x[0]) || occurance.set(x[0], new Map<string, number[]>()),
+        occurance.get(x[0])?.get(x[1])
+          ? occurance.get(x[0])?.set(x[1], [...(occurance.get(x[0])?.get(x[1]) || []), i])
+          : occurance.get(x[0])?.set(x[1], [i])
+    })
+  })
   return occurance
 }
 
@@ -120,7 +136,7 @@ export const rarity = (
   score: number
 }[] => {
   const max = elements.length
-  const occurs = occurances(elements)
+  const occurs = occurances.traits(elements)
   return elements
     .map((token, index) => {
       return {
@@ -139,6 +155,7 @@ export const seed = (...values: (string | number)[]) => {
   return values.join('.')
 }
 
+// @todo keccak256 hash
 export const hash = (elements: [string, string][]) => {
   return elements.join('.')
 }
