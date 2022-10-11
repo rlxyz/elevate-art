@@ -52,9 +52,9 @@ module.exports = {
       additionalLanguages: ['solidity', 'graphql'],
     },
     algolia: {
-      apiKey: 'ea9711802399936fa4d55c3033c4cfc5',
-      indexName: 'zora',
-      appId: 'BH4D9OD16A',
+      apiKey: '74757d32b3f09f212e2b2dbc0f5a5b74',
+      indexName: 'elevate_art',
+      appId: 'AJNT935KJH',
     },
     footer: {
       style: 'dark',
