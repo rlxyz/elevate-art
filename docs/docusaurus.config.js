@@ -15,7 +15,7 @@ module.exports = {
   themeConfig: {
     navbar: {
       logo: {
-        alt: 'Elevat Art Logo',
+        alt: 'Elevate Art Logo',
         src: 'img/logo_white.svg',
       },
       items: [

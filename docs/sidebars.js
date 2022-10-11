@@ -26,7 +26,18 @@ module.exports = {
       label: 'Generator',
       items: [
         'generator/upload-art',
-        'generator/preview-collection',
+
+        {
+          type: 'category',
+          label: 'Preview',
+          collapsed: false,
+          items: [
+            'generator/preview-collection',
+            'generator/regenerate',
+            'generator/filters',
+            'generator/expand',
+          ],
+        },
         {
           type: 'category',
           label: 'Rarity',
