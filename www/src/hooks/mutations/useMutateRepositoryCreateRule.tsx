@@ -9,7 +9,7 @@ export const useMutateRepositoryCreateRule = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.useMutation('rules.create', {
     onError: () => {
-      notifyError("We reverted the new rule because it couldn't be created")
+      notifyError("We couldn't create the rule. Try again.")
     },
     onSuccess: (data) => {
       const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])

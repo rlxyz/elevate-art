@@ -9,11 +9,11 @@
 import seedrandom from 'seedrandom'
 import { z } from 'zod'
 
-export const RuleEnum = z.enum(['cannot mix with', 'must mix with'])
-export type RuleEnum = z.infer<typeof RuleEnum>
+export const RulesEnum = z.enum(['cannot mix with', 'only mixes with'])
+export type RulesType = z.infer<typeof RulesEnum>
 
 export const Rule = z.object({
-  type: RuleEnum,
+  type: RulesEnum,
   with: z.string(),
 })
 
@@ -52,7 +52,7 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
 const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
     const exclude = rules.filter(
-      (rule) => rule.type === RuleEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with)
+      (rule) => rule.type === RulesEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with)
     )
     return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])]
   }, [])
@@ -61,14 +61,14 @@ const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
 const combination = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
     const combine = rules.filter(
-      (rule) => rule.type === RuleEnum.enum['must mix with'] && elements.map((x) => x[1]).includes(rule.with)
+      (rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with)
     )
     return [...acc, ...(combine.length > 0 ? [{ id, rules, weight }] : [])]
   }, [])
 }
 
 const choose = (traits: Trait[], random: seedrandom.PRNG): string => {
-  let element: string = ''
+  let element = ''
   let r = random() * traits.reduce((a, b) => a + b.weight, 0)
   traits.every(({ id, weight }: Trait) => {
     r -= weight

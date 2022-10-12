@@ -37,7 +37,7 @@ const PreviewImage = ({
           ...t,
           rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
             ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-              type: condition as v.RuleEnum,
+              type: condition as v.RulesType,
               with: left === t.id ? right : left,
             })
           ),

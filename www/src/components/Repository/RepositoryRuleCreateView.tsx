@@ -6,12 +6,13 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { RulesEnum, RulesType } from '@utils/compiler'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { clientEnv } from 'src/env/schema.mjs'
-import { RulesEnum, RulesType } from 'src/types/enums'
+import { RepositoryCreateRuleDialog } from './RepositoryCreateRuleDialog'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
 export const RuleSelector = ({
@@ -30,6 +31,7 @@ export const RuleSelector = ({
     })[]
   })[]
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<
     | null
@@ -111,32 +113,40 @@ export const RuleSelector = ({
             onChange={setSelectedRightTrait}
           />
         </div>
-        <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
+        <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center space-x-3'>
+          <button
+            className='bg-white border border-mediumGrey text-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
+            onClick={() => {
+              setSelectedLeftTrait(null)
+              setSelectedRightTrait(null)
+              setSelectedCondition(null)
+            }}
+          >
+            Reset
+          </button>
           <button
             className='bg-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
-              if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
-              mutate(
-                {
-                  condition: selectedCondition,
-                  primaryTraitElementId: selectedLeftTrait.id,
-                  primaryLayerElementId: selectedLeftTrait.layerElementId,
-                  secondaryTraitElementId: selectedRightTrait.id,
-                  secondaryLayerElementId: selectedRightTrait.layerElementId,
-                },
-                {
-                  onSuccess: () => {
-                    setSelectedLeftTrait(null)
-                    setSelectedRightTrait(null)
-                    setSelectedCondition(null)
-                  },
-                }
-              )
+              setIsOpen(true)
             }}
           >
             Add Rule
           </button>
+          {selectedCondition && selectedLeftTrait && selectedRightTrait && (
+            <RepositoryCreateRuleDialog
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              onSuccess={() => {
+                setSelectedLeftTrait(null)
+                setSelectedRightTrait(null)
+                setSelectedCondition(null)
+              }}
+              condition={selectedCondition}
+              primaryTrait={selectedLeftTrait}
+              secondaryTrait={selectedRightTrait}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -147,14 +157,14 @@ export const RuleSelectorConditionCombobox = ({
   selected,
   onChange,
 }: {
-  selected: 'cannot mix with' | 'must mix with' | null
-  onChange: Dispatch<SetStateAction<'cannot mix with' | 'must mix with' | null>>
+  selected: 'cannot mix with' | 'only mixes with' | null
+  onChange: Dispatch<SetStateAction<'cannot mix with' | 'only mixes with' | null>>
 }) => {
   const [query, setQuery] = useState('')
   const filteredConditions: RulesType[] =
     query === ''
-      ? [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['must mix with'] as RulesType]
-      : [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['must mix with'] as RulesType].filter((conditions) => {
+      ? [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['only mixes with'] as RulesType]
+      : [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['only mixes with'] as RulesType].filter((conditions) => {
           return conditions.toLowerCase().includes(query.toLowerCase())
         })
 
@@ -173,7 +183,7 @@ export const RuleSelectorConditionCombobox = ({
         <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
       </Combobox.Button>
       <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-        {filteredConditions.map((condition: RulesType, index: number) => (
+        {filteredConditions.map((condition: RulesType) => (
           <Combobox.Option
             key={condition}
             value={condition}

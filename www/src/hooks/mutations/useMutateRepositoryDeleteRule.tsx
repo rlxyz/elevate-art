@@ -28,7 +28,7 @@ export const useMutateRepositoryDeleteRule = () => {
         const ruleIndexSecondary = secondaryTrait.rulesSecondary.findIndex((r) => r.id === input.id)
         primaryTrait.rulesPrimary.splice(ruleIndexPrimary, 1)
         secondaryTrait.rulesSecondary.splice(ruleIndexSecondary, 1)
-        notifySuccess(`${primaryTrait.name} now ${'@todo'} ${secondaryTrait.name}`)
+        notifySuccess(`Deleted ${primaryTrait.name} ${input.condition} ${secondaryTrait.name} rule`)
       })
 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)

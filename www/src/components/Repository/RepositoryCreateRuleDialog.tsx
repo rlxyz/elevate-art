@@ -1,24 +1,26 @@
 import Loader from '@components/Layout/Loader'
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
-import { useNotification } from '@hooks/utils/useNotification'
-import { capitalize } from '@utils/format'
+import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
+import { TraitElement } from '@prisma/client'
+import { RulesType } from '@utils/compiler'
 import { Fragment } from 'react'
-import { OrganisationDatabaseRoleEnumType } from 'src/types/enums'
 
-export const OrganisationTeamAddUserDialog = ({
-  organisationId,
-  addNewUserData,
+export const RepositoryCreateRuleDialog = ({
   isOpen,
   onClose,
+  condition,
+  onSuccess,
+  primaryTrait,
+  secondaryTrait,
 }: {
-  organisationId: string
-  addNewUserData: { address: string; role: OrganisationDatabaseRoleEnumType }
+  onSuccess: () => void
   isOpen: boolean
   onClose: () => void
+  condition: RulesType
+  primaryTrait: TraitElement
+  secondaryTrait: TraitElement
 }) => {
-  const { notifySuccess, notifyError } = useNotification()
-  const { mutate, isLoading } = useMutateOrganisationAddUser()
+  const { mutate, isLoading } = useMutateRepositoryCreateRule()
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -51,25 +53,28 @@ export const OrganisationTeamAddUserDialog = ({
                     as='h3'
                     className='p-8 border-b border-mediumGrey bg-white text-black text-xl justify-center flex leading-6 font-semibold'
                   >
-                    Add Collaborator
+                    Add Rule
                   </Dialog.Title>
                   <Dialog.Description>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>
-                        Add people to your team and collaborate with them. They can create projects, add layers with associates
-                        traits, set rarity, create rules, and generate collections.
+                        Add a new rule to the repository. This rule will be applied to all collections in the repository.
                       </span>
                       <div>
                         <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Address</span>
+                          <span className='text-[0.6rem] uppercase'>Main</span>
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
-                            {addNewUserData.address}
+                            {primaryTrait.name}
                           </div>
                         </div>
                         <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Role</span>
+                          <span className='text-[0.6rem] uppercase'>Condition</span>
+                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{condition}</div>
+                        </div>
+                        <div className='space-y-1'>
+                          <span className='text-[0.6rem] uppercase'>With</span>
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
-                            {capitalize(addNewUserData.role || '')}
+                            {secondaryTrait.name}
                           </div>
                         </div>
                       </div>
@@ -84,17 +89,18 @@ export const OrganisationTeamAddUserDialog = ({
                           e.preventDefault()
                           mutate(
                             {
-                              organisationId,
-                              address: addNewUserData.address,
-                              role: addNewUserData.role,
+                              condition,
+                              primaryTraitElementId: primaryTrait.id,
+                              primaryLayerElementId: primaryTrait.layerElementId,
+                              secondaryTraitElementId: secondaryTrait.id,
+                              secondaryLayerElementId: secondaryTrait.layerElementId,
                             },
                             {
                               onSuccess: () => {
-                                notifySuccess(`Added a new member to the team`)
+                                onSuccess && onSuccess()
                                 onClose()
                               },
                               onError: () => {
-                                notifyError("Couldn't add a new member to the team")
                                 onClose()
                               },
                             }
