@@ -17,13 +17,19 @@ module.exports = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['elevate-difference', 'intro', 'account-setup', 'add-collaborators'],
+      items: [
+        'elevate-difference',
+        'intro',
+        'account-setup',
+        'settings',
+        'add-collaborators',
+      ],
     },
   ],
   generator: [
     {
       type: 'category',
-      label: 'Generator',
+      label: 'Art Generator',
       items: [
         'generator/upload-art',
 
@@ -42,10 +48,14 @@ module.exports = {
           type: 'category',
           label: 'Rarity',
           collapsed: false,
-          items: ['generator/layers', 'generator/traits', 'generator/rarity'],
+          items: [
+            'generator/rarity-table',
+            'generator/rarity-img',
+            'generator/layers',
+            // 'generator/traits',
+          ],
         },
         'generator/rules',
-        'generator/settings',
         'generator/export',
       ],
     },

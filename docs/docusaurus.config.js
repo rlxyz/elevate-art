@@ -28,7 +28,7 @@ module.exports = {
         },
         {
           position: 'left',
-          label: 'Generator',
+          label: 'Art Generator',
           to: '/docs/generator/upload-art',
         },
         // {
