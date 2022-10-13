@@ -1,23 +1,28 @@
 // src/pages/_app.tsx
 import { AppRouter } from '@elevateart/api'
-import { appInfo, chains, getSiweMessageOptions, wagmiClient } from '@elevateart/ui-eth-auth'
+import {
+  appInfo,
+  chains,
+  getSiweMessageOptions,
+  RainbowKitProvider,
+  RainbowKitSiweNextAuthProvider,
+  SessionProvider,
+  wagmiClient,
+  WagmiConfig,
+} from '@elevateart/ui-eth-auth'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
-import '@rainbow-me/rainbowkit/styles.css'
+// import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
 import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
 import { H } from 'highlight.run'
-import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
-import { WagmiConfig } from 'wagmi'
 import '../styles/globals.css'
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {

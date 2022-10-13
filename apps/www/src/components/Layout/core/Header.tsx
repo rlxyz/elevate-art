@@ -7,7 +7,6 @@ import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
@@ -91,7 +90,6 @@ type HeaderInternalAppRoutesProps = {
   }[]
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
-  const { data: session } = useSession()
   const { currentHref } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {

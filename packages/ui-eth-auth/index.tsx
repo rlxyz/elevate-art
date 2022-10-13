@@ -41,6 +41,8 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
 
 export { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 export { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
+export { SessionProvider, useSession } from "next-auth/react";
+export { WagmiConfig } from "wagmi";
 export {
   getSiweMessageOptions,
   wagmiClient,
