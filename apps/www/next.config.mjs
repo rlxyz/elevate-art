@@ -16,7 +16,7 @@ const defineNextConfig = (config) => {
   return config
 }
 
-export default withTM(['ui'])(
+export default withTM(['@elevateart/ui', '@elevateart/db', '@elevateart/api'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,
