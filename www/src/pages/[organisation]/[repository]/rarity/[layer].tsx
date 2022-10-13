@@ -1,5 +1,5 @@
-import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
-import { Layout } from '@components/Layout/Layout'
+import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
+import { Layout } from '@components/Layout/core/Layout'
 import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'

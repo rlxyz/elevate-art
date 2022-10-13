@@ -1,5 +1,5 @@
-import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
-import { Layout } from '@components/Layout/Layout'
+import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
+import { Layout } from '@components/Layout/core/Layout'
 import { SettingsNavigations } from '@components/Organisation/OrganisationSettings'
 import { OrganisationTeamAddUser } from '@components/Organisation/OrganisationTeamAddUser'
 import { OrganisationTeamDisplayPending } from '@components/Organisation/OrganisationTeamDisplayPending'

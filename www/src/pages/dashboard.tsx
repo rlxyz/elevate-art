@@ -1,5 +1,5 @@
-import { OrganisationAuthLayout } from '@components/Layout/AuthLayout'
-import { Layout } from '@components/Layout/Layout'
+import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
+import { Layout } from '@components/Layout/core/Layout'
 import { PersonalOrganisationAccountTeam } from '@components/Organisation/PersonalOrganisationAccountTeam'
 import { PersonalOrganisationAccountTeamInvites } from '@components/Organisation/PersonalOrganisationAccountTeamInvites'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'

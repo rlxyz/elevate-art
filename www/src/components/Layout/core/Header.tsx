@@ -11,8 +11,8 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-import { ConnectButton } from './ConnectButton'
-import { Link } from './Link'
+import { ConnectButton } from '../ConnectButton'
+import { Link } from '../Link'
 
 const externalRoutes = [
   {

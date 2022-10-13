@@ -1,4 +1,4 @@
-import { Layout } from '@components/Layout/Layout'
+import { Layout } from '@components/Layout/core/Layout'
 import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
@@ -6,7 +6,7 @@ import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigati
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { OrganisationAuthLayout } from '../../components/Layout/AuthLayout'
+import { OrganisationAuthLayout } from '../../components/Layout/core/AuthLayout'
 
 const Page: NextPage = () => {
   const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {

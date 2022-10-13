@@ -4,7 +4,15 @@ import clsx from 'clsx'
 import { Children, Fragment, ReactNode } from 'react'
 
 export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
-  return <table className='border-separate border-spacing-x-0 border-spacing-y-0 min-w-full'>{children}</table>
+  return (
+    <div className='flex flex-col'>
+      <div className='inline-block min-w-full align-middle'>
+        <div className='overflow-hidden'>
+          <table className='border-separate border-spacing-x-0 border-spacing-y-0 min-w-full'>{children}</table>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const TableHead = ({ children }: { children: ReactNode | ReactNode[] }) => {
@@ -61,29 +69,36 @@ const TableBody = ({ children }: { children: ReactNode | ReactNode[] }) => {
   return <tbody className='divide-y divide-mediumGrey'>{children}</tbody>
 }
 
-const TableBodyRow = ({ children }: { children: ReactNode | ReactNode[] }) => {
+const TableBodyRow = ({ children, current, total }: { children: ReactNode | ReactNode[]; current: number; total: number }) => {
   const childrens = Children.toArray(children)
   return (
     <tr>
       {childrens.map((children, index) => {
         return (
-          <th
+          <td
             className={clsx(
-              index === 0 && 'border-t border-l rounded-tl-[5px] border-mediumGrey pl-3',
-              index === childrens.length - 1 && 'pr-3 border-t border-r rounded-tr-[5px] border-mediumGrey',
-              'text-left border-t border-mediumGrey py-2' // everything else
+              current === total - 1 && 'border-b border-mediumGrey',
+              current === total - 1 && index == 0 && 'rounded-bl-[5px]',
+              current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
+              index === 0 && 'pl-3 border-l',
+              index === childrens.length - 1 && 'pr-3 border-r',
+              index === 2 && 'w-[20%]', // this needs to be fixed!
+              index === 3 && 'w-[30%]',
+              index === 4 && 'w-[20%]',
+              index === 5 && 'w-[10%]',
+              'text-left border-t border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
             )}
           >
             {children}
-          </th>
+          </td>
         )
       })}
     </tr>
   )
 }
 
-const TableBodyRowData = ({ children, last = false }: { children: ReactNode; last?: boolean }) => {
-  return <td className={clsx(last && 'border-b rounded-bl-[5px]')}>{children}</td>
+const TableBodyRowData = ({ children }: { children: ReactNode }) => {
+  return <>{children}</>
 }
 
 Table.Head = TableHead
