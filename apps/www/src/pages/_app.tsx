@@ -10,6 +10,7 @@ import { withTRPC } from '@trpc/next'
 import { H } from 'highlight.run'
 import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
+import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
 import '../styles/globals.css'
@@ -48,7 +49,7 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
                 }}
               />
               <Component {...pageProps} />
-              {/* <Toaster /> */}
+              <Toaster />
             </RepositoryContext.Provider>
           </CollectionRouterContext.Provider>
         </OrganisationRouterContext.Provider>
