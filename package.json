@@ -1,22 +1,25 @@
 {
   "name": "rlxyz-compiler-client",
-  "version": "1.0.0",
-  "description": "This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rlxyz/rlxyz-compiler-client.git"
+  "devDependencies": {
+    "eslint-config-custom": "*",
+    "prettier": "latest",
+    "turbo": "latest"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rlxyz/rlxyz-compiler-client/issues"
+  "engines": {
+    "node": ">=14.0.0"
   },
-  "homepage": "https://github.com/rlxyz/rlxyz-compiler-client#readme"
+  "dependencies": {},
+  "packageManager": "yarn@1.22.19"
 }
