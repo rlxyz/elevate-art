@@ -86,15 +86,17 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                         <></>
                       </Table.Body.Row.Data>
                       <Table.Body.Row.Data>
-                        <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center  rounded-[5px] border border-mediumGrey'>
-                          <img
-                            className='w-10 lg:w-20 h-auto rounded-[5px]'
-                            src={getImageForTrait({
-                              r: repositoryId,
-                              l: layerElementId,
-                              t: id,
-                            })}
-                          />
+                        <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
+                          <div className='rounded-[5px] border border-mediumGrey'>
+                            <img
+                              className='w-10 lg:w-16 h-auto rounded-[5px]'
+                              src={getImageForTrait({
+                                r: repositoryId,
+                                l: layerElementId,
+                                t: id,
+                              })}
+                            />
+                          </div>
                         </div>
                       </Table.Body.Row.Data>
                       <Table.Body.Row.Data>{truncate(name)}</Table.Body.Row.Data>
