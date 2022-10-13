@@ -1,5 +1,5 @@
 // src/server/router/context.ts
-import { prisma } from "@rlxyz/db";
+import { prisma } from "@elevateart/db";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { Session } from "next-auth";

@@ -2,7 +2,7 @@ import {
   OrganisationDatabaseEnum,
   OrganisationDatabaseRoleEnum,
   prisma,
-} from "@rlxyz/db";
+} from "@elevateart/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
