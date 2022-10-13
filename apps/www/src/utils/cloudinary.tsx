@@ -1,8 +1,17 @@
+import { Cloudinary } from '@cloudinary/url-gen'
 import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
 import { clientEnv } from 'src/env/schema.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
+
+export const createCloudinary = () => {
+  return new Cloudinary({
+    cloud: {
+      cloudName: 'rlxyz',
+    },
+  })
+}
 
 export const uploadCollectionLayerImageCloudinary = ({
   repositoryId,
