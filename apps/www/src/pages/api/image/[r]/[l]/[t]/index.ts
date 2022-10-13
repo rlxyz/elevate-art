@@ -1,6 +1,6 @@
 // Example of a restricted endpoint that only authenticated users can access from https://next-auth.js.org/getting-started/example
 
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { getServerAuthSession } from '@elevateart/api'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { clientEnv } from 'src/env/schema.mjs'
 
