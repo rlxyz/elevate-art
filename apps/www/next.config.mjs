@@ -1,4 +1,6 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import withTM from 'next-transpile-modules'
+
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -7,17 +9,19 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
-function defineNextConfig(config) {
+const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
     return withBundleAnalyzer(config)
   }
   return config
 }
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['res.cloudinary.com', 'localhost'],
-  },
-})
+export default withTM(['ui'])(
+  defineNextConfig({
+    reactStrictMode: true,
+    swcMinify: true,
+    images: {
+      domains: ['res.cloudinary.com', 'localhost'],
+    },
+  })
+)

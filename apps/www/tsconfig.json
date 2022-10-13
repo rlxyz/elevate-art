@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/app.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -10,6 +10,5 @@
       "@scripts/*": ["src/scripts/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"]
 }

@@ -15,5 +15,11 @@
     "react": "^18.2.0",
     "tsconfig": "*",
     "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "v1",
+    "clsx": "^1.2.1",
+    "react-hot-toast": "^2.4.0"
   }
 }
