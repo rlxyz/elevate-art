@@ -97,7 +97,7 @@ const Page = () => {
                   <div className='col-span-2'>
                     <span
                       className={clsx(
-                        !filteredTraitElements && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
+                        !hasLoaded() && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
                         'text-lg flex items-end h-full font-semibold'
                       )}
                     >
@@ -107,7 +107,7 @@ const Page = () => {
                   <div className='col-span-5 flex justify-between'>
                     <div />
                     <div className='w-3/4'>
-                      <SearchInput setQuery={setQuery} isLoading={!filteredTraitElements} />
+                      <SearchInput setQuery={setQuery} isLoading={!hasLoaded()} />
                     </div>
                   </div>
                   <div
@@ -167,12 +167,12 @@ const Page = () => {
                       Add Trait
                     </button> */}
                 </div>
-                {currentView === 'layers' && (
-                  <div className='space-y-3'>
-                    <LayerGridView traitElements={filteredTraitElements} />
-                  </div>
-                )}
-                {currentView === 'rarity' && <LayerRarityTable traitElements={filteredTraitElements} />}
+                <div className={clsx(currentView !== 'layers' && 'hidden')}>
+                  <LayerGridView traitElements={filteredTraitElements} />
+                </div>
+                <div className={clsx(currentView !== 'rarity' && 'hidden')}>
+                  <LayerRarityTable traitElements={filteredTraitElements} />
+                </div>
               </main>
             </div>
           </div>

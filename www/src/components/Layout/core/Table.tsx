@@ -24,10 +24,10 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
           return (
             <th
               className={clsx(
-                !loading && index === 0 && 'border-t border-l rounded-tl-[5px] border-mediumGrey pl-3',
-                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r rounded-tr-[5px] border-mediumGrey',
+                !loading && index === 0 && 'border-t border-l border-mediumGrey pl-3',
+                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-mediumGrey',
                 !loading && 'text-left border-t border-mediumGrey', // everything else
-                'py-2'
+                'py-2 rounded-tl-[5px] rounded-tr-[5px]'
               )}
             >
               <div className={clsx(loading && 'invisible')}>{children}</div>

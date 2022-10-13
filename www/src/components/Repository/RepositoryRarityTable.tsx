@@ -31,6 +31,34 @@ export const calculateSumArray = (values: { weight: number }[] | undefined) => {
   return values?.reduce((a, b) => a + Number(b.weight), 0) || 0 // change to number incase someone accidently changes how textbox works
 }
 
+const LoadingTable = () => {
+  return (
+    <Table>
+      <Table.Head loading={true}>
+        {tableHeaders.map(({ title, description }, index) => {
+          return <Table.Head.Row key={index} title={title} description={description} />
+        })}
+      </Table.Head>
+      <Table.Body loading={true}>
+        {Array.from(Array(10).keys()).map((_, index) => {
+          return (
+            <Table.Body.Row key={index} current={index} total={10} loading={true}>
+              <Table.Body.Row.Data>
+                <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center' />
+              </Table.Body.Row.Data>
+              <Table.Body.Row.Data>...</Table.Body.Row.Data>
+              <Table.Body.Row.Data>...</Table.Body.Row.Data>
+              <Table.Body.Row.Data>...</Table.Body.Row.Data>
+              <Table.Body.Row.Data>...</Table.Body.Row.Data>
+              <Table.Body.Row.Data>...</Table.Body.Row.Data>
+            </Table.Body.Row>
+          )
+        })}
+      </Table.Body>
+    </Table>
+  )
+}
+
 const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | undefined }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
@@ -41,29 +69,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
   return (
     <>
       {!summedRarityWeightage || !collection || !layer ? (
-        <Table>
-          <Table.Head loading={true}>
-            {tableHeaders.map(({ title, description }, index) => {
-              return <Table.Head.Row key={index} title={title} description={description} />
-            })}
-          </Table.Head>
-          <Table.Body loading={true}>
-            {Array.from(Array(10).keys()).map((_, index) => {
-              return (
-                <Table.Body.Row key={index} current={index} total={10} loading={true}>
-                  <Table.Body.Row.Data>
-                    <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center' />
-                  </Table.Body.Row.Data>
-                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
-                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
-                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
-                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
-                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
-                </Table.Body.Row>
-              )
-            })}
-          </Table.Body>
-        </Table>
+        <LoadingTable />
       ) : (
         <Formik
           enableReinitialize
