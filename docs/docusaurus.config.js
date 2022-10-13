@@ -59,7 +59,8 @@ module.exports = {
     footer: {
       style: 'dark',
     },
-    image: 'img/previewImage.png',
+    image:
+      'https://uploads-ssl.webflow.com/62fb25dec6d6000039acf36b/630df414a98b27db93462c57_Open%20Graph.png',
     ...(process.env.GTAG_ID && {
       gtag: {
         trackingID: process.env.GTAG_ID,
