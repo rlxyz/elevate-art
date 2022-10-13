@@ -89,7 +89,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
   const elements: [string, string][] = []
 
   // step 0: iterate all layers
-  layers.forEach(({ id, traits }, index) => {
+  layers.forEach(({ id, traits }) => {
     // step 1.1: grab combinations that can happen
     const combinations = combination(elements, traits)
 

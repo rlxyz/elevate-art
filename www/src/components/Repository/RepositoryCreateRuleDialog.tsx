@@ -62,7 +62,7 @@ export const RepositoryCreateRuleDialog = ({
                       </span>
                       <div>
                         <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Main</span>
+                          <span className='text-[0.6rem] uppercase'>Trait</span>
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
                             {primaryTrait.name}
                           </div>

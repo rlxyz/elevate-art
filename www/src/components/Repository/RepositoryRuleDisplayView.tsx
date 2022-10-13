@@ -1,4 +1,3 @@
-import Button from '@components/Layout/Button'
 import { TrashIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
@@ -30,7 +29,7 @@ const TraitRulesDisplayPerItem = ({
         <ComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-sm'>
+        <div className='w-full h-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-xs'>
           {condition}
         </div>
       </div>
@@ -38,9 +37,8 @@ const TraitRulesDisplayPerItem = ({
         <ComboboxInput traitElement={secondary} layerName={secondaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
-        <Button
-          variant='icon'
-          className='w-full'
+        <button
+          className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center'
           onClick={() => {
             deleteRule({
               id,
@@ -52,8 +50,8 @@ const TraitRulesDisplayPerItem = ({
             })
           }}
         >
-          <TrashIcon className='w-5 h-5 text-mediumGrey' />
-        </Button>
+          <TrashIcon className='w-4 h-4 text-mediumGrey' />
+        </button>
       </div>
     </div>
   )

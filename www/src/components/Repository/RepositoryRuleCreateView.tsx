@@ -3,15 +3,13 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { RulesEnum, RulesType } from '@utils/compiler'
 import { classNames } from '@utils/format'
+import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
-import Image from 'next/image'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { clientEnv } from 'src/env/schema.mjs'
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { RepositoryCreateRuleDialog } from './RepositoryCreateRuleDialog'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
@@ -131,7 +129,7 @@ export const RuleSelector = ({
               setIsOpen(true)
             }}
           >
-            Add Rule
+            Add
           </button>
           {selectedCondition && selectedLeftTrait && selectedRightTrait && (
             <RepositoryCreateRuleDialog
@@ -172,12 +170,12 @@ export const RuleSelectorConditionCombobox = ({
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
         className={clsx(
-          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-xs',
           selected && 'border-blueHighlight'
         )}
         onChange={(event) => setQuery(event.target.value)}
         displayValue={(value: RulesType) => value}
-        placeholder={RulesEnum.enum['cannot mix with']}
+        placeholder='Select Condition'
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
         <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
@@ -249,7 +247,6 @@ export const RuleSelectorCombobox = ({
 }) => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryRepositoryLayer()
-  const { cld } = useCloudinaryHelper()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const filteredTraits =
     query === ''
@@ -263,9 +260,10 @@ export const RuleSelectorCombobox = ({
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
         as={ComboboxInput}
-        onChange={(event) => setQuery(event.target.value)}
+        className={clsx(selected && 'border-blueHighlight')}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
-        placeholder='Search a trait...'
+        placeholder='Select Trait'
         traitElement={selected}
         layerName={layers.find((layer) => layer.id === selected?.layerElementId)?.name || ''}
       />
@@ -287,13 +285,12 @@ export const RuleSelectorCombobox = ({
                   <div className='flex flex-row items-center space-x-3'>
                     <div className='relative h-[35px] w-[35px]'>
                       <div className='absolute w-full h-full border border-mediumGrey rounded-[5px]'>
-                        <Image
-                          src={cld
-                            .image(
-                              `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`
-                            )
-                            .toURL()}
-                          layout='fill'
+                        <img
+                          src={getImageForTrait({
+                            r: repositoryId,
+                            l: traitElement.layerElementId,
+                            t: traitElement.id,
+                          })}
                           className='rounded-[3px]'
                         />
                       </div>

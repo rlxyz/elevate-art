@@ -10,6 +10,7 @@ const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
+
   if (!session || !session.user) {
     return res.status(401).send('Unauthorized')
   }
