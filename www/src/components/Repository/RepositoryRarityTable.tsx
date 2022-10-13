@@ -162,14 +162,16 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                                 'py-3  border-t border-mediumGrey'
                               )}
                             >
-                              <img
-                                className='w-20 h-auto rounded-[3px] border border-mediumGrey'
-                                src={getImageForTrait({
-                                  r: repositoryId,
-                                  l: layerElementId,
-                                  t: id,
-                                })}
-                              />
+                              <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
+                                <img
+                                  className='absolute w-10 lg:w-20 h-auto rounded-[5px] border border-mediumGrey'
+                                  src={getImageForTrait({
+                                    r: repositoryId,
+                                    l: layerElementId,
+                                    t: id,
+                                  })}
+                                />
+                              </div>
                             </td>
                             <td
                               className={clsx(
