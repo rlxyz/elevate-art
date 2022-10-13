@@ -129,9 +129,7 @@ export const FilterByTrait = () => {
                   <div className='px-3 flex justify-between'>
                     <label>{truncate(layer.name)}</label>
                     <div className='flex items-center space-x-2'>
-                      <span className='text-xs'>
-                        {traitMapping.traitMap.size > 0 && (traitMapping.traitMap.get(layer.id)?.size || 0)}
-                      </span>
+                      <span className='text-xs'>{layer.traitElements.length}</span>
                       {layerDropdown !== optionIdx ? (
                         <ChevronDownIcon className='w-3 h-3' />
                       ) : (
@@ -159,8 +157,7 @@ export const FilterByTrait = () => {
                             <span>{truncate(traitElement.name)}</span>
                             <div className='flex items-center space-x-2'>
                               <span className='text-darkGrey text-xs'>
-                                {traitMapping.traitMap.size > 0 &&
-                                  (traitMapping?.traitMap.get(layer.id)?.get(traitElement.id) || 0)}
+                                {traitMapping.traitMap.size > 0 && (traitMapping?.traitMap.get(traitElement.id) || 0)}
                               </span>
                               <Field
                                 type='checkbox'

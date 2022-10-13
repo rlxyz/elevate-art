@@ -1,78 +1,64 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { useMutateRepositoryRule } from '@hooks/mutations/useMutateRepositoryRule'
+import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useCloudinaryHelper } from '@hooks/utils/useCloudinaryHelper'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { RulesEnum, RulesType } from '@utils/compiler'
 import { classNames } from '@utils/format'
+import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
-import Image from 'next/image'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { clientEnv } from 'src/env/schema.mjs'
-import { RulesEnum, RulesType } from 'src/types/enums'
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
+import { RepositoryCreateRuleDialog } from './RepositoryCreateRuleDialog'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
-const RuleSelector = ({
+export const RuleSelector = ({
   layers,
 }: {
   layers: (LayerElement & {
     traitElements: (TraitElement & {
       rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
       })[]
       rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement & { layerElement: LayerElement }
-        secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+        primaryTraitElement: TraitElement
+        secondaryTraitElement: TraitElement
       })[]
     })[]
   })[]
 }) => {
-  const [selectedCondition, setSelectedCondition] = useState<RulesType | null | string>()
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<
     | null
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & { layerElement: LayerElement }
-          secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
-  >()
+  >(null)
   const [selectedRightTrait, setSelectedRightTrait] = useState<
     | null
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
-  >()
+  >(null)
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate, isLoading } = useMutateRepositoryRule({
-    onMutate: () => {
-      setSelectedCondition(null)
-      setSelectedLeftTrait(null)
-      setSelectedRightTrait(null)
-    },
-  })
+  const { mutate, isLoading } = useMutateRepositoryCreateRule()
 
   // note: this will transform all rules in the selected trait to a standard format and return the trait ids that are already selected
   const allInvalidRightTraitElements = [...(selectedLeftTrait?.rulesPrimary || []), ...(selectedLeftTrait?.rulesSecondary || [])]
@@ -125,24 +111,40 @@ const RuleSelector = ({
             onChange={setSelectedRightTrait}
           />
         </div>
-        <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center'>
+        <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center space-x-3'>
+          <button
+            className='bg-white border border-mediumGrey text-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
+            onClick={() => {
+              setSelectedLeftTrait(null)
+              setSelectedRightTrait(null)
+              setSelectedCondition(null)
+            }}
+          >
+            Reset
+          </button>
           <button
             className='bg-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
-              if (!(selectedCondition && selectedLeftTrait && selectedRightTrait)) return
-              mutate({
-                repositoryId: repositoryId,
-                type: selectedCondition,
-                primaryTraitElementId: selectedLeftTrait.id,
-                primaryLayerElementId: selectedLeftTrait.layerElementId,
-                secondaryTraitElementId: selectedRightTrait.id,
-                secondaryLayerElementId: selectedRightTrait.layerElementId,
-              })
+              setIsOpen(true)
             }}
           >
-            Add Rule
+            Add
           </button>
+          {selectedCondition && selectedLeftTrait && selectedRightTrait && (
+            <RepositoryCreateRuleDialog
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              onSuccess={() => {
+                setSelectedLeftTrait(null)
+                setSelectedRightTrait(null)
+                setSelectedCondition(null)
+              }}
+              condition={selectedCondition}
+              primaryTrait={selectedLeftTrait}
+              secondaryTrait={selectedRightTrait}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -153,51 +155,43 @@ export const RuleSelectorConditionCombobox = ({
   selected,
   onChange,
 }: {
-  selected: undefined | null | string
-  onChange: Dispatch<SetStateAction<string | null | undefined>>
+  selected: 'cannot mix with' | 'only mixes with' | null
+  onChange: Dispatch<SetStateAction<'cannot mix with' | 'only mixes with' | null>>
 }) => {
   const [query, setQuery] = useState('')
-  const filteredConditions =
+  const filteredConditions: RulesType[] =
     query === ''
-      ? [
-          { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          // { id: 1, name: RulesEnum.enum['only mixes with'] },
-          // { id: 3, name: 'always mixes with' },
-        ]
-      : [
-          { id: 0, name: RulesEnum.enum['cannot mix with'] },
-          // { id: 1, name: RulesEnum.enum['only mixes with'] },
-          // { id: 3, name: 'always mixes with' },
-        ].filter((conditions) => {
-          return conditions.name.toLowerCase().includes(query.toLowerCase())
+      ? [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['only mixes with'] as RulesType]
+      : [RulesEnum.enum['cannot mix with'] as RulesType, RulesEnum.enum['only mixes with'] as RulesType].filter((conditions) => {
+          return conditions.toLowerCase().includes(query.toLowerCase())
         })
 
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
         className={clsx(
-          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-xs',
           selected && 'border-blueHighlight'
         )}
         onChange={(event) => setQuery(event.target.value)}
-        displayValue={(value: string) => value}
-        placeholder='cannot mix with'
+        displayValue={(value: RulesType) => value}
+        placeholder='Select Condition'
       />
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
         <SelectorIcon className='h-3 w-3 text-darkGrey' aria-hidden='true' />
       </Combobox.Button>
       <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-        {filteredConditions.map((option, index) => (
+        {filteredConditions.map((condition: RulesType) => (
           <Combobox.Option
-            key={index}
-            value={option.name}
+            key={condition}
+            value={condition}
             className={({ active }) =>
               classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-black')
             }
           >
             {({ active, selected }) => (
               <>
-                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{option.name}</span>
+                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{condition}</span>
                 {selected && (
                   <span
                     className={classNames(
@@ -225,53 +219,34 @@ export const RuleSelectorCombobox = ({
   traitElements: TraitElement[]
   selected:
     | null
-    | undefined
     | (TraitElement & {
         rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
         rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
-          secondaryTraitElement: TraitElement & {
-            layerElement: LayerElement
-          }
+          primaryTraitElement: TraitElement
+          secondaryTraitElement: TraitElement
         })[]
       })
   onChange: Dispatch<
     SetStateAction<
       | (TraitElement & {
           rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
-            secondaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
           })[]
           rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
-            secondaryTraitElement: TraitElement & {
-              layerElement: LayerElement
-            }
+            primaryTraitElement: TraitElement
+            secondaryTraitElement: TraitElement
           })[]
         })
       | null
-      | undefined
     >
   >
 }) => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryRepositoryLayer()
-  const { cld } = useCloudinaryHelper()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const filteredTraits =
     query === ''
@@ -285,9 +260,10 @@ export const RuleSelectorCombobox = ({
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
         as={ComboboxInput}
-        onChange={(event) => setQuery(event.target.value)}
+        className={clsx(selected && 'border-blueHighlight')}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
-        placeholder='Search a trait...'
+        placeholder='Select Trait'
         traitElement={selected}
         layerName={layers.find((layer) => layer.id === selected?.layerElementId)?.name || ''}
       />
@@ -309,13 +285,12 @@ export const RuleSelectorCombobox = ({
                   <div className='flex flex-row items-center space-x-3'>
                     <div className='relative h-[35px] w-[35px]'>
                       <div className='absolute w-full h-full border border-mediumGrey rounded-[5px]'>
-                        <Image
-                          src={cld
-                            .image(
-                              `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${traitElement.layerElementId}/${traitElement.id}`
-                            )
-                            .toURL()}
-                          layout='fill'
+                        <img
+                          src={getImageForTrait({
+                            r: repositoryId,
+                            l: traitElement.layerElementId,
+                            t: traitElement.id,
+                          })}
                           className='rounded-[3px]'
                         />
                       </div>
@@ -344,20 +319,5 @@ export const RuleSelectorCombobox = ({
         </Combobox.Options>
       )}
     </Combobox>
-  )
-}
-
-export const RepositoryRuleCreateView = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  if (isLoading || !layers) return <></>
-  return (
-    <div className='w-full py-16'>
-      <div className='flex justify-center'>
-        <div className='space-y-1 w-full'>
-          <span className='text-xs font-semibold uppercase'>Create a condition</span>
-          <RuleSelector layers={layers} />
-        </div>
-      </div>
-    </div>
   )
 }

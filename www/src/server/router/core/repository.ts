@@ -28,30 +28,14 @@ export const repositoryRouter = createRouter()
             include: {
               rulesPrimary: {
                 include: {
-                  primaryTraitElement: {
-                    include: {
-                      layerElement: true,
-                    },
-                  },
-                  secondaryTraitElement: {
-                    include: {
-                      layerElement: true,
-                    },
-                  },
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
                 },
               },
               rulesSecondary: {
                 include: {
-                  primaryTraitElement: {
-                    include: {
-                      layerElement: true,
-                    },
-                  },
-                  secondaryTraitElement: {
-                    include: {
-                      layerElement: true,
-                    },
-                  },
+                  primaryTraitElement: true,
+                  secondaryTraitElement: true,
                 },
               },
             },

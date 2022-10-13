@@ -4,12 +4,12 @@ declare global {
   type LayerElements = (LayerElement & { traitElements: TraitElements })[]
   type TraitElements = (TraitElement & {
     rulesSecondary: (Rules & {
-      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement
+      primaryTraitElement: TraitElement
     })[]
     rulesPrimary: (Rules & {
-      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
-      primaryTraitElement: TraitElement & { layerElement: LayerElement }
+      secondaryTraitElement: TraitElement
+      primaryTraitElement: TraitElement
     })[]
   })[]
 }

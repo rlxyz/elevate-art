@@ -1,11 +1,10 @@
-import Button from '@components/Layout/Button'
 import { TrashIcon } from '@heroicons/react/outline'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useNotification } from '@hooks/utils/useNotification'
-import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { Rules, TraitElement } from '@prisma/client'
+import { RulesEnum } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { RulesEnum } from 'src/types/enums'
+import { RulesType } from 'src/types/enums'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
 const TraitRulesDisplayPerItem = ({
@@ -15,77 +14,60 @@ const TraitRulesDisplayPerItem = ({
   secondary,
 }: {
   id: string
-  primary: TraitElement & {
-    layerElement: LayerElement
-  }
-  secondary: TraitElement & {
-    layerElement: LayerElement
-  }
-  condition: string
+  primary: TraitElement
+  secondary: TraitElement
+  condition: RulesType
 }) => {
-  const { notifySuccess, notifyError } = useNotification()
+  const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const ctx = trpc.useContext()
-  const mutation = trpc.useMutation('trait.deleteRuleById', {
-    onSuccess: (data) => {
-      // const primaryLayer = data.layers.filter(
-      //   (layer) => layer.id === (data.deletedRule.primaryTraitElement?.layerElement.id || '')
-      // )[0]
-      // const secondaryLayer = data.layers.filter(
-      //   (layer) => layer.id === (data.deletedRule.secondaryTraitElement?.layerElement.id || '')
-      // )[0]
-      // if (primaryLayer) ctx.setQueryData(['layer.getLayerById', { id: primaryLayer.id }], primaryLayer)
-      // if (secondaryLayer) ctx.setQueryData(['layer.getLayerById', { id: secondaryLayer.id }], secondaryLayer)
-      // ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], data.layers)
-      notifySuccess(
-        `Removed ${data?.deletedRule.primaryTraitElement?.name} ${data?.deletedRule.condition} ${data?.deletedRule.secondaryTraitElement?.name}`
-      )
-    },
-    onError: () => {
-      notifyError('Sorry we couldnt set the rule')
-    },
-  })
-
+  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const primaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === primary.id))
+  const secondaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === secondary.id))
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
-        <ComboboxInput traitElement={primary} layerName={primary.layerElement.name} highlight={false} />
+        <ComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
-        <div className='w-full h-full shadow-sm rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-sm'>
+        <div className='w-full h-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-xs'>
           {condition}
         </div>
       </div>
       <div className='col-span-4 h-full relative'>
-        <ComboboxInput traitElement={secondary} layerName={secondary.layerElement.name} highlight={false} />
+        <ComboboxInput traitElement={secondary} layerName={secondaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
-        <Button
-          variant='icon'
-          className='w-full'
-          disabled={mutation.isLoading}
+        <button
+          className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center'
           onClick={() => {
-            mutation.mutate({ id, repositoryId })
+            deleteRule({
+              id,
+              condition: condition,
+              primaryLayerElementId: primary.layerElementId,
+              secondaryLayerElementId: secondary.layerElementId,
+              primaryTraitElementId: primary.id,
+              secondaryTraitElementId: secondary.id,
+            })
           }}
         >
-          <TrashIcon className='w-5 h-5 text-mediumGrey' />
-        </Button>
+          <TrashIcon className='w-4 h-4 text-mediumGrey' />
+        </button>
       </div>
     </div>
   )
 }
 
-const RuleDisplayAll = ({
+export const RuleDisplayAll = ({
   traitElements,
 }: {
   traitElements: (TraitElement & {
     rulesPrimary: (Rules & {
-      primaryTraitElement: TraitElement & { layerElement: LayerElement }
-      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
     })[]
     rulesSecondary: (Rules & {
-      primaryTraitElement: TraitElement & { layerElement: LayerElement }
-      secondaryTraitElement: TraitElement & { layerElement: LayerElement }
+      primaryTraitElement: TraitElement
+      secondaryTraitElement: TraitElement
     })[]
   })[]
 }) => {
@@ -99,20 +81,15 @@ const RuleDisplayAll = ({
               rulesPrimary,
             }: TraitElement & {
               rulesPrimary: (Rules & {
-                primaryTraitElement: TraitElement & {
-                  layerElement: LayerElement
-                }
-                secondaryTraitElement: TraitElement & {
-                  layerElement: LayerElement
-                }
+                primaryTraitElement: TraitElement
+                secondaryTraitElement: TraitElement
               })[]
             },
             index
           ) => {
             return (
               <div key={index}>
-                {/* {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map( */}
-                {[RulesEnum.enum['cannot mix with']].map((ruleType: string, index) => {
+                {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {
                   return (
                     <div className='space-y-2' key={index}>
                       {rulesPrimary
@@ -123,7 +100,7 @@ const RuleDisplayAll = ({
                               id={rule.id}
                               key={index}
                               primary={rule.primaryTraitElement}
-                              condition={rule.condition}
+                              condition={rule.condition as RulesType}
                               secondary={rule.secondaryTraitElement}
                             />
                           )
@@ -135,19 +112,6 @@ const RuleDisplayAll = ({
             )
           }
         )}
-    </div>
-  )
-}
-
-export const RepositoryRuleDisplayView = () => {
-  const { all: layers, isLoading } = useQueryRepositoryLayer()
-  if (isLoading || !layers) return <></>
-  return (
-    <div className='w-full py-16'>
-      <div className='space-y-3 w-full flex flex-col justify-center'>
-        <span className='text-xs font-semibold uppercase'>All rules created</span>
-        <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />
-      </div>
     </div>
   )
 }

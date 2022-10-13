@@ -1,16 +1,17 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { useQueryRenderSingleToken } from '@hooks/query/useQueryRenderSingleToken'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { Collection } from '@prisma/client'
+import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
+import * as v from '@utils/compiler'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
 
 const PreviewImage = ({
@@ -24,11 +25,30 @@ const PreviewImage = ({
   id: number
   collection: Collection
   repositoryId: string
-  layers: LayerElements
+  layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
   children: ReactNode
   canHover?: boolean
 }) => {
-  const { traitElements, hash } = useQueryRenderSingleToken({ tokenId: id, collection, layers, repositoryId })
+  const elements = v.one(
+    v.parseLayer(
+      layers.map((l) => ({
+        ...l,
+        traits: l.traitElements.map((t) => ({
+          ...t,
+          rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+              type: condition as v.RulesType,
+              with: left === t.id ? right : left,
+            })
+          ),
+        })),
+      }))
+    ),
+    v.seed(repositoryId, collection.name, collection.generations, id)
+  )
+
+  const hash = v.hash(elements)
+
   return (
     <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
       <div className='py-8 overflow-hidden'>
@@ -39,12 +59,12 @@ const PreviewImage = ({
           }}
           className='relative'
         >
-          {traitElements.map(({ id: t, layerElementId: l }, index) => {
+          {elements.map(([l, t], index) => {
             return (
               <img
                 key={`${hash}-${t}-${index}`}
                 className={clsx(
-                  index === traitElements.length - 1 ? 'relative' : 'absolute',
+                  index === elements.length - 1 ? 'relative' : 'absolute',
                   'w-full h-auto border-t border-b border-mediumGrey'
                 )}
                 src={getImageForTrait({
@@ -117,7 +137,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                         <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
                       </span>
                       <span className='text-darkGrey overflow-hidden w-full'>
-                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.openRarityScore.toFixed(3)}
+                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
                       </span>
                     </div>
                   </div>

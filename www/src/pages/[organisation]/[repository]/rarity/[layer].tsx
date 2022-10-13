@@ -80,28 +80,6 @@ const Page = () => {
             },
           ]}
         />
-        {/* <Layout.Title>
-          <main className='pointer-events-auto -ml-2'>
-            <div className='flex justify-between items-center h-[10rem] space-y-2'>
-              <div className='flex flex-col space-y-1'>
-                <span className='text-3xl font-semibold'>{layer?.name}</span>
-                <span className='text-sm text-darkGrey'>{CollectionTitleContent['rarity'].description}</span>
-              </div>
-              <div className='space-y-2'>
-                <div className='flex space-x-1'>
-                  <button
-                    className={clsx(
-                      'flex items-center space-x-2 p-2 text-xs border border-mediumGrey bg-blueHighlight text-white rounded-[5px]'
-                    )}
-                  >
-                    Add Layer
-                  </button>
-                </div>
-              </div>
-            </div>
-          </main>
-        </Layout.Title> */}
-
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8 -ml-4'>
