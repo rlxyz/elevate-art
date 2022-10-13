@@ -1,3 +1,4 @@
+import { ConnectButton } from '@elevateart/ui-eth-auth/ConnectButton'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -10,7 +11,6 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-import { ConnectButton } from '../ConnectButton'
 import { Link } from '../Link'
 
 const externalRoutes = [

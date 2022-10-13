@@ -1,6 +1,6 @@
+import { useSession } from '@elevateart/ui-eth-auth'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { capitalize } from '@utils/format'
-import { useSession } from 'next-auth/react'
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
 
 export const PersonalOrganisationAccountTeamInvites = () => {

@@ -1,5 +1,5 @@
 import { AppRouter } from '@elevateart/api'
-import { AuthContext } from '@elevateart/ui-eth-auth'
+import { EthereumNextAuthContext } from '@elevateart/ui-eth-auth'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
@@ -30,7 +30,7 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIG
 const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ErrorBoundary showDialog>
-      <AuthContext session={pageProps.session}>
+      <EthereumNextAuthContext session={pageProps.session}>
         <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
           <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
             <RepositoryContext.Provider createStore={() => createRepositoryStore}>
@@ -53,7 +53,7 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
             </RepositoryContext.Provider>
           </CollectionRouterContext.Provider>
         </OrganisationRouterContext.Provider>
-      </AuthContext>
+      </EthereumNextAuthContext>
     </ErrorBoundary>
   )
 }

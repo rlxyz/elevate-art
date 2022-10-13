@@ -46,6 +46,7 @@ import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next
 import { SessionProvider, useSession } from "next-auth/react";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
+export { ConnectButton } from "./ConnectButton";
 export {
   getSiweMessageOptions,
   wagmiClient,
@@ -56,7 +57,8 @@ export {
   wallets,
 };
 export { useSession };
-export const AuthContext = ({
+
+export const EthereumNextAuthContext = ({
   children,
   session,
 }: {
