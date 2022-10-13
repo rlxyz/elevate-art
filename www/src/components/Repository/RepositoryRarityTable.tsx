@@ -3,7 +3,6 @@ import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCol
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
-import { createCloudinary } from '@utils/cloudinary'
 import { truncate } from '@utils/format'
 import { getImageForTrait } from '@utils/image'
 import { calculateTraitQuantityInCollection } from '@utils/math'
@@ -33,7 +32,6 @@ export const calculateSumArray = (values: { weight: number }[] | undefined) => {
 }
 
 const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | undefined }) => {
-  const cld = createCloudinary()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const { current: collection } = useQueryRepositoryCollection()
@@ -43,7 +41,29 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
   return (
     <>
       {!summedRarityWeightage || !collection || !layer ? (
-        <div>loading...</div>
+        <Table>
+          <Table.Head loading={true}>
+            {tableHeaders.map(({ title, description }, index) => {
+              return <Table.Head.Row key={index} title={title} description={description} />
+            })}
+          </Table.Head>
+          <Table.Body loading={true}>
+            {Array.from(Array(10).keys()).map((_, index) => {
+              return (
+                <Table.Body.Row key={index} current={index} total={10} loading={true}>
+                  <Table.Body.Row.Data>
+                    <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center' />
+                  </Table.Body.Row.Data>
+                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
+                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
+                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
+                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
+                  <Table.Body.Row.Data>...</Table.Body.Row.Data>
+                </Table.Body.Row>
+              )
+            })}
+          </Table.Body>
+        </Table>
       ) : (
         <Formik
           enableReinitialize
@@ -73,9 +93,9 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
           {({ values, handleChange, handleSubmit, resetForm }) => (
             <Form onSubmit={handleSubmit} className='overflow-hidden'>
               <Table>
-                <Table.Head>
+                <Table.Head loading={!collection && !layer}>
                   {tableHeaders.map(({ title, description }, index) => {
-                    return <Table.Head.Row title={title} description={description} />
+                    return <Table.Head.Row key={index} title={title} description={description} />
                   })}
                 </Table.Head>
                 <Table.Body>

@@ -15,21 +15,22 @@ export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
   )
 }
 
-const TableHead = ({ children }: { children: ReactNode | ReactNode[] }) => {
+const TableHead = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   const childrens = Children.toArray(children)
   return (
-    <thead className='bg-white'>
+    <thead className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white')}>
       <tr>
         {childrens.map((children, index) => {
           return (
             <th
               className={clsx(
-                index === 0 && 'border-t border-l rounded-tl-[5px] border-mediumGrey pl-3',
-                index === childrens.length - 1 && 'pr-3 border-t border-r rounded-tr-[5px] border-mediumGrey',
-                'text-left border-t border-mediumGrey py-2' // everything else
+                !loading && index === 0 && 'border-t border-l rounded-tl-[5px] border-mediumGrey pl-3',
+                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r rounded-tr-[5px] border-mediumGrey',
+                !loading && 'text-left border-t border-mediumGrey', // everything else
+                'py-2'
               )}
             >
-              {children}
+              <div className={clsx(loading && 'invisible')}>{children}</div>
             </th>
           )
         })}
@@ -65,11 +66,25 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
   )
 }
 
-const TableBody = ({ children }: { children: ReactNode | ReactNode[] }) => {
-  return <tbody className='divide-y divide-mediumGrey'>{children}</tbody>
+const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
+  return (
+    <tbody className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-mediumGrey')}>
+      {children}
+    </tbody>
+  )
 }
 
-const TableBodyRow = ({ children, current, total }: { children: ReactNode | ReactNode[]; current: number; total: number }) => {
+const TableBodyRow = ({
+  children,
+  current,
+  total,
+  loading = false,
+}: {
+  children: ReactNode | ReactNode[]
+  current: number
+  total: number
+  loading?: boolean
+}) => {
   const childrens = Children.toArray(children)
   return (
     <tr>
@@ -89,7 +104,7 @@ const TableBodyRow = ({ children, current, total }: { children: ReactNode | Reac
               'text-left border-t border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
             )}
           >
-            {children}
+            <div className={clsx(loading && 'invisible')}>{children}</div>
           </td>
         )
       })}

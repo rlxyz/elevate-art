@@ -95,7 +95,14 @@ const Page = () => {
               <main className='space-y-3 py-8 pl-8'>
                 <div className='grid gap-x-3 grid-cols-8'>
                   <div className='col-span-2'>
-                    <span className='text-xl flex items-end h-full font-semibold'>{layer?.name}</span>
+                    <span
+                      className={clsx(
+                        !filteredTraitElements && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
+                        'text-lg flex items-end h-full font-semibold'
+                      )}
+                    >
+                      {layer?.name}
+                    </span>
                   </div>
                   <div className='col-span-5 flex justify-between'>
                     <div />
