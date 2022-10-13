@@ -1,3 +1,5 @@
+// @todo connect button export from here.
+// @todo typesafe environment variables
 import {
   connectorsForWallets,
   getDefaultWallets,
@@ -39,10 +41,11 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: "sign in to elevate.art",
 });
 
-export { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-export { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
-export { SessionProvider, useSession } from "next-auth/react";
-export { WagmiConfig } from "wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { SessionProvider, useSession } from "next-auth/react";
+import { ReactNode } from "react";
+import { WagmiConfig } from "wagmi";
 export {
   getSiweMessageOptions,
   wagmiClient,
@@ -51,4 +54,30 @@ export {
   connectors,
   provider,
   wallets,
+};
+export { useSession };
+export const AuthContext = ({
+  children,
+  session,
+}: {
+  children: ReactNode;
+  session: any;
+}) => {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <SessionProvider refetchInterval={60} session={session}>
+        <RainbowKitSiweNextAuthProvider
+          getSiweMessageOptions={getSiweMessageOptions}
+        >
+          <RainbowKitProvider
+            appInfo={appInfo}
+            chains={chains}
+            initialChain={Number(process.env.NEXT_PUBLIC_NETWORK_ID)}
+          >
+            {children}
+          </RainbowKitProvider>
+        </RainbowKitSiweNextAuthProvider>
+      </SessionProvider>
+    </WagmiConfig>
+  );
 };

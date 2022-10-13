@@ -1,20 +1,9 @@
-// src/pages/_app.tsx
 import { AppRouter } from '@elevateart/api'
-import {
-  appInfo,
-  chains,
-  getSiweMessageOptions,
-  RainbowKitProvider,
-  RainbowKitSiweNextAuthProvider,
-  SessionProvider,
-  wagmiClient,
-  WagmiConfig,
-} from '@elevateart/ui-eth-auth'
+import { AuthContext } from '@elevateart/ui-eth-auth'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
-// import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
 import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
@@ -40,36 +29,30 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIG
 const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ErrorBoundary showDialog>
-      <WagmiConfig client={wagmiClient}>
-        <SessionProvider refetchInterval={60} session={pageProps.session}>
-          <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
-            <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={Number(process.env.NEXT_PUBLIC_NETWORK_ID)}>
-              <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                    <DefaultSeo
-                      title='elevate.art'
-                      description='a general purpose image compiler for nft projects'
-                      openGraph={{
-                        type: 'website',
-                        locale: 'en_US',
-                        url: 'https://elevate.art/',
-                        site_name: 'elevate.art',
-                      }}
-                      twitter={{
-                        handle: '@elevate_art',
-                        cardType: 'summary',
-                      }}
-                    />
-                    <Component {...pageProps} />
-                    {/* <Toaster /> */}
-                  </RepositoryContext.Provider>
-                </CollectionRouterContext.Provider>
-              </OrganisationRouterContext.Provider>
-            </RainbowKitProvider>
-          </RainbowKitSiweNextAuthProvider>
-        </SessionProvider>
-      </WagmiConfig>
+      <AuthContext session={pageProps.session}>
+        <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
+          <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
+            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+              <DefaultSeo
+                title='elevate.art'
+                description='a general purpose image compiler for nft projects'
+                openGraph={{
+                  type: 'website',
+                  locale: 'en_US',
+                  url: 'https://elevate.art/',
+                  site_name: 'elevate.art',
+                }}
+                twitter={{
+                  handle: '@elevate_art',
+                  cardType: 'summary',
+                }}
+              />
+              <Component {...pageProps} />
+              {/* <Toaster /> */}
+            </RepositoryContext.Provider>
+          </CollectionRouterContext.Provider>
+        </OrganisationRouterContext.Provider>
+      </AuthContext>
     </ErrorBoundary>
   )
 }
