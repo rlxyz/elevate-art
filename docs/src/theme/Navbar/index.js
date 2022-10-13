@@ -16,14 +16,12 @@ import useThemeContext from '@theme/hooks/useThemeContext'
 import useWindowSize from '@theme/hooks/useWindowSize'
 import Logo from '@theme/Logo'
 import NavbarItem from '@theme/NavbarItem'
-import SearchBar from '@theme/SearchBar'
 import Toggle from '@theme/Toggle'
 import clsx from 'clsx'
 import React, { useCallback, useEffect, useState } from 'react'
 import GithubIcon from '../../../static/img/githubIcon.svg'
 import HamburgerIcon from '../../../static/img/hamburgerIcon.svg'
 import NavbarMenuExit from '../../../static/img/navbarMenuExit.svg'
-import MobileSearchBar from '../MobileSearchBar'
 import styles from './styles.module.css' // retrocompatible with v1
 
 const DefaultNavItemPosition = 'right'
@@ -238,7 +236,7 @@ function Navbar() {
           {leftItems.map((item, i) => (
             <NavbarItem {...item} key={i} className={styles.navbar__item__style} />
           ))}
-          <SearchBar />
+          {/* <SearchBar /> */}
         </div>
         {!mobileSidebar.shouldRender && (
           <>
@@ -264,16 +262,14 @@ function Navbar() {
           </>
         )}
       </div>
-
       <div
         role="presentation"
         className="navbar-sidebar__backdrop"
         onClick={mobileSidebar.toggle}
       />
-
       {mobileSidebar.shouldRender && (
         <>
-          <MobileSearchBar />
+          {/* <MobileSearchBar /> */}
           <NavbarMobileSidebar
             sidebarShown={mobileSidebar.shown}
             toggleSidebar={mobileSidebar.toggle}

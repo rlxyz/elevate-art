@@ -18,13 +18,7 @@ module.exports = {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
-      items: [
-        'elevate-difference',
-        'intro',
-        'account-setup',
-        'team-settings',
-        // 'add-collaborators',
-      ],
+      items: ['elevate-difference', 'faq', 'intro', 'account-setup', 'team-settings'],
     },
   ],
   generator: [
