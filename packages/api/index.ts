@@ -1,3 +1,5 @@
+export { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+export { loggerLink } from "@trpc/client/links/loggerLink";
 export { createNextApiHandler } from "@trpc/server/adapters/next";
 export { getServerAuthSession } from "./src/common/get-server-auth-session";
 export { nextAuthOptions } from "./src/common/next-auth-options";

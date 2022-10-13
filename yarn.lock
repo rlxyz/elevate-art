@@ -3373,7 +3373,7 @@
     "@babel/runtime" "^7.9.0"
     react-ssr-prepass "^1.5.0"
 
-"@trpc/react@^9.27.1", "@trpc/react@^9.27.4":
+"@trpc/react@^9.27.1":
   version "9.27.4"
   resolved "https://registry.yarnpkg.com/@trpc/react/-/react-9.27.4.tgz#0320e0cbd416506959ddc65a10758fc41d70fb65"
   integrity sha512-bP74Tf6vWcMoWYiTAvbWrieV9cFQiKUDKRoRj0+VeGJbxdbhdJyUzv4zos0T4SiSKuhgoEm9bP4jWU2NhNhpIA==
