@@ -1,0 +1,29 @@
+{
+  "name": "@elevateart/ui-eth-auth",
+  "version": "0.0.0",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\""
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "react": "^18.2.0",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "v1",
+    "@rainbow-me/rainbowkit": "^0.7.1",
+    "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.4",
+    "clsx": "^1.2.1",
+    "ethers": "^5.7.1",
+    "next-auth": "^4.13.0",
+    "wagmi": "^0.6.8"
+  }
+}
