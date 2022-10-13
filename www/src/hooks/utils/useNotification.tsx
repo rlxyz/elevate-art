@@ -1,4 +1,4 @@
-import { Notification } from '@components/Layout/Notification'
+import { Notification } from '@components/Layout/core/Notification'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 

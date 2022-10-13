@@ -1,5 +1,5 @@
 // import { Header } from '@components/Layout/Header'
-import { Layout } from '@components/Layout/Layout'
+import { Layout } from '@components/Layout/core/Layout'
 import { Link } from '@components/Layout/Link'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
