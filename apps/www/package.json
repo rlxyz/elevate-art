@@ -58,7 +58,8 @@
     "zustand": "^4.1.1",
     "@elevateart/db": "*",
     "@elevateart/api": "*",
-    "@elevateart/ui": "*"
+    "@elevateart/ui": "*",
+    "@elevateart/ui-eth-auth": "*"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.0",

@@ -1,11 +1,12 @@
 // src/pages/_app.tsx
 import { AppRouter } from '@elevateart/api'
+import { appInfo, chains, getSiweMessageOptions, wagmiClient } from '@elevateart/ui-eth-auth'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
-import { connectorsForWallets, getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
 import { loggerLink } from '@trpc/client/links/loggerLink'
@@ -14,13 +15,9 @@ import { H } from 'highlight.run'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
-import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { infuraProvider } from 'wagmi/providers/infura'
-import { publicProvider } from 'wagmi/providers/public'
+import { WagmiConfig } from 'wagmi'
 import '../styles/globals.css'
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
@@ -35,49 +32,13 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIG
   })
 }
 
-const { chains, provider } = configureChains(
-  [chain.mainnet, chain.hardhat, ...(env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : [])],
-  [
-    alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }),
-    infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }),
-    publicProvider(),
-  ]
-)
-
-const { wallets } = getDefaultWallets({
-  appName: env.NEXT_PUBLIC_APP_NAME,
-  chains,
-})
-
-const appInfo = {
-  appName: env.NEXT_PUBLIC_APP_NAME,
-}
-
-const connectors = connectorsForWallets([
-  ...wallets,
-  // {
-  //   groupName: 'Other',
-  //   // wallets: [wallet.argent({ chains }), wallet.trust({ chains })],
-  // },
-])
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-})
-
-const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: 'sign in to elevate.art',
-})
-
 const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ErrorBoundary showDialog>
       <WagmiConfig client={wagmiClient}>
-        <SessionProvider refetchInterval={0} session={pageProps.session}>
+        <SessionProvider refetchInterval={60} session={pageProps.session}>
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
-            <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+            <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={Number(process.env.NEXT_PUBLIC_NETWORK_ID)}>
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
                 <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
                   <RepositoryContext.Provider createStore={() => createRepositoryStore}>
@@ -96,7 +57,7 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
                       }}
                     />
                     <Component {...pageProps} />
-                    <Toaster />
+                    {/* <Toaster /> */}
                   </RepositoryContext.Provider>
                 </CollectionRouterContext.Provider>
               </OrganisationRouterContext.Provider>
