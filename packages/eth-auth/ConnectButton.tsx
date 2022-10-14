@@ -1,5 +1,5 @@
-import { useSession } from "@elevateart/ui-eth-auth";
 import { ConnectButton as RainbowKitButton } from "@rainbow-me/rainbowkit";
+import { useSession } from "next-auth/react";
 import React from "react";
 
 interface ConnectButtonProps {

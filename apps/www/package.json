@@ -42,10 +42,10 @@
     "superjson": "^1.9.1",
     "zod": "^3.18.0",
     "zustand": "^4.1.1",
+    "@elevateart/eth-auth": "*",
     "@elevateart/db": "*",
     "@elevateart/api": "*",
     "@elevateart/ui": "*",
-    "@elevateart/ui-eth-auth": "*",
     "@elevateart/compiler": "*"
   },
   "devDependencies": {

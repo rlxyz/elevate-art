@@ -1,5 +1,5 @@
 import { AppRouter } from '@elevateart/api'
-import { EthereumNextAuthContext } from '@elevateart/ui-eth-auth'
+import { EthereumNextAuthContext } from '@elevateart/eth-auth'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'

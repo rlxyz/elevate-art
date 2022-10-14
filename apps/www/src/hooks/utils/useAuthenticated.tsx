@@ -1,4 +1,4 @@
-import { useSession } from '@elevateart/ui-eth-auth'
+import { useSession } from '@elevateart/eth-auth'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 

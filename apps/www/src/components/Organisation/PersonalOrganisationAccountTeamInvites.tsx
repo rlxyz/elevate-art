@@ -1,4 +1,4 @@
-import { useSession } from '@elevateart/ui-eth-auth'
+import { useSession } from '@elevateart/eth-auth'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { capitalize } from '@utils/format'
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
