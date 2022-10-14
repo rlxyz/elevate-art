@@ -1,3 +1,4 @@
+// move to packages/compiler
 export const calculateTraitRarityScore = (
   traitWeight: number,
   traitsTotalWeight: number,

@@ -1,10 +1,11 @@
 import Loader from '@components/Layout/Loader'
+import { RulesType } from '@elevateart/compiler'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { TraitElement } from '@prisma/client'
-import { RulesType } from '@utils/compiler'
 import { Fragment } from 'react'
-
+{
+}
 export const RepositoryCreateRuleDialog = ({
   isOpen,
   onClose,

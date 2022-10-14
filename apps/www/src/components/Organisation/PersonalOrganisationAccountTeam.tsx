@@ -1,11 +1,11 @@
 import { Link } from '@components/Layout/Link'
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
+import { useSession } from '@elevateart/eth-auth'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
-import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import { OrganisationDatabaseEnum } from 'src/types/enums'
 import { SearchInput } from '../Layout/SearchInput'
 
 export const PersonalOrganisationAccountTeam = () => {

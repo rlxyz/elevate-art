@@ -1,10 +1,10 @@
 import Loader from '@components/Layout/Loader'
+import { OrganisationDatabaseRoleEnumType } from '@elevateart/db'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from '@hooks/utils/useNotification'
 import { capitalize } from '@utils/format'
 import { Fragment } from 'react'
-import { OrganisationDatabaseRoleEnumType } from 'src/types/enums'
 
 export const OrganisationTeamAddUserDialog = ({
   organisationId,

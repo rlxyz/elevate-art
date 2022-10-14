@@ -1,3 +1,4 @@
+import { CollectionDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
@@ -5,7 +6,6 @@ import { Collection } from '@prisma/client'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'
-import { CollectionDatabaseEnum } from 'src/types/enums'
 
 export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()

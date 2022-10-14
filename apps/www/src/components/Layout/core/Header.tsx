@@ -1,3 +1,5 @@
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
+import { ConnectButton } from '@elevateart/eth-auth/ConnectButton'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -7,11 +9,9 @@ import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Fragment } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-import { ConnectButton } from '../ConnectButton'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 import { Link } from '../Link'
 
 const externalRoutes = [
@@ -91,7 +91,6 @@ type HeaderInternalAppRoutesProps = {
   }[]
 }
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
-  const { data: session } = useSession()
   const { currentHref } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
     return {
