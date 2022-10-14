@@ -7,6 +7,5 @@ export { createContext } from "./src/context";
 export type { Context } from "./src/context";
 export { appRouter } from "./src/router";
 export type { AppRouter } from "./src/router";
-export { trpc } from "./src/utils/trpc";
 export { superjson };
 import superjson from "superjson";

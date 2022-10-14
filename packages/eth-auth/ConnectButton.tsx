@@ -1,3 +1,4 @@
+import { UserCircleIcon } from "@elevateart/ui";
 import { ConnectButton as RainbowKitButton } from "@rainbow-me/rainbowkit";
 import { useSession } from "next-auth/react";
 import React from "react";
@@ -72,8 +73,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
                 >
                   {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
                   {session ? (
-                    // <UserCircleIcon className="w-4 h-4 text-darkGrey" />
-                    <></>
+                    <UserCircleIcon className="w-4 h-4 text-darkGrey" />
                   ) : (
                     <img
                       src="/images/lightGray-wallet.svg"

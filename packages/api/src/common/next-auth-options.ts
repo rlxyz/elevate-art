@@ -1,8 +1,8 @@
+import { prisma } from "@elevateart/db";
 import {
   OrganisationDatabaseEnum,
   OrganisationDatabaseRoleEnum,
-  prisma,
-} from "@elevateart/db";
+} from "@elevateart/db/enums";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
