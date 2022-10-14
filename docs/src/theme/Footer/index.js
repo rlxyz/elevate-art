@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
-import styles from './styles.module.css'
+import ElevateLogo from '../../../static/img/logo_white.svg'
 import QuestionsIcon from '../../../static/img/questionsIcon.svg'
 import TwitterIcon from '../../../static/img/twitterIcon.svg'
-import ElevateLogo from '../../../static/img/logo_white.svg'
+import styles from './styles.module.css'
 
 function Footer() {
   return (
@@ -24,9 +24,7 @@ function Footer() {
             <QuestionsIcon className={styles.footerIcon} />
             <h3 className={styles.footerTitle}>Questions?</h3>
           </div>
-          <p className={styles.footerParagraph}>
-            Get help in the in Discord.
-          </p>
+          <p className={styles.footerParagraph}>Get help in the in Discord.</p>
         </a>
         <a
           href="https://twitter.com/elevate_art"
@@ -38,9 +36,7 @@ function Footer() {
             <TwitterIcon className={styles.footerIcon} />
             <h3 className={styles.footerTitle}>Stay updated</h3>
           </div>
-          <p className={styles.footerParagraph}>
-            Follow us on Twitter for updates.
-          </p>
+          <p className={styles.footerParagraph}>Follow us on Twitter for updates.</p>
         </a>
       </div>
       <div className={styles.logoFlexbox}>

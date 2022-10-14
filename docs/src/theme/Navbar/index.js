@@ -4,27 +4,25 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useCallback, useState, useEffect } from 'react'
-import clsx from 'clsx'
-import Translate from '@docusaurus/Translate'
-import SearchBar from '@theme/SearchBar'
-import Toggle from '@theme/Toggle'
-import useThemeContext from '@theme/hooks/useThemeContext'
 import {
-  useThemeConfig,
   useMobileSecondaryMenuRenderer,
   usePrevious,
+  useThemeConfig,
 } from '@docusaurus/theme-common'
+import Translate from '@docusaurus/Translate'
 import useHideableNavbar from '@theme/hooks/useHideableNavbar'
 import useLockBodyScroll from '@theme/hooks/useLockBodyScroll'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import useWindowSize from '@theme/hooks/useWindowSize'
-import NavbarItem from '@theme/NavbarItem'
 import Logo from '@theme/Logo'
-import styles from './styles.module.css' // retrocompatible with v1
+import NavbarItem from '@theme/NavbarItem'
+import Toggle from '@theme/Toggle'
+import clsx from 'clsx'
+import React, { useCallback, useEffect, useState } from 'react'
 import GithubIcon from '../../../static/img/githubIcon.svg'
-import NavbarMenuExit from '../../../static/img/navbarMenuExit.svg'
 import HamburgerIcon from '../../../static/img/hamburgerIcon.svg'
-import MobileSearchBar from '../MobileSearchBar'
+import NavbarMenuExit from '../../../static/img/navbarMenuExit.svg'
+import styles from './styles.module.css' // retrocompatible with v1
 
 const DefaultNavItemPosition = 'right'
 
@@ -172,11 +170,7 @@ function NavbarMobileSidebar({ sidebarShown, toggleSidebar }) {
           <a href="https://elevate.art/" target="_blank" rel="noopener noreferrer">
             <p className={styles.zoraCoText}>elevate.art</p>
           </a>
-          <a
-            href="https://github.com/rlxyz"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://github.com/rlxyz" target="_blank" rel="noopener noreferrer">
             <GithubIcon className={styles.githubIconSideBar} />
           </a>
         </div>
@@ -242,7 +236,7 @@ function Navbar() {
           {leftItems.map((item, i) => (
             <NavbarItem {...item} key={i} className={styles.navbar__item__style} />
           ))}
-          <SearchBar />
+          {/* <SearchBar /> */}
         </div>
         {!mobileSidebar.shouldRender && (
           <>
@@ -268,16 +262,14 @@ function Navbar() {
           </>
         )}
       </div>
-
       <div
         role="presentation"
         className="navbar-sidebar__backdrop"
         onClick={mobileSidebar.toggle}
       />
-
       {mobileSidebar.shouldRender && (
         <>
-          <MobileSearchBar />
+          {/* <MobileSearchBar /> */}
           <NavbarMobileSidebar
             sidebarShown={mobileSidebar.shown}
             toggleSidebar={mobileSidebar.toggle}

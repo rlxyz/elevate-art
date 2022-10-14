@@ -10,12 +10,12 @@ module.exports = {
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/logo_white.svg',
-  organizationName: 'ourzora',
-  projectName: 'Zora Docs',
+  organizationName: 'elevate.art',
+  projectName: 'Elevate Art Docs',
   themeConfig: {
     navbar: {
       logo: {
-        alt: 'Zora Docs Logo',
+        alt: 'Elevate Art Logo',
         src: 'img/logo_white.svg',
       },
       items: [
@@ -23,23 +23,24 @@ module.exports = {
           type: 'doc',
           docId: 'intro',
           position: 'left',
-          label: 'Intro',
+          label: 'Get Started',
+          to: '/docs/intro_to_elevate_art',
         },
         {
           position: 'left',
-          label: 'Contracts',
-          to: '/docs/smart-contracts/zora-V3',
+          label: 'Art Generator',
+          to: '/docs/generator/upload-art',
         },
-        {
-          position: 'left',
-          label: 'API',
-          to: '/docs/zora-api/intro',
-        },
-        {
-          position: 'left',
-          label: 'Tools',
-          to: '/docs/developer-tools/nft-rendering/introduction',
-        },
+        // {
+        //   position: 'left',
+        //   label: 'Smart Contracts',
+        //   to: '/docs/smart-contracts/zora-v3',
+        // },
+        // {
+        //   position: 'left',
+        //   label: 'Mint Client',
+        //   to: '/docs/mint-client/intro',
+        // },
       ],
     },
     colorMode: {
@@ -51,14 +52,15 @@ module.exports = {
       additionalLanguages: ['solidity', 'graphql'],
     },
     algolia: {
-      apiKey: 'ea9711802399936fa4d55c3033c4cfc5',
-      indexName: 'zora',
-      appId: 'BH4D9OD16A',
+      apiKey: '74757d32b3f09f212e2b2dbc0f5a5b74',
+      indexName: 'elevate_art',
+      appId: 'AJNT935KJH',
     },
     footer: {
       style: 'dark',
     },
-    image: 'img/previewImage.png',
+    image:
+      'https://uploads-ssl.webflow.com/62fb25dec6d6000039acf36b/630df414a98b27db93462c57_Open%20Graph.png',
     ...(process.env.GTAG_ID && {
       gtag: {
         trackingID: process.env.GTAG_ID,
@@ -72,7 +74,8 @@ module.exports = {
       },
       {
         name: 'og:description',
-        content: 'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.'
+        content:
+          'Design your NFT collection with our leading art generator. Build the perfect collection for your community. Upload your base images, tweak your layers, and algorithmically generate your full collection.',
       },
       {
         name: 'description',
