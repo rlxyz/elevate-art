@@ -1,5 +1,11 @@
 import * as z from "zod";
 
+/**
+ * Core enums for Database schema.
+ * IMPORTANT: Enum names & values should never be changed! It will cause incosistency in the database.
+ *            However, new enums can be added.
+ * @todo enforce testing.
+ **/
 export const OrganisationDatabaseRoleEnum = z.nativeEnum(
   Object.freeze({
     Admin: "admin",

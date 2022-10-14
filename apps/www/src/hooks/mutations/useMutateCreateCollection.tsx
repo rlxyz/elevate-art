@@ -1,4 +1,4 @@
-import { CollectionDatabaseEnum } from '@elevateart/db'
+import { CollectionDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'

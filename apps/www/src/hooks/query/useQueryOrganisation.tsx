@@ -1,4 +1,4 @@
-import { OrganisationDatabaseEnum } from '@elevateart/db'
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useSession } from '@elevateart/ui-eth-auth'
 import { trpc } from '@utils/trpc'
 import produce, { setAutoFreeze } from 'immer'

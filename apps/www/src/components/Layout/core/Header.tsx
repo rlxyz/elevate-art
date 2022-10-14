@@ -1,3 +1,4 @@
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { ConnectButton } from '@elevateart/ui-eth-auth/ConnectButton'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
@@ -10,7 +11,7 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 import { Link } from '../Link'
 
 const externalRoutes = [

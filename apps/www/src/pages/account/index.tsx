@@ -1,7 +1,7 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import { PersonalOrganisationAccountNavigation } from '@components/Organisation/PersonalOrganisationAccountNavigation'
-import { OrganisationDatabaseEnum } from '@elevateart/db'
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'

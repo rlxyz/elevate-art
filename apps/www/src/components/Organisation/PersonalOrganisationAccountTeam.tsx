@@ -1,5 +1,5 @@
 import { Link } from '@components/Layout/Link'
-import { OrganisationDatabaseEnum } from '@elevateart/db'
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useSession } from '@elevateart/ui-eth-auth'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Organisation, OrganisationMember, User } from '@prisma/client'

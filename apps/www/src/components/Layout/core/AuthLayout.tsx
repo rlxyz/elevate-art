@@ -1,4 +1,4 @@
-import { OrganisationDatabaseEnum, OrganisationDatabaseType } from '@elevateart/db'
+import { OrganisationDatabaseEnum, OrganisationDatabaseType } from '@elevateart/db/enums'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
