@@ -1,9 +1,9 @@
+import { OrganisationDatabaseEnum, OrganisationDatabaseType } from '@elevateart/db'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import { OrganisationDatabaseEnum, OrganisationDatabaseType } from 'src/types/enums'
 
 export const OrganisationAuthLayout = ({
   children,

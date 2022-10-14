@@ -9,7 +9,7 @@ import { z } from "zod";
 // @todo remove seedrandom & implement own randomness                                   //
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
-const RulesEnum = z.enum(["cannot mix with", "only mixes with"]);
+export const RulesEnum = z.enum(["cannot mix with", "only mixes with"]);
 export type RulesType = z.infer<typeof RulesEnum>;
 
 export const Rule = z.object({

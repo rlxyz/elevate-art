@@ -1,8 +1,9 @@
+import { OrganisationDatabaseEnum } from '@elevateart/db'
 import { useSession } from '@elevateart/ui-eth-auth'
 import { trpc } from '@utils/trpc'
 import produce, { setAutoFreeze } from 'immer'
 import { useRouter } from 'next/router'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 
 setAutoFreeze(false)
 

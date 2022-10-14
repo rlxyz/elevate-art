@@ -1,3 +1,4 @@
+import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from '@elevateart/db'
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { getAddressFromEns } from '@utils/ethers'
@@ -6,7 +7,6 @@ import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from 'src/types/enums'
 import { OrganisationTeamAddUserDialog } from './OrganisationTeamAddUserDialog'
 export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisation()

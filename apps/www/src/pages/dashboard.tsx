@@ -2,13 +2,14 @@ import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import { PersonalOrganisationAccountTeam } from '@components/Organisation/PersonalOrganisationAccountTeam'
 import { PersonalOrganisationAccountTeamInvites } from '@components/Organisation/PersonalOrganisationAccountTeamInvites'
+import { OrganisationDatabaseEnum } from '@elevateart/db'
 import { useSession } from '@elevateart/ui-eth-auth'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const Page: NextPage = () => {
   const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {
