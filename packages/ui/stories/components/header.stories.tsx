@@ -1,16 +1,18 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Footer from "../components/layout/layout-footer";
+import LayoutHeader from "components/layout/layout-header";
 
 export default {
-  title: "Layout/Footer",
-  component: Footer,
+  title: "Layout/Header",
+  component: LayoutHeader,
   //   parameters: {
   //     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
   //     layout: "fullscreen",
   //   },
-} as ComponentMeta<typeof Footer>;
+} as ComponentMeta<typeof LayoutHeader>;
 
-export const Template: ComponentStory<typeof Footer> = () => <Footer />;
+export const Template: ComponentStory<typeof LayoutHeader> = () => (
+  <LayoutHeader />
+);
 
 // export const LoggedOut = Template.bind({});
 

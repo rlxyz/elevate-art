@@ -1,5 +1,5 @@
-import Footer from "./layout-footer";
-
+import LayoutContainer from "./layout-container";
+import LayoutFooter from "./layout-footer";
 export interface Props {
   hasFooter?: boolean;
 }
@@ -21,7 +21,14 @@ const LayoutComponent: React.FC<React.PropsWithChildren<LayoutProps>> = ({
   return (
     <main {...props}>
       {children}
-      {hasFooter ? <Footer /> : null}
+      {hasFooter ? (
+        <LayoutContainer
+          border="upper"
+          className="min-h-[3.5rem] flex items-center"
+        >
+          <LayoutFooter />
+        </LayoutContainer>
+      ) : null}
     </main>
   );
 };
