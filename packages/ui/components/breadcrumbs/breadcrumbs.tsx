@@ -1,9 +1,6 @@
 import clsx from "clsx";
 import React, { ReactNode } from "react";
 import BreadcrumbsSeparator from "./breadcrumbs-separator";
-// import useScale, { withScale } from "../use-scale";
-// import useTheme from "../use-theme";
-// import { addColorAlpha } from "../utils/color";
 
 interface Props {
   separator?: string | ReactNode;
@@ -25,12 +22,6 @@ const BreadcrumbsComponent: React.FC<
   children,
   className,
 }: BreadcrumbsProps & typeof defaultProps) => {
-  //   const theme = useTheme();
-  //   const { SCALES } = useScale();
-  //   const hoverColor = useMemo(() => {
-  //     return addColorAlpha(theme.palette.link, 0.85);
-  //   }, [theme.palette.link]);
-
   const childrenArray = React.Children.toArray(children);
   const withSeparatorChildren = childrenArray.map((item, index) => {
     if (!React.isValidElement(item)) return item;
