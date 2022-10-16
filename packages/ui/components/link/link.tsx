@@ -48,8 +48,8 @@ const LinkComponent = React.forwardRef<
           "text-xs w-fit h-auto",
           underline && "hover:underline hover:bg-mediumGrey",
           block && "rounded-[5px] hover:bg-mediumGrey p-1",
-          color &&
-            "text-blueHighlight hover:text-blueHighlightLight hover:bg-blueHighlightLight hover:bg-opacity-10"
+          color && "text-blueHighlight hover:text-blueHighlightLight",
+          block && color && "hover:bg-blueHighlightLight hover:bg-opacity-10"
         )}
         href={href}
         {...props}
