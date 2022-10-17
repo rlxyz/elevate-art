@@ -1,19 +1,22 @@
-type ExternalLinkType = {
+export interface NavigationRoutes {
   name: string;
   href: string;
+  disabled: boolean;
   icon?: (props: any) => JSX.Element;
-};
+}
 
-export const externalRoutes: ExternalLinkType[] = [
+export const externalRoutes: NavigationRoutes[] = [
   {
     name: "Docs",
+    disabled: false,
     href: "https://docs.elevate.art",
   },
 ];
 
-export const socialRoutes: ExternalLinkType[] = [
+export const socialRoutes: NavigationRoutes[] = [
   {
     name: "Twitter",
+    disabled: false,
     href: "https://twitter.com/elevate_art",
     icon: (props: any) => (
       <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -23,6 +26,7 @@ export const socialRoutes: ExternalLinkType[] = [
   },
   {
     name: "GitHub",
+    disabled: false,
     href: "https://github.com/rlxyz",
     icon: (props: any) => (
       <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -36,6 +40,7 @@ export const socialRoutes: ExternalLinkType[] = [
   },
   {
     name: "Discord",
+    disabled: false,
     href: "https://discord.gg/aC7spK59",
     icon: (props: any) => (
       <svg

@@ -1,7 +1,11 @@
 import clsx from "clsx";
 import Breadcrumbs from "components/breadcrumbs";
 import Link from "components/link";
-import { externalRoutes, socialRoutes } from "../elevateart-external-links";
+import {
+  externalRoutes,
+  NavigationRoutes,
+  socialRoutes,
+} from "../elevateart-external-links";
 import LayoutContainer from "./layout-container";
 
 export interface HeaderInternalPageRoutesProps {
@@ -38,36 +42,99 @@ const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
 };
 
 export interface Props {
-  internalRoutes?: {
-    current: string;
-    href: string;
-    // organisations?: Organisation[];
-  }[];
-  internalNavigation?: {
-    href: string;
-    name: string;
-    enabled: boolean;
-    loading: boolean;
-  }[];
-  connectButton?: boolean;
+  appNavigationRoutes?: NavigationRoutes[];
+  pageNavigationRoutes?: NavigationRoutes[];
+  isEthereumConnectable?: boolean;
 }
 
 const defaultProps: Props = {
-  internalRoutes: [],
-  internalNavigation: [],
-  connectButton: false,
+  appNavigationRoutes: [],
+  pageNavigationRoutes: [],
+  isEthereumConnectable: false,
 };
 
 export type LayoutContainerProps = Props &
   Omit<React.HTMLAttributes<any>, keyof Props>;
 
+/**
+ * The main navigation component for the application.
+ * There are three sections to this component:
+ * - appNavigationRoutes: These are the routes that are always present in the header.
+ * - pageNavigationRoutes: These are the routes that are specific to the page.
+ * - isEthereumConnectable: This is a flag that determines if the ethereum connect button should be shown.
+ *
+ * Example:
+ * - a landing page wouldnt have the pageNavigationRoutes.
+ * - it would instantiate an empty array of appNavigationRoutes
+ */
 const LayoutHeaderComponent: React.FC<
   React.PropsWithChildren<LayoutContainerProps>
 > = ({
+  appNavigationRoutes,
+  pageNavigationRoutes,
   className,
   children,
   ...props
 }: React.PropsWithChildren<LayoutContainerProps>) => {
+  const appNavigationRoutesFinal = [
+    {
+      name: "Elevate Art",
+      href: "/",
+      disabled: false,
+      icon: (props: any) => <img src="" {...props} />,
+    },
+    ...(appNavigationRoutes || []),
+  ];
+
+  const externalNavigationRoutesFinal = [...externalRoutes, ...socialRoutes];
+
+  const topNav = (
+    <div className="flex justify-between items-center">
+      {/* App Navigation on the left side of the Header */}
+      <Breadcrumbs className="space-x-2">
+        {appNavigationRoutesFinal.map((item) => {
+          return (
+            <Breadcrumbs.Item key={item.name} href={item.href}>
+              {item.icon ? (
+                <item.icon className="h-8 w-8" aria-hidden="true" />
+              ) : (
+                <>{item.name}</>
+              )}
+            </Breadcrumbs.Item>
+          );
+        })}
+      </Breadcrumbs>
+
+      {/* External Routes Navigation on the right side of the Header */}
+      <div className="flex flex-row justify-center items-center space-x-3">
+        {externalNavigationRoutesFinal.map((item) => {
+          return (
+            <Link key={item.href} href={item.href}>
+              {item.icon ? (
+                <item.icon
+                  className="h-4 w-4 text-darkGrey"
+                  aria-hidden="true"
+                />
+              ) : (
+                <span className="text-darkGrey">{item.name}</span>
+              )}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const bottomNav = (
+    <HeaderInternalPageRoutes
+      links={[
+        { name: "Preview", href: "/", enabled: false },
+        { name: "Rarity", href: "/", enabled: false },
+        { name: "Rules", href: "/", enabled: false },
+      ]}
+    />
+  );
+
   return (
     <LayoutContainer
       {...props}
@@ -75,41 +142,8 @@ const LayoutHeaderComponent: React.FC<
       className={clsx(className, "min-h-[3.5rem] max-h-[5.64rem]")}
     >
       <header>
-        <div className="flex justify-between items-center">
-          <Breadcrumbs className="space-x-2">
-            <Breadcrumbs.Item>
-              <img
-                className="object-cover w-8 h-8"
-                src="https://elevate.art/_next/image?url=%2Fimages%2Flogo-black.png&w=128&q=75"
-              />
-            </Breadcrumbs.Item>
-            <Breadcrumbs.Item>sekured</Breadcrumbs.Item>
-            <Breadcrumbs.Item>roboghost</Breadcrumbs.Item>
-          </Breadcrumbs>
-          <div className="flex flex-row justify-center items-center space-x-3">
-            {[...externalRoutes, ...socialRoutes].map((item, index) => {
-              return (
-                <Link href={item.href}>
-                  {item.icon ? (
-                    <item.icon
-                      className="h-4 w-4 text-darkGrey"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <span className="text-darkGrey">{item.name}</span>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-        <HeaderInternalPageRoutes
-          links={[
-            { name: "Preview", href: "/", enabled: false },
-            { name: "Rarity", href: "/", enabled: false },
-            { name: "Rules", href: "/", enabled: false },
-          ]}
-        />
+        {topNav}
+        {bottomNav}
       </header>
     </LayoutContainer>
   );
