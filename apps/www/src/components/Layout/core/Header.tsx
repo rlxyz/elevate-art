@@ -90,6 +90,7 @@ type HeaderInternalAppRoutesProps = {
     organisations?: Organisation[]
   }[]
 }
+
 const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   const { currentHref } = useQueryOrganisation()
   const { setOrganisationId } = useOrganisationNavigationStore((state) => {
