@@ -30,8 +30,8 @@ const LayoutContainerComponent: React.FC<
       className={clsx(
         "flex justify-center h-full w-full",
         className,
-        border === "lower" && "border-b border-mediumGrey",
-        border === "upper" && "border-t border-mediumGrey"
+        border === "lower" && "border-b border-border",
+        border === "upper" && "border-t border-border"
       )}
     >
       <div className="w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full">

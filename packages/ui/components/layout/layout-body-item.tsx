@@ -23,7 +23,12 @@ const LayoutBodyItemComponent: React.FC<
   ...props
 }: React.PropsWithChildren<LayoutBodyProps>) => {
   return (
-    <LayoutContainer border={border} className="min-h-[3.5rem]" {...props}>
+    <LayoutContainer
+      as="article"
+      border={border}
+      className="min-h-[3.5rem]"
+      {...props}
+    >
       <div className="-ml-2">{children}</div>
     </LayoutContainer>
   );

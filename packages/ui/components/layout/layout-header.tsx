@@ -1,45 +1,14 @@
 import clsx from "clsx";
 import Breadcrumbs from "components/breadcrumbs";
 import Link from "components/link";
+import Tabs from "components/tabs";
+import { FC, HTMLAttributes, PropsWithChildren } from "react";
 import {
   externalRoutes,
   NavigationRoutes,
   socialRoutes,
 } from "../elevateart-external-links";
 import LayoutContainer from "./layout-container";
-
-export interface HeaderInternalPageRoutesProps {
-  links: { name: string; enabled: boolean; href: string }[];
-}
-
-const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
-  return (
-    <aside>
-      <ul className="flex list-none">
-        {links.map(({ name, enabled, href }, index: number) => {
-          return (
-            <li
-              key={index}
-              className={
-                enabled ? "flex space-between items-center relative" : ""
-              }
-            >
-              <Link block href={href}>
-                {name}
-              </Link>
-              {/* {enabled && (
-                <motion.div
-                  className="absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0"
-                  layoutId="underline"
-                />
-              )} */}
-            </li>
-          );
-        })}
-      </ul>
-    </aside>
-  );
-};
 
 export interface Props {
   appNavigationRoutes?: NavigationRoutes[];
@@ -54,7 +23,7 @@ const defaultProps: Props = {
 };
 
 export type LayoutContainerProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+  Omit<HTMLAttributes<any>, keyof Props>;
 
 /**
  * The core navigation component for applications.
@@ -67,15 +36,13 @@ export type LayoutContainerProps = Props &
  * - a landing page wouldnt have the pageNavigationRoutes.
  * - it would instantiate an empty array of appNavigationRoutes
  */
-const LayoutHeaderComponent: React.FC<
-  React.PropsWithChildren<LayoutContainerProps>
-> = ({
+const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
   appNavigationRoutes,
   pageNavigationRoutes,
   className,
   children,
   ...props
-}: React.PropsWithChildren<LayoutContainerProps>) => {
+}: PropsWithChildren<LayoutContainerProps>) => {
   const appNavigationRoutesFinal = [
     {
       name: "Elevate Art",
@@ -114,11 +81,11 @@ const LayoutHeaderComponent: React.FC<
             <Link key={item.href} href={item.href}>
               {item.icon ? (
                 <item.icon
-                  className="h-4 w-4 text-darkGrey"
+                  className="h-4 w-4 text-accents_6"
                   aria-hidden="true"
                 />
               ) : (
-                <span className="text-darkGrey">{item.name}</span>
+                <span className="text-accents_6">{item.name}</span>
               )}
             </Link>
           );
@@ -128,13 +95,11 @@ const LayoutHeaderComponent: React.FC<
   );
 
   const bottomNav = (
-    <HeaderInternalPageRoutes
-      links={[
-        { name: "Preview", href: "/", enabled: false },
-        { name: "Rarity", href: "/", enabled: false },
-        { name: "Rules", href: "/", enabled: false },
-      ]}
-    />
+    <Tabs hideDivider>
+      {pageNavigationRoutes?.map((route) => {
+        return <Tabs.Item label={route.name} value={route.name} />;
+      })}
+    </Tabs>
   );
 
   return (
