@@ -21,6 +21,7 @@ module.exports = {
       accents_7: "rgb(var(--accents_7) / 1.0)",
       accents_8: "rgb(var(--accents_8) / 1.0)",
       accents_9: "rgb(var(--accents_9) / 1.0)",
+      border: "rgb(var(--border) / 1.0)",
       error: "rgb(var(--error) / 1.0)",
       success: "rgb(var(--success) / 1.0)",
       link: "rgb(var(--link) / 1.0)",
