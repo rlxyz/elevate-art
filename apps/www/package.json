@@ -11,7 +11,8 @@
     "push": "prisma db push",
     "push:seed": "node prisma/seed",
     "migrate": "prisma migrate",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "clean": "rm -rf .turbo node_modules"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",

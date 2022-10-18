@@ -5,6 +5,7 @@
   "types": "./index.tsx",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf .turbo node_modules",
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
   "devDependencies": {
