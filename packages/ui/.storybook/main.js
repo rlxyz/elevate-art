@@ -1,6 +1,7 @@
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const path = require("path");
 
+// @todo convert to typescript
 module.exports = {
   stories: [
     "../stories/**/*.stories.mdx",

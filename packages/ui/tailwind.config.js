@@ -1,37 +1,32 @@
-const colors = require("tailwindcss/colors");
 const plugin = require("tailwindcss/plugin");
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: "jit",
   content: ["./components/**/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    /**
+     * We use CSS variables defined in styles/globals.css to define color values.
+     * Source: https://tailwindcss.com/docs/customizing-colors#using-css-variables
+     */
     colors: {
-      hue: {
-        light: "#ffffff",
-        header: "#FAFAFA",
-        dark: "#0F111A",
-      },
-      hover: {
-        light: "#E5E8EB",
-      },
-      white: colors.white,
-      primary: colors.red,
-      lightGray: "#FAFAFA",
-      darkGrey: "#888888",
-      mediumGrey: "#eaeaea",
-      redDot: "#FF5555",
-      greenDot: "#86D893",
-      black: "#2C2C2C",
-      disabledGray: "#D7D7D7",
-      blueHighlight: "#0070F3",
-      blueHighlightLight: "#3291FF",
-      redError: "#EE0000",
+      background: "rgb(var(--background) / 1.0)",
+      foreground: "rgb(var(--foreground) / 1.0)",
+      accents_1: "rgb(var(--accents_1) / 1.0)",
+      accents_2: "rgb(var(--accents_2) / 1.0)",
+      accents_3: "rgb(var(--accents_3) / 1.0)",
+      accents_4: "rgb(var(--accents_4) / 1.0)",
+      accents_5: "rgb(var(--accents_5) / 1.0)",
+      accents_6: "rgb(var(--accents_6) / 1.0)",
+      accents_7: "rgb(var(--accents_7) / 1.0)",
+      accents_8: "rgb(var(--accents_8) / 1.0)",
+      accents_9: "rgb(var(--accents_9) / 1.0)",
+      error: "rgb(var(--error) / 1.0)",
+      success: "rgb(var(--success) / 1.0)",
+      link: "rgb(var(--link) / 1.0)",
+      linkLighter: "rgb(var(--linkLighter) / 1.0)",
     },
-    fontFamily: {
-      sans: ['"Plus Jakarta Sans"', "sans-serif"],
-      normal: ['"Plus Jakarta Sans"', "sans-serif"],
-      "plus-jakarta-sans": ['"Plus Jakarta Sans"', "sans-serif"],
-    },
+    /** All screen sizes that this UI library handles. Extend this list if you want to add more screen sizes */
     screens: {
       sm: "640px",
       md: "768px",
@@ -42,9 +37,16 @@ module.exports = {
       "4xl": "2048px",
       "5xl": "2560px",
     },
+    /** All fonts that we handle */
+    fontFamily: {
+      sans: ['"Plus Jakarta Sans"', "sans-serif"],
+      normal: ['"Plus Jakarta Sans"', "sans-serif"],
+      "plus-jakarta-sans": ['"Plus Jakarta Sans"', "sans-serif"],
+    },
   },
   plugins: [
     plugin(function ({ addUtilities }) {
+      /** Little hack for components that do not want to show the scrollbar. Usage: `no-scrollbar` in a components className */
       addUtilities({
         ".no-scrollbar": {
           scrollbarWidth: "none",

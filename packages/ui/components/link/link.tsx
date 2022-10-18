@@ -47,9 +47,9 @@ const LinkComponent = React.forwardRef<
           "inline-flex items-baseline no-underline",
           "text-xs w-fit h-auto",
           underline && "hover:underline hover:bg-mediumGrey",
-          block && "rounded-[5px] hover:bg-mediumGrey p-1",
-          color && "text-blueHighlight hover:text-blueHighlightLight",
-          block && color && "hover:bg-blueHighlightLight hover:bg-opacity-10"
+          color && "text-link",
+          block && "rounded-[5px] hover:bg-accents_7 p-1",
+          block && color && "hover:bg-linkLighter"
         )}
         href={href}
         {...props}
