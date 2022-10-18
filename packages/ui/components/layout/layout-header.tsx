@@ -57,7 +57,7 @@ export type LayoutContainerProps = Props &
   Omit<React.HTMLAttributes<any>, keyof Props>;
 
 /**
- * The main navigation component for the application.
+ * The core navigation component for applications.
  * There are three sections to this component:
  * - appNavigationRoutes: These are the routes that are always present in the header.
  * - pageNavigationRoutes: These are the routes that are specific to the page.
@@ -81,7 +81,9 @@ const LayoutHeaderComponent: React.FC<
       name: "Elevate Art",
       href: "/",
       disabled: false,
-      icon: (props: any) => <img src="" {...props} />,
+      icon: (props: any) => (
+        <img src="public/images/logo-black.png" {...props} />
+      ),
     },
     ...(appNavigationRoutes || []),
   ];
