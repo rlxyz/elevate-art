@@ -147,7 +147,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
             ))}
           </div>
         </header>
-        <div className={`pt-1`}>{children}</div>
+        <div className="pt-1">{children}</div>
       </div>
     </TabsContext.Provider>
   );

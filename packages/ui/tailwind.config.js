@@ -27,6 +27,11 @@ module.exports = {
       link: "rgb(var(--link) / 1.0)",
       linkLighter: "rgb(var(--linkLighter) / 1.0)",
     },
+    borderRadius: {
+      primary: "5px",
+      secondary: "4px",
+      tertiary: "3px",
+    },
     /** All screen sizes that this UI library handles. Extend this list if you want to add more screen sizes */
     screens: {
       sm: "640px",
