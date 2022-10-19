@@ -127,3 +127,11 @@ export const getReactNode = (
   if (typeof node !== "function") return node;
   return (node as () => React.ReactNode)();
 };
+
+// @todo once renamed the ui lib, then change this and all data-ui
+export const isUIElement = (el?: HTMLElement): boolean => {
+  if (!el) return false;
+  if (el?.dataset && el?.dataset["ui"]) return true;
+  el.attributes.getNamedItem("data-ui");
+  return !!el.attributes.getNamedItem("data-ui");
+};

@@ -10,6 +10,7 @@ module.exports = {
      * Source: https://tailwindcss.com/docs/customizing-colors#using-css-variables
      */
     colors: {
+      transparent: "transparent",
       background: "rgb(var(--background) / 1.0)",
       foreground: "rgb(var(--foreground) / 1.0)",
       accents_1: "rgb(var(--accents_1) / 1.0)",

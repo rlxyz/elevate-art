@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Highlight from "components/shared/highlight";
+import { isUIElement } from "components/utils/collections";
 import { useRect } from "components/utils/useLayout";
 import React, {
   CSSProperties,
@@ -9,11 +10,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-// import Highlight from "../shared/highlight";
-// import useClasses from "../use-classes";
-// import useScale, { withScale } from "../use-scale";
-// import useTheme from "../use-theme";
-// import { useRect } from "../utils/layouts";
 import { TabsConfig, TabsContext, TabsHeaderItem } from "./tabs-context";
 
 interface Props {
@@ -63,8 +59,6 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
   align,
   ...props
 }: React.PropsWithChildren<TabsProps> & typeof defaultProps) => {
-  // const theme = useTheme();
-  // const { SCALES } = useScale();
   const [tabs, setTabs] = useState<Array<TabsHeaderItem>>([]);
   const [selfValue, setSelfValue] = useState<string | undefined>(
     userCustomInitialValue
@@ -107,6 +101,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
     onChange && onChange(value);
   };
   const tabItemMouseOverHandler = (event: MouseEvent<HTMLDivElement>) => {
+    if (!isUIElement(event.target as HTMLDivElement)) return;
     setRect(event, () => ref.current);
     if (highlight) {
       setDisplayHighlight(true);
@@ -132,8 +127,8 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
           />
           <div
             className={clsx(
-              "w-full h-full flex flex-1 flex-nowrap items-center",
-              hideDivider ? "border-transparent" : "border-b border-border"
+              "w-full h-full flex flex-1 flex-nowrap items-center border-b border-border",
+              hideDivider && "border-transparent"
             )}
             style={{ justifyContent: align, paddingLeft: leftSpace }}
           >

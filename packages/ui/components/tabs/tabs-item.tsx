@@ -45,10 +45,10 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
           "relative flex items-center box-border cursor-pointer bg-transparent",
           "w-auto h-auto py-3 px-2 mx-1 first-of-type:ml-0 z-1",
           "outline-none capitalize whitespace-nowrap select-none text-xs leading-normal",
-          "after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:right-0 after:w-full after:h-[2px] after:rounded-secondary after:scale-x-75 after:bg-foreground after:text-foreground after:transition-opacity after:opacity-0",
           "hover:text-foreground",
-          active && "after:opacity-100 after:scale-x-100",
-          !active ? "text-accents_5" : "text-foreground",
+          "after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:right-0 after:w-full after:h-[2px] after:rounded-secondary after:bg-foreground after:text-foreground after:transition-['transition: opacity, transform 200ms ease-in'] after:opacity-0",
+          active ? "after:opacity-100 after:scale-x-100" : "after:scale-x-75",
+          active ? "text-foreground" : "text-accents_5",
           disabled && "cursor-not-allowed text-accents_3",
           hideBorder &&
             "before:block before:font-semibold before:height-0 before:overflow-hidden before:invisible after:hidden",
@@ -62,22 +62,9 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
           onClick && onClick(value);
         }}
         style={active ? activeStyle : {}}
-        // data-geist="tab-item" // @todo fix this? src: https://github.com/geist-org/geist-ui/blob/0381813bdbd7eae802d4792ae88c8336f3afacb9/components/tabs/tabs-item.tsx#L61
+        data-ui="tab-item" // @todo fix this? src: https://github.com/geist-org/geist-ui/blob/0381813bdbd7eae802d4792ae88c8336f3afacb9/components/tabs/tabs-item.tsx#L61
       >
         {label}
-        {/* <style jsx>{`
-          .tab {
-            --tabs-item-hover-left: calc(-1 * ${SCALES.pl(0.28)});
-            --tabs-item-hover-right: calc(-1 * ${SCALES.pr(0.28)});
-          }
-          .tab :global(svg) {
-            max-height: 1em;
-            margin-right: 5px;
-          }
-          .hide-border:before {
-            content: ${label};
-          }
-        `}</style> */}
       </div>
     );
   };
