@@ -92,8 +92,8 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
                         images: [
                           {
                             url: 'https://uploads-ssl.webflow.com/62fb25dec6d6000039acf36b/630df414a98b27db93462c57_Open%20Graph.png',
-                            width: 800,
-                            height: 600,
+                            width: 1600,
+                            height: 840,
                             alt: 'Elevate Art',
                           },
                         ],
