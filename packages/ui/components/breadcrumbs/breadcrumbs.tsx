@@ -58,5 +58,4 @@ const BreadcrumbsComponent: React.FC<
 
 BreadcrumbsComponent.defaultProps = defaultProps;
 BreadcrumbsComponent.displayName = "Breadcrumbs";
-// const Breadcrumbs = withScale(BreadcrumbsComponent);
 export default BreadcrumbsComponent;
