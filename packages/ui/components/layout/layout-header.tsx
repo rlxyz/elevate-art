@@ -94,8 +94,8 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
     </div>
   );
 
-  const bottomNav = (
-    <Tabs hideDivider>
+  const bottomNav = pageNavigationRoutes && (
+    <Tabs initialValue={pageNavigationRoutes[0]?.name} hideDivider>
       {pageNavigationRoutes?.map((route) => {
         return <Tabs.Item label={route.name} value={route.name} />;
       })}
