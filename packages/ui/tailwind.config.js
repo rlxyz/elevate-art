@@ -13,6 +13,7 @@ module.exports = {
       transparent: "transparent",
       background: "rgb(var(--background) / 1.0)",
       foreground: "rgb(var(--foreground) / 1.0)",
+      foregroundLight: "rgb(var(--foreground) / 0.5)",
       accents_1: "rgb(var(--accents_1) / 1.0)",
       accents_2: "rgb(var(--accents_2) / 1.0)",
       accents_3: "rgb(var(--accents_3) / 1.0)",

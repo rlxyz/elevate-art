@@ -28,11 +28,11 @@ const LoadingComponent: React.FC<React.PropsWithChildren<LoadingProps>> = ({
     <div
       className={clsx(
         className,
-        "relative inline-flex items-center text-xs w-full h-full min-h-4 p-0 m-0"
+        "relative inline-flex justify-center items-center text-xs w-full h-full min-h-4 p-0 m-0"
       )}
       {...props}
     >
-      <span className="absolute flex items-center bg-transparent content-center select-none top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2">
+      <span className="absolute flex justify-center items-center bg-transparent select-none top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2">
         {children && (
           <label className="mr-2 text-accents_5 leading-none">{children}</label>
         )}
