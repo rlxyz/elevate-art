@@ -23,6 +23,7 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
         {childrens.map((children, index) => {
           return (
             <th
+              key={index}
               className={clsx(
                 !loading && index === 0 && 'border-t border-l border-mediumGrey pl-3',
                 !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-mediumGrey',
@@ -91,13 +92,14 @@ const TableBodyRow = ({
       {childrens.map((children, index) => {
         return (
           <td
+            key={index}
             className={clsx(
               current === total - 1 && 'border-b border-mediumGrey',
               current === total - 1 && index == 0 && 'rounded-bl-[5px]',
               current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
               index === 0 && 'pl-3 border-l',
               index === childrens.length - 1 && 'pr-3 border-r',
-              index === 2 && 'w-[20%]', // this needs to be fixed!
+              index === 2 && 'w-[20%]', // @todo this needs to be fixed!
               index === 3 && 'w-[30%]',
               index === 4 && 'w-[20%]',
               index === 5 && 'w-[10%]',
