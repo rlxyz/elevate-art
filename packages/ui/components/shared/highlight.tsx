@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { isUnplacedRect, ReactiveDomReact } from "components/utils/useLayout";
 import usePrevious from "components/utils/usePrevious";
 import React, { useMemo, useRef } from "react";
@@ -37,10 +36,10 @@ const Highlight: React.FC<HighlightProps> = ({
     const width = rect.width * hoverWidthRatio;
     const height = rect.height * hoverHeightRatio;
     return {
-      width: `w-[${width}px]`,
-      left: `left-[${rect.left + (rect.width - width) / 2}px]`,
-      height: `h-[${height}px]`,
-      top: `top-[${rect.elementTop + (rect.height - height) / 2}px]`,
+      width: `${width}px`,
+      left: `${rect.left + (rect.width - width) / 2}px`,
+      height: `${height}px`,
+      top: `${rect.elementTop + (rect.height - height) / 2}px`,
       transition: isFirstVisible ? "opacity" : "opacity, width, left, top",
     };
   }, [rect, hoverWidthRatio, hoverHeightRatio]);
@@ -48,15 +47,16 @@ const Highlight: React.FC<HighlightProps> = ({
   return (
     <div
       ref={ref}
-      className={clsx(
-        `absolute rounded-[5px] bg-accents_2`,
-        position.width,
-        position.left,
-        position.height,
-        position.top,
-        visible ? `opacity-[${activeOpacity}]` : `opacity-[0]`,
-        "transition-opacity"
-      )}
+      style={{
+        width: position.width,
+        left: position.left,
+        height: position.height,
+        top: position.top,
+        opacity: visible ? activeOpacity : 0,
+        transition: "0.15s ease",
+        transitionProperty: position.transition,
+      }}
+      className="absolute rounded-primary bg-accents_7"
       {...props}
     />
   );

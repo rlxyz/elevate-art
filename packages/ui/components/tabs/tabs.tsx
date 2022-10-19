@@ -1,4 +1,6 @@
 import clsx from "clsx";
+import Highlight from "components/shared/highlight";
+import { useRect } from "components/utils/useLayout";
 import React, {
   CSSProperties,
   MouseEvent,
@@ -69,7 +71,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
   );
   const ref = useRef<HTMLDivElement | null>(null);
   const [displayHighlight, setDisplayHighlight] = useState<boolean>(false);
-  // const { rect, setRect } = useRect();
+  const { rect, setRect } = useRect();
 
   const register = (next: TabsHeaderItem) => {
     setTabs((last) => {
@@ -105,7 +107,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
     onChange && onChange(value);
   };
   const tabItemMouseOverHandler = (event: MouseEvent<HTMLDivElement>) => {
-    // setRect(event, () => ref.current);
+    setRect(event, () => ref.current);
     if (highlight) {
       setDisplayHighlight(true);
     }
@@ -122,18 +124,18 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
           ref={ref}
           onMouseLeave={() => setDisplayHighlight(false)}
         >
-          {/* <Highlight
+          <Highlight
             rect={rect}
             visible={displayHighlight}
             hoverHeightRatio={hoverHeightRatio}
             hoverWidthRatio={hoverWidthRatio}
-          /> */}
+          />
           <div
-            /* @todo add align content */
             className={clsx(
               "w-full h-full flex flex-1 flex-nowrap items-center",
               hideDivider ? "border-transparent" : "border-b border-border"
             )}
+            style={{ justifyContent: align, paddingLeft: leftSpace }}
           >
             {tabs.map(({ cell: Cell, value }) => (
               <Cell
@@ -147,7 +149,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
             ))}
           </div>
         </header>
-        <div className="pt-1">{children}</div>
+        <div className="pt-2">{children}</div>
       </div>
     </TabsContext.Provider>
   );

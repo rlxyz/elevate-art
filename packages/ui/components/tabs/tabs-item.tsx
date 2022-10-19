@@ -42,9 +42,8 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
         ref={ref}
         className={clsx(
           "relative flex items-center box-border cursor-pointer",
-          "w-auto h-auto px-3 py-2 z-1",
+          "w-auto h-auto p-3 z-1",
           "outline-none capitalize whitespace-nowrap bg-transparent select-none text-xs",
-          "hover:text-foreground hover:bg-accents_7",
           "absolute -bottom-[1px] rounded-secondary left-0 right-0 w-100% -height-[2px] transition-opacity",
           active && "text-foreground bg-accents_7 opacity-1 scale-x-100",
           disabled && "cursor-not-allowed text-accents_3"
