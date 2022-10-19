@@ -49,7 +49,7 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
           "after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:right-0 after:w-full after:h-[2px] after:rounded-secondary after:bg-foreground after:text-foreground after:transition-['transition: opacity, transform 200ms ease-in'] after:opacity-0",
           active ? "after:opacity-100 after:scale-x-100" : "after:scale-x-75",
           active ? "text-foreground" : "text-accents_5",
-          disabled && "cursor-not-allowed text-accents_3",
+          disabled && "cursor-not-allowed hover:text-accents_3",
           hideBorder &&
             "before:block before:font-semibold before:height-0 before:overflow-hidden before:invisible after:hidden",
           hideBorder && active && "text-semibold"
