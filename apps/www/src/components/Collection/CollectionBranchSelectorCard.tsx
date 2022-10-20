@@ -53,7 +53,7 @@ const Index = () => {
           ref={buttonRef}
           onClick={() => setOpenState(true)}
           className={clsx(
-            !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
+            !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
             'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-black'
           )}
         >
@@ -87,7 +87,7 @@ const Index = () => {
                     </div>
                     <div className='col-span-2'>
                       <button
-                        className='w-full h-full px-2 border border-mediumGrey rounded-[5px] flex items-center justify-center'
+                        className='w-full h-full px-2 border border-border rounded-[5px] flex items-center justify-center'
                         onClick={(e: any) => {
                           e.preventDefault()
                           setIsOpenDialog(true)
@@ -118,7 +118,7 @@ const Index = () => {
                             </span>
                             <div className='flex items-center'>
                               {collection.name === 'main' && (
-                                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black mr-1'>
+                                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black mr-1'>
                                   {'master'}
                                 </span>
                               )}

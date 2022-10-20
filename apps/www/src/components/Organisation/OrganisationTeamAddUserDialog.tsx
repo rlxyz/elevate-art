@@ -49,12 +49,12 @@ export const OrganisationTeamAddUserDialog = ({
                 <Dialog.Panel className='relative rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
-                    className='p-8 border-b border-mediumGrey bg-white text-black text-xl justify-center flex leading-6 font-semibold'
+                    className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
                   >
                     Add Collaborator
                   </Dialog.Title>
                   <Dialog.Description>
-                    <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
+                    <div className='bg-lightGray space-y-3 p-8 border-b border-border'>
                       <span className='text-sm'>
                         Add people to your team and collaborate with them. They can create projects, add layers with associates
                         traits, set rarity, create rules, and generate collections.
@@ -62,13 +62,13 @@ export const OrganisationTeamAddUserDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Address</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
+                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
                             {addNewUserData.address}
                           </div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
+                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
                             {capitalize(addNewUserData.role || '')}
                           </div>
                         </div>

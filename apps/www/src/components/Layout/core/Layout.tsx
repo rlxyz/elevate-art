@@ -1,11 +1,8 @@
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
+import Footer from './Footer'
 import Header, { HeaderProps } from './Header'
-
-const DynamicHeader = dynamic(() => import('./Header'))
-const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {
   children: React.ReactElement[] | React.ReactElement
@@ -26,8 +23,8 @@ export const LayoutContainer = ({
       className={clsx(
         'flex justify-center h-full w-full',
         className,
-        border === 'lower' && 'border-b border-mediumGrey',
-        border === 'upper' && 'border-t border-mediumGrey'
+        border === 'lower' && 'border-b border-border',
+        border === 'upper' && 'border-t border-border'
       )}
     >
       <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
@@ -42,7 +39,7 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
       {hasFooter ? (
         <LayoutContainer border='upper'>
           <div className='min-h-[3.5rem] flex items-center'>
-            <DynamicFooter />
+            <Footer />
           </div>
         </LayoutContainer>
       ) : (

@@ -12,7 +12,7 @@ export const GenerateButton = () => {
   return (
     <div
       className={clsx(
-        !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
+        !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
         'w-full h-full rounded-[5px] flex items-center justify-center'
       )}
     >
@@ -43,7 +43,7 @@ const Index = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <div className='flex items-center border border-mediumGrey rounded-[5px] px-4 py-3'>
+      <div className='flex items-center border border-border rounded-[5px] px-4 py-3'>
         <div className='space-y-4'>
           <span className='font-normal flex flex-col text-xs space-y-3'>
             <div className='flex items-center justify-between'>

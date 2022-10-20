@@ -113,7 +113,7 @@ const Page = () => {
                   <div
                     className={clsx(
                       !hasLoaded() && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full border-none',
-                      'border bg-white border-mediumGrey rounded-[5px]'
+                      'border bg-white border-border rounded-[5px]'
                     )}
                   >
                     <div className={clsx(!hasLoaded() && 'invisible', 'flex w-full h-full')}>
@@ -161,7 +161,7 @@ const Page = () => {
                   </div>
                   {/* <button
                       className={clsx(
-                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey rounded-[5px] bg-blueHighlight text-white'
+                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border rounded-[5px] bg-blueHighlight text-white'
                       )}
                     >
                       Add Trait

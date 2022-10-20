@@ -46,7 +46,7 @@ import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next
 import { SessionProvider, useSession } from "next-auth/react";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
-export { ConnectButton } from "./ConnectButton";
+export { ConnectButton } from "./components/ConnectButton";
 export {
   getSiweMessageOptions,
   wagmiClient,

@@ -29,6 +29,7 @@ module.exports = {
       link: "rgb(var(--link) / 1.0)",
       linkLighter: "rgb(var(--linkLighter) / 1.0)",
     },
+    /** Border Radius that we use. Note: full is rounded */
     borderRadius: {
       primary: "5px",
       secondary: "4px",

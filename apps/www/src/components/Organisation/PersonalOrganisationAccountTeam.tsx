@@ -35,12 +35,12 @@ export const PersonalOrganisationAccountTeam = () => {
       <SearchInput isLoading={isLoading} setQuery={setQuery} />
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
-          <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
+          <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-mediumGrey')}>
             {filteredOrganisaitons.map((organisation) => {
               return (
                 <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-border' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
@@ -56,7 +56,7 @@ export const PersonalOrganisationAccountTeam = () => {
                   </div>
                   <Link
                     href={`/${organisation.name}`}
-                    className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                    className='text-black border border-border px-4 py-1.5 rounded-[5px] text-xs'
                   >
                     View
                   </Link>
@@ -69,7 +69,7 @@ export const PersonalOrganisationAccountTeam = () => {
         <></>
       )}
       {isLoading ? (
-        <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
+        <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-mediumGrey')}>
           {Array.from(Array(3).keys()).map((index) => {
             return (
               <div

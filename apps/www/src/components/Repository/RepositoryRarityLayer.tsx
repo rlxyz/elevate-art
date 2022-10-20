@@ -17,10 +17,10 @@ const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] | unde
           ?.sort((a, b) => a.weight - b.weight)
           .map((trait: TraitElement) => {
             return (
-              <div key={trait.id} className='relative flex-col border border-mediumGrey rounded-[5px] shadow-lg'>
+              <div key={trait.id} className='relative flex-col border border-border rounded-[5px] shadow-lg'>
                 <div className='py-4 overflow-hidden'>
                   <img
-                    className='relative w-full h-auto border-t border-b border-mediumGrey'
+                    className='relative w-full h-auto border-t border-b border-border'
                     src={getImageForTrait({
                       r: repositoryId,
                       l: trait.layerElementId,

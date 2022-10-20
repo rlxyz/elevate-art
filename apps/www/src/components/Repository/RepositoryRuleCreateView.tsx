@@ -113,7 +113,7 @@ export const RuleSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center space-x-3'>
           <button
-            className='bg-white border border-mediumGrey text-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
+            className='bg-white border border-border text-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
             onClick={() => {
               setSelectedLeftTrait(null)
               setSelectedRightTrait(null)
@@ -170,7 +170,7 @@ export const RuleSelectorConditionCombobox = ({
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
         className={clsx(
-          'w-full rounded-[5px] border border-mediumGrey bg-hue-light py-2 pl-3 pr-10 text-xs',
+          'w-full rounded-[5px] border border-border bg-hue-light py-2 pl-3 pr-10 text-xs',
           selected && 'border-blueHighlight'
         )}
         onChange={(event) => setQuery(event.target.value)}
@@ -284,7 +284,7 @@ export const RuleSelectorCombobox = ({
                 <>
                   <div className='flex flex-row items-center space-x-3'>
                     <div className='relative h-[35px] w-[35px]'>
-                      <div className='absolute w-full h-full border border-mediumGrey rounded-[5px]'>
+                      <div className='absolute w-full h-full border border-border rounded-[5px]'>
                         <img
                           src={getImageForTrait({
                             r: repositoryId,

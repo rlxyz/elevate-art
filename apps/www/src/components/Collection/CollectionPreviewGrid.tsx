@@ -50,7 +50,7 @@ const PreviewImage = ({
   const hash = v.hash(elements)
 
   return (
-    <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
+    <div className={clsx('relative flex-col border border-border rounded-[5px] shadow-lg')}>
       <div className='py-8 overflow-hidden'>
         <motion.div
           whileHover={{
@@ -65,7 +65,7 @@ const PreviewImage = ({
                 key={`${hash}-${t}-${index}`}
                 className={clsx(
                   index === elements.length - 1 ? 'relative' : 'absolute',
-                  'w-full h-auto border-t border-b border-mediumGrey'
+                  'w-full h-auto border-t border-b border-border'
                 )}
                 src={getImageForTrait({
                   r: repositoryId,

@@ -46,8 +46,8 @@
     "@elevateart/eth-auth": "*",
     "@elevateart/db": "*",
     "@elevateart/api": "*",
-    "@elevateart/ui": "*",
-    "@elevateart/compiler": "*"
+    "@elevateart/compiler": "*",
+    "@elevateart/ui": "*"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.0",

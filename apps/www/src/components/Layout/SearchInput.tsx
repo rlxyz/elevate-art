@@ -25,7 +25,7 @@ export const SearchInput = ({ setQuery, isLoading }: { setQuery: Dispatch<SetSta
         onChange={(e) => setQuery(e.target.value)}
         type='text'
         className={clsx(
-          isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full border-none' : 'border border-mediumGrey',
+          isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full border-none' : 'border border-border',
           'block text-xs w-full pl-10 rounded-[5px] py-2',
           'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',
           'invalid:border-redError invalid:text-redError',

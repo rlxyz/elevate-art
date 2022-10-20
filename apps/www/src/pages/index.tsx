@@ -24,7 +24,7 @@ const Guide = () => {
         </div>
       </div>
       <div className='mt-8 grid grid-cols-2 space-x-16'>
-        <div className='left-0 col-span-1 text-sm border border-mediumGrey rounded-[5px]'>
+        <div className='left-0 col-span-1 text-sm border border-border rounded-[5px]'>
           <img
             className='rounded-[5px]'
             src='https://uploads-ssl.webflow.com/62fb25dec6d6000039acf36b/63031ad32ea56e5ca7347090_Images-p-1600.png'

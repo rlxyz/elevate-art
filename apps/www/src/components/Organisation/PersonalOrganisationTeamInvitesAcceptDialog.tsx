@@ -20,7 +20,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className='text-white bg-blueHighlight border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+        className='text-white bg-blueHighlight border border-border px-4 py-1.5 rounded-[5px] text-xs'
       >
         Accept
       </button>
@@ -52,12 +52,12 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                 <Dialog.Panel className='relative rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
-                    className='p-8 border-b border-mediumGrey bg-white text-black text-xl justify-center flex leading-6 font-semibold'
+                    className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
                   >
                     Join Team
                   </Dialog.Title>
                   <Dialog.Description>
-                    <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
+                    <div className='bg-lightGray space-y-3 p-8 border-b border-border'>
                       <span className='text-sm'>
                         Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate
                         tons of collections.
@@ -65,13 +65,13 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Name</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
+                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
                             {pending.organisation.name}
                           </div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
+                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
                             {capitalize(pending.role)}
                           </div>
                         </div>

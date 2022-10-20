@@ -18,12 +18,12 @@ export const PersonalOrganisationAccountTeamInvites = () => {
               <p>Join teams youve been invited to</p>
             </div>
           </div>
-          <div className='border border-mediumGrey rounded-[5px] divide-y divide-mediumGrey'>
+          <div className='border border-border rounded-[5px] divide-y divide-mediumGrey'>
             {pendings.map((pending) => {
               return (
                 <div key={pending.id} className='p-4 flex flex-row items-center justify-between'>
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-border' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>{pending.organisation.name}</span>
                       <span className='text-xs text-darkGrey'>{capitalize(pending.role)}</span>

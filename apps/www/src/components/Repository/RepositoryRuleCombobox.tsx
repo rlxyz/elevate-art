@@ -9,7 +9,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
       <div
         ref={ref}
         className={clsx(
-          'flex items-center space-x-2 w-full rounded-[5px] border border-mediumGrey text-xs bg-hue-light pl-3 pr-10',
+          'flex items-center space-x-2 w-full rounded-[5px] border border-border text-xs bg-hue-light pl-3 pr-10',
           highlight && traitElement && 'border-blueHighlight',
           className
         )}

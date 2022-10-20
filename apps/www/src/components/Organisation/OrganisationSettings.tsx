@@ -39,7 +39,7 @@ export const OrganisationGeneralSettings = () => {
         console.log('tobeimeplemtned')
       })}
     >
-      <div className='w-full rounded-[5px] border border-mediumGrey'>
+      <div className='w-full rounded-[5px] border border-border'>
         <div className='p-6 space-y-4'>
           <div className='flex flex-col'>
             <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
@@ -47,7 +47,7 @@ export const OrganisationGeneralSettings = () => {
               <p className='text-xs text-black'>{'Used to identify your teams name on elevate.art'}</p>
             </div>
           </div>
-          <div className='w-full border border-mediumGrey rounded-[5px]'>
+          <div className='w-full border border-border rounded-[5px]'>
             <div className='h-full grid grid-cols-10 text-sm'>
               <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
                 <span className='px-4 py-2'>{`elevate.art/`}</span>
@@ -75,7 +75,7 @@ export const OrganisationGeneralSettings = () => {
             </Link>
           </div> */}
           <div>
-            <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
+            <div className='border border-border px-4 py-2 rounded-[5px]'>
               <span className='text-darkGrey'>Save</span>
             </div>
           </div>

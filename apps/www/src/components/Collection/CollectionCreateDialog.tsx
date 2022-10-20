@@ -70,7 +70,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                         <div className='space-y-1 flex flex-col'>
                           <span className='text-xs font-base'>Collection name</span>
                           <input
-                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
                             defaultValue='development'
                             type='string'
                             {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
@@ -88,7 +88,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                         <div className='space-y-1 flex flex-col'>
                           <span className='text-xs font-base'>Total Supply</span>
                           <input
-                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-mediumGrey rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
                             defaultValue={10000}
                             type='number'
                             {...register('totalSupply', { required: true, min: 1, max: 20000 })}

@@ -65,7 +65,7 @@ export const OrganisationTeamAddUser = () => {
           <h1 className='text-lg font-semibold text-black'>Members</h1>
           <p className='text-xs text-black'>Manage and invite Team Members.</p>
         </div>
-        <div className='w-full rounded-[5px] border border-mediumGrey'>
+        <div className='w-full rounded-[5px] border border-border'>
           <div className='p-6 space-y-2'>
             <div className='flex flex-col'>
               <div className='col-span-6 font-plus-jakarta-sans divide-y divide-mediumGrey space-y-3'>
@@ -79,7 +79,7 @@ export const OrganisationTeamAddUser = () => {
                 <div className='w-full'>
                   <input
                     className={clsx(
-                      'text-xs p-2 w-full h-full border border-mediumGrey rounded-[5px]',
+                      'text-xs p-2 w-full h-full border border-border rounded-[5px]',
                       'invalid:border-redError invalid:text-redError',
                       'focus:invalid:border-redError focus:invalid:ring-redError',
                       'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight'
@@ -105,7 +105,7 @@ export const OrganisationTeamAddUser = () => {
                 <div className='w-full'>
                   <select
                     {...register('role', { required: true })}
-                    className='text-xs p-2 w-full h-full rounded-[5px] border border-mediumGrey'
+                    className='text-xs p-2 w-full h-full rounded-[5px] border border-border'
                   >
                     <option value={OrganisationDatabaseRoleEnum.enum.Admin}>
                       {capitalize(OrganisationDatabaseRoleEnum.enum.Admin)}
@@ -139,7 +139,7 @@ export const OrganisationTeamAddUser = () => {
             </div>
           </div>
           <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-mediumGrey'>
-            <button className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-mediumGrey px-4 py-1.5 rounded-[5px]'>
+            <button className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-border px-4 py-1.5 rounded-[5px]'>
               Add
             </button>
             {addNewUserData && (

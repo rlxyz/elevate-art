@@ -41,7 +41,7 @@ const CollectionPreviewGridFilterLabels = () => {
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}
-            className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'
+            className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black'
           >
             <div>
               <span className='text-darkGrey mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}

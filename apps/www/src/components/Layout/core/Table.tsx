@@ -24,9 +24,9 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
           return (
             <th
               className={clsx(
-                !loading && index === 0 && 'border-t border-l border-mediumGrey pl-3',
-                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-mediumGrey',
-                !loading && 'text-left border-t border-mediumGrey', // everything else
+                !loading && index === 0 && 'border-t border-l border-border pl-3',
+                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-border',
+                !loading && 'text-left border-t border-border', // everything else
                 'py-2 rounded-tl-[5px] rounded-tr-[5px]'
               )}
             >
@@ -92,7 +92,7 @@ const TableBodyRow = ({
         return (
           <td
             className={clsx(
-              current === total - 1 && 'border-b border-mediumGrey',
+              current === total - 1 && 'border-b border-border',
               current === total - 1 && index == 0 && 'rounded-bl-[5px]',
               current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
               index === 0 && 'pl-3 border-l',
@@ -101,7 +101,7 @@ const TableBodyRow = ({
               index === 3 && 'w-[30%]',
               index === 4 && 'w-[20%]',
               index === 5 && 'w-[10%]',
-              'text-left border-t border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
+              'text-left border-t border-border py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
             )}
           >
             <div className={clsx(loading && 'invisible')}>{children}</div>

@@ -103,7 +103,7 @@ const LayerFolderSelector = () => {
         <div className='flex space-x-1 w-[15%]'>
           {/* <button
             className={clsx(
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white text-darkGrey rounded-[5px]'
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white text-darkGrey rounded-[5px]'
             )}
           >
             <PlusIcon className='w-3 h-3 text-darkGrey' />
@@ -111,7 +111,7 @@ const LayerFolderSelector = () => {
           <button
             className={clsx(
               openReordering ? 'text-blueHighlight border-blueHighlight' : ' text-darkGrey',
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px]'
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white rounded-[5px]'
             )}
             onClick={() => {
               if (!openReordering) {
@@ -127,7 +127,7 @@ const LayerFolderSelector = () => {
         </div>
       </div>
       <aside className='space-y-1'>
-        <div className='border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
+        <div className='border border-border rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
             <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
               {items.map((item, index) => {

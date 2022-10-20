@@ -24,7 +24,7 @@ const NoRepositoryExistPlaceholder = () => {
         </div>
         <div className='space-y-3 flex flex-col items-center'>
           <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
-            <div className='border flex items-center justify-center border-mediumGrey rounded-[5px] p-3 bg-black'>
+            <div className='border flex items-center justify-center border-border rounded-[5px] p-3 bg-black'>
               <span className='text-sm text-white'>Create a Project</span>
               <ChevronRightIcon className='text-white h-4 w-4' />
             </div>
@@ -151,7 +151,7 @@ const ViewAllRepositories = () => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
               <Link href={`/${organisationName}/${repository.name}`} external>
-                <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4'>
+                <div className='border border-border rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <div className='bg-blueHighlight h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>

@@ -141,7 +141,7 @@ export const FilterByTrait = () => {
                 <div
                   className={
                     layerDropdown === optionIdx
-                      ? 'max-h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey'
+                      ? 'max-h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-border'
                       : 'hidden'
                   }
                 >
@@ -163,7 +163,7 @@ export const FilterByTrait = () => {
                                 type='checkbox'
                                 name='checked'
                                 value={`${layer.id}/${traitElement.id}`}
-                                className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                                className='h-4 w-4 border rounded-[3px] border-border bg-hue-light'
                                 onChange={(e: any) => {
                                   handleChange(e)
                                   submitForm()
@@ -266,7 +266,7 @@ export const FilterByRarity = () => {
                           type='radio'
                           name='checked'
                           value={value}
-                          className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                          className='h-4 w-4 border rounded-[3px] border-border bg-hue-light'
                           onChange={(e: any) => {
                             handleChange(e)
                             submitForm()
@@ -293,7 +293,7 @@ const Index = () => {
     <>
       <div
         className={clsx(
-          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
           'rounded-[5px] space-y-1'
         )}
       >
@@ -303,7 +303,7 @@ const Index = () => {
       </div>
       <div
         className={clsx(
-          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-border',
           'rounded-[5px] space-y-1'
         )}
       >

@@ -1,5 +1,6 @@
 import { AppRouter } from '@elevateart/api'
 import { EthereumNextAuthContext } from '@elevateart/eth-auth'
+import '@elevateart/ui/styles/globals.css'
 import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
@@ -13,7 +14,6 @@ import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
-import '../styles/globals.css'
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {

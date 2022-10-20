@@ -29,7 +29,7 @@ const TraitRulesDisplayPerItem = ({
         <ComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
-        <div className='w-full h-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-xs'>
+        <div className='w-full h-full rounded-[5px] overflow-hidden border border-border bg-hue-light py-2 pl-3 text-xs'>
           {condition}
         </div>
       </div>

@@ -209,7 +209,7 @@ export const FolderUpload = () => {
           </div>
         </div>
       )}
-      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 space-y-12'>
+      <div className='absolute left-0 w-full border-t border-border bg-white p-12 space-y-12'>
         <div className='space-y-6 w-full h-full'>
           {organisation ? (
             <>
@@ -251,9 +251,7 @@ export const FolderUpload = () => {
                         <Disclosure key={files[0]}>
                           {({ open }) => (
                             <>
-                              <Disclosure.Button
-                                className={`border border-mediumGrey rounded-[5px] p-2 grid grid-cols-10 w-full`}
-                              >
+                              <Disclosure.Button className={`border border-border rounded-[5px] p-2 grid grid-cols-10 w-full`}>
                                 <div className='col-span-9 space-y-3 flex flex-col'>
                                   <div className='flex space-x-3'>
                                     <div className='flex items-center'>
@@ -305,7 +303,7 @@ export const FolderUpload = () => {
                                     {files[1].map((item, index) => {
                                       return (
                                         <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
-                                          <div className='relative border border-mediumGrey rounded-[5px]'>
+                                          <div className='relative border border-border rounded-[5px]'>
                                             <div className='pb-[100%]' />
                                             <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
                                             {item.uploaded && (
