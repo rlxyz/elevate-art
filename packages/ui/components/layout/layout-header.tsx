@@ -1,13 +1,13 @@
 import clsx from "clsx";
-import Breadcrumbs from "components/breadcrumbs";
-import Link from "components/link";
-import Tabs from "components/tabs";
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import Breadcrumbs from "../breadcrumbs";
 import {
   externalRoutes,
   NavigationRoutes,
   socialRoutes,
 } from "../elevateart-external-links";
+import Link from "../link";
+import Tabs from "../tabs";
 import LayoutContainer from "./layout-container";
 
 export interface Props {
@@ -49,7 +49,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
       href: "/",
       disabled: false,
       icon: (props: any) => (
-        <img src="public/images/logo-black.png" {...props} />
+        <img width={50} height={50} src="images/logo-black.png" {...props} />
       ),
     },
     ...(appNavigationRoutes || []),
@@ -81,11 +81,11 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
             <Link key={item.href} href={item.href}>
               {item.icon ? (
                 <item.icon
-                  className="h-4 w-4 text-accents_6"
+                  className="h-4 w-4 text-accents_5"
                   aria-hidden="true"
                 />
               ) : (
-                <span className="text-accents_6">{item.name}</span>
+                <span className="text-accents_5">{item.name}</span>
               )}
             </Link>
           );
@@ -106,11 +106,11 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
     <LayoutContainer
       {...props}
       border="lower"
-      className={clsx(className, "min-h-[3.5rem] max-h-[5.64rem]")}
+      className={clsx(className, "min-h-[3rem] max-h-[5.64rem]")}
     >
       <header>
         {topNav}
-        {bottomNav}
+        {/* {pageNavigationRoutes ? bottomNav : null} */}
       </header>
     </LayoutContainer>
   );

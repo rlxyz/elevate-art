@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import LayoutHeader from "components/layout/layout-header";
+import LayoutHeader from "../layout/layout-header";
 
 export default {
   title: "Layout/Header",

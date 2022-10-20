@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import Loading from "components/loading";
 import { Fragment, useEffect, useState } from "react";
+import Loading from "../loading";
 
 interface Props {
   title: string;

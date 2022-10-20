@@ -1,7 +1,4 @@
 import clsx from "clsx";
-import Highlight from "components/shared/highlight";
-import { isUIElement } from "components/utils/collections";
-import { useRect } from "components/utils/useLayout";
 import React, {
   CSSProperties,
   MouseEvent,
@@ -10,6 +7,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import Highlight from "../shared/highlight";
+import { isUIElement } from "../utils/collections";
+import { useRect } from "../utils/useLayout";
 import { TabsConfig, TabsContext, TabsHeaderItem } from "./tabs-context";
 
 interface Props {

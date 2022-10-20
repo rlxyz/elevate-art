@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Layout from "components/layout";
+import Layout from "../layout";
 
 export default {
   title: "Layout/Index",

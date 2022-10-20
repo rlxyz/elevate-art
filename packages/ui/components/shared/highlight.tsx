@@ -1,6 +1,6 @@
-import { isUnplacedRect, ReactiveDomReact } from "components/utils/useLayout";
-import usePrevious from "components/utils/usePrevious";
 import React, { useMemo, useRef } from "react";
+import { isUnplacedRect, ReactiveDomReact } from "../utils/useLayout";
+import usePrevious from "../utils/usePrevious";
 
 interface Props {
   rect: ReactiveDomReact;

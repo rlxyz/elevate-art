@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import LayoutFooter from "components/layout/layout-footer";
+import LayoutFooter from "../layout/layout-footer";
 
 export default {
   title: "Layout/Footer",
