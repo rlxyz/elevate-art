@@ -34,3 +34,7 @@ yarn-error.log*
 
 # storybook
 storybook-static/
+
+# yarn & npm - note: we removed this as we are now using pnpm
+yarn.lock
+package-json.lock
