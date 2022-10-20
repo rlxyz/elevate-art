@@ -23,11 +23,11 @@ export const PersonalOrganisationAccountTeam = () => {
   return (
     <div className='space-y-6'>
       <div className='space-y-2'>
-        <span className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'text-xl font-semibold')}>
+        <span className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'text-xl font-semibold')}>
           <span className={clsx(isLoading && 'invisible')}>Your Teams</span>
         </span>
         <div
-          className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}
+          className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-accents_5')}
         >
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
@@ -35,19 +35,19 @@ export const PersonalOrganisationAccountTeam = () => {
       <SearchInput isLoading={isLoading} setQuery={setQuery} />
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
-          <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-mediumGrey')}>
+          <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-accents_7')}>
             {filteredOrganisaitons.map((organisation) => {
               return (
                 <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-border' />
+                    <div className='h-6 w-6 border rounded-full bg-success border-border' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
                           ? capitalize(organisation.name)
                           : organisation.name}
                       </span>
-                      <span className='text-xs text-darkGrey'>
+                      <span className='text-xs text-accents_5'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
                           ? capitalize(OrganisationDatabaseEnum.enum.Personal)
                           : capitalize(getUserRoleInOrganisation(organisation) || '')}
@@ -69,13 +69,13 @@ export const PersonalOrganisationAccountTeam = () => {
         <></>
       )}
       {isLoading ? (
-        <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-mediumGrey')}>
+        <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-accents_7')}>
           {Array.from(Array(3).keys()).map((index) => {
             return (
               <div
                 key={index}
                 className={clsx(
-                  isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
+                  isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]',
                   'p-4 flex flex-row items-center justify-between'
                 )}
               >
@@ -83,7 +83,7 @@ export const PersonalOrganisationAccountTeam = () => {
                   <div className='h-6 w-6 rounded-full' />
                   <div className='flex flex-col space-y-1'>
                     <span className='text-xs font-bold'>{''}</span>
-                    <span className='text-xs text-darkGrey'>{''}</span>
+                    <span className='text-xs text-accents_5'>{''}</span>
                   </div>
                 </div>
                 <div />

@@ -42,22 +42,22 @@ export const OrganisationTeamDisplayPending = () => {
       <span className='text-xs'>Pending</span>
       <div>
         <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-border rounded-t-[5px]'>
-          <span className='text-darkGrey'>All</span>
+          <span className='text-accents_5'>All</span>
         </div>
-        <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-border'>
+        <div className='divide-y divide-accents_7 bg-white border-b border-x rounded-b-[5px] border-border'>
           {organisation.pendings.map(({ id, address, role, createdAt }) => (
             <div key={id} className='px-6 py-4 flex justify-between items-center'>
               <div className='flex items-center space-x-2'>
-                <div className='border border-border rounded-full bg-blueHighlight w-7 h-7' />
+                <div className='border border-border rounded-full bg-success w-7 h-7' />
                 <div className='flex flex-col space-y-1'>
                   <span className='text-xs font-semibold'>{address}</span>
                   <div className={clsx('flex items-baseline')}>
-                    <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
-                    {/* {ens ? <span className='text-xs font-normal text-blueHighlight'>{ens}</span> : null} */}
+                    <span className='text-xs text-accents_5'>{createdAt && timeAgo(createdAt)}</span>
+                    {/* {ens ? <span className='text-xs font-normal text-success'>{ens}</span> : null} */}
                   </div>
                 </div>
               </div>
-              <span className='text-xs text-darkGrey'>{capitalize(role)}</span>
+              <span className='text-xs text-accents_5'>{capitalize(role)}</span>
             </div>
           ))}
         </div>

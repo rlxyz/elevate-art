@@ -19,7 +19,7 @@ const NoRepositoryExistPlaceholder = () => {
             <img className='h-full object-cover' src='/images/logo-banner.png' alt='elevate art logo' />
           </div>
           <span className='text-md'>
-            We created a team for you called <span className='text-blueHighlight font-bold'>{current?.name}</span>
+            We created a team for you called <span className='text-success font-bold'>{current?.name}</span>
           </span>
         </div>
         <div className='space-y-3 flex flex-col items-center'>
@@ -33,7 +33,7 @@ const NoRepositoryExistPlaceholder = () => {
         <div className='space-y-3 flex flex-col items-center'>
           <span className='text-xs'>
             <Link external href='https://docs.elevate.art'>
-              <span className='text-blueHighlight font-semibold'>Learn</span>
+              <span className='text-success font-semibold'>Learn</span>
             </Link>{' '}
             about elevate.art
           </span>
@@ -65,7 +65,7 @@ const ViewAllRepositories = () => {
           <SearchInput isLoading={isLoading} setQuery={setQuery} />
         </div>
         <div className='col-span-1 h-full flex items-center'>
-          <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
+          <div className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
             <button
               className={clsx(
                 isLoading && 'invisible',
@@ -86,15 +86,15 @@ const ViewAllRepositories = () => {
           <>
             {Array.from({ length: 6 }).map((_, index) => (
               <div
-                className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'col-span-1 w-full')}
+                className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'col-span-1 w-full')}
                 key={index}
               >
                 <div className={clsx(isLoading && 'invisible', 'rounded-[5px] px-6 py-5 space-y-4')}>
                   <div className='flex items-center space-x-3'>
-                    <div className='bg-blueHighlight h-6 w-6 rounded-full' />
+                    <div className='bg-success h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{'no_collection'}</span>
-                      <span className='text-xs text-darkGrey'>Last Edited {'0 days ago'}</span>
+                      <span className='text-xs text-accents_5'>Last Edited {'0 days ago'}</span>
                     </div>
                   </div>
                   <div className='flow-root'>
@@ -153,10 +153,10 @@ const ViewAllRepositories = () => {
               <Link href={`/${organisationName}/${repository.name}`} external>
                 <div className='border border-border rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
-                    <div className='bg-blueHighlight h-6 w-6 rounded-full' />
+                    <div className='bg-success h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
-                      <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>
+                      <span className='text-xs text-accents_5'>Last Edited {timeAgo(repository.updatedAt)}</span>
                     </div>
                   </div>
                   <div className='flow-root'>

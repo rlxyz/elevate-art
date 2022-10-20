@@ -36,7 +36,7 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
                 <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-lightGray'>
                   <div className='space-y-4'>
                     <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
-                      Upload to <span className='text-blueHighlight'>{layer.name}</span> layer
+                      Upload to <span className='text-success'>{layer.name}</span> layer
                     </Dialog.Title>
                     <div>
                       <p className='text-sm'>You can upload multiple traits at a time</p>

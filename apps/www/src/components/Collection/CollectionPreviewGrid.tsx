@@ -88,7 +88,7 @@ const InfiniteScrollGridLoading = () => {
       {Array.from(Array(25).keys()).map((item, index) => {
         return (
           <div key={`${item}-${index}`} className='col-span-1'>
-            <div className={clsx('animate-pulse bg-mediumGrey bg-opacity-50', 'rounded-[5px] relative cursor-pointer shadow-sm')}>
+            <div className={clsx('animate-pulse bg-accents_7 bg-opacity-50', 'rounded-[5px] relative cursor-pointer shadow-sm')}>
               <div className='pb-[100%]' />
               <div className='pl-2 flex flex-col items-center space-y-1 w-full py-2' />
             </div>
@@ -134,9 +134,9 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                     }`}</span>
                     <div className='flex flex-col text-[0.6rem]'>
                       <span className='font-semibold overflow-hidden w-full'>
-                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
+                        <span className='text-accents_5'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
                       </span>
-                      <span className='text-darkGrey overflow-hidden w-full'>
+                      <span className='text-accents_5 overflow-hidden w-full'>
                         OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export const InfiniteScrollGrid = () => {
   return (
     <>
       <span
-        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50', 'text-xs text-darkGrey mb-1')}
+        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50', 'text-xs text-accents_5 mb-1')}
       >
         <span className={clsx(!collection && 'invisible')}>{`${collection?.generations || 0} generations`}</span>
       </span>
@@ -251,7 +251,7 @@ const Index = () => {
           <div className='flex space-x-2'>
             <h1
               className={clsx(
-                !collection && 'animate-pulse flex flex-row rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
+                !collection && 'animate-pulse flex flex-row rounded-[5px] bg-accents_7 bg-opacity-50 w-2/6',
                 'text-2xl font-bold text-black'
               )}
             >
@@ -260,8 +260,8 @@ const Index = () => {
           </div>
           <p
             className={clsx(
-              !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
-              'text-sm text-darkGrey w-1/2'
+              !collection && 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full',
+              'text-sm text-accents_5 w-1/2'
             )}
           >
             <span className={clsx(!collection && 'invisible')}>Create different token sets before finalising the collection</span>

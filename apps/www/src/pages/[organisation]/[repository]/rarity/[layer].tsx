@@ -97,7 +97,7 @@ const Page = () => {
                   <div className='col-span-2'>
                     <span
                       className={clsx(
-                        !hasLoaded() && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]',
+                        !hasLoaded() && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]',
                         'text-lg flex items-end h-full font-semibold'
                       )}
                     >
@@ -112,7 +112,7 @@ const Page = () => {
                   </div>
                   <div
                     className={clsx(
-                      !hasLoaded() && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full border-none',
+                      !hasLoaded() && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-full border-none',
                       'border bg-white border-border rounded-[5px]'
                     )}
                   >
@@ -120,7 +120,7 @@ const Page = () => {
                       <button
                         onClick={() => setCurrentView('rarity')}
                         className={clsx(
-                          currentView === 'rarity' ? 'bg-lightGray text-black' : 'text-darkGrey',
+                          currentView === 'rarity' ? 'bg-lightGray text-black' : 'text-accents_5',
                           'flex w-full items-center justify-center space-x-2 p-2'
                         )}
                       >
@@ -139,7 +139,7 @@ const Page = () => {
                         onClick={() => setCurrentView('layers')}
                         className={clsx(
                           currentView === 'layers' && 'bg-lightGray text-black',
-                          'flex w-full items-center justify-center space-x-2 p-2 text-darkGrey'
+                          'flex w-full items-center justify-center space-x-2 p-2 text-accents_5'
                         )}
                       >
                         <svg
@@ -148,7 +148,7 @@ const Page = () => {
                           viewBox='0 0 24 24'
                           strokeWidth={1.25}
                           stroke='currentColor'
-                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-darkGrey')}
+                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-accents_5')}
                         >
                           <path
                             strokeLinecap='round'
@@ -161,7 +161,7 @@ const Page = () => {
                   </div>
                   {/* <button
                       className={clsx(
-                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border rounded-[5px] bg-blueHighlight text-white'
+                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border rounded-[5px] bg-success text-white'
                       )}
                     >
                       Add Trait

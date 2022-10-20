@@ -34,7 +34,7 @@ const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] | unde
                     <span className='font-semibold overflow-hidden w-full'>
                       {((trait.weight / calculateSumArray(traitElements)) * 100).toFixed(3)}%
                     </span>
-                    <span className='text-darkGrey overflow-hidden w-full'>Update {timeAgo(trait.updatedAt)}</span>
+                    <span className='text-accents_5 overflow-hidden w-full'>Update {timeAgo(trait.updatedAt)}</span>
                   </div>
                 </div>
               </div>

@@ -18,7 +18,7 @@ export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
 const TableHead = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   const childrens = Children.toArray(children)
   return (
-    <thead className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white')}>
+    <thead className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-white')}>
       <tr>
         {childrens.map((children, index) => {
           return (
@@ -41,10 +41,10 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
 const TableHeadRow = ({ title, description }: { title?: JSX.Element; description?: JSX.Element }) => {
   return (
     <div className='flex items-center space-x-1'>
-      <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
+      <span className='text-[0.65rem] uppercase font-normal text-accents_5'>{title}</span>
       {description && (
         <Popover>
-          <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+          <Popover.Button as={InformationCircleIcon} className='text-accents_5 w-3 h-3 bg-lightGray' />
           <Transition
             as={Fragment}
             enter='transition ease-out duration-200'
@@ -68,7 +68,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
 
 const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   return (
-    <tbody className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-mediumGrey')}>
+    <tbody className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-accents_7')}>
       {children}
     </tbody>
   )

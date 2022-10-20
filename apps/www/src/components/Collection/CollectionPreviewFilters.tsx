@@ -156,7 +156,7 @@ export const FilterByTrait = () => {
                           >
                             <span>{truncate(traitElement.name)}</span>
                             <div className='flex items-center space-x-2'>
-                              <span className='text-darkGrey text-xs'>
+                              <span className='text-accents_5 text-xs'>
                                 {traitMapping.traitMap.size > 0 && (traitMapping?.traitMap.get(traitElement.id) || 0)}
                               </span>
                               <Field
@@ -293,7 +293,7 @@ const Index = () => {
     <>
       <div
         className={clsx(
-          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
+          isLoading ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full' : 'border border-border',
           'rounded-[5px] space-y-1'
         )}
       >
@@ -303,7 +303,7 @@ const Index = () => {
       </div>
       <div
         className={clsx(
-          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-border',
+          isLoading ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-[32rem]' : 'border border-border',
           'rounded-[5px] space-y-1'
         )}
       >

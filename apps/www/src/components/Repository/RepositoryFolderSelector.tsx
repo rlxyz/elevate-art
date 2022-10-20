@@ -103,14 +103,14 @@ const LayerFolderSelector = () => {
         <div className='flex space-x-1 w-[15%]'>
           {/* <button
             className={clsx(
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white text-darkGrey rounded-[5px]'
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white text-accents_5 rounded-[5px]'
             )}
           >
-            <PlusIcon className='w-3 h-3 text-darkGrey' />
+            <PlusIcon className='w-3 h-3 text-accents_5' />
           </button> */}
           <button
             className={clsx(
-              openReordering ? 'text-blueHighlight border-blueHighlight' : ' text-darkGrey',
+              openReordering ? 'text-success border-success' : ' text-accents_5',
               'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white rounded-[5px]'
             )}
             onClick={() => {

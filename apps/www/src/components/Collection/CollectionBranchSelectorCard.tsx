@@ -53,17 +53,17 @@ const Index = () => {
           ref={buttonRef}
           onClick={() => setOpenState(true)}
           className={clsx(
-            !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
+            !collection ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full' : 'border border-border',
             'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-black'
           )}
         >
           <div className={clsx(!collection && 'invisible', 'flex justify-between w-full items-center')}>
             <div className='flex space-x-2 items-center justify-start'>
-              <div className='rounded-full h-4 w-4 bg-blueHighlight' />
+              <div className='rounded-full h-4 w-4 bg-success' />
               <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
             </div>
             <div>
-              <ChevronDownIcon className='w-4 h-4 text-darkGrey' />
+              <ChevronDownIcon className='w-4 h-4 text-accents_5' />
             </div>
           </div>
         </Listbox.Button>
@@ -79,8 +79,8 @@ const Index = () => {
             leaveTo='opacity-0 translate-y-1'
           >
             <Listbox.Options className='absolute z-10 w-56 py-2'>
-              <div className='rounded-[5px] ring-1 ring-mediumGrey shadow-lg max-h-[20rem] overflow-y-scroll no-scrollbar '>
-                <div className=' bg-white divide-y divide-mediumGrey'>
+              <div className='rounded-[5px] ring-1 ring-accents_7 shadow-lg max-h-[20rem] overflow-y-scroll no-scrollbar '>
+                <div className=' bg-white divide-y divide-accents_7'>
                   <div className='p-2 grid grid-cols-10 gap-x-1'>
                     <div className='col-span-8'>
                       <SearchInput isLoading={!collections} setQuery={setQuery} />
@@ -94,11 +94,11 @@ const Index = () => {
                           setOpenState(false)
                         }}
                       >
-                        <PlusIcon className='w-3 h-3 text-darkGrey' />
+                        <PlusIcon className='w-3 h-3 text-accents_5' />
                       </button>
                     </div>
                   </div>
-                  {/* <span className='text-xs text-darkGrey'>Collections</span> */}
+                  {/* <span className='text-xs text-accents_5'>Collections</span> */}
                   <div className='overflow-y-scroll max-h-[16em] no-scrollbar'>
                     {filteredCollections?.map((collection: Collection) => (
                       <Listbox.Option key={collection.id} value={collection}>
@@ -122,9 +122,7 @@ const Index = () => {
                                   {'master'}
                                 </span>
                               )}
-                              {collection.name === selectedCollection?.name && (
-                                <CheckIcon className='w-4 h-4 text-blueHighlight' />
-                              )}
+                              {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-success' />}
                             </div>
                           </div>
                         </Button>

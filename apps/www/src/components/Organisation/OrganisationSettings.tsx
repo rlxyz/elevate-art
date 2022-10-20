@@ -49,7 +49,7 @@ export const OrganisationGeneralSettings = () => {
           </div>
           <div className='w-full border border-border rounded-[5px]'>
             <div className='h-full grid grid-cols-10 text-sm'>
-              <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
+              <div className='col-span-4 border-r border-r-accents_7 rounded-l-[5px] bg-lightGray text-accents_5 flex items-center'>
                 <span className='px-4 py-2'>{`elevate.art/`}</span>
               </div>
               <div className='col-span-6 flex items-center'>
@@ -64,11 +64,11 @@ export const OrganisationGeneralSettings = () => {
             </div>
           </div>
         </div>
-        <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+        <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-accents_7'>
           {/* <div className='flex items-center'>
             <span>{`Learn more about`}&nbsp;</span>
             <Link href='https://docs.elevate.art/team'>
-            <div className='flex items-center text-blueHighlight'>
+            <div className='flex items-center text-success'>
               <span>{'Team Name'}</span>
               <ArrowTopRightOnSquare className='w-3 h-3' />
             </div>
@@ -76,7 +76,7 @@ export const OrganisationGeneralSettings = () => {
           </div> */}
           <div>
             <div className='border border-border px-4 py-2 rounded-[5px]'>
-              <span className='text-darkGrey'>Save</span>
+              <span className='text-accents_5'>Save</span>
             </div>
           </div>
         </footer>

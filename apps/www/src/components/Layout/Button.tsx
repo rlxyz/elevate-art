@@ -59,7 +59,7 @@ const Button: ButtonFC = (props) => {
     size == 'lg' && 'h-11 leading-11 text-xs',
     variant === 'secondary' && 'bg-white text-black border border-border',
     variant === 'primary' && 'rounded-[5px] bg-black justify-center',
-    variant === 'icon' && 'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
+    variant === 'icon' && 'bg-white disabled:bg-white disabled:text-accents_7 justify-center',
     variant === 'ghost' && 'text-black',
     variant === 'link' && 'cursor-pointer flex flex-row w-full justify-between hover:bg-lightGray',
     className

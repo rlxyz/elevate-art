@@ -80,8 +80,8 @@ export const RepositoryCreateRuleDialog = ({
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                      <button onClick={onClose} className='text-xs text-darkGrey hover:bg-lightGray py-6'>
+                    <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
+                      <button onClick={onClose} className='text-xs text-accents_5 hover:bg-lightGray py-6'>
                         Cancel
                       </button>
                       <button
@@ -107,7 +107,7 @@ export const RepositoryCreateRuleDialog = ({
                             }
                           )
                         }}
-                        className='text-xs text-blueHighlight hover:bg-lightGray py-6'
+                        className='text-xs text-success hover:bg-lightGray py-6'
                       >
                         {isLoading ? <Loader /> : 'Add'}
                       </button>

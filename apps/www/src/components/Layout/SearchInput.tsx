@@ -11,7 +11,7 @@ export const SearchInput = ({ setQuery, isLoading }: { setQuery: Dispatch<SetSta
           viewBox='0 0 24 24'
           strokeWidth='1.5'
           stroke='currentColor'
-          className={clsx(isLoading && 'hidden', 'w-4 h-4 text-darkGrey')}
+          className={clsx(isLoading && 'hidden', 'w-4 h-4 text-accents_5')}
         >
           <path
             strokeLinecap='round'
@@ -25,11 +25,11 @@ export const SearchInput = ({ setQuery, isLoading }: { setQuery: Dispatch<SetSta
         onChange={(e) => setQuery(e.target.value)}
         type='text'
         className={clsx(
-          isLoading ? 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-full border-none' : 'border border-border',
+          isLoading ? 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-full border-none' : 'border border-border',
           'block text-xs w-full pl-10 rounded-[5px] py-2',
-          'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',
-          'invalid:border-redError invalid:text-redError',
-          'focus:invalid:border-redError focus:invalid:ring-redError'
+          'focus:outline-none focus:ring-1 focus:border-success focus:ring-success',
+          'invalid:border-error invalid:text-error',
+          'focus:invalid:border-error focus:invalid:ring-error'
         )}
         placeholder={isLoading ? '' : 'Search'}
       />

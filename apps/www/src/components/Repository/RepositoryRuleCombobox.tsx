@@ -10,7 +10,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
         ref={ref}
         className={clsx(
           'flex items-center space-x-2 w-full rounded-[5px] border border-border text-xs bg-hue-light pl-3 pr-10',
-          highlight && traitElement && 'border-blueHighlight',
+          highlight && traitElement && 'border-success',
           className
         )}
       >
@@ -18,7 +18,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
           <>
             <div className='flex flex-row items-center space-x-3 py-2'>
               <div className='flex flex-row space-x-2 items-center'>
-                <span className={clsx('block truncate text-xs tracking-tight text-darkGrey')}>{layerName}</span>
+                <span className={clsx('block truncate text-xs tracking-tight text-accents_5')}>{layerName}</span>
                 <span className={clsx('block truncate text-xs text-black')}>{traitElement.name}</span>
               </div>
             </div>

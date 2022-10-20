@@ -14,19 +14,19 @@ export const PersonalOrganisationAccountTeamInvites = () => {
             <span className='text-xl font-semibold'>
               <span>Pending Invites</span>
             </span>
-            <div className={'text-xs text-darkGrey'}>
+            <div className={'text-xs text-accents_5'}>
               <p>Join teams youve been invited to</p>
             </div>
           </div>
-          <div className='border border-border rounded-[5px] divide-y divide-mediumGrey'>
+          <div className='border border-border rounded-[5px] divide-y divide-accents_7'>
             {pendings.map((pending) => {
               return (
                 <div key={pending.id} className='p-4 flex flex-row items-center justify-between'>
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-border' />
+                    <div className='h-6 w-6 border rounded-full bg-success border-border' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>{pending.organisation.name}</span>
-                      <span className='text-xs text-darkGrey'>{capitalize(pending.role)}</span>
+                      <span className='text-xs text-accents_5'>{capitalize(pending.role)}</span>
                     </div>
                   </div>
                   <div className='flex flex-row space-x-2'>

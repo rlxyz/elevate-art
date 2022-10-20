@@ -12,7 +12,7 @@ export const GenerateButton = () => {
   return (
     <div
       className={clsx(
-        !collection ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-border',
+        !collection ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full' : 'border border-border',
         'w-full h-full rounded-[5px] flex items-center justify-center'
       )}
     >
@@ -24,7 +24,7 @@ export const GenerateButton = () => {
             viewBox='0 0 24 24'
             strokeWidth='1.5'
             stroke='currentColor'
-            className='w-4 h-4 text-darkGrey'
+            className='w-4 h-4 text-accents_5'
           >
             <path
               strokeLinecap='round'
@@ -49,7 +49,7 @@ const Index = () => {
             <div className='flex items-center justify-between'>
               <span className='font-semibold'>Generate</span>
             </div>
-            <span className='text-darkGrey'>You can regenerate your collection by clicking this button.</span>
+            <span className='text-accents_5'>You can regenerate your collection by clicking this button.</span>
             <Button onClick={() => setIsOpen(true)}>
               <span className='flex items-center justify-center space-x-2'>
                 <Image priority width={30} height={30} src='/images/logo-white.png' alt='Logo' />

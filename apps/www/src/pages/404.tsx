@@ -22,7 +22,7 @@ export default function NotFound() {
                   </div>
                   <div className='mt-2'>
                     <Link href='/'>
-                      <div className='text-darkGrey text-sm'>
+                      <div className='text-accents_5 text-sm'>
                         lets go somewhere<span aria-hidden='true'> &rarr;</span>
                       </div>
                     </Link>

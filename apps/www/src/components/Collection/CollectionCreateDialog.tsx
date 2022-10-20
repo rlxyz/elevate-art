@@ -60,7 +60,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                       })
                     })}
                   >
-                    <div className='divide-y divide-mediumGrey space-y-6'>
+                    <div className='divide-y divide-accents_7 space-y-6'>
                       <div>
                         <p className='text-sm'>
                           This will create a new collection, your existing collection will remain the same
@@ -76,7 +76,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                             {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
                           />
                           {errors.name && (
-                            <span className='text-xs text-redError'>
+                            <span className='text-xs text-error'>
                               {errors.name.type === 'required'
                                 ? 'This field is required'
                                 : errors.name.type === 'pattern'
@@ -93,7 +93,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                             type='number'
                             {...register('totalSupply', { required: true, min: 1, max: 20000 })}
                           />
-                          {errors.totalSupply && <span className='text-xs text-redError'>Must be smaller than 10000</span>}
+                          {errors.totalSupply && <span className='text-xs text-error'>Must be smaller than 10000</span>}
                         </div>
                         <div className='pt-6 flex justify-between'>
                           <div className='ml-[auto]'>

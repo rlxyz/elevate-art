@@ -68,7 +68,7 @@ export const OrganisationTeamAddUser = () => {
         <div className='w-full rounded-[5px] border border-border'>
           <div className='p-6 space-y-2'>
             <div className='flex flex-col'>
-              <div className='col-span-6 font-plus-jakarta-sans divide-y divide-mediumGrey space-y-3'>
+              <div className='col-span-6 font-plus-jakarta-sans divide-y divide-accents_7 space-y-3'>
                 <h1 className='text-sm font-semibold text-black'>Add new</h1>
                 <p className='py-3 text-xs text-black'>Add Team Members using Ethereum address or ENS.</p>
               </div>
@@ -80,9 +80,9 @@ export const OrganisationTeamAddUser = () => {
                   <input
                     className={clsx(
                       'text-xs p-2 w-full h-full border border-border rounded-[5px]',
-                      'invalid:border-redError invalid:text-redError',
-                      'focus:invalid:border-redError focus:invalid:ring-redError',
-                      'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight'
+                      'invalid:border-error invalid:text-error',
+                      'focus:invalid:border-error focus:invalid:ring-error',
+                      'focus:outline-none focus:ring-1 focus:border-success focus:ring-success'
                     )}
                     aria-invalid={errors.address ? 'true' : 'false'}
                     placeholder='0xd2a420... or alpha.eth...'
@@ -117,29 +117,29 @@ export const OrganisationTeamAddUser = () => {
                 </div>
               </div>
               {errors.address ? (
-                <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
-                  <ExclamationCircleIcon className='text-redError w-4 h-4' />
+                <span className='mt-2 col-span-10 text-xs w-full text-error flex items-center space-x-1'>
+                  <ExclamationCircleIcon className='text-error w-4 h-4' />
                   <span>{String(errors?.address?.message) || 'Please enter a valid Ethereum address'}</span>
                 </span>
               ) : null}
               {errors.role ? (
-                <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
-                  <ExclamationCircleIcon className='text-redError w-4 h-4' />
+                <span className='mt-2 col-span-10 text-xs w-full text-error flex items-center space-x-1'>
+                  <ExclamationCircleIcon className='text-error w-4 h-4' />
                   <span>Please choose a role for this address</span>
                 </span>
               ) : null}
               {errors.exists ? (
                 <>
-                  <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
-                    <ExclamationCircleIcon className='text-redError w-4 h-4' />
+                  <span className='mt-2 col-span-10 text-xs w-full text-error flex items-center space-x-1'>
+                    <ExclamationCircleIcon className='text-error w-4 h-4' />
                     <span>Something went wrong, possibly the address is already added</span>
                   </span>
                 </>
               ) : null}
             </div>
           </div>
-          <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-mediumGrey'>
-            <button className='bg-blueHighlight text-white disabled:bg-lightGray disabled:text-darkGrey border border-border px-4 py-1.5 rounded-[5px]'>
+          <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-accents_7'>
+            <button className='bg-success text-white disabled:bg-lightGray disabled:text-accents_5 border border-border px-4 py-1.5 rounded-[5px]'>
               Add
             </button>
             {addNewUserData && (

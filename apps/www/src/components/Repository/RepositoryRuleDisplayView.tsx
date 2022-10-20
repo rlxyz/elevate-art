@@ -24,7 +24,7 @@ const TraitRulesDisplayPerItem = ({
   const primaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === primary.id))
   const secondaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === secondary.id))
   return (
-    <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
+    <div className='grid grid-cols-10 space-x-3 text-accents_5'>
       <div className='col-span-3 h-full relative'>
         <ComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
       </div>
@@ -38,7 +38,7 @@ const TraitRulesDisplayPerItem = ({
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <button
-          className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center'
+          className='w-full flex bg-white disabled:bg-white disabled:text-accents_7 justify-center'
           onClick={() => {
             deleteRule({
               id,
@@ -50,7 +50,7 @@ const TraitRulesDisplayPerItem = ({
             })
           }}
         >
-          <TrashIcon className='w-4 h-4 text-mediumGrey' />
+          <TrashIcon className='w-4 h-4 text-accents_7' />
         </button>
       </div>
     </div>

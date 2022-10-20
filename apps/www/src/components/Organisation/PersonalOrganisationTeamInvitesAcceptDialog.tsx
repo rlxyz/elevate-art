@@ -20,7 +20,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className='text-white bg-blueHighlight border border-border px-4 py-1.5 rounded-[5px] text-xs'
+        className='text-white bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
       >
         Accept
       </button>
@@ -77,8 +77,8 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                      <button onClick={() => setIsOpen(false)} className='text-xs text-darkGrey py-6 hover:text-black'>
+                    <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
+                      <button onClick={() => setIsOpen(false)} className='text-xs text-accents_5 py-6 hover:text-black'>
                         Cancel
                       </button>
                       <button
@@ -95,7 +95,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                             }
                           )
                         }
-                        className='text-xs text-darkGrey py-6 hover:text-black'
+                        className='text-xs text-accents_5 py-6 hover:text-black'
                       >
                         {isLoading ? <Loader /> : 'Join'}
                       </button>

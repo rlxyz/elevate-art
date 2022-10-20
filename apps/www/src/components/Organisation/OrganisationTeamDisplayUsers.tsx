@@ -51,21 +51,21 @@ export const OrganisationTeamDisplayUsers = () => {
       <span className='text-xs'>Team Members</span>
       <div>
         <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-border rounded-t-[5px]'>
-          <span className='text-darkGrey'>All</span>
+          <span className='text-accents_5'>All</span>
         </div>
-        <div className='divide-y divide-mediumGrey bg-white border-b border-x rounded-b-[5px] border-border'>
+        <div className='divide-y divide-accents_7 bg-white border-b border-x rounded-b-[5px] border-border'>
           {organisation.members.map(({ id, user: { address }, createdAt, type }) => (
             <div key={id} className='px-6 py-4 flex justify-between items-center'>
               <div className='flex items-center space-x-2'>
-                <div className='border border-border rounded-full bg-blueHighlight w-7 h-7' />
+                <div className='border border-border rounded-full bg-success w-7 h-7' />
                 <div className='flex flex-col space-y-1'>
                   <span className='text-xs font-semibold'>{address}</span>
                   <div className={clsx('flex items-baseline')}>
-                    <span className='text-xs text-darkGrey'>{createdAt && timeAgo(createdAt)}</span>
+                    <span className='text-xs text-accents_5'>{createdAt && timeAgo(createdAt)}</span>
                   </div>
                 </div>
               </div>
-              <span className='text-xs text-darkGrey'>{capitalize(type)}</span>
+              <span className='text-xs text-accents_5'>{capitalize(type)}</span>
             </div>
           ))}
         </div>

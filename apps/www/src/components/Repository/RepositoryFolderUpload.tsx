@@ -198,10 +198,10 @@ export const FolderUpload = () => {
       {Object.entries(uploadedFiles).length === 0 && (
         <div className='h-[40vh] flex items-center'>
           <div className='space-y-6'>
-            <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>
+            <div className={clsx(isLoading && 'animate-pulse bg-accents_7 rounded-[5px]')}>
               <span className={clsx(isLoading && 'invisible', 'text-5xl font-bold')}>Lets build something new.</span>
             </div>
-            <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>
+            <div className={clsx(isLoading && 'animate-pulse bg-accents_7 rounded-[5px]')}>
               <p className={clsx(isLoading && 'invisible', 'text-md')}>
                 To create a new Project, set the name and add layers, or get started with one of our templates.
               </p>
@@ -216,14 +216,14 @@ export const FolderUpload = () => {
               {Object.entries(uploadedFiles).length === 0 ? (
                 <div className='h-[42.5vh]' {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <div className='border border-dashed hover:bg-lightGray border-blueHighlight rounded-[5px]  flex flex-col justify-center items-center h-full'>
-                    <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
+                  <div className='border border-dashed hover:bg-lightGray border-success rounded-[5px]  flex flex-col justify-center items-center h-full'>
+                    <span className='text-lg text-success'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
                     <span> to upload</span>
-                    <span className='text-xs text-darkGrey'>Only PNG files supported, max file size 10 MB</span>
+                    <span className='text-xs text-accents_5'>Only PNG files supported, max file size 10 MB</span>
                   </div>
                 </div>
               ) : (
-                <div className='min-h-[calc(100vh-7rem) divide-y divide-mediumGrey space-y-3'>
+                <div className='min-h-[calc(100vh-7rem) divide-y divide-accents_7 space-y-3'>
                   <div className='flex flex-row justify-between items-end'>
                     <div className='flex flex-col space-y-2'>
                       <span className='text-2xl font-semibold'>All Layers & Traits</span>
@@ -255,13 +255,13 @@ export const FolderUpload = () => {
                                 <div className='col-span-9 space-y-3 flex flex-col'>
                                   <div className='flex space-x-3'>
                                     <div className='flex items-center'>
-                                      <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
+                                      <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-accents_5 rounded-[5px]'>
                                         <Image src={'/images/not-found.svg'} width={15} height={15} />
                                       </div>
                                     </div>
                                     <div className='w-full items-start flex flex-col space-y-1'>
                                       <span className='text-sm font-semibold'>{files[0]}</span>
-                                      <span className='text-xs text-darkGrey'>
+                                      <span className='text-xs text-accents_5'>
                                         {formatBytes(files[1].reduce((a, b) => a + b.size, 0))}
                                       </span>
                                     </div>
@@ -271,7 +271,7 @@ export const FolderUpload = () => {
                                       // style={{ scaleX: 1 / 10 }}
                                       style={{ width: `${(files[1].filter((x) => x.uploaded).length / files[1].length) * 100}%` }}
                                       // style={{ scaleX: files[1].filter((x) => x.uploaded === true).length / files[1].length }}
-                                      className={`bg-blueHighlight h-1`}
+                                      className={`bg-success h-1`}
                                     />
                                   </div>
                                 </div>
@@ -309,7 +309,7 @@ export const FolderUpload = () => {
                                             {item.uploaded && (
                                               <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
                                             )}
-                                            {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
+                                            {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-error m-1' /> */}
                                           </div>
                                           <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>
                                             {item.name}
@@ -330,7 +330,7 @@ export const FolderUpload = () => {
               )}
             </>
           ) : (
-            <div className='h-[42.5vh] w-full animate-pulse bg-mediumGrey rounded-[5px]'></div>
+            <div className='h-[42.5vh] w-full animate-pulse bg-accents_7 rounded-[5px]'></div>
           )}
         </div>
       </div>
