@@ -20,7 +20,6 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
   NEXT_PUBLIC_INFURA_ID: z.string(),
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),
-  NEXT_PUBLIC_ENABLE_TESTNETS: z.boolean(),
   NEXT_PUBLIC_NETWORK_ID: z.number(),
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.string(),
@@ -38,7 +37,6 @@ export const clientSchema = z.object({
 export const clientEnv = {
   NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
   NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
-  NEXT_PUBLIC_ENABLE_TESTNETS: Boolean(process.env.NEXT_PUBLIC_ENABLE_TESTNETS),
   NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
   NEXT_PUBLIC_APP_NAME: 'elevate.art',
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
