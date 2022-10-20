@@ -6,6 +6,7 @@ import { env } from 'src/env/server.mjs'
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   res.send({
     nextAuthUrl: env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
+    apiUrl: env.NEXT_PUBLIC_API_URL,
     appEnv: env.NEXT_PUBLIC_NODE_ENV,
   })
 }
