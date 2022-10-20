@@ -24,7 +24,7 @@ const NoRepositoryExistPlaceholder = () => {
         </div>
         <div className='space-y-3 flex flex-col items-center'>
           <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
-            <div className='border flex items-center justify-center border-border rounded-[5px] p-3 bg-black'>
+            <div className='border flex items-center justify-center border-border rounded-[5px] p-3 bg-foreground'>
               <span className='text-sm text-white'>Create a Project</span>
               <ChevronRightIcon className='text-white h-4 w-4' />
             </div>
@@ -69,7 +69,7 @@ const ViewAllRepositories = () => {
             <button
               className={clsx(
                 isLoading && 'invisible',
-                'w-full border h-full rounded-[5px] text-xs text-white bg-black font-semibold'
+                'w-full border h-full rounded-[5px] text-xs text-white bg-foreground font-semibold'
               )}
               onClick={(e: any) => {
                 e.preventDefault()
@@ -122,17 +122,17 @@ const ViewAllRepositories = () => {
                         <li key={event.id}>
                           <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
                             {eventIdx !== 2 ? (
-                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
+                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-foreground' aria-hidden='true' />
                             ) : null}
                             <div className='relative flex items-center space-x-5'>
                               <div>
                                 <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
-                                  <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
+                                  <event.icon className='h-5 w-5 text-foreground' aria-hidden='true' />
                                 </span>
                               </div>
                               <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
-                                <p className='text-xs text-black'>{event.content}</p>
-                                <div className='whitespace-nowrap text-right text-xs text-black'>{event.target}</div>
+                                <p className='text-xs text-foreground'>{event.content}</p>
+                                <div className='whitespace-nowrap text-right text-xs text-foreground'>{event.target}</div>
                               </div>
                             </div>
                           </div>
@@ -186,17 +186,17 @@ const ViewAllRepositories = () => {
                         <li key={event.id}>
                           <div className={clsx('relative ml-2', eventIdx !== 2 && 'pb-6')}>
                             {eventIdx !== 2 ? (
-                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-black' aria-hidden='true' />
+                              <span className='absolute top-6 left-1.5 -ml-px h-1/2 w-[1px] bg-foreground' aria-hidden='true' />
                             ) : null}
                             <div className='relative flex items-center space-x-5'>
                               <div>
-                                <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-white'}>
-                                  <event.icon className='h-5 w-5 text-black' aria-hidden='true' />
+                                <span className={'h-3 w-3 rounded-full flex items-center justify-center ring-8 ring-background'}>
+                                  <event.icon className='h-5 w-5 text-foreground' aria-hidden='true' />
                                 </span>
                               </div>
                               <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
-                                <p className='text-xs text-black'>{event.content}</p>
-                                <div className='whitespace-nowrap text-right text-xs text-black'>
+                                <p className='text-xs text-foreground'>{event.content}</p>
+                                <div className='whitespace-nowrap text-right text-xs text-foreground'>
                                   {/* <time dateTime={event.datetime}>{event.date}</time> */}
                                   {event.target}
                                 </div>

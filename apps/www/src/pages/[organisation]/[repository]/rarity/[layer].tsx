@@ -113,14 +113,14 @@ const Page = () => {
                   <div
                     className={clsx(
                       !hasLoaded() && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-full border-none',
-                      'border bg-white border-border rounded-[5px]'
+                      'border bg-background border-border rounded-[5px]'
                     )}
                   >
                     <div className={clsx(!hasLoaded() && 'invisible', 'flex w-full h-full')}>
                       <button
                         onClick={() => setCurrentView('rarity')}
                         className={clsx(
-                          currentView === 'rarity' ? 'bg-accents_8 text-black' : 'text-accents_5',
+                          currentView === 'rarity' ? 'bg-accents_8 text-foreground' : 'text-accents_5',
                           'flex w-full items-center justify-center space-x-2 p-2'
                         )}
                       >
@@ -138,7 +138,7 @@ const Page = () => {
                       <button
                         onClick={() => setCurrentView('layers')}
                         className={clsx(
-                          currentView === 'layers' && 'bg-accents_8 text-black',
+                          currentView === 'layers' && 'bg-accents_8 text-foreground',
                           'flex w-full items-center justify-center space-x-2 p-2 text-accents_5'
                         )}
                       >
@@ -148,7 +148,7 @@ const Page = () => {
                           viewBox='0 0 24 24'
                           strokeWidth={1.25}
                           stroke='currentColor'
-                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-accents_5')}
+                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-foreground' : 'text-accents_5')}
                         >
                           <path
                             strokeLinecap='round'

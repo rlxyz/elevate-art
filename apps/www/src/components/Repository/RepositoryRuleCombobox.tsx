@@ -19,7 +19,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
             <div className='flex flex-row items-center space-x-3 py-2'>
               <div className='flex flex-row space-x-2 items-center'>
                 <span className={clsx('block truncate text-xs tracking-tight text-accents_5')}>{layerName}</span>
-                <span className={clsx('block truncate text-xs text-black')}>{traitElement.name}</span>
+                <span className={clsx('block truncate text-xs text-foreground')}>{traitElement.name}</span>
               </div>
             </div>
           </>

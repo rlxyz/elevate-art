@@ -25,7 +25,7 @@ export const Link = ({
   return disabled ? (
     <div className={'py-2'}>
       {title && (
-        <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+        <div className='px-5 flex flex-row items-center text-foreground justify-between text-xs w-full'>
           <span>{title}</span>
         </div>
       )}
@@ -47,7 +47,7 @@ export const Link = ({
             )}
           >
             {title && (
-              <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+              <div className='px-5 flex flex-row items-center text-foreground justify-between text-xs w-full'>
                 <span>{title}</span>
               </div>
             )}

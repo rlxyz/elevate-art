@@ -35,7 +35,7 @@ export const RepositoryCreateRuleDialog = ({
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black bg-opacity-50' />
+            <div className='fixed inset-0 bg-foreground bg-opacity-50' />
           </Transition.Child>
 
           <div className='fixed inset-0 overflow-y-auto'>
@@ -52,7 +52,7 @@ export const RepositoryCreateRuleDialog = ({
                 <Dialog.Panel className='relative rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
-                    className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
+                    className='p-8 border-b border-border bg-background text-foreground text-xl justify-center flex leading-6 font-semibold'
                   >
                     Add Rule
                   </Dialog.Title>
@@ -64,23 +64,23 @@ export const RepositoryCreateRuleDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Trait</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {primaryTrait.name}
                           </div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Condition</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>{condition}</div>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>{condition}</div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>With</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {secondaryTrait.name}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
+                    <div className='grid grid-cols-2 bg-background divide-x divide-accents_7'>
                       <button onClick={onClose} className='text-xs text-accents_5 hover:bg-accents_8 py-6'>
                         Cancel
                       </button>

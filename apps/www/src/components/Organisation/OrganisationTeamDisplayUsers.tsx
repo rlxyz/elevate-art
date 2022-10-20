@@ -53,7 +53,7 @@ export const OrganisationTeamDisplayUsers = () => {
         <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-accents_8 text-xs border border-border rounded-t-[5px]'>
           <span className='text-accents_5'>All</span>
         </div>
-        <div className='divide-y divide-accents_7 bg-white border-b border-x rounded-b-[5px] border-border'>
+        <div className='divide-y divide-accents_7 bg-background border-b border-x rounded-b-[5px] border-border'>
           {organisation.members.map(({ id, user: { address }, createdAt, type }) => (
             <div key={id} className='px-6 py-4 flex justify-between items-center'>
               <div className='flex items-center space-x-2'>

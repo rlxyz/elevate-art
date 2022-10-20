@@ -38,7 +38,7 @@ const TraitRulesDisplayPerItem = ({
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <button
-          className='w-full flex bg-white disabled:bg-white disabled:text-accents_7 justify-center'
+          className='w-full flex bg-background disabled:bg-background disabled:text-accents_7 justify-center'
           onClick={() => {
             deleteRule({
               id,

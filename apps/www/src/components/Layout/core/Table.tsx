@@ -18,7 +18,7 @@ export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
 const TableHead = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   const childrens = Children.toArray(children)
   return (
-    <thead className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-white')}>
+    <thead className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-background')}>
       <tr>
         {childrens.map((children, index) => {
           return (
@@ -54,7 +54,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
             leaveFrom='opacity-100 translate-y-0'
             leaveTo='opacity-0 translate-y-1'
           >
-            <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+            <Popover.Panel className='absolute w-[200px] bg-foreground z-10 -translate-x-1/2 transform rounded-[5px]'>
               <div className='p-2 shadow-lg'>
                 <p className='text-[0.65rem] text-white font-normal'>{description}</p>
               </div>
@@ -68,7 +68,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
 
 const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   return (
-    <tbody className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-accents_7')}>
+    <tbody className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-background', 'divide-y divide-accents_7')}>
       {children}
     </tbody>
   )

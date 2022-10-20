@@ -21,7 +21,7 @@ const CollectionPreviewGridFilterLabels = () => {
       >
         <div className={clsx(!collection && 'invisible')}>
           {rarityFilter !== 'All' ? (
-            <span className='text-xs text-black'>
+            <span className='text-xs text-foreground'>
               {`${tokens.length} results `}
               {traitFilters.length > 0 ? (
                 <span>
@@ -33,7 +33,7 @@ const CollectionPreviewGridFilterLabels = () => {
               )}
             </span>
           ) : (
-            <span className='text-xs text-black'>{`${tokens.length} results`}</span>
+            <span className='text-xs text-foreground'>{`${tokens.length} results`}</span>
           )}
         </div>
       </div>
@@ -41,7 +41,7 @@ const CollectionPreviewGridFilterLabels = () => {
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}
-            className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black'
+            className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-foreground'
           >
             <div>
               <span className='text-accents_5 mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}

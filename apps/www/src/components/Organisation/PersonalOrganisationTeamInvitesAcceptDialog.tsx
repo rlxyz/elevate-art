@@ -35,7 +35,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black bg-opacity-50' />
+            <div className='fixed inset-0 bg-foreground bg-opacity-50' />
           </Transition.Child>
 
           <div className='fixed inset-0 overflow-y-auto'>
@@ -52,7 +52,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                 <Dialog.Panel className='relative rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
-                    className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
+                    className='p-8 border-b border-border bg-background text-foreground text-xl justify-center flex leading-6 font-semibold'
                   >
                     Join Team
                   </Dialog.Title>
@@ -65,20 +65,20 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Name</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {pending.organisation.name}
                           </div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {capitalize(pending.role)}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
-                      <button onClick={() => setIsOpen(false)} className='text-xs text-accents_5 py-6 hover:text-black'>
+                    <div className='grid grid-cols-2 bg-background divide-x divide-accents_7'>
+                      <button onClick={() => setIsOpen(false)} className='text-xs text-accents_5 py-6 hover:text-foreground'>
                         Cancel
                       </button>
                       <button
@@ -95,7 +95,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                             }
                           )
                         }
-                        className='text-xs text-accents_5 py-6 hover:text-black'
+                        className='text-xs text-accents_5 py-6 hover:text-foreground'
                       >
                         {isLoading ? <Loader /> : 'Join'}
                       </button>

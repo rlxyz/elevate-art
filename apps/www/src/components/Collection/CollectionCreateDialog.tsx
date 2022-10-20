@@ -32,7 +32,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black bg-opacity-50' />
+          <div className='fixed inset-0 bg-foreground bg-opacity-50' />
         </Transition.Child>
 
         <div className='fixed inset-0 overflow-y-auto'>
@@ -46,7 +46,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
               leaveFrom='opacity-100 translate-y-0 sm:scale-100'
               leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
-              <Dialog.Panel className='relative bg-white rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-accents_8'>
+              <Dialog.Panel className='relative bg-background rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-accents_8'>
                 <div className='space-y-4'>
                   <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
                     Create new collection
@@ -70,7 +70,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                         <div className='space-y-1 flex flex-col'>
                           <span className='text-xs font-base'>Collection name</span>
                           <input
-                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-background text-foreground border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-background focus:border-gray-500'
                             defaultValue='development'
                             type='string'
                             {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
@@ -88,7 +88,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                         <div className='space-y-1 flex flex-col'>
                           <span className='text-xs font-base'>Total Supply</span>
                           <input
-                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-white text-black border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-white focus:border-gray-500'
+                            className='font-plus-jakarta-sans text-sm appearance-none block w-full bg-background text-foreground border border-border rounded-lg py-3 px-4 focus:outline-black focus:bg-background focus:border-gray-500'
                             defaultValue={10000}
                             type='number'
                             {...register('totalSupply', { required: true, min: 1, max: 20000 })}

@@ -54,13 +54,13 @@ const Index = () => {
           onClick={() => setOpenState(true)}
           className={clsx(
             !collection ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full' : 'border border-border',
-            'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-black'
+            'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-foreground'
           )}
         >
           <div className={clsx(!collection && 'invisible', 'flex justify-between w-full items-center')}>
             <div className='flex space-x-2 items-center justify-start'>
               <div className='rounded-full h-4 w-4 bg-success' />
-              <span className='text-xs font-semibold text-black'>{selectedCollection?.name || ''}</span>
+              <span className='text-xs font-semibold text-foreground'>{selectedCollection?.name || ''}</span>
             </div>
             <div>
               <ChevronDownIcon className='w-4 h-4 text-accents_5' />
@@ -80,7 +80,7 @@ const Index = () => {
           >
             <Listbox.Options className='absolute z-10 w-56 py-2'>
               <div className='rounded-[5px] ring-1 ring-accents_7 shadow-lg max-h-[20rem] overflow-y-scroll no-scrollbar '>
-                <div className=' bg-white divide-y divide-accents_7'>
+                <div className=' bg-background divide-y divide-accents_7'>
                   <div className='p-2 grid grid-cols-10 gap-x-1'>
                     <div className='col-span-8'>
                       <SearchInput isLoading={!collections} setQuery={setQuery} />
@@ -110,7 +110,7 @@ const Index = () => {
                           <div className='flex flex-row items-center justify-between px-1 w-full'>
                             <span
                               className={clsx(
-                                'text-xs text-black',
+                                'text-xs text-foreground',
                                 collection.name === selectedCollection?.name ? 'font-semibold' : 'font-normal'
                               )}
                             >
@@ -118,7 +118,7 @@ const Index = () => {
                             </span>
                             <div className='flex items-center'>
                               {collection.name === 'main' && (
-                                <span className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black mr-1'>
+                                <span className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-foreground mr-1'>
                                   {'master'}
                                 </span>
                               )}

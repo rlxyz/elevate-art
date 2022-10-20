@@ -32,7 +32,7 @@ export const OrganisationTeamAddUserDialog = ({
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black bg-opacity-50' />
+            <div className='fixed inset-0 bg-foreground bg-opacity-50' />
           </Transition.Child>
 
           <div className='fixed inset-0 overflow-y-auto'>
@@ -49,7 +49,7 @@ export const OrganisationTeamAddUserDialog = ({
                 <Dialog.Panel className='relative rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
-                    className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
+                    className='p-8 border-b border-border bg-background text-foreground text-xl justify-center flex leading-6 font-semibold'
                   >
                     Add Collaborator
                   </Dialog.Title>
@@ -62,19 +62,19 @@ export const OrganisationTeamAddUserDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Address</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {addNewUserData.address}
                           </div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>
-                          <div className='w-full bg-white text-xs p-2 border border-border rounded-[5px]'>
+                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
                             {capitalize(addNewUserData.role || '')}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
+                    <div className='grid grid-cols-2 bg-background divide-x divide-accents_7'>
                       <button onClick={onClose} className='text-xs text-accents_5 hover:bg-accents_8 py-6'>
                         Cancel
                       </button>

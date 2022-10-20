@@ -113,7 +113,7 @@ export const RuleSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center space-x-3'>
           <button
-            className='bg-white border border-border text-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
+            className='bg-background border border-border text-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
             onClick={() => {
               setSelectedLeftTrait(null)
               setSelectedRightTrait(null)
@@ -123,7 +123,7 @@ export const RuleSelector = ({
             Reset
           </button>
           <button
-            className='bg-black disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
+            className='bg-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
               setIsOpen(true)
@@ -180,13 +180,13 @@ export const RuleSelectorConditionCombobox = ({
       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
         <SelectorIcon className='h-3 w-3 text-accents_5' aria-hidden='true' />
       </Combobox.Button>
-      <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+      <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-background py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
         {filteredConditions.map((condition: RulesType) => (
           <Combobox.Option
             key={condition}
             value={condition}
             className={({ active }) =>
-              classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-success' : 'text-black')
+              classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-success' : 'text-foreground')
             }
           >
             {({ active, selected }) => (
@@ -196,7 +196,7 @@ export const RuleSelectorConditionCombobox = ({
                   <span
                     className={classNames(
                       'absolute inset-y-0 right-0 flex items-center pr-4',
-                      active ? 'text-black' : 'text-indigo-600'
+                      active ? 'text-foreground' : 'text-indigo-600'
                     )}
                   >
                     <CheckIcon className='h-5 w-5' aria-hidden='true' />
@@ -271,7 +271,7 @@ export const RuleSelectorCombobox = ({
         <SelectorIcon className='h-3 w-3 text-accents_5' aria-hidden='true' />
       </Combobox.Button>
       {filteredTraits.length > 0 && (
-        <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full max-w-[calc(100% + 5rem)] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+        <Combobox.Options className='absolute z-10 mt-1 max-h-60 min-w-full max-w-[calc(100% + 5rem)] overflow-auto rounded-md bg-background py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
           {filteredTraits.map((traitElement) => (
             <Combobox.Option
               key={traitElement.id}

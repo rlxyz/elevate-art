@@ -64,7 +64,7 @@ export const ReorderItem = ({
         hover
         rounded={rounded}
       >
-        <div className={clsx('text-black', 'flex justify-between w-full')}>
+        <div className={clsx('text-foreground', 'flex justify-between w-full')}>
           <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
             <span>{name}</span>
           </div>
@@ -103,7 +103,7 @@ const LayerFolderSelector = () => {
         <div className='flex space-x-1 w-[15%]'>
           {/* <button
             className={clsx(
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white text-accents_5 rounded-[5px]'
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-background text-accents_5 rounded-[5px]'
             )}
           >
             <PlusIcon className='w-3 h-3 text-accents_5' />
@@ -111,7 +111,7 @@ const LayerFolderSelector = () => {
           <button
             className={clsx(
               openReordering ? 'text-success border-success' : ' text-accents_5',
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-white rounded-[5px]'
+              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border bg-background rounded-[5px]'
             )}
             onClick={() => {
               if (!openReordering) {

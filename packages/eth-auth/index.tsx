@@ -12,11 +12,7 @@ import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
-  [
-    chain.mainnet,
-    chain.hardhat,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS ? [chain.rinkeby] : []),
-  ],
+  [chain.mainnet, chain.hardhat, chain.goerli],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),

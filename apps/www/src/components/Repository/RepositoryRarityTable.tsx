@@ -108,7 +108,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                   {traitElements?.map(({ name, id, layerElementId }: TraitElement, index: number) => (
                     <Table.Body.Row key={id} current={index} total={traitElements?.length}>
                       <Table.Body.Row.Data>
-                        {/* <div className='w-4 h-4 border border-border bg-white rounded-[3px]' /> */}
+                        {/* <div className='w-4 h-4 border border-border bg-background rounded-[3px]' /> */}
                         <></>
                       </Table.Body.Row.Data>
                       <Table.Body.Row.Data>
@@ -130,7 +130,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
                         <div className='flex space-x-3 items-center justify-start'>
                           <div className='w-20'>
                             <input
-                              className='bg-white text-xs w-full border border-border rounded-[5px] p-2'
+                              className='bg-background text-xs w-full border border-border rounded-[5px] p-2'
                               id={`traits.${index}.weight`}
                               type='number'
                               name={`traits.${index}.weight`}

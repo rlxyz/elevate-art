@@ -37,9 +37,21 @@ const Loader = () => {
         initial='initial'
         animate='animate'
       >
-        <motion.span className='block w-[3px] h-[3px] bg-black rounded-[50%]' variants={DotVariants} transition={DotTransition} />
-        <motion.span className='block w-[3px] h-[3px] bg-black rounded-[50%]' variants={DotVariants} transition={DotTransition} />
-        <motion.span className='block w-[3px] h-[3px] bg-black rounded-[50%]' variants={DotVariants} transition={DotTransition} />
+        <motion.span
+          className='block w-[3px] h-[3px] bg-foreground rounded-[50%]'
+          variants={DotVariants}
+          transition={DotTransition}
+        />
+        <motion.span
+          className='block w-[3px] h-[3px] bg-foreground rounded-[50%]'
+          variants={DotVariants}
+          transition={DotTransition}
+        />
+        <motion.span
+          className='block w-[3px] h-[3px] bg-foreground rounded-[50%]'
+          variants={DotVariants}
+          transition={DotTransition}
+        />
       </motion.div>
     </div>
   )

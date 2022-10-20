@@ -9,7 +9,7 @@ export default function NotFound() {
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
-            <main className='flex-grow flex flex-col bg-white'>
+            <main className='flex-grow flex flex-col bg-background'>
               <div className='flex-grow mx-auto max-w-7xl w-full flex flex-col px-4 sm:px-6 lg:px-8'>
                 <div className='flex-shrink-0 my-auto py-16 sm:py-32'>
                   <p className='text-base font-semibold'>404</p>

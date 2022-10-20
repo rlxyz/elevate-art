@@ -159,7 +159,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
               leaveFrom='opacity-100'
               leaveTo='opacity-0'
             >
-              <div className='fixed inset-0 bg-black bg-opacity-50' />
+              <div className='fixed inset-0 bg-foreground bg-opacity-50' />
             </Transition.Child>
 
             <div className='fixed inset-0 overflow-y-auto'>
@@ -173,7 +173,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveFrom='opacity-100 translate-y-0 sm:scale-100'
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
-                  <Dialog.Panel className='relative bg-white rounded-[5px] border max-w-lg border-accents_8 overflow-hidden shadow-xl transform transition-all w-1/2'>
+                  <Dialog.Panel className='relative bg-background rounded-[5px] border max-w-lg border-accents_8 overflow-hidden shadow-xl transform transition-all w-1/2'>
                     <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
                       <></>
                     </PreviewImage>
@@ -252,7 +252,7 @@ const Index = () => {
             <h1
               className={clsx(
                 !collection && 'animate-pulse flex flex-row rounded-[5px] bg-accents_7 bg-opacity-50 w-2/6',
-                'text-2xl font-bold text-black'
+                'text-2xl font-bold text-foreground'
               )}
             >
               <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>

@@ -43,8 +43,8 @@ export const OrganisationGeneralSettings = () => {
         <div className='p-6 space-y-4'>
           <div className='flex flex-col'>
             <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
-              <h1 className='text-lg font-semibold text-black'>Team Name</h1>
-              <p className='text-xs text-black'>{'Used to identify your teams name on elevate.art'}</p>
+              <h1 className='text-lg font-semibold text-foreground'>Team Name</h1>
+              <p className='text-xs text-foreground'>{'Used to identify your teams name on elevate.art'}</p>
             </div>
           </div>
           <div className='w-full border border-border rounded-[5px]'>

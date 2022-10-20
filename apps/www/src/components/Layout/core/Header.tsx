@@ -66,7 +66,7 @@ const HeaderExternalRoutes = () => {
         {externalRoutes.map((item, index) => {
           return (
             <Link external={true} key={index} href={item.href}>
-              <span className='cursor-pointer hover:text-black text-xs text-accents_5'>{item.name}</span>
+              <span className='cursor-pointer hover:text-foreground text-xs text-accents_5'>{item.name}</span>
             </Link>
           )
         })}
@@ -113,7 +113,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   <div className='w-36 animate-pulse h-5 rounded-[5px] bg-accents_7' />
                 ) : (
                   <>
-                    <div className={clsx(organisations ? 'text-black' : 'text-accents_5', 'py-1')}>
+                    <div className={clsx(organisations ? 'text-foreground' : 'text-accents_5', 'py-1')}>
                       {current === OrganisationNavigationEnum.enum.You || current === OrganisationNavigationEnum.enum.Dashboard
                         ? capitalize(current)
                         : current}
@@ -124,7 +124,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
               {organisations ? (
                 <>
                   <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
-                    <SelectorIcon className='text-black w-4 h-4' />
+                    <SelectorIcon className='text-foreground w-4 h-4' />
                   </Popover.Button>
                   <Transition
                     as={Fragment}
@@ -140,7 +140,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                         <div className='py-2 bg-accents_8 border-b border-border'>
                           <div className='relative rounded-[5px]'>
                             <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
-                              <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-accents_5 hover:text-black'>
+                              <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-accents_5 hover:text-foreground'>
                                 <div className='flex space-x-2 items-center'>
                                   {/* <div className='rounded-full h-5 w-5 bg-success' /> */}
                                   <UserIcon className='h-3 w-3' />
@@ -155,7 +155,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                             </Link>
                           </div>
                         </div>
-                        <div className='p-2 relative bg-white space-y-1'>
+                        <div className='p-2 relative bg-background space-y-1'>
                           {organisations.length > 0 ? (
                             <div className='space-y-1'>
                               <span className='text-xs text-accents_5'>Your Teams</span>
@@ -187,7 +187,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                             <div className='py-1 border border-border rounded-[5px] bg-accents_8 flex space-x-2 items-center'>
                               <Button variant='ghost' className='space-x-2'>
                                 <PlusCircleIcon className='text-success w-5 h-5' />
-                                <span className='text-black'>Create Team</span>
+                                <span className='text-foreground'>Create Team</span>
                               </Button>
                             </div>
                           </div> */}

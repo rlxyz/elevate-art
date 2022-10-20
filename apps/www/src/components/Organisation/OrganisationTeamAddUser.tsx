@@ -62,15 +62,15 @@ export const OrganisationTeamAddUser = () => {
     >
       <div className='flex space-y-6 flex-col'>
         <div className='flex flex-col space-y-2'>
-          <h1 className='text-lg font-semibold text-black'>Members</h1>
-          <p className='text-xs text-black'>Manage and invite Team Members.</p>
+          <h1 className='text-lg font-semibold text-foreground'>Members</h1>
+          <p className='text-xs text-foreground'>Manage and invite Team Members.</p>
         </div>
         <div className='w-full rounded-[5px] border border-border'>
           <div className='p-6 space-y-2'>
             <div className='flex flex-col'>
               <div className='col-span-6 font-plus-jakarta-sans divide-y divide-accents_7 space-y-3'>
-                <h1 className='text-sm font-semibold text-black'>Add new</h1>
-                <p className='py-3 text-xs text-black'>Add Team Members using Ethereum address or ENS.</p>
+                <h1 className='text-sm font-semibold text-foreground'>Add new</h1>
+                <p className='py-3 text-xs text-foreground'>Add Team Members using Ethereum address or ENS.</p>
               </div>
             </div>
             <div className='h-full grid grid-cols-10 gap-x-2 text-sm'>

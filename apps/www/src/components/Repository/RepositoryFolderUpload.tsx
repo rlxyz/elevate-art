@@ -209,7 +209,7 @@ export const FolderUpload = () => {
           </div>
         </div>
       )}
-      <div className='absolute left-0 w-full border-t border-border bg-white p-12 space-y-12'>
+      <div className='absolute left-0 w-full border-t border-border bg-background p-12 space-y-12'>
         <div className='space-y-6 w-full h-full'>
           {organisation ? (
             <>

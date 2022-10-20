@@ -56,7 +56,7 @@ export const PersonalOrganisationAccountTeam = () => {
                   </div>
                   <Link
                     href={`/${organisation.name}`}
-                    className='text-black border border-border px-4 py-1.5 rounded-[5px] text-xs'
+                    className='text-foreground border border-border px-4 py-1.5 rounded-[5px] text-xs'
                   >
                     View
                   </Link>
