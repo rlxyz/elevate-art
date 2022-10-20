@@ -24,7 +24,7 @@ export const useNotification = () => {
       (t) => (
         <ToastContainer id={t.id} type="error">
           <div className="flex justify-between w-full items-center">
-            <span className="pr-4">{message}</span>
+            <span>{message}</span>
           </div>
         </ToastContainer>
       ),

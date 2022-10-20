@@ -18,7 +18,7 @@ export const ToastContainer = ({ children, id, type }: Props) => {
       )}
       role="alert"
     >
-      <div className="w-full flex items-center text-white text-xs">
+      <div className="w-full flex items-center text-background text-xs">
         {children}
       </div>
     </div>
