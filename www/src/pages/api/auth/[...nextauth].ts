@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
+import { env } from 'src/env/server.mjs'
 import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { prisma } from '../../../server/db/client'
 
@@ -41,14 +42,14 @@ export const authOptions: NextAuthOptions = {
         try {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
           const nextAuthUrl =
-            process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+            env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
           if (!nextAuthUrl) return null
           if (siwe.domain !== new URL(nextAuthUrl).host) return null
           if (!siwe.address.length) return null
 
           await siwe.validate(credentials?.signature || '')
           const { address } = siwe
-          // if (!whitelist.includes(address)) return null
+
           // https://github.com/prisma/prisma-client-js/issues/85#issuecomment-660057346
           const user = await prisma.user.upsert({
             where: { address },
