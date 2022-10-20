@@ -46,7 +46,7 @@ export const OrganisationTeamAddUserDialog = ({
                 leaveFrom='opacity-100 translate-y-0 sm:scale-100'
                 leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
               >
-                <Dialog.Panel className='relative rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
+                <Dialog.Panel className='relative rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
                     className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
@@ -54,7 +54,7 @@ export const OrganisationTeamAddUserDialog = ({
                     Add Collaborator
                   </Dialog.Title>
                   <Dialog.Description>
-                    <div className='bg-lightGray space-y-3 p-8 border-b border-border'>
+                    <div className='bg-accents_8 space-y-3 p-8 border-b border-border'>
                       <span className='text-sm'>
                         Add people to your team and collaborate with them. They can create projects, add layers with associates
                         traits, set rarity, create rules, and generate collections.
@@ -75,7 +75,7 @@ export const OrganisationTeamAddUserDialog = ({
                       </div>
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-accents_7'>
-                      <button onClick={onClose} className='text-xs text-accents_5 hover:bg-lightGray py-6'>
+                      <button onClick={onClose} className='text-xs text-accents_5 hover:bg-accents_8 py-6'>
                         Cancel
                       </button>
                       <button
@@ -100,7 +100,7 @@ export const OrganisationTeamAddUserDialog = ({
                             }
                           )
                         }}
-                        className='text-xs text-success hover:bg-lightGray py-6'
+                        className='text-xs text-success hover:bg-accents_8 py-6'
                       >
                         {isLoading ? <Loader /> : 'Add'}
                       </button>

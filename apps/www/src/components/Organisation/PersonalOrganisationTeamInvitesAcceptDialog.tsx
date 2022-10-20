@@ -49,7 +49,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                 leaveFrom='opacity-100 translate-y-0 sm:scale-100'
                 leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
               >
-                <Dialog.Panel className='relative rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
+                <Dialog.Panel className='relative rounded-[5px] border border-accents_8 text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
                   <Dialog.Title
                     as='h3'
                     className='p-8 border-b border-border bg-white text-black text-xl justify-center flex leading-6 font-semibold'
@@ -57,7 +57,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                     Join Team
                   </Dialog.Title>
                   <Dialog.Description>
-                    <div className='bg-lightGray space-y-3 p-8 border-b border-border'>
+                    <div className='bg-accents_8 space-y-3 p-8 border-b border-border'>
                       <span className='text-sm'>
                         Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate
                         tons of collections.

@@ -118,7 +118,7 @@ const Index = () => {
                             </span>
                             <div className='flex items-center'>
                               {collection.name === 'main' && (
-                                <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black mr-1'>
+                                <span className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-black mr-1'>
                                   {'master'}
                                 </span>
                               )}

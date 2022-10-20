@@ -44,7 +44,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
       <span className='text-[0.65rem] uppercase font-normal text-accents_5'>{title}</span>
       {description && (
         <Popover>
-          <Popover.Button as={InformationCircleIcon} className='text-accents_5 w-3 h-3 bg-lightGray' />
+          <Popover.Button as={InformationCircleIcon} className='text-accents_5 w-3 h-3 bg-accents_8' />
           <Transition
             as={Fragment}
             enter='transition ease-out duration-200'

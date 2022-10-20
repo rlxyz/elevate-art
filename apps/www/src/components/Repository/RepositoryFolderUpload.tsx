@@ -216,7 +216,7 @@ export const FolderUpload = () => {
               {Object.entries(uploadedFiles).length === 0 ? (
                 <div className='h-[42.5vh]' {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <div className='border border-dashed hover:bg-lightGray border-success rounded-[5px]  flex flex-col justify-center items-center h-full'>
+                  <div className='border border-dashed hover:bg-accents_8 border-success rounded-[5px]  flex flex-col justify-center items-center h-full'>
                     <span className='text-lg text-success'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
                     <span> to upload</span>
                     <span className='text-xs text-accents_5'>Only PNG files supported, max file size 10 MB</span>
@@ -255,7 +255,7 @@ export const FolderUpload = () => {
                                 <div className='col-span-9 space-y-3 flex flex-col'>
                                   <div className='flex space-x-3'>
                                     <div className='flex items-center'>
-                                      <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-accents_5 rounded-[5px]'>
+                                      <div className='w-[25px] h-[25px] border border-accents_8 flex items-center justify-center bg-accents_5 rounded-[5px]'>
                                         <Image src={'/images/not-found.svg'} width={15} height={15} />
                                       </div>
                                     </div>
@@ -266,7 +266,7 @@ export const FolderUpload = () => {
                                       </span>
                                     </div>
                                   </div>
-                                  <div className='flex items-start rounded-[5px] h-1 bg-lightGray text-left'>
+                                  <div className='flex items-start rounded-[5px] h-1 bg-accents_8 text-left'>
                                     <motion.div
                                       // style={{ scaleX: 1 / 10 }}
                                       style={{ width: `${(files[1].filter((x) => x.uploaded).length / files[1].length) * 100}%` }}

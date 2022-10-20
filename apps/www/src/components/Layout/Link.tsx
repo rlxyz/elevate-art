@@ -39,9 +39,9 @@ export const Link = ({
         <a>
           <div
             className={clsx(
-              `cursor-pointer flex flex-row justify-between hover:bg-lightGray py-2`,
+              `cursor-pointer flex flex-row justify-between hover:bg-accents_8 py-2`,
               enabled ? 'font-semibold' : '',
-              enabled && hover ? 'bg-lightGray' : '',
+              enabled && hover ? 'bg-accents_8' : '',
               rounded ? 'rounded-[5px]' : '',
               className
             )}

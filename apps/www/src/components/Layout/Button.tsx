@@ -61,7 +61,7 @@ const Button: ButtonFC = (props) => {
     variant === 'primary' && 'rounded-[5px] bg-black justify-center',
     variant === 'icon' && 'bg-white disabled:bg-white disabled:text-accents_7 justify-center',
     variant === 'ghost' && 'text-black',
-    variant === 'link' && 'cursor-pointer flex flex-row w-full justify-between hover:bg-lightGray',
+    variant === 'link' && 'cursor-pointer flex flex-row w-full justify-between hover:bg-accents_8',
     className
   )
 

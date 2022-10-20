@@ -137,7 +137,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                   >
                     <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-                        <div className='py-2 bg-lightGray border-b border-border'>
+                        <div className='py-2 bg-accents_8 border-b border-border'>
                           <div className='relative rounded-[5px]'>
                             <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
                               <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-accents_5 hover:text-black'>
@@ -184,7 +184,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                             <></>
                           )}
                           {/* <div className='pt-2'>
-                            <div className='py-1 border border-border rounded-[5px] bg-lightGray flex space-x-2 items-center'>
+                            <div className='py-1 border border-border rounded-[5px] bg-accents_8 flex space-x-2 items-center'>
                               <Button variant='ghost' className='space-x-2'>
                                 <PlusCircleIcon className='text-success w-5 h-5' />
                                 <span className='text-black'>Create Team</span>
@@ -220,7 +220,7 @@ const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
                 <Link disabled={loading} enabled={enabled} title={capitalize(name)} href={href} />
               </div>
               {enabled && (
-                <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
+                <motion.div className='absolute bg-foreground mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
               )}
             </li>
           )
@@ -229,6 +229,7 @@ const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
     </aside>
   )
 }
+
 export interface HeaderProps {
   internalRoutes?: {
     current: string
@@ -245,7 +246,7 @@ const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = f
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link className='' external={true} href={isLoggedIn ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
+          <Link external={true} href={'/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </Link>
           <HeaderInternalAppRoutes routes={internalRoutes} />

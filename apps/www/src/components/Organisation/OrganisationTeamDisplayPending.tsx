@@ -41,7 +41,7 @@ export const OrganisationTeamDisplayPending = () => {
     <div className='space-y-2'>
       <span className='text-xs'>Pending</span>
       <div>
-        <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-lightGray text-xs border border-border rounded-t-[5px]'>
+        <div className='w-full px-6 py-2 flex items-center h-[3rem] bg-accents_8 text-xs border border-border rounded-t-[5px]'>
           <span className='text-accents_5'>All</span>
         </div>
         <div className='divide-y divide-accents_7 bg-white border-b border-x rounded-b-[5px] border-border'>

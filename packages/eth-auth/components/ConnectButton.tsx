@@ -4,12 +4,10 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 interface ConnectButtonProps {
-  normalButton?: boolean;
   disabled?: boolean;
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({
-  normalButton,
   disabled = false,
 }) => {
   const { data: session } = useSession();
@@ -36,25 +34,17 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
           >
             {(() => {
               if (!mounted || !account || !chain) {
-                if (normalButton) {
-                  return (
-                    <div className="flex justify-center">
-                      <button disabled onClick={openConnectModal}>
-                        Connect Wallet
-                      </button>
-                    </div>
-                  );
-                }
                 return (
                   <>
                     <button
                       disabled={disabled}
                       onClick={openConnectModal}
                       type="button"
+                      className="flex items-center"
                     >
                       <img
                         src="/images/lightGray-wallet.svg"
-                        className="w-6 h-6 p-2 inline-block border border-border rounded"
+                        className="p-2 w-12 h-12 inline-block border border-border rounded-primary"
                         alt="Wallet"
                       />
                     </button>

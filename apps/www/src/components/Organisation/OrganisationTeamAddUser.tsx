@@ -138,8 +138,8 @@ export const OrganisationTeamAddUser = () => {
               ) : null}
             </div>
           </div>
-          <div className='w-full px-6 py-2 flex items-center bg-lightGray text-xs  justify-end border-t border-t-accents_7'>
-            <button className='bg-success text-white disabled:bg-lightGray disabled:text-accents_5 border border-border px-4 py-1.5 rounded-[5px]'>
+          <div className='w-full px-6 py-2 flex items-center bg-accents_8 text-xs  justify-end border-t border-t-accents_7'>
+            <button className='bg-success text-white disabled:bg-accents_8 disabled:text-accents_5 border border-border px-4 py-1.5 rounded-[5px]'>
               Add
             </button>
             {addNewUserData && (

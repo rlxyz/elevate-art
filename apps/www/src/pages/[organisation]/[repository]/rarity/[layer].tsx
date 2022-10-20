@@ -120,7 +120,7 @@ const Page = () => {
                       <button
                         onClick={() => setCurrentView('rarity')}
                         className={clsx(
-                          currentView === 'rarity' ? 'bg-lightGray text-black' : 'text-accents_5',
+                          currentView === 'rarity' ? 'bg-accents_8 text-black' : 'text-accents_5',
                           'flex w-full items-center justify-center space-x-2 p-2'
                         )}
                       >
@@ -138,7 +138,7 @@ const Page = () => {
                       <button
                         onClick={() => setCurrentView('layers')}
                         className={clsx(
-                          currentView === 'layers' && 'bg-lightGray text-black',
+                          currentView === 'layers' && 'bg-accents_8 text-black',
                           'flex w-full items-center justify-center space-x-2 p-2 text-accents_5'
                         )}
                       >

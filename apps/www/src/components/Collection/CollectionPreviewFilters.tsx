@@ -124,7 +124,7 @@ export const FilterByTrait = () => {
                       setLayerDropdown(optionIdx)
                     }
                   }}
-                  className={`hover:bg-lightGray text-xs py-3 ${layerDropdown === optionIdx ? 'font-semibold' : ''}`}
+                  className={`hover:bg-accents_8 text-xs py-3 ${layerDropdown === optionIdx ? 'font-semibold' : ''}`}
                 >
                   <div className='px-3 flex justify-between'>
                     <label>{truncate(layer.name)}</label>
@@ -152,7 +152,7 @@ export const FilterByTrait = () => {
                         <div key={index}>
                           <div
                             key={traitElement.id}
-                            className='flex flex-row justify-between items-center py-3 px-3 hover:bg-lightGray w-full'
+                            className='flex flex-row justify-between items-center py-3 px-3 hover:bg-accents_8 w-full'
                           >
                             <span>{truncate(traitElement.name)}</span>
                             <div className='flex items-center space-x-2'>
@@ -257,7 +257,7 @@ export const FilterByRarity = () => {
           <div className={clsx('rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}>
             {filters.map(({ value }, optionIdx: number) => (
               <div key={optionIdx} className='flex flex-col text-xs'>
-                <div className={`hover:bg-lightGray text-xs py-3`}>
+                <div className={`hover:bg-accents_8 text-xs py-3`}>
                   <div className='px-3 flex justify-between'>
                     <label>{value}</label>
                     <div className='flex items-center space-x-2'>
