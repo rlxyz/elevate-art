@@ -73,7 +73,6 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
           );
         })}
       </Breadcrumbs>
-
       {/* External Routes Navigation on the right side of the Header */}
       <div className="flex flex-row justify-center items-center space-x-3">
         {externalNavigationRoutesFinal.map((item) => {

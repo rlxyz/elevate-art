@@ -81,7 +81,7 @@ const Home: NextPage = () => {
           <Layout.Body>
             <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
               <div className='w-full flex flex-col justify-center items-center'>
-                <div className='w-[50%] h-auto'>
+                <div className='w-[40%] h-auto'>
                   <img src='/images/logo-banner.png' alt='elevate art logo' />
                 </div>
                 <span className='text-xs uppercase'>

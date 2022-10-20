@@ -20,16 +20,12 @@ const LayoutBodyItemComponent: React.FC<
 > = ({
   children,
   border,
+  className,
   ...props
 }: React.PropsWithChildren<LayoutBodyProps>) => {
   return (
-    <LayoutContainer
-      as="article"
-      border={border}
-      className="min-h-[3.5rem]"
-      {...props}
-    >
-      <div className="-ml-2">{children}</div>
+    <LayoutContainer border={border} className="min-h-[3.5rem]" {...props}>
+      <div className={className}>{children}</div>
     </LayoutContainer>
   );
 };
