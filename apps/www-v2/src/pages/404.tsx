@@ -1,6 +1,6 @@
-import { Layout } from '@components/Layout/core/Layout'
+import Layout from '@elevateart/ui/components/layout'
+import Link from '@elevateart/ui/components/link'
 import Image from 'next/image'
-import Link from 'next/link'
 
 export default function NotFound() {
   return (
