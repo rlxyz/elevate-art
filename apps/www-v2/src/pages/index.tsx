@@ -1,6 +1,6 @@
 // import { Header } from '@components/Layout/Header'
-import { Link } from '@components/Layout/Link'
 import Layout from '@elevateart/ui/components/layout'
+import Link from '@elevateart/ui/components/link'
 import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
@@ -17,7 +17,7 @@ const Home: NextPage = () => {
                 </div>
                 <span className='text-xs uppercase'>
                   an&nbsp;
-                  <Link external={true} href='https://twitter.com/rlxyz_eth'>
+                  <Link href='https://twitter.com/rlxyz_eth'>
                     <span className='font-extrabold line-through'>RLXYZ</span>
                   </Link>
                   &nbsp;production
