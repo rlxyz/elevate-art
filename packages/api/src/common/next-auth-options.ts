@@ -56,7 +56,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
           await siwe.validate(credentials?.signature || "");
           const { address } = siwe;
-          // if (!whitelist.includes(address)) return null
+
           // https://github.com/prisma/prisma-client-js/issues/85#issuecomment-660057346
           const user = await prisma.user.upsert({
             where: { address },

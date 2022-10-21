@@ -99,7 +99,7 @@ const TableBodyRow = ({
               current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
               index === 0 && 'pl-3 border-l',
               index === childrens.length - 1 && 'pr-3 border-r',
-              index === 2 && 'w-[20%]', // this needs to be fixed!
+              index === 2 && 'w-[20%]', // @todo this needs to be fixed!
               index === 3 && 'w-[30%]',
               index === 4 && 'w-[20%]',
               index === 5 && 'w-[10%]',
