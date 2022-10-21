@@ -1,10 +1,9 @@
 import { Notification } from "@components/Notification/Notification";
 import { Button } from "@components/UI/Button";
 import { LinkButton } from "@components/UI/LinkButton";
-import { config } from "@utils/config";
 import { NETWORK_NAME } from "@utils/constant";
-import * as React from "react";
 import toast from "react-hot-toast";
+import { env } from "src/env/client.mjs";
 
 import { useStore } from "./useStore";
 
@@ -53,7 +52,7 @@ export const useNotification = (projectName: string) => {
 
   const notifySubmitted = (trxHash: string, duration = 8000) => {
     const transactionEtherscanUrl =
-      config.networkId === 1
+      env.NEXT_PUBLIC_NETWORK_ID === 1
         ? `https://etherscan.io/tx/${trxHash}`
         : `https://${
             NETWORK_NAME[config.networkId]

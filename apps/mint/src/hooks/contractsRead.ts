@@ -1,9 +1,9 @@
 import { useGetProjectDetail } from "@hooks/useGetProjectDetail";
-import { config } from "@utils/config";
 import { RhapsodyContractConfig } from "@utils/constant";
 import { presaleConfig } from "@utils/merkle_roots";
 import { ethers } from "ethers";
 import { useMemo } from "react";
+import { env } from "src/env/client.mjs";
 import { useContractRead } from "wagmi";
 
 export const useMintCount = (address: string): number => {
@@ -24,7 +24,7 @@ export const useTotalMinted = (): number => {
     ...RhapsodyContractConfig,
     functionName: "totalSupply",
     watch: true,
-    chainId: config.networkId,
+    chainId: env.NEXT_PUBLIC_NETWORK_ID,
   });
 
   const totalMinted = useMemo(() => {
@@ -47,13 +47,13 @@ export const useMintPeriod = (): UseMintPeriod => {
   const { data: contractPresaleTime } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: "presaleTime",
-    chainId: config.networkId,
+    chainId: env.NEXT_PUBLIC_NETWORK_ID,
     watch: true,
   });
   const { data: contractPublicTime } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: "publicTime",
-    chainId: config.networkId,
+    chainId: env.NEXT_PUBLIC_NETWORK_ID,
     watch: true,
   });
 

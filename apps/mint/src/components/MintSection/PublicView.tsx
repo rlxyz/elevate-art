@@ -5,8 +5,8 @@ import { useTotalMinted } from "@hooks/contractsRead";
 import { useGetProjectDetail } from "@hooks/useGetProjectDetail";
 import { usePublicMint } from "@hooks/usePublicMint";
 import { usePublicSaleRequirements } from "@hooks/usePublicSaleRequirements";
-import { config } from "@utils/config";
 import { useEffect, useState } from "react";
+import { env } from "src/env/client.mjs";
 import { useAccount } from "wagmi";
 
 import { ConnectWalletSection } from "./ConnectWalletSection";
@@ -65,7 +65,7 @@ export const PublicView = () => {
         <div className="flex justify-between items-center mt-7">
           <span className="block font-plus-jakarta-sans font-bold">Total</span>
           <span className="block font-plus-jakarta-sans font-bold">{`${
-            config.totalPriceAllocation[mintCount - 1]
+            env.NEXT_PUBLIC_TOTAL_PRICE_ALLOCATION[mintCount - 1]
           } ETH`}</span>
         </div>
       </div>

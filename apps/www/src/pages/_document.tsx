@@ -16,8 +16,6 @@ class CompilerDocument extends Document {
             href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap'
             rel='stylesheet'
           />
-          {/* <link rel='reload' href='https://rlxyz.nyc3.cdn.digitaloceanspaces.com' /> */}
-          {/* <link rel='stylesheet' type='text/css' href='/font.css' /> */}
         </Head>
         <body className='min-h-full'>
           <Main />

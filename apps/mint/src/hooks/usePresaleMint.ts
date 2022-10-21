@@ -1,11 +1,11 @@
 import { useGetProjectDetail } from "@hooks/useGetProjectDetail";
-import { config } from "@utils/config";
 import {
   COLLECTION_DISTRIBUTION,
   RhapsodyContractConfig,
 } from "@utils/constant";
 import { generateLeaf, presaleMerkleTree } from "@utils/merkle_roots";
 import { ethers } from "ethers";
+import { env } from "src/env/client.mjs";
 import { useContractWrite, useWaitForTransaction } from "wagmi";
 
 import { usePresaleMaxAllocation } from "./contractsRead";
@@ -64,7 +64,7 @@ export const usePresaleMint = (address: string): UsePresaleMint => {
       notifyError({ message: "Trying to mint too many" });
     }
 
-    const mintValue = config.totalPriceAllocation[invocations - 1];
+    const mintValue = env.NEXT_PUBLIC_TOTAL_PRICE_ALLOCATION[invocations - 1];
     const formattedAddress = ethers.utils.getAddress(address);
     const overrides = {
       value: ethers.utils.parseEther(mintValue.toString()),

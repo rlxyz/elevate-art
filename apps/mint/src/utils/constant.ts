@@ -1,5 +1,4 @@
-import { config } from "@utils/config";
-
+import { env } from "src/env/client.mjs";
 import ContractAbi from "../contracts/Rhapsody.json";
 
 export const COLLECTION_DISTRIBUTION = {
@@ -14,10 +13,10 @@ export const SUPPORTED_NETWORKS = [1, 4];
 
 export const NETWORK_NAME = {
   1: "Mainnet",
-  4: "Rinkeby",
+  5: "Goerli",
 };
 
 export const RhapsodyContractConfig = {
-  addressOrName: config.contractAddress,
+  addressOrName: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
   contractInterface: ContractAbi,
 };
