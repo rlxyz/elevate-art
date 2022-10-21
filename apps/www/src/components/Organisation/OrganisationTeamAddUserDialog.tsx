@@ -1,5 +1,5 @@
 import Loader from '@components/Layout/Loader'
-import { OrganisationDatabaseRoleEnumType } from '@elevateart/db'
+import { OrganisationDatabaseRoleEnumType } from '@elevateart/db/enums'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from '@hooks/utils/useNotification'

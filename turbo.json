@@ -1,26 +1,35 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "^db-generate"
       ],
       "outputs": [
-        "dist/**",
-        ".next/**"
+        ".next/**",
+        ".expo/**"
       ]
     },
     "lint": {
       "outputs": []
     },
     "dev": {
+      "dependsOn": [
+        "^db-generate"
+      ],
+      "cache": false
+    },
+    "db-generate": {
+      "cache": false
+    },
+    "db-push": {
       "cache": false
     },
     "clean": {
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "cache": false
+    },
+    "//#clean": {
+      "cache": false
     }
   }
 }

@@ -1,25 +1,23 @@
 {
   "name": "rlxyz-compiler-client",
-  "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packageManager": "pnpm@7.13.0",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "clean": "turbo clean",
-    "lint": "turbo run lint",
+    "db-generate": "turbo db-generate",
+    "db-push": "turbo db-push",
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "clean:workspaces": "turbo clean",
+    "clean": "rm -rf node_modules .turbo .vercel",
+    "lint": "turbo lint && manypkg check",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
-  "devDependencies": {
-    "prettier": "latest",
-    "turbo": "latest"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
-  "packageManager": "yarn@1.22.19"
+  "dependencies": {
+    "@manypkg/cli": "^0.19.2",
+    "prettier": "latest",
+    "turbo": "latest"
+  }
 }

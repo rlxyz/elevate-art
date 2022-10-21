@@ -1,4 +1,4 @@
-import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from '@elevateart/db'
+import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from '@elevateart/db/enums'
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { getAddressFromEns } from '@utils/ethers'

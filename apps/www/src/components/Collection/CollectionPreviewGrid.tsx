@@ -8,11 +8,9 @@ import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import dynamic from 'next/dynamic'
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-
-const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
+import CollectionPreviewGridFilterLabels from './CollectionPreviewGridFilterLabels'
 
 const PreviewImage = ({
   id,
@@ -225,7 +223,7 @@ export const InfiniteScrollGrid = () => {
       </span>
       <div className='min-h-6 space-x-2 flex items-center max-w-full'>
         <div className='space-x-3 flex items-center'>
-          <DynamicCollectionPreviewGridFilterLabels />
+          <CollectionPreviewGridFilterLabels />
         </div>
       </div>
       <InfiniteScrollComponent.default
