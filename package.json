@@ -1,5 +1,5 @@
 {
-  "name": "rlxyz-compiler-client",
+  "name": "@elevateart/core",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -19,9 +19,9 @@
     "prettier": "latest",
     "turbo": "latest"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "dependencies": {},
+  "engines": {
+    "node": "16.16.0"
+  },
   "packageManager": "yarn@1.22.19"
 }
