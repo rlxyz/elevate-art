@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Loading from "../loading";
+import Loading from "components/loading";
 
 export default {
   title: "Feedback/Loading",

@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { Toaster, useNotification } from "../toast";
+import { Toaster, useNotification } from "components/toast";
 
 export default {
   title: "Hooks/useNotification",

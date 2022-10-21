@@ -1,13 +1,13 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import LayoutHeader from "../layout/layout-header";
+import LayoutHeaderComponent from "components/layout/layout-header";
 
 export default {
   title: "Layout/Header",
-  component: LayoutHeader,
-} as ComponentMeta<typeof LayoutHeader>;
+  component: LayoutHeaderComponent,
+} as ComponentMeta<typeof LayoutHeaderComponent>;
 
-export const Template: ComponentStory<typeof LayoutHeader> = () => (
-  <LayoutHeader
+export const Template: ComponentStory<typeof LayoutHeaderComponent> = () => (
+  <LayoutHeaderComponent
     appNavigationRoutes={[
       {
         name: "tylerhobbs",

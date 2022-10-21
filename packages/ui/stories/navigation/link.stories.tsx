@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Link from "../link";
+import Link from "components/link";
 
 export default {
   title: "Navigation/Link",

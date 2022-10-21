@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Breadcrumbs from "../breadcrumbs";
+import Breadcrumbs from "components/breadcrumbs";
 
 export default {
   title: "Navigation/Breadcrumbs",
