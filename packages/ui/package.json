@@ -4,6 +4,32 @@
   "main": "./index.tsx",
   "types": "./index.tsx",
   "license": "MIT",
+  "exports": {
+    "./tailwind": {
+      "require": "./src/tailwind.cjs"
+    },
+    ".": "./src/index.tsx",
+    "./*": [
+      "./src/*.tsx",
+      "./src/*.ts",
+      "./src/*/index.ts"
+    ],
+    "./globals.css": "./styles/globals.css",
+    "./postcss": {
+      "require": "./src/postcss.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*",
+        "src/*/index"
+      ]
+    }
+  },
+  "files": [
+    "src"
+  ],
   "scripts": {
     "clean": "rm -rf .turbo node_modules storybook-static",
     "storybook": "start-storybook -p 6006 -s public",

@@ -1,5 +1,4 @@
-import Card from '@elevateart/ui/components/card'
-import Layout from '@elevateart/ui/components/layout'
+import { Card, Layout } from '@elevateart/ui'
 import Image from 'next/image'
 
 const Connect = () => {

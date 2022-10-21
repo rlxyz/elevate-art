@@ -1,7 +1,7 @@
-const config = require('@elevateart/ui/tailwind.config')
+// const path = require('path')
+const ui = require('@elevateart/ui/tailwind')
 
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  ...config,
-  content: ['./src/**/**/*.{js,ts,jsx,tsx}'],
+  presets: [ui],
+  content: ui.content.concat(['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}']),
 }
