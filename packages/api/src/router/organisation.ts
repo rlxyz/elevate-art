@@ -1,4 +1,4 @@
-import { OrganisationDatabaseRoleEnum } from "src/types/enums";
+import { OrganisationDatabaseRoleEnum } from "@elevateart/db/enums";
 import { z } from "zod";
 import { createRouter } from "../context";
 

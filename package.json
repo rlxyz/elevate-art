@@ -1,7 +1,10 @@
 {
   "name": "rlxyz-compiler-client",
   "private": true,
-  "packageManager": "pnpm@7.13.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "db-generate": "turbo db-generate",
     "db-push": "turbo db-push",
@@ -12,12 +15,13 @@
     "lint": "turbo lint && manypkg check",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "devDependencies": {
+    "prettier": "latest",
+    "turbo": "latest"
+  },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {
-    "@manypkg/cli": "^0.19.2",
-    "prettier": "latest",
-    "turbo": "latest"
-  }
+  "dependencies": {},
+  "packageManager": "yarn@1.22.19"
 }

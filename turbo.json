@@ -1,5 +1,10 @@
 {
   "pipeline": {
+    "db-generate": {
+      "outputs": [
+        ".generated/**"
+      ]
+    },
     "build": {
       "dependsOn": [
         "^build",
@@ -17,9 +22,6 @@
       "dependsOn": [
         "^db-generate"
       ],
-      "cache": false
-    },
-    "db-generate": {
       "cache": false
     },
     "db-push": {

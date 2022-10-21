@@ -13,13 +13,11 @@ import LayoutContainer from "./layout-container";
 export interface Props {
   appNavigationRoutes?: NavigationRoutes[];
   pageNavigationRoutes?: NavigationRoutes[];
-  isEthereumConnectable?: boolean;
 }
 
 const defaultProps: Props = {
   appNavigationRoutes: [],
   pageNavigationRoutes: [],
-  isEthereumConnectable: false,
 };
 
 export type LayoutContainerProps = Props &
@@ -30,7 +28,6 @@ export type LayoutContainerProps = Props &
  * There are three sections to this component:
  * - appNavigationRoutes: These are the routes that are always present in the header.
  * - pageNavigationRoutes: These are the routes that are specific to the page.
- * - isEthereumConnectable: This is a flag that determines if the ethereum connect button should be shown.
  *
  * Example:
  * - a landing page wouldnt have the pageNavigationRoutes.
