@@ -1,4 +1,3 @@
-import { Layout } from "@components/Layout/Layout";
 import { PageContainer } from "@components/Layout/PageContainer";
 import { ProjectInfo } from "@components/Minter/ProjectInfo";
 import { MintSection } from "@components/MintSection/MintSection";
@@ -18,29 +17,27 @@ export const Home = () => {
   }
 
   return (
-    <Layout>
-      <PageContainer
-        header={
-          <ProjectHeader
-            bannerImageUrl={data?.projectBanner}
-            profileImageUrl={data?.projectProfileImage}
-            projectOwner={data?.projectOwner}
-          />
-        }
-        leftContent={
-          <ProjectInfo
-            projectName={data?.projectName}
-            projectDescription={data?.projectDescription}
-            bannerImageUrl={data?.projectInfoBanner}
-            discordUrl={data?.discordUrl}
-            twitterUrl={data?.twitterUrl}
-            openseaUrl={data?.openseaUrl}
-            price={data?.ethPrice}
-            supply={data?.totalSupply}
-          />
-        }
-        rightContent={<MintSection />}
-      />
-    </Layout>
+    <PageContainer
+      header={
+        <ProjectHeader
+          bannerImageUrl={data?.projectBanner}
+          profileImageUrl={data?.projectProfileImage}
+          projectOwner={data?.projectOwner}
+        />
+      }
+      leftContent={
+        <ProjectInfo
+          projectName={data?.projectName}
+          projectDescription={data?.projectDescription}
+          bannerImageUrl={data?.projectInfoBanner}
+          discordUrl={data?.discordUrl}
+          twitterUrl={data?.twitterUrl}
+          openseaUrl={data?.openseaUrl}
+          price={data?.ethPrice}
+          supply={data?.totalSupply}
+        />
+      }
+      rightContent={<MintSection />}
+    />
   );
 };

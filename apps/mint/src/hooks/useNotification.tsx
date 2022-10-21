@@ -5,24 +5,14 @@ import { NETWORK_NAME } from "@utils/constant";
 import toast from "react-hot-toast";
 import { env } from "src/env/client.mjs";
 
-import { useStore } from "./useStore";
-
 export const useNotification = (projectName: string) => {
-  const { rollbar } = useStore();
-
   const notifyError = ({
     message = "",
     duration = 10000,
-    err,
   }: {
     message: string;
     duration?: number;
-    err?: Error;
   }) => {
-    if (err) {
-      rollbar.error(err);
-    }
-
     return toast.custom(
       (t) => (
         <Notification id={t.id} type="error">

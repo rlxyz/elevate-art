@@ -1,5 +1,4 @@
 import "@elevateart/ui/styles/globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 import "react-medium-image-zoom/dist/styles.css";
 
 import { EthereumNextAuthContext } from "@elevateart/eth-auth";
