@@ -4,9 +4,16 @@
   "main": "./index.tsx",
   "types": "./index.tsx",
   "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules storybook-static",
+    "dev": "start-storybook -p 6006 -s public",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public",
+    "serve-storybook": "serve storybook-static"
+  },
   "exports": {
     "./tailwind": {
-      "require": "./src/tailwind.cjs"
+      "require": "./tailwind.config.js"
     },
     ".": "./src/index.tsx",
     "./*": [
@@ -16,7 +23,7 @@
     ],
     "./globals.css": "./styles/globals.css",
     "./postcss": {
-      "require": "./src/postcss.cjs"
+      "require": "./postcss.config.js"
     }
   },
   "typesVersions": {
@@ -30,12 +37,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules storybook-static",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
-    "serve-storybook": "serve storybook-static"
-  },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@storybook/addon-actions": "^6.5.12",

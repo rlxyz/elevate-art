@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Modal from "components/modal";
 import { useState } from "react";
+import Modal from "../../src/modal";
 
 export default {
   title: "Feedback/Modal",

@@ -1,1 +1,1 @@
-export * from "@heroicons/react/outline";
+export default "@heroicons/react/outline";

@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Tabs, { TabsComponentType } from "components/tabs";
+import Tabs, { TabsComponentType } from "../../src/tabs";
 
 export default {
   title: "Navigation/Tabs",
