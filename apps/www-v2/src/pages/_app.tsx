@@ -2,57 +2,34 @@ import { AppRouter } from '@elevateart/api'
 import { EthereumNextAuthContext } from '@elevateart/eth-auth'
 import '@elevateart/ui/styles/globals.css'
 import { ErrorBoundary } from '@highlight-run/react'
-import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
-import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
 import { loggerLink } from '@trpc/client/links/loggerLink'
 import { withTRPC } from '@trpc/next'
-import { H } from 'highlight.run'
 import { DefaultSeo } from 'next-seo'
 import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
-import { env } from 'src/env/client.mjs'
 import superjson from 'superjson'
 
-if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
-  H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
-    environment: env.NEXT_PUBLIC_NODE_ENV,
-    networkRecording: {
-      enabled: true,
-      recordHeadersAndBody: true,
-    },
-    // version: (process.env.VERCEL_GIT_COMMIT_SHA as string) || env.NEXT_PUBLIC_NODE_ENV, // default to production
-    // enableStrictPrivacy: false, see: https://docs.highlight.run/privacy#pU2Cn
-  })
-}
-
-const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
+const ElevateMintApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ErrorBoundary showDialog>
       <EthereumNextAuthContext session={pageProps.session}>
-        <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-          <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <DefaultSeo
-                title='elevate_www.png-v2'
-                description='a general purpose image compiler for nft projects'
-                openGraph={{
-                  type: 'website',
-                  locale: 'en_US',
-                  url: 'https://elevate.art/',
-                  site_name: 'elevate.art',
-                }}
-                twitter={{
-                  handle: '@elevate_art',
-                  cardType: 'summary',
-                }}
-              />
-              <Component {...pageProps} />
-              <Toaster />
-            </RepositoryContext.Provider>
-          </CollectionRouterContext.Provider>
-        </OrganisationRouterContext.Provider>
+        <DefaultSeo
+          title='elevate_www.png-v2'
+          description='a general purpose image compiler for nft projects'
+          openGraph={{
+            type: 'website',
+            locale: 'en_US',
+            url: 'https://elevate.art/',
+            site_name: 'elevate.art',
+          }}
+          twitter={{
+            handle: '@elevate_art',
+            cardType: 'summary',
+          }}
+        />
+        <Component {...pageProps} />
+        <Toaster />
       </EthereumNextAuthContext>
     </ErrorBoundary>
   )
@@ -106,7 +83,7 @@ const createTRPCNextApp = () => {
      * @link https://trpc.io/docs/ssr
      */
     ssr: false,
-  })(ElevateCompilerApp)
+  })(ElevateMintApp)
 }
 
 export default createTRPCNextApp()
