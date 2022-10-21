@@ -1,4 +1,3 @@
-// const path = require('path')
 const ui = require('@elevateart/ui/tailwind')
 
 module.exports = {

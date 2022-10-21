@@ -7,7 +7,7 @@ export const useAuthenticated = () => {
   const router = useRouter()
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/')
+      router.push('/connect')
     }
   }, [status])
   return { session, isLoggedIn: !!session }

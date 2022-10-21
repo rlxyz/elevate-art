@@ -1,7 +1,14 @@
 import { Card, Layout } from '@elevateart/ui'
+import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const Connect = () => {
+  const router = useRouter()
+  const { isLoggedIn } = useAuthenticated()
+
+  if (isLoggedIn) router.push('/dashboard')
+
   return (
     <Layout>
       <Layout.Header />
@@ -19,7 +26,7 @@ const Connect = () => {
             <div className='w-full flex flex-col justify-center space-y-3'>
               <div className='space-y-1'>
                 <h1 className='text-xl font-semibold'>Connect your Wallet</h1>
-                <p className='text-xs text-accents_6'>Apparently, this thing called Rainbow that does everything for you.</p>
+                <p className='text-xs text-accents_6'>Apparently, this thing called Rainbow does everything helps you connect.</p>
               </div>
               <Card>
                 <div className='flex flex-row items-center space-x-2 cursor-pointer'>
