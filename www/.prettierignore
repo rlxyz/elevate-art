@@ -1,9 +1,0 @@
-# next
-.next/
-
-# random
-build
-coverage
-out/
-*.html
-.storybook
