@@ -1,9 +1,15 @@
 const plugin = require("tailwindcss/plugin");
+const path = require("path");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: "jit",
-  content: ["./components/**/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    path.join(
+      path.dirname(require.resolve("@elevateart/ui")),
+      "**/*.{ts, tsx}"
+    ),
+  ],
   theme: {
     /**
      * We use CSS variables defined in styles/globals.css to define color values.

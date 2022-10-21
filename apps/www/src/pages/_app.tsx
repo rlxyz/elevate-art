@@ -35,7 +35,7 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
           <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
             <RepositoryContext.Provider createStore={() => createRepositoryStore}>
               <DefaultSeo
-                title='elevate.art'
+                title='elevate_www.png-v1'
                 description='a general purpose image compiler for nft projects'
                 openGraph={{
                   type: 'website',
