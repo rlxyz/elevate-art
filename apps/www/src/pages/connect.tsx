@@ -1,3 +1,4 @@
+import { EthereumConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
 import { Card, Layout } from '@elevateart/ui'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import Image from 'next/image'
@@ -28,12 +29,14 @@ const Connect = () => {
                 <h1 className='text-xl font-semibold'>Connect your Wallet</h1>
                 <p className='text-xs text-accents_6'>Apparently, this thing called Rainbow does everything helps you connect.</p>
               </div>
-              <Card>
-                <div className='flex flex-row items-center space-x-2 cursor-pointer'>
-                  <img src='images/rainbow.png' className='w-10 h-10 rounded-primary' />
-                  <span className='font-semibold'>Rainbow</span>
-                </div>
-              </Card>
+              <EthereumConnectButton>
+                <Card>
+                  <div className='flex flex-row items-center space-x-2 cursor-pointer'>
+                    <img src='images/rainbow.png' className='w-10 h-10 rounded-primary' />
+                    <span className='font-semibold'>Rainbow</span>
+                  </div>
+                </Card>
+              </EthereumConnectButton>
             </div>
           </div>
         </Layout.Body.Item>

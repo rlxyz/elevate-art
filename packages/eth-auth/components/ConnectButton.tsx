@@ -1,29 +1,33 @@
-// import { UserCircleIcon } from "@elevateart/ui";
-import { ConnectButton as RainbowKitButton } from "@rainbow-me/rainbowkit";
-import { useSession } from "next-auth/react";
-import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ReactNode } from "react";
 
-interface ConnectButtonProps {
-  disabled?: boolean;
-}
-
-export const ConnectButton: React.FC<ConnectButtonProps> = ({
-  disabled = false,
+export const EthereumConnectButton = ({
+  children,
+}: {
+  children: ReactNode;
 }) => {
-  const { data: session } = useSession();
   return (
-    <RainbowKitButton.Custom>
+    <ConnectButton.Custom>
       {({
         account,
         chain,
         openAccountModal,
         openChainModal,
         openConnectModal,
+        authenticationStatus,
         mounted,
       }) => {
+        // Note: If your app doesn't use authentication, you
+        // can remove all 'authenticationStatus' checks
+        const ready = mounted && authenticationStatus !== "loading";
+        const connected =
+          ready &&
+          account &&
+          chain &&
+          (!authenticationStatus || authenticationStatus === "authenticated");
         return (
           <div
-            {...(!mounted && {
+            {...(!ready && {
               "aria-hidden": true,
               style: {
                 opacity: 0,
@@ -33,50 +37,25 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
             })}
           >
             {(() => {
-              if (!mounted || !account || !chain) {
-                return (
-                  <>
-                    <button
-                      disabled={disabled}
-                      onClick={openConnectModal}
-                      type="button"
-                      className="flex items-center"
-                    >
-                      <img
-                        src="/images/lightGray-wallet.svg"
-                        className="p-2 w-12 h-12 inline-block border border-border rounded-primary"
-                        alt="Wallet"
-                      />
-                    </button>
-                  </>
-                );
-              }
-
               return (
                 <button
-                  disabled={disabled}
                   onClick={
-                    chain.unsupported ? openChainModal : openAccountModal
+                    !connected
+                      ? openConnectModal
+                      : chain.unsupported
+                      ? openChainModal
+                      : openAccountModal
                   }
                   type="button"
+                  className="w-full h-full"
                 >
-                  {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
-                  {session ? (
-                    // <UserCircleIcon className="w-4 h-4 text-darkGrey" />
-                    <></>
-                  ) : (
-                    <img
-                      src="/images/lightGray-wallet.svg"
-                      className="p-2 w-12 h-12 inline-block border border-border rounded-primary"
-                      alt="Wallet"
-                    />
-                  )}
+                  {children}
                 </button>
               );
             })()}
           </div>
         );
       }}
-    </RainbowKitButton.Custom>
+    </ConnectButton.Custom>
   );
 };

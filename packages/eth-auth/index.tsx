@@ -3,6 +3,7 @@
 import {
   connectorsForWallets,
   getDefaultWallets,
+  lightTheme,
 } from "@rainbow-me/rainbowkit";
 import { GetSiweMessageOptions } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -42,7 +43,7 @@ import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next
 import { SessionProvider, useSession } from "next-auth/react";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
-export { ConnectButton } from "./components/ConnectButton";
+export { EthereumConnectButton } from "./components/ConnectButton";
 export {
   getSiweMessageOptions,
   wagmiClient,
@@ -71,6 +72,13 @@ export const EthereumNextAuthContext = ({
             appInfo={appInfo}
             chains={chains}
             initialChain={Number(process.env.NEXT_PUBLIC_NETWORK_ID)}
+            theme={lightTheme({
+              accentColor: "#0070F3",
+              accentColorForeground: "white",
+              borderRadius: "small",
+              fontStack: "system",
+              overlayBlur: "small",
+            })}
           >
             {children}
           </RainbowKitProvider>
