@@ -1,15 +1,8 @@
 import { EthereumConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
 import { Card, Layout } from '@elevateart/ui'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 
 const Connect = () => {
-  const router = useRouter()
-  const { isLoggedIn } = useAuthenticated()
-
-  if (isLoggedIn) router.push('/dashboard')
-
   return (
     <Layout>
       <Layout.Header />
