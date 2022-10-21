@@ -1,5 +1,5 @@
-import withBundleAnalyzer from "@next/bundle-analyzer";
-import withTM from "next-transpile-modules";
+import withBundleAnalyzer from '@next/bundle-analyzer'
+import withTM from 'next-transpile-modules'
 
 /**
  * Don't be scared of the generics here.
@@ -11,26 +11,26 @@ import withTM from "next-transpile-modules";
  */
 const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
-    return withBundleAnalyzer(config);
+    return withBundleAnalyzer(config)
   }
-  return config;
-};
+  return config
+}
 
-export default withTM(["@elevateart/ui", "@elevateart/eth-auth"])(
+export default withTM(['@elevateart/ui', '@elevateart/eth-auth'])(
   defineNextConfig({
     reactStrictMode: true,
     swcMinify: true,
     images: {
       domains: [
-        "res.cloudinary.com",
-        "localhost",
-        "rlwxyz.nyc3.cdn.digitaloceanspaces.com", // @todo fix
-        "rlyxz.nyc3.cdn.digitaloceanspaces.com", // @todo fix
+        'res.cloudinary.com',
+        'localhost',
+        'rlwxyz.nyc3.cdn.digitaloceanspaces.com', // @todo fix
+        'rlyxz.nyc3.cdn.digitaloceanspaces.com', // @todo fix
       ],
     },
     i18n: {
-      locales: ["en-US"],
-      defaultLocale: "en-US",
+      locales: ['en-US'],
+      defaultLocale: 'en-US',
     },
   })
-);
+)

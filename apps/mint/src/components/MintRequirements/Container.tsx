@@ -1,4 +1,4 @@
-import cls from 'classnames'
+import clsx from 'clsx'
 import React from 'react'
 
 interface Props {
@@ -10,12 +10,12 @@ interface Props {
 export const Container: React.FC<Props> = ({ children, top, bottom }) => {
   return (
     <div
-      className={cls(
+      className={clsx(
         'flex items-center px-4 py-6 border-b border-b-lightGray border-r border-r-lightGray border-l border-l-lightGray',
         {
           'rounded-b-xl': bottom,
           'border-t border-t-lightGray rounded-t-xl': top,
-        },
+        }
       )}
     >
       {children}

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { data } from '../data'
+import { data } from '../utils/data'
 
 const fetchProjectDetail = async () => {
   return new Promise<ProjectDetail>(resolve => {
