@@ -1,5 +1,5 @@
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-import { ConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
+// import { ConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -78,7 +78,7 @@ const HeaderExternalRoutes = () => {
           </Link>
         </div>
       ))}
-      <ConnectButton />
+      {/* <ConnectButton /> */}
     </div>
   )
 }
