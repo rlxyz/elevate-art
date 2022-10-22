@@ -11,6 +11,11 @@ export const externalRoutes: NavigationRoutes[] = [
     disabled: false,
     href: "https://docs.elevate.art",
   },
+  {
+    name: "Features",
+    disabled: false,
+    href: "https://feature.elevate.art",
+  },
 ];
 
 export const socialRoutes: NavigationRoutes[] = [
