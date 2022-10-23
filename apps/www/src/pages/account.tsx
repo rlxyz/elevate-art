@@ -3,35 +3,20 @@ import { Layout } from '@components/Layout/core/Layout'
 import { PersonalOrganisationAccountNavigation } from '@components/Organisation/PersonalOrganisationAccountNavigation'
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useSession } from 'next-auth/react'
+import type { NextPage } from 'next'
 import { useEffect } from 'react'
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 
-const Page = () => {
-  const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
-    (state) => {
-      return {
-        organisationId: state.organisationId,
-        setOrganisationId: state.setOrganisationId,
-        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
-        setCurrentRoute: state.setCurrentRoute,
-        currentRoute: state.currentRoute,
-      }
-    }
-  )
-
+const Page: NextPage = () => {
+  const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => ({
+    setCurrentRoute: state.setCurrentRoute,
+    currentRoute: state.currentRoute,
+  }))
+  const { all: organisations } = useQueryOrganisation()
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Account)
-    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General)
   }, [])
-
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  const { data: session } = useSession()
   return (
     <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal}>
       <Layout>
@@ -40,7 +25,7 @@ const Page = () => {
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name || ''}`,
+              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               organisations,
             },
           ]}
@@ -49,13 +34,13 @@ const Page = () => {
               name: OrganisationNavigationEnum.enum.Overview,
               href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              loading: isLoadingOrganisations,
+              loading: false,
             },
             {
               name: OrganisationNavigationEnum.enum.Account,
               href: `/${OrganisationNavigationEnum.enum.Account}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-              loading: isLoadingOrganisations,
+              loading: false,
             },
           ]}
         />

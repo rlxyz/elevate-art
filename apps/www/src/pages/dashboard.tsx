@@ -41,13 +41,13 @@ const Page: NextPage = () => {
               name: OrganisationNavigationEnum.enum.Overview,
               href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              loading: isLoadingOrganisations,
+              loading: false,
             },
             {
               name: OrganisationNavigationEnum.enum.Account,
               href: `/${OrganisationNavigationEnum.enum.Account}`,
               enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-              loading: isLoadingOrganisations,
+              loading: false,
             },
           ]}
         />
