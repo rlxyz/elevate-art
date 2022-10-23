@@ -26,7 +26,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
 }: SearchProps & typeof defaultProps) => {
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -58,9 +58,9 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
         className={clsx(
           className,
           isLoading
-            ? "bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-full border-none"
+            ? "bg-accents_7 bg-opacity-50 animate-pulse rounded-primary border-none"
             : "border border-border",
-          "block text-xs w-full pl-10 rounded-[5px] py-2",
+          "block text-xs w-full pl-8 rounded-primary py-2",
           "focus:outline-none focus:ring-1 focus:border-success focus:ring-success",
           "invalid:border-error invalid:text-error",
           "focus:invalid:border-error focus:invalid:ring-error"

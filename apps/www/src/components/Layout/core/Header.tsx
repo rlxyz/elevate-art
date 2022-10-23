@@ -172,13 +172,13 @@ export interface HeaderInternalPageRoutesProps {
 
 const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
   return (
-    <aside className='-ml-5'>
+    <nav>
       <ul className='flex list-none'>
         {links.map(({ name, enabled, href, loading }, index: number) => {
           return (
             <li key={index} className={clsx(enabled && 'flex space-between items-center relative')}>
               <div className={clsx('mb-1', loading && 'pointer-events-none')}>
-                <Link block href={href} className='text-xs px-3'>
+                <Link block href={href} className='text-xs'>
                   <span className={clsx(enabled && 'font-semibold')}>{capitalize(name)}</span>
                 </Link>
               </div>
@@ -189,7 +189,7 @@ const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
           )
         })}
       </ul>
-    </aside>
+    </nav>
   )
 }
 
@@ -208,9 +208,11 @@ const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) =>
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link href={'/'}>
-            <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
-          </Link>
+          <div className='relative w-12 h-12'>
+            <Link href='/'>
+              <Image priority layout='fill' src='/images/logo-black.png' alt='elevate-art-logo' />
+            </Link>
+          </div>
           <HeaderInternalAppRoutes routes={internalRoutes} />
         </div>
         <HeaderExternalRoutes />

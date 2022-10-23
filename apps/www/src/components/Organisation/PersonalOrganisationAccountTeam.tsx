@@ -1,4 +1,4 @@
-import { Link } from '@components/Layout/Link'
+import Link from '@components/Layout/Link'
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useSession } from '@elevateart/eth-auth'
 import { Search, useInput } from '@elevateart/ui'
@@ -54,7 +54,7 @@ export const PersonalOrganisationAccountTeam = () => {
                   </div>
                   <Link
                     href={`/${organisation.name}`}
-                    className='text-foreground border border-border px-4 py-1.5 rounded-[5px] text-xs'
+                    className='text-foreground border border-border px-4 py-1.5 rounded-[5px] text-xs w-fit'
                   >
                     View
                   </Link>

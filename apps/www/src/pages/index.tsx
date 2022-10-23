@@ -6,7 +6,7 @@ import Image from 'next/image'
 const Home: NextPage = () => (
   <Layout>
     <Layout.Header>
-      <Link href='/connect' className='border border-border bg-foreground text-background rounded-primary px-3 py-2 text-xs'>
+      <Link href='/connect' className='border border-border bg-foreground text-background rounded-primary p-2 text-xs'>
         Go to App
       </Link>
     </Layout.Header>
@@ -15,7 +15,13 @@ const Home: NextPage = () => (
         <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
           <div className='w-full flex flex-col justify-center items-center'>
             <div className='relative w-1/2 h-1/2'>
-              <Image priority className='object-contain' layout='fill' src='/images/logo-banner.png' alt='elevate-art-logo' />
+              <Image
+                priority
+                className='object-contain'
+                layout='fill'
+                src='/images/logo-banner.png'
+                alt='elevate-art-logo-banner'
+              />
             </div>
           </div>
         </div>

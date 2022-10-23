@@ -1,1 +1,6 @@
-module.exports = require('@elevateart/ui/postcss')
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}

@@ -110,7 +110,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
       border="lower"
       className={clsx(
         className,
-        "min-h-[3.5rem] max-h-[5.64rem] flex items-center"
+        "min-h-[3.5rem] max-h-[5.64rem] flex items-center whitespace-nowrap"
       )}
     >
       <header>

@@ -45,22 +45,20 @@ const Page: NextPage = () => {
           ]}
         />
         <Layout.Body>
-          <div className='-ml-4 py-8 space-y-8'>
-            {
-              <div className='grid grid-cols-10 gap-x-6'>
-                <div className='col-span-2'>
-                  <PersonalOrganisationAccountNavigation />
-                </div>
-                <div className='col-span-8'>
-                  <div className='space-y-1'>
-                    <span className='text-sm font-semibold'>We intend to implement this page soon</span>
-                    <p className='text-xs text-accents_5'>
-                      Hopefully the universe doesnt collapse into a black hole in the meantime
-                    </p>
-                  </div>
+          <div className='py-8 space-y-8'>
+            <div className='grid grid-cols-10 gap-x-6'>
+              <div className='col-span-2'>
+                <PersonalOrganisationAccountNavigation />
+              </div>
+              <div className='col-span-8'>
+                <div className='space-y-1'>
+                  <span className='text-sm font-semibold'>We intend to implement this page soon</span>
+                  <p className='text-xs text-accents_5'>
+                    Hopefully the universe doesnt collapse into a black hole in the meantime
+                  </p>
                 </div>
               </div>
-            }
+            </div>
           </div>
         </Layout.Body>
       </Layout>

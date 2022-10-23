@@ -47,7 +47,7 @@ const LinkComponent = React.forwardRef<
           "text-inherit w-full h-auto",
           underline && "hover:underline hover:bg-accents_5",
           color && "text-success",
-          block && "rounded-[5px] hover:bg-accents_8 p-2",
+          block && "rounded-[5px] hover:bg-accents_8 px-3 py-2",
           block && color && "hover:bg-linkLighter",
           className
         )}
