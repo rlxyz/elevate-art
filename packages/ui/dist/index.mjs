@@ -189,7 +189,7 @@ var LinkIconComponent = () => {
     strokeLinejoin: "round",
     fill: "none",
     shapeRendering: "geometricPrecision",
-    className: "inline-flex items-center mb-[0.1875em]",
+    className: "inline-flex items-center mb-[0.1875em] ml-[2px]",
     children: [
       /* @__PURE__ */ jsx5("path", {
         d: "M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"
@@ -231,7 +231,7 @@ var LinkComponent = React4.forwardRef(
     return /* @__PURE__ */ jsxs5("a", {
       className: clsx5(
         "inline-flex items-baseline no-underline",
-        "text-inherit w-full h-auto",
+        "text-inherit w-fit h-auto",
         underline && "hover:underline hover:bg-accents_5",
         color && "text-success",
         block && "rounded-[5px] hover:bg-accents_8 px-3 py-2",

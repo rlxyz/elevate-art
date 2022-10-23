@@ -679,6 +679,14 @@ video {
   margin-right: 0.5rem;
 }
 
+.ml-\[1px\] {
+  margin-left: 1px;
+}
+
+.ml-\[2px\] {
+  margin-left: 2px;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -782,6 +790,11 @@ video {
 
 .w-\[350px\] {
   width: 350px;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .max-w-lg {
