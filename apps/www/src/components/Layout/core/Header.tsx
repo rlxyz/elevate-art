@@ -1,6 +1,5 @@
-import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { EthereumConnectButton } from '@elevateart/eth-auth'
-import { Avatar, Link } from '@elevateart/ui'
+import { Avatar } from '@elevateart/ui'
 import { externalRoutes, socialRoutes } from '@elevateart/ui/elevateart-external-links'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
@@ -13,7 +12,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { Link as OldLink } from '../Link'
+import Link from '../Link'
 
 const HeaderExternalRoutes = () => {
   return (
@@ -21,14 +20,14 @@ const HeaderExternalRoutes = () => {
       <aside className='flex flex-row items-center justify-center space-x-3'>
         {externalRoutes.map((item) => {
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
               <span className='cursor-pointer hover:text-foreground text-xs text-accents_5'>{item.name}</span>
             </Link>
           )
         })}
       </aside>
       {socialRoutes.map((item) => (
-        <Link href={item.href}>
+        <Link href={item.href} rel='noreferrer nofollow' target='_blank'>
           {item.icon ? (
             <item.icon className='h-4 w-4 cursor-pointer hover:text-foreground text-xs text-accents_5' aria-hidden='true' />
           ) : null}
@@ -100,7 +99,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                       <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-border ring-opacity-5'>
                         <div className='py-2 bg-accents_8 border-b border-border'>
                           <div className='relative rounded-[5px]'>
-                            <OldLink external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
+                            <Link href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
                               <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-accents_5 hover:text-foreground'>
                                 <div className='flex space-x-2 items-center'>
                                   {/* <div className='rounded-full h-5 w-5 bg-success' /> */}
@@ -113,7 +112,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                   <></>
                                 )}
                               </div>
-                            </OldLink>
+                            </Link>
                           </div>
                         </div>
                         <div className='p-2 relative bg-background space-y-1'>
@@ -122,8 +121,9 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               <span className='text-xs text-accents_5'>Your Teams</span>
                               <div>
                                 {organisations.map(({ name, type, id }) => (
-                                  <OldLink hover enabled={name === current} key={name} href={`/${name}`}>
-                                    <div
+                                  <Link block key={name} href={`/${name}`} className='flex items-center'>
+                                    <Avatar src='/images/avatar-blank.png' />
+                                    {/* <div
                                       className='px-2 flex flex-row justify-between items-center w-full'
                                       onClick={() => setOrganisationId(id)}
                                     >
@@ -136,8 +136,8 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                         </span>
                                       </div>
                                       {name === currentHref && <CheckIcon className='text-success h-4 w-4' />}
-                                    </div>
-                                  </OldLink>
+                                    </div> */}
+                                  </Link>
                                 ))}
                               </div>
                             </div>
@@ -167,18 +167,20 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
 }
 
 export interface HeaderInternalPageRoutesProps {
-  oldlinks: { name: string; enabled: boolean; href: string; loading: boolean }[]
+  links: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const HeaderInternalPageRoutes = ({ oldlinks }: HeaderInternalPageRoutesProps) => {
+const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
   return (
     <aside className='-ml-5'>
       <ul className='flex list-none'>
-        {oldlinks.map(({ name, enabled, href, loading }, index: number) => {
+        {links.map(({ name, enabled, href, loading }, index: number) => {
           return (
-            <li key={index} className={enabled ? 'flex space-between items-center relative' : ''}>
+            <li key={index} className={clsx(enabled && 'flex space-between items-center relative')}>
               <div className={clsx('mb-1', loading && 'pointer-events-none')}>
-                <OldLink disabled={loading} enabled={enabled} title={capitalize(name)} href={href} />
+                <Link block href={href} className='text-xs px-3'>
+                  <span className={clsx(enabled && 'font-semibold')}>{capitalize(name)}</span>
+                </Link>
               </div>
               {enabled && (
                 <motion.div className='absolute bg-foreground mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
@@ -206,14 +208,14 @@ const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) =>
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <OldLink external={true} href={'/'}>
+          <Link href={'/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
-          </OldLink>
+          </Link>
           <HeaderInternalAppRoutes routes={internalRoutes} />
         </div>
         <HeaderExternalRoutes />
       </div>
-      <HeaderInternalPageRoutes oldlinks={internalNavigation} />
+      <HeaderInternalPageRoutes links={internalNavigation} />
     </header>
   )
 }

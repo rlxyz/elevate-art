@@ -1,14 +1,14 @@
-import { Layout, Link } from '@elevateart/ui'
+import Link from '@components/Layout/Link'
+import { Layout } from '@elevateart/ui'
 import type { NextPage } from 'next'
 import Image from 'next/image'
-import { default as NextLink } from 'next/link'
 
 const Home: NextPage = () => (
   <Layout>
     <Layout.Header>
-      <NextLink href='/connect'>
-        <Link className='border border-border bg-foreground text-background rounded-primary px-3 py-2 text-xs'>Go to App</Link>
-      </NextLink>
+      <Link href='/connect' className='border border-border bg-foreground text-background rounded-primary px-3 py-2 text-xs'>
+        Go to App
+      </Link>
     </Layout.Header>
     <Layout.Body>
       <Layout.Body.Item border='none'>

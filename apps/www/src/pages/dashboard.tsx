@@ -1,7 +1,5 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
-import { PersonalOrganisationAccountTeam } from '@components/Organisation/PersonalOrganisationAccountTeam'
-import { PersonalOrganisationAccountTeamInvites } from '@components/Organisation/PersonalOrganisationAccountTeamInvites'
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
@@ -52,12 +50,12 @@ const Page: NextPage = () => {
           ]}
         />
         <Layout.Body>
-          <div className='py-8 space-y-8'>
+          {/* <div className='py-8 space-y-8'>
             <div className='space-y-9'>
               <PersonalOrganisationAccountTeam />
               <PersonalOrganisationAccountTeamInvites />
             </div>
-          </div>
+          </div> */}
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

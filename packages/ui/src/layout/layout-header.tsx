@@ -79,6 +79,8 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
             <Link
               key={item.href}
               href={item.href}
+              rel="noreferrer nofollow"
+              target="_blank"
               className="cursor-pointer hover:text-foreground text-xs text-accents_5"
             >
               {item.icon ? (

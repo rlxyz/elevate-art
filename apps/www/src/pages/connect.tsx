@@ -1,5 +1,6 @@
+import Link from '@components/Layout/Link'
 import { EthereumConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
-import { Card, Layout, Link } from '@elevateart/ui'
+import { Card, Layout } from '@elevateart/ui'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
@@ -44,7 +45,7 @@ const Connect: NextPage = () => {
                 <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
                 <p className='text-sm text-accents_6'>
                   Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
-                  <Link color icon href='https://feature.elevate.art'>
+                  <Link color icon href='https://feature.elevate.art' rel='noreferrer nofollow' target='_blank'>
                     feature.elevate.art
                   </Link>
                 </p>

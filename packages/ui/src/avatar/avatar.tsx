@@ -40,7 +40,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({
     <span
       className={clsx(
         className,
-        "inline-block relative overflow-hidden border border-border align-top bg-background box-border h-7 w-7 p-0",
+        "inline-block relative overflow-hidden border border-border align-top bg-background box-border h-6 w-6 p-0",
         stacked && "ml-2.5",
         isSquare ? "rounded-primary" : "rounded-full"
       )}
