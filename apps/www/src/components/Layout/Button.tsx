@@ -1,6 +1,6 @@
+import { Loading } from '@elevateart/ui'
 import cn from 'clsx'
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from 'react'
-import Loader from './Loader'
 
 /**
  * All the component types allowed by the Button component.
@@ -79,7 +79,7 @@ const Button: ButtonFC = (props) => {
     >
       {loading ? (
         <i className='m-0 flex'>
-          <Loader />
+          <Loading />
         </i>
       ) : (
         children
