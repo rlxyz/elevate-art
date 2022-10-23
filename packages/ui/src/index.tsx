@@ -5,5 +5,6 @@ export { default as Icons } from "./icons";
 export { default as Layout } from "./layout";
 export { default as Link } from "./link";
 export { default as Loading } from "./loading";
+export { default as Search } from "./search";
 export { default as Tabs } from "./tabs";
 export { default as Toast, useNotification } from "./toast";
