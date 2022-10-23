@@ -18,23 +18,31 @@ const Connect = () => {
     router.push('/dashboard')
   }
   return (
-    <Layout>
-      <Layout.Header />
+    <Layout hasFooter={false}>
       <Layout.Body>
-        <Layout.Body.Item border='none'>
-          <div className='w-full min-h-[calc(100vh-7rem)] flex lg:grid lg:grid-cols-2 gap-x-12'>
-            <div className='hidden lg:block relative'>
+        <Layout.Body.Item border='none' hasMargin={false}>
+          <div className='w-full min-h-screen flex lg:grid lg:grid-cols-10 lg:gap-x-20'>
+            <div className='col-span-3 hidden lg:block relative'>
               <Image
+                priority
                 className='absolute inset-0 h-full object-cover'
                 layout='fill'
-                src='/images/protoglyph.png'
-                alt='protoglyph-by-larvalabs'
+                src='/images/refikanadol.jpeg'
+                alt='refik-moma'
               />
+              <Link href='/'>
+                <img
+                  className='absolute bg-foreground rounded-full border border-border left-5 top-5 p-2'
+                  width={50}
+                  height={50}
+                  src='images/logo-white.png'
+                />
+              </Link>
             </div>
-            <div className='w-full flex flex-col justify-center space-y-3'>
-              <div className='space-y-1'>
-                <h1 className='text-xl font-semibold'>Connect your Wallet</h1>
-                <p className='text-xs text-accents_6'>
+            <div className='col-span-4 w-full flex flex-col justify-center space-y-6'>
+              <div className='space-y-4'>
+                <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
+                <p className='text-sm text-accents_6'>
                   Rainbow wallet helps you connect. If your wallet is not supported here, please make a feature request at{' '}
                   <Link color icon href='https://feature.elevate.art'>
                     feature.elevate.art

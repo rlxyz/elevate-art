@@ -24,8 +24,8 @@
 
   /** Dark Mode */
   .dark {
-    --background: 255 255 255;
-    --foreground: 0 0 0;
+    --background: 0 0 0;
+    --foreground: 255 255 255;
     --accents_1: 250 250 250;
     --accents_2: 234 234 234;
     --accents_3: 153 153 153;

@@ -6,6 +6,7 @@ export interface Props extends LayoutContainerProps {}
 
 const defaultProps: Props = {
   border: "lower",
+  hasMargin: true,
 };
 
 export type LayoutBodyProps = Props &
@@ -19,12 +20,18 @@ const LayoutBodyItemComponent: React.FC<
   React.PropsWithChildren<LayoutBodyProps>
 > = ({
   children,
+  hasMargin,
   border,
   className,
   ...props
 }: React.PropsWithChildren<LayoutBodyProps>) => {
   return (
-    <LayoutContainer border={border} className="min-h-[3.5rem]" {...props}>
+    <LayoutContainer
+      border={border}
+      hasMargin={hasMargin}
+      className="min-h-[3.5rem]"
+      {...props}
+    >
       <div className={className}>{children}</div>
     </LayoutContainer>
   );

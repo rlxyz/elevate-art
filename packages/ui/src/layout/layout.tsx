@@ -19,7 +19,7 @@ const LayoutComponent: React.FC<React.PropsWithChildren<LayoutProps>> = ({
   ...props
 }: React.PropsWithChildren<LayoutProps>) => {
   return (
-    <main {...props}>
+    <main {...props} className="bg-background">
       {children}
       {hasFooter ? (
         <LayoutContainer

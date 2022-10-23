@@ -2,10 +2,12 @@ import clsx from "clsx";
 
 export interface Props {
   border?: "lower" | "upper" | "none";
+  hasMargin?: boolean;
 }
 
 const defaultProps: Props = {
   border: "lower",
+  hasMargin: true,
 };
 
 export type LayoutContainerProps = Props &
@@ -22,6 +24,7 @@ const LayoutContainerComponent: React.FC<
   children,
   className,
   border,
+  hasMargin,
   ...props
 }: React.PropsWithChildren<LayoutContainerProps>) => {
   return (
@@ -34,7 +37,13 @@ const LayoutContainerComponent: React.FC<
         border === "upper" && "border-t border-border"
       )}
     >
-      <div className="w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full">
+      <div
+        className={clsx(
+          hasMargin
+            ? "w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full"
+            : "w-full h-full"
+        )}
+      >
         {children}
       </div>
     </article>
