@@ -1,9 +1,9 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
-import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'
 import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
+import { Search, useInput } from '@elevateart/ui'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -17,6 +17,7 @@ import { CollectionNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
   const router: NextRouter = useRouter()
+  const { bindings: inputBindings, state: input } = useInput('')
   const layerName: string = router.query.layer as string
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
@@ -29,7 +30,6 @@ const Page = () => {
       setRepositoryId: state.setRepositoryId,
     }
   })
-  const [query, setQuery] = useState('')
   const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
   const [isOpen, setIsOpen] = useState(false)
   const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
@@ -40,7 +40,7 @@ const Page = () => {
   })
 
   const isLoading = isLoadingLayers && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
-  const filteredTraitElements = layer?.traitElements.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
+  const filteredTraitElements = layer?.traitElements.filter((x) => x.name.toLowerCase().includes(input.toLowerCase()))
 
   useEffect(() => {
     layers && layerName && setCurrentLayerPriority(layers?.find((l) => l.name === layerName)?.id || '')
@@ -107,7 +107,7 @@ const Page = () => {
                   <div className='col-span-5 flex justify-between'>
                     <div />
                     <div className='w-3/4'>
-                      <SearchInput setQuery={setQuery} isLoading={!hasLoaded()} />
+                      <Search {...inputBindings} isLoading={!hasLoaded()} />
                     </div>
                   </div>
                   <div

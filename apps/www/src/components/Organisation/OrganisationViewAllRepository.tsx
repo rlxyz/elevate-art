@@ -1,12 +1,11 @@
 import { Link } from '@components/Layout/Link'
-import { SearchInput } from '@components/Layout/SearchInput'
+import { Search, useInput } from '@elevateart/ui'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
-import { useState } from 'react'
 import { timeAgo } from '../../utils/time'
 
 const NoRepositoryExistPlaceholder = () => {
@@ -46,23 +45,23 @@ const NoRepositoryExistPlaceholder = () => {
 const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-  const [query, setQuery] = useState('')
+  const { bindings: inputBindings, state: input } = useInput('')
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories
   const filteredRepositories =
-    query === ''
+    input === ''
       ? repositories
       : repositories?.filter((repo) => {
-          return repo.name.toLowerCase().includes(query.toLowerCase())
+          return repo.name.toLowerCase().includes(input.toLowerCase())
         })
 
   return (
     <>
       <div className='grid grid-cols-10 space-x-3 items-center'>
         <div className='col-span-9 h-full w-full'>
-          <SearchInput isLoading={isLoading} setQuery={setQuery} />
+          <Search isLoading={isLoading} {...inputBindings} />
         </div>
         <div className='col-span-1 h-full flex items-center'>
           <div className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>

@@ -1,25 +1,23 @@
 import CollectionCreateDialog from '@components/Collection/CollectionCreateDialog'
 import Button from '@components/Layout/Button'
-import { SearchInput } from '@components/Layout/SearchInput'
+import { Search, useInput } from '@elevateart/ui'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
 const Index = () => {
-  const [query, setQuery] = useState('')
-  const { all: layers } = useQueryRepositoryLayer()
+  const { bindings: inputBindings, state: input } = useInput('')
   const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryRepositoryCollection()
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const filteredCollections =
-    query === ''
+    input === ''
       ? collections
       : collections?.filter((collection: Collection) => {
-          return collection.name.toLowerCase().includes(query.toLowerCase())
+          return collection.name.toLowerCase().includes(input.toLowerCase())
         })
   const [openState, setOpenState] = useState(false)
   const buttonRef = useRef<null | HTMLButtonElement>(null) // useRef<HTMLButtonElement>(null)
@@ -83,7 +81,7 @@ const Index = () => {
                 <div className=' bg-background divide-y divide-accents_7'>
                   <div className='p-2 grid grid-cols-10 gap-x-1'>
                     <div className='col-span-8'>
-                      <SearchInput isLoading={!collections} setQuery={setQuery} />
+                      <Search isLoading={!collections} {...inputBindings} />
                     </div>
                     <div className='col-span-2'>
                       <button

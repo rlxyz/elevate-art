@@ -1,19 +1,17 @@
 import { Link } from '@components/Layout/Link'
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useSession } from '@elevateart/eth-auth'
+import { Search, useInput } from '@elevateart/ui'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
-import { useState } from 'react'
-import { SearchInput } from '../Layout/SearchInput'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisation()
-  const [query, setQuery] = useState('')
-  const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   const session = useSession()
-
+  const { bindings: inputBindings, state: input } = useInput('')
+  const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(input.toLowerCase()))
   const getUserRoleInOrganisation = (organisation: Organisation & { members: (OrganisationMember & { user: User })[] }) => {
     return organisation.members.find((x) => x.userId === session?.data?.user?.id)?.type
   }
@@ -32,7 +30,7 @@ export const PersonalOrganisationAccountTeam = () => {
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
-      <SearchInput isLoading={isLoading} setQuery={setQuery} />
+      <Search isLoading={isLoading} {...inputBindings} />
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-border', 'rounded-[5px] divide-y divide-accents_7')}>

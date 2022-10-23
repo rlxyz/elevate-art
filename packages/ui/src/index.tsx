@@ -8,3 +8,4 @@ export { default as Loading } from "./loading";
 export { default as Search } from "./search";
 export { default as Tabs } from "./tabs";
 export { default as Toast, useNotification } from "./toast";
+export { default as useInput } from "./utils/useInput";
