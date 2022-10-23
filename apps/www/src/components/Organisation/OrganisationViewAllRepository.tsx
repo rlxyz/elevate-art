@@ -1,4 +1,4 @@
-import { Link } from '@components/Layout/Link'
+import Link from '@components/Layout/Link'
 import { Search, useInput } from '@elevateart/ui'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -22,7 +22,7 @@ const NoRepositoryExistPlaceholder = () => {
           </span>
         </div>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
+          <Link className='px-6 space-x-1' href={`${current?.name}/new`}>
             <div className='border flex items-center justify-center border-border rounded-[5px] p-3 bg-foreground'>
               <span className='text-sm text-accents_8'>Create a Project</span>
               <ChevronRightIcon className='text-accents_8 h-4 w-4' />
@@ -31,7 +31,7 @@ const NoRepositoryExistPlaceholder = () => {
         </div>
         <div className='space-y-3 flex flex-col items-center'>
           <span className='text-xs'>
-            <Link external href='https://docs.elevate.art'>
+            <Link href='https://docs.elevate.art' rel='noreferrer nofollow' target='_blank'>
               <span className='text-success font-semibold'>Learn</span>
             </Link>{' '}
             about elevate.art
@@ -150,7 +150,7 @@ const ViewAllRepositories = () => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
               <Link href={`/${organisationName}/${repository.name}`} external>
-                <div className='border border-border rounded-[5px] px-6 py-5 space-y-4'>
+                <div className='border border-border rounded-[5px] px-6 py-5 space-y-4 w-full'>
                   <div className='flex items-center space-x-3'>
                     <div className='bg-success h-6 w-6 rounded-full' />
                     <div className='flex flex-col'>
