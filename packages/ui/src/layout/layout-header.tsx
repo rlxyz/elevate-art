@@ -76,14 +76,15 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
       <div className="flex flex-row justify-center items-center space-x-3 text-xs">
         {externalNavigationRoutesFinal.map((item) => {
           return (
-            <Link key={item.href} href={item.href}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className="cursor-pointer hover:text-foreground text-xs text-accents_5"
+            >
               {item.icon ? (
-                <item.icon
-                  className="h-4 w-4 text-accents_5"
-                  aria-hidden="true"
-                />
+                <item.icon className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <span className="text-accents_5">{item.name}</span>
+                <span>{item.name}</span>
               )}
             </Link>
           );
@@ -105,7 +106,10 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
     <LayoutContainer
       {...props}
       border="lower"
-      className={clsx(className, "min-h-[3rem] max-h-[5.64rem]")}
+      className={clsx(
+        className,
+        "min-h-[3.5rem] max-h-[5.64rem] flex items-center"
+      )}
     >
       <header>
         {topNav}

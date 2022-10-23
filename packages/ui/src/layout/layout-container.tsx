@@ -44,7 +44,7 @@ const LayoutContainerComponent: React.FC<
             : "w-full h-full"
         )}
       >
-        {children}
+        <div className="-ml-2">{children}</div>
       </div>
     </article>
   );
