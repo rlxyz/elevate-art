@@ -1,6 +1,5 @@
 import { EthereumConnectButton } from '@elevateart/eth-auth'
-import { Avatar } from '@elevateart/ui'
-import { externalRoutes, socialRoutes } from '@elevateart/ui/elevateart-external-links'
+import { Avatar, externalRoutes, socialRoutes } from '@elevateart/ui'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'

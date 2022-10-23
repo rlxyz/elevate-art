@@ -9,3 +9,5 @@ export { default as Search } from "./search";
 export { default as Tabs } from "./tabs";
 export { default as Toast, useNotification } from "./toast";
 export { default as useInput } from "./utils/useInput";
+export { externalRoutes, socialRoutes } from "./elevateart-external-links";
+export type { NavigationRoutes } from "./elevateart-external-links";

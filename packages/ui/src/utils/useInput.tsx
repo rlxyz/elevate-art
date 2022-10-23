@@ -28,7 +28,7 @@ const useInput = (
       value: state,
       onChange: (event: BindingsChangeTarget) => {
         if (typeof event === "object" && event.target) {
-          setState(event.target.value);
+          // setState(event.target.value);
         } else {
           setState(event as string);
         }
