@@ -4,6 +4,7 @@ import { getServerAuthSession } from '@elevateart/api'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { clientEnv } from 'src/env/schema.mjs'
 
+// @todo this shoudl be a function in the api package & also use env variables for res.cloudinary.com/rlxyz
 const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
   return `https://res.cloudinary.com/rlxyz/image/upload/c_scale,w_600/q_auto/v1/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
