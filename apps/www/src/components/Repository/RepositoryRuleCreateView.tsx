@@ -113,7 +113,7 @@ export const RuleSelector = ({
         </div>
         <div className='col-span-1 relative mt-1 flex items-center right-0 justify-center space-x-3'>
           <button
-            className='bg-background border border-border text-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-xs'
+            className='bg-background border border-border text-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-accents_8 w-full h-full rounded-[5px] text-xs'
             onClick={() => {
               setSelectedLeftTrait(null)
               setSelectedRightTrait(null)
@@ -123,7 +123,7 @@ export const RuleSelector = ({
             Reset
           </button>
           <button
-            className='bg-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white w-full h-full rounded-[5px] text-white text-xs'
+            className='bg-foreground disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-accents_8 w-full h-full rounded-[5px] text-accents_8 text-xs'
             disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait) || isLoading}
             onClick={() => {
               setIsOpen(true)
@@ -306,7 +306,7 @@ export const RuleSelectorCombobox = ({
                     <span
                       className={classNames(
                         'absolute inset-y-0 right-0 flex items-center pr-4',
-                        active ? 'text-white' : 'text-indigo-600'
+                        active ? 'text-accents_8' : 'text-indigo-600'
                       )}
                     >
                       <CheckIcon className='h-5 w-5' aria-hidden='true' />

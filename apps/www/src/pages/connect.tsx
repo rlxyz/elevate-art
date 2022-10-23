@@ -43,7 +43,7 @@ const Connect = () => {
               <div className='space-y-4'>
                 <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
                 <p className='text-sm text-accents_6'>
-                  Rainbow wallet helps you connect. If your wallet is not supported here, please make a feature request at{' '}
+                  Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
                   <Link color icon href='https://feature.elevate.art'>
                     feature.elevate.art
                   </Link>

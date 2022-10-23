@@ -32,7 +32,7 @@ const Page: NextPage = () => {
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name || ''}`,
+              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
               organisations,
             },
           ]}

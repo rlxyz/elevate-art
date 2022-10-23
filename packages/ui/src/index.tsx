@@ -1,3 +1,4 @@
+export { default as Avatar } from "./avatar";
 export { default as Breadcrumbs } from "./breadcrumbs";
 export { default as Card } from "./card";
 export { default as Icons } from "./icons";

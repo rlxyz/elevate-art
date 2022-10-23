@@ -57,7 +57,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
           >
             <Popover.Panel className='absolute w-[200px] bg-foreground z-10 -translate-x-1/2 transform rounded-[5px]'>
               <div className='p-2 shadow-lg'>
-                <p className='text-[0.65rem] text-white font-normal'>{description}</p>
+                <p className='text-[0.65rem] text-accents_8 font-normal'>{description}</p>
               </div>
             </Popover.Panel>
           </Transition>

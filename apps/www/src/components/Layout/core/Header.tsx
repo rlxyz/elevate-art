@@ -1,10 +1,10 @@
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-// import { ConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
+import { EthereumConnectButton } from '@elevateart/eth-auth'
+import { Avatar, Link } from '@elevateart/ui'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
@@ -12,7 +12,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { Link } from '../Link'
+import { Link as OldLink } from '../Link'
 
 const externalRoutes = [
   {
@@ -65,20 +65,22 @@ const HeaderExternalRoutes = () => {
       {/* <aside className='flex flex-row items-center justify-center space-x-3'>
         {externalRoutes.map((item, index) => {
           return (
-            <Link external={true} key={index} href={item.href}>
+            <OldLink external={true} key={index} href={item.href}>
               <span className='cursor-pointer hover:text-foreground text-xs text-accents_5'>{item.name}</span>
-            </Link>
+            </OldLink>
           )
         })}
       </aside> */}
       {socialRoutes.map((item, index) => (
         <div key={index} className='cursor-pointer'>
-          <Link external={true} href={item.href}>
+          <OldLink external={true} href={item.href}>
             <item.icon className='h-4 w-4 text-accents_5' aria-hidden='true' />
-          </Link>
+          </OldLink>
         </div>
       ))}
-      {/* <ConnectButton /> */}
+      <EthereumConnectButton>
+        <Avatar src='/images/avatar-blank.png' />
+      </EthereumConnectButton>
     </div>
   )
 }
@@ -103,13 +105,16 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   return (
     <>
       {routes.map(({ current, href, organisations }, index) => {
-        const isLoading = current === ''
+        // const isLoading = current === ''
         return (
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
             <Popover className='flex space-x-1'>
-              <Link href={href} enabled={false} external>
-                {isLoading ? (
+              <Link href={href}>
+                {current === OrganisationNavigationEnum.enum.You || current === OrganisationNavigationEnum.enum.Dashboard
+                  ? capitalize(current)
+                  : current}
+                {/* {isLoading ? (
                   <div className='w-36 animate-pulse h-5 rounded-[5px] bg-accents_7' />
                 ) : (
                   <>
@@ -119,7 +124,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                         : current}
                     </div>
                   </>
-                )}
+                )} */}
               </Link>
               {organisations ? (
                 <>
@@ -136,10 +141,10 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                     leaveTo='opacity-0 translate-y-1'
                   >
                     <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
-                      <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
+                      <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-border ring-opacity-5'>
                         <div className='py-2 bg-accents_8 border-b border-border'>
                           <div className='relative rounded-[5px]'>
-                            <Link external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
+                            <OldLink external href={`/${OrganisationNavigationEnum.enum.Dashboard}`}>
                               <div className='pl-2 py-2 pr-4 flex flex-row justify-between items-center w-full text-accents_5 hover:text-foreground'>
                                 <div className='flex space-x-2 items-center'>
                                   {/* <div className='rounded-full h-5 w-5 bg-success' /> */}
@@ -152,7 +157,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                   <></>
                                 )}
                               </div>
-                            </Link>
+                            </OldLink>
                           </div>
                         </div>
                         <div className='p-2 relative bg-background space-y-1'>
@@ -161,7 +166,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                               <span className='text-xs text-accents_5'>Your Teams</span>
                               <div>
                                 {organisations.map(({ name, type, id }) => (
-                                  <Link hover enabled={name === current} key={name} href={`/${name}`}>
+                                  <OldLink hover enabled={name === current} key={name} href={`/${name}`}>
                                     <div
                                       className='px-2 flex flex-row justify-between items-center w-full'
                                       onClick={() => setOrganisationId(id)}
@@ -176,7 +181,7 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
                                       </div>
                                       {name === currentHref && <CheckIcon className='text-success h-4 w-4' />}
                                     </div>
-                                  </Link>
+                                  </OldLink>
                                 ))}
                               </div>
                             </div>
@@ -206,18 +211,18 @@ const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
 }
 
 export interface HeaderInternalPageRoutesProps {
-  links: { name: string; enabled: boolean; href: string; loading: boolean }[]
+  oldlinks: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
+const HeaderInternalPageRoutes = ({ oldlinks }: HeaderInternalPageRoutesProps) => {
   return (
     <aside className='-ml-5'>
       <ul className='flex list-none'>
-        {links.map(({ name, enabled, href, loading }, index: number) => {
+        {oldlinks.map(({ name, enabled, href, loading }, index: number) => {
           return (
             <li key={index} className={enabled ? 'flex space-between items-center relative' : ''}>
               <div className={clsx('mb-1', loading && 'pointer-events-none')}>
-                <Link disabled={loading} enabled={enabled} title={capitalize(name)} href={href} />
+                <OldLink disabled={loading} enabled={enabled} title={capitalize(name)} href={href} />
               </div>
               {enabled && (
                 <motion.div className='absolute bg-foreground mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
@@ -240,20 +245,19 @@ export interface HeaderProps {
   internalNavigation?: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {
-  const { isLoggedIn } = useAuthenticated()
+const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) => {
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link external={true} href={'/'}>
+          <OldLink external={true} href={'/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
-          </Link>
+          </OldLink>
           <HeaderInternalAppRoutes routes={internalRoutes} />
         </div>
         <HeaderExternalRoutes />
       </div>
-      <HeaderInternalPageRoutes links={internalNavigation} />
+      <HeaderInternalPageRoutes oldlinks={internalNavigation} />
     </header>
   )
 }

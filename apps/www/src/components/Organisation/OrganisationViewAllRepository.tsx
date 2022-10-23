@@ -25,8 +25,8 @@ const NoRepositoryExistPlaceholder = () => {
         <div className='space-y-3 flex flex-col items-center'>
           <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
             <div className='border flex items-center justify-center border-border rounded-[5px] p-3 bg-foreground'>
-              <span className='text-sm text-white'>Create a Project</span>
-              <ChevronRightIcon className='text-white h-4 w-4' />
+              <span className='text-sm text-accents_8'>Create a Project</span>
+              <ChevronRightIcon className='text-accents_8 h-4 w-4' />
             </div>
           </Link>
         </div>
@@ -69,7 +69,7 @@ const ViewAllRepositories = () => {
             <button
               className={clsx(
                 isLoading && 'invisible',
-                'w-full border h-full rounded-[5px] text-xs text-white bg-foreground font-semibold'
+                'w-full border h-full rounded-[5px] text-xs text-accents_8 bg-foreground font-semibold'
               )}
               onClick={(e: any) => {
                 e.preventDefault()

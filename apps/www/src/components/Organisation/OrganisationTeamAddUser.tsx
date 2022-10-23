@@ -139,7 +139,7 @@ export const OrganisationTeamAddUser = () => {
             </div>
           </div>
           <div className='w-full px-6 py-2 flex items-center bg-accents_8 text-xs  justify-end border-t border-t-accents_7'>
-            <button className='bg-success text-white disabled:bg-accents_8 disabled:text-accents_5 border border-border px-4 py-1.5 rounded-[5px]'>
+            <button className='bg-success text-accents_8 disabled:bg-accents_8 disabled:text-accents_5 border border-border px-4 py-1.5 rounded-[5px]'>
               Add
             </button>
             {addNewUserData && (

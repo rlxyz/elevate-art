@@ -47,9 +47,9 @@ const AvatarComponent: React.FC<AvatarProps> = ({
     >
       {!showText && (
         <img
-          alt="avatar"
+          alt="avatar-img"
           className={clsx(
-            "inline-block object-cover w-full h-100 select-none",
+            "object-cover w-full select-none",
             isSquare ? "rounded-primary" : "rounded-full"
           )}
           src={src}
@@ -60,7 +60,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({
       {showText && text && (
         <span
           className={clsx(
-            "absolute left-1/2 top-1/2 text-xs items-center -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none"
+            "h-full flex justify-center text-xs items-center whitespace-nowrap select-none"
           )}
           {...props}
         >

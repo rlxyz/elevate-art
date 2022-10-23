@@ -161,7 +161,7 @@ const Page = () => {
                   </div>
                   {/* <button
                       className={clsx(
-                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border rounded-[5px] bg-success text-white'
+                        'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-border rounded-[5px] bg-success text-accents_8'
                       )}
                     >
                       Add Trait

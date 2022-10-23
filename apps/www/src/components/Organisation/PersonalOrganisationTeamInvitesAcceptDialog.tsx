@@ -20,7 +20,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className='text-white bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
+        className='text-accents_8 bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
       >
         Accept
       </button>
