@@ -45,7 +45,7 @@ const LinkComponent = React.forwardRef<
         className={clsx(
           "inline-flex items-baseline no-underline",
           "text-inherit w-full h-auto",
-          underline && "hover:underline hover:bg-accents_5",
+          underline && "hover:underline hover:text-success",
           color && "text-success",
           block && "rounded-[5px] hover:bg-accents_8 px-3 py-2",
           block && color && "hover:bg-linkLighter",

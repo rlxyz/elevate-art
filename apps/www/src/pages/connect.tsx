@@ -4,7 +4,7 @@ import { Card, Layout } from '@elevateart/ui'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import { useRouter } from 'next/router'
 
 /**
@@ -27,16 +27,18 @@ const Connect: NextPage = () => {
               <Image
                 priority
                 className='absolute inset-0 h-full object-cover'
-                layout='fill'
+                sizes='30vw'
+                fill
                 src='/images/refikanadol.jpeg'
                 alt='refik-moma'
               />
               <Link href='/'>
-                <img
+                <Image
                   className='absolute bg-foreground rounded-full border border-border left-5 top-5 p-2'
                   width={50}
                   height={50}
-                  src='images/logo-white.png'
+                  src='/images/logo-white.png'
+                  alt='elevate-art-logo'
                 />
               </Link>
             </div>
@@ -45,7 +47,15 @@ const Connect: NextPage = () => {
                 <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
                 <p className='text-sm text-accents_6'>
                   Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
-                  <Link color icon href='https://feature.elevate.art' rel='noreferrer nofollow' target='_blank'>
+                  <Link
+                    color
+                    icon
+                    underline
+                    href='https://feature.elevate.art'
+                    rel='noreferrer nofollow'
+                    target='_blank'
+                    className='w-fit'
+                  >
                     feature.elevate.art
                   </Link>
                 </p>
@@ -53,7 +63,7 @@ const Connect: NextPage = () => {
               <EthereumConnectButton>
                 <Card>
                   <div className='flex flex-row items-center space-x-2 cursor-pointer'>
-                    <img src='images/rainbow.png' className='w-10 h-10 rounded-primary' />
+                    <Image src='/images/rainbow.png' alt='rainbow-wallet' width={35} height={35} className='rounded-primary' />
                     <span className='font-semibold'>Rainbow</span>
                   </div>
                 </Card>

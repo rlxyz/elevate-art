@@ -63,11 +63,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
         {appNavigationRoutesFinal.map((item) => {
           return (
             <Breadcrumbs.Item key={item.name} href={item.href}>
-              {item.icon ? (
-                <item.icon className="h-8 w-8" aria-hidden="true" />
-              ) : (
-                <>{item.name}</>
-              )}
+              {item.icon ? <item.icon aria-hidden="true" /> : <>{item.name}</>}
             </Breadcrumbs.Item>
           );
         })}
