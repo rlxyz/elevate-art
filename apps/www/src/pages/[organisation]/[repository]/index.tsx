@@ -84,7 +84,7 @@ const Page = () => {
         />
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-            <div className='col-span-2 py-8 -ml-4'>
+            <div className='col-span-2 py-8'>
               <div>
                 <div className='relative flex flex-col space-y-3 justify-between'>
                   <div className='grid grid-cols-8 gap-x-2 w-full h-full'>
