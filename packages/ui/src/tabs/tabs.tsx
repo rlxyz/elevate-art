@@ -111,7 +111,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
   return (
     <TabsContext.Provider value={initialValue}>
       <div
-        className={clsx(className, "text-xs w-initial h-auto p-0 m-0")}
+        className={clsx(className, "text-inherit w-initial h-auto p-0 m-0")}
         {...props}
       >
         <header

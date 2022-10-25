@@ -21,7 +21,7 @@ export default withTM(['@elevateart/ui', '@elevateart/eth-auth', '@elevateart/db
     reactStrictMode: true,
     swcMinify: true,
     images: {
-      domains: ['res.cloudinary.com', 'localhost'],
+      domains: ['res.cloudinary.com', 'localhost', 'cdn.feralfileassets.com'],
     },
   })
 )

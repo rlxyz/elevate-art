@@ -1,4 +1,4 @@
-import Loader from '@components/Layout/Loader'
+import { Loading } from '@elevateart/ui'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateAcceptInvitation } from '@hooks/mutations/useMutateAcceptInvitation'
 import { useNotification } from '@hooks/utils/useNotification'
@@ -20,7 +20,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className='text-white bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
+        className='text-accents_8 bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
       >
         Accept
       </button>
@@ -97,7 +97,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                         }
                         className='text-xs text-accents_5 py-6 hover:text-foreground'
                       >
-                        {isLoading ? <Loader /> : 'Join'}
+                        {isLoading ? <Loading /> : 'Join'}
                       </button>
                     </div>
                   </Dialog.Description>

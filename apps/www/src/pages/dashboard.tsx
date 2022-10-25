@@ -1,13 +1,9 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
-// import { Layout } from '@components/Layout/core/Layout'
+import { Layout } from '@components/Layout/core/Layout'
 import { PersonalOrganisationAccountTeam } from '@components/Organisation/PersonalOrganisationAccountTeam'
 import { PersonalOrganisationAccountTeamInvites } from '@components/Organisation/PersonalOrganisationAccountTeamInvites'
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-import { useSession } from '@elevateart/eth-auth'
-import { Layout } from '@elevateart/ui'
-import { capitalize } from '@elevateart/ui/utils/collections'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
@@ -22,9 +18,7 @@ const Page: NextPage = () => {
       currentRoute: state.currentRoute,
     }
   })
-  const { data: session } = useSession()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
 
   useEffect(() => {
     setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
@@ -34,37 +28,36 @@ const Page: NextPage = () => {
     <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal}>
       <Layout>
         <Layout.Header
-          appNavigationRoutes={[
+          connectButton
+          internalRoutes={[
             {
-              name: capitalize(OrganisationNavigationEnum.enum.Dashboard),
-              href: `/${organisation?.name}`,
-              disabled: organisation === undefined,
+              current: OrganisationNavigationEnum.enum.Dashboard,
+              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+              organisations,
             },
           ]}
-          // pageN={[
-          //   {
-          //     name: OrganisationNavigationEnum.enum.Overview,
-          //     href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-          //     enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-          //     loading: isLoadingOrganisations,
-          //   },
-          //   {
-          //     name: OrganisationNavigationEnum.enum.Account,
-          //     href: `/${OrganisationNavigationEnum.enum.Account}`,
-          //     enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-          //     loading: isLoadingOrganisations,
-          //   },
-          // ]}
+          internalNavigation={[
+            {
+              name: OrganisationNavigationEnum.enum.Overview,
+              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+              loading: false,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Account,
+              href: `/${OrganisationNavigationEnum.enum.Account}`,
+              enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+              loading: false,
+            },
+          ]}
         />
         <Layout.Body>
-          <Layout.Body.Item border='none'>
-            <div className='py-8 space-y-8'>
-              <div className='space-y-9'>
-                <PersonalOrganisationAccountTeam />
-                <PersonalOrganisationAccountTeamInvites />
-              </div>
+          <div className='py-8 space-y-8'>
+            <div className='space-y-9'>
+              <PersonalOrganisationAccountTeam />
+              <PersonalOrganisationAccountTeamInvites />
             </div>
-          </Layout.Body.Item>
+          </div>
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

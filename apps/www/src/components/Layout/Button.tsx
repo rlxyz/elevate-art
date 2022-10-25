@@ -1,6 +1,6 @@
+import { Loading } from '@elevateart/ui'
 import cn from 'clsx'
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from 'react'
-import Loader from './Loader'
 
 /**
  * All the component types allowed by the Button component.
@@ -52,8 +52,8 @@ const Button: ButtonFC = (props) => {
 
   const rootClassName = cn(
     // missing transition
-    'relative inline-flex items-center cursor-pointer p-3 text-white text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10',
-    'disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-white',
+    'relative inline-flex items-center cursor-pointer p-3 text-accents_8 text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10',
+    'disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-accents_8',
     size == 'sm' && 'leading-9 text-xs min-width-[auto]',
     size == 'md' && 'h-10 leading-10 text-xs',
     size == 'lg' && 'h-11 leading-11 text-xs',
@@ -79,7 +79,7 @@ const Button: ButtonFC = (props) => {
     >
       {loading ? (
         <i className='m-0 flex'>
-          <Loader />
+          <Loading />
         </i>
       ) : (
         children

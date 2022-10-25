@@ -1,7 +1,8 @@
-import { Link } from '@components/Layout/Link'
+import Link from '@components/Layout/Link'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { capitalize } from '@utils/format'
+import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
@@ -20,7 +21,11 @@ export const SettingsNavigations = () => {
           href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
         },
       ].map(({ name, href }) => {
-        return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />
+        return (
+          <Link key={name} href={href} block className={clsx(currentSettingsRoute === name && 'font-semibold', 'w-full text-xs')}>
+            {capitalize(name)}
+          </Link>
+        )
       })}
     </div>
   )

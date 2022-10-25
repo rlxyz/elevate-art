@@ -1,5 +1,5 @@
-import Loader from '@components/Layout/Loader'
 import { OrganisationDatabaseRoleEnumType } from '@elevateart/db/enums'
+import { Loading } from '@elevateart/ui'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from '@hooks/utils/useNotification'
@@ -102,7 +102,7 @@ export const OrganisationTeamAddUserDialog = ({
                         }}
                         className='text-xs text-success hover:bg-accents_8 py-6'
                       >
-                        {isLoading ? <Loader /> : 'Add'}
+                        {isLoading ? <Loading /> : 'Add'}
                       </button>
                     </div>
                   </Dialog.Description>

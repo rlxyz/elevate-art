@@ -1,27 +1,28 @@
-import { Layout, Link } from '@elevateart/ui'
+import Link from '@components/Layout/Link'
+import { Layout } from '@elevateart/ui'
 import type { NextPage } from 'next'
+import Image from 'next/image'
 
 const Home: NextPage = () => (
   <Layout>
     <Layout.Header>
-      <Link href='/connect' className='border border-border bg-foreground text-background rounded-primary px-3 py-2 text-xs'>
+      <Link href='/connect' className='border border-border bg-foreground text-background rounded-primary p-2 text-xs'>
         Go to App
       </Link>
     </Layout.Header>
     <Layout.Body>
-      <Layout.Body.Item>
+      <Layout.Body.Item border='none'>
         <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
           <div className='w-full flex flex-col justify-center items-center'>
-            <div className='w-[50%] h-auto'>
-              <img src='/images/logo-banner.png' alt='elevate art logo' />
+            <div className='relative w-1/2 h-1/2'>
+              <Image
+                priority
+                className='object-contain'
+                layout='fill'
+                src='/images/logo-banner.png'
+                alt='elevate-art-logo-banner'
+              />
             </div>
-            <span className='text-xs uppercase'>
-              an&nbsp;
-              <Link color href='https://twitter.com/rlxyz_eth'>
-                RLXYZ
-              </Link>
-              &nbsp;production
-            </span>
           </div>
         </div>
       </Layout.Body.Item>

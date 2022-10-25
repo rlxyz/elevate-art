@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /** Base Color Palette: Light Mode */
+  :root {
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --accents_1: 17 17 17;
+    --accents_2: 51 51 51;
+    --accents_3: 68 68 68;
+    --accents_4: 102 102 102;
+    --accents_5: 136 136 136;
+    --accents_6: 153 153 153;
+    --accents_7: 234 234 234;
+    --accents_8: 250 250 250;
+    --border: 234 234 234;
+    --error: 238 0 0;
+    --success: 0 112 243;
+    --link: 0 112 243;
+    --linkLighter: 211 229 255;
+  }
+
+  /** Dark Mode */
+  .dark {
+    --background: 0 0 0;
+    --foreground: 255 255 255;
+    --accents_1: 250 250 250;
+    --accents_2: 234 234 234;
+    --accents_3: 153 153 153;
+    --accents_4: 136 136 136;
+    --accents_5: 102 102 102;
+    --accents_6: 68 68 68;
+    --accents_7: 51 51 51;
+    --accents_8: 17 17 17;
+    --error: 238 0 0;
+    --success: 0 112 243;
+    --link: 0 112 243;
+    --linkLighter: 211 229 255;
+  }
+}

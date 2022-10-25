@@ -25,10 +25,10 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
             <th
               key={index}
               className={clsx(
-                !loading && index === 0 && 'border-t border-l border-border pl-3',
-                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-border',
+                !loading && index === 0 && 'border-t border-l border-border pl-3 rounded-tl-[5px] ',
+                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-border rounded-tr-[5px]',
                 !loading && 'text-left border-t border-border', // everything else
-                'py-2 rounded-tl-[5px] rounded-tr-[5px]'
+                'py-2'
               )}
             >
               <div className={clsx(loading && 'invisible')}>{children}</div>
@@ -57,7 +57,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
           >
             <Popover.Panel className='absolute w-[200px] bg-foreground z-10 -translate-x-1/2 transform rounded-[5px]'>
               <div className='p-2 shadow-lg'>
-                <p className='text-[0.65rem] text-white font-normal'>{description}</p>
+                <p className='text-[0.65rem] text-accents_8 font-normal'>{description}</p>
               </div>
             </Popover.Panel>
           </Transition>

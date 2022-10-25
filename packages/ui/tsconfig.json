@@ -1,19 +1,23 @@
 {
+  "include": ["."],
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "composite": false,
     "declaration": true,
-    "allowJs": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "incremental": true,
+    "lib": ["ES2015"],
+    "module": "ESNext",
+    "target": "ES6",
     "jsx": "react-jsx"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "build", "node_modules"]
 }

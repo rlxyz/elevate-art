@@ -47,9 +47,9 @@ export const EthereumConnectButton = ({
                       : openAccountModal
                   }
                   type="button"
-                  className="w-full h-full"
+                  className="w-full h-full flex items-center justify-center"
                 >
-                  {children}
+                  <div className="w-full h-full">{children}</div>
                 </button>
               );
             })()}

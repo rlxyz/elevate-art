@@ -18,7 +18,7 @@ export const Notification = ({ children, id, type }: Props) => {
       )}
       role='alert'
     >
-      <div className='w-full flex items-center text-white text-xs'>{children}</div>
+      <div className='w-full flex items-center text-accents_8 text-xs'>{children}</div>
     </div>
   )
 }

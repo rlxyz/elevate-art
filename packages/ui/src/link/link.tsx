@@ -43,13 +43,13 @@ const LinkComponent = React.forwardRef<
     return (
       <a
         className={clsx(
-          className,
           "inline-flex items-baseline no-underline",
-          "text-xs w-fit h-auto",
+          "text-inherit w-full h-auto",
           underline && "hover:underline hover:bg-accents_5",
           color && "text-success",
-          block && "rounded-[5px] hover:bg-accents_7 p-1",
-          block && color && "hover:bg-linkLighter"
+          block && "rounded-[5px] hover:bg-accents_8 px-3 py-2",
+          block && color && "hover:bg-linkLighter",
+          className
         )}
         href={href}
         {...props}

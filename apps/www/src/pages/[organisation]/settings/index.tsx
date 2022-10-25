@@ -59,7 +59,7 @@ const Page: NextPage = () => {
           ]}
         />
         <Layout.Body>
-          <div className='-ml-4 py-8 space-y-8'>
+          <div className='py-8 space-y-8'>
             {
               <div className='grid grid-cols-10 gap-x-6'>
                 <div className='col-span-2'>

@@ -1,5 +1,5 @@
-import Loader from '@components/Layout/Loader'
 import { RulesType } from '@elevateart/compiler'
+import { Loading } from '@elevateart/ui'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { TraitElement } from '@prisma/client'
@@ -109,7 +109,7 @@ export const RepositoryCreateRuleDialog = ({
                         }}
                         className='text-xs text-success hover:bg-accents_8 py-6'
                       >
-                        {isLoading ? <Loader /> : 'Add'}
+                        {isLoading ? <Loading /> : 'Add'}
                       </button>
                     </div>
                   </Dialog.Description>

@@ -1,7 +1,8 @@
+import Link from '@components/Layout/Link'
 import { EthereumConnectButton } from '@elevateart/eth-auth/components/ConnectButton'
-import { Card, Layout, Link } from '@elevateart/ui'
+import { Card, Layout } from '@elevateart/ui'
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -11,32 +12,40 @@ import { useRouter } from 'next/router'
  * Also, redirect user after logged on.
  * Note: the server side props will ALSO redirect user to dashboard if already logged in.
  */
-const Connect = () => {
+const Connect: NextPage = () => {
   const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   if (isLoggedIn) {
     router.push('/dashboard')
   }
   return (
-    <Layout>
-      <Layout.Header />
+    <Layout hasFooter={false}>
       <Layout.Body>
-        <Layout.Body.Item border='none'>
-          <div className='w-full min-h-[calc(100vh-7rem)] flex lg:grid lg:grid-cols-2 gap-x-12'>
-            <div className='hidden lg:block relative'>
+        <Layout.Body.Item border='none' hasMargin={false}>
+          <div className='w-full min-h-screen flex px-12 lg:px-0 lg:grid lg:grid-cols-10 lg:gap-x-20'>
+            <div className='col-span-3 hidden lg:block relative'>
               <Image
+                priority
                 className='absolute inset-0 h-full object-cover'
                 layout='fill'
-                src='/images/protoglyph.png'
-                alt='protoglyph-by-larvalabs'
+                src='/images/refikanadol.jpeg'
+                alt='refik-moma'
               />
+              <Link href='/'>
+                <img
+                  className='absolute bg-foreground rounded-full border border-border left-5 top-5 p-2'
+                  width={50}
+                  height={50}
+                  src='images/logo-white.png'
+                />
+              </Link>
             </div>
-            <div className='w-full flex flex-col justify-center space-y-3'>
-              <div className='space-y-1'>
-                <h1 className='text-xl font-semibold'>Connect your Wallet</h1>
-                <p className='text-xs text-accents_6'>
-                  Rainbow wallet helps you connect. If your wallet is not supported here, please make a feature request at{' '}
-                  <Link color icon href='https://feature.elevate.art'>
+            <div className='col-span-4 w-full flex flex-col justify-center space-y-6'>
+              <div className='space-y-4'>
+                <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
+                <p className='text-sm text-accents_6'>
+                  Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
+                  <Link color icon href='https://feature.elevate.art' rel='noreferrer nofollow' target='_blank'>
                     feature.elevate.art
                   </Link>
                 </p>
