@@ -19,6 +19,12 @@
       ],
       "cache": false
     },
+    "start": {
+      "dependsOn": [
+        "^db-generate"
+      ],
+      "cache": false
+    },
     "db-generate": {
       "cache": false
     },
