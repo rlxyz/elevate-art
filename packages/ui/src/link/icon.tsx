@@ -21,6 +21,6 @@ export const LinkIconComponent: React.FC<unknown> = () => {
   );
 };
 
-LinkIconComponent.displayName = "GeistLinkIcon";
+LinkIconComponent.displayName = "LinkIcon";
 const LinkIcon = React.memo(LinkIconComponent);
 export default LinkIcon;

@@ -10,8 +10,10 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react && tailwindcss -i ./src/styles/globals.css -o ./dist/globals.css",
-    "dev": "concurrently \"tsup src/index.tsx --format esm,cjs --dts --external react --watch\" \"tailwindcss -i ./src/styles/globals.css -o ./dist/globals.css --watch\"",
-    "clean": "rm -rf dist node_modules .turbo"
+    "dev": "concurrently \"tsup src/index.tsx --format esm,cjs --dts --external react --watch\" \"tailwindcss -i ./src/styles/globals.css -o ./dist/globals.css --watch\" \"start-storybook -p 6006 -s public\"",
+    "clean": "rm -rf dist .turbo node_modules storybook-static",
+    "build:storybook": "build-storybook -s public",
+    "serve:serve": "serve storybook-static"
   },
   "files": [
     "src"
