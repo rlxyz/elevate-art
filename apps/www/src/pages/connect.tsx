@@ -22,7 +22,7 @@ const Connect: NextPage = () => {
     <Layout hasFooter={false}>
       <Layout.Body>
         <Layout.Body.Item border='none' hasMargin={false}>
-          <div className='w-full min-h-screen flex lg:grid lg:grid-cols-10 lg:gap-x-20'>
+          <div className='w-full min-h-screen flex px-12 lg:px-0 lg:grid lg:grid-cols-10 lg:gap-x-20'>
             <div className='col-span-3 hidden lg:block relative'>
               <Image
                 priority
