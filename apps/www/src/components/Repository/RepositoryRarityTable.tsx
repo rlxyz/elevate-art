@@ -66,6 +66,7 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   const { current: layer } = useQueryRepositoryLayer()
   const summedRarityWeightage = calculateSumArray(layer?.traitElements)
+  console.log({ summedRarityWeightage, collection, layer })
   return (
     <>
       {!summedRarityWeightage || !collection || !layer ? (
