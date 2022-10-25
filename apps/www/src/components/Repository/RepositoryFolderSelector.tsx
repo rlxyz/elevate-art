@@ -1,4 +1,5 @@
-import { Link } from '@components/Layout/Link'
+// import { Link } from '@components/Layout/Link'
+import Link from '@components/Layout/Link'
 import { DotsHorizontalIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import { useMutateReorderLayers } from '@hooks/mutations/useMutateReorderLayers'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -57,15 +58,9 @@ export const ReorderItem = ({
   const repositoryName: string = router.query.repository as string
   return (
     <Reorder.Item value={item} id={item.toString()} style={{ boxShadow, y }} dragListener={false} dragControls={dragControls}>
-      <Link
-        href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${name}`}
-        enabled={enabled}
-        disabled={canReorder}
-        hover
-        rounded={rounded}
-      >
-        <div className={clsx('text-foreground', 'flex justify-between w-full')}>
-          <div className='px-5 flex flex-row items-center justify-between text-xs w-full'>
+      <Link href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${name}`} block>
+        <div className={clsx('text-foreground', 'flex justify-between w-full', enabled && 'font-semibold')}>
+          <div className='px-2 flex flex-row items-center justify-between text-xs w-full'>
             <span>{name}</span>
           </div>
           {canReorder && (
