@@ -1,6 +1,6 @@
 import { Layout } from '@components/Layout/core/Layout'
-import Image from 'next/image'
 import Link from '@components/Layout/Link'
+import Image from 'next/image'
 
 export default function NotFound() {
   return (

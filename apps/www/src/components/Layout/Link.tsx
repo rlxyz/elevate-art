@@ -1,11 +1,8 @@
-import { Link } from '@elevateart/ui'
-import { LinkProps } from '@elevateart/ui/link'
+import { Link, LinkProps } from '@elevateart/ui'
 import { default as NextLink } from 'next/link'
 import React from 'react'
 
-export interface Props extends LinkProps {}
-
-const defaultProps: Props = {
+const defaultProps: LinkProps = {
   href: '/',
   color: false,
   icon: false,
@@ -14,7 +11,7 @@ const defaultProps: Props = {
   className: '',
 }
 
-export type NextLinkProps = Props & Omit<React.AnchorHTMLAttributes<any>, keyof Props>
+export type NextLinkProps = LinkProps & Omit<React.AnchorHTMLAttributes<any>, keyof LinkProps>
 
 const NextLinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
   (

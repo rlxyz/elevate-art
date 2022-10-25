@@ -36,53 +36,51 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <>
-          <Layout.Header
-            internalRoutes={[
-              { current: organisationName, href: `/${organisationName}`, organisations },
-              { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-            ]}
-            internalNavigation={[
-              {
-                name: CollectionNavigationEnum.enum.Preview,
-                loading: mainRepositoryHref === null || isLoading,
-                href: `/${mainRepositoryHref}`,
-                enabled: false,
-              },
-              {
-                name: CollectionNavigationEnum.enum.Rarity,
-                loading: mainRepositoryHref === null || isLoading,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-                enabled: false,
-              },
-              {
-                name: CollectionNavigationEnum.enum.Rules,
-                loading: mainRepositoryHref === null || isLoading,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-                enabled: true,
-              },
-            ]}
-          />
-          <Layout.Body border='lower'>
-            <div className='w-full py-16'>
-              <div className='flex justify-center'>
-                <div className='space-y-1 w-full'>
-                  <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                  {layers && <RuleSelector layers={layers} />}
-                </div>
+        <Layout.Header
+          internalRoutes={[
+            { current: organisationName, href: `/${organisationName}`, organisations },
+            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+          ]}
+          internalNavigation={[
+            {
+              name: CollectionNavigationEnum.enum.Preview,
+              loading: mainRepositoryHref === null || isLoading,
+              href: `/${mainRepositoryHref}`,
+              enabled: false,
+            },
+            {
+              name: CollectionNavigationEnum.enum.Rarity,
+              loading: mainRepositoryHref === null || isLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+              enabled: false,
+            },
+            {
+              name: CollectionNavigationEnum.enum.Rules,
+              loading: mainRepositoryHref === null || isLoading,
+              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+              enabled: true,
+            },
+          ]}
+        />
+        <Layout.Body border='lower'>
+          <div className='w-full py-16'>
+            <div className='flex justify-center'>
+              <div className='space-y-1 w-full'>
+                <span className='text-xs font-semibold uppercase'>Create a condition</span>
+                {layers && <RuleSelector layers={layers} />}
               </div>
             </div>
-            {layers &&
-            layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
-              <div className='w-full py-16'>
-                <div className='space-y-3 w-full flex flex-col justify-center'>
-                  <span className='text-xs font-semibold uppercase'>All rules created</span>
-                  {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
-                </div>
+          </div>
+          {layers &&
+          layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
+            <div className='w-full py-16'>
+              <div className='space-y-3 w-full flex flex-col justify-center'>
+                <span className='text-xs font-semibold uppercase'>All rules created</span>
+                {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
               </div>
-            ) : null}
-          </Layout.Body>
-        </>
+            </div>
+          ) : null}
+        </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
   )

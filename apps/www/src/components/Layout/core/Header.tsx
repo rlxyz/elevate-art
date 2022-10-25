@@ -1,6 +1,5 @@
 import { EthereumConnectButton } from '@elevateart/eth-auth'
-import { Avatar } from '@elevateart/ui'
-import { externalRoutes, socialRoutes } from '@elevateart/ui/elevateart-external-links'
+import { Avatar, externalRoutes, socialRoutes } from '@elevateart/ui'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -27,7 +26,7 @@ const HeaderExternalRoutes = () => {
         })}
       </aside>
       {socialRoutes.map((item) => (
-        <Link href={item.href} rel='noreferrer nofollow' target='_blank'>
+        <Link key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
           {item.icon ? (
             <item.icon className='h-4 w-4 cursor-pointer hover:text-foreground text-xs text-accents_5' aria-hidden='true' />
           ) : null}

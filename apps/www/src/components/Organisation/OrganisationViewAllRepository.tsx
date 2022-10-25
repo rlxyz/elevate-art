@@ -149,7 +149,7 @@ const ViewAllRepositories = () => {
         {filteredRepositories?.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
-              <Link href={`/${organisationName}/${repository.name}`} external>
+              <Link href={`/${organisationName}/${repository.name}`}>
                 <div className='border border-border rounded-[5px] px-6 py-5 space-y-4 w-full'>
                   <div className='flex items-center space-x-3'>
                     <div className='bg-success h-6 w-6 rounded-full' />

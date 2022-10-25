@@ -1,6 +1,10 @@
+const config = require('tailwind-config/tailwind.config.js')
+
 module.exports = {
   plugins: {
-    tailwindcss: {},
+    // Specifying the config is not necessary in most cases, but it is included
+    // here to share the same config across the entire monorepo
+    tailwindcss: { config },
     autoprefixer: {},
   },
 }

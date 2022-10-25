@@ -86,7 +86,7 @@ const Page = () => {
         />
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-            <div className='col-span-2 py-8 -ml-4'>
+            <div className='col-span-2 py-8'>
               <div className='space-y-4'>
                 <LayerFolderSelector />
               </div>
