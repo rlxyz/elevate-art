@@ -675,16 +675,12 @@ video {
   margin-bottom: 0.1875em;
 }
 
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
-.ml-\[1px\] {
-  margin-left: 1px;
-}
-
 .ml-\[2px\] {
   margin-left: 2px;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
 .box-border {
@@ -784,17 +780,17 @@ video {
   width: 1rem;
 }
 
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .w-1 {
   width: 0.25rem;
 }
 
 .w-\[350px\] {
   width: 350px;
-}
-
-.w-fit {
-  width: -moz-fit-content;
-  width: fit-content;
 }
 
 .max-w-lg {

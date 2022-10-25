@@ -43,6 +43,7 @@ interface Props$c {
     block?: boolean;
     className?: string;
 }
+declare type LinkProps = Props$c & Omit<React__default.AnchorHTMLAttributes<any>, keyof Props$c>;
 declare const LinkComponent: React__default.ForwardRefExoticComponent<Props$c & Omit<React__default.AnchorHTMLAttributes<any>, keyof Props$c> & {
     children?: React__default.ReactNode;
 } & React__default.RefAttributes<HTMLAnchorElement>>;
@@ -75,6 +76,15 @@ interface Props$9 {
 }
 declare type CardProps = Props$9 & Omit<React__default.HTMLAttributes<any>, keyof Props$9>;
 declare const CardComponent: React__default.FC<React__default.PropsWithChildren<CardProps>>;
+
+interface NavigationRoutes {
+    name: string;
+    href: string;
+    disabled: boolean;
+    icon?: (props: any) => JSX.Element;
+}
+declare const externalRoutes: NavigationRoutes[];
+declare const socialRoutes: NavigationRoutes[];
 
 declare const _default$2: "@heroicons/react/outline";
 
@@ -109,15 +119,6 @@ declare type LayoutBodyProps = Props$5 & Omit<React.HTMLAttributes<any>, keyof P
  * the height of the viewport height minus the (footer + header) height.
  */
 declare const LayoutBodyItemComponent: React.FC<React.PropsWithChildren<LayoutBodyProps>>;
-
-interface NavigationRoutes {
-    name: string;
-    href: string;
-    disabled: boolean;
-    icon?: (props: any) => JSX.Element;
-}
-declare const externalRoutes: NavigationRoutes[];
-declare const socialRoutes: NavigationRoutes[];
 
 interface Props$4 {
     appNavigationRoutes?: NavigationRoutes[];
@@ -216,4 +217,4 @@ declare const useInput: (initialValue: string) => {
     };
 };
 
-export { _default$4 as Avatar, _default$3 as Breadcrumbs, CardComponent as Card, _default$2 as Icons, _default$1 as Layout, LinkComponent as Link, LoadingComponent as Loading, NavigationRoutes, SearchComponent as Search, _default as Tabs, externalRoutes, socialRoutes, useInput, useNotification };
+export { _default$4 as Avatar, _default$3 as Breadcrumbs, CardComponent as Card, _default$2 as Icons, _default$1 as Layout, LinkComponent as Link, LinkProps, LoadingComponent as Loading, NavigationRoutes, SearchComponent as Search, _default as Tabs, externalRoutes, socialRoutes, useInput, useNotification };
