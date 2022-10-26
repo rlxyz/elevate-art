@@ -13,6 +13,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
+import { useFieldArray, useForm } from 'react-hook-form'
 
 type RarityTableType = {
   imageUrl: string
@@ -111,32 +112,39 @@ function useSkipper() {
   return [shouldSkip, skip] as const
 }
 
-const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElement[] }) => {
+const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElements: TraitElement[]; initialSum: number }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   // const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   // const { current: collection } = useQueryRepositoryCollection()
   // const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   // const { current: layer } = useQueryRepositoryLayer()
-  // const {
-  //   register,
-  //   setError,
-  //   clearErrors,
-  //   handleSubmit,
-  //   reset,
-  //   watch,
-  //   getValues,
-  //   setValue,
-  //   control,
-  //   formState: { errors, isDirty },
-  // } = useForm<{ traitElements: { item: TraitElement }[] }>({
-  //   defaultValues: {
-  //     traitElements: traitElements.map((x) => {
-  //       return {
-  //         item: x,
-  //       }
-  //     }),
-  //   },
-  // })
+  const {
+    register,
+    setError,
+    clearErrors,
+    handleSubmit,
+    reset,
+    watch,
+    getValues,
+    setValue,
+    control,
+    formState: { errors, isDirty },
+  } = useForm<{ traitElements: { item: TraitElement }[] }>({
+    defaultValues: {
+      traitElements: traitElements.map((x) => {
+        return {
+          item: x,
+        }
+      }),
+    },
+  })
+
+  const { fields, update } = useFieldArray({
+    control,
+    name: 'traitElements',
+  })
+
+  const traitElementsArray = watch('traitElements')
 
   const columns = useMemo<ColumnDef<RarityTableType>[]>(
     () => [
@@ -167,24 +175,23 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
       {
         header: () => <span>%</span>,
         accessorKey: 'rarityScore',
-        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
+        cell: ({ row: { original } }) => <div>{original.rarityScore}</div>,
         footer: (props) => props.column.id,
       },
       {
         header: () => <span>%</span>,
         accessorKey: 'rarityPercentage',
-        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
+        cell: ({ row: { original } }) => <div>{original.rarityPercentage}</div>,
         footer: (props) => props.column.id,
       },
     ],
     []
   )
-
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
   const [data, setData] = useState<RarityTableType[]>(() =>
-    traitElements.map(
-      ({ name, layerElementId, id }, index) =>
+    traitElementsArray.map(
+      ({ item: { name, layerElementId, id } }, index) =>
         ({
           imageUrl: getImageForTrait({
             r: repositoryId,
@@ -193,10 +200,8 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
           }),
           name: name,
           estimateInCollection: 1,
-          rarityScore: 1,
-          rarityPercentage: `1%`,
-          // rarityScore: Number(-Math.log(watch(`traitElements.${index}.item.weight`) / initialSum).toFixed(3)) % Infinity || 0,
-          // rarityPercentage: `${((watch(`traitElements.${index}.item.weight`) / initialSum) * 100).toFixed(3)}%`,
+          rarityScore: Number(-Math.log(watch(`traitElements.${index}.item.weight`) / initialSum).toFixed(3)) % Infinity || 0,
+          rarityPercentage: `${((watch(`traitElements.${index}.item.weight`) / initialSum) * 100).toFixed(3)}%`,
         } as RarityTableType)
     )
   )
@@ -230,33 +235,6 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
     debugTable: true,
   })
 
-  // const table = useReactTable({
-  //   // data: getValues().traitElements.map(
-  //   //   ({ item: { name, layerElementId, id } }, index) =>
-  //   //     ({
-  //   //       imageUrl: getImageForTrait({
-  //   //         r: repositoryId,
-  //   //         l: layerElementId,
-  //   //         t: id,
-  //   //       }),
-  //   //       name: name,
-  //   //       estimateInCollection: 1,
-  //   //       rarityScore: 1,
-  //   //       rarityPercentage: `1%`,
-  //   //       // rarityScore: Number(-Math.log(watch(`traitElements.${index}.item.weight`) / initialSum).toFixed(3)) % Infinity || 0,
-  //   //       // rarityPercentage: `${((watch(`traitElements.${index}.item.weight`) / initialSum) * 100).toFixed(3)}%`,
-  //   //     } as RarityTableType)
-  //   // ),
-  //   data: [{ imageUrl: '', name: 'test', estimateInCollection: 1, rarityScore: 1, rarityPercentage: '1%' }],
-  //   columns,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   // meta: {
-  //   //   updateEstimate: (id: string) => {},
-  //   // },
-  //   // debugTable: true,
-  // })
-
-  // const summedRarityWeightage = calculateSumArray(layer?.traitElements)
   return (
     <form>
       <Table>
@@ -292,88 +270,6 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
           })}
         </Table.Body>
       </Table>
-      {/* <Table.Body>
-          {table.getRowModel().rows.map((row, index) => (
-            <Table.Body.Row key={row.id} current={index} total={table.getRowModel().rows.length}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-              ))}
-            </Table.Body.Row>
-          ))}
-        </Table.Body> */}
-      {/* <Table.Body>
-          {traitElements?.map(({ name, id, layerElementId }: TraitElement, index: number) => (
-            <Table.Body.Row key={id} current={index} total={traitElements?.length}>
-              <Table.Body.Row.Data>
-                <div className='w-4 h-4 border border-mediumGrey bg-white rounded-[3px]' />
-                <></>
-              </Table.Body.Row.Data>
-              <Table.Body.Row.Data>
-                <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
-                  <div className='rounded-[5px] border border-mediumGrey'>
-                    <img
-                      className='w-10 lg:w-16 h-auto rounded-[5px]'
-                      src={getImageForTrait({
-                        r: repositoryId,
-                        l: layerElementId,
-                        t: id,
-                      })}
-                    />
-                  </div>
-                </div>
-              </Table.Body.Row.Data>
-              <Table.Body.Row.Data>{truncate(name)}</Table.Body.Row.Data>
-              <Table.Body.Row.Data>
-                <div className='flex space-x-3 items-center justify-start'>
-                          <div className='w-20'>
-                            <input
-                              className='bg-white text-xs w-full border border-mediumGrey rounded-[5px] p-2'
-                              id={`traits.${index}.weight`}
-                              type='number'
-                              name={`traits.${index}.weight`}
-                              min={0}
-                              max={collection.totalSupply}
-                              value={values.traits[index]?.weight}
-                              onChange={(e) => {
-                                e.persist()
-                                !hasFormChange && setHasFormChange(true)
-                                const trait = values.traits.find((x) => x.id === id)
-                                if (!trait) {
-                                  resetForm()
-                                  return
-                                }
-                                handleChange(e)
-                                // if (Number(e.target.value) + calculateSumArray(values.traits) > collection.totalSupply) {
-                                //   return
-                                // }
-                                const difference = trait.weight - Number(e.target.value)
-                                const linearDistributeLength =
-                                  values.traits.length - values.traits.filter((v) => v.weight === 0).length - 1
-                                values.traits = values.traits.map((t) => {
-                                  if (t.weight === 0) return { ...t, weight: 0 }
-                                  return {
-                                    id: t.id,
-                                    weight: t.weight + difference / linearDistributeLength,
-                                  }
-                                })
-                              }}
-                            />
-                          </div>
-                          <span>out of {collection.totalSupply}</span>
-                        </div>
-              </Table.Body.Row.Data>
-              <Table.Body.Row.Data>
-                <span className='whitespace-nowrap text-ellipsis w-16'>
-                  {Number(-Math.log((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)).toFixed(3)) %
-                    Infinity || 0}
-                </span>
-              </Table.Body.Row.Data>
-              <Table.Body.Row.Data>
-                {(((values.traits[index]?.weight || 0) / calculateSumArray(values.traits)) * 100).toFixed(3)}%
-              </Table.Body.Row.Data>
-            </Table.Body.Row>
-          ))}
-        </Table.Body> */}
     </form>
   )
 }

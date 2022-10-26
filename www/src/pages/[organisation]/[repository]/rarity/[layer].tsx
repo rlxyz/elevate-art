@@ -171,7 +171,12 @@ const Page = () => {
                   <LayerGridView traitElements={filteredTraitElements} />
                 </div>
                 <div className={clsx(currentView !== 'rarity' && 'hidden')}>
-                  {filteredTraitElements && <RepositoryRuleDisplayView traitElements={filteredTraitElements} />}
+                  {filteredTraitElements && layer && (
+                    <RepositoryRuleDisplayView
+                      traitElements={filteredTraitElements}
+                      initialSum={layer.traitElements.reduce((a, b) => a + b.weight, 0)}
+                    />
+                  )}
                 </div>
               </main>
             </div>
