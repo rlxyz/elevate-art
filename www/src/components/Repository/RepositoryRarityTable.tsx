@@ -4,7 +4,9 @@ import { Table } from '../Layout/core/Table'
 
 import { Popover, Transition } from '@headlessui/react'
 import { CheckCircleIcon, InformationCircleIcon, RefreshIcon } from '@heroicons/react/outline'
+import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import {
   ColumnDef,
   flexRender,
@@ -26,21 +28,6 @@ type RarityTableType = {
   rarityPercentage: string
 }
 
-const tableHeaders: { title: JSX.Element; description?: JSX.Element }[] = [
-  { title: <></> },
-  { title: <></> },
-  { title: <>Name</> },
-  {
-    title: <>Estimate in Collection</>,
-    description: <>We linearly distribute the rarity changes to the rest of the traits in this layer.</>,
-  },
-  {
-    title: <>Rarity Score</>,
-    description: <>This is the rarity score of each trait in this layer. It is based on the OpenRarity standard.</>,
-  },
-  { title: <>%</> },
-]
-
 export const calculateSumArray = (values: { weight: number }[] | undefined) => {
   return values?.reduce((a, b) => a + Number(b.weight), 0) || 0 // change to number incase someone accidently changes how textbox works
 }
@@ -51,51 +38,15 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const defaultColumn: Partial<ColumnDef<RarityTableType>> = {
-  cell: ({ getValue, row: { index }, column: { id }, table }) => {
-    const initialValue = getValue()
-    // We need to keep and update the state of the cell normally
-    const [value, setValue] = useState(initialValue)
-
-    // When the input is blurred, we'll call our table meta's updateData function
-    const onBlur = () => {
-      table.options.meta?.updateData(index, id, value)
-    }
-
-    // If the initialValue is changed external, sync it up with our state
-    useEffect(() => {
-      setValue(initialValue)
-    }, [initialValue])
-
-    return <input value={value as string} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />
-  },
-}
-
-const estimateColumn: Partial<ColumnDef<RarityTableType>> = {
-  cell: ({ getValue, row: { index }, column: { id }, table }) => {
-    const initialValue = getValue()
-    const [value, setValue] = useState(initialValue)
-
-    const onBlur = () => {
-      table.options.meta?.updateData(index, id, value)
-    }
-
-    // If the initialValue is changed external, sync it up with our state
-    useEffect(() => {
-      setValue(initialValue)
-    }, [initialValue])
-
-    return <input value={value as number} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />
-  },
-}
-
 const LoadingTable = () => {
   return (
     <Table>
       <Table.Head loading={true}>
-        {tableHeaders.map(({ title, description }, index) => {
-          return <Table.Head.Row key={index} title={title} description={description} />
-        })}
+        {[{ title: '' }, { title: '', description: '' }, { title: '' }, { title: '' }, { title: '' }, { title: '' }].map(
+          ({ title, description }, index) => {
+            return <Table.Head.Row key={index} title={title} description={description} />
+          }
+        )}
       </Table.Head>
       <Table.Body loading={true}>
         {Array.from(Array(10).keys()).map((_, index) => {
@@ -136,21 +87,15 @@ function useSkipper() {
 const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElements: TraitElement[]; initialSum: number }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  // const { current: collection } = useQueryRepositoryCollection()
-  // const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
-  // const { current: layer } = useQueryRepositoryLayer()
-  const {
-    register,
-    setError,
-    clearErrors,
-    handleSubmit,
-    reset,
-    watch,
-    getValues,
-    setValue,
-    control,
-    formState: { errors, isDirty },
-  } = useForm<{ traitElements: TraitElement[] }>({ defaultValues: { traitElements: traitElements.map((x) => x) } })
+  const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
+  const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<{
+    traitElements: TraitElement[]
+  }>({ defaultValues: { traitElements: traitElements.map((x) => x) } })
+
+  useDeepCompareEffect(() => {
+    reset({ traitElements: traitElements.map((x) => x) })
+    setHasFormChange(false)
+  }, [traitElements])
 
   const traitElementsArray = watch('traitElements')
 
@@ -164,10 +109,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
             original: { id: t, layerElementId: l },
           },
         }) => (
-          <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
+          <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center px-1'>
             <div className='rounded-[5px] border border-mediumGrey'>
               <img
-                className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]'
+                className='w-full h-full rounded-[5px]'
                 src={getImageForTrait({
                   r: repositoryId,
                   l,
@@ -219,13 +164,14 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
         accessorKey: 'estimateInCollection',
         cell: ({ row: { original, index } }) => (
           <input
-            className='bg-white text-xs w-fit border border-mediumGrey rounded-[5px] p-2'
+            className='bg-white text-xs w-1/2 border border-mediumGrey rounded-[5px] p-2'
             type='number'
             {...register(`traitElements.${index}.weight` as const, {
               valueAsNumber: true,
               min: 0,
               max: 100,
               onChange: (e) => {
+                e.preventDefault()
                 e.persist()
                 !hasFormChange && setHasFormChange(true)
                 const difference = Math.abs(initialSum - getValues().traitElements.reduce((acc, curr) => acc + curr.weight, 0))
@@ -278,7 +224,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
         ),
         accessorKey: 'rarityScore',
         cell: ({ row: { original, index } }) => (
-          <div>{Number(-Math.log(watch(`traitElements.${index}.weight`) / initialSum).toFixed(3)) % Infinity || 0}</div>
+          <span>{Number(-Math.log(watch(`traitElements.${index}.weight`) / initialSum).toFixed(3)) % Infinity || 0}</span>
         ),
         footer: (props) => props.column.id,
       },
@@ -286,7 +232,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
         header: () => <span>%</span>,
         accessorKey: 'rarityPercentage',
         cell: ({ row: { original, index } }) => (
-          <div>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</div>
+          <span>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</span>
         ),
         footer: (props) => props.column.id,
       },
@@ -324,21 +270,22 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                 leaveFrom='opacity-100 translate-y-0'
                 leaveTo='opacity-0 translate-y-1'
               >
-                <Popover.Panel className='absolute z-10 w-screen py-6 max-w-xs'>
-                  <div className='overflow-hidden rounded-[5px] bg-lightGray shadow-lg ring-1 ring-black ring-opacity-5'>
+                <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
+                  <div className='overflow-hidden rounded-[5px] bg-lightGray shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
                       {
                         name: 'Save',
-                        icon: <CheckCircleIcon className='w-4 h-4' />,
-                        onClick: (e) => {
-                          e.preventDefault()
+                        icon: <CheckCircleIcon className='w-4 h-4 text-greenDot' />,
+                        onClick: () => {
+                          handleSubmit((values) => {
+                            console.log(values)
+                          })
                         },
                       },
                       {
                         name: 'Reset',
-                        icon: <RefreshIcon className='w-4 h-4' />,
-                        onClick: (e) => {
-                          e.preventDefault()
+                        icon: <RefreshIcon className='w-4 h-4 text-redDot' />,
+                        onClick: () => {
                           reset()
                           setHasFormChange(false)
                         },
@@ -347,7 +294,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                       <button
                         disabled={!hasFormChange}
                         className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
-                        onClick={onClick}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          onClick && onClick()
+                        }}
                       >
                         {icon}
                         <span className='text-xs'>{name}</span>
@@ -397,23 +347,14 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   })
 
   return (
-    <form
-      onSubmit={handleSubmit((values) => {
-        console.log(values)
-      })}
-    >
+    <form>
       <Table>
         <Table.Head>
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header) => {
               return (
                 <Table.Head.Row key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <div>
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {header.column.getCanFilter() ? <div>{/* <Filter column={header.column} table={table} /> */}</div> : null}
-                    </div>
-                  )}
+                  {header.isPlaceholder ? null : <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>}
                 </Table.Head.Row>
               )
             })
