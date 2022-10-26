@@ -1,7 +1,7 @@
 import Link from '@components/Layout/Link'
 import { Layout } from '@elevateart/ui'
 import type { NextPage } from 'next'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 const Home: NextPage = () => (
   <Layout>

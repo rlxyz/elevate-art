@@ -209,7 +209,7 @@ const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) =>
         <div className='flex items-center text-xs font-semibold space-x-1'>
           <div className='relative w-12 h-12'>
             <Link href='/'>
-              <Image priority layout='fill' src='/images/logo-black.png' alt='elevate-art-logo' />
+              <Image priority fill src='/images/logo-black.png' alt='elevate-art-logo' />
             </Link>
           </div>
           <HeaderInternalAppRoutes routes={internalRoutes} />

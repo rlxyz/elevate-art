@@ -256,7 +256,7 @@ export const FolderUpload = () => {
                                   <div className='flex space-x-3'>
                                     <div className='flex items-center'>
                                       <div className='w-[25px] h-[25px] border border-accents_8 flex items-center justify-center bg-accents_5 rounded-[5px]'>
-                                        <Image src={'/images/not-found.svg'} width={15} height={15} />
+                                        <Image priority src='/images/not-found.svg' width={15} height={15} alt='not-found' />
                                       </div>
                                     </div>
                                     <div className='w-full items-start flex flex-col space-y-1'>
@@ -305,7 +305,12 @@ export const FolderUpload = () => {
                                         <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
                                           <div className='relative border border-border rounded-[5px]'>
                                             <div className='pb-[100%]' />
-                                            <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
+                                            <Image
+                                              fill
+                                              src={item.imageUrl}
+                                              className='rounded-[5px]'
+                                              alt={`uploaded-file-${item.name}`}
+                                            />
                                             {item.uploaded && (
                                               <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
                                             )}
