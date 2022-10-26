@@ -25,13 +25,15 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
             <th
               key={index}
               className={clsx(
-                !loading && index === 0 && 'border-t border-l border-mediumGrey pl-3',
-                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-mediumGrey',
+                !loading && index === 0 && 'border-t border-l border-mediumGrey rounded-tl-[5px] pl-3',
+                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-mediumGrey rounded-tr-[5px]',
                 !loading && 'text-left border-t border-mediumGrey', // everything else
-                'py-2 rounded-tl-[5px] rounded-tr-[5px]'
+                'py-2'
               )}
             >
-              <div className={clsx(loading && 'invisible')}>{children}</div>
+              <span className={clsx(loading && 'invisible', 'text-[0.6rem] font-normal text-darkGrey uppercase')}>
+                {children}
+              </span>
             </th>
           )
         })}
@@ -44,8 +46,8 @@ const TableHeadRow = ({
   description,
   children,
 }: {
-  title?: JSX.Element
-  description?: JSX.Element
+  title?: JSX.Element | string
+  description?: JSX.Element | string
   children?: ReactNode
 }) => {
   return (

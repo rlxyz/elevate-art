@@ -3,7 +3,7 @@ import { Layout } from '@components/Layout/core/Layout'
 import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'
-import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
+import RepositoryRuleDisplayView from '@components/Repository/RepositoryRarityTable'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -171,7 +171,7 @@ const Page = () => {
                   <LayerGridView traitElements={filteredTraitElements} />
                 </div>
                 <div className={clsx(currentView !== 'rarity' && 'hidden')}>
-                  <LayerRarityTable traitElements={filteredTraitElements} />
+                  {filteredTraitElements && <RepositoryRuleDisplayView traitElements={filteredTraitElements} />}
                 </div>
               </main>
             </div>
