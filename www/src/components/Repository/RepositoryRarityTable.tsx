@@ -328,8 +328,8 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
   // const summedRarityWeightage = calculateSumArray(layer?.traitElements)
   return (
     <form>
-      <table>
-        <thead>
+      <Table>
+        <Table.Head>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -346,19 +346,23 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
               })}
             </tr>
           ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
+        </Table.Head>
+        <Table.Body>
+          {table.getRowModel().rows.map((row, index) => {
             return (
-              <tr key={row.id}>
+              <Table.Body.Row key={row.id} current={index} total={table.getRowModel().rows.length}>
                 {row.getVisibleCells().map((cell) => {
-                  return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  return (
+                    <Table.Body.Row.Data key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Table.Body.Row.Data>
+                  )
                 })}
-              </tr>
+              </Table.Body.Row>
             )
           })}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
       {/* <Table.Body>
           {table.getRowModel().rows.map((row, index) => (
             <Table.Body.Row key={row.id} current={index} total={table.getRowModel().rows.length}>
