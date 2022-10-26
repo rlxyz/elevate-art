@@ -1,7 +1,9 @@
 import { TraitElement } from '@prisma/client'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Table } from '../Layout/core/Table'
 
+import { Popover, Transition } from '@headlessui/react'
+import { InformationCircleIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import {
   ColumnDef,
@@ -13,9 +15,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 type RarityTableType = {
+  trait: TraitElement
   imageUrl: string
   name: string
   estimateInCollection: number
@@ -68,6 +71,24 @@ const defaultColumn: Partial<ColumnDef<RarityTableType>> = {
   },
 }
 
+const estimateColumn: Partial<ColumnDef<RarityTableType>> = {
+  cell: ({ getValue, row: { index }, column: { id }, table }) => {
+    const initialValue = getValue()
+    const [value, setValue] = useState(initialValue)
+
+    const onBlur = () => {
+      table.options.meta?.updateData(index, id, value)
+    }
+
+    // If the initialValue is changed external, sync it up with our state
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    return <input value={value as number} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />
+  },
+}
+
 const LoadingTable = () => {
   return (
     <Table>
@@ -114,7 +135,7 @@ function useSkipper() {
 
 const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElements: TraitElement[]; initialSum: number }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  // const [hasFormChange, setHasFormChange] = useState<boolean>(false)
+  const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   // const { current: collection } = useQueryRepositoryCollection()
   // const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   // const { current: layer } = useQueryRepositoryLayer()
@@ -129,32 +150,30 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
     setValue,
     control,
     formState: { errors, isDirty },
-  } = useForm<{ traitElements: { item: TraitElement }[] }>({
-    defaultValues: {
-      traitElements: traitElements.map((x) => {
-        return {
-          item: x,
-        }
-      }),
-    },
-  })
-
-  const { fields, update } = useFieldArray({
-    control,
-    name: 'traitElements',
-  })
+  } = useForm<{ traitElements: TraitElement[] }>({ defaultValues: { traitElements: traitElements.map((x) => x) } })
 
   const traitElementsArray = watch('traitElements')
 
-  const columns = useMemo<ColumnDef<RarityTableType>[]>(
+  const columns = useMemo<ColumnDef<TraitElement>[]>(
     () => [
       {
         header: () => <span></span>,
         accessorKey: 'imageUrl',
-        cell: ({ row: { original } }) => (
+        cell: ({
+          row: {
+            original: { id: t, layerElementId: l },
+          },
+        }) => (
           <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
             <div className='rounded-[5px] border border-mediumGrey'>
-              <img className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]' src={original.imageUrl} />
+              <img
+                className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]'
+                src={getImageForTrait({
+                  r: repositoryId,
+                  l,
+                  t,
+                })}
+              />
             </div>
           </div>
         ),
@@ -163,80 +182,185 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
       {
         header: () => <span>Name</span>,
         accessorKey: 'name',
-        cell: ({ row: { original } }) => <div>{original.name}</div>,
+        cell: ({
+          row: {
+            original: { name },
+          },
+        }) => <div>{name}</div>,
         footer: (props) => props.column.id,
       },
       {
-        header: () => <span>Estimate In Collection</span>,
+        header: () => (
+          <div className='flex space-x-1'>
+            <span>Estimate In Collection</span>
+            <Popover>
+              <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+              <Transition
+                as={Fragment}
+                enter='transition ease-out duration-200'
+                enterFrom='opacity-0 translate-y-1'
+                enterTo='opacity-100 translate-y-0'
+                leave='transition ease-in duration-150'
+                leaveFrom='opacity-100 translate-y-0'
+                leaveTo='opacity-0 translate-y-1'
+              >
+                <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+                  <div className='p-2 shadow-lg'>
+                    <p className='text-[0.65rem] text-white font-normal normal-case'>
+                      {'We linearly distribute the rarity changes to the rest of the traits in this layer.'}
+                    </p>
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </Popover>
+          </div>
+        ),
+
         accessorKey: 'estimateInCollection',
-        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
+        cell: ({ row: { original, index } }) => (
+          <input
+            className='bg-white text-xs w-fit border border-mediumGrey rounded-[5px] p-2'
+            type='number'
+            {...register(`traitElements.${index}.weight` as const, {
+              valueAsNumber: true,
+              min: 0,
+              max: 100,
+              onChange: (e) => {
+                e.persist()
+                !hasFormChange && setHasFormChange(true)
+                const difference = Math.abs(initialSum - getValues().traitElements.reduce((acc, curr) => acc + curr.weight, 0))
+                const sum = getValues().traitElements.reduce((a, c) => a + c.weight, 0) - Number(e.target.value)
+                if (sum === 0) {
+                  getValues().traitElements.forEach((x, index) => {
+                    if (x.id === original.id) return
+                    setValue(`traitElements.${index}.weight`, 0)
+                  })
+                  return
+                }
+                getValues().traitElements.forEach((x, index) => {
+                  if (x.id === original.id) return
+                  const minus = x.weight / difference / sum // this scales down the difference to the weight of the current element
+                  setValue(`traitElements.${index}.weight` as const, x.weight - minus)
+                })
+              },
+            })}
+            min={0}
+            max={100}
+          />
+        ),
         footer: (props) => props.column.id,
       },
       {
-        header: () => <span>%</span>,
+        header: () => (
+          <div className='flex space-x-1'>
+            <span>Rarity Score</span>
+            <Popover>
+              <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+              <Transition
+                as={Fragment}
+                enter='transition ease-out duration-200'
+                enterFrom='opacity-0 translate-y-1'
+                enterTo='opacity-100 translate-y-0'
+                leave='transition ease-in duration-150'
+                leaveFrom='opacity-100 translate-y-0'
+                leaveTo='opacity-0 translate-y-1'
+              >
+                <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+                  <div className='p-2 shadow-lg'>
+                    <p className='text-[0.65rem] text-white normal-case'>
+                      {'This is the rarity score of each trait in this layer. It is based on the OpenRarity standard.'}
+                    </p>
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </Popover>
+          </div>
+        ),
         accessorKey: 'rarityScore',
-        cell: ({ row: { original } }) => <div>{original.rarityScore}</div>,
+        cell: ({ row: { original, index } }) => (
+          <div>{Number(-Math.log(watch(`traitElements.${index}.weight`) / initialSum).toFixed(3)) % Infinity || 0}</div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         header: () => <span>%</span>,
         accessorKey: 'rarityPercentage',
-        cell: ({ row: { original } }) => <div>{original.rarityPercentage}</div>,
+        cell: ({ row: { original, index } }) => (
+          <div>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</div>
+        ),
+        footer: (props) => props.column.id,
+      },
+      {
+        header: () => (
+          <div className='relative'>
+            <Popover className='relative flex space-x-1'>
+              <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-4 h-4 text-darkGrey'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                  />
+                </svg>
+                {hasFormChange && (
+                  <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
+                    1
+                  </span>
+                )}
+              </Popover.Button>
+            </Popover>
+          </div>
+        ),
+        accessorKey: 'actions',
         footer: (props) => props.column.id,
       },
     ],
-    []
+    [hasFormChange]
   )
+
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const [data, setData] = useState<RarityTableType[]>(() =>
-    traitElementsArray.map(
-      ({ item: { name, layerElementId, id } }, index) =>
-        ({
-          imageUrl: getImageForTrait({
-            r: repositoryId,
-            l: layerElementId,
-            t: id,
-          }),
-          name: name,
-          estimateInCollection: 1,
-          rarityScore: Number(-Math.log(watch(`traitElements.${index}.item.weight`) / initialSum).toFixed(3)) % Infinity || 0,
-          rarityPercentage: `${((watch(`traitElements.${index}.item.weight`) / initialSum) * 100).toFixed(3)}%`,
-        } as RarityTableType)
-    )
-  )
-
   const table = useReactTable({
-    data,
+    data: traitElementsArray,
     columns,
-    defaultColumn,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex,
     // Provide our updateData function to our table meta
-    meta: {
-      updateData: (rowIndex, columnId, value) => {
-        // Skip age index reset until after next rerender
-        skipAutoResetPageIndex()
-        setData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex]!,
-                [columnId]: value,
-              }
-            }
-            return row
-          })
-        )
-      },
-    },
+    // meta: {
+    //   updateData: (rowIndex) => {
+    //     // Skip age index reset until after next rerender
+    //     // skipAutoResetPageIndex()
+    //     setData((old) =>
+    //       old.map((row, index) => {
+    //         if (index === rowIndex) {
+    //           return {
+    //             ...old[rowIndex]!,
+    //             [columnId]: value,
+    //           }
+    //         }
+    //         return row
+    //       })
+    //     )
+    //   },
+    // },
     debugTable: true,
   })
 
   return (
-    <form>
+    <form
+      onSubmit={handleSubmit((values) => {
+        console.log(values)
+      })}
+    >
       <Table>
         <Table.Head>
           {table.getHeaderGroups().map((headerGroup) =>
