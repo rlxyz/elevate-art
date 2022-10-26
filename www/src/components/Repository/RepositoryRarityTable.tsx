@@ -2,9 +2,9 @@ import { TraitElement } from '@prisma/client'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Table } from '../Layout/core/Table'
 
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import {
   ColumnDef,
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -22,8 +22,6 @@ type RarityTableType = {
   rarityPercentage: string
 }
 
-const columnHelper = createColumnHelper<RarityTableType>()
-
 const tableHeaders: { title: JSX.Element; description?: JSX.Element }[] = [
   { title: <></> },
   { title: <></> },
@@ -39,49 +37,6 @@ const tableHeaders: { title: JSX.Element; description?: JSX.Element }[] = [
   { title: <>%</> },
 ]
 
-export type Person = {
-  imageUrl: string
-  name: string
-  age: number
-  visits: number
-  progress: number
-  status: 'relationship' | 'complicated' | 'single'
-  subRows?: Person[]
-}
-
-const range = (len: number) => {
-  const arr = []
-  for (let i = 0; i < len; i++) {
-    arr.push(i)
-  }
-  return arr
-}
-
-const newPerson = (): Person => {
-  return {
-    imageUrl: 'faker.name.imageUrl()',
-    name: 'aker.name.name()',
-    age: 123,
-    visits: 123,
-    progress: 100,
-    status: 'single',
-  }
-}
-
-export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Person[] => {
-    const len = lens[depth]!
-    return range(len).map((d): Person => {
-      return {
-        ...newPerson(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      }
-    })
-  }
-
-  return makeDataLevel()
-}
-
 export const calculateSumArray = (values: { weight: number }[] | undefined) => {
   return values?.reduce((a, b) => a + Number(b.weight), 0) || 0 // change to number incase someone accidently changes how textbox works
 }
@@ -92,7 +47,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const defaultColumn: Partial<ColumnDef<Person>> = {
+const defaultColumn: Partial<ColumnDef<RarityTableType>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -157,7 +112,7 @@ function useSkipper() {
 }
 
 const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElement[] }) => {
-  // const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   // const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   // const { current: collection } = useQueryRepositoryCollection()
   // const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
@@ -183,62 +138,42 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
   //   },
   // })
 
-  // const columns = useMemo<ColumnDef<RarityTableType>[]>(
-  //   () => [
-  //     {
-  //       accessorKey: 'imageUrl',
-  //       header: '..',
-  //       footer: (props) => props.column.id,
-  //     },
-  //     {
-  //       accessorKey: 'name',
-  //       header: 'Name',
-  //       footer: (props) => props.column.id,
-  //     },
-  //     {
-  //       accessorKey: 'estimateInCollection',
-  //       header: 'Estimate in Collection',
-  //       footer: (props) => props.column.id,
-  //     },
-  //     {
-  //       header: 'Rarity Score',
-  //       accessorKey: 'rarityScore',
-  //       footer: (props) => props.column.id,
-  //     },
-  //     {
-  //       header: '%',
-  //       accessorKey: 'rarityPercentage',
-  //       footer: (props) => props.column.id,
-  //     },
-  //   ],
-  //   []
-  // )
-
-  const columns = useMemo<ColumnDef<Person>[]>(
+  const columns = useMemo<ColumnDef<RarityTableType>[]>(
     () => [
       {
-        header: '....',
+        header: () => <span></span>,
         accessorKey: 'imageUrl',
         cell: ({ row: { original } }) => (
           <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
             <div className='rounded-[5px] border border-mediumGrey'>
-              <img
-                className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]'
-                src={getImageForTrait({
-                  r: '',
-                  l: '',
-                  t: '',
-                })}
-              />
+              <img className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]' src={original.imageUrl} />
             </div>
           </div>
         ),
         footer: (props) => props.column.id,
       },
       {
-        header: 'Name',
+        header: () => <span>Name</span>,
         accessorKey: 'name',
         cell: ({ row: { original } }) => <div>{original.name}</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        header: () => <span>Estimate In Collection</span>,
+        accessorKey: 'estimateInCollection',
+        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        header: () => <span>%</span>,
+        accessorKey: 'rarityScore',
+        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        header: () => <span>%</span>,
+        accessorKey: 'rarityPercentage',
+        cell: ({ row: { original } }) => <div>{original.estimateInCollection}</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -247,7 +182,24 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const [data, setData] = useState(() => makeData(1000))
+  const [data, setData] = useState<RarityTableType[]>(() =>
+    traitElements.map(
+      ({ name, layerElementId, id }, index) =>
+        ({
+          imageUrl: getImageForTrait({
+            r: repositoryId,
+            l: layerElementId,
+            t: id,
+          }),
+          name: name,
+          estimateInCollection: 1,
+          rarityScore: 1,
+          rarityPercentage: `1%`,
+          // rarityScore: Number(-Math.log(watch(`traitElements.${index}.item.weight`) / initialSum).toFixed(3)) % Infinity || 0,
+          // rarityPercentage: `${((watch(`traitElements.${index}.item.weight`) / initialSum) * 100).toFixed(3)}%`,
+        } as RarityTableType)
+    )
+  )
 
   const table = useReactTable({
     data,
