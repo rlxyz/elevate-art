@@ -311,6 +311,78 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
         ),
         accessorKey: 'actions',
         footer: (props) => props.column.id,
+        cell: ({ row: { original, index } }) => (
+          <div className='relative'>
+            <Popover className='relative flex space-x-1'>
+              <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-4 h-4 text-darkGrey'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                  />
+                </svg>
+                {hasFormChange && (
+                  <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
+                    1
+                  </span>
+                )}
+              </Popover.Button>
+              <Transition
+                as={Fragment}
+                enter='transition ease-out duration-200'
+                enterFrom='opacity-0 translate-y-1'
+                enterTo='opacity-100 translate-y-0'
+                leave='transition ease-in duration-150'
+                leaveFrom='opacity-100 translate-y-0'
+                leaveTo='opacity-0 translate-y-1'
+              >
+                <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
+                  <div className='overflow-hidden rounded-[5px] bg-lightGray shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
+                    {[
+                      {
+                        name: 'Save',
+                        icon: <CheckCircleIcon className='w-4 h-4 text-greenDot' />,
+                        onClick: () => {
+                          handleSubmit((values) => {
+                            console.log(values)
+                          })
+                        },
+                      },
+                      {
+                        name: 'Reset',
+                        icon: <RefreshIcon className='w-4 h-4 text-redDot' />,
+                        onClick: () => {
+                          reset()
+                          setHasFormChange(false)
+                        },
+                      },
+                    ].map(({ name, icon, onClick }) => (
+                      <button
+                        disabled={!hasFormChange}
+                        className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          onClick && onClick()
+                        }}
+                      >
+                        {icon}
+                        <span className='text-xs'>{name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </Popover>
+          </div>
+        ),
       },
     ],
     [hasFormChange]

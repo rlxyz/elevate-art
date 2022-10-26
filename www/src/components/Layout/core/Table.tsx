@@ -49,7 +49,7 @@ const TableHeadRow = ({
   children?: ReactNode
 }) => {
   return (
-    <div className='flex items-center space-x-1'>
+    <div className='flex items-center'>
       <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
       {description && (
         <Popover>
@@ -113,7 +113,6 @@ const TableBodyRow = ({
               index === 2 && 'w-[25%]', // @todo this needs to be fixed!
               index === 3 && 'w-[15%]',
               index === 4 && 'w-[15%]',
-              index === 5 && 'w-[5%]',
               'text-left border-t border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
             )}
           >
