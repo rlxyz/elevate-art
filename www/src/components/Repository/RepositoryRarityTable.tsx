@@ -3,7 +3,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { Table } from '../Layout/core/Table'
 
 import { Popover, Transition } from '@headlessui/react'
-import { CheckCircleIcon, InformationCircleIcon, RefreshIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon, InformationCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
@@ -18,6 +18,7 @@ import {
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
 import { useForm } from 'react-hook-form'
+import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
 
 type RarityTableType = {
   trait: TraitElement
@@ -88,7 +89,9 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
-  const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<{
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [isDeleteTrait, setIsDeleteTrait] = useState<TraitElement | null>(null)
+  const { register, handleSubmit, reset, watch, getValues, setValue, control } = useForm<{
     traitElements: TraitElement[]
   }>({ defaultValues: { traitElements: traitElements.map((x) => x) } })
 
@@ -160,7 +163,6 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
             </Popover>
           </div>
         ),
-
         accessorKey: 'estimateInCollection',
         cell: ({ row: { original, index } }) => (
           <input
@@ -271,7 +273,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                 leaveTo='opacity-0 translate-y-1'
               >
                 <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
-                  <div className='overflow-hidden rounded-[5px] bg-lightGray shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
+                  <div className='overflow-hidden rounded-[5px] bg-white shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
                       {
                         name: 'Save',
@@ -329,11 +331,6 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                     d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
                   />
                 </svg>
-                {hasFormChange && (
-                  <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
-                    1
-                  </span>
-                )}
               </Popover.Button>
               <Transition
                 as={Fragment}
@@ -344,38 +341,31 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                 leaveFrom='opacity-100 translate-y-0'
                 leaveTo='opacity-0 translate-y-1'
               >
-                <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
-                  <div className='overflow-hidden rounded-[5px] bg-lightGray shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
+                <Popover.Panel className='absolute z-10 -translate-y-1/4 left-1/2 max-w-xs'>
+                  <div className='overflow-hidden bg-white rounded-[5px] shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
                       {
-                        name: 'Save',
-                        icon: <CheckCircleIcon className='w-4 h-4 text-greenDot' />,
+                        name: 'Delete',
+                        icon: <XCircleIcon className='w-4 h-4 text-redDot' />,
                         onClick: () => {
-                          handleSubmit((values) => {
-                            console.log(values)
-                          })
-                        },
-                      },
-                      {
-                        name: 'Reset',
-                        icon: <RefreshIcon className='w-4 h-4 text-redDot' />,
-                        onClick: () => {
-                          reset()
-                          setHasFormChange(false)
+                          setIsDeleteDialogOpen(true)
+                          setIsDeleteTrait(original)
                         },
                       },
                     ].map(({ name, icon, onClick }) => (
-                      <button
-                        disabled={!hasFormChange}
-                        className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          onClick && onClick()
-                        }}
-                      >
-                        {icon}
-                        <span className='text-xs'>{name}</span>
-                      </button>
+                      <>
+                        <button
+                          key={index}
+                          className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            onClick && onClick()
+                          }}
+                        >
+                          {icon}
+                          <span className='text-xs'>{name}</span>
+                        </button>
+                      </>
                     ))}
                   </div>
                 </Popover.Panel>
@@ -448,6 +438,16 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
           })}
         </Table.Body>
       </Table>
+      {isDeleteTrait && (
+        <RepositoryDeleteTraitDialog
+          isOpen={isDeleteDialogOpen}
+          trait={isDeleteTrait}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onSuccess={() => {
+            console.log('test')
+          }}
+        />
+      )}
     </form>
   )
 }

@@ -86,3 +86,15 @@ export const traitElementRouter = createRouter()
       }
     },
   })
+  .mutation('delete', {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.traitElement.delete({
+        where: {
+          id: input.id,
+        },
+      })
+    },
+  })
