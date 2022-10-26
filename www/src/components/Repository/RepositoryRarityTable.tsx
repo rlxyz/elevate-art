@@ -12,6 +12,7 @@ import {
   RowData,
   useReactTable,
 } from '@tanstack/react-table'
+import { getImageForTrait } from '@utils/image'
 
 type RarityTableType = {
   imageUrl: string
@@ -39,8 +40,8 @@ const tableHeaders: { title: JSX.Element; description?: JSX.Element }[] = [
 ]
 
 export type Person = {
-  firstName: string
-  lastName: string
+  imageUrl: string
+  name: string
   age: number
   visits: number
   progress: number
@@ -58,8 +59,8 @@ const range = (len: number) => {
 
 const newPerson = (): Person => {
   return {
-    firstName: 'faker.name.firstName()',
-    lastName: 'aker.name.lastName()',
+    imageUrl: 'faker.name.imageUrl()',
+    name: 'aker.name.name()',
     age: 123,
     visits: 123,
     progress: 100,
@@ -216,51 +217,29 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
   const columns = useMemo<ColumnDef<Person>[]>(
     () => [
       {
-        header: 'Name',
+        header: '....',
+        accessorKey: 'imageUrl',
+        cell: ({ row: { original } }) => (
+          <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center'>
+            <div className='rounded-[5px] border border-mediumGrey'>
+              <img
+                className='w-10 lg:w-16 h-10 lg:h-16 rounded-[5px]'
+                src={getImageForTrait({
+                  r: '',
+                  l: '',
+                  t: '',
+                })}
+              />
+            </div>
+          </div>
+        ),
         footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            header: () => <span>Last Name</span>,
-            footer: (props) => props.column.id,
-          },
-        ],
       },
       {
-        header: 'Info',
+        header: 'Name',
+        accessorKey: 'name',
+        cell: ({ row: { original } }) => <div>{original.name}</div>,
         footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: (props) => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
       },
     ],
     []
@@ -330,22 +309,20 @@ const RepositoryRuleDisplayView = ({ traitElements }: { traitElements: TraitElem
     <form>
       <Table>
         <Table.Head>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanFilter() ? <div>{/* <Filter column={header.column} table={table} /> */}</div> : null}
-                      </div>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
+          {table.getHeaderGroups().map((headerGroup) =>
+            headerGroup.headers.map((header) => {
+              return (
+                <Table.Head.Row key={header.id}>
+                  {header.isPlaceholder ? null : (
+                    <div>
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getCanFilter() ? <div>{/* <Filter column={header.column} table={table} /> */}</div> : null}
+                    </div>
+                  )}
+                </Table.Head.Row>
+              )
+            })
+          )}
         </Table.Head>
         <Table.Body>
           {table.getRowModel().rows.map((row, index) => {
