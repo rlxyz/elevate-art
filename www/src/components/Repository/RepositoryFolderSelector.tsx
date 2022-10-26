@@ -129,7 +129,7 @@ const LayerFolderSelector = () => {
       <aside className='space-y-1'>
         <div className='border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]'>
           <AnimatePresence>
-            <Reorder.Group axis='y' layoutScroll style={{ overflowY: 'scroll' }} onReorder={setItems} values={items}>
+            <Reorder.Group axis='y' layoutScroll onReorder={setItems} values={items}>
               {items.map((item, index) => {
                 return (
                   <ReorderItem

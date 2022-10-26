@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from '@heroicons/react/solid'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -10,7 +11,7 @@ import { Form, Formik } from 'formik'
 import { useState } from 'react'
 import { Table } from '../Layout/core/Table'
 
-const tableHeaders = [
+const tableHeaders: { title: JSX.Element; description?: JSX.Element }[] = [
   { title: <></> },
   { title: <></> },
   { title: <>Name</> },
@@ -18,12 +19,10 @@ const tableHeaders = [
     title: <>Estimate in Collection</>,
     description: <>We linearly distribute the rarity changes to the rest of the traits in this layer.</>,
   },
-
   {
     title: <>Rarity Score</>,
     description: <>This is the rarity score of each trait in this layer. It is based on the OpenRarity standard.</>,
   },
-
   { title: <>%</> },
 ]
 
@@ -101,7 +100,21 @@ const LayerRarityTable = ({ traitElements }: { traitElements: TraitElement[] | u
               <Table>
                 <Table.Head loading={!collection && !layer}>
                   {tableHeaders.map(({ title, description }, index) => {
-                    return <Table.Head.Row key={index} title={title} description={description} />
+                    return (
+                      <Table.Head.Row key={index} title={title} description={description}>
+                        {hasFormChange && index == 3 && (
+                          <button
+                            className='flex'
+                            onClick={(e: any) => {
+                              e.preventDefault()
+                              handleSubmit()
+                            }}
+                          >
+                            <CheckCircleIcon className='text-blueHighlight w-4 h-4' />
+                          </button>
+                        )}
+                      </Table.Head.Row>
+                    )
                   })}
                 </Table.Head>
                 <Table.Body>

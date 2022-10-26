@@ -39,7 +39,15 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
     </thead>
   )
 }
-const TableHeadRow = ({ title, description }: { title?: JSX.Element; description?: JSX.Element }) => {
+const TableHeadRow = ({
+  title,
+  description,
+  children,
+}: {
+  title?: JSX.Element
+  description?: JSX.Element
+  children?: ReactNode
+}) => {
   return (
     <div className='flex items-center space-x-1'>
       <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
@@ -63,6 +71,7 @@ const TableHeadRow = ({ title, description }: { title?: JSX.Element; description
           </Transition>
         </Popover>
       )}
+      {children}
     </div>
   )
 }
