@@ -90,18 +90,14 @@ export default function Home() {
     ['from-[#ff3399]', 'to-[#ff3333]'],
   ]
   return (
-    <>
-      <div className='relative group transition duration-1000'>
-        <div
-          className={clsx(
-            'absolute -inset-1 bg-gradient-to-r rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000',
-            // graident[Math.floor(Math.random() * graident.length)].join(' ')
-            graident[0]
-          )}
-        />
-        {/* <Search className='w-full' placeholder='Search the metaverse' focus={false} /> */}
-        <Example />
-      </div>
-    </>
+    <div className='relative group transition duration-1000 w-full'>
+      <div
+        className={clsx(
+          'absolute -inset-1 bg-gradient-to-r rounded-lg blur opacity-10 group-hover:opacity-75 transition duration-1000',
+          graident[0]
+        )}
+      />
+      <Example />
+    </div>
   )
 }
