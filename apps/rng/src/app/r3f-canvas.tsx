@@ -70,7 +70,7 @@ export default function R3FCanvas() {
         orthographic
         gl={{ antialias: false }}
         camera={{ position: [0, 0, 100], zoom: 50 }}
-        style={{ width: '100vw', height: '40vh', userSelect: 'none' }}
+        style={{ width: '100vw', height: '50vh', userSelect: 'none' }}
       >
         <color attach='background' args={['black']} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
