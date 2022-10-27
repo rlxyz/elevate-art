@@ -23,9 +23,12 @@ export default async function Home() {
       </div>
       <div className='absolute top-[60%] left-1/2 -translate-x-1/2 w-screen flex justify-center'>
         <div className='w-1/2'>
-          <MainSearch />
+          <div className='max-w-7xl mx-auto'>
+            <MainSearch />
+          </div>
         </div>
       </div>
     </div>
   )
 }
+// bg-gradient-to-r from-cyan-500 via-teal-300 to-blue-800
