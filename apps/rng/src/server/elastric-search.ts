@@ -49,3 +49,22 @@ export default async function ingestContractData({ address }: { address: string 
     },
   })
 }
+
+// elastric search bulk upload
+// Path: apps/rng/src/server/elastric-search.ts
+export const ingestBulkContractData = async ({
+  address,
+  data,
+}: {
+  address: string
+  data: { id: number; attributes: { trait_type: string; value: string }; name: string; image: string }[]
+}) => {
+  const elastic = await getElasticClient()
+  const body = data.flatMap(
+    (doc: { id: number; attributes: { trait_type: string; value: string }; name: string; image: string }) => [
+      { index: { _index: 'my-index' } },
+      doc,
+    ]
+  )
+  return await elastic.bulk({ refresh: true, body })
+}

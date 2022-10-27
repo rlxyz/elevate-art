@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const response = await fetch(tokenURI)
   const data = await response.json()
   if (response.status === 200) {
-    return res.status(200).send({ attributes: data.attributes, name: `#${id}`, image: data.image })
+    return res.status(200).send({ attributes: data.attributes, name: data.name, image: data.image })
   }
   return res.status(400).send({ error: 'Invalid token id' })
 }
