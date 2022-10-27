@@ -1,21 +1,26 @@
 'use client'
-
+import { Modal } from '@elevateart/ui'
+import { useCursor } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Mesh } from 'three'
 import { AsciiEffect } from 'three-stdlib'
 
-const Tetrahedron = () => {
+const Tetrahedron = ({ click }: { click: (e: boolean) => void }) => {
   const ref = useRef<Mesh | null>(null)
+  const [hovered, hover] = useState(false)
+  useCursor(hovered)
   useFrame((state, delta) => {
     if (!ref.current) return
     ref.current.rotation.x = ref.current.rotation.y += delta / 2
   })
   return (
-    <mesh ref={ref}>
-      <tetrahedronGeometry args={[2]} />
-      <meshStandardMaterial color='black' />
-    </mesh>
+    <group>
+      <mesh ref={ref} onPointerOver={() => hover(true)} onPointerOut={() => hover(false)} onClick={() => click(true)}>
+        <tetrahedronGeometry args={[2]} />
+        <meshStandardMaterial color='black' />
+      </mesh>
+    </group>
   )
 }
 
@@ -27,7 +32,7 @@ const AsciiRenderer = ({ renderIndex = 1, characters = ' .:-+*=%@#', ...options 
   const effect = useMemo(() => {
     const effect = new AsciiEffect(gl, characters, options)
     effect.domElement.style.position = 'absolute'
-    effect.domElement.style.top = '0px'
+    effect.domElement.style.top = '-10px'
     effect.domElement.style.left = '-40px'
     effect.domElement.style.color = 'white'
     effect.domElement.style.backgroundColor = 'black'
@@ -58,18 +63,28 @@ const AsciiRenderer = ({ renderIndex = 1, characters = ' .:-+*=%@#', ...options 
 }
 
 export default function R3FCanvas() {
+  const [clicked, click] = useState(false)
   return (
-    <Canvas
-      orthographic
-      gl={{ antialias: false }}
-      camera={{ position: [0, 0, 100], zoom: 70 }}
-      style={{ width: '100vw', height: '50vh' }}
-    >
-      <color attach='background' args={['black']} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-      <pointLight position={[-10, -10, -10]} />
-      <Tetrahedron />
-      <AsciiRenderer invert />
-    </Canvas>
+    <>
+      <Canvas
+        orthographic
+        gl={{ antialias: false }}
+        camera={{ position: [0, 0, 100], zoom: 50 }}
+        style={{ width: '100vw', height: '40vh', userSelect: 'none' }}
+      >
+        <color attach='background' args={['black']} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+        <pointLight position={[-10, -10, -10]} />
+        <Tetrahedron click={click} />
+        <AsciiRenderer invert />
+      </Canvas>
+      <Modal
+        visible={clicked}
+        onClose={() => click(false)}
+        title='We like Randomness'
+        description='You found the secret button!'
+        submitButtonName='Connect Wallet'
+      />
+    </>
   )
 }
