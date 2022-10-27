@@ -7,7 +7,6 @@ import {
   socialRoutes,
 } from "../elevateart-external-links";
 import Link from "../link";
-import Tabs from "../tabs";
 import LayoutContainer from "./layout-container";
 
 export interface Props {
@@ -92,13 +91,13 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
     </div>
   );
 
-  const bottomNav = pageNavigationRoutes && (
-    <Tabs initialValue={pageNavigationRoutes[0]?.name} hideDivider>
-      {pageNavigationRoutes?.map((route) => {
-        return <Tabs.Item label={route.name} value={route.name} />;
-      })}
-    </Tabs>
-  );
+  // const bottomNav = pageNavigationRoutes && (
+  //   <Tabs initialValue={pageNavigationRoutes[0]?.name} hideDivider>
+  //     {pageNavigationRoutes?.map((route) => {
+  //       return <Tabs.Item label={route.name} value={route.name} />;
+  //     })}
+  //   </Tabs>
+  // );
 
   return (
     <LayoutContainer
