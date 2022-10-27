@@ -2,6 +2,7 @@ import clsx from "clsx";
 
 export interface Props {
   isLoading?: boolean;
+  placeholder?: string;
   initialValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -9,6 +10,7 @@ export interface Props {
 }
 
 export const defaultProps: Props = {
+  placeholder: "Search",
   isLoading: false,
   initialValue: "",
 };
@@ -22,6 +24,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
   onFocus,
   onBlur,
   isLoading,
+  placeholder,
   ...props
 }: SearchProps & typeof defaultProps) => {
   return (
@@ -65,7 +68,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
           "invalid:border-error invalid:text-error",
           "focus:invalid:border-error focus:invalid:ring-error"
         )}
-        placeholder={isLoading ? "" : "Search"}
+        placeholder={isLoading ? "" : placeholder}
       />
     </div>
   );
