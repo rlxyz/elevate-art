@@ -1,4 +1,4 @@
-import withBundleAnalyzer from "@next/bundle-analyzer";
+import withBundleAnalyzer from '@next/bundle-analyzer'
 
 /**
  *
@@ -11,10 +11,10 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
  */
 const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
-    return withBundleAnalyzer(config);
+    return withBundleAnalyzer(config)
   }
-  return config;
-};
+  return config
+}
 
 export default defineNextConfig({
   reactStrictMode: true,
@@ -22,14 +22,19 @@ export default defineNextConfig({
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "*",
-        port: "",
+        protocol: 'https',
+        hostname: '*',
+        port: '',
+      },
+      {
+        protocol: 'ipfs',
+        hostname: '*',
+        port: '',
       },
     ],
   },
   experimental: {
     appDir: true,
-    transpilePackages: ["@elevateart/ui"],
+    transpilePackages: ['@elevateart/ui'],
   },
-});
+})

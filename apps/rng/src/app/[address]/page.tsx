@@ -9,20 +9,39 @@ export default async function Page({ params: { address } }: { params: { address:
     // @todo better error handling
     return <div>{address} not a valid address</div>
   }
-  const args = {
-    token: {
-      address,
-      tokenId: '314',
+
+  const response = await getZoraClient().tokens({
+    where: {
+      tokens: Array.from(Array(100).keys()).map((i) => ({
+        address,
+        tokenId: String(i),
+      })),
     },
-    includeFullDetails: false, // Optional, provides more data on the NFT such as all historical events
-  }
-  const response = await getZoraClient().token(args)
+    includeFullDetails: false,
+  })
+
   return (
-    <div className='h-screen flex flex-col items-center space-y-3 justify-center'>
-      <Card>
-        <Image width={500} height={500} alt={response.token?.token.name || ''} src={response.token?.token.image?.url || ''} />
-      </Card>
-      <IngestButton address={address} />
+    <div className='p-12'>
+      <div className='grid grid-cols-6 gap-6'>
+        {response.tokens.nodes.map((token) => (
+          <Card>
+            <div className='pb-2'>
+              <Image
+                width={500}
+                height={500}
+                alt={token?.token.name || ''}
+                src={token?.token.image?.url || ''}
+                className='rounded-primary'
+              />
+            </div>
+            <div className='flex flex-col'>
+              <span className='text-foreground'>{token.token.name}</span>
+              {/* <span className='text-foreground'>{token.token.name}</span> */}
+            </div>
+          </Card>
+        ))}
+        <IngestButton address={address} />
+      </div>
     </div>
   )
 }
