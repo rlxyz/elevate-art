@@ -9,7 +9,6 @@ export default async function Page({ params: { address } }: { params: { address:
     // @todo better error handling
     return <div>{address} not a valid address</div>
   }
-
   const args = {
     token: {
       address,
