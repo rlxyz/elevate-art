@@ -19,6 +19,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string(),
+  NEXT_PUBLIC_ALCHEMY_ID: z.string(),
+  NEXT_PUBLIC_API_URL: z.string(),
 })
 
 /**
@@ -29,4 +31,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_APP_NAME: 'elevate_art_rng.png',
+  NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 }

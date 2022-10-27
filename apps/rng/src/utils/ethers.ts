@@ -1,4 +1,8 @@
+import { ethers } from 'ethers'
 import { keccak256 } from 'js-sha3'
+import { env } from '../env/client.mjs'
+
+export const provider = new ethers.providers.AlchemyProvider('mainnet', env.NEXT_PUBLIC_ALCHEMY_ID)
 
 /**
  * Checks if the given string is an address
@@ -41,4 +45,46 @@ export const isChecksumAddress = (address: string) => {
     }
   }
   return true
+}
+
+export const getContract = ({ address }: { address: string }): ethers.Contract => {
+  const contract = new ethers.Contract(
+    address,
+    [
+      {
+        inputs: [
+          {
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+        ],
+        name: 'tokenURI',
+        outputs: [
+          {
+            internalType: 'string',
+            name: '',
+            type: 'string',
+          },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+      },
+      {
+        inputs: [],
+        name: 'totalSupply',
+        outputs: [
+          {
+            internalType: 'uint256',
+            name: '',
+            type: 'uint256',
+          },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ],
+    provider
+  )
+  return contract
 }
