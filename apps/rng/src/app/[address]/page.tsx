@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getZoraClient } from '../../server/zdk'
 import { isAddress } from '../../utils/ethers'
 import TokenPreviewCard from './token-preview-card'
@@ -24,10 +25,10 @@ export default async function Page({ params: { address } }: { params: { address:
       {response.tokens.nodes
         .sort((a, b) => Number(a.token?.tokenId) - Number(b.token?.tokenId))
         .map((token) => (
-          <>
+          <Link key={`${address}-${token.token.tokenId}`} href={`/${address}/${token.token.tokenId}`}>
             <TokenPreviewCard token={token?.token} />
             {/* <div></div> */}
-          </>
+          </Link>
         ))}
       {/* <IngestButton address={address} /> */}
     </div>

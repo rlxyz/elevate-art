@@ -7,9 +7,9 @@ import RenderIfVisible from 'react-render-if-visible'
 export default function TokenPreviewCard({ token }: { token: Token }) {
   return (
     <RenderIfVisible>
-      <Card>
+      <Card className='w-fit'>
         <div className='pb-2'>
-          <Image width={250} height={250} alt={token.name || ''} src={token.image?.url || ''} className='rounded-primary' />
+          <Image width={500} height={500} alt={token.name || ''} src={token.image?.url || ''} className='rounded-primary' />
         </div>
         <div className='flex flex-col'>
           <span className='text-foreground'>{token.name}</span>

@@ -1,5 +1,5 @@
 'use client'
-import { Link, Search } from '@elevateart/ui'
+import { Search } from '@elevateart/ui'
 import clsx from 'clsx'
 
 import { Combobox } from '@headlessui/react'
@@ -7,6 +7,7 @@ import { useState } from 'react'
 
 import { Transition } from '@headlessui/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Fragment } from 'react'
 
 type Contract = { address: string; name: string; imageUrl: string }
@@ -56,14 +57,12 @@ const Example = () => {
             ) : (
               filteredContracts.map((contract: Contract) => (
                 <Combobox.Option
-                  as={Link}
                   key={contract.address}
-                  href={`/${contract.address}`}
                   className='relative cursor-pointer select-none py-2 px-4 text-accents_2'
                   value={contract}
                 >
                   {({ selected, active }) => (
-                    <div className='flex items-center space-x-4'>
+                    <Link className='flex items-center space-x-4' href={`/${contract.address}`}>
                       <Image
                         src={contract.imageUrl}
                         alt={contract.name}
@@ -72,7 +71,7 @@ const Example = () => {
                         className='rounded-primary border border-accents_7'
                       />
                       <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>{contract.name}</span>
-                    </div>
+                    </Link>
                   )}
                 </Combobox.Option>
               ))

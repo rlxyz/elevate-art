@@ -11,12 +11,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className='h-screen w-screen bg-accents_8'>
         {children}
-        <footer className='bottom-0 text-accents_6 text-xs flex items-center justify-center w-full py-3'>
+        {/* <footer className='bottom-0 text-accents_6 text-xs flex items-center justify-center w-full py-3'>
           <div className='text-xs flex'>
             <span>currently&nbsp;on&nbsp;</span>
             <span className='font-extrabold'>zen mode</span>
           </div>
-        </footer>
+        </footer> */}
       </body>
     </html>
   )

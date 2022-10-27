@@ -1,4 +1,3 @@
-import { Card } from '@elevateart/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import MainSearch from '../main-search'
@@ -21,7 +20,7 @@ export default function AddressLayout({
         </div>
       </div>
       <div className='p-6 grid grid-cols-4 gap-6'>
-        <div className='space-y-6'>
+        {/* <div className='space-y-6'>
           <Card className='col-span-3 row-span-1 text-foreground text-xs flex flex-col space-y-1'>
             <label className='text-xs text-accents_6'>Address</label>
             <span className='text-accents_3'>{address}</span>
@@ -30,8 +29,8 @@ export default function AddressLayout({
             <label className='text-xs text-accents_6'>Address</label>
             <span className='text-accents_3'>{address}</span>
           </Card>
-        </div>
-        <div className='col-span-3'>{children}</div>
+        </div> */}
+        <div className='col-span-4'>{children}</div>
       </div>
     </div>
   )
