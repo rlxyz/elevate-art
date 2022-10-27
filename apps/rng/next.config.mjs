@@ -1,5 +1,4 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
-import withTM from "next-transpile-modules";
 
 /**
  *
@@ -17,42 +16,14 @@ const defineNextConfig = (config) => {
   return config;
 };
 
-export default withTM()(
-  defineNextConfig({
-    reactStrictMode: true,
-    swcMinify: true,
-    images: {
-      domains: ["res.cloudinary.com", "localhost", "cdn.feralfileassets.com"],
-    },
-    experimental: {
-      appDir: true,
-      transpilePackages: ["@elevateart/ui"],
-    },
-  })
-);
-
-// export default withTM([
-//   "@elevateart/ui",
-//   "@elevateart/eth-auth",
-//   "@elevateart/db",
-//   "@elevateart/api",
-//   "@elevateart/compiler",
-// ])(
-//   defineNextConfig({
-//     reactStrictMode: true,
-//     swcMinify: true,
-//     images: {
-//       domains: ["res.cloudinary.com", "localhost", "cdn.feralfileassets.com"],
-//     },
-//     experimental: {
-//       appDir: true,
-//     },
-//   })
-// );
-
-// /** @type {import('next').NextConfig} */
-// export default {
-//   experimental: {
-//     appDir: true,
-//   },
-// };
+export default defineNextConfig({
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ["res.cloudinary.com", "localhost"],
+  },
+  experimental: {
+    appDir: true,
+    transpilePackages: ["@elevateart/ui"],
+  },
+});
