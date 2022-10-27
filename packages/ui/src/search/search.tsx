@@ -7,12 +7,14 @@ export interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  focus?: boolean;
 }
 
 export const defaultProps: Props = {
   placeholder: "Search",
   isLoading: false,
   initialValue: "",
+  focus: true,
 };
 
 export type SearchProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
@@ -23,6 +25,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
   onChange,
   onFocus,
   onBlur,
+  focus,
   isLoading,
   placeholder,
   ...props
@@ -64,9 +67,11 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
             ? "bg-accents_7 bg-opacity-50 animate-pulse rounded-primary border-none"
             : "border border-border",
           "block text-xs w-full pl-8 rounded-primary py-2 bg-accents_8 text-foreground",
-          "focus:outline-none focus:ring-1 focus:border-success focus:ring-success",
+          focus
+            ? "focus:outline-none focus:ring-1 focus:border-success focus:ring-success"
+            : "focus:outline-none focus:ring-none",
           "invalid:border-error invalid:text-error",
-          "focus:invalid:border-error focus:invalid:ring-error"
+          focus && "focus:invalid:border-error focus:invalid:ring-error"
         )}
         placeholder={isLoading ? "" : placeholder}
       />
