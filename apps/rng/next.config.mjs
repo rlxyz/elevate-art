@@ -20,7 +20,13 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["res.cloudinary.com", "localhost"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*",
+        port: "",
+      },
+    ],
   },
   experimental: {
     appDir: true,
