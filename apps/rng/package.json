@@ -12,6 +12,7 @@
     "@elastic/elasticsearch": "^8.4.0",
     "@elevateart/ui": "*",
     "@zoralabs/zdk": "^2.2.0",
+    "js-sha3": "^0.8.0",
     "next": "13.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
