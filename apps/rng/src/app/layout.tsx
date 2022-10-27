@@ -1,5 +1,6 @@
+import { Link } from '@elevateart/ui'
 import '@elevateart/ui/globals.css'
-// import './globals.css'
+import './globals.css'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +12,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className='h-screen w-screen bg-background'>{children}</body>
       <footer className='absolute fixed bottom-0 text-accents_6 text-xs flex items-center justify-center w-full py-3'>
-        inspired by manifold & zora
+        <div className='text-xs flex'>
+          <span>inspired&nbsp;by&nbsp;</span>
+          <Link underline href='https://manifold.xyz/' className='w-full'>
+            <span className='font-extrabold line-through'>manifold</span>
+          </Link>
+          &nbsp;and&nbsp;
+          <Link underline href='https://zora.co' className='w-full'>
+            <span className='font-extrabold line-through'>zora</span>
+          </Link>
+        </div>
       </footer>
     </html>
   )

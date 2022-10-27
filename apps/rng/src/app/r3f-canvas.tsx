@@ -14,7 +14,7 @@ const Tetrahedron = () => {
   return (
     <mesh ref={ref}>
       <tetrahedronGeometry args={[2]} />
-      <meshStandardMaterial color='orange' />
+      <meshStandardMaterial color='black' />
     </mesh>
   )
 }
@@ -28,7 +28,7 @@ const AsciiRenderer = ({ renderIndex = 1, characters = ' .:-+*=%@#', ...options 
     const effect = new AsciiEffect(gl, characters, options)
     effect.domElement.style.position = 'absolute'
     effect.domElement.style.top = '0px'
-    effect.domElement.style.left = '0px'
+    effect.domElement.style.left = '-40px'
     effect.domElement.style.color = 'white'
     effect.domElement.style.backgroundColor = 'black'
     effect.domElement.style.pointerEvents = 'none'
