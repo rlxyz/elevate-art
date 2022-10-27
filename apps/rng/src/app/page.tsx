@@ -8,14 +8,14 @@ export default async function Home() {
     <div className='w-full h-full border-b border-accents_7'>
       <R3FCanvas />
       <div className='absolute top-1/2 -translate-y-1/2 left-4'>
-        <div className='border border-border bg-background p-1'>
+        <div className='border border-border bg-background p-1 hover:border-success rounded-tertiary'>
           <Link href='https://elevate.art/'>
             <Image src='/images/logo-white.png' width={50} height={50} alt='logo-left' />
           </Link>
         </div>
       </div>
       <div className='absolute top-1/2 -translate-y-1/2 right-4'>
-        <div className='border border-border bg-background p-1'>
+        <div className='border border-border bg-background p-1 hover:border-success rounded-tertiary'>
           <Link href='https://elevate.art/'>
             <Image src='/images/logo-white.png' width={50} height={50} alt='logo-right' />
           </Link>
