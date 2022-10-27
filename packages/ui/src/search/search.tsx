@@ -63,7 +63,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
           isLoading
             ? "bg-accents_7 bg-opacity-50 animate-pulse rounded-primary border-none"
             : "border border-border",
-          "block text-xs w-full pl-8 rounded-primary py-2",
+          "block text-xs w-full pl-8 rounded-primary py-2 bg-accents_8 text-foreground",
           "focus:outline-none focus:ring-1 focus:border-success focus:ring-success",
           "invalid:border-error invalid:text-error",
           "focus:invalid:border-error focus:invalid:ring-error"

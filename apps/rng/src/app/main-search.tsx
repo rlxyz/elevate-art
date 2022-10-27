@@ -1,6 +1,6 @@
-"use client";
-import { Search } from "@elevateart/ui";
+'use client'
+import { Search } from '@elevateart/ui'
 
 export default function Home() {
-  return <Search className="w-[30rem]" />;
+  return <Search className='w-full' placeholder='Search the metaverse' />
 }
