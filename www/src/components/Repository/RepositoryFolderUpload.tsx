@@ -6,15 +6,14 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { Repository } from '@prisma/client'
 import { formatBytes } from '@utils/format'
-import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import { useMutateCreateNewRepository } from '../../hooks/mutations/useMutateCreateNewRepository'
 
-export const FolderUpload = () => {
+export const FolderUpload = ({ children }: { children?: ReactNode }) => {
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: {
       name: string
@@ -52,10 +51,6 @@ export const FolderUpload = () => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log({ uploadedFiles })
-  }, [uploadedFiles])
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
@@ -68,22 +63,9 @@ export const FolderUpload = () => {
   const isLoading = !organisation
 
   return (
-    <div className='min-h-[calc(100vh-7rem)]'>
-      {Object.entries(uploadedFiles).length === 0 && (
-        <div className='h-[40vh] flex items-center'>
-          <div className='space-y-6'>
-            <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>
-              <span className={clsx(isLoading && 'invisible', 'text-5xl font-bold')}>Lets build something new.</span>
-            </div>
-            <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>
-              <p className={clsx(isLoading && 'invisible', 'text-md')}>
-                To create a new Project, set the name and add layers, or get started with one of our templates.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className='absolute left-0 w-full border-t border-mediumGrey bg-white p-12 space-y-12'>
+    <div>
+      {Object.entries(uploadedFiles).length === 0 && <>{children}</>}
+      <div className='left-0 w-full border-t border-mediumGrey bg-white p-12 space-y-12'>
         <div className='space-y-6 w-full h-full'>
           {organisation ? (
             <>
@@ -181,7 +163,7 @@ export const FolderUpload = () => {
                                         <div key={`${item}-${index}`} className='flex flex-col space-y-1'>
                                           <div className='relative border border-mediumGrey rounded-[5px]'>
                                             <div className='pb-[100%]' />
-                                            <Image layout='fill' src={item.imageUrl} className='rounded-[5px]' />
+                                            <img width={50} height={50} src={item.imageUrl} className='rounded-[5px]' />
                                             {item.uploaded && (
                                               <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
                                             )}

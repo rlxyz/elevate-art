@@ -1,8 +1,8 @@
 import Button from '@components/Layout/Button'
-import FolderUpload from '@components/Repository/RepositoryFolderUpload'
 import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Fragment } from 'react'
+import FolderUpload from './RepositoryFolderUpload'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { current: layer } = useQueryRepositoryLayer()
@@ -35,6 +35,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
               >
                 <Dialog.Panel className='relative bg-white rounded-[5px] border border-lightGray text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full p-8 space-y-6 divide-y divide-lightGray'>
                   <div className='space-y-4'>
+                    {/* <FolderUpload> */}
                     <Dialog.Title as='h3' className='text-xl leading-6 font-semibold'>
                       Upload to <span className='text-blueHighlight'>{layer.name}</span> layer
                     </Dialog.Title>
@@ -42,6 +43,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                       <p className='text-sm'>You can upload multiple traits at a time</p>
                     </div>
                     <FolderUpload />
+                    {/* </FolderUpload> */}
                     <div className='flex justify-between'>
                       <div className='ml-[auto]'>
                         <Button disabled>
