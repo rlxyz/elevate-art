@@ -4,142 +4,16 @@ import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/reac
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
-import { Repository, TraitElement } from '@prisma/client'
+import { Repository } from '@prisma/client'
 import { formatBytes } from '@utils/format'
-import { trpc } from '@utils/trpc'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import produce from 'immer'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
-import {
-  getRepositoryLayerNames,
-  getRepositoryLayerObjectUrls,
-  uploadCollectionLayerImageCloudinary,
-  validateFiles,
-} from '../../utils/cloudinary'
+import { useMutateCreateNewRepository } from '../../hooks/mutations/useMutateCreateNewRepository'
 
-const useMutateAddTraits = ({
-  setUploadedFiles,
-  setUploadedFilesV2,
-}: {
-  setUploadedFiles: Dispatch<
-    SetStateAction<{
-      [key: string]: {
-        name: string
-        imageUrl: string
-        size: number
-        uploaded: boolean
-      }[]
-    }>
-  >
-  setUploadedFilesV2: Dispatch<
-    SetStateAction<
-      | (TraitElement & {
-          imageUrl: string
-          size: number
-          state: 'idle' | 'uploaded' | 'error'
-        })[]
-      | undefined
-    >
-  >
-}) => {
-  const mutate = ({ files }: { files: FileWithPath[] }) => {
-    // step 1: validate files
-    if (!validateFiles(files, 1)) {
-      alert("Something wrong with the format you've uploaded")
-      return
-    }
-
-    // step 4: set repository data
-    const layers = getRepositoryLayerObjectUrls(files)
-    setUploadedFiles(layers)
-  }
-  return { mutate }
-}
-
-const useMutateCreateNewRepositoryAndLayers = ({
-  setRepository,
-  setUploadedFiles,
-}: {
-  setRepository: Dispatch<SetStateAction<null | Repository>>
-  setUploadedFiles: Dispatch<
-    SetStateAction<{
-      [key: string]: {
-        name: string
-        imageUrl: string
-        size: number
-        uploaded: boolean
-      }[]
-    }>
-  >
-}) => {
-  const ctx = trpc.useContext()
-  const { mutate: createRepository } = trpc.useMutation('repository.create')
-  const { notifyError, notifySuccess } = useNotification()
-  const mutate = ({ files, organisationId }: { files: FileWithPath[]; organisationId: string }) => {
-    // step 1: validate files
-    if (!validateFiles(files, 3)) {
-      notifyError('There seems to be something wrong with the upload format.')
-      return
-    }
-
-    notifySuccess('Upload format is correct. We are creating the project for you.')
-
-    const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
-    const layers = getRepositoryLayerObjectUrls(files)
-    setUploadedFiles(layers)
-    createRepository(
-      { organisationId: organisationId, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },
-      {
-        onSuccess: (data, variables) => {
-          setRepository(data)
-          notifySuccess('We have created the project for you. Starting upload...')
-          ctx.setQueryData(['repository.getRepositoryByName', { name: data.name }], data)
-          files.map((file: FileWithPath) => {
-            const reader = new FileReader()
-            const pathArray = String(file.path).split('/')
-            const layerName = pathArray[2]
-            const traitName = pathArray[3]?.replace('.png', '')
-            if (!traitName || !layerName) return
-            // reader.onabort = () => console.error('file reading was aborted')
-            // reader.onerror = () => console.error('file reading has failed')
-            reader.onload = async () => {
-              const traitElement = data.layers.find((x) => x.name === layerName)?.traitElements.find((x) => x.name === traitName)
-              if (!traitElement) return
-              uploadCollectionLayerImageCloudinary({
-                file,
-                traitElement,
-                repositoryId: data.id,
-              }).then(() => {
-                setUploadedFiles((state) =>
-                  produce(state, (draft) => {
-                    const trait = draft[layerName]?.find((x) => x.name === traitName)
-                    if (!trait) return
-                    trait.uploaded = true
-                  })
-                )
-              })
-            }
-            reader.readAsArrayBuffer(file)
-          })
-        },
-        onError: (error) => {
-          notifyError('Something went wrong. Please refresh and try again.')
-        },
-      }
-    )
-  }
-
-  return { mutate }
-}
-
-// Depth
-// - if 1, then image images only
-// - if 2, then layer folder
-// - if 3, then a root folder with layer folder and then images
 export const FolderUpload = () => {
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: {
@@ -152,7 +26,7 @@ export const FolderUpload = () => {
   const router = useRouter()
   const { current: organisation } = useQueryOrganisation()
   const [repository, setRepository] = useState<null | Repository>(null)
-  const { mutate: createNewRepositoryAndLayers } = useMutateCreateNewRepositoryAndLayers({
+  const { mutate: createNewRepositoryAndLayers } = useMutateCreateNewRepository({
     setUploadedFiles,
     setRepository,
   })

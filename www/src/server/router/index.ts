@@ -15,7 +15,7 @@ export const appRouter = createRouter()
   .merge('repository.', repositoryRouter)
   .merge('collection.', collectionRouter)
   .merge('layer.', layerElementRouter)
-  .merge('trait.', traitElementRouter)
+  .merge('traits.', traitElementRouter)
   .merge('rules.', rulesRouter)
 
 // export type definition of API

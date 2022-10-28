@@ -1,0 +1,88 @@
+import { useNotification } from '@hooks/utils/useNotification'
+import { Repository } from '@prisma/client'
+import { trpc } from '@utils/trpc'
+import produce from 'immer'
+import { Dispatch, SetStateAction } from 'react'
+import { FileWithPath } from 'react-dropzone'
+import {
+  getRepositoryLayerNames,
+  getRepositoryLayerObjectUrls,
+  uploadCollectionLayerImageCloudinary,
+  validateFiles,
+} from '../../utils/cloudinary'
+
+export const useMutateCreateNewRepository = ({
+  setRepository,
+  setUploadedFiles,
+}: {
+  setRepository: Dispatch<SetStateAction<null | Repository>>
+  setUploadedFiles: Dispatch<
+    SetStateAction<{
+      [key: string]: {
+        name: string
+        imageUrl: string
+        size: number
+        uploaded: boolean
+      }[]
+    }>
+  >
+}) => {
+  const ctx = trpc.useContext()
+  const { mutate: createRepository } = trpc.useMutation('repository.create')
+  const { notifyError, notifySuccess } = useNotification()
+  const mutate = ({ files, organisationId }: { files: FileWithPath[]; organisationId: string }) => {
+    // step 1: validate files
+    if (!validateFiles(files, 3)) {
+      notifyError('There seems to be something wrong with the upload format.')
+      return
+    }
+
+    notifySuccess('Upload format is correct. We are creating the project for you.')
+
+    const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
+    const layers = getRepositoryLayerObjectUrls(files)
+    setUploadedFiles(layers)
+    createRepository(
+      { organisationId: organisationId, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },
+      {
+        onSuccess: (data, variables) => {
+          setRepository(data)
+          notifySuccess('We have created the project for you. Starting upload...')
+          ctx.setQueryData(['repository.getRepositoryByName', { name: data.name }], data)
+          files.map((file: FileWithPath) => {
+            const reader = new FileReader()
+            const pathArray = String(file.path).split('/')
+            const layerName = pathArray[2]
+            const traitName = pathArray[3]?.replace('.png', '')
+            if (!traitName || !layerName) return
+            // reader.onabort = () => console.error('file reading was aborted')
+            // reader.onerror = () => console.error('file reading has failed')
+            reader.onload = async () => {
+              const traitElement = data.layers.find((x) => x.name === layerName)?.traitElements.find((x) => x.name === traitName)
+              if (!traitElement) return
+              uploadCollectionLayerImageCloudinary({
+                file,
+                traitElement,
+                repositoryId: data.id,
+              }).then(() => {
+                setUploadedFiles((state) =>
+                  produce(state, (draft) => {
+                    const trait = draft[layerName]?.find((x) => x.name === traitName)
+                    if (!trait) return
+                    trait.uploaded = true
+                  })
+                )
+              })
+            }
+            reader.readAsArrayBuffer(file)
+          })
+        },
+        onError: (error) => {
+          notifyError('Something went wrong. Please refresh and try again.')
+        },
+      }
+    )
+  }
+
+  return { mutate }
+}

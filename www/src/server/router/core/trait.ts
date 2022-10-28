@@ -98,3 +98,33 @@ export const traitElementRouter = createRouter()
       })
     },
   })
+  .mutation('create', {
+    input: z.object({
+      layerElementId: z.string(),
+      name: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const { name, layerElementId } = input
+      return await ctx.prisma.traitElement.create({
+        data: {
+          layerElementId: layerElementId,
+          name: name,
+          weight: 0,
+        },
+        include: {
+          rulesPrimary: {
+            include: {
+              primaryTraitElement: true,
+              secondaryTraitElement: true,
+            },
+          },
+          rulesSecondary: {
+            include: {
+              primaryTraitElement: true,
+              secondaryTraitElement: true,
+            },
+          },
+        },
+      })
+    },
+  })

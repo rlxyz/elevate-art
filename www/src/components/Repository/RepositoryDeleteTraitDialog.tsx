@@ -1,6 +1,6 @@
 import Loader from '@components/Layout/Loader'
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateRepositoryDeleteTrait } from '@hooks/mutations/useMutateRepositoryTraitDelete'
+import { useMutateDeleteTrait } from '@hooks/mutations/useMutateDeleteTrait'
 import { TraitElement } from '@prisma/client'
 import { Fragment } from 'react'
 
@@ -15,7 +15,7 @@ export const RepositoryDeleteTraitDialog = ({
   onClose: () => void
   trait: TraitElement
 }) => {
-  const { mutate, isLoading } = useMutateRepositoryDeleteTrait()
+  const { mutate, isLoading } = useMutateDeleteTrait()
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
