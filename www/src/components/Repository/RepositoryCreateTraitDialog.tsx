@@ -3,7 +3,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useMutateDeleteTrait } from '@hooks/mutations/useMutateDeleteTrait'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Fragment } from 'react'
-import FolderUpload from './RepositoryFolderUpload'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { current: layer } = useQueryRepositoryLayer()
@@ -46,7 +45,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                   <Dialog.Description>
                     <div className='relative bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>Add new traits. This will be applied to all collections in the project.</span>
-                      <FolderUpload />
+                      {/* <Uplo}}ad /> */}
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
                       <button onClick={onClose} className='text-xs text-darkGrey hover:bg-lightGray py-6'>

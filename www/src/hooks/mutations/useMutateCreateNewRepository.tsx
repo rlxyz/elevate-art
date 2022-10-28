@@ -1,3 +1,4 @@
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useNotification } from '@hooks/utils/useNotification'
 import { Repository } from '@prisma/client'
 import { trpc } from '@utils/trpc'
@@ -13,24 +14,38 @@ import {
 
 export const useMutateCreateNewRepository = ({
   setRepository,
-  setUploadedFiles,
 }: {
   setRepository: Dispatch<SetStateAction<null | Repository>>
-  setUploadedFiles: Dispatch<
-    SetStateAction<{
-      [key: string]: {
-        name: string
-        imageUrl: string
-        size: number
-        uploaded: boolean
-      }[]
-    }>
-  >
 }) => {
   const ctx = trpc.useContext()
+  const { current: organisation, isLoading } = useQueryOrganisation()
   const { mutate: createRepository } = trpc.useMutation('repository.create')
   const { notifyError, notifySuccess } = useNotification()
-  const mutate = ({ files, organisationId }: { files: FileWithPath[]; organisationId: string }) => {
+
+  const mutate = ({
+    files,
+    setUploadedFiles,
+    setUploadState,
+  }: {
+    files: FileWithPath[]
+    setUploadedFiles: Dispatch<
+      SetStateAction<{
+        [key: string]: {
+          name: string
+          imageUrl: string
+          size: number
+          uploaded: boolean
+        }[]
+      }>
+    >
+    setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
+  }) => {
+    // step 0: validate organisation
+    if (isLoading || !organisation) {
+      notifyError('We couldnt find your team. Please refresh the page to try again.')
+      return
+    }
+
     // step 1: validate files
     if (!validateFiles(files, 3)) {
       notifyError('There seems to be something wrong with the upload format.')
@@ -43,7 +58,7 @@ export const useMutateCreateNewRepository = ({
     const layers = getRepositoryLayerObjectUrls(files)
     setUploadedFiles(layers)
     createRepository(
-      { organisationId: organisationId, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },
+      { organisationId: organisation.id, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },
       {
         onSuccess: (data, variables) => {
           setRepository(data)
@@ -76,6 +91,9 @@ export const useMutateCreateNewRepository = ({
             }
             reader.readAsArrayBuffer(file)
           })
+        },
+        onSettled: () => {
+          setUploadState('done')
         },
         onError: (error) => {
           notifyError('Something went wrong. Please refresh and try again.')
