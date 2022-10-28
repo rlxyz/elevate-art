@@ -46,6 +46,8 @@ export const useMutateCreateTrait = () => {
       return
     }
 
+    console.log({ a: 'names', names, b: layer.name })
+
     createManyTrait(
       {
         layerElementId: layer.id,
@@ -75,8 +77,6 @@ export const useMutateCreateTrait = () => {
             const reader = new FileReader()
             const traitName = file.path?.replace('.png', '') || ''
             if (!traitName) return
-            // reader.onabort = () => console.error('file reading was aborted')
-            // reader.onerror = () => console.error('file reading has failed')
             reader.onload = async () => {
               const traitElement = data.find((x) => x.name === traitName)
               if (!traitElement) return
@@ -85,7 +85,6 @@ export const useMutateCreateTrait = () => {
                 traitElement,
                 repositoryId,
               }).then(() => {
-                console.log('uploaded', traitName)
                 setUploadedFiles((state) =>
                   produce(state, (draft) => {
                     const trait = draft[layer.name]?.find((x) => x.name === traitName)
