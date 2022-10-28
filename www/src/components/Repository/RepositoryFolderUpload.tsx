@@ -65,7 +65,7 @@ export const FolderUpload = ({ children }: { children?: ReactNode }) => {
   return (
     <div>
       {Object.entries(uploadedFiles).length === 0 && <>{children}</>}
-      <div className='left-0 w-full border-t border-mediumGrey bg-white p-12 space-y-12'>
+      <div className='w-full border border-mediumGrey bg-inherit p-12 space-y-12'>
         <div className='space-y-6 w-full h-full'>
           {organisation ? (
             <>

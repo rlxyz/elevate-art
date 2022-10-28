@@ -69,18 +69,7 @@ export const RepositoryDeleteTraitDialog = ({
                         disabled={isLoading}
                         onClick={(e) => {
                           e.preventDefault()
-                          mutate(
-                            { id: trait.id },
-                            {
-                              onSuccess: () => {
-                                onSuccess && onSuccess()
-                                onClose()
-                              },
-                              onError: () => {
-                                onClose()
-                              },
-                            }
-                          )
+                          mutate({ id: trait.id }, { onSettled: onClose })
                         }}
                         className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
