@@ -7,9 +7,8 @@ import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 import {
   getRepositoryLayerNames,
-  getRepositoryLayerObjectUrls,
+  getRepositoryUploadLayerObjectUrls,
   uploadCollectionLayerImageCloudinary,
-  validateFiles,
 } from '../../utils/cloudinary'
 
 export const useMutateCreateNewRepository = ({
@@ -47,18 +46,11 @@ export const useMutateCreateNewRepository = ({
       return
     }
 
-    // step 1: validate files
-    if (!validateFiles(files, 3)) {
-      setUploadState('error')
-      notifyError('There seems to be something wrong with the upload format.')
-      return
-    }
-
     setUploadState('uploading')
     notifySuccess('Upload format is correct. We are creating the project for you.')
 
     const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
-    const layers = getRepositoryLayerObjectUrls(files)
+    const layers = getRepositoryUploadLayerObjectUrls(files)
     setUploadedFiles(layers)
     createRepository(
       { organisationId: organisation.id, name: repositoryName, layerElements: getRepositoryLayerNames(layers) },

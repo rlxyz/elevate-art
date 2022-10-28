@@ -98,18 +98,22 @@ export const traitElementRouter = createRouter()
       })
     },
   })
-  .mutation('create', {
+  .mutation('createMany', {
     input: z.object({
       layerElementId: z.string(),
-      name: z.string(),
+      traitElements: z.array(z.string()),
     }),
     async resolve({ ctx, input }) {
-      const { name, layerElementId } = input
-      return await ctx.prisma.traitElement.create({
-        data: {
-          layerElementId: layerElementId,
-          name: name,
-          weight: 0,
+      await ctx.prisma.traitElement.createMany({
+        data: input.traitElements.map((name) => ({
+          layerElementId: input.layerElementId,
+          name,
+        })),
+      })
+
+      return ctx.prisma.traitElement.findMany({
+        where: {
+          layerElementId: input.layerElementId,
         },
         include: {
           rulesPrimary: {

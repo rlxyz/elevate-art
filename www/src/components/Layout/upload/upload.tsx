@@ -84,6 +84,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
     const folderDepth = files[0]?.path?.split('/').length
 
     if (depth !== folderDepth) {
+      setInternalUploadState('error')
       notifyError('There seems to be something wrong with the folder format.')
     }
 

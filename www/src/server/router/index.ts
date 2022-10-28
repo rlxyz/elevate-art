@@ -7,7 +7,7 @@ import { layerElementRouter } from './core/layer'
 import { organisationRouter } from './core/organisation'
 import { repositoryRouter } from './core/repository'
 import { rulesRouter } from './core/rules'
-import { traitElementRouter } from './core/trait'
+import { traitElementRouter } from './core/traits'
 
 export const appRouter = createRouter()
   .transformer(superjson)

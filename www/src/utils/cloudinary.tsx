@@ -47,13 +47,34 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
     ).length === 0
   )
 }
-export const getRepositoryLayerObjectUrls = (
+export const getRepositoryUploadLayerObjectUrls = (
   files: FileWithPath[]
 ): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
   return files.reduce((acc: any, file: FileWithPath) => {
     const pathArray = file.path?.split('/') || []
     const layerName: string = pathArray[2] || ''
     const traitName: string = pathArray[3]?.replace('.png', '') || ''
+    acc[layerName] = [
+      ...(acc[layerName] || []),
+      {
+        name: traitName,
+        imageUrl: URL.createObjectURL(file),
+        path: file.path,
+        size: file.size,
+        uploaded: false,
+      },
+    ]
+    return acc
+  }, {})
+}
+
+// @todo combine with function getRepositoryUploadLayerObjectUrls
+export const getTraitUploadObjectUrls = (
+  layerName: string,
+  files: FileWithPath[]
+): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
+  return files.reduce((acc: any, file: FileWithPath) => {
+    const traitName: string = file.path?.replace('.png', '') || ''
     acc[layerName] = [
       ...(acc[layerName] || []),
       {
