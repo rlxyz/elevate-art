@@ -76,10 +76,6 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   const { notifyError } = useNotification()
   const [uploadState, setInternalUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
 
-  const handleUploadState = (state: 'uploading' | 'done') => {
-    setInternalUploadState(state)
-  }
-
   useEffect(() => {
     setUploadState && setUploadState(uploadState)
   }, [uploadState])
@@ -91,7 +87,6 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       notifyError('There seems to be something wrong with the folder format.')
     }
     // call the callback function with the files
-    handleUploadState('uploading')
     onDropCallback && onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
   }, [])
 

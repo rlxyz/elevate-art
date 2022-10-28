@@ -42,16 +42,19 @@ export const useMutateCreateNewRepository = ({
   }) => {
     // step 0: validate organisation
     if (isLoading || !organisation) {
+      setUploadState('error')
       notifyError('We couldnt find your team. Please refresh the page to try again.')
       return
     }
 
     // step 1: validate files
     if (!validateFiles(files, 3)) {
+      setUploadState('error')
       notifyError('There seems to be something wrong with the upload format.')
       return
     }
 
+    setUploadState('uploading')
     notifySuccess('Upload format is correct. We are creating the project for you.')
 
     const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
@@ -97,6 +100,7 @@ export const useMutateCreateNewRepository = ({
         },
         onError: (error) => {
           notifyError('Something went wrong. Please refresh and try again.')
+          setUploadState('error')
         },
       }
     )
