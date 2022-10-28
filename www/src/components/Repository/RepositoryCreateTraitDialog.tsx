@@ -1,12 +1,14 @@
 import Loader from '@components/Layout/Loader'
+import Upload from '@components/Layout/upload'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateDeleteTrait } from '@hooks/mutations/useMutateDeleteTrait'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { current: layer } = useQueryRepositoryLayer()
   const { mutate, isLoading } = useMutateDeleteTrait()
+  const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
   if (!layer) return null
   return (
     <>
@@ -45,21 +47,20 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                   <Dialog.Description>
                     <div className='relative bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>Add new traits. This will be applied to all collections in the project.</span>
-                      {/* <Uplo}}ad /> */}
+                      <Upload className='h-[30vh]' depth={1} />
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
                       <button onClick={onClose} className='text-xs text-darkGrey hover:bg-lightGray py-6'>
                         Cancel
                       </button>
                       <button
-                        disabled={isLoading}
+                        disabled={uploadState !== 'done'}
                         onClick={(e) => {
                           e.preventDefault()
-                          // mutate({ id: trait.id }, { onSettled: onClose })
                         }}
-                        className='text-xs text-blueHighlight hover:bg-lightGray py-6'
+                        className='text-xs text-blueHighlight hover:bg-lightGray py-6 disabled:cursor-not-allowed disabled:text-darkGrey'
                       >
-                        {isLoading ? <Loader /> : 'Confirm'}
+                        {isLoading ? <Loader /> : 'Continue'}
                       </button>
                     </div>
                   </Dialog.Description>

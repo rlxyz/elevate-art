@@ -86,7 +86,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
     if (depth !== folderDepth) {
       notifyError('There seems to be something wrong with the folder format.')
     }
-    // call the callback function with the files
+
     onDropCallback && onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
   }, [])
 
