@@ -41,13 +41,11 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                     as='h3'
                     className='p-8 border-b border-mediumGrey bg-white text-black text-xl justify-center flex leading-6 font-semibold'
                   >
-                    Delete Trait
+                    Add Trait
                   </Dialog.Title>
                   <Dialog.Description>
-                    <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
-                      <div>
-                        <p className='text-sm'>You can upload multiple traits at a time</p>
-                      </div>
+                    <div className='relative bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
+                      <span className='text-sm'>Add new traits. This will be applied to all collections in the project.</span>
                       <FolderUpload />
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>

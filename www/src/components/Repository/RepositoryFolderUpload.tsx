@@ -6,6 +6,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { Repository } from '@prisma/client'
 import { formatBytes } from '@utils/format'
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -13,7 +14,7 @@ import { ReactNode, useCallback, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import { useMutateCreateNewRepository } from '../../hooks/mutations/useMutateCreateNewRepository'
 
-export const FolderUpload = ({ children }: { children?: ReactNode }) => {
+export const FolderUpload = ({ children, className }: { children?: ReactNode; className?: string }) => {
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: {
       name: string
@@ -60,12 +61,10 @@ export const FolderUpload = ({ children }: { children?: ReactNode }) => {
     noDrag: false,
   })
 
-  const isLoading = !organisation
-
   return (
     <div>
       {Object.entries(uploadedFiles).length === 0 && <>{children}</>}
-      <div className='w-full border border-mediumGrey bg-inherit p-12 space-y-12'>
+      <div className={clsx(className, 'w-full bg-inherit space-y-12')}>
         <div className='space-y-6 w-full h-full'>
           {organisation ? (
             <>

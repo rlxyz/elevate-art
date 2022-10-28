@@ -51,8 +51,7 @@ export const RepositoryDeleteTraitDialog = ({
                   <Dialog.Description>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>
-                        Delete an existing rule from the repository. This rule will be applied to all collections in the
-                        repository.
+                        Delete an existing trait. This will be applied to all collections in the project.
                       </span>
                       <div>
                         <div className='space-y-1'>

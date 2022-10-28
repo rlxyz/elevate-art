@@ -35,8 +35,8 @@ const Page: NextPage = () => {
         />
         <Layout.Body>
           <div className='left-0 absolute min-h-[calc(100vh-7rem)] w-full'>
-            <FolderUpload>
-              <div className='px-48 h-[40vh] flex items-center'>
+            <FolderUpload className='p-12'>
+              <div className='px-48 h-[40vh] flex items-center border-b border-mediumGrey'>
                 <div className='space-y-6'>
                   <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>
                     <span className={clsx(isLoading && 'invisible', 'text-5xl font-bold')}>Lets build something new.</span>
