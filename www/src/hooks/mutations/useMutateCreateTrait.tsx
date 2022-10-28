@@ -37,6 +37,7 @@ export const useMutateCreateTrait = () => {
       notifyError('We couldnt find the layer. Please refresh the page to try again.')
       return
     }
+
     const traits = getTraitUploadObjectUrls(layer.name, files)
     setUploadedFiles(traits)
     const names = traits[layer.name]?.map((x) => x.name)
@@ -45,13 +46,12 @@ export const useMutateCreateTrait = () => {
       notifyError('We couldnt find the layer. Please refresh the page to try again.')
       return
     }
-
-    console.log({ a: 'names', names, b: layer.name })
+    const allExistingTraits = layer.traitElements.map((x) => x.name)
 
     createManyTrait(
       {
         layerElementId: layer.id,
-        traitElements: names,
+        traitElements: names.filter((x) => !allExistingTraits.includes(x)),
       },
       {
         onSuccess: async (data, variables) => {
