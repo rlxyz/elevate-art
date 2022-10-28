@@ -2,15 +2,15 @@ import Button from '@components/Layout/Button'
 import FolderUpload from '@components/Repository/RepositoryFolderUpload'
 import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Fragment } from 'react'
 
-const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
+const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { current: layer } = useQueryRepositoryLayer()
   if (!layer) return null
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
+        <Dialog as='div' className='relative z-10' onClose={() => onClose()}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'

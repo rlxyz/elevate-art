@@ -8,9 +8,7 @@ export const RepositoryDeleteTraitDialog = ({
   isOpen,
   onClose,
   trait,
-  onSuccess,
 }: {
-  onSuccess: () => void
   isOpen: boolean
   onClose: () => void
   trait: TraitElement

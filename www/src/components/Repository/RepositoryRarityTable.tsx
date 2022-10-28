@@ -3,7 +3,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { Table } from '../Layout/core/Table'
 
 import { Popover, Transition } from '@headlessui/react'
-import { CheckCircleIcon, InformationCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
@@ -18,6 +18,7 @@ import {
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
 import { useForm } from 'react-hook-form'
+import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
 import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
 
 type RarityTableType = {
@@ -90,6 +91,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false)
   const [isDeleteTrait, setIsDeleteTrait] = useState<TraitElement | null>(null)
   const { register, handleSubmit, reset, watch, getValues, setValue, control } = useForm<{
     traitElements: TraitElement[]
@@ -276,6 +278,14 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                   <div className='overflow-hidden rounded-[5px] bg-white shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
                       {
+                        name: 'Add',
+                        icon: <PlusCircleIcon className='w-4 h-4 text-blueHighlight' />,
+                        onClick: () => {
+                          setIsCreateDialogOpen(true)
+                        },
+                        disabled: false,
+                      },
+                      {
                         name: 'Save',
                         icon: <CheckCircleIcon className='w-4 h-4 text-greenDot' />,
                         onClick: () => {
@@ -283,6 +293,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                             console.log(values)
                           })
                         },
+                        disabled: !hasFormChange,
                       },
                       {
                         name: 'Reset',
@@ -291,10 +302,11 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                           reset()
                           setHasFormChange(false)
                         },
+                        disabled: !hasFormChange,
                       },
-                    ].map(({ name, icon, onClick }) => (
+                    ].map(({ disabled, name, icon, onClick }) => (
                       <button
-                        disabled={!hasFormChange}
+                        disabled={disabled}
                         className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
                         onClick={(e) => {
                           e.preventDefault()
@@ -443,10 +455,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
           isOpen={isDeleteDialogOpen}
           trait={isDeleteTrait}
           onClose={() => setIsDeleteDialogOpen(false)}
-          onSuccess={() => {
-            console.log('test')
-          }}
         />
+      )}
+      {isCreateDialogOpen && (
+        <RepositoryCreateTraitDialog isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
       )}
     </form>
   )
