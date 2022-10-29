@@ -12,12 +12,12 @@ export const useMutateAcceptInvitation = () => {
       if (!session?.user?.id) return
       const userId = session.user.id
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['organisation.getManyOrganisationByUserId', { id: userId }])
-      await ctx.cancelQuery(['organisation.getManyPendingOrganisationByUserId', { id: userId }])
+      await ctx.cancelQuery(['organisation.getManyOrganisationByUserId'])
+      await ctx.cancelQuery(['organisation.getManyPendingOrganisationByUserId'])
 
       // Snapshot the previous value
-      const backupOrganisations = ctx.getQueryData(['organisation.getManyOrganisationByUserId', { id: userId }])
-      const backupPending = ctx.getQueryData(['organisation.getManyPendingOrganisationByUserId', { id: userId }])
+      const backupOrganisations = ctx.getQueryData(['organisation.getManyOrganisationByUserId'])
+      const backupPending = ctx.getQueryData(['organisation.getManyPendingOrganisationByUserId'])
       if (!backupOrganisations || !backupPending) return { backupOrganisations, backupPending }
 
       const organisationPending = pendings?.find((x) => x.id === input.pendingId)
@@ -53,7 +53,7 @@ export const useMutateAcceptInvitation = () => {
           pendings: [],
         })
       })
-      ctx.setQueryData(['organisation.getManyOrganisationByUserId', { id: userId }], next)
+      ctx.setQueryData(['organisation.getManyOrganisationByUserId'], next)
 
       const nextPending = produce(backupPending, (draft) => {
         draft.splice(
@@ -63,7 +63,7 @@ export const useMutateAcceptInvitation = () => {
       })
 
       console.log({ nextPending, next })
-      ctx.setQueryData(['organisation.getManyPendingOrganisationByUserId', { id: session.user.id }], nextPending)
+      ctx.setQueryData(['organisation.getManyPendingOrganisationByUserId'], nextPending)
 
       // return backup
       return { backupOrganisations, backupPending }
