@@ -30,7 +30,7 @@
     "@trpc/next": "^9.27.1",
     "@trpc/react": "^9.27.1",
     "@trpc/server": "^9.27.1",
-    "cloudinary": "^1.31.0",
+    "cloudinary": "^1.32.0",
     "clsx": "^1.2.1",
     "dequal": "^2.0.3",
     "dotenv": "^16.0.1",
