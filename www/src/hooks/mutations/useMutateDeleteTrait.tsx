@@ -9,19 +9,20 @@ export const useMutateDeleteTrait = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('traits.delete', {
+  return trpc.useMutation('traits.deleteMany', {
     onSuccess: (data, variable) => {
       const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])
       if (!backup) return { backup }
 
       const next = produce(backup, (draft) => {
-        const trait = draft.flatMap((x) => x.traitElements).find((x) => x.id === variable.id)
-        if (!trait) return
-        const layer = draft.find((x) => x.id === trait.layerElementId)
-        if (!layer) return
-        layer.traitElements = layer.traitElements.filter((x) => x.id !== variable.id)
-
-        notifySuccess(`Deleted ${trait.name} from ${layer.name}`)
+        variable.ids.forEach((id) => {
+          const trait = draft.flatMap((x) => x.traitElements).find((x) => x.id === id)
+          if (!trait) return
+          const layer = draft.find((x) => x.id === trait.layerElementId)
+          if (!layer) return
+          layer.traitElements = layer.traitElements.filter((x) => x.id !== id)
+          notifySuccess(`Deleted ${trait.name} from ${layer.name}`)
+        })
       })
 
       ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)

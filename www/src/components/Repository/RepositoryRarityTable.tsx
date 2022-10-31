@@ -6,17 +6,11 @@ import { Popover, Transition } from '@headlessui/react'
 import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
+import { env } from 'src/env/client.mjs'
 import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
 import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
 
@@ -269,7 +263,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                         name: 'Delete',
                         icon: <XCircleIcon className='w-4 h-4' />,
                         onClick: () => setIsDeleteDialogOpen(true),
-                        disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
+                        // disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
                       },
                     ].map(({ disabled, name, icon, onClick }) => (
                       <button
@@ -324,10 +318,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                   <div className='overflow-hidden bg-white rounded-[5px] shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
                       {
-                        name: 'Delete',
+                        name: 'TBD',
                         icon: <XCircleIcon className='w-4 h-4 text-redDot' />,
                         onClick: () => {
-                          setIsDeleteDialogOpen(true)
+                          // setIsDelFeteDialogOpen(true)
                         },
                       },
                     ].map(({ name, icon, onClick }) => (
@@ -360,9 +354,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
     data: traitElementsArray,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true,
+    debugTable: env.NEXT_PUBLIC_NODE_ENV === 'production' ? false : true,
   })
 
   return (
