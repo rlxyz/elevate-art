@@ -9,7 +9,7 @@ export const useMutateDeleteTrait = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const { notifySuccess, notifyError } = useNotification()
-  return trpc.useMutation('traits.deleteMany', {
+  return trpc.useMutation('traits.delete', {
     onSuccess: (data, variable) => {
       const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])
       if (!backup) return
