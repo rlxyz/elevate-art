@@ -1,4 +1,4 @@
-import { deleteImageFromCloudinary } from '@server/common/cld-delete-image'
+import { env } from 'src/env/client.mjs'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -34,11 +34,7 @@ export const traitElementRouter = createRouter()
       await Promise.all(
         traitElements.map(
           async ({ repositoryId: r, layerElementId: l, id: t }) =>
-            await deleteImageFromCloudinary({
-              r,
-              l,
-              t,
-            })
+            await fetch(`${env.NEXT_PUBLIC_API_URL}/${r}/${l}/${t}/delete/queue`)
         )
       )
     },
