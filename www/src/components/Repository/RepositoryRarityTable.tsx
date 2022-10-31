@@ -1,10 +1,9 @@
 import { TraitElement } from '@prisma/client'
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import { Table } from '../Layout/core/Table'
 
 import { Popover, Transition } from '@headlessui/react'
 import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
-import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import {
@@ -13,87 +12,23 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  RowData,
   useReactTable,
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
 import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
-
-type RarityTableType = {
-  trait: TraitElement
-  imageUrl: string
-  name: string
-  estimateInCollection: number
-  rarityScore: number
-  rarityPercentage: string
-}
 
 export const calculateSumArray = (values: { weight: number }[] | undefined) => {
   return values?.reduce((a, b) => a + Number(b.weight), 0) || 0 // change to number incase someone accidently changes how textbox works
 }
 
-declare module '@tanstack/react-table' {
-  interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }
-}
-
-const LoadingTable = () => {
-  return (
-    <Table>
-      <Table.Head loading={true}>
-        {[{ title: '' }, { title: '', description: '' }, { title: '' }, { title: '' }, { title: '' }, { title: '' }].map(
-          ({ title, description }, index) => {
-            return <Table.Head.Row key={index} title={title} description={description} />
-          }
-        )}
-      </Table.Head>
-      <Table.Body loading={true}>
-        {Array.from(Array(10).keys()).map((_, index) => {
-          return (
-            <Table.Body.Row key={index} current={index} total={10} loading={true}>
-              <Table.Body.Row.Data>
-                <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center' />
-              </Table.Body.Row.Data>
-              <Table.Body.Row.Data>...</Table.Body.Row.Data>
-              <Table.Body.Row.Data>...</Table.Body.Row.Data>
-              <Table.Body.Row.Data>...</Table.Body.Row.Data>
-              <Table.Body.Row.Data>...</Table.Body.Row.Data>
-              <Table.Body.Row.Data>...</Table.Body.Row.Data>
-            </Table.Body.Row>
-          )
-        })}
-      </Table.Body>
-    </Table>
-  )
-}
-
-function useSkipper() {
-  const shouldSkipRef = useRef(true)
-  const shouldSkip = shouldSkipRef.current
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skip = useCallback(() => {
-    shouldSkipRef.current = false
-  }, [])
-
-  useEffect(() => {
-    shouldSkipRef.current = true
-  })
-
-  return [shouldSkip, skip] as const
-}
-
 const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElements: TraitElement[]; initialSum: number }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const { mutate } = useMutateRepositoryLayersWeight({ onMutate: () => setHasFormChange(false) })
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false)
-  const [isDeleteTrait, setIsDeleteTrait] = useState<TraitElement | null>(null)
   const { register, handleSubmit, reset, watch, getValues, setValue, control } = useForm<{
     traitElements: (TraitElement & { checked: boolean })[]
   }>({ defaultValues: { traitElements: traitElements.map((x) => ({ ...x, checked: false })) } })
@@ -104,11 +39,6 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   }, [traitElements])
 
   const traitElementsArray = watch('traitElements')
-
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: 'traitElements', // unique name for your Field Array
-  })
 
   const columns = useMemo<ColumnDef<TraitElement & { checked: boolean }>[]>(
     () => [
@@ -398,7 +328,6 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                         icon: <XCircleIcon className='w-4 h-4 text-redDot' />,
                         onClick: () => {
                           setIsDeleteDialogOpen(true)
-                          setIsDeleteTrait(original)
                         },
                       },
                     ].map(({ name, icon, onClick }) => (
@@ -427,77 +356,54 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
     [hasFormChange]
   )
 
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
-
   const table = useReactTable({
     data: traitElementsArray,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    autoResetPageIndex,
-    // Provide our updateData function to our table meta
-    // meta: {
-    //   updateData: (rowIndex) => {
-    //     // Skip age index reset until after next rerender
-    //     // skipAutoResetPageIndex()
-    //     setData((old) =>
-    //       old.map((row, index) => {
-    //         if (index === rowIndex) {
-    //           return {
-    //             ...old[rowIndex]!,
-    //             [columnId]: value,
-    //           }
-    //         }
-    //         return row
-    //       })
-    //     )
-    //   },
-    // },
     debugTable: true,
   })
 
   return (
-    <form>
-      <Table>
-        <Table.Head>
-          {table.getHeaderGroups().map((headerGroup) =>
-            headerGroup.headers.map((header) => {
+    <>
+      <form>
+        <Table>
+          <Table.Head>
+            {table.getHeaderGroups().map((headerGroup) =>
+              headerGroup.headers.map((header) => {
+                return (
+                  <Table.Head.Row key={header.id}>
+                    {header.isPlaceholder ? null : <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>}
+                  </Table.Head.Row>
+                )
+              })
+            )}
+          </Table.Head>
+          <Table.Body>
+            {table.getRowModel().rows.map((row, index) => {
               return (
-                <Table.Head.Row key={header.id}>
-                  {header.isPlaceholder ? null : <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>}
-                </Table.Head.Row>
+                <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <Table.Body.Row.Data key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Table.Body.Row.Data>
+                    )
+                  })}
+                </Table.Body.Row>
               )
-            })
-          )}
-        </Table.Head>
-        <Table.Body>
-          {table.getRowModel().rows.map((row, index) => {
-            return (
-              <Table.Body.Row key={row.id} current={index} total={table.getRowModel().rows.length}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <Table.Body.Row.Data key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Table.Body.Row.Data>
-                  )
-                })}
-              </Table.Body.Row>
-            )
-          })}
-        </Table.Body>
-      </Table>
-      {isDeleteDialogOpen && (
-        <RepositoryDeleteTraitDialog
-          isOpen={isDeleteDialogOpen}
-          traitElements={traitElementsArray.filter((x) => x.checked)}
-          onClose={() => setIsDeleteDialogOpen(false)}
-        />
-      )}
-      {isCreateDialogOpen && (
-        <RepositoryCreateTraitDialog isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
-      )}
-    </form>
+            })}
+          </Table.Body>
+        </Table>
+      </form>
+      <RepositoryDeleteTraitDialog
+        isOpen={isDeleteDialogOpen}
+        traitElements={traitElementsArray.filter((x) => x.checked)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      />
+      <RepositoryCreateTraitDialog isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
+    </>
   )
 }
 
