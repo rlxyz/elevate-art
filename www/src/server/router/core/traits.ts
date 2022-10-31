@@ -86,14 +86,17 @@ export const traitElementRouter = createRouter()
       }
     },
   })
-  .mutation('delete', {
+  .mutation('deleteMany', {
     input: z.object({
-      id: z.string(),
+      ids: z.array(z.string()),
     }),
     async resolve({ ctx, input }) {
-      await ctx.prisma.traitElement.delete({
+      // delete many traits
+      await ctx.prisma.traitElement.deleteMany({
         where: {
-          id: input.id,
+          id: {
+            in: input.ids,
+          },
         },
       })
     },

@@ -17,6 +17,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
+import clsx from 'clsx'
 import { useFieldArray, useForm } from 'react-hook-form'
 import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
 import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
@@ -94,8 +95,8 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false)
   const [isDeleteTrait, setIsDeleteTrait] = useState<TraitElement | null>(null)
   const { register, handleSubmit, reset, watch, getValues, setValue, control } = useForm<{
-    traitElements: TraitElement[]
-  }>({ defaultValues: { traitElements: traitElements.map((x) => x) } })
+    traitElements: (TraitElement & { checked: boolean })[]
+  }>({ defaultValues: { traitElements: traitElements.map((x) => ({ ...x, checked: false })) } })
 
   useDeepCompareEffect(() => {
     reset({ traitElements: traitElements.map((x) => x) })
@@ -103,22 +104,37 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   }, [traitElements])
 
   const traitElementsArray = watch('traitElements')
+
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: 'traitElements', // unique name for your Field Array
   })
 
-  const columns = useMemo<ColumnDef<TraitElement>[]>(
+  const columns = useMemo<ColumnDef<TraitElement & { checked: boolean }>[]>(
     () => [
       {
         header: () => <span></span>,
         accessorKey: 'select',
         cell: ({
           row: {
-            index,
             original: { id },
+            index,
           },
-        }) => <input type='checkbox' key={fields[index]} className='rounded-[5px]' />,
+        }) => (
+          <input
+            key={id}
+            type='checkbox'
+            value={id}
+            {...register(`traitElements.${index}.checked`)}
+            className={clsx(
+              'border border-mediumGrey',
+              'text-xs rounded-[5px]',
+              'focus:outline-none focus:ring-blueHighlight',
+              'invalid:border-redError invalid:text-redError',
+              'focus:invalid:border-redError focus:invalid:ring-redError'
+            )}
+          />
+        ),
         footer: (props) => props.column.id,
       },
       {
@@ -294,7 +310,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                     {[
                       {
                         name: 'Add',
-                        icon: <PlusCircleIcon className='w-4 h-4 text-blueHighlight' />,
+                        icon: <PlusCircleIcon className='w-4 h-4' />,
                         onClick: () => {
                           setIsCreateDialogOpen(true)
                         },
@@ -302,7 +318,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                       },
                       {
                         name: 'Save',
-                        icon: <CheckCircleIcon className='w-4 h-4 text-greenDot' />,
+                        icon: <CheckCircleIcon className='w-4 h-4' />,
                         onClick: () => {
                           handleSubmit((values) => {
                             console.log(values)
@@ -312,17 +328,23 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                       },
                       {
                         name: 'Reset',
-                        icon: <RefreshIcon className='w-4 h-4 text-redDot' />,
+                        icon: <RefreshIcon className='w-4 h-4' />,
                         onClick: () => {
                           reset()
                           setHasFormChange(false)
                         },
                         disabled: !hasFormChange,
                       },
+                      {
+                        name: 'Delete',
+                        icon: <XCircleIcon className='w-4 h-4' />,
+                        onClick: () => setIsDeleteDialogOpen(true),
+                        disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
+                      },
                     ].map(({ disabled, name, icon, onClick }) => (
                       <button
                         disabled={disabled}
-                        className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
+                        className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed disabled:bg-lightGray disabled:text-mediumGrey text-black'
                         onClick={(e) => {
                           e.preventDefault()
                           onClick && onClick()
@@ -465,10 +487,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
           })}
         </Table.Body>
       </Table>
-      {isDeleteTrait && (
+      {isDeleteDialogOpen && (
         <RepositoryDeleteTraitDialog
           isOpen={isDeleteDialogOpen}
-          trait={isDeleteTrait}
+          traitElements={traitElementsArray.filter((x) => x.checked)}
           onClose={() => setIsDeleteDialogOpen(false)}
         />
       )}

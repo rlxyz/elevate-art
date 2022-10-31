@@ -7,11 +7,11 @@ import { Fragment } from 'react'
 export const RepositoryDeleteTraitDialog = ({
   isOpen,
   onClose,
-  trait,
+  traitElements,
 }: {
   isOpen: boolean
   onClose: () => void
-  trait: TraitElement
+  traitElements: TraitElement[]
 }) => {
   const { mutate, isLoading } = useMutateDeleteTrait()
   return (
@@ -53,11 +53,13 @@ export const RepositoryDeleteTraitDialog = ({
                       <span className='text-sm'>
                         Delete an existing trait. This will be applied to all collections in the project.
                       </span>
-                      <div>
-                        <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Trait</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{trait.name}</div>
-                        </div>
+                      <div className='space-y-2'>
+                        {traitElements.map(({ id, name }) => (
+                          <div className='space-y-1' key={id}>
+                            <span className='text-[0.6rem] uppercase'>Trait</span>
+                            <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{name}</div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
@@ -68,7 +70,7 @@ export const RepositoryDeleteTraitDialog = ({
                         disabled={isLoading}
                         onClick={(e) => {
                           e.preventDefault()
-                          mutate({ id: trait.id }, { onSettled: onClose })
+                          mutate({ ids: traitElements.map((x) => x.id) }, { onSettled: onClose })
                         }}
                         className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
