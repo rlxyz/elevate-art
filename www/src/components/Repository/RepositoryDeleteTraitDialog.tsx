@@ -1,6 +1,7 @@
 import Loader from '@components/Layout/Loader'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateDeleteTrait } from '@hooks/mutations/useMutateDeleteTrait'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { Fragment } from 'react'
 
@@ -13,6 +14,7 @@ export const RepositoryDeleteTraitDialog = ({
   onClose: () => void
   traitElements: TraitElement[]
 }) => {
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate, isLoading } = useMutateDeleteTrait()
   return (
     <>
@@ -70,7 +72,16 @@ export const RepositoryDeleteTraitDialog = ({
                         disabled={isLoading}
                         onClick={(e) => {
                           e.preventDefault()
-                          mutate({ ids: traitElements.map((x) => x.id) }, { onSettled: onClose })
+                          mutate(
+                            {
+                              traitElements: traitElements.map(({ id, layerElementId }) => ({
+                                id,
+                                layerElementId,
+                                repositoryId,
+                              })),
+                            },
+                            { onSettled: onClose }
+                          )
                         }}
                         className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >

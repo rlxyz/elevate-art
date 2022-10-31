@@ -1,3 +1,4 @@
+import { deleteImageFromCloudinary } from '@server/common/cld-delete-image'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -88,17 +89,27 @@ export const traitElementRouter = createRouter()
   })
   .mutation('deleteMany', {
     input: z.object({
-      ids: z.array(z.string()),
+      traitElements: z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() })),
     }),
     async resolve({ ctx, input }) {
-      // delete many traits
+      const { traitElements } = input
       await ctx.prisma.traitElement.deleteMany({
         where: {
           id: {
-            in: input.ids,
+            in: traitElements.map((x) => x.id),
           },
         },
       })
+      await Promise.all(
+        traitElements.map(
+          async ({ repositoryId: r, layerElementId: l, id: t }) =>
+            await deleteImageFromCloudinary({
+              r,
+              l,
+              t,
+            })
+        )
+      )
     },
   })
   .mutation('createMany', {
