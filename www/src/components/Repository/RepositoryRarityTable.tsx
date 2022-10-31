@@ -17,7 +17,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
 import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
 
@@ -103,9 +103,24 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
   }, [traitElements])
 
   const traitElementsArray = watch('traitElements')
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: 'traitElements', // unique name for your Field Array
+  })
 
   const columns = useMemo<ColumnDef<TraitElement>[]>(
     () => [
+      {
+        header: () => <span></span>,
+        accessorKey: 'select',
+        cell: ({
+          row: {
+            index,
+            original: { id },
+          },
+        }) => <input type='checkbox' key={fields[index]} className='rounded-[5px]' />,
+        footer: (props) => props.column.id,
+      },
       {
         header: () => <span></span>,
         accessorKey: 'imageUrl',

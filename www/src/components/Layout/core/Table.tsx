@@ -108,10 +108,10 @@ const TableBodyRow = ({
               current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
               index === 0 && 'pl-3 border-l',
               index === childrens.length - 1 && 'pr-3 border-r',
-              index === 0 && 'w-[20%]', // @todo this needs to be fixed!
-              index === 1 && 'w-[20%]', // @todo this needs to be fixed!
-              index === 2 && 'w-[25%]', // @todo this needs to be fixed!
-              index === 3 && 'w-[15%]',
+              index === 0 && 'w-[7.5%]', // @todo this needs to be fixed!
+              index === 1 && 'w-[15%]', // @todo this needs to be fixed!
+              index === 2 && 'w-[20%]', // @todo this needs to be fixed!
+              index === 3 && 'w-[25%]',
               index === 4 && 'w-[15%]',
               'text-left border-t border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
             )}
