@@ -115,9 +115,14 @@ export const FilterByTrait = () => {
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
-              <div key={layer.id} className='flex flex-col text-xs'>
+              <div
+                key={layer.id}
+                className={clsx('flex flex-col text-xs', layer.traitElements.length === 0 && 'cursor-not-allowed')}
+              >
                 <div
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (layer.traitElements.length === 0) return
                     if (layerDropdown === optionIdx) {
                       setLayerDropdown(null)
                     } else {
