@@ -118,8 +118,6 @@ export const traitElementRouter = createRouter()
       traitElements: z.array(z.string()),
     }),
     async resolve({ ctx, input }) {
-      console.log('createMany', input)
-
       await ctx.prisma.traitElement.createMany({
         data: input.traitElements.map((name) => ({
           layerElementId: input.layerElementId,
