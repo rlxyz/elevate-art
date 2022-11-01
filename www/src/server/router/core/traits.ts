@@ -1,5 +1,5 @@
 import { groupBy } from '@utils/object-utils'
-import { env } from 'src/env/client.mjs'
+import { env } from 'src/env/server.mjs'
 import { z } from 'zod'
 import { getLayerElements } from '../../common/get-layer-with-traits'
 import { createRouter } from '../context'
@@ -38,7 +38,14 @@ export const traitElementRouter = createRouter()
       /* This fetch sends request to Qstash to run delete jobs with retries if failed */
       await Promise.all(
         traitElements.map(async ({ repositoryId: r, layerElementId: l, id: t }) => {
-          await fetch(`${env.NEXT_PUBLIC_API_URL}/${r}/${l}/${t}/delete/queue`)
+          const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${r}/${l}/${t}/delete`)
+          if (response.status === 200) {
+            // @todo log
+            console.log(`delete ${r}/${l}/${t}`)
+          } else {
+            // @todo qstash
+            console.log(`failed ${r}/${l}/${t}`)
+          }
         })
       )
     },

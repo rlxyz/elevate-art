@@ -1,6 +1,4 @@
 import { deleteImageFromCloudinary } from '@server/common/cld-delete-image'
-import { verifySignature } from '@upstash/qstash/nextjs'
-import 'isomorphic-fetch'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -23,10 +21,4 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).send({ deleted: true })
 }
 
-export default verifySignature(index)
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+export default index
