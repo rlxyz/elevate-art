@@ -38,6 +38,7 @@ export const useMutateCreateTrait = () => {
       return
     }
 
+    // step 1: get traits being uploaded
     const traits = getTraitUploadObjectUrls(layer.name, files)
     setUploadedFiles(traits)
     const names = traits[layer.name]?.map((x) => x.name)
@@ -46,9 +47,9 @@ export const useMutateCreateTrait = () => {
       notifyError('We couldnt find the layer. Please refresh the page to try again.')
       return
     }
-    const allExistingTraits = layer.traitElements.map((x) => x.name)
+
     const allNewTraits = names
-      .filter((x) => !allExistingTraits.includes(x))
+      .filter((x) => !layer.traitElements.map((x) => x.name).includes(x))
       .map((x) => ({
         name: x,
         layerElementId: layer.id,
@@ -56,15 +57,7 @@ export const useMutateCreateTrait = () => {
       }))
 
     createManyTrait(
-      {
-        traitElements: names
-          .filter((x) => !allExistingTraits.includes(x))
-          .map((x) => ({
-            name: x,
-            layerElementId: layer.id,
-            repositoryId: repositoryId,
-          })),
-      },
+      { traitElements: allNewTraits },
       {
         onSuccess: async (data, variable) => {
           notifySuccess(`Saved ${variable.traitElements.length} traits. We are now uploading the images to the cloud...`)
@@ -86,35 +79,40 @@ export const useMutateCreateTrait = () => {
           })
 
           ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)
+          const allTraits = Object.entries(data).flatMap((x) => x[1])
+          files.map((file: FileWithPath) => {
+            const reader = new FileReader()
+            const traitName = file.path?.replace('.png', '') || ''
+            if (!traitName) return
+            reader.onload = async () => {
+              const traitElement = allTraits.find((x) => x.name === traitName)
+              if (!traitElement) return
+              uploadCollectionLayerImageCloudinary({
+                file,
+                traitElement,
+                repositoryId,
+              }).then(() => {
+                setUploadedFiles((state) =>
+                  produce(state, (draft) => {
+                    const trait = draft[layer.name]?.find((x) => x.name === traitName)
+                    if (!trait) return
+                    trait.uploaded = true
+                  })
+                )
+              })
+            }
+            reader.readAsArrayBuffer(file)
+          })
         },
-        onError: async () => notifyError('Something went wrong'),
+        onError: async (error, variables, context) => {
+          if (JSON.parse(error.message).code === 'too_small') {
+            notifyError("We couldn't find any new traits.")
+          } else {
+            notifyError('Something went wrong')
+          }
+        },
       }
     )
-
-    files.map((file: FileWithPath) => {
-      const reader = new FileReader()
-      const traitName = file.path?.replace('.png', '') || ''
-      if (!traitName) return
-      reader.onload = async () => {
-        const traitElement = allTraits.find((x) => x.name === traitName)
-        console.log('t', { traitElement })
-        if (!traitElement) return
-        uploadCollectionLayerImageCloudinary({
-          file,
-          traitElement,
-          repositoryId,
-        }).then(() => {
-          setUploadedFiles((state) =>
-            produce(state, (draft) => {
-              const trait = draft[layer.name]?.find((x) => x.name === traitName)
-              if (!trait) return
-              trait.uploaded = true
-            })
-          )
-        })
-      }
-      reader.readAsArrayBuffer(file)
-    })
   }
   return { mutate }
 }

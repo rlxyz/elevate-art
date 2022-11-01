@@ -1,5 +1,6 @@
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
+import { groupBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 
@@ -21,11 +22,11 @@ export const useMutateDeleteTrait = () => {
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        Object.entries(data).map(([layerElementId, traitElements]) => {
+        Object.entries(groupBy(variable.traitElements, (x) => x.layerElementId)).map(([layerElementId, traitElements]) => {
           const layer = draft.find((l) => l.id === layerElementId)
           if (!layer) return
           const ids = traitElements.map((x) => x.id)
-          layer.traitElements = layer.traitElements.filter((x) => ids.includes(x.id))
+          layer.traitElements = layer.traitElements.filter((x) => !ids.includes(x.id))
         })
       })
 

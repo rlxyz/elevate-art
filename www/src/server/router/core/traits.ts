@@ -41,9 +41,6 @@ export const traitElementRouter = createRouter()
           await fetch(`${env.NEXT_PUBLIC_API_URL}/${r}/${l}/${t}/delete/queue`)
         })
       )
-
-      /* Return all the new TraitElement grouped by LayerElement */
-      return await getLayerElements({ layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)), ctx })
     },
   })
   /**
