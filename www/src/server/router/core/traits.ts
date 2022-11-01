@@ -15,8 +15,6 @@ export const traitElementRouter = createRouter()
   /**
    * Delete TraitElement from their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
-   *
-   * @todo log the delete that occurs
    */
   .mutation('delete', {
     input: z.object({
@@ -53,8 +51,6 @@ export const traitElementRouter = createRouter()
   /**
    * Creates a TraitElement with their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
-   *
-   * @todo log the create that occurs
    */
   .mutation('create', {
     input: z.object({
