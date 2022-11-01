@@ -1,9 +1,15 @@
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { clientEnv } from 'src/env/schema.mjs'
+import { env } from 'src/env/server.mjs'
+
+const imageSettings: string[] = ['c_scale,w_600', 'q_auto']
+const version = 'v1'
 
 const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
-  return `https://res.cloudinary.com/rlxyz/image/upload/c_scale,w_600/q_auto/v1/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
+  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${imageSettings.join(
+    '/'
+  )}/${version}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -25,8 +31,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (data.status === 200) {
-    res.setHeader('Cache-Control', 'private, s-maxage=1, stale-while-revalidate=59')
-    res.setHeader('Content-Type', 'image/png')
+    // res.setHeader('Cache-Control', 'private, s-maxage=1, stale-while-revalidate=59')
+    // res.setHeader('Content-Type', 'image/png')
     return res.send(data.body)
   }
 }
