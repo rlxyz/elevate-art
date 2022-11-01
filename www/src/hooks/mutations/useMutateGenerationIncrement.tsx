@@ -9,7 +9,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
   const { mutate } = useQueryRepositoryCollection()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('collection.updateGeneration', {
+  return trpc.useMutation('collections.updateGeneration', {
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)

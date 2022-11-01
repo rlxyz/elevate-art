@@ -1,3 +1,4 @@
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
@@ -6,15 +7,16 @@ import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
   const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess } = useNotification()
   return trpc.useMutation('repository.updateLayer', {
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryLayers', { id: input.repositoryId }])
+      await ctx.cancelQuery(['layers.getAll', { id: input.repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }])
+      const backup = ctx.getQueryData(['layers.getAll', { id: input.repositoryId }])
       if (!backup) return { backup }
 
       // Optimistically update to the new value
@@ -31,7 +33,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
             })
             .sort((a, b) => a.weight - b.weight) || []
       })
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
       onMutate && onMutate()
       // return backup
       notifySuccess(`Successfully updated ${layers?.find((l) => l.id === input.layerId)?.name} rarities.`)
@@ -40,8 +42,8 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
+    onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })
 }

@@ -18,7 +18,7 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
       setCollectionId: state.setCollectionId,
     }
   })
-  return trpc.useMutation('collection.create', {
+  return trpc.useMutation('collections.create', {
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)

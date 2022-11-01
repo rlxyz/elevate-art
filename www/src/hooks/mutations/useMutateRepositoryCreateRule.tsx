@@ -12,7 +12,7 @@ export const useMutateRepositoryCreateRule = () => {
       notifyError("We couldn't create the rule. Try again.")
     },
     onSuccess: (data) => {
-      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])
+      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return
       const primaryId = backup.findIndex((l) => l.id === data.primaryTraitElement.layerElementId)
       const secondaryId = backup.findIndex((l) => l.id === data.secondaryTraitElement.layerElementId)
@@ -29,7 +29,7 @@ export const useMutateRepositoryCreateRule = () => {
           primaryTraitElement: primaryTrait,
         })
       })
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
       notifySuccess(`${data.primaryTraitElement.name} now ${data.condition} ${data.primaryTraitElement.name}`)
     },
   })

@@ -20,7 +20,7 @@ const TraitRulesDisplayPerItem = ({
 }) => {
   const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = trpc.useQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+  const { data: layers } = trpc.useQuery(['layers.getAll', { id: repositoryId }])
   const primaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === primary.id))
   const secondaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === secondary.id))
   return (

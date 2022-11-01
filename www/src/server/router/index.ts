@@ -13,9 +13,9 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .merge('organisation.', organisationRouter)
   .merge('repository.', repositoryRouter)
-  .merge('collection.', collectionRouter)
-  .merge('layer.', layerElementRouter)
-  .merge('trait.', traitElementRouter)
+  .merge('collections.', collectionRouter)
+  .merge('layers.', layerElementRouter)
+  .merge('traits.', traitElementRouter)
   .merge('rules.', rulesRouter)
 
 // export type definition of API
