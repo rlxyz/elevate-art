@@ -1,16 +1,6 @@
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { getCldImgUrl } from '@utils/cloudinary'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { clientEnv } from 'src/env/schema.mjs'
-import { env } from 'src/env/server.mjs'
-
-const imageSettings: string[] = ['c_scale,w_600', 'q_auto']
-const version = 'v1'
-
-const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
-  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${imageSettings.join(
-    '/'
-  )}/${version}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
-}
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })

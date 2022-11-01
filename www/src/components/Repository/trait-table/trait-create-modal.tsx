@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useMutateCreateTrait } from '@hooks/mutations/useMutateCreateTrait'
 import { Fragment, useState } from 'react'
 
-const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const TraitElementCreateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
   const { mutate: createManyTrait } = useMutateCreateTrait()
   return (
@@ -68,4 +68,4 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
   )
 }
 
-export default Index
+export default TraitElementCreateModal

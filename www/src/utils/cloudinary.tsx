@@ -1,8 +1,17 @@
 import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
+import { env } from 'src/env/client.mjs'
 import { clientEnv } from 'src/env/schema.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
+export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
+export const IMAGE_VERSION = 'v1'
+
+export const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
+  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join(
+    '/'
+  )}/${IMAGE_VERSION}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
+}
 
 export const uploadCollectionLayerImageCloudinary = ({
   repositoryId,

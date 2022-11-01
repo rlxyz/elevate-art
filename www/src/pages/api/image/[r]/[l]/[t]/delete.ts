@@ -1,6 +1,7 @@
 import { deleteImageFromCloudinary } from '@server/common/cld-delete-image'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+// @todo authenticated?
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   // r: repositoryId, l: layerElementId, t: traitElementId
   const { r, l, t } = req.query as { r: string; l: string; t: string }

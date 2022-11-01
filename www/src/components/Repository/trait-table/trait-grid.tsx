@@ -3,8 +3,9 @@ import { TraitElement } from '@prisma/client'
 import { truncate } from '@utils/format'
 import { getImageForTrait } from '@utils/image'
 import { timeAgo } from '@utils/time'
-import { calculateSumArray } from './RepositoryRarityTable'
+import { calculateSumArray } from './trait-form-hook'
 
+// @todo refactor
 const LayerGridView = ({ traitElements }: { traitElements: TraitElement[] | undefined }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return (

@@ -1,43 +1,93 @@
-import { TraitElement } from '@prisma/client'
-import { Fragment, useMemo, useState } from 'react'
-import { Table } from '../Layout/core/Table'
-
 import { Popover, Transition } from '@headlessui/react'
 import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { TraitElement } from '@prisma/client'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
+import { sumBy } from '@utils/object-utils'
 import clsx from 'clsx'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
-import RepositoryCreateTraitDialog from './RepositoryCreateTraitDialog'
-import { RepositoryDeleteTraitDialog } from './RepositoryDeleteTraitDialog'
 
-export const calculateSumArray = (values: { weight: number }[] | undefined) => {
-  return values?.reduce((a, b) => a + Number(b.weight), 0) || 0 // change to number incase someone accidently changes how textbox works
+export type TraitElementFormType = {
+  traitElements: (TraitElement & { checked: boolean })[]
+  allCheckboxesChecked: boolean
 }
 
-const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElements: TraitElement[]; initialSum: number }) => {
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const [hasFormChange, setHasFormChange] = useState<boolean>(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false)
-  const { register, handleSubmit, reset, watch, getValues, setValue, control } = useForm<{
-    traitElements: (TraitElement & { checked: boolean })[]
-  }>({ defaultValues: { traitElements: traitElements.map((x) => ({ ...x, checked: false })) } })
+export const calculateSumArray = (values: { weight: number }[] | undefined) => {
+  return values ? sumBy(values, (x) => x.weight) : 0
+}
 
+/**
+ * This hook handles all the core logic for the TraitElement table form.
+ */
+export const useTraitElementForm = ({
+  traitElements,
+  repositoryId,
+  initialSum,
+}: {
+  traitElements: TraitElement[]
+  repositoryId: string
+  initialSum: number
+}) => {
+  const [hasFormChange, setHasFormChange] = useState<boolean>(false)
+  const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
+  const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
+
+  /**
+   * Table data based on react-hook-form
+   * Handles default values in the table, and any hooks needed for the table.
+   * Use the default value to add more functionality into the form.
+   */
+  const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<TraitElementFormType>({
+    defaultValues: { allCheckboxesChecked: false, traitElements: traitElements.map((x) => ({ ...x, checked: false })) },
+  })
+
+  /**
+   * Used in effects.
+   * Source: https://react-hook-form.com/api/useform/watch
+   */
+  const traitElementsArray = watch('traitElements')
+  const allCheckboxesChecked = watch('allCheckboxesChecked')
+
+  /**
+   * Reset Effect
+   * This effect resets the Table.
+   */
   useDeepCompareEffect(() => {
     reset({ traitElements: traitElements.map((x) => x) })
     setHasFormChange(false)
   }, [traitElements])
 
-  const traitElementsArray = watch('traitElements')
+  /**
+   * Delete All Checkbox Effect
+   * This effect allows the ability to force set all delete checkboxes to be clicked
+   * based on the TableHeader checkbox.
+   */
+  useEffect(() => {
+    traitElementsArray.forEach((x, index) => {
+      setValue(`traitElements.${index}.checked`, allCheckboxesChecked)
+    })
+  }, [allCheckboxesChecked])
 
   const columns = useMemo<ColumnDef<TraitElement & { checked: boolean }>[]>(
     () => [
       {
-        header: () => <span></span>,
+        header: () => (
+          <input
+            // key={id} // @todo reintroduce?
+            type='checkbox'
+            {...register(`allCheckboxesChecked`)}
+            className={clsx(
+              'border border-mediumGrey',
+              'text-xs rounded-[5px]',
+              'focus:outline-none focus:ring-blueHighlight',
+              'invalid:border-redError invalid:text-redError',
+              'focus:invalid:border-redError focus:invalid:ring-redError'
+            )}
+          />
+        ),
         accessorKey: 'select',
         cell: ({
           row: {
@@ -236,7 +286,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                         name: 'Add',
                         icon: <PlusCircleIcon className='w-4 h-4' />,
                         onClick: () => {
-                          setIsCreateDialogOpen(true)
+                          setIsCreateClicked(true)
                         },
                         disabled: false,
                       },
@@ -262,7 +312,7 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
                       {
                         name: 'Delete',
                         icon: <XCircleIcon className='w-4 h-4' />,
-                        onClick: () => setIsDeleteDialogOpen(true),
+                        onClick: () => setIsDeletedClicked(true),
                         // disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
                       },
                     ].map(({ disabled, name, icon, onClick }) => (
@@ -357,46 +407,10 @@ const RepositoryRuleDisplayView = ({ traitElements, initialSum }: { traitElement
     debugTable: env.NEXT_PUBLIC_NODE_ENV === 'production' ? false : true,
   })
 
-  return (
-    <>
-      <form>
-        <Table>
-          <Table.Head>
-            {table.getHeaderGroups().map((headerGroup) =>
-              headerGroup.headers.map((header) => {
-                return (
-                  <Table.Head.Row key={header.id}>
-                    {header.isPlaceholder ? null : <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>}
-                  </Table.Head.Row>
-                )
-              })
-            )}
-          </Table.Head>
-          <Table.Body>
-            {table.getRowModel().rows.map((row, index) => {
-              return (
-                <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <Table.Body.Row.Data key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Table.Body.Row.Data>
-                    )
-                  })}
-                </Table.Body.Row>
-              )
-            })}
-          </Table.Body>
-        </Table>
-      </form>
-      <RepositoryDeleteTraitDialog
-        isOpen={isDeleteDialogOpen}
-        traitElements={traitElementsArray.filter((x) => x.checked)}
-        onClose={() => setIsDeleteDialogOpen(false)}
-      />
-      <RepositoryCreateTraitDialog isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
-    </>
-  )
+  return {
+    table,
+    delete: { open: isDeleteClicked, set: setIsDeletedClicked },
+    create: { open: isCreateClicked, set: setIsCreateClicked },
+    traitElements: traitElementsArray,
+  }
 }
-
-export default RepositoryRuleDisplayView

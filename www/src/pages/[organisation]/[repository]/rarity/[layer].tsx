@@ -2,8 +2,8 @@ import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
-import LayerGridView from '@components/Repository/RepositoryRarityLayer'
-import RepositoryRuleDisplayView from '@components/Repository/RepositoryRarityTable'
+import LayerGridView from '@components/Repository/trait-table/trait-grid'
+import RepositoryRuleDisplayView from '@components/Repository/trait-table/trait-table'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -24,6 +24,7 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { setRepositoryId } = useRepositoryStore((state) => {
     return {
       setRepositoryId: state.setRepositoryId,
@@ -175,6 +176,7 @@ const Page = () => {
                     <RepositoryRuleDisplayView
                       traitElements={filteredTraitElements}
                       initialSum={layer.traitElements.reduce((a, b) => a + b.weight, 0)}
+                      repositoryId={repositoryId}
                     />
                   )}
                 </div>

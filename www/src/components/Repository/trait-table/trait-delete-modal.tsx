@@ -5,7 +5,7 @@ import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { Fragment } from 'react'
 
-export const RepositoryDeleteTraitDialog = ({
+const TraitElementDeleteModal = ({
   isOpen,
   onClose,
   traitElements,
@@ -91,3 +91,5 @@ export const RepositoryDeleteTraitDialog = ({
     </>
   )
 }
+
+export default TraitElementDeleteModal
