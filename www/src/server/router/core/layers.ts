@@ -59,3 +59,29 @@ export const layerElementRouter = createRouter()
       )
     },
   })
+  .mutation('weight.update', {
+    input: z.object({
+      layerId: z.string(),
+      repositoryId: z.string(),
+      traits: z.array(
+        z.object({
+          id: z.string(),
+          weight: z.number(),
+        })
+      ),
+    }),
+    async resolve({ ctx, input }) {
+      return await Promise.all(
+        input.traits.map(async ({ id, weight }) => {
+          return await ctx.prisma.traitElement.update({
+            where: {
+              id,
+            },
+            data: {
+              weight,
+            },
+          })
+        })
+      )
+    },
+  })

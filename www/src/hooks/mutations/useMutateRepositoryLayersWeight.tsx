@@ -9,14 +9,14 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('repository.updateLayer', {
+  return trpc.useMutation('layers.weight.update', {
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['layers.getAll', { id: input.repositoryId }])
+      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['layers.getAll', { id: input.repositoryId }])
+      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       // Optimistically update to the new value
