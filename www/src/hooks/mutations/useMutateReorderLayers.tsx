@@ -6,7 +6,7 @@ export const useMutateReorderLayers = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
 
-  return trpc.useMutation('layer.reorderMany', {
+  return trpc.useMutation('layers.reorder', {
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
@@ -33,7 +33,7 @@ export const useMutateReorderLayers = () => {
       // return backup
       return { backup }
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers', { id: repositoryId }]),
+    onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
     onError: (err, variables, context) => {
       if (!context?.backup) return
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)

@@ -40,6 +40,6 @@ export const useMutateRepositoryDeleteRule = () => {
       if (!context?.backup) return
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
     },
-    onSettled: (data) => ctx.invalidateQueries(['repository.getRepositoryLayers', { id: repositoryId }]),
+    onSettled: (data) => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })
 }

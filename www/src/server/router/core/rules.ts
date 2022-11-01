@@ -19,7 +19,6 @@ export const rulesRouter = createRouter()
       })
     },
   })
-  // @todo: better naming conventions?
   .mutation('create', {
     input: z.object({
       condition: z.string(),

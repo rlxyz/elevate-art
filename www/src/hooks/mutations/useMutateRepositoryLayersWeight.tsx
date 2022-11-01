@@ -1,3 +1,4 @@
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
@@ -6,6 +7,7 @@ import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
   const { all: layers, isLoading } = useQueryRepositoryLayer()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess } = useNotification()
   return trpc.useMutation('repository.updateLayer', {
     // Optimistic Update
@@ -31,7 +33,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
             })
             .sort((a, b) => a.weight - b.weight) || []
       })
-      ctx.setQueryData(['layers.getAll', { id: input.repositoryId }], next)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
       onMutate && onMutate()
       // return backup
       notifySuccess(`Successfully updated ${layers?.find((l) => l.id === input.layerId)?.name} rarities.`)
@@ -40,8 +42,8 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['layers.getAll', { id: variables.repositoryId }], context.backup)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
+    onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })
 }
