@@ -10,7 +10,7 @@ import { FileWithPath } from 'react-dropzone'
 export const useMutateCreateTrait = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate: createManyTrait } = trpc.useMutation('traits.createMany')
+  const { mutate: createManyTrait } = trpc.useMutation('traits.create')
   const { current: layer } = useQueryRepositoryLayer()
   const { notifyError, notifySuccess } = useNotification()
   const mutate = ({
@@ -47,15 +47,27 @@ export const useMutateCreateTrait = () => {
       return
     }
     const allExistingTraits = layer.traitElements.map((x) => x.name)
+    const allNewTraits = names
+      .filter((x) => !allExistingTraits.includes(x))
+      .map((x) => ({
+        name: x,
+        layerElementId: layer.id,
+        repositoryId: repositoryId,
+      }))
 
     createManyTrait(
       {
-        layerElementId: layer.id,
-        traitElements: names.filter((x) => !allExistingTraits.includes(x)),
+        traitElements: names
+          .filter((x) => !allExistingTraits.includes(x))
+          .map((x) => ({
+            name: x,
+            layerElementId: layer.id,
+            repositoryId: repositoryId,
+          })),
       },
       {
-        onSuccess: async (data, variables) => {
-          notifySuccess('We are now uploading the images to the cloud...')
+        onSuccess: async (data, variable) => {
+          notifySuccess(`Saved ${variable.traitElements.length} traits. We are now uploading the images to the cloud...`)
 
           // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
           await ctx.cancelQuery(['repository.getRepositoryLayers', { id: repositoryId }])
@@ -66,39 +78,43 @@ export const useMutateCreateTrait = () => {
 
           // Optimistically update to the new value
           const next = produce(backup, (draft) => {
-            const layer = draft.find((l) => l.id === variables.layerElementId)
-            if (!layer) return
-            layer.traitElements = data
+            Object.entries(data).map(([layerElementId, traitElements]) => {
+              const layer = draft.find((l) => l.id === layerElementId)
+              if (!layer) return
+              layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
+            })
           })
 
           ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)
-
-          files.map((file: FileWithPath) => {
-            const reader = new FileReader()
-            const traitName = file.path?.replace('.png', '') || ''
-            if (!traitName) return
-            reader.onload = async () => {
-              const traitElement = data.find((x) => x.name === traitName)
-              if (!traitElement) return
-              uploadCollectionLayerImageCloudinary({
-                file,
-                traitElement,
-                repositoryId,
-              }).then(() => {
-                setUploadedFiles((state) =>
-                  produce(state, (draft) => {
-                    const trait = draft[layer.name]?.find((x) => x.name === traitName)
-                    if (!trait) return
-                    trait.uploaded = true
-                  })
-                )
-              })
-            }
-            reader.readAsArrayBuffer(file)
-          })
         },
+        onError: async () => notifyError('Something went wrong'),
       }
     )
+
+    files.map((file: FileWithPath) => {
+      const reader = new FileReader()
+      const traitName = file.path?.replace('.png', '') || ''
+      if (!traitName) return
+      reader.onload = async () => {
+        const traitElement = allTraits.find((x) => x.name === traitName)
+        console.log('t', { traitElement })
+        if (!traitElement) return
+        uploadCollectionLayerImageCloudinary({
+          file,
+          traitElement,
+          repositoryId,
+        }).then(() => {
+          setUploadedFiles((state) =>
+            produce(state, (draft) => {
+              const trait = draft[layer.name]?.find((x) => x.name === traitName)
+              if (!trait) return
+              trait.uploaded = true
+            })
+          )
+        })
+      }
+      reader.readAsArrayBuffer(file)
+    })
   }
   return { mutate }
 }

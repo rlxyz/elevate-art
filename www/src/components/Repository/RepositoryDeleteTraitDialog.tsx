@@ -55,12 +55,12 @@ export const RepositoryDeleteTraitDialog = ({
                       <span className='text-sm'>
                         Delete an existing trait. This will be applied to all collections in the project.
                       </span>
-                      <div className='space-y-2'>
+                      <div className='flex items-center space-x-1'>
                         {traitElements.map(({ id, name }) => (
-                          <div className='space-y-1' key={id}>
-                            <span className='text-[0.6rem] uppercase'>Trait</span>
-                            <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{name}</div>
-                          </div>
+                          <span className='text-[0.6rem] uppercase'>{name}</span>
+                          // <div className='space-y-1' key={id}>
+                          //   <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{name}</div>
+                          // </div>
                         ))}
                       </div>
                     </div>

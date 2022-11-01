@@ -1,6 +1,11 @@
+import { groupBy } from '@utils/object-utils'
 import { env } from 'src/env/client.mjs'
 import { z } from 'zod'
+import { getLayerElements } from '../../common/get-layer-with-traits'
 import { createRouter } from '../context'
+
+const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
+const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 
 /**
  * TraitElement Router
@@ -12,11 +17,10 @@ export const traitElementRouter = createRouter()
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
    *
    * @todo log the delete that occurs
-   * @todo qstash delete traits from cloudinary to ensure it happens
    */
   .mutation('delete', {
     input: z.object({
-      traitElements: z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() })).min(1),
+      traitElements: TraitElementDeleteInput,
     }),
     async resolve({ ctx, input }) {
       const { traitElements } = input
@@ -31,12 +35,15 @@ export const traitElementRouter = createRouter()
       })
 
       /* Delete many TraitElement from Cloudinary */
+      /* This fetch sends request to Qstash to run delete jobs with retries if failed */
       await Promise.all(
-        traitElements.map(
-          async ({ repositoryId: r, layerElementId: l, id: t }) =>
-            await fetch(`${env.NEXT_PUBLIC_API_URL}/${r}/${l}/${t}/delete/queue`)
-        )
+        traitElements.map(async ({ repositoryId: r, layerElementId: l, id: t }) => {
+          await fetch(`${env.NEXT_PUBLIC_API_URL}/${r}/${l}/${t}/delete/queue`)
+        })
       )
+
+      /* Return all the new TraitElement grouped by LayerElement */
+      return await getLayerElements({ layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)), ctx })
     },
   })
   /**
@@ -47,7 +54,7 @@ export const traitElementRouter = createRouter()
    */
   .mutation('create', {
     input: z.object({
-      traitElements: z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() })),
+      traitElements: TraitElementCreateInput.min(1),
     }),
     async resolve({ ctx, input }) {
       const { traitElements } = input
@@ -58,6 +65,12 @@ export const traitElementRouter = createRouter()
           layerElementId,
           name,
         })),
+      })
+
+      /* Return all the new TraitElement grouped by LayerElement */
+      return await getLayerElements({
+        layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)),
+        ctx,
       })
     },
   })

@@ -125,6 +125,8 @@ model TraitElement {
 
     rulesPrimary   Rules[] @relation("primaryTraitElement")
     rulesSecondary Rules[] @relation("secondaryTraitElement")
+
+    @@unique([name, layerElementId])
 }
 
 model Rules {
