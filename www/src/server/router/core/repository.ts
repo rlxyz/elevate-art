@@ -12,38 +12,6 @@ export const repositoryRouter = createRouter()
       })
     },
   })
-  .query('getRepositoryLayers', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.layerElement.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { priority: 'asc' },
-        include: {
-          traitElements: {
-            orderBy: { weight: 'asc' }, // guarantee rarest first
-            include: {
-              rulesPrimary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-              rulesSecondary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
   .query('getRepositoryCollections', {
     input: z.object({
       id: z.string(),

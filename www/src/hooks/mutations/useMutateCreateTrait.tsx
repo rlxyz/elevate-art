@@ -63,10 +63,10 @@ export const useMutateCreateTrait = () => {
           notifySuccess(`Saved ${variable.traitElements.length} traits. We are now uploading the images to the cloud...`)
 
           // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-          await ctx.cancelQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+          await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
 
           // Snapshot the previous value
-          const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])
+          const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
           if (!backup) return { backup }
 
           // Optimistically update to the new value
@@ -78,7 +78,7 @@ export const useMutateCreateTrait = () => {
             })
           })
 
-          ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)
+          ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
           const allTraits = Object.entries(data).flatMap((x) => x[1])
           files.map((file: FileWithPath) => {
             const reader = new FileReader()

@@ -9,10 +9,10 @@ export const useMutateReorderLayers = () => {
   return trpc.useMutation('layer.reorderMany', {
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryLayers', { id: repositoryId }])
+      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: repositoryId }])
+      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       const { layerIdsInOrder } = input
@@ -28,7 +28,7 @@ export const useMutateReorderLayers = () => {
         draft = draft.sort((a, b) => a.priority - b.priority)
       })
 
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], next)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
 
       // return backup
       return { backup }
@@ -36,7 +36,7 @@ export const useMutateReorderLayers = () => {
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers', { id: repositoryId }]),
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: repositoryId }], context.backup)
+      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
     },
   })
 }

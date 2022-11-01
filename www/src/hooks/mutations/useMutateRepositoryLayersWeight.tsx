@@ -11,10 +11,10 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryLayers', { id: input.repositoryId }])
+      await ctx.cancelQuery(['layers.getAll', { id: input.repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }])
+      const backup = ctx.getQueryData(['layers.getAll', { id: input.repositoryId }])
       if (!backup) return { backup }
 
       // Optimistically update to the new value
@@ -31,7 +31,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
             })
             .sort((a, b) => a.weight - b.weight) || []
       })
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: input.repositoryId }], next)
+      ctx.setQueryData(['layers.getAll', { id: input.repositoryId }], next)
       onMutate && onMutate()
       // return backup
       notifySuccess(`Successfully updated ${layers?.find((l) => l.id === input.layerId)?.name} rarities.`)
@@ -40,7 +40,7 @@ export const useMutateRepositoryLayersWeight = ({ onMutate }: { onMutate?: () =>
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryLayers', { id: variables.repositoryId }], context.backup)
+      ctx.setQueryData(['layers.getAll', { id: variables.repositoryId }], context.backup)
     },
     onSettled: () => ctx.invalidateQueries(['repository.getRepositoryLayers']),
   })
