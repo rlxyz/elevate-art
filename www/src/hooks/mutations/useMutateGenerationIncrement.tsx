@@ -9,14 +9,14 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
   const { mutate } = useQueryRepositoryCollection()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('collections.updateGeneration', {
+  return trpc.useMutation('collections.generation.increment', {
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryCollections', { id: repositoryId }])
+      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryCollections', { id: repositoryId }])
+      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       // Optimistically update to the new value
@@ -28,7 +28,7 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
 
       const collection = next.find((c) => c.id === input.id)
       if (collection) mutate({ collection })
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
+      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
 
       onMutate && onMutate()
       notifySuccess(`Successfully generated a new collection!`)
@@ -36,8 +36,8 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], context.backup)
+      ctx.setQueryData(['collections.getAll', { id: repositoryId }], context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryCollections', { id: repositoryId }]),
+    onSettled: () => ctx.invalidateQueries(['collections.getAll', { id: repositoryId }]),
   })
 }

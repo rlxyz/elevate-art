@@ -22,10 +22,10 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryCollections', { id: repositoryId }])
+      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryCollections', { id: repositoryId }])
+      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       const collection: Collection = {
@@ -46,20 +46,20 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
 
       mutate({ collection })
       onMutate && onMutate()
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
+      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
       return { backup }
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], context.backup)
+      ctx.setQueryData(['collections.getAll', { id: repositoryId }], context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['repository.getRepositoryCollections', { id: repositoryId }]),
+    onSettled: () => ctx.invalidateQueries(['collections.getAll', { id: repositoryId }]),
     onSuccess: async (data, variables) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['repository.getRepositoryCollections', { id: repositoryId }])
+      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['repository.getRepositoryCollections', { id: repositoryId }])
+      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       // Optimistically update to the new value
@@ -68,7 +68,7 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
         if (c) c.id = data.id
       })
       setCollectionId(data.id)
-      ctx.setQueryData(['repository.getRepositoryCollections', { id: repositoryId }], next)
+      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
       return { backup }
     },
   })

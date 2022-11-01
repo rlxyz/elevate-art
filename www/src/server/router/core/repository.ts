@@ -12,51 +12,6 @@ export const repositoryRouter = createRouter()
       })
     },
   })
-  .query('getRepositoryLayers', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.layerElement.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { priority: 'asc' },
-        include: {
-          traitElements: {
-            orderBy: { weight: 'asc' }, // guarantee rarest first
-            include: {
-              rulesPrimary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-              rulesSecondary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
-  .query('getRepositoryCollections', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.collection.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { createdAt: 'asc' },
-      })
-    },
-  })
   .mutation('create', {
     input: z.object({
       organisationId: z.string(),
@@ -137,25 +92,5 @@ export const repositoryRouter = createRouter()
           })
         })
       )
-    },
-  })
-  // todo: better naming conventions?
-  .mutation('createRule', {
-    input: z.object({
-      type: z.string(),
-      primaryLayerElementId: z.string(),
-      primaryTraitElementId: z.string(),
-      secondaryLayerElementId: z.string(),
-      secondaryTraitElementId: z.string(),
-      repositoryId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      await ctx.prisma.rules.create({
-        data: {
-          condition: input.type,
-          primaryTraitElementId: input.primaryTraitElementId,
-          secondaryTraitElementId: input.secondaryTraitElementId,
-        },
-      })
     },
   })

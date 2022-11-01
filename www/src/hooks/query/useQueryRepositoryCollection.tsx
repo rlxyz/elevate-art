@@ -17,7 +17,7 @@ export const useQueryRepositoryCollection = () => {
         setCollectionId: state.setCollectionId,
       }
     })
-  const { data: collections, isLoading, isError } = trpc.useQuery(['repository.getRepositoryCollections', { id: repositoryId }])
+  const { data: collections, isLoading, isError } = trpc.useQuery(['collections.getAll', { id: repositoryId }])
   const { all: layers } = useQueryRepositoryLayer()
 
   // update the current tokens
