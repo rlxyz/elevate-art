@@ -1,6 +1,6 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
-import Upload from '@components/Layout/upload/upload'
+import Upload from '@components/Repository/upload-new-traits/upload'
 import { useMutateCreateNewRepository } from '@hooks/mutations/useMutateCreateNewRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'

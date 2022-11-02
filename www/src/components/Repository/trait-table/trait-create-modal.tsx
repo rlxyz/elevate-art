@@ -1,5 +1,5 @@
 import ModalComponent from '@components/Layout/Modal'
-import Upload from '@components/Layout/upload'
+import Upload from '@components/Repository/upload-new-traits'
 import { FC } from 'react'
 import { useMutateCreateTrait } from './trait-create-mutate-hook'
 
@@ -22,7 +22,7 @@ const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boo
         e.preventDefault()
       }}
     >
-      <Upload className='h-[30vh]' depth={1} onDropCallback={mutate} />
+      <Upload className='h-[30vh]' depth={1} onDropCallback={mutate} gridSize='md' />
     </ModalComponent>
   )
 }

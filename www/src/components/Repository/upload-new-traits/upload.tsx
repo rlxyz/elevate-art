@@ -8,6 +8,7 @@ import UploadDisplay from './upload-display'
 
 interface Props {
   depth: number
+  gridSize: 'md' | 'lg'
   setUploadState?: (state: 'idle' | 'uploading' | 'done' | 'error') => void
   onDropCallback: ({
     files,
@@ -31,6 +32,7 @@ interface Props {
 
 const defaultProps = {
   depth: 4,
+  gridSize: 'lg',
   onDropCallback: ({
     files,
     setUploadedFiles,
@@ -63,6 +65,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   onDropCallback,
   children,
   className,
+  gridSize,
   ...props
 }: React.PropsWithChildren<UploadProps> & typeof defaultProps) => {
   const [uploadedFiles, setUploadedFiles] = useState<{
@@ -117,7 +120,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       )}
       <div className='space-y-6'>
         {Object.entries(uploadedFiles).map((files) => (
-          <UploadDisplay layerName={files[0]} traits={files[1]} />
+          <UploadDisplay layerName={files[0]} traits={files[1]} gridSize={gridSize} />
         ))}
       </div>
     </div>
