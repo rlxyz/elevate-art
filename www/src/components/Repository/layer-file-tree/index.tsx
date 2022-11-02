@@ -48,7 +48,6 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLa
         items={items}
         isReorderable={openReordering}
         onReorder={setItems}
-        layers={layers}
         itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)}
       />
       <LayerElementReorderConfirmModal

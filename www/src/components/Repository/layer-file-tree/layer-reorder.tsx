@@ -10,7 +10,6 @@ interface Props {
   itemEnabledIndex: number
   onReorder: (newOrder: any[]) => void
   isReorderable: boolean
-  layers: LayerElement[]
 }
 
 export type LayerElementFileSelectorProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
@@ -21,7 +20,6 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({
   isReorderable,
   itemEnabledIndex,
   className,
-  layers,
   ...props
 }) => {
   return (
