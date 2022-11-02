@@ -6,7 +6,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { Fragment, useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
 import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
 
@@ -50,9 +50,15 @@ export const useTraitElementForm = ({
     reset,
     watch,
     getValues,
+    control,
     setValue,
   } = useForm<TraitElementFormType>({
     defaultValues: { allCheckboxesChecked: false, traitElements: traitElements.map((x) => ({ ...x, checked: false })) },
+  })
+
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: 'traitElements', // unique name for your Field Array
   })
 
   /**
@@ -82,7 +88,7 @@ export const useTraitElementForm = ({
     })
   }, [allCheckboxesChecked])
 
-  const columns = useMemo<ColumnDef<TraitElement & { checked: boolean }>[]>(
+  const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementFormType, 'traitElements', 'id'>>[]>(
     () => [
       {
         header: () => (
@@ -162,11 +168,13 @@ export const useTraitElementForm = ({
               className='p-2 border border-mediumGrey rounded-[5px]'
               onBlur={(e) => {
                 e.preventDefault()
+                const newName = String(e.target.value)
+                // if (newValue === name) return
                 mutate({
                   traitElements: [
                     {
                       traitElementId: id,
-                      name: e.target.value,
+                      name: newName,
                       repositoryId,
                     },
                   ],
