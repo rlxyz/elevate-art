@@ -88,12 +88,14 @@ export const traitElementRouter = createRouter()
 
       /* Update many traits based on their traitElementId & name */
       await ctx.prisma.$transaction(async (tx) => {
-        traitElements.map(async ({ traitElementId: id, name }) => {
-          await tx.traitElement.update({
-            where: { id },
-            data: { name },
+        await Promise.all(
+          traitElements.map(async ({ traitElementId: id, name }) => {
+            await tx.traitElement.update({
+              where: { id },
+              data: { name },
+            })
           })
-        })
+        )
       })
     },
   })

@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
+import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
 
 export type TraitElementFormType = {
   traitElements: (TraitElement & { checked: boolean })[]
@@ -31,6 +32,11 @@ export const useTraitElementForm = ({
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
+
+  /**
+   *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
+   */
+  const { mutate } = useMutateRenameTraitElement()
 
   /**
    * Table data based on react-hook-form
@@ -144,7 +150,7 @@ export const useTraitElementForm = ({
         accessorKey: 'name',
         cell: ({
           row: {
-            original: { name },
+            original: { id, name },
             index,
           },
         }) => (
@@ -156,6 +162,15 @@ export const useTraitElementForm = ({
               className='p-2 border border-mediumGrey rounded-[5px]'
               onBlur={(e) => {
                 e.preventDefault()
+                mutate({
+                  traitElements: [
+                    {
+                      traitElementId: id,
+                      name: e.target.value,
+                      repositoryId,
+                    },
+                  ],
+                })
               }}
             />
           </>

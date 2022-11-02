@@ -37,6 +37,7 @@ const Index: FC<Props> = ({ traitElements, repositoryId, searchFilter, view }) =
     table,
     create: { open: isCreateDialogOpen, set: setIsCreateDialogOpen },
     delete: { open: isDeleteDialogOpen, set: setIsDeleteDialogOpen },
+    // getRenamedTraitElements,
     getFilteredTraitElements,
     getCheckedTraitElements,
   } = useTraitElementForm({ traitElements, repositoryId, initialSum: 0, searchFilter })
