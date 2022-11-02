@@ -21,12 +21,7 @@ const LayerElementReorderConfirmModal: FC<Props> = ({ visible, onClose, layerEle
       isLoading={isLoading}
       onClick={(e) => {
         e.preventDefault()
-        mutate(
-          {
-            layerIdsInOrder: layerElements.map(({ id }) => id),
-          },
-          { onSettled: onClose }
-        )
+        mutate({ layerElementOrder: layerElements.map(({ id }) => id) }, { onSettled: onClose })
       }}
     />
   )

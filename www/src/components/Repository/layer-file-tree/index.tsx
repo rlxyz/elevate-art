@@ -16,7 +16,7 @@ export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, 
  * The core LayerElement File Tree. It handles selection of the current layer route & reordering of layers.
  */
 const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLayerId, className, ...props }) => {
-  const [items, setItems] = useState<string[]>(layers.map((x) => x.id))
+  const [items, setItems] = useState<LayerElement[]>(layers)
   const [openReordering, setOpenReordering] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
 
@@ -27,6 +27,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLa
         <div className='flex space-x-1 w-[15%]'>
           <button
             className={clsx(
+              openReordering && 'border-blueHighlight text-blueHighlight',
               'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px] text-darkGrey'
             )}
             onClick={() => {
@@ -48,10 +49,10 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLa
         isReorderable={openReordering}
         onReorder={setItems}
         layers={layers}
-        itemEnabledIndex={items.findIndex((x) => x === currentLayerId)}
+        itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)}
       />
       <LayerElementReorderConfirmModal
-        layerElements={layers}
+        layerElements={items}
         onClose={() => setIsConfirmDialogOpen(false)}
         visible={isConfirmDialogOpen}
       />

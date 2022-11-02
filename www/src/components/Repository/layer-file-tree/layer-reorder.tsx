@@ -6,7 +6,7 @@ import { FC } from 'react'
 import { ReorderItem } from './layer-reorder-item'
 
 interface Props {
-  items: string[]
+  items: LayerElement[]
   itemEnabledIndex: number
   onReorder: (newOrder: any[]) => void
   isReorderable: boolean
@@ -33,8 +33,8 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({
               <ReorderItem
                 rounded={index === 0 || index === items.length - 1 ? true : false}
                 canReorder={isReorderable}
-                key={item}
-                name={truncate(layers.find((x) => x.id === item)?.name || '')}
+                key={item.id}
+                name={truncate(item.name)}
                 item={item}
                 enabled={index === itemEnabledIndex}
               />

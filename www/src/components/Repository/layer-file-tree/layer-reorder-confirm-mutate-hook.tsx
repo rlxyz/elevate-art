@@ -21,12 +21,13 @@ export const useMutateReorderLayers = () => {
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        variable.layerIdsInOrder.forEach((id, index) => {
+        variable.layerElementOrder.forEach((id, index) => {
           const layer = draft.find((l) => l.id === id)
           if (layer) {
             layer.priority = index
           }
         })
+        // @todo this seems unsafe; we should depend on server for sorting
         draft = draft.sort((a, b) => a.priority - b.priority)
       })
 

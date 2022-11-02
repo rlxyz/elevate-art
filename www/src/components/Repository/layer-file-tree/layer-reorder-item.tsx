@@ -1,5 +1,6 @@
 import { Link } from '@components/Layout/Link'
 import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import router from 'next/router'
@@ -9,7 +10,7 @@ import { useRaisedShadow } from './layer-reorder-item-shadow'
 
 interface Props {
   rounded: boolean
-  item: string
+  item: LayerElement
   name: string
   enabled: boolean
   canReorder: boolean
