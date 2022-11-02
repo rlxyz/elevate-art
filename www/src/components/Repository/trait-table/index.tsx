@@ -54,7 +54,7 @@ const Index: FC<Props> = ({ traitElements, repositoryId, searchFilter, view }) =
         onClose={() => setIsDeleteDialogOpen(false)}
         traitElements={getCheckedTraitElements()}
       />
-      <TraitElementCreateModal isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
+      <TraitElementCreateModal visible={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
     </>
   )
 }

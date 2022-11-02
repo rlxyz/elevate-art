@@ -10,7 +10,7 @@ import { FileWithPath } from 'react-dropzone'
 export const useMutateCreateTrait = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate: createManyTrait } = trpc.useMutation('traits.create')
+  const { mutate: createManyTrait, isLoading } = trpc.useMutation('traits.create')
   const { current: layer } = useQueryRepositoryLayer()
   const { notifyError, notifySuccess } = useNotification()
   const mutate = ({
@@ -114,5 +114,5 @@ export const useMutateCreateTrait = () => {
       }
     )
   }
-  return { mutate }
+  return { mutate, isLoading }
 }
