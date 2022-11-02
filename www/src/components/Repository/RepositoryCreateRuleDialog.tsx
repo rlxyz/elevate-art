@@ -1,4 +1,4 @@
-import Loader from '@components/Layout/Loader'
+import LoadingComponent from '@components/Layout/Loading'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import { TraitElement } from '@prisma/client'
@@ -108,7 +108,7 @@ export const RepositoryCreateRuleDialog = ({
                         }}
                         className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
-                        {isLoading ? <Loader /> : 'Add'}
+                        {isLoading ? <LoadingComponent /> : 'Add'}
                       </button>
                     </div>
                   </Dialog.Description>

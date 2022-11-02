@@ -1,4 +1,4 @@
-import Loader from '@components/Layout/Loader'
+import LoadingComponent from '@components/Layout/Loading'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateAcceptInvitation } from '@hooks/mutations/useMutateAcceptInvitation'
 import { useNotification } from '@hooks/utils/useNotification'
@@ -97,7 +97,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                         }
                         className='text-xs text-darkGrey py-6 hover:text-black'
                       >
-                        {isLoading ? <Loader /> : 'Join'}
+                        {isLoading ? <LoadingComponent /> : 'Join'}
                       </button>
                     </div>
                   </Dialog.Description>

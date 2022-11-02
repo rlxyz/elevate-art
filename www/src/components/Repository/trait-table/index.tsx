@@ -37,23 +37,22 @@ const Index: FC<Props> = ({ traitElements, repositoryId, searchFilter, view }) =
     table,
     create: { open: isCreateDialogOpen, set: setIsCreateDialogOpen },
     delete: { open: isDeleteDialogOpen, set: setIsDeleteDialogOpen },
-    traitElements: traitElementFormData,
-  } = useTraitElementForm({ traitElements, repositoryId, initialSum: 0 })
-
-  const filteredTraitElementsFormData = traitElements.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase()))
+    getFilteredTraitElements,
+    getCheckedTraitElements,
+  } = useTraitElementForm({ traitElements, repositoryId, initialSum: 0, searchFilter })
 
   return (
     <>
       <TraitElementTable table={table} className={clsx(view === TraitElementView.enum.Table && 'hidden')} />
       <TraitElementGrid
-        traitElements={filteredTraitElementsFormData}
+        traitElements={getFilteredTraitElements()}
         repositoryId={repositoryId}
         className={clsx(view === TraitElementView.enum.Grid && 'hidden')}
       />
       <TraitElementDeleteModal
-        isOpen={isDeleteDialogOpen}
-        traitElements={traitElementFormData.filter((x) => x.checked)}
+        visible={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        traitElements={getCheckedTraitElements()}
       />
       <TraitElementCreateModal isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
     </>

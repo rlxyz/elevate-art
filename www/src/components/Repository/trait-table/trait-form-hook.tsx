@@ -21,10 +21,12 @@ export const useTraitElementForm = ({
   traitElements,
   repositoryId,
   initialSum,
+  searchFilter = '',
 }: {
   traitElements: TraitElement[]
   repositoryId: string
   initialSum: number
+  searchFilter?: string
 }) => {
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
@@ -406,6 +408,7 @@ export const useTraitElementForm = ({
     table,
     delete: { open: isDeleteClicked, set: setIsDeletedClicked },
     create: { open: isCreateClicked, set: setIsCreateClicked },
-    traitElements: traitElementsArray,
+    getFilteredTraitElements: () => traitElementsArray.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase())),
+    getCheckedTraitElements: () => traitElementsArray.filter((x) => x.checked),
   }
 }
