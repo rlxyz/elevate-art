@@ -169,7 +169,7 @@ const Page = () => {
                     </button> */}
                 </div>
                 <div className={clsx(currentView !== 'layers' && 'hidden')}>
-                  <LayerGridView traitElements={filteredTraitElements} />
+                  <LayerGridView traitElements={filteredTraitElements} repositoryId={repositoryId} />
                 </div>
                 <div className={clsx(currentView !== 'rarity' && 'hidden')}>
                   {filteredTraitElements && layer && (

@@ -16,7 +16,7 @@ interface Props {
 }
 
 /**
- * This Functional Component maintains all the logic related to the TraitElmeentTable.
+ * This Functional Component maintains all the logic related to the TraitElementTable.
  * It connects the useTraitElementForm hook with the TraitElementCreateModal & TraitElementDeleteModal
  *
  * @todo initialSum removed as prop. it should be generated here.
