@@ -1,7 +1,7 @@
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import { SearchInput } from '@components/Layout/SearchInput'
-import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
+import LayerElementFileTree from '@components/Repository/layer-file-tree'
 import TraitTable, { TraitElementView, TraitElementViewType } from '@components/Repository/trait-table'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
@@ -32,7 +32,7 @@ const Page = () => {
   const [query, setQuery] = useState('')
   const [currentView, setCurrentView] = useState<TraitElementViewType>(TraitElementView.enum.Table)
   const [isOpen, setIsOpen] = useState(false)
-  const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
+  const { currentLayerPriority, setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
       currentLayerPriority: state.currentLayerPriority,
       setCurrentLayerPriority: state.setCurrentLayerPriority,
@@ -87,9 +87,9 @@ const Page = () => {
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8 -ml-4'>
-              <div className='space-y-4'>
-                <LayerFolderSelector />
-              </div>
+              {layers && (
+                <LayerElementFileTree layers={layers} currentLayerId={layers.find((l) => l.name === layerName)?.id || ''} />
+              )}
             </div>
             <div className='col-span-8'>
               <main className='space-y-3 py-8 pl-8'>
@@ -167,12 +167,14 @@ const Page = () => {
                       Add Trait
                     </button> */}
                 </div>
-                <TraitTable
-                  traitElements={layer?.traitElements}
-                  view={currentView}
-                  repositoryId={repositoryId}
-                  searchFilter={query}
-                />
+                {layer?.traitElements && (
+                  <TraitTable
+                    traitElements={layer.traitElements}
+                    view={currentView}
+                    repositoryId={repositoryId}
+                    searchFilter={query}
+                  />
+                )}
               </main>
             </div>
           </div>

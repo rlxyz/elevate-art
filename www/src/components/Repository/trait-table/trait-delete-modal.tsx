@@ -1,7 +1,7 @@
 import ModalComponent from '@components/Layout/Modal'
-import { useMutateDeleteTrait } from '@hooks/mutations/useMutateDeleteTrait'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
+import { useMutateDeleteTrait } from './trait-delete-mutate-hook'
 
 interface Props {
   onClose?: () => void

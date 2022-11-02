@@ -1,13 +1,17 @@
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 
 export const useMutateReorderLayers = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-
+  const { notifySuccess, notifyError } = useNotification()
   return trpc.useMutation('layers.reorder', {
-    onMutate: async (input) => {
+    onSuccess: async (data, variable) => {
+      // Notify
+      notifySuccess(`You have reordered the layers. All collections have been regenerated with the new order.`)
+
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
 
@@ -15,11 +19,9 @@ export const useMutateReorderLayers = () => {
       const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
-      const { layerIdsInOrder } = input
-
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        layerIdsInOrder.forEach((id, index) => {
+        variable.layerIdsInOrder.forEach((id, index) => {
           const layer = draft.find((l) => l.id === id)
           if (layer) {
             layer.priority = index
@@ -28,15 +30,11 @@ export const useMutateReorderLayers = () => {
         draft = draft.sort((a, b) => a.priority - b.priority)
       })
 
+      // Save
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
-
-      // return backup
-      return { backup }
     },
-    onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
     onError: (err, variables, context) => {
-      if (!context?.backup) return
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
+      notifyError('Something went wrong when reordering layers. Try again...')
     },
   })
 }

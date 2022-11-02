@@ -1,7 +1,7 @@
 import Upload from '@components/Layout/upload'
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateCreateTrait } from '@hooks/mutations/useMutateCreateTrait'
 import { Fragment, useState } from 'react'
+import { useMutateCreateTrait } from './trait-create-mutate-hook'
 
 const TraitElementCreateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')

@@ -19,8 +19,7 @@ const defaultProps: Props = {
   isLoading: false,
 }
 
-type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>
-export type ModalProps = Props & NativeAttrs
+export type ModalProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
 
 const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
   visible: customVisible,
@@ -46,7 +45,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
   }, [customVisible])
 
   return (
-    <Transition appear show={visible} as={Fragment} {...props}>
+    <Transition appear show={visible} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
         <Transition.Child
           as={Fragment}
@@ -71,7 +70,10 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
               leaveFrom='opacity-100 translate-y-0 sm:scale-100'
               leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
-              <Dialog.Panel className='relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'>
+              <Dialog.Panel
+                className='relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'
+                {...props}
+              >
                 <Dialog.Title
                   as='h3'
                   className='p-6 border-b border-mediumGrey bg-white text-black text-md justify-center flex leading-6 font-semibold'
@@ -107,7 +109,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                         isLoading && 'cursor-not-allowed'
                       )}
                     >
-                      {isLoading ? <Loading /> : 'Add'}
+                      {isLoading ? <Loading /> : 'Confirm'}
                     </button>
                   </div>
                 </Dialog.Description>
