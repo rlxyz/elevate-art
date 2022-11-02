@@ -7,7 +7,7 @@ import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 
-export const useMutateCreateTrait = () => {
+export const useMutateCreateTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate: createManyTrait, isLoading } = trpc.useMutation('traits.create')

@@ -2,7 +2,7 @@ import ModalComponent from '@components/Layout/Modal'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { TraitElement } from '@prisma/client'
 import { FC } from 'react'
-import { useMutateDeleteTrait } from './trait-delete-mutate-hook'
+import { useMutateDeleteTraitElement } from './trait-delete-mutate-hook'
 
 interface Props {
   onClose: () => void
@@ -12,14 +12,13 @@ interface Props {
 
 const TraitElementDeleteModal: FC<Props> = ({ visible, onClose, traitElements }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate, isLoading } = useMutateDeleteTrait()
+  const { mutate, isLoading } = useMutateDeleteTraitElement()
   return (
     <ModalComponent
       visible={visible}
       onClose={onClose}
       title='Delete Trait'
       description={`You are deleting ${traitElements.length} traits. This will be applied to all collections in the project`}
-      data={[]}
       isLoading={isLoading}
       onClick={(e) => {
         e.preventDefault()

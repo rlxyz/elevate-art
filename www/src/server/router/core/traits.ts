@@ -6,6 +6,7 @@ import { createRouter } from '../context'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
+const TraitElementRenameInput = z.array(z.object({ name: z.string(), traitElementId: z.string(), repositoryId: z.string() }))
 
 /**
  * TraitElement Router
@@ -71,6 +72,28 @@ export const traitElementRouter = createRouter()
       return await getLayerElements({
         layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)),
         ctx,
+      })
+    },
+  })
+  /**
+   * Renames a TraitElement with their associated LayerElement.
+   * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
+   */
+  .mutation('rename', {
+    input: z.object({
+      traitElements: TraitElementRenameInput.min(1),
+    }),
+    async resolve({ ctx, input }) {
+      const { traitElements } = input
+
+      /* Update many traits based on their traitElementId & name */
+      await ctx.prisma.$transaction(async (tx) => {
+        traitElements.map(async ({ traitElementId: id, name }) => {
+          await tx.traitElement.update({
+            where: { id },
+            data: { name },
+          })
+        })
       })
     },
   })

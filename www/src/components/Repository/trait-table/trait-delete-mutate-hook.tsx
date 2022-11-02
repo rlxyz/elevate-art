@@ -4,7 +4,7 @@ import { groupBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 
-export const useMutateDeleteTrait = () => {
+export const useMutateDeleteTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()

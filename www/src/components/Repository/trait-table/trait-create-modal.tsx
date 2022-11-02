@@ -1,7 +1,7 @@
 import ModalComponent from '@components/Layout/Modal'
 import Upload from '@components/Repository/upload-new-traits'
 import { FC } from 'react'
-import { useMutateCreateTrait } from './trait-create-mutate-hook'
+import { useMutateCreateTraitElement } from './trait-create-mutate-hook'
 
 interface Props {
   onClose: () => void
@@ -9,14 +9,13 @@ interface Props {
 }
 
 const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
-  const { mutate, isLoading } = useMutateCreateTrait()
+  const { mutate, isLoading } = useMutateCreateTraitElement()
   return (
     <ModalComponent
       visible={visible}
       onClose={onClose}
       title='Add Trait'
       description={`You can upload new traits here. This will be applied to all collections in the project.`}
-      data={[]}
       isLoading={isLoading}
       onClick={(e) => {
         e.preventDefault()

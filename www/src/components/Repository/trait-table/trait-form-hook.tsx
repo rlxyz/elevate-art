@@ -37,7 +37,15 @@ export const useTraitElementForm = ({
    * Handles default values in the table, and any hooks needed for the table.
    * Use the default value to add more functionality into the form.
    */
-  const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<TraitElementFormType>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+    getValues,
+    setValue,
+  } = useForm<TraitElementFormType>({
     defaultValues: { allCheckboxesChecked: false, traitElements: traitElements.map((x) => ({ ...x, checked: false })) },
   })
 
@@ -137,8 +145,21 @@ export const useTraitElementForm = ({
         cell: ({
           row: {
             original: { name },
+            index,
           },
-        }) => <div>{name}</div>,
+        }) => (
+          <>
+            <div>{errors.traitElements && errors.traitElements[index]?.name?.message}</div>
+            <input
+              placeholder={name}
+              {...register(`traitElements.${index}.name`)}
+              className='p-2 border border-mediumGrey rounded-[5px]'
+              onBlur={(e) => {
+                e.preventDefault()
+              }}
+            />
+          </>
+        ),
         footer: (props) => props.column.id,
       },
       {
