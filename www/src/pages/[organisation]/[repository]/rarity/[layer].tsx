@@ -2,8 +2,7 @@ import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import { SearchInput } from '@components/Layout/SearchInput'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
-import LayerGridView from '@components/Repository/trait-table/trait-grid'
-import RepositoryRuleDisplayView from '@components/Repository/trait-table/trait-table'
+import TraitTable, { TraitElementView, TraitElementViewType } from '@components/Repository/trait-table'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -31,7 +30,7 @@ const Page = () => {
     }
   })
   const [query, setQuery] = useState('')
-  const [currentView, setCurrentView] = useState<'rarity' | 'layers'>('rarity')
+  const [currentView, setCurrentView] = useState<TraitElementViewType>(TraitElementView.enum.Table)
   const [isOpen, setIsOpen] = useState(false)
   const { setCurrentLayerPriority } = useCollectionNavigationStore((state) => {
     return {
@@ -119,9 +118,9 @@ const Page = () => {
                   >
                     <div className={clsx(!hasLoaded() && 'invisible', 'flex w-full h-full')}>
                       <button
-                        onClick={() => setCurrentView('rarity')}
+                        onClick={() => setCurrentView(TraitElementView.enum.Table)}
                         className={clsx(
-                          currentView === 'rarity' ? 'bg-lightGray text-black' : 'text-darkGrey',
+                          currentView === TraitElementView.enum.Table ? 'bg-lightGray text-black' : 'text-darkGrey',
                           'flex w-full items-center justify-center space-x-2 p-2'
                         )}
                       >
@@ -137,9 +136,9 @@ const Page = () => {
                         </svg>
                       </button>
                       <button
-                        onClick={() => setCurrentView('layers')}
+                        onClick={() => setCurrentView(TraitElementView.enum.Grid)}
                         className={clsx(
-                          currentView === 'layers' && 'bg-lightGray text-black',
+                          currentView === TraitElementView.enum.Grid && 'bg-lightGray text-black',
                           'flex w-full items-center justify-center space-x-2 p-2 text-darkGrey'
                         )}
                       >
@@ -149,7 +148,7 @@ const Page = () => {
                           viewBox='0 0 24 24'
                           strokeWidth={1.25}
                           stroke='currentColor'
-                          className={clsx('w-3 h-3', currentView === 'layers' ? 'text-black' : 'text-darkGrey')}
+                          className={clsx('w-3 h-3', currentView === TraitElementView.enum.Grid ? 'text-black' : 'text-darkGrey')}
                         >
                           <path
                             strokeLinecap='round'
@@ -168,18 +167,12 @@ const Page = () => {
                       Add Trait
                     </button> */}
                 </div>
-                <div className={clsx(currentView !== 'layers' && 'hidden')}>
-                  <LayerGridView traitElements={filteredTraitElements} repositoryId={repositoryId} />
-                </div>
-                <div className={clsx(currentView !== 'rarity' && 'hidden')}>
-                  {filteredTraitElements && layer && (
-                    <RepositoryRuleDisplayView
-                      traitElements={filteredTraitElements}
-                      initialSum={layer.traitElements.reduce((a, b) => a + b.weight, 0)}
-                      repositoryId={repositoryId}
-                    />
-                  )}
-                </div>
+                <TraitTable
+                  traitElements={layer?.traitElements}
+                  view={currentView}
+                  repositoryId={repositoryId}
+                  searchFilter={query}
+                />
               </main>
             </div>
           </div>

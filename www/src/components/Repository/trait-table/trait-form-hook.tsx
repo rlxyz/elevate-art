@@ -4,7 +4,6 @@ import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { TraitElement } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
-import { sumBy } from '@utils/object-utils'
 import clsx from 'clsx'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,10 +12,6 @@ import { env } from 'src/env/client.mjs'
 export type TraitElementFormType = {
   traitElements: (TraitElement & { checked: boolean })[]
   allCheckboxesChecked: boolean
-}
-
-export const calculateSumArray = (values: { weight: number }[] | undefined) => {
-  return values ? sumBy(values, (x) => x.weight) : 0
 }
 
 /**
