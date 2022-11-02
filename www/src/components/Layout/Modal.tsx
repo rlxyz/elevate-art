@@ -30,6 +30,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
   isLoading,
   children,
   onClick,
+  className,
   ...props
 }: ModalProps & typeof defaultProps) => {
   const [visible, setVisible] = useState(false)
@@ -71,7 +72,10 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
               leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
               <Dialog.Panel
-                className='relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full'
+                className={clsx(
+                  className,
+                  'relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all max-w-md'
+                )}
                 {...props}
               >
                 <Dialog.Title

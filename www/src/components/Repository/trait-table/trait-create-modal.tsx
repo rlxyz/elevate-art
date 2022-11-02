@@ -20,7 +20,9 @@ const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boo
       isLoading={isLoading}
       onClick={(e) => {
         e.preventDefault()
+        onClose()
       }}
+      className='md:max-w-2xl' // @todo fix this
     >
       <Upload className='h-[30vh]' depth={1} onDropCallback={mutate} gridSize='md' />
     </ModalComponent>
