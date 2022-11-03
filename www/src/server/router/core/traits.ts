@@ -10,7 +10,7 @@ const TraitElementRenameInput = z.array(z.object({ name: z.string(), traitElemen
 
 /**
  * TraitElement Router
- * Any TraitElement functionality from the application should be done here.
+ * Any TraitElement functionality should implemented here.
  */
 export const traitElementRouter = createRouter()
   /**
@@ -65,6 +65,7 @@ export const traitElementRouter = createRouter()
         data: traitElements.map(({ name, layerElementId }) => ({
           layerElementId,
           name,
+          weight: 0, // weight set to 0 to not fuck up existing collections
         })),
       })
 

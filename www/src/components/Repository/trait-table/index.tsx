@@ -3,13 +3,13 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC } from 'react'
 import { z } from 'zod'
-import TraitElementTable from './trait-table'
-import { useTraitElementForm } from './trait-table-hook'
+import { useTraitElementForm } from './trait-table-form-hook'
+import TraitElementTable from './trait-table-list'
 
 /** Server-Side Rendering is set to false as we do not need these components on startup */
 const TraitElementCreateModal = dynamic(() => import('./trait-create-modal'), { ssr: false })
 const TraitElementDeleteModal = dynamic(() => import('./trait-delete-modal'), { ssr: false })
-const TraitElementGrid = dynamic(() => import('./trait-grid'))
+const TraitElementGrid = dynamic(() => import('./trait-table-grid'))
 
 /** View Enum */
 export const TraitElementView = z.nativeEnum(

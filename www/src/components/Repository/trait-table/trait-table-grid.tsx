@@ -23,10 +23,10 @@ const TraitElementGrid: FC<TraitElementGridProps> = ({ traitElements, repository
       {traitElements.map((trait: TraitElement) => {
         return (
           <div key={trait.id} className='w-auto h-auto flex-col border border-mediumGrey rounded-[5px] shadow-md'>
-            <div className='h-[10rem] w-auto overflow-hidden flex items-center bg-lightGray border-b border-mediumGrey'>
+            <div className='h-[10rem] w-auto overflow-hidden flex items-center border-b border-mediumGrey'>
               <img
                 loading='lazy'
-                className='w-auto h-auto border-t border-b border-mediumGrey object-contain bg-white'
+                className='w-auto h-auto border-t border-b border-mediumGrey object-contain'
                 src={getImageForTrait({
                   r: repositoryId,
                   l: trait.layerElementId,

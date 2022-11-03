@@ -1,16 +1,29 @@
 import { z } from 'zod'
 import { createRouter } from '../context'
 
+/**
+ * LayerElement Router
+ * Any LayerElement functionality should implemented here.
+ */
 export const layerElementRouter = createRouter()
+  /**
+   * Get All LayerElements based on their associated repository id.
+   * Also, returns the associated TraitElements & Rules.
+   *
+   * @todo break this up so TraitElements & Rules are fetched separately, its too
+   *       much data to fetch at once. requires big restructuring of data fetch in app
+   * @todo rename input id to repositoryId; not specific enough
+   */
   .query('getAll', {
     input: z.object({
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
+      const { id: repositoryId } = input
+
+      /** Fetch many LayerElement & TraitElements & Rules from Db */
       return await ctx.prisma.layerElement.findMany({
-        where: {
-          repositoryId: input.id,
-        },
+        where: { repositoryId },
         orderBy: [{ priority: 'asc' }, { name: 'asc' }],
         include: {
           traitElements: {
@@ -32,6 +45,39 @@ export const layerElementRouter = createRouter()
               },
             },
           },
+        },
+      })
+    },
+  })
+  /**
+   * Create LayerElement with their associated repository id.
+   * This function is NOT dynamic. It only allows a single LayerElement to be created.
+   * It also created all associated TraitElements.
+   *
+   * @todo make this more dynamic so it can create multiple LayerElements at once.
+   */
+  .mutation('create', {
+    input: z.object({
+      repositoryId: z.string(),
+      name: z.string(),
+      traitElements: z.array(z.object({ name: z.string() })),
+    }),
+    async resolve({ ctx, input }) {
+      const { repositoryId, name, traitElements } = input
+
+      /** Create LayerElement & TraitElements in Db */
+      return await ctx.prisma.layerElement.create({
+        data: {
+          repositoryId,
+          name,
+          traitElements: {
+            createMany: {
+              data: traitElements.map(({ name }) => ({ name, weight: 1 })),
+            },
+          },
+        },
+        include: {
+          traitElements: true,
         },
       })
     },
