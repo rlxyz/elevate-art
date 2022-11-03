@@ -3,79 +3,13 @@ import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
-import * as v from '@utils/compiler'
-import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
-import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import { Fragment, ReactNode, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import { PreviewImageCardStandalone, PreviewImageCardWithChildren } from './CollectionPreviewImage'
 
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
-
-const PreviewImage = ({
-  id,
-  collection,
-  layers,
-  repositoryId,
-  children,
-  canHover = false,
-}: {
-  id: number
-  collection: Collection
-  repositoryId: string
-  layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
-  children: ReactNode
-  canHover?: boolean
-}) => {
-  const elements = v.one(
-    v.parseLayer(
-      layers.map((l) => ({
-        ...l,
-        traits: l.traitElements.map((t) => ({
-          ...t,
-          rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-              type: condition as v.RulesType,
-              with: left === t.id ? right : left,
-            })
-          ),
-        })),
-      }))
-    ),
-    v.seed(repositoryId, collection.name, collection.generations, id)
-  )
-
-  const hash = v.hash(elements)
-
-  return (
-    <div className={clsx('relative flex-col h-full w-full overflow-hidden')}>
-      <motion.div
-        className='relative overflow-hidden h-[75%] w-full flex items-center'
-        whileHover={{
-          scale: canHover ? 1.05 : 1.0,
-          transition: { duration: 1 },
-        }}
-      >
-        {elements.map(([l, t], index) => {
-          return (
-            <img
-              key={`${hash}-${t}-${index}`}
-              className={clsx('absolute w-full border-box object-contain')}
-              src={getImageForTrait({
-                r: repositoryId,
-                l,
-                t,
-              })}
-            />
-          )
-        })}
-      </motion.div>
-      <div className='h-[25%] flex flex-col w-full'>{children}</div>
-    </div>
-  )
-}
 
 const InfiniteScrollGridLoading = () => {
   return (
@@ -122,7 +56,13 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                 className='flex flex-col rounded-[5px] cursor-pointer h-[17.5rem] border border-mediumGrey bg-white shadow-lg'
                 onClick={() => setSelectedToken(item || null)}
               >
-                <PreviewImage canHover id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
+                <PreviewImageCardWithChildren
+                  canHover
+                  id={item}
+                  collection={collection}
+                  layers={layers}
+                  repositoryId={repositoryId}
+                >
                   <div className='px-2 flex flex-col h-full items-center justify-center py-2'>
                     <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
                       item || 0
@@ -134,7 +74,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                       OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
                     </span>
                   </div>
-                </PreviewImage>
+                </PreviewImageCardWithChildren>
               </article>
             )
           })}
@@ -167,9 +107,12 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border max-w-lg border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
-                    <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
-                      <></>
-                    </PreviewImage>
+                    <PreviewImageCardStandalone
+                      id={selectedToken}
+                      collection={collection}
+                      layers={layers}
+                      repositoryId={repositoryId}
+                    />
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
