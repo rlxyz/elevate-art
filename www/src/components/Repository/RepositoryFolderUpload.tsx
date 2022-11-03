@@ -12,7 +12,7 @@ import { motion } from 'framer-motion'
 import produce from 'immer'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import {
   getRepositoryLayerNames,
@@ -177,10 +177,6 @@ export const FolderUpload = () => {
         notifyError('There seems to be something wrong with the folder format.')
     }
   }, [])
-
-  useEffect(() => {
-    console.log({ uploadedFiles })
-  }, [uploadedFiles])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -62,7 +62,6 @@ export const useMutateAcceptInvitation = () => {
         )
       })
 
-      console.log({ nextPending, next })
       ctx.setQueryData(['organisation.getManyPendingOrganisationByUserId', { id: session.user.id }], nextPending)
 
       // return backup

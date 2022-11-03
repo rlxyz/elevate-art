@@ -36,7 +36,7 @@ export const OrganisationGeneralSettings = () => {
   return (
     <form
       onSubmit={handleSubmit((data) => {
-        console.log('tobeimeplemtned')
+        // @todo to be implemented
       })}
     >
       <div className='w-full rounded-[5px] border border-mediumGrey'>

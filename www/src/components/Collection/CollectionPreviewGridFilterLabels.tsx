@@ -33,7 +33,7 @@ const CollectionPreviewGridFilterLabels = () => {
               )}
             </span>
           ) : (
-            <span className='text-xs text-black'>{`${tokens.length} results`}</span>
+            <span className='lg:text-xs text-[0.6rem] text-black'>{`${tokens.length} results`}</span>
           )}
         </div>
       </div>
@@ -41,7 +41,7 @@ const CollectionPreviewGridFilterLabels = () => {
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}
-            className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 text-xs font-medium text-black'
+            className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'
           >
             <div>
               <span className='text-darkGrey mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}
