@@ -1,12 +1,11 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
-import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
 import { TraitElement } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { Fragment, useEffect, useMemo, useState } from 'react'
-import { FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form'
+import { FieldArrayWithId, useForm } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
 import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
 
@@ -22,11 +21,13 @@ export const useTraitElementForm = ({
   traitElements,
   repositoryId,
   initialSum,
+  key,
   searchFilter = '',
 }: {
   traitElements: TraitElement[]
   repositoryId: string
   initialSum: number
+  key: string
   searchFilter?: string
 }) => {
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
@@ -56,11 +57,6 @@ export const useTraitElementForm = ({
     defaultValues: { allCheckboxesChecked: false, traitElements: traitElements.map((x) => ({ ...x, checked: false })) },
   })
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: 'traitElements', // unique name for your Field Array
-  })
-
   /**
    * Used in effects.
    * Source: https://react-hook-form.com/api/useform/watch
@@ -72,10 +68,11 @@ export const useTraitElementForm = ({
    * Reset Effect
    * This effect resets the Table.
    */
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     reset({ traitElements: traitElements.map((x) => x) })
+    // reset({ allCheckboxesChecked: false })
     setHasFormChange(false)
-  }, [traitElements])
+  }, [key])
 
   /**
    * Delete All Checkbox Effect

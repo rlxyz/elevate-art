@@ -116,7 +116,7 @@ const Page = () => {
                       'border bg-white border-mediumGrey rounded-[5px]'
                     )}
                   >
-                    <div className={clsx(!hasLoaded() && 'invisible', 'flex w-full h-full')}>
+                    <div className={clsx(!hasLoaded() && 'invisible', 'flex w-full h-full divide-x divide-mediumGrey')}>
                       <button
                         onClick={() => setCurrentView(TraitElementView.enum.Table)}
                         className={clsx(
@@ -167,14 +167,7 @@ const Page = () => {
                       Add Trait
                     </button> */}
                 </div>
-                {layer?.traitElements && (
-                  <TraitTable
-                    traitElements={layer.traitElements}
-                    view={currentView}
-                    repositoryId={repositoryId}
-                    searchFilter={query}
-                  />
-                )}
+                <TraitTable layerElement={layer} view={currentView} repositoryId={repositoryId} searchFilter={query} />
               </main>
             </div>
           </div>

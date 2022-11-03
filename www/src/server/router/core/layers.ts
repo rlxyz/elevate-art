@@ -36,6 +36,20 @@ export const layerElementRouter = createRouter()
       })
     },
   })
+  .query('traits.find', {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const { id } = input
+      return await ctx.prisma.layerElement.findFirst({
+        where: {
+          id,
+        },
+        select: { traitElements: true },
+      })
+    },
+  })
   .mutation('reorder', {
     input: z.object({
       layerElementOrder: z.array(z.string()),
