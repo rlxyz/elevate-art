@@ -69,8 +69,8 @@ export const useTraitElementForm = ({
    * This effect resets the Table.
    */
   useEffect(() => {
-    reset({ traitElements: traitElements.map((x) => x) })
-    // reset({ allCheckboxesChecked: false })
+    reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false })) })
+    setValue('allCheckboxesChecked', false)
     setHasFormChange(false)
   }, [key])
 

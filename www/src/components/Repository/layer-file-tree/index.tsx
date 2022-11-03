@@ -1,7 +1,9 @@
+import { PlusIcon } from '@heroicons/react/outline'
 import { SwitchVerticalIcon } from '@heroicons/react/solid'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC, useState } from 'react'
+import LayerElementCreateModal from './layer-create-modal'
 import LayerElementFileSelector from './layer-reorder'
 import LayerElementReorderConfirmModal from './layer-reorder-confirm-modal'
 
@@ -19,29 +21,35 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLa
   const [items, setItems] = useState<LayerElement[]>(layers)
   const [openReordering, setOpenReordering] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   return (
     <div {...props} className={clsx(className, 'space-y-4')}>
       <div className='flex flex-row justify-between items-end'>
-        <h3 className='text-md font-semibold'>Your Layers</h3>
-        <div className='flex space-x-1 w-[15%]'>
-          <button
-            className={clsx(
-              openReordering && 'border-blueHighlight text-blueHighlight',
-              'flex w-full items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px] text-darkGrey'
-            )}
-            onClick={() => {
-              if (!openReordering) {
-                setOpenReordering(true)
-              } else {
-                setIsConfirmDialogOpen(true)
-                setOpenReordering(false)
-              }
-            }}
-          >
-            <SwitchVerticalIcon className='w-3 h-3' />
-          </button>
-        </div>
+        <button
+          className={clsx(
+            openReordering && 'border-blueHighlight text-blueHighlight',
+            'flex items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px] text-darkGrey'
+          )}
+          onClick={() => {
+            if (!openReordering) {
+              setOpenReordering(true)
+            } else {
+              setIsConfirmDialogOpen(true)
+              setOpenReordering(false)
+            }
+          }}
+        >
+          <SwitchVerticalIcon className='w-3 h-3' />
+        </button>
+        <button
+          className={clsx(
+            'flex items-center justify-center space-x-2 p-2 text-xs border border-mediumGrey bg-white rounded-[5px] text-darkGrey'
+          )}
+          onClick={() => setIsCreateDialogOpen(true)}
+        >
+          <PlusIcon className='w-3 h-3' />
+        </button>
       </div>
 
       <LayerElementFileSelector
@@ -55,6 +63,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers, currentLa
         onClose={() => setIsConfirmDialogOpen(false)}
         visible={isConfirmDialogOpen}
       />
+      <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} />
     </div>
   )
 }

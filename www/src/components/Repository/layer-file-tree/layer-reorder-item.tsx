@@ -38,19 +38,19 @@ export const ReorderItem: FC<ModalProps> = ({ item, name, enabled, canReorder, r
         hover
         rounded={rounded}
       >
-        <div className={clsx(className, 'flex justify-between w-full')} {...props}>
-          <span className='px-5 flex flex-row items-center justify-between text-xs w-full overflow-hidden whitespace-nowrap'>
-            {name}
-          </span>
+        <div className={clsx(className, 'relative flex items-center justify-between w-full')} {...props}>
           {canReorder && (
             <DotsHorizontalIcon
-              className='mr-2 w-4 h-4'
+              className='ml-2 absolute w-3 h-3'
               onPointerDown={(e) => {
                 e.preventDefault()
                 dragControls.start(e)
               }}
             />
           )}
+          <span className='px-7 flex flex-row items-center justify-between text-xs w-full overflow-hidden whitespace-nowrap'>
+            {name}
+          </span>
         </div>
       </Link>
     </Reorder.Item>

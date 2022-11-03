@@ -25,7 +25,7 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({
   return (
     <div className={clsx(className, 'border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]')} {...props}>
       <AnimatePresence>
-        <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items}>
+        <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items} className='overflow-hidden'>
           {items.map((item, index) => {
             return (
               <ReorderItem
