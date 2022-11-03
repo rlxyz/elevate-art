@@ -50,34 +50,29 @@ const PreviewImage = ({
   const hash = v.hash(elements)
 
   return (
-    <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
-      <div className='py-8 overflow-hidden'>
-        <motion.div
-          whileHover={{
-            scale: canHover ? 1.05 : 1.0,
-            transition: { duration: 1 },
-          }}
-          className='relative'
-        >
-          {elements.map(([l, t], index) => {
-            return (
-              <img
-                key={`${hash}-${t}-${index}`}
-                className={clsx(
-                  index === elements.length - 1 ? 'relative' : 'absolute',
-                  'w-full h-auto border-t border-b border-mediumGrey'
-                )}
-                src={getImageForTrait({
-                  r: repositoryId,
-                  l,
-                  t,
-                })}
-              />
-            )
-          })}
-        </motion.div>
-      </div>
-      {children}
+    <div className={clsx('relative flex-col h-full w-full overflow-hidden')}>
+      <motion.div
+        className='relative overflow-hidden h-[75%] w-full flex items-center'
+        whileHover={{
+          scale: canHover ? 1.05 : 1.0,
+          transition: { duration: 1 },
+        }}
+      >
+        {elements.map(([l, t], index) => {
+          return (
+            <img
+              key={`${hash}-${t}-${index}`}
+              className={clsx('absolute w-full border-box object-contain')}
+              src={getImageForTrait({
+                r: repositoryId,
+                l,
+                t,
+              })}
+            />
+          )
+        })}
+      </motion.div>
+      <div className='h-[25%] flex flex-col w-full'>{children}</div>
     </div>
   )
 }
@@ -122,27 +117,25 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <div
+              <article
                 key={`${item}-${index}`}
-                className='flex flex-col rounded-[5px] cursor-pointer'
+                className='flex flex-col rounded-[5px] cursor-pointer h-[17.5rem] border border-mediumGrey bg-white shadow-lg'
                 onClick={() => setSelectedToken(item || null)}
               >
                 <PreviewImage canHover id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
-                  <div className='px-1 flex flex-col space-y-1 mb-3'>
+                  <div className='px-2 flex flex-col h-full items-center justify-center py-2'>
                     <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
                       item || 0
                     }`}</span>
-                    <div className='flex flex-col text-[0.6rem]'>
-                      <span className='font-semibold overflow-hidden w-full'>
-                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
-                      </span>
-                      <span className='text-darkGrey overflow-hidden w-full'>
-                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
-                      </span>
-                    </div>
+                    <span className='font-semibold w-full text-[0.6rem]'>
+                      <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
+                    </span>
+                    <span className='text-darkGrey w-full text-[0.6rem]'>
+                      OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
+                    </span>
                   </div>
                 </PreviewImage>
-              </div>
+              </article>
             )
           })}
         </>
