@@ -146,7 +146,7 @@ export const FilterByTrait = () => {
                   }
                 >
                   {layer.traitElements
-                    .sort((a, b) => a.weight - b.weight)
+                    .sort((a, b) => (traitMapping?.traitMap.get(a.id) || 0) - (traitMapping?.traitMap.get(b.id) || 0))
                     .map((traitElement: TraitElement, index) => {
                       return (
                         <div key={index}>
