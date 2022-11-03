@@ -42,7 +42,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   })
 
   return (
-    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
+    <div className='py-2 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -53,7 +53,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
             return (
               <article
                 key={`${item}-${index}`}
-                className='flex flex-col rounded-[5px] cursor-pointer h-[17.5rem] border border-mediumGrey bg-white shadow-lg'
+                className='flex flex-col rounded-[5px] cursor-pointer xl:h-[17.5rem] md:h-[15rem] sm:h-[20rem] h-[20rem] border border-mediumGrey bg-white shadow-lg'
                 onClick={() => setSelectedToken(item || null)}
               >
                 <PreviewImageCardWithChildren
@@ -64,13 +64,13 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   repositoryId={repositoryId}
                 >
                   <div className='px-2 flex flex-col h-full items-center justify-center py-2'>
-                    <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
-                      item || 0
-                    }`}</span>
-                    <span className='font-semibold w-full text-[0.6rem]'>
+                    <span className='text-[0.6rem] xl:text-xs font-semibold overflow-hidden w-full whitespace-nowrap'>{`${
+                      current?.tokenName || ''
+                    } #${item || 0}`}</span>
+                    <span className='font-semibold w-full xl:text-[0.6rem] text-[0.5rem]'>
                       <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
                     </span>
-                    <span className='text-darkGrey w-full text-[0.6rem]'>
+                    <span className='hidden xl:block text-darkGrey w-full xl:text-[0.6rem] text-[0.5rem]'>
                       OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
                     </span>
                   </div>
@@ -155,7 +155,10 @@ export const InfiniteScrollGrid = () => {
   return (
     <>
       <span
-        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50', 'text-xs text-darkGrey mb-1')}
+        className={clsx(
+          !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50',
+          'lg:text-xs text-[0.6rem] text-darkGrey'
+        )}
       >
         <span className={clsx(!collection && 'invisible')}>{`${collection?.generations || 0} generations`}</span>
       </span>
@@ -181,14 +184,14 @@ export const InfiniteScrollGrid = () => {
 const Index = () => {
   const { current: collection } = useQueryRepositoryCollection()
   return (
-    <main className='space-y-3'>
+    <main className='space-y-1'>
       <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
           <div className='flex space-x-2'>
             <h1
               className={clsx(
                 !collection && 'animate-pulse flex flex-row rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
-                'text-2xl font-bold text-black'
+                'lg:text-2xl text-lg font-bold text-black'
               )}
             >
               <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
@@ -197,16 +200,14 @@ const Index = () => {
           <p
             className={clsx(
               !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
-              'text-sm text-darkGrey w-1/2'
+              'lg:text-sm text-xs text-darkGrey w-1/2'
             )}
           >
             <span className={clsx(!collection && 'invisible')}>Create different token sets before finalising the collection</span>
           </p>
         </div>
       </div>
-      <div>
-        <InfiniteScrollGrid />
-      </div>
+      <InfiniteScrollGrid />
     </main>
   )
 }
