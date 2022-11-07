@@ -54,7 +54,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disa
 
               return (
                 <button onClick={openAccountModal} type='button'>
-                  <AvatarComponent className='w-4 h-4 text-darkGrey' src='/images/avatar.png' />
+                  <AvatarComponent className='w-4 h-4 text-darkGrey' src='/images/avatar-blank.png' />
                 </button>
               )
             })()}
