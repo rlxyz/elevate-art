@@ -23,24 +23,22 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({
   ...props
 }) => {
   return (
-    <div className={clsx(className, 'border border-mediumGrey rounded-[5px] max-h-[calc(100vh-17.5rem)]')} {...props}>
-      <AnimatePresence>
-        <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items} className='overflow-hidden'>
-          {items.map((item, index) => {
-            return (
-              <ReorderItem
-                rounded={index === 0 || index === items.length - 1 ? true : false}
-                canReorder={isReorderable}
-                key={item.id}
-                name={truncate(item.name)}
-                item={item}
-                enabled={index === itemEnabledIndex}
-              />
-            )
-          })}
-        </Reorder.Group>
-      </AnimatePresence>
-    </div>
+    <AnimatePresence>
+      <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items} className={clsx('overflow-hidden', className)}>
+        {items.map((item, index) => {
+          return (
+            <ReorderItem
+              rounded={index === 0 || index === items.length - 1 ? true : false}
+              canReorder={isReorderable}
+              key={item.id}
+              name={truncate(item.name)}
+              item={item}
+              enabled={index === itemEnabledIndex}
+            />
+          )
+        })}
+      </Reorder.Group>
+    </AnimatePresence>
   )
 }
 
