@@ -33,10 +33,9 @@ const Page = () => {
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
-  const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+  const { all: organisations } = useQueryOrganisation()
+  const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
-  const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
 
   useEffect(() => {
     if (!repository) return
@@ -64,21 +63,21 @@ const Page = () => {
           internalNavigation={[
             {
               name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}`,
               enabled: true,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
           ]}
         />
