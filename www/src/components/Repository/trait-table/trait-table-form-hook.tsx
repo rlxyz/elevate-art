@@ -1,8 +1,17 @@
 import { Popover, Transition } from '@headlessui/react'
-import { CheckCircleIcon, InformationCircleIcon, PlusCircleIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/outline'
+import {
+  CheckCircleIcon,
+  InformationCircleIcon,
+  MinusIcon,
+  PlusCircleIcon,
+  PlusIcon,
+  RefreshIcon,
+  XCircleIcon,
+} from '@heroicons/react/outline'
 import { TraitElement } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
+import { sumBy } from '@utils/object-utils'
 import clsx from 'clsx'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId, useForm } from 'react-hook-form'
@@ -20,19 +29,19 @@ export type TraitElementFormType = {
 export const useTraitElementForm = ({
   traitElements,
   repositoryId,
-  initialSum,
   key,
   searchFilter = '',
 }: {
   traitElements: TraitElement[]
   repositoryId: string
-  initialSum: number
   key: string
   searchFilter?: string
 }) => {
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
+  const initialSum = useMemo(() => sumBy(traitElements, (x) => x.weight), [key])
+  // const [initialSum, setInitialSum] = useState<number>(sumBy(traitElements, (x) => x.weight))
 
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
@@ -69,9 +78,10 @@ export const useTraitElementForm = ({
    * This effect resets the Table.
    */
   useEffect(() => {
-    reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false })) })
     setValue('allCheckboxesChecked', false)
     setHasFormChange(false)
+    // setInitialSum(sumBy(traitElements, (x) => x.weight))
+    reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false })) })
   }, [key])
 
   /**
@@ -162,7 +172,7 @@ export const useTraitElementForm = ({
             <input
               placeholder={name}
               {...register(`traitElements.${index}.name`)}
-              className='p-2 border border-mediumGrey rounded-[5px]'
+              className='px-2 py-1 border border-mediumGrey rounded-[5px] text-xs'
               onBlur={(e) => {
                 e.preventDefault()
                 const newName = String(e.target.value)
@@ -185,7 +195,7 @@ export const useTraitElementForm = ({
       {
         header: () => (
           <div className='flex space-x-1'>
-            <span>Estimate In Collection</span>
+            <span>%</span>
             <Popover>
               <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
               <Transition
@@ -200,7 +210,7 @@ export const useTraitElementForm = ({
                 <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
                   <div className='p-2 shadow-lg'>
                     <p className='text-[0.65rem] text-white font-normal normal-case'>
-                      {'We linearly distribute the rarity changes to the rest of the traits in this layer.'}
+                      We linearly distribute the rarity changes to the rest of the traits in this layer
                     </p>
                   </div>
                 </Popover.Panel>
@@ -210,36 +220,46 @@ export const useTraitElementForm = ({
         ),
         accessorKey: 'estimateInCollection',
         cell: ({ row: { original, index } }) => (
-          <input
-            className='bg-white text-xs w-1/2 border border-mediumGrey rounded-[5px] p-2'
-            type='number'
-            {...register(`traitElements.${index}.weight` as const, {
-              valueAsNumber: true,
-              min: 0,
-              max: 100,
-              onChange: (e) => {
+          <div className='w-3/4 justify-between flex items-center border border-mediumGrey rounded-[5px]'>
+            <button
+              className='border-r border-mediumGrey px-2 py-2'
+              onClick={(e) => {
                 e.preventDefault()
-                e.persist()
-                !hasFormChange && setHasFormChange(true)
-                const difference = Math.abs(initialSum - getValues().traitElements.reduce((acc, curr) => acc + curr.weight, 0))
-                const sum = getValues().traitElements.reduce((a, c) => a + c.weight, 0) - Number(e.target.value)
-                if (sum === 0) {
-                  getValues().traitElements.forEach((x, index) => {
-                    if (x.id === original.id) return
-                    setValue(`traitElements.${index}.weight`, 0)
-                  })
-                  return
-                }
+                if (original.weight - 0.1 < 0) return
+                setHasFormChange(true)
+                setValue(`traitElements.${index}.weight`, original.weight - 0.1)
                 getValues().traitElements.forEach((x, index) => {
                   if (x.id === original.id) return
-                  const minus = x.weight / difference / sum // this scales down the difference to the weight of the current element
-                  setValue(`traitElements.${index}.weight` as const, x.weight - minus)
+                  setValue(`traitElements.${index}.weight`, x.weight + 0.1 / (getValues().traitElements.length - 1))
                 })
-              },
-            })}
-            min={0}
-            max={100}
-          />
+              }}
+            >
+              <MinusIcon className='w-2 h-2 text-darkGrey' />
+            </button>
+            <div className='w-full flex items-center justify-between py-1 text-xs px-2 cursor-default'>
+              <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{original.weight.toFixed(2)}</span>
+              {/* <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{`${(
+                (watch(`traitElements.${index}.weight`) / initialSum) *
+                100
+              ).toFixed(3)}`}</span> */}
+              <span className='text-darkGrey text-[0.6rem]'>%</span>
+            </div>
+            <button
+              className='border-l border-mediumGrey p-2'
+              onClick={(e) => {
+                e.preventDefault()
+                if (original.weight + 0.1 > 100) return
+                setHasFormChange(true)
+                setValue(`traitElements.${index}.weight`, original.weight + 0.1)
+                getValues().traitElements.forEach((x, index) => {
+                  if (x.id === original.id) return
+                  setValue(`traitElements.${index}.weight`, x.weight - 0.1 / (getValues().traitElements.length - 1))
+                })
+              }}
+            >
+              <PlusIcon className='w-2 h-2 text-darkGrey' />
+            </button>
+          </div>
         ),
         footer: (props) => props.column.id,
       },
@@ -275,14 +295,14 @@ export const useTraitElementForm = ({
         ),
         footer: (props) => props.column.id,
       },
-      {
-        header: () => <span>%</span>,
-        accessorKey: 'rarityPercentage',
-        cell: ({ row: { original, index } }) => (
-          <span>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</span>
-        ),
-        footer: (props) => props.column.id,
-      },
+      // {
+      //   header: () => <span>%</span>,
+      //   accessorKey: 'rarityPercentage',
+      //   cell: ({ row: { original, index } }) => (
+      //     <span>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</span>
+      //   ),
+      //   footer: (props) => props.column.id,
+      // },
       {
         header: () => (
           <div className='relative'>

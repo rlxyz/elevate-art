@@ -22,7 +22,8 @@ export const useMutateRenameTraitElement = () => {
         variable.traitElements.forEach(({ traitElementId, name }) => {
           const trait = allTraits.find((x) => x.id === traitElementId)
           if (!trait) return
-          notifySuccess(`You have changed the trait with name ${trait.name} to ${name}`)
+          // removed notification to infer inplace mutation
+          // notifySuccess(`You have changed the trait with name ${trait.name} to ${name}`)
           trait.name = name
         })
       })

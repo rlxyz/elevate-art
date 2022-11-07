@@ -45,7 +45,7 @@ const Index: FC<Props> = ({ layerElement, repositoryId, searchFilter, view }) =>
     delete: { open: isDeleteDialogOpen, set: setIsDeleteDialogOpen },
     getFilteredTraitElements,
     getCheckedTraitElements,
-  } = useTraitElementForm({ key: id, traitElements, repositoryId, initialSum: 0, searchFilter })
+  } = useTraitElementForm({ key: id, traitElements, repositoryId, searchFilter })
 
   return (
     <>
