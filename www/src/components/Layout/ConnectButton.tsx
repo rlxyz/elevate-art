@@ -1,8 +1,6 @@
-import { UserCircleIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
-import { useSession } from 'next-auth/react'
 import React from 'react'
-import Button from './Button'
+import AvatarComponent from './Avatar'
 
 interface ConnectButtonProps {
   normalButton?: boolean
@@ -10,13 +8,17 @@ interface ConnectButtonProps {
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disabled = false }) => {
-  const { data: session } = useSession()
   return (
     <RbConnectButton.Custom>
-      {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+      {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
+        // Note: If your app doesn't use authentication, you
+        // can remove all 'authenticationStatus' checks
+        const ready = mounted && authenticationStatus !== 'loading'
+        const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated')
+
         return (
           <div
-            {...(!mounted && {
+            {...(!ready && {
               'aria-hidden': true,
               style: {
                 opacity: 0,
@@ -26,46 +28,33 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ normalButton, disa
             })}
           >
             {(() => {
-              if (!mounted || !account || !chain) {
-                if (normalButton) {
-                  return (
-                    <div className='flex justify-center'>
-                      <Button disabled onClick={openConnectModal}>
-                        Connect Wallet
-                      </Button>
-                    </div>
-                  )
-                }
+              if (!connected) {
                 return (
-                  <>
-                    <button disabled={disabled} onClick={openConnectModal} type='button'>
-                      <img
-                        src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
-                        alt='Wallet'
-                      />
-                    </button>
-                  </>
+                  <button onClick={openConnectModal} type='button'>
+                    <img
+                      src='/images/lightGray-wallet.svg'
+                      className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
+                      alt='Wallet'
+                    />
+                  </button>
+                )
+              }
+
+              if (chain.unsupported) {
+                return (
+                  <button onClick={openChainModal} type='button'>
+                    <img
+                      src='/images/lightGray-wallet.svg'
+                      className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
+                      alt='Wallet'
+                    />
+                  </button>
                 )
               }
 
               return (
-                <button
-                  disabled={disabled}
-                  onClick={chain.unsupported ? openChainModal : openAccountModal}
-                  type='button'
-                  className='flex items-center'
-                >
-                  {/* <span className='font-bold mr-3 text-xs'>{account.displayName}</span> */}
-                  {session ? (
-                    <UserCircleIcon className='w-4 h-4 text-darkGrey' />
-                  ) : (
-                    <img
-                      src='/images/lightGray-wallet.svg'
-                      className='w-8 h-8 p-2 inline-block border rounded border-lightGray'
-                      alt='Wallet'
-                    />
-                  )}
+                <button onClick={openAccountModal} type='button'>
+                  <AvatarComponent className='w-4 h-4 text-darkGrey' src='/images/avatar.png' />
                 </button>
               )
             })()}
