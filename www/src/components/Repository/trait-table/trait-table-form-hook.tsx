@@ -103,6 +103,13 @@ export const useTraitElementForm = ({
    */
   useEffect(() => {
     traitElementsArray.forEach((x, index) => {
+      /**
+       * Skip none trait. Cannot be deleted.
+       * @todo Is there a better method to handle this? Can we have a variable in db called deletable?
+       */
+      if (isNoneTraitElement(x.id)) {
+        return
+      }
       setValue(`traitElements.${index}.checked`, allCheckboxesChecked)
     })
   }, [allCheckboxesChecked])
@@ -131,19 +138,23 @@ export const useTraitElementForm = ({
             index,
           },
         }) => (
-          <input
-            key={id}
-            type='checkbox'
-            value={id}
-            {...register(`traitElements.${index}.checked`)}
-            className={clsx(
-              'border border-mediumGrey',
-              'text-xs rounded-[5px]',
-              'focus:outline-none focus:ring-blueHighlight',
-              'invalid:border-redError invalid:text-redError',
-              'focus:invalid:border-redError focus:invalid:ring-redError'
+          <>
+            {!isNoneTraitElement(id) && (
+              <input
+                key={id}
+                type='checkbox'
+                value={id}
+                {...register(`traitElements.${index}.checked`)}
+                className={clsx(
+                  'border border-mediumGrey',
+                  'text-xs rounded-[5px]',
+                  'focus:outline-none focus:ring-blueHighlight',
+                  'invalid:border-redError invalid:text-redError',
+                  'focus:invalid:border-redError focus:invalid:ring-redError'
+                )}
+              />
             )}
-          />
+          </>
         ),
         footer: (props) => props.column.id,
       },
