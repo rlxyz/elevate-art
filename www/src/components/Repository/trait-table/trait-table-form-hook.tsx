@@ -45,7 +45,6 @@ export const useTraitElementForm = ({
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
   const initialSum = useMemo(() => sumBy(traitElements, (x) => x.weight), [key])
-  // const [initialSum, setInitialSum] = useState<number>(sumBy(traitElements, (x) => x.weight))
 
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
@@ -64,7 +63,6 @@ export const useTraitElementForm = ({
     reset,
     watch,
     getValues,
-    control,
     setValue,
   } = useForm<TraitElementFormType>({
     defaultValues: {
@@ -107,7 +105,7 @@ export const useTraitElementForm = ({
       {
         header: () => (
           <input
-            // key={id} // @todo reintroduce?
+            key={key} // @todo reintroduce?
             type='checkbox'
             {...register(`allCheckboxesChecked`)}
             className={clsx(
@@ -255,7 +253,6 @@ export const useTraitElementForm = ({
               <MinusIcon className='w-2 h-2 text-darkGrey' />
             </button>
             <div className='w-full flex items-center justify-between py-1 text-xs px-2 cursor-default'>
-              {/* <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{original.weight.toFixed(2)}</span> */}
               <button
                 onClick={(e) => {
                   e.preventDefault()
@@ -274,7 +271,8 @@ export const useTraitElementForm = ({
                 )}
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between'>
-                {`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}`}
+                {/* {original.weight.toFixed(2)} */}
+                {`${((original.weight / initialSum) * 100).toFixed(3)}`}
                 <span>%</span>
               </span>
             </div>
@@ -336,8 +334,8 @@ export const useTraitElementForm = ({
           </div>
         ),
         accessorKey: 'rarityScore',
-        cell: ({ row: { original, index } }) => (
-          <span>{Number(-Math.log(watch(`traitElements.${index}.weight`) / initialSum).toFixed(3)) % Infinity || 0}</span>
+        cell: ({ row: { original } }) => (
+          <span>{Number(-Math.log(original.weight / initialSum).toFixed(3)) % Infinity || 0}</span>
         ),
         footer: (props) => props.column.id,
       },
