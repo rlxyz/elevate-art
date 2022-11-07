@@ -67,7 +67,7 @@ export const useTraitElementForm = ({
   } = useForm<TraitElementFormType>({
     defaultValues: {
       allCheckboxesChecked: false,
-      traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })),
+      traitElements: [...traitElements].map((x) => ({ ...x, checked: false, locked: false })),
     },
   })
 
@@ -77,6 +77,13 @@ export const useTraitElementForm = ({
    */
   const traitElementsArray = watch('traitElements')
   const allCheckboxesChecked = watch('allCheckboxesChecked')
+
+  /**
+   * Used to check if the trait is a none trait. These traits are not allowed to be deleted, renamed, etc.
+   */
+  const isNoneTraitElement = (id: string) => {
+    return id === 'none'
+  }
 
   /**
    * Reset Effect
@@ -150,14 +157,16 @@ export const useTraitElementForm = ({
         }) => (
           <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center px-1'>
             <div className='rounded-[5px] border border-mediumGrey'>
-              <img
-                className='w-full h-full rounded-[5px]'
-                src={getImageForTrait({
-                  r: repositoryId,
-                  l,
-                  t,
-                })}
-              />
+              {!isNoneTraitElement(t) && (
+                <img
+                  className='w-full h-full rounded-[5px]'
+                  src={getImageForTrait({
+                    r: repositoryId,
+                    l,
+                    t,
+                  })}
+                />
+              )}
             </div>
           </div>
         ),
@@ -174,25 +183,51 @@ export const useTraitElementForm = ({
         }) => (
           <>
             <div>{errors.traitElements && errors.traitElements[index]?.name?.message}</div>
-            <input
-              placeholder={name}
-              {...register(`traitElements.${index}.name`)}
-              className='px-2 py-1 border border-mediumGrey rounded-[5px] text-xs'
-              onBlur={(e) => {
-                e.preventDefault()
-                const newName = String(e.target.value)
-                // if (newValue === name) return
-                mutate({
-                  traitElements: [
-                    {
-                      traitElementId: id,
-                      name: newName,
-                      repositoryId,
-                    },
-                  ],
-                })
-              }}
-            />
+            {!isNoneTraitElement(id) ? (
+              <input
+                placeholder={name}
+                {...register(`traitElements.${index}.name`)}
+                className='px-2 py-1 border border-mediumGrey rounded-[5px] text-xs'
+                onBlur={(e) => {
+                  e.preventDefault()
+                  const newName = String(e.target.value)
+                  // if (newValue === name) return
+                  mutate({
+                    traitElements: [
+                      {
+                        traitElementId: id,
+                        name: newName,
+                        repositoryId,
+                      },
+                    ],
+                  })
+                }}
+              />
+            ) : (
+              <div className='flex space-x-1 items-center'>
+                <span>None</span>
+                <Popover>
+                  <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
+                  <Transition
+                    as={Fragment}
+                    enter='transition ease-out duration-200'
+                    enterFrom='opacity-0 translate-y-1'
+                    enterTo='opacity-100 translate-y-0'
+                    leave='transition ease-in duration-150'
+                    leaveFrom='opacity-100 translate-y-0'
+                    leaveTo='opacity-0 translate-y-1'
+                  >
+                    <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
+                      <div className='p-2 shadow-lg'>
+                        <p className='text-[0.65rem] text-white font-normal whitespace-pre-wrap normal-case'>
+                          This trait is used to represent the absence of a trait. It is not allowed to be deleted or renamed.
+                        </p>
+                      </div>
+                    </Popover.Panel>
+                  </Transition>
+                </Popover>
+              </div>
+            )}
           </>
         ),
         footer: (props) => props.column.id,
@@ -230,22 +265,29 @@ export const useTraitElementForm = ({
               className='border-r border-mediumGrey px-2 py-2'
               onClick={(e) => {
                 e.preventDefault()
-                /** If weight is reaching boundary 0, return */
-                if (original.weight - WEIGHT_STEP_COUNT < 0) return
+                /** If has reached lower boundary 0, return */
+                if (original.weight === 0) return
+
+                /** Figure out how much to minus */
+                let weightToMinus = WEIGHT_STEP_COUNT
+                if (original.weight - weightToMinus < 0.1) {
+                  weightToMinus = original.weight
+                }
+
+                setValue(`traitElements.${index}.weight`, original.weight - weightToMinus)
                 setHasFormChange(true)
-                setValue(`traitElements.${index}.weight`, original.weight - WEIGHT_STEP_COUNT)
 
                 /** If locked then dont distribute linearly */
                 if (original.locked) return
 
                 /** Distribute linearly */
-                const totalLocked = getValues().traitElements.filter((x) => x.locked).length
+                const totalLocked = getValues().traitElements.filter((x) => x.locked).length - 1
                 getValues().traitElements.forEach((x, index) => {
                   if (x.id === original.id) return
                   if (x.locked) return
                   setValue(
                     `traitElements.${index}.weight`,
-                    x.weight + WEIGHT_STEP_COUNT / (getValues().traitElements.length - 1 - totalLocked)
+                    x.weight + weightToMinus / (getValues().traitElements.length - 1 - totalLocked)
                   )
                 })
               }}
@@ -271,8 +313,7 @@ export const useTraitElementForm = ({
                 )}
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between'>
-                {/* {original.weight.toFixed(2)} */}
-                {`${((original.weight / initialSum) * 100).toFixed(3)}`}
+                {`${((original.weight / sumBy(watch(`traitElements`), (x) => x.weight)) * 100).toFixed(2)}`}
                 <span>%</span>
               </span>
             </div>
@@ -335,7 +376,9 @@ export const useTraitElementForm = ({
         ),
         accessorKey: 'rarityScore',
         cell: ({ row: { original } }) => (
-          <span>{Number(-Math.log(original.weight / initialSum).toFixed(3)) % Infinity || 0}</span>
+          <span>
+            {Number(-Math.log(original.weight / sumBy(watch(`traitElements`), (x) => x.weight)).toFixed(3)) % Infinity || 0}
+          </span>
         ),
         footer: (props) => props.column.id,
       },
