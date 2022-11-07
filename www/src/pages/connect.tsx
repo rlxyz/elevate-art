@@ -45,7 +45,7 @@ const Connect: NextPage = () => {
               <p className='text-sm text-accents_6'>
                 Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
                 <Link href='https://feature.elevate.art' rel='noreferrer nofollow' target='_blank' className='w-fit'>
-                  <span className='text-blueHighlight underline'>feature.elevate.art</span>
+                  <span className='text-blueHighlight underline cursor-pointer'>feature.elevate.art</span>
                 </Link>
               </p>
             </div>
