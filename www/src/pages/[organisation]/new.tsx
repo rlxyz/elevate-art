@@ -1,14 +1,13 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import Upload from '@components/Repository/upload-new-traits/upload'
 import { useMutateCreateNewRepository } from '@hooks/mutations/useMutateCreateNewRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const Page: NextPage = () => {
@@ -16,24 +15,12 @@ const Page: NextPage = () => {
   const router = useRouter()
   const [repository, setRepository] = useState<null | Repository>(null)
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
-  const { setCurrentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
-    }
-  })
-
   const { mutate: createRepository } = useMutateCreateNewRepository({
     setRepository,
   })
-
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.New)
-  }, [])
-
   const isLoading = !organisation
   return (
-    <OrganisationAuthLayout>
+    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
         <Layout.Header
           connectButton
@@ -62,7 +49,13 @@ const Page: NextPage = () => {
                   </button>
                 </div>
               ))}
-            <Upload className='h-[50vh]' depth={4} onDropCallback={createRepository} setUploadState={setUploadState}>
+            <Upload
+              className='h-[50vh]'
+              depth={4}
+              onDropCallback={createRepository}
+              setUploadState={setUploadState}
+              gridSize='lg'
+            >
               <div className='h-[30vh] flex items-center'>
                 <div className='space-y-6'>
                   <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>

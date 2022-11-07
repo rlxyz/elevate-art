@@ -1,0 +1,10 @@
+import { getLayerElementsWithTraitElementsTotalWeight } from '@server/scripts/get-all-layer-elements-total-weight-'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+const index = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!prisma) return res.status(400)
+  const response = await getLayerElementsWithTraitElementsTotalWeight({ prisma })
+  return res.status(200).json(response)
+}
+
+export default index

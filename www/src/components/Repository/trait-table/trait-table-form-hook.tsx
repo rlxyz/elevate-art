@@ -110,6 +110,7 @@ export const useTraitElementForm = ({
       if (isNoneTraitElement(x.id)) {
         return
       }
+
       setValue(`traitElements.${index}.checked`, allCheckboxesChecked)
     })
   }, [allCheckboxesChecked])

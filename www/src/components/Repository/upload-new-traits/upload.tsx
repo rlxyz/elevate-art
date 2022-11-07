@@ -30,7 +30,7 @@ interface Props {
   }) => void
 }
 
-const defaultProps = {
+const defaultProps: Props = {
   depth: 4,
   gridSize: 'lg',
   onDropCallback: ({

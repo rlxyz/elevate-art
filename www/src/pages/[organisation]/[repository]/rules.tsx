@@ -1,5 +1,5 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import { RuleSelector } from '@components/Repository/RepositoryRuleCreateView'
 import { RuleDisplayAll } from '@components/Repository/RepositoryRuleDisplayView'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'

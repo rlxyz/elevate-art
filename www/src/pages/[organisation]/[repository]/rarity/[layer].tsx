@@ -1,6 +1,6 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import SearchInput from '@components/Layout/SearchInput'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import LayerElementFileTree from '@components/Repository/layer-file-tree'
 import TraitTable, { TraitElementView, TraitElementViewType } from '@components/Repository/trait-table'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'

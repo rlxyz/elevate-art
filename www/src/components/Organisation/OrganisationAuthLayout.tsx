@@ -3,24 +3,32 @@ import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigati
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import { OrganisationDatabaseEnum, OrganisationDatabaseType } from 'src/types/enums'
+import {
+  OrganisationDatabaseEnum,
+  OrganisationDatabaseType,
+  OrganisationNavigationEnum,
+  OrganisationNavigationType,
+} from 'src/types/enums'
 
 export const OrganisationAuthLayout = ({
   children,
   type = OrganisationDatabaseEnum.enum.Team,
+  route = OrganisationNavigationEnum.enum.Dashboard,
 }: {
   children: ReactNode
+  route?: OrganisationNavigationType
   type?: OrganisationDatabaseType
 }) => {
-  const { isLoggedIn, session } = useAuthenticated()
+  const { isLoggedIn } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
-  const { all: organisations, isLoading, isError } = useQueryOrganisation()
-  const { setOrganisationId } = useOrganisationNavigationStore((state) => {
-    return {
-      setOrganisationId: state.setOrganisationId,
-    }
-  })
+  const { all: organisations, isLoading } = useQueryOrganisation()
+  const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
+  const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
+
+  useEffect(() => {
+    setCurrentRoute(route)
+  }, [])
 
   useEffect(() => {
     if (organisations && organisations.length > 0) {

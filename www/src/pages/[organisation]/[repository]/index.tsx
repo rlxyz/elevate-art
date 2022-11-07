@@ -2,8 +2,8 @@ import CollectionBranchSelectorCard from '@components/Collection/CollectionBranc
 import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -30,7 +30,7 @@ const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
+  const { current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()

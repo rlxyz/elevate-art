@@ -1,7 +1,7 @@
+import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
 import { groupBy } from '@utils/object-utils'
 import { env } from 'src/env/server.mjs'
 import { z } from 'zod'
-import { getLayerElements } from '../../common/get-layer-with-traits'
 import { createRouter } from '../context'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
@@ -70,9 +70,9 @@ export const traitElementRouter = createRouter()
       })
 
       /* Return all the new TraitElement grouped by LayerElement */
-      return await getLayerElements({
+      return await getLayerElementsWithTraitElements({
         layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)),
-        ctx,
+        prisma: ctx.prisma,
       })
     },
   })

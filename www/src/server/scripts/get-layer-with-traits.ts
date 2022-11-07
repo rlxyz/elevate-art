@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient, TraitElement } from '@prisma/client'
 import { groupBy } from '@utils/object-utils'
-import { Session } from 'next-auth'
 
 export type LayerElementObjectWithTraitElements = { [key: string]: TraitElement[] }
 
@@ -10,18 +9,15 @@ export type LayerElementObjectWithTraitElements = { [key: string]: TraitElement[
  *
  * @todo turn qstash fetch typesafe and error handle
  */
-export const getLayerElements = async ({
+export const getLayerElementsWithTraitElements = async ({
   layerElementIds,
-  ctx,
+  prisma,
 }: {
   layerElementIds: string[]
-  ctx: {
-    session: Session | null
-    prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
-  }
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
 }): Promise<LayerElementObjectWithTraitElements> => {
   return groupBy(
-    await ctx.prisma.traitElement.findMany({
+    await prisma.traitElement.findMany({
       where: {
         layerElementId: { in: layerElementIds },
       },

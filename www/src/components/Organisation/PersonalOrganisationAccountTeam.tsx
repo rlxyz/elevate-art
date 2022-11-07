@@ -1,4 +1,5 @@
 import { Link } from '@components/Layout/Link'
+import SearchInput from '@components/Layout/SearchInput'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import { capitalize } from '@utils/format'
@@ -6,7 +7,6 @@ import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { OrganisationDatabaseEnum } from 'src/types/enums'
-import { SearchInput } from '../Layout/SearchInput'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisation()
@@ -32,7 +32,13 @@ export const PersonalOrganisationAccountTeam = () => {
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
-      <SearchInput isLoading={isLoading} setQuery={setQuery} />
+      <SearchInput
+        isLoading={isLoading}
+        onChange={(e) => {
+          e.preventDefault()
+          setQuery(e.target.value)
+        }}
+      />
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
