@@ -8,6 +8,7 @@ interface Props {
   table: ReactTable<
     TraitElement & {
       checked: boolean
+      locked: boolean
     }
   >
 }

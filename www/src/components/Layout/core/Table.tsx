@@ -29,9 +29,9 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
                 'py-2'
               )}
             >
-              <span className={clsx(loading && 'invisible', 'text-[0.6rem] font-normal text-darkGrey uppercase')}>
+              <div className={clsx(loading && 'invisible', 'text-[0.6rem] w-full font-normal text-darkGrey uppercase')}>
                 {children}
-              </span>
+              </div>
             </th>
           )
         })}
@@ -49,7 +49,7 @@ const TableHeadRow = ({
   children?: ReactNode
 }) => {
   return (
-    <div className='flex items-center'>
+    <>
       <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
       {description && (
         <Popover>
@@ -72,7 +72,7 @@ const TableHeadRow = ({
         </Popover>
       )}
       {children}
-    </div>
+    </>
   )
 }
 

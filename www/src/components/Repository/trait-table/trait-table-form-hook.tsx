@@ -2,6 +2,8 @@ import { Popover, Transition } from '@headlessui/react'
 import {
   CheckCircleIcon,
   InformationCircleIcon,
+  LockClosedIcon,
+  LockOpenIcon,
   MinusIcon,
   PlusCircleIcon,
   PlusIcon,
@@ -19,9 +21,11 @@ import { env } from 'src/env/client.mjs'
 import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
 
 export type TraitElementFormType = {
-  traitElements: (TraitElement & { checked: boolean })[]
+  traitElements: (TraitElement & { checked: boolean; locked: boolean })[]
   allCheckboxesChecked: boolean
 }
+
+const WEIGHT_STEP_COUNT = 0.1
 
 /**
  * This hook handles all the core logic for the TraitElement table form.
@@ -63,7 +67,10 @@ export const useTraitElementForm = ({
     control,
     setValue,
   } = useForm<TraitElementFormType>({
-    defaultValues: { allCheckboxesChecked: false, traitElements: traitElements.map((x) => ({ ...x, checked: false })) },
+    defaultValues: {
+      allCheckboxesChecked: false,
+      traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })),
+    },
   })
 
   /**
@@ -81,7 +88,7 @@ export const useTraitElementForm = ({
     setValue('allCheckboxesChecked', false)
     setHasFormChange(false)
     // setInitialSum(sumBy(traitElements, (x) => x.weight))
-    reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false })) })
+    reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })) })
   }, [key])
 
   /**
@@ -194,8 +201,8 @@ export const useTraitElementForm = ({
       },
       {
         header: () => (
-          <div className='flex space-x-1'>
-            <span>%</span>
+          <div className='flex space-x-1 w-3/4 justify-center items-center'>
+            <span>Percentage in Collection</span>
             <Popover>
               <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
               <Transition
@@ -225,35 +232,74 @@ export const useTraitElementForm = ({
               className='border-r border-mediumGrey px-2 py-2'
               onClick={(e) => {
                 e.preventDefault()
-                if (original.weight - 0.1 < 0) return
+                /** If weight is reaching boundary 0, return */
+                if (original.weight - WEIGHT_STEP_COUNT < 0) return
                 setHasFormChange(true)
-                setValue(`traitElements.${index}.weight`, original.weight - 0.1)
+                setValue(`traitElements.${index}.weight`, original.weight - WEIGHT_STEP_COUNT)
+
+                /** If locked then dont distribute linearly */
+                if (original.locked) return
+
+                /** Distribute linearly */
+                const totalLocked = getValues().traitElements.filter((x) => x.locked).length
                 getValues().traitElements.forEach((x, index) => {
                   if (x.id === original.id) return
-                  setValue(`traitElements.${index}.weight`, x.weight + 0.1 / (getValues().traitElements.length - 1))
+                  if (x.locked) return
+                  setValue(
+                    `traitElements.${index}.weight`,
+                    x.weight + WEIGHT_STEP_COUNT / (getValues().traitElements.length - 1 - totalLocked)
+                  )
                 })
               }}
             >
               <MinusIcon className='w-2 h-2 text-darkGrey' />
             </button>
             <div className='w-full flex items-center justify-between py-1 text-xs px-2 cursor-default'>
-              <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{original.weight.toFixed(2)}</span>
-              {/* <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{`${(
-                (watch(`traitElements.${index}.weight`) / initialSum) *
-                100
-              ).toFixed(3)}`}</span> */}
-              <span className='text-darkGrey text-[0.6rem]'>%</span>
+              {/* <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis'>{original.weight.toFixed(2)}</span> */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (original.locked) {
+                    setValue(`traitElements.${index}.locked`, false)
+                  } else {
+                    setValue(`traitElements.${index}.locked`, true)
+                  }
+                }}
+                className='text-darkGrey text-[0.6rem]'
+              >
+                {original.locked ? (
+                  <LockClosedIcon className='w-3 h-3 text-redError' />
+                ) : (
+                  <LockOpenIcon className='w-3 h-3 text-blueHighlight' />
+                )}
+              </button>
+              <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between'>
+                {`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}`}
+                <span>%</span>
+              </span>
             </div>
             <button
               className='border-l border-mediumGrey p-2'
               onClick={(e) => {
                 e.preventDefault()
-                if (original.weight + 0.1 > 100) return
+
+                /** If weight is reaching boundary max sum, return */
+                if (original.weight + WEIGHT_STEP_COUNT > initialSum) return
                 setHasFormChange(true)
-                setValue(`traitElements.${index}.weight`, original.weight + 0.1)
+                setValue(`traitElements.${index}.weight`, original.weight + WEIGHT_STEP_COUNT)
+
+                /** If locked then dont distribute linearly */
+                if (original.locked) return
+
+                /** Distribute linearly */
+                const totalLocked = getValues().traitElements.filter((x) => x.locked).length
                 getValues().traitElements.forEach((x, index) => {
                   if (x.id === original.id) return
-                  setValue(`traitElements.${index}.weight`, x.weight - 0.1 / (getValues().traitElements.length - 1))
+                  if (x.locked) return
+                  setValue(
+                    `traitElements.${index}.weight`,
+                    x.weight - WEIGHT_STEP_COUNT / (getValues().traitElements.length - 1 - totalLocked)
+                  )
                 })
               }}
             >
