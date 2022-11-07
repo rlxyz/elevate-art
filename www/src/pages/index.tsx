@@ -79,18 +79,31 @@ const Home: NextPage = () => {
         <Layout>
           <Layout.Header />
           <Layout.Body>
-            <div className='min-h-[calc(100vh-7rem)] space-y-20 h-full flex'>
-              <div className='w-full flex flex-col justify-center items-center'>
+            <div className=' space-y-20 h-full flex'>
+              <div className='w-full flex flex-row justify-center items-center mt-10'>
                 <div className='w-[50%] h-auto'>
-                  <img src='/images/logo-banner.png' alt='elevate art logo' />
+                  <div className='relative'>
+                    <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
+                    <img className='absolute bottom-[-60px] right-[-40px] w-72' src='/images/ffc.png' alt='demo' />
+                    <img src='/images/journey.png' alt='demo' />
+                    <div className='bg-darkGrey h-32 w-32 absolute right-[-50]'></div>
+                  </div>
                 </div>
-                <span className='text-xs uppercase'>
-                  an&nbsp;
-                  <Link external={true} href='https://twitter.com/rlxyz_eth'>
-                    <span className='font-extrabold line-through'>RLXYZ</span>
+                <div className='w-[50%] h-auto'>
+                  <h1 className='text-4xl font-bold tracking-wide text-right'>
+                    Elevate your
+                    <br /> NFT Collection
+                  </h1>
+                  <p className='text-sm text-right'>
+                    Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
+                  </p>
+                  <Link className='text-white' external={true} href='#'>
+                    <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
+                      <img className='w-8' src='./images/logo-white.png' />
+                      Start Creating
+                    </button>
                   </Link>
-                  &nbsp;production
-                </span>
+                </div>
               </div>
               {/* <Guide /> */}
               {/* <CoolShit /> */}

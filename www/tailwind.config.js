@@ -25,6 +25,7 @@ module.exports = {
       disabledGray: '#D7D7D7',
       blueHighlight: '#0070F3',
       redError: '#EE0000',
+      blue: '#6484F3',
     },
     fontFamily: {
       sans: ['"Plus Jakarta Sans"', 'sans-serif'],
