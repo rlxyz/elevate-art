@@ -75,7 +75,7 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ErrorBoundary showDialog>
       <WagmiConfig client={wagmiClient}>
-        <SessionProvider refetchInterval={0} session={pageProps.session}>
+        <SessionProvider refetchInterval={60} session={pageProps.session}>
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
             <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
