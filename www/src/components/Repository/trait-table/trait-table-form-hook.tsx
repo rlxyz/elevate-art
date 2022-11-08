@@ -177,77 +177,65 @@ export const useTraitElementForm = ({
     }, 50)
   }
 
+  const incrementRarityByIndex = (index: number) => {
+    /** Get latest values for the form */
+    const weight = Big(getValues(`traitElements.${index}.weight`))
+    const locked = getValues(`traitElements.${index}.locked`)
+    const id = getValues(`traitElements.${index}.id`)
+    const traitElements = getValues().traitElements
+    const alterableTraitElements = traitElements
+      .filter((x) => x.id !== id)
+      .filter((x) => !x.locked)
+      .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY))
+
+    /** Get max the rarity can grow to */
+    const max = getMaxGrowthAllowance(index, locked)
+
+    /** If has reached upper boundary max, return */
+    if (isEqual(weight, max)) return
+
+    /** Figure out how much to change */
+    const growth = getAllowableGrowth(weight, max)
+
+    /** Set the Primary Value */
+    setValue(`traitElements.${index}.weight`, weight.plus(growth))
+    setHasFormChange(true)
+
+    /**
+     * Locked Distribution
+     * If locked then dont distribute linearly, only to none trait (index 0)
+     * @future also distribute to any other locked traits
+     */
+    if (locked) {
+      setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(growth))
+      return
+    }
+
+    /**
+     * Non Locked Distribution
+     * This algorithm linearly distriubtes based how big of a slice each traitElement can consume of "growth"
+     * Imagine a pie chart, where each traitElement is a slice of the pie. The size of the slice is based on the
+     * weight of the traitElement. The bigger the slice, the more it can consume of the growth.
+     *
+     * @notes by jeevan, I've explored several algorithms, and this one seems to be the most simple solution while
+     *        also linearly distributing in a way that makes sense.
+     *        Other solutions, I've explored are such that one would reduce everything at the same rate (or amount),
+     *        but this would mean that smaller values will would hit 0 before others. That is not linear.
+     */
+    const sum = sumByBig(alterableTraitElements, (x) => x.weight)
+    traitElements.forEach((x, index) => {
+      if (x.id === id) return
+      if (x.locked) return
+      const w = Big(x.weight)
+      const size = w.div(sum).mul(growth) // the percentage of growth this traitElement can consume
+      const linear = growth.mul(size)
+      setValue(`traitElements.${index}.weight`, w.minus(linear))
+    })
+  }
+
   const incrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
-    changeTimer.current = setInterval(() => {
-      /** Get latest values for the form */
-      const weight = Big(getValues(`traitElements.${index}.weight`))
-      const locked = getValues(`traitElements.${index}.locked`)
-      const id = getValues(`traitElements.${index}.id`)
-      const traitElements = getValues().traitElements
-      const alterableTraitElements = traitElements.filter((x) => x.id !== id).filter((x) => !x.locked)
-
-      /** Get max the rarity can grow to */
-      const max = getMaxGrowthAllowance(index, locked)
-
-      /** If has reached upper boundary max, return */
-      if (isEqual(weight, max)) return
-
-      /** Figure out how much to change */
-      const growth = getAllowableGrowth(weight, max)
-
-      /** Set the Primary Value */
-      setValue(`traitElements.${index}.weight`, weight.plus(growth))
-      setHasFormChange(true)
-
-      /**
-       * Locked Distribute
-       * If locked then dont distribute linearly, only to none trait (index 0)
-       * @future also distribute to any other locked traits
-       */
-      if (locked) {
-        setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(growth))
-        return
-      }
-
-      /**
-       * Non Locked Distribute
-       * If not locked then distribute to all traits one by one
-       */
-
-      /** Value doesn't change in the Loop */
-      const linearDistributeLocked = getValues().traitElements.filter((x) => x.locked).length
-
-      /** Values that already have hit the lower boundary */
-      const linearDistributeLowerBoundary = getValues().traitElements.filter((x) =>
-        Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)
-      ).length
-
-      /** Value does change in the Loop */
-      let nonLinearDistributeCount = getValues().traitElements.length - linearDistributeLocked - linearDistributeLowerBoundary
-
-      // console.log(getValues().traitElements.filter((x) => x.id !== id))
-      getValues()
-        .traitElements.filter((x) => x.id !== id)
-        .filter((x) => !x.locked)
-        .forEach((x, index) => {
-          const w = Big(x.weight)
-
-          /** Reduce value by 1 if hit boundary */
-          if (w.eq(WEIGHT_LOWER_BOUNDARY)) {
-            nonLinearDistributeCount -= 1
-            return
-          }
-
-          let linearDistribute = weightToChange.div(nonLinearDistributeCount)
-
-          if (w.minus(linearDistribute).lt(WEIGHT_LOWER_BOUNDARY)) {
-            setValue(`traitElements.${index}.weight`, w.minus(w))
-          } else {
-            setValue(`traitElements.${index}.weight`, w.minus(linearDistribute))
-          }
-        })
-    }, 50)
+    changeTimer.current = setInterval(() => incrementRarityByIndex(index), 50)
   }
 
   /**
@@ -499,7 +487,7 @@ export const useTraitElementForm = ({
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
                 {`${new Big(original.weight)
-                  .abs()
+                  // .abs()
                   // .div(sumByBig(watch(`traitElements`), (x) => x.weight))
                   // .mul(100)
                   .toFixed(4)}`}
@@ -515,6 +503,10 @@ export const useTraitElementForm = ({
               }}
               onMouseUp={resetRarityInterval}
               onMouseLeave={resetRarityInterval}
+              // onClick={(e) => {
+              //   e.preventDefault()
+              //   incrementRarityByIndex(index)
+              // }}
               type='button'
             >
               <PlusIcon className='w-2 h-2 text-darkGrey' />
