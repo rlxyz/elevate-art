@@ -160,22 +160,24 @@ export const useTraitElementForm = ({
       const id = getValues(`traitElements.${index}.id`)
 
       /** Get max the rarity can grow to */
-      const max = locked
-        ? WEIGHT_UPPER_BOUNDARY.minus(
-            sumByBig(
-              getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
-              (x) => x.weight
+      const max = Big(
+        locked
+          ? WEIGHT_UPPER_BOUNDARY.minus(
+              sumByBig(
+                getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
+                (x) => x.weight
+              )
             )
-          )
-        : WEIGHT_UPPER_BOUNDARY
+          : WEIGHT_UPPER_BOUNDARY
+      )
 
       /** If has reached lower boundary 0, return */
-      if (weight.eq(0)) return
+      if (weight.eq(max)) return
 
       /** Figure out how much to change */
       let weightToChange = WEIGHT_STEP_COUNT
       if (weight.plus(weightToChange).gt(max)) {
-        weightToChange = new Big(max).minus(weight)
+        weightToChange = max.minus(weight)
       }
 
       setValue(`traitElements.${index}.weight`, weight.plus(weightToChange))
@@ -188,17 +190,38 @@ export const useTraitElementForm = ({
       }
 
       /** Distribute linearly */
-      const linearDistributeCount = getValues().traitElements.filter((x) => x.locked).length
-      const nonLinearDistributeCount = getValues().traitElements.length - linearDistributeCount
-      const linearDistribute = weightToChange.div(nonLinearDistributeCount - 1)
 
-      getValues().traitElements.forEach((x, index) => {
-        if (x.id === id) return
-        if (x.locked) return
-        const w = Big(x.weight)
-        if (w.plus(linearDistribute).lt(WEIGHT_LOWER_BOUNDARY)) return
-        setValue(`traitElements.${index}.weight`, w.minus(linearDistribute))
-      })
+      /** Value doesn't change in the Loop */
+      const linearDistributeLocked = getValues().traitElements.filter((x) => x.locked).length
+
+      /** Values that already have hit the lower boundary */
+      const linearDistributeLowerBoundary = getValues().traitElements.filter((x) =>
+        Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)
+      ).length
+
+      /** Value does change in the Loop */
+      let nonLinearDistributeCount = getValues().traitElements.length - linearDistributeLocked - linearDistributeLowerBoundary
+
+      // console.log(getValues().traitElements.filter((x) => x.id !== id))
+      getValues()
+        .traitElements.filter((x) => x.id !== id || !x.locked)
+        .forEach((x, index) => {
+          const w = Big(x.weight)
+
+          /** Reduce value by 1 if hit boundary */
+          if (w.eq(WEIGHT_LOWER_BOUNDARY)) {
+            nonLinearDistributeCount -= 1
+            return
+          }
+
+          let linearDistribute = weightToChange.div(nonLinearDistributeCount)
+
+          if (w.minus(linearDistribute).lt(WEIGHT_LOWER_BOUNDARY)) {
+            setValue(`traitElements.${index}.weight`, w.minus(w))
+          } else {
+            setValue(`traitElements.${index}.weight`, w.minus(linearDistribute))
+          }
+        })
     }, 50)
   }
 
