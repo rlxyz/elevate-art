@@ -247,7 +247,7 @@ export const useTraitElementForm = ({
       {
         header: () => (
           <div className='flex space-x-1 w-3/4 justify-center items-center'>
-            <span>Percentage in Collection</span>
+            <span>Rarity Percentage</span>
             <Popover>
               <Popover.Button as={InformationCircleIcon} className='text-darkGrey w-3 h-3 bg-lightGray' />
               <Transition
@@ -262,7 +262,7 @@ export const useTraitElementForm = ({
                 <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
                   <div className='p-2 shadow-lg'>
                     <p className='text-[0.65rem] text-white font-normal normal-case'>
-                      We linearly distribute the rarity changes to the rest of the traits in this layer
+                      This is the percentage rarity across all collections that this project has.
                     </p>
                   </div>
                 </Popover.Panel>
@@ -270,15 +270,16 @@ export const useTraitElementForm = ({
             </Popover>
           </div>
         ),
-        accessorKey: 'estimateInCollection',
+        accessorKey: 'rarityPercentage',
         cell: ({ row: { original, index } }) => (
           <div className='w-3/4 justify-between flex items-center border border-mediumGrey rounded-[5px]'>
             <button
-              className='border-r border-mediumGrey px-2 py-2'
+              disabled={original.weight === 0}
+              className='border-r border-mediumGrey px-2 py-2 disabled:cursor-not-allowed'
               onClick={(e) => {
                 e.preventDefault()
                 /** If has reached lower boundary 0, return */
-                if (original.weight === 0) return
+                if (original.weight === 0) return // lower boundary
 
                 /** Figure out how much to minus */
                 let weightToMinus = WEIGHT_STEP_COUNT
@@ -306,8 +307,9 @@ export const useTraitElementForm = ({
             >
               <MinusIcon className='w-2 h-2 text-darkGrey' />
             </button>
-            <div className='w-full flex items-center justify-between py-1 text-xs px-2 cursor-default'>
+            <div className='w-full flex items-center justify-between py-1 text-xs px-2'>
               <button
+                disabled={isNoneTraitElement(original.id)}
                 onClick={(e) => {
                   e.preventDefault()
                   if (original.locked) {
@@ -316,21 +318,22 @@ export const useTraitElementForm = ({
                     setValue(`traitElements.${index}.locked`, true)
                   }
                 }}
-                className='text-darkGrey text-[0.6rem]'
+                className='text-darkGrey text-[0.6rem] disabled:cursor-not-allowed'
               >
                 {original.locked ? (
-                  <LockClosedIcon className='w-3 h-3 text-redError' />
+                  <LockClosedIcon className='w-3 h-3 text-blueHighlight' />
                 ) : (
-                  <LockOpenIcon className='w-3 h-3 text-blueHighlight' />
+                  <LockOpenIcon className='w-3 h-3 text-darkGrey' />
                 )}
               </button>
-              <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between'>
+              <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
                 {`${((original.weight / sumBy(watch(`traitElements`), (x) => x.weight)) * 100).toFixed(2)}`}
                 <span>%</span>
               </span>
             </div>
             <button
-              className='border-l border-mediumGrey p-2'
+              // disabled={sumBy(watch(`traitElements`), (x) => x.weight) === 100} // upper boundary
+              className='border-l border-mediumGrey p-2 disabled:cursor-not-allowed'
               onClick={(e) => {
                 e.preventDefault()
 
@@ -340,7 +343,10 @@ export const useTraitElementForm = ({
                 setValue(`traitElements.${index}.weight`, original.weight + WEIGHT_STEP_COUNT)
 
                 /** If locked then dont distribute linearly */
-                if (original.locked) return
+                if (original.locked) {
+                  setValue(`traitElements.${0}.weight`, getValues(`traitElements.${0}.weight`) - WEIGHT_STEP_COUNT)
+                  return
+                }
 
                 /** Distribute linearly */
                 const totalLocked = getValues().traitElements.filter((x) => x.locked).length
@@ -394,14 +400,6 @@ export const useTraitElementForm = ({
         ),
         footer: (props) => props.column.id,
       },
-      // {
-      //   header: () => <span>%</span>,
-      //   accessorKey: 'rarityPercentage',
-      //   cell: ({ row: { original, index } }) => (
-      //     <span>{`${((watch(`traitElements.${index}.weight`) / initialSum) * 100).toFixed(3)}%`}</span>
-      //   ),
-      //   footer: (props) => props.column.id,
-      // },
       {
         header: () => (
           <div className='relative'>
@@ -493,65 +491,66 @@ export const useTraitElementForm = ({
         ),
         accessorKey: 'actions',
         footer: (props) => props.column.id,
-        cell: ({ row: { original, index } }) => (
-          <div className='relative'>
-            <Popover className='relative flex space-x-1'>
-              <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='w-4 h-4 text-darkGrey'
+        cell: ({ row: { original, index } }) =>
+          !isNoneTraitElement(original.id) && (
+            <div className='relative'>
+              <Popover className='relative flex space-x-1'>
+                <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={1.5}
+                    stroke='currentColor'
+                    className='w-4 h-4 text-darkGrey'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
+                    />
+                  </svg>
+                </Popover.Button>
+                <Transition
+                  as={Fragment}
+                  enter='transition ease-out duration-200'
+                  enterFrom='opacity-0 translate-y-1'
+                  enterTo='opacity-100 translate-y-0'
+                  leave='transition ease-in duration-150'
+                  leaveFrom='opacity-100 translate-y-0'
+                  leaveTo='opacity-0 translate-y-1'
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
-                  />
-                </svg>
-              </Popover.Button>
-              <Transition
-                as={Fragment}
-                enter='transition ease-out duration-200'
-                enterFrom='opacity-0 translate-y-1'
-                enterTo='opacity-100 translate-y-0'
-                leave='transition ease-in duration-150'
-                leaveFrom='opacity-100 translate-y-0'
-                leaveTo='opacity-0 translate-y-1'
-              >
-                <Popover.Panel className='absolute z-10 -translate-y-1/4 left-1/2 max-w-xs'>
-                  <div className='overflow-hidden bg-white rounded-[5px] shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
-                    {[
-                      {
-                        name: 'TBD',
-                        icon: <XCircleIcon className='w-4 h-4 text-redDot' />,
-                        onClick: () => {
-                          // setIsDelFeteDialogOpen(true)
+                  <Popover.Panel className='absolute z-10 -translate-y-1/4 left-1/2 max-w-xs'>
+                    <div className='overflow-hidden bg-white rounded-[5px] shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
+                      {[
+                        {
+                          name: 'TBD',
+                          icon: <XCircleIcon className='w-4 h-4 text-redDot' />,
+                          onClick: () => {
+                            // setIsDelFeteDialogOpen(true)
+                          },
                         },
-                      },
-                    ].map(({ name, icon, onClick }) => (
-                      <>
-                        <button
-                          key={index}
-                          className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
-                          onClick={(e) => {
-                            e.preventDefault()
-                            onClick && onClick()
-                          }}
-                        >
-                          {icon}
-                          <span className='text-xs'>{name}</span>
-                        </button>
-                      </>
-                    ))}
-                  </div>
-                </Popover.Panel>
-              </Transition>
-            </Popover>
-          </div>
-        ),
+                      ].map(({ name, icon, onClick }) => (
+                        <>
+                          <button
+                            key={index}
+                            className='relative items-center p-2 flex space-x-1 disabled:cursor-not-allowed'
+                            onClick={(e) => {
+                              e.preventDefault()
+                              onClick && onClick()
+                            }}
+                          >
+                            {icon}
+                            <span className='text-xs'>{name}</span>
+                          </button>
+                        </>
+                      ))}
+                    </div>
+                  </Popover.Panel>
+                </Transition>
+              </Popover>
+            </div>
+          ),
       },
     ],
     [hasFormChange]

@@ -52,21 +52,21 @@ const Page = () => {
           internalNavigation={[
             {
               name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
               enabled: true,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
           ]}
         />
