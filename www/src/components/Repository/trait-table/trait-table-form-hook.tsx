@@ -123,7 +123,7 @@ export const useTraitElementForm = ({
 
       /** Distribute linearly */
       const linear = weightToChange.div(
-        getValues().traitElements.length - 1 - getValues().traitElements.filter((x) => x.locked).length - 1
+        getValues().traitElements.length - 1 - getValues().traitElements.filter((x) => x.locked).length
       )
       getValues().traitElements.forEach((x, index) => {
         if (x.id === id) return
@@ -132,7 +132,7 @@ export const useTraitElementForm = ({
         if (w.minus(linear).lt(WEIGHT_LOWER_BOUNDARY)) return
         setValue(`traitElements.${index}.weight`, w.plus(linear))
       })
-    }, 100)
+    }, 50)
   }
 
   const incrementRarityInterval = (index: number) => {
@@ -143,31 +143,45 @@ export const useTraitElementForm = ({
       const locked = getValues(`traitElements.${index}.locked`)
       const id = getValues(`traitElements.${index}.id`)
 
+      /** Get max the rarity can grow to */
+      const max = locked
+        ? WEIGHT_UPPER_BOUNDARY.minus(
+            sumByBig(
+              getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
+              (x) => x.weight
+            )
+          )
+        : WEIGHT_UPPER_BOUNDARY
+
       /** If has reached lower boundary 0, return */
       if (weight.eq(0)) return
 
       /** Figure out how much to change */
       let weightToChange = WEIGHT_STEP_COUNT
-      if (weight.minus(weightToChange).gt(WEIGHT_UPPER_BOUNDARY)) {
-        weightToChange = new Big(WEIGHT_UPPER_BOUNDARY).minus(weight)
+      if (weight.plus(weightToChange).gt(max)) {
+        weightToChange = new Big(max).minus(weight)
       }
 
       setValue(`traitElements.${index}.weight`, weight.plus(weightToChange))
       setHasFormChange(true)
 
-      /** If locked then dont distribute linearly */
-      if (locked) return
+      /** If locked then dont distribute linearly, only to none trait */
+      if (locked) {
+        setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(weightToChange))
+        return
+      }
 
       /** Distribute linearly */
-      const linear = weightToChange.div(
-        getValues().traitElements.length - 1 - getValues().traitElements.filter((x) => x.locked).length - 1
-      )
+      const linearDistributeCount = getValues().traitElements.filter((x) => x.locked).length
+      const nonLinearDistributeCount = getValues().traitElements.length - linearDistributeCount
+      const linearDistribute = weightToChange.div(nonLinearDistributeCount - 1)
+
       getValues().traitElements.forEach((x, index) => {
         if (x.id === id) return
         if (x.locked) return
         const w = Big(x.weight)
-        if (w.plus(linear).gt(WEIGHT_LOWER_BOUNDARY)) return
-        setValue(`traitElements.${index}.weight`, w.minus(linear))
+        if (w.plus(linearDistribute).lt(WEIGHT_LOWER_BOUNDARY)) return
+        setValue(`traitElements.${index}.weight`, w.minus(linearDistribute))
       })
     }, 50)
   }
@@ -406,9 +420,10 @@ export const useTraitElementForm = ({
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
                 {`${new Big(original.weight)
-                  .div(sumByBig(watch(`traitElements`), (x) => x.weight))
-                  .mul(100)
-                  .toFixed(2)}`}
+                  .abs()
+                  // .div(sumByBig(watch(`traitElements`), (x) => x.weight))
+                  // .mul(100)
+                  .toFixed(4)}`}
                 <span>%</span>
               </span>
             </div>
