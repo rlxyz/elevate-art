@@ -13,7 +13,7 @@ import {
 import { TraitElement } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
-import { sumBy, sumByBig } from '@utils/object-utils'
+import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
@@ -57,7 +57,6 @@ export const useTraitElementForm = ({
   const [hasFormChange, setHasFormChange] = useState<boolean>(false)
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
-  const initialSum = useMemo(() => sumBy(traitElements, (x) => x.weight), [key])
   const changeTimer: React.MutableRefObject<NodeJS.Timer | null> = React.useRef(null)
 
   /**
@@ -98,14 +97,15 @@ export const useTraitElementForm = ({
    * Checks if its possible to still distribute
    */
   const isIncreaseRarityPossible = (index: number) => {
-    const weight = getValues(`traitElements.${index}.weight`)
+    const weight = Big(getValues(`traitElements.${index}.weight`))
+    const none = Big(getValues(`traitElements.${0}.weight`))
     const locked = getValues(`traitElements.${index}.locked`)
 
     // checks the max boundary
-    const maxCheck = Big(weight).eq(WEIGHT_UPPER_BOUNDARY)
+    const maxCheck = weight.eq(WEIGHT_UPPER_BOUNDARY)
 
     // checks the None trait can be distribute to if locked
-    const lockCheck = locked && Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY)
+    const lockCheck = locked && none.eq(WEIGHT_LOWER_BOUNDARY)
 
     return lockCheck || maxCheck
   }
@@ -230,7 +230,6 @@ export const useTraitElementForm = ({
   useEffect(() => {
     setValue('allCheckboxesChecked', false)
     setHasFormChange(false)
-    // setInitialSum(sumBy(traitElements, (x) => x.weight))
     reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })) })
   }, [key])
 
@@ -258,7 +257,7 @@ export const useTraitElementForm = ({
       {
         header: () => (
           <input
-            key={key} // @todo reintroduce?
+            key={key}
             type='checkbox'
             {...register(`allCheckboxesChecked`)}
             className={clsx(
@@ -341,7 +340,6 @@ export const useTraitElementForm = ({
                 onBlur={(e) => {
                   e.preventDefault()
                   const newName = String(e.target.value)
-                  // if (newValue === name) return
                   mutate({
                     traitElements: [
                       {
@@ -411,7 +409,12 @@ export const useTraitElementForm = ({
         ),
         accessorKey: 'rarityPercentage',
         cell: ({ row: { original, index } }) => (
-          <div className='w-3/4 justify-between flex items-center border border-mediumGrey rounded-[5px]'>
+          <div
+            className={clsx(
+              // isNoneTraitElement(original.id) && Big(original.weight).eq(WEIGHT_LOWER_BOUNDARY) && 'border-redError',
+              'w-3/4 justify-between flex items-center border border-mediumGrey rounded-[5px]'
+            )}
+          >
             <button
               // disabled={!!Big(original.weight).eq(WEIGHT_LOWER_BOUNDARY)}
               className='border-r border-mediumGrey px-2 py-2 disabled:cursor-not-allowed'
@@ -436,7 +439,12 @@ export const useTraitElementForm = ({
                 className='text-darkGrey text-[0.6rem] disabled:cursor-not-allowed'
               >
                 {original.locked ? (
-                  <LockClosedIcon className='w-3 h-3 text-blueHighlight' />
+                  <LockClosedIcon
+                    className={clsx(
+                      Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY) && 'text-redError',
+                      'w-3 h-3 text-blueHighlight'
+                    )}
+                  />
                 ) : (
                   <LockOpenIcon className='w-3 h-3 text-darkGrey' />
                 )}
