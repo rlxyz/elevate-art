@@ -97,6 +97,7 @@ export const useTraitElementForm = ({
    * Checks if its possible to still distribute
    */
   const isIncreaseRarityPossible = (index: number) => {
+    const traitElements = getValues().traitElements
     const weight = Big(getValues(`traitElements.${index}.weight`))
     const none = Big(getValues(`traitElements.${0}.weight`))
     const locked = getValues(`traitElements.${index}.locked`)
@@ -107,7 +108,15 @@ export const useTraitElementForm = ({
     // checks the None trait can be distribute to if locked
     const lockCheck = locked && none.eq(WEIGHT_LOWER_BOUNDARY)
 
-    return lockCheck || maxCheck
+    // checks if there is there is leftover weight to consume
+    const leftoverCheck = Big(
+      sumByBig(
+        traitElements.filter((x) => !x.locked).filter((_, i) => i !== index),
+        (x) => x.weight
+      )
+    ).lte(0)
+
+    return lockCheck || maxCheck || leftoverCheck
   }
 
   const getMaxGrowthAllowance = (index: number, locked: boolean): Big => {
@@ -184,9 +193,9 @@ export const useTraitElementForm = ({
     const id = getValues(`traitElements.${index}.id`)
     const traitElements = getValues().traitElements
     const alterableTraitElements = traitElements
-      .filter((x) => x.id !== id)
-      .filter((x) => !x.locked)
-      .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY))
+      .filter((x) => x.id !== id) // remove the current trait element
+      .filter((x) => !x.locked) // remove the locked trait elements
+      .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)) // remove the trait elements that has reached lower boundary
 
     /** Get max the rarity can grow to */
     const max = getMaxGrowthAllowance(index, locked)
@@ -197,7 +206,7 @@ export const useTraitElementForm = ({
     /** Figure out how much to change */
     const growth = getAllowableGrowth(weight, max)
 
-    /** Set the Primary Value */
+    /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.plus(growth))
     setHasFormChange(true)
 
@@ -223,6 +232,7 @@ export const useTraitElementForm = ({
      *        but this would mean that smaller values will would hit 0 before others. That is not linear.
      */
     const sum = sumByBig(alterableTraitElements, (x) => x.weight)
+    console.log({ alter: alterableTraitElements, sum: sum.toNumber() })
     traitElements.forEach((x, index) => {
       if (x.id === id) return
       if (x.locked) return
@@ -278,7 +288,7 @@ export const useTraitElementForm = ({
     traitElementsArray.forEach((x, index) => {
       /**
        * Skip none trait. Cannot be deleted.
-       * @todo Is there a better method to handle this? Can we have a variable in db called deletable?
+       * @todo Is there a better method to handle this? Possibly a TraitElement variable in db called "none".
        */
       if (isNoneTraitElement(x.id)) {
         return
@@ -503,10 +513,10 @@ export const useTraitElementForm = ({
               }}
               onMouseUp={resetRarityInterval}
               onMouseLeave={resetRarityInterval}
-              // onClick={(e) => {
-              //   e.preventDefault()
-              //   incrementRarityByIndex(index)
-              // }}
+              onClick={(e) => {
+                e.preventDefault()
+                incrementRarityByIndex(index)
+              }}
               type='button'
             >
               <PlusIcon className='w-2 h-2 text-darkGrey' />
