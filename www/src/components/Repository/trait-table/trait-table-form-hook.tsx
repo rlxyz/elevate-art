@@ -110,6 +110,32 @@ export const useTraitElementForm = ({
     return lockCheck || maxCheck
   }
 
+  const getMaxGrowthAllowance = (index: number, locked: boolean): Big => {
+    return Big(
+      locked
+        ? WEIGHT_UPPER_BOUNDARY.minus(
+            sumByBig(
+              getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
+              (x) => x.weight
+            )
+          )
+        : WEIGHT_UPPER_BOUNDARY
+    )
+  }
+
+  const isEqual = (a: Big, b: Big) => {
+    return a.eq(b)
+  }
+
+  const getAllowableGrowth = (weight: Big, max: Big): Big => {
+    /** Figure out how much to change */
+    let weightToChange = WEIGHT_STEP_COUNT
+    if (weight.plus(weightToChange).gt(max)) {
+      weightToChange = max.minus(weight)
+    }
+    return weightToChange
+  }
+
   /**
    * This is used to create an interval for the rarity button's increment/decement.
    * Note, we use an interval to ensure that user can hold down the button to increment/decrement.
@@ -158,38 +184,36 @@ export const useTraitElementForm = ({
       const weight = Big(getValues(`traitElements.${index}.weight`))
       const locked = getValues(`traitElements.${index}.locked`)
       const id = getValues(`traitElements.${index}.id`)
+      const traitElements = getValues().traitElements
+      const alterableTraitElements = traitElements.filter((x) => x.id !== id).filter((x) => !x.locked)
 
       /** Get max the rarity can grow to */
-      const max = Big(
-        locked
-          ? WEIGHT_UPPER_BOUNDARY.minus(
-              sumByBig(
-                getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
-                (x) => x.weight
-              )
-            )
-          : WEIGHT_UPPER_BOUNDARY
-      )
+      const max = getMaxGrowthAllowance(index, locked)
 
-      /** If has reached lower boundary 0, return */
-      if (weight.eq(max)) return
+      /** If has reached upper boundary max, return */
+      if (isEqual(weight, max)) return
 
       /** Figure out how much to change */
-      let weightToChange = WEIGHT_STEP_COUNT
-      if (weight.plus(weightToChange).gt(max)) {
-        weightToChange = max.minus(weight)
-      }
+      const growth = getAllowableGrowth(weight, max)
 
-      setValue(`traitElements.${index}.weight`, weight.plus(weightToChange))
+      /** Set the Primary Value */
+      setValue(`traitElements.${index}.weight`, weight.plus(growth))
       setHasFormChange(true)
 
-      /** If locked then dont distribute linearly, only to none trait */
+      /**
+       * Locked Distribute
+       * If locked then dont distribute linearly, only to none trait (index 0)
+       * @future also distribute to any other locked traits
+       */
       if (locked) {
-        setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(weightToChange))
+        setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(growth))
         return
       }
 
-      /** Distribute linearly */
+      /**
+       * Non Locked Distribute
+       * If not locked then distribute to all traits one by one
+       */
 
       /** Value doesn't change in the Loop */
       const linearDistributeLocked = getValues().traitElements.filter((x) => x.locked).length
@@ -204,7 +228,8 @@ export const useTraitElementForm = ({
 
       // console.log(getValues().traitElements.filter((x) => x.id !== id))
       getValues()
-        .traitElements.filter((x) => x.id !== id || !x.locked)
+        .traitElements.filter((x) => x.id !== id)
+        .filter((x) => !x.locked)
         .forEach((x, index) => {
           const w = Big(x.weight)
 
@@ -595,6 +620,7 @@ export const useTraitElementForm = ({
                         onClick: () => {
                           reset()
                           setHasFormChange(false)
+                          resetRarityInterval()
                         },
                         disabled: !hasFormChange,
                       },
