@@ -20,19 +20,21 @@ export type TraitElementGridProps = Props & Omit<React.HTMLAttributes<any>, keyo
 const TraitElementGrid: FC<TraitElementGridProps> = ({ traitElements, repositoryId, className }) => {
   return (
     <div className={clsx(className, 'grid grid-cols-5 gap-3')}>
-      {traitElements.map((trait: TraitElement) => {
+      {traitElements.map((trait: TraitElement, index) => {
         return (
           <div key={trait.id} className='w-auto h-auto flex-col border border-mediumGrey rounded-[5px] shadow-md'>
             <div className='h-[10rem] w-auto overflow-hidden flex items-center border-b border-mediumGrey'>
-              <img
-                loading='lazy'
-                className='w-auto h-auto border-t border-b border-mediumGrey object-contain'
-                src={getImageForTrait({
-                  r: repositoryId,
-                  l: trait.layerElementId,
-                  t: trait.id,
-                })}
-              />
+              {index !== 0 && (
+                <img
+                  loading='lazy'
+                  className='w-auto h-auto border-t border-b border-mediumGrey object-contain'
+                  src={getImageForTrait({
+                    r: repositoryId,
+                    l: trait.layerElementId,
+                    t: trait.id,
+                  })}
+                />
+              )}
             </div>
             <div className='px-1 py-2 flex flex-col space-y-1'>
               <span className='text-xs font-semibold overflow-hidden w-full'>{truncate(trait.name)}</span>
