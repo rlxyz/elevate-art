@@ -15,7 +15,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { getImageForTrait } from '@utils/image'
 import { sumBy } from '@utils/object-utils'
 import clsx from 'clsx'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId, useForm } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
 import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
@@ -45,6 +45,7 @@ export const useTraitElementForm = ({
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
   const initialSum = useMemo(() => sumBy(traitElements, (x) => x.weight), [key])
+  const changeTimer: React.MutableRefObject<NodeJS.Timer | null> = React.useRef(null)
 
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
@@ -70,6 +71,89 @@ export const useTraitElementForm = ({
       traitElements: [...traitElements].map((x) => ({ ...x, checked: false, locked: false })),
     },
   })
+
+  /**
+   * This is use the reset the rarity button's increment/decement interval reference.
+   */
+  const resetRarityInterval = () => {
+    if (!changeTimer.current) return
+    clearInterval(changeTimer.current)
+    changeTimer.current = null
+  }
+
+  /**
+   * This is used to create an interval for the rarity button's increment/decement.
+   * Note, we use an interval to ensure that user can hold down the button to increment/decrement.
+   */
+  const decrementRarityInterval = (index: number) => {
+    if (changeTimer.current) return
+    changeTimer.current = setInterval(() => {
+      /** Get latest values for the form */
+      const weight = getValues(`traitElements.${index}.weight`)
+      const locked = getValues(`traitElements.${index}.locked`)
+      const id = getValues(`traitElements.${index}.id`)
+
+      /** If has reached lower boundary 0, return */
+      if (weight === 0) return
+
+      /** Figure out how much to change */
+      let weightToChange = WEIGHT_STEP_COUNT
+      if (weight - weightToChange < 0.1) {
+        weightToChange = weight
+      }
+      setValue(`traitElements.${index}.weight`, weight - weightToChange)
+      setHasFormChange(true)
+
+      /** If locked then dont distribute linearly */
+      if (locked) return
+
+      /** Distribute linearly */
+      const totalLocked = getValues().traitElements.filter((x) => x.locked).length - 1
+      getValues().traitElements.forEach((x, index) => {
+        if (x.id === id) return
+        if (x.locked) return
+        setValue(
+          `traitElements.${index}.weight`,
+          x.weight + weightToChange / (getValues().traitElements.length - 1 - totalLocked)
+        )
+      })
+    }, 100)
+  }
+
+  const incrementRarityInterval = (index: number) => {
+    if (changeTimer.current) return
+    changeTimer.current = setInterval(() => {
+      const weight = getValues(`traitElements.${index}.weight`)
+      const locked = getValues(`traitElements.${index}.locked`)
+      const id = getValues(`traitElements.${index}.id`)
+      console.log(weight)
+      /** If has reached upper boundary, return */
+      if (weight === 100) return
+
+      /** Figure out how much to change */
+      let weightToChange = WEIGHT_STEP_COUNT
+      if (weight + weightToChange > 100) {
+        weightToChange = weight
+      }
+
+      setValue(`traitElements.${index}.weight`, weight + weightToChange)
+      setHasFormChange(true)
+
+      /** If locked then dont distribute linearly */
+      if (locked) return
+
+      /** Distribute linearly */
+      const totalLocked = getValues().traitElements.filter((x) => x.locked).length - 1
+      getValues().traitElements.forEach((x, index) => {
+        if (x.id === id) return
+        if (x.locked) return
+        setValue(
+          `traitElements.${index}.weight`,
+          x.weight - weightToChange / (getValues().traitElements.length - 1 - totalLocked)
+        )
+      })
+    }, 50)
+  }
 
   /**
    * Used in effects.
@@ -277,34 +361,10 @@ export const useTraitElementForm = ({
             <button
               disabled={original.weight === 0}
               className='border-r border-mediumGrey px-2 py-2 disabled:cursor-not-allowed'
-              onClick={(e) => {
-                e.preventDefault()
-                /** If has reached lower boundary 0, return */
-                if (original.weight === 0) return // lower boundary
-
-                /** Figure out how much to minus */
-                let weightToMinus = WEIGHT_STEP_COUNT
-                if (original.weight - weightToMinus < 0.1) {
-                  weightToMinus = original.weight
-                }
-
-                setValue(`traitElements.${index}.weight`, original.weight - weightToMinus)
-                setHasFormChange(true)
-
-                /** If locked then dont distribute linearly */
-                if (original.locked) return
-
-                /** Distribute linearly */
-                const totalLocked = getValues().traitElements.filter((x) => x.locked).length - 1
-                getValues().traitElements.forEach((x, index) => {
-                  if (x.id === original.id) return
-                  if (x.locked) return
-                  setValue(
-                    `traitElements.${index}.weight`,
-                    x.weight + weightToMinus / (getValues().traitElements.length - 1 - totalLocked)
-                  )
-                })
-              }}
+              onMouseDown={(e) => decrementRarityInterval(index)}
+              onMouseUp={resetRarityInterval}
+              onMouseLeave={resetRarityInterval}
+              type='button'
             >
               <MinusIcon className='w-2 h-2 text-darkGrey' />
             </button>
@@ -335,31 +395,37 @@ export const useTraitElementForm = ({
             <button
               // disabled={sumBy(watch(`traitElements`), (x) => x.weight) === 100} // upper boundary
               className='border-l border-mediumGrey p-2 disabled:cursor-not-allowed'
-              onClick={(e) => {
-                e.preventDefault()
-
-                /** If weight is reaching boundary max sum, return */
-                if (original.weight + WEIGHT_STEP_COUNT > initialSum) return
-                setHasFormChange(true)
-                setValue(`traitElements.${index}.weight`, original.weight + WEIGHT_STEP_COUNT)
-
-                /** If locked then dont distribute linearly */
-                if (original.locked) {
-                  setValue(`traitElements.${0}.weight`, getValues(`traitElements.${0}.weight`) - WEIGHT_STEP_COUNT)
-                  return
-                }
-
-                /** Distribute linearly */
-                const totalLocked = getValues().traitElements.filter((x) => x.locked).length
-                getValues().traitElements.forEach((x, index) => {
-                  if (x.id === original.id) return
-                  if (x.locked) return
-                  setValue(
-                    `traitElements.${index}.weight`,
-                    x.weight - WEIGHT_STEP_COUNT / (getValues().traitElements.length - 1 - totalLocked)
-                  )
-                })
+              onMouseDown={(e) => {
+                incrementRarityInterval(index)
               }}
+              onMouseUp={resetRarityInterval}
+              onMouseLeave={resetRarityInterval}
+              type='button'
+              // onClick={(e) => {
+              //   e.preventDefault()
+
+              //   /** If weight is reaching boundary max sum, return */
+              //   if (original.weight + WEIGHT_STEP_COUNT > initialSum) return
+              //   setHasFormChange(true)
+              //   setValue(`traitElements.${index}.weight`, original.weight + WEIGHT_STEP_COUNT)
+
+              //   /** If locked then dont distribute linearly */
+              //   if (original.locked) {
+              //     setValue(`traitElements.${0}.weight`, getValues(`traitElements.${0}.weight`) - WEIGHT_STEP_COUNT)
+              //     return
+              //   }
+
+              //   /** Distribute linearly */
+              //   const totalLocked = getValues().traitElements.filter((x) => x.locked).length
+              //   getValues().traitElements.forEach((x, index) => {
+              //     if (x.id === original.id) return
+              //     if (x.locked) return
+              //     setValue(
+              //       `traitElements.${index}.weight`,
+              //       x.weight - WEIGHT_STEP_COUNT / (getValues().traitElements.length - 1 - totalLocked)
+              //     )
+              //   })
+              // }}
             >
               <PlusIcon className='w-2 h-2 text-darkGrey' />
             </button>
