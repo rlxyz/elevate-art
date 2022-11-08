@@ -1,6 +1,7 @@
 import { Table } from '@components/Layout/core/Table'
 import { TraitElement } from '@prisma/client'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
+import Big from 'big.js'
 import clsx from 'clsx'
 import { FC } from 'react'
 
@@ -9,6 +10,7 @@ interface Props {
     TraitElement & {
       checked: boolean
       locked: boolean
+      weight: Big
     }
   >
 }

@@ -3,8 +3,8 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC } from 'react'
 import { z } from 'zod'
-import { useTraitElementForm } from './trait-table-form-hook'
 import TraitElementTable from './trait-table-list'
+import { useTraitElementTable } from './trait-table-list-hook'
 
 /** Server-Side Rendering is set to false as we do not need these components on startup */
 const TraitElementCreateModal = dynamic(() => import('./trait-create-modal'), { ssr: false })
@@ -45,7 +45,7 @@ const Index: FC<Props> = ({ layerElement, repositoryId, searchFilter, view }) =>
     delete: { open: isDeleteDialogOpen, set: setIsDeleteDialogOpen },
     getFilteredTraitElements,
     getCheckedTraitElements,
-  } = useTraitElementForm({
+  } = useTraitElementTable({
     key: id,
     traitElements,
     repositoryId,
