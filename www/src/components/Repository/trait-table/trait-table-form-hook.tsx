@@ -109,14 +109,13 @@ export const useTraitElementForm = ({
     const lockCheck = locked && none.eq(WEIGHT_LOWER_BOUNDARY)
 
     // checks if there is there is leftover weight to consume
-    const leftoverCheck = Big(
-      sumByBig(
-        traitElements.filter((x) => !x.locked).filter((_, i) => i !== index),
-        (x) => x.weight
-      )
-    ).lte(0)
+    // @todo fix this
+    // const lockedTraitElements = traitElements.filter((x) => !x.locked).filter((_, i) => i !== index)
+    // const leftoverCheck = Big(
+    //   sumByBig(lockedTraitElements, (x) => x.weight).minus(WEIGHT_STEP_COUNT.mul(lockedTraitElements.length))
+    // ).lte(0)
 
-    return lockCheck || maxCheck || leftoverCheck
+    return lockCheck || maxCheck
   }
 
   const getMaxGrowthAllowance = (index: number, locked: boolean): Big => {
@@ -128,7 +127,12 @@ export const useTraitElementForm = ({
               (x) => x.weight
             )
           )
-        : WEIGHT_UPPER_BOUNDARY
+        : WEIGHT_UPPER_BOUNDARY.minus(
+            sumByBig(
+              getValues().traitElements.filter((x) => x.locked),
+              (x) => x.weight
+            )
+          )
     )
   }
 
@@ -222,7 +226,7 @@ export const useTraitElementForm = ({
 
     /**
      * Non Locked Distribution
-     * This algorithm linearly distriubtes based how big of a slice each traitElement can consume of "growth"
+     * This algorithm linearly distributes based how big of a slice each traitElement can consume of "growth"
      * Imagine a pie chart, where each traitElement is a slice of the pie. The size of the slice is based on the
      * weight of the traitElement. The bigger the slice, the more it can consume of the growth.
      *
@@ -232,7 +236,6 @@ export const useTraitElementForm = ({
      *        but this would mean that smaller values will would hit 0 before others. That is not linear.
      */
     const sum = sumByBig(alterableTraitElements, (x) => x.weight)
-    console.log({ alter: alterableTraitElements, sum: sum.toNumber() })
     traitElements.forEach((x, index) => {
       if (x.id === id) return
       if (x.locked) return
