@@ -37,6 +37,31 @@ export const uploadCollectionLayerImageCloudinary = ({
   })
 }
 
+export const deleteCollectionLayerImageCloudinary = ({
+  repositoryId,
+  traitElement,
+}: {
+  repositoryId: string
+  traitElement: TraitElement
+}) => {
+  return new Promise((resolve, reject) => {
+    const { id, name, layerElementId } = traitElement
+    const data = new FormData()
+    data.append('public_id', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}.png`)
+    data.append('signature', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}.png`)
+    fetch('https://api.cloudinary.com/v1_1/rlxyz/image/destroy', {
+      method: 'post',
+      body: data,
+    })
+      .then(async (response) => {
+        resolve(response)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
 export const validateFiles = (files: FileWithPath[], folderDepth: number): boolean => {
   const depth = folderDepth + 1 // + 1 because we are adding the root folder
   return (

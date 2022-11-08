@@ -232,7 +232,8 @@ export const useTraitElementForm = ({
                     <Popover.Panel className='absolute w-[200px] bg-black z-10 -translate-x-1/2 transform rounded-[5px]'>
                       <div className='p-2 shadow-lg'>
                         <p className='text-[0.65rem] text-white font-normal whitespace-pre-wrap normal-case'>
-                          This trait is used to represent the absence of a trait. It is not allowed to be deleted or renamed.
+                          This trait can be used for situations where you don't want to assign a trait to a layer. It cannot be
+                          renamed or deleted.
                         </p>
                       </div>
                     </Popover.Panel>
