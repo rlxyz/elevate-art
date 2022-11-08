@@ -95,6 +95,22 @@ export const useTraitElementForm = ({
   }
 
   /**
+   * Checks if its possible to still distribute
+   */
+  const isIncreaseRarityPossible = (index: number) => {
+    const weight = getValues(`traitElements.${index}.weight`)
+    const locked = getValues(`traitElements.${index}.locked`)
+
+    // checks the max boundary
+    const maxCheck = Big(weight).eq(WEIGHT_UPPER_BOUNDARY)
+
+    // checks the None trait can be distribute to if locked
+    const lockCheck = locked && Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY)
+
+    return lockCheck || maxCheck
+  }
+
+  /**
    * This is used to create an interval for the rarity button's increment/decement.
    * Note, we use an interval to ensure that user can hold down the button to increment/decrement.
    */
@@ -185,6 +201,13 @@ export const useTraitElementForm = ({
       })
     }, 50)
   }
+
+  /**
+   * This effect ensures that when App is unmounted we should the interval
+   */
+  useEffect(() => {
+    return () => resetRarityInterval()
+  }, [])
 
   /**
    * Used in effects.
@@ -428,6 +451,7 @@ export const useTraitElementForm = ({
               </span>
             </div>
             <button
+              disabled={isIncreaseRarityPossible(index)}
               // disabled={!!Big(original.weight).eq(WEIGHT_UPPER_BOUNDARY)}
               className='border-l border-mediumGrey p-2 disabled:cursor-not-allowed'
               onMouseDown={(e) => {
