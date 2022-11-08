@@ -4,7 +4,7 @@ import Big from 'big.js'
 import { useForm } from 'react-hook-form'
 
 /** Note, we use big.js's Big to ensure precision. Javascript just sux tbh. */
-export const WEIGHT_STEP_COUNT = Big(1)
+export const WEIGHT_STEP_COUNT = Big(0.1)
 export const WEIGHT_LOWER_BOUNDARY = Big(0)
 export const WEIGHT_UPPER_BOUNDARY = Big(100)
 
@@ -86,17 +86,95 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     )
   }
 
+  const getMinGrowthAllowance = (index: number, locked: boolean): Big => {
+    return Big(
+      locked
+        ? WEIGHT_LOWER_BOUNDARY.plus(
+            sumByBig(
+              getValues().traitElements.filter((x, i) => x.locked && i !== index),
+              (x) => x.weight
+            )
+          )
+        : WEIGHT_LOWER_BOUNDARY
+    )
+  }
+
   const isEqual = (a: Big, b: Big) => {
     return a.eq(b)
   }
 
-  const getAllowableGrowth = (weight: Big, max: Big): Big => {
+  const getAllowableIncrementGrowth = (weight: Big, max: Big): Big => {
     /** Figure out how much to change */
     let weightToChange = WEIGHT_STEP_COUNT
     if (weight.plus(weightToChange).gt(max)) {
       weightToChange = max.minus(weight)
     }
     return weightToChange
+  }
+
+  const getAllowableDecrementGrowth = (weight: Big, min: Big): Big => {
+    /** Figure out how much to change */
+    let weightToChange = WEIGHT_STEP_COUNT
+    if (weight.minus(weightToChange).lt(min)) {
+      weightToChange = min.plus(weight)
+    }
+    return weightToChange
+  }
+
+  const decrementRarityByIndex = (index: number) => {
+    /** Get latest values for the form */
+    const weight = Big(getValues(`traitElements.${index}.weight`))
+    const locked = getValues(`traitElements.${index}.locked`)
+    const id = getValues(`traitElements.${index}.id`)
+    const traitElements = getValues().traitElements
+    const alterableTraitElements = traitElements
+      .filter((x) => x.id !== id) // remove the current trait element
+      .filter((x) => !x.locked) // remove the locked trait elements
+      .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)) // remove the trait elements that has reached lower boundary
+
+    /** Get max the rarity can grow to */
+    const min = getMinGrowthAllowance(index, locked)
+
+    /** If has reached upper boundary max, return */
+    if (isEqual(weight, min)) return
+
+    /** Figure out how much to change */
+    const growth = getAllowableDecrementGrowth(weight, min)
+    /** Set the primary weight */
+    setValue(`traitElements.${index}.weight`, weight.minus(growth))
+    onChange && onChange()
+
+    /**
+     * Locked Distribution
+     * If locked then dont distribute linearly, only to none trait (index 0)
+     * @future also distribute to any other locked traits
+     */
+    if (locked) {
+      setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).plus(growth))
+      return
+    }
+
+    /**
+     * Non Locked Distribution
+     * This algorithm linearly distributes based how big of a slice each traitElement can consume of "growth"
+     * Imagine a pie chart, where each traitElement is a slice of the pie. The size of the slice is based on the
+     * weight of the traitElement. The bigger the slice, the more it can consume of the growth.
+     *
+     * @notes by jeevan, I've explored several algorithms, and this one seems to be the most simple solution while
+     *        also linearly distributing in a way that makes sense.
+     *        Other solutions, I've explored are such that one would reduce everything at the same rate (or amount),
+     *        but this would mean that smaller values would hit 0 before others. That is not linear.
+     */
+    const sum = sumByBig(alterableTraitElements, (x) => x.weight)
+    if (sum.eq(0)) return // error handling
+    traitElements.forEach((x, index) => {
+      if (x.id === id) return
+      if (x.locked) return
+      const w = Big(x.weight)
+      const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
+      const linear = growth.mul(size)
+      setValue(`traitElements.${index}.weight`, w.plus(linear))
+    })
   }
 
   const incrementRarityByIndex = (index: number) => {
@@ -117,7 +195,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     if (isEqual(weight, max)) return
 
     /** Figure out how much to change */
-    const growth = getAllowableGrowth(weight, max)
+    const growth = getAllowableIncrementGrowth(weight, max)
 
     /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.plus(growth))
@@ -142,26 +220,25 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
      * @notes by jeevan, I've explored several algorithms, and this one seems to be the most simple solution while
      *        also linearly distributing in a way that makes sense.
      *        Other solutions, I've explored are such that one would reduce everything at the same rate (or amount),
-     *        but this would mean that smaller values will would hit 0 before others. That is not linear.
+     *        but this would mean that smaller values would hit 0 before others. That is not linear.
      */
     const sum = sumByBig(alterableTraitElements, (x) => x.weight)
     traitElements.forEach((x, index) => {
       if (x.id === id) return
       if (x.locked) return
       const w = Big(x.weight)
-      const size = w.div(sum).mul(growth) // the percentage of growth this traitElement can consume
+      const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
       setValue(`traitElements.${index}.weight`, w.minus(linear))
     })
   }
 
-  const decrementRarityByIndex = (index: number) => {}
   const isDecreaseRarityPossible = (index: number) => {}
 
   return {
     incrementRarityByIndex,
-    isIncreaseRarityPossible,
     decrementRarityByIndex,
+    isIncreaseRarityPossible,
     isDecreaseRarityPossible,
     register,
     handleSubmit,

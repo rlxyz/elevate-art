@@ -60,6 +60,7 @@ export const useTraitElementTable = ({
     getValues,
     setValue,
     isIncreaseRarityPossible,
+    decrementRarityByIndex,
     incrementRarityByIndex,
   } = useTraitElementForm({
     traitElements,
@@ -78,6 +79,11 @@ export const useTraitElementTable = ({
   const incrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
     changeTimer.current = setInterval(() => incrementRarityByIndex(index), 50)
+  }
+
+  const decrementRarityInterval = (index: number) => {
+    if (changeTimer.current) return
+    changeTimer.current = setInterval(() => decrementRarityByIndex(index), 50)
   }
 
   /**
@@ -296,9 +302,15 @@ export const useTraitElementTable = ({
             <button
               // disabled={!!Big(original.weight).eq(WEIGHT_LOWER_BOUNDARY)}
               className='border-r border-mediumGrey px-2 py-2 disabled:cursor-not-allowed'
-              // onMouseDown={(e) => decrementRarityInterval(index)}
+              onMouseDown={(e) => {
+                decrementRarityInterval(index)
+              }}
               onMouseUp={resetRarityInterval}
               onMouseLeave={resetRarityInterval}
+              onClick={(e) => {
+                e.preventDefault()
+                decrementRarityByIndex(index)
+              }}
               type='button'
             >
               <MinusIcon className='w-2 h-2 text-darkGrey' />
