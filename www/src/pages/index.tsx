@@ -7,59 +7,96 @@ import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
 import { useAuthenticated } from '../hooks/utils/useAuthenticated'
 
-const Guide = () => {
+const Hero = () => {
   return (
-    <div className='w-full flex flex-col justify-center items-center'>
-      <span className='uppercase text-xs'>Elevate with us</span>
-      <span className='lowercase text-xl'>Create</span>
-      <span className='font-bold text-4xl'>Start with creating your collection</span>
-      <div className='mt-8 w-[60%] grid grid-cols-2 space-x-4'>
-        <div className='col-span-1 text-sm'>
-          Developers love Next.js, the open source React framework Vercel built together with Google and Facebook. Next.js powers
-          the biggest websites like Patreon, for use cases in e-commerce, travel, news, and marketing.
-        </div>
-        <div className='col-span-1 text-sm'>
-          Vercel is the best place to deploy any frontend app. Start by deploying with zero configuration to our global edge
-          network. Scale dynamically to millions of pages without breaking a sweat.
+    <div>
+      <div className='w-[50%] h-auto'>
+        <div className='relative'>
+          <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
+          <img className='absolute bottom-[-60px] right-[-40px] w-72' src='/images/ffc.png' alt='demo' />
+          <img src='/images/journey.png' alt='demo' />
+          <div className='bg-darkGrey h-32 w-32 absolute right-[-50]'></div>
         </div>
       </div>
-      <div className='mt-8 grid grid-cols-2 space-x-16'>
-        <div className='left-0 col-span-1 text-sm border border-mediumGrey rounded-[5px]'>
-          <img
-            className='rounded-[5px]'
-            src='https://uploads-ssl.webflow.com/62fb25dec6d6000039acf36b/63031ad32ea56e5ca7347090_Images-p-1600.png'
-          />
+      <div className='w-[50%] h-auto'>
+        <h1 className='text-4xl font-bold tracking-wide text-right'>
+          Elevate your
+          <br /> NFT Collection
+        </h1>
+        <p className='text-sm text-right'>
+          Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
+        </p>
+        <Link className='text-white' external={true} href='#'>
+          <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
+            <img className='w-8' src='./images/logo-white.png' />
+            Start Creating
+          </button>
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+const Features = () => {
+  return (
+    <div className='w-[70%]'>
+      <div className='w-full flex flex-row justify-center items-center p-4'>
+        <div>
+          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center'>Generate in Seconds</h3>
+          <p className='text-center text-xs'>Drag & drop to upload traits & generate in seconds</p>
         </div>
-        <div className='col-span-1 text-sm mt-20 space-y-16 w-[50%]'>
-          <div className='flex flex-col'>
-            <h1 className='text-xl font-semibold'>Fast Refresh</h1>
-            <span>Reliable live-editing experience for your UI components.</span>
-          </div>
-          <div className='flex flex-col'>
-            <h1 className='text-xl font-semibold'>Fast Refresh</h1>
-            <span>Reliable live-editing experience for your UI components.</span>
-          </div>
-          <div className='flex flex-col'>
-            <h1 className='text-xl font-semibold'>Fast Refresh</h1>
-            <span>Reliable live-editing experience for your UI components.</span>
-          </div>
+        <div>
+          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center'>Refine with Ease</h3>
+          <p className='text-center text-xs'>Apply Custom Rules & Rarity for your specific traits</p>
+        </div>
+        <div>
+          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center'>Curation made Easy</h3>
+          <p className='text-center text-xs'>Use filters to view your collection by rarity and tweak before exporting</p>
         </div>
       </div>
     </div>
   )
 }
 
-const CoolShit = () => {
+const Partners = () => {
   return (
-    <div className='w-full flex flex-col justify-center items-center space-y-6 my-2'>
-      <div className='h-72 flex items-center'>
-        <img src='/images/logo-thankyoux.png' />
+    <div className='w-[70%]'>
+      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2'>
+        <div className='grid grid-cols-5 gap-1'>
+          <img className='' src='/images/pfp-1.png' alt='pfp-1' />
+          <img className='' src='/images/pfp-1.png' alt='pfp-1' />
+          <img className='' src='/images/pfp-1.png' alt='pfp-1' />
+          <img className='' src='/images/pfp-1.png' alt='pfp-1' />
+          <img className='' src='/images/pfp-1.png' alt='pfp-1' />
+        </div>
       </div>
-      <div className='flex'>
-        <div className='text-5xl'>unlock the power of&#8201;</div>
-        <h1 className='text-5xl font-extrabold text-transparent bg-gradient-to-r bg-clip-text from-[#243c5a] to-[#243c5a]'>
-          generate art
-        </h1>
+    </div>
+  )
+}
+
+const Footer = () => {
+  return (
+    <div className='w-[70%]'>
+      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-darkGrey'>
+        <h2 className='text-4xl'>
+          Design your NFT collection seamlessly.
+          <br />
+          Let's elevate art together
+        </h2>
+        <Link className='text-white' external={true} href='#'>
+          <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
+            <img className='w-8' src='./images/logo-white.png' />
+            Start Creating
+          </button>
+        </Link>
+        <div className='relative flex flex-row'>
+          <img className='' src='/images/circle1.png' alt='circle1' />
+          <img className='' src='/images/circle2.png' alt='circle2' />
+          <img src='/images/circle3.png' alt='circle3' />
+        </div>
       </div>
     </div>
   )
@@ -79,34 +116,13 @@ const Home: NextPage = () => {
         <Layout>
           <Layout.Header />
           <Layout.Body>
-            <div className=' space-y-20 h-full flex'>
-              <div className='w-full flex flex-row justify-center items-center mt-10'>
-                <div className='w-[50%] h-auto'>
-                  <div className='relative'>
-                    <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
-                    <img className='absolute bottom-[-60px] right-[-40px] w-72' src='/images/ffc.png' alt='demo' />
-                    <img src='/images/journey.png' alt='demo' />
-                    <div className='bg-darkGrey h-32 w-32 absolute right-[-50]'></div>
-                  </div>
-                </div>
-                <div className='w-[50%] h-auto'>
-                  <h1 className='text-4xl font-bold tracking-wide text-right'>
-                    Elevate your
-                    <br /> NFT Collection
-                  </h1>
-                  <p className='text-sm text-right'>
-                    Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
-                  </p>
-                  <Link className='text-white' external={true} href='#'>
-                    <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
-                      <img className='w-8' src='./images/logo-white.png' />
-                      Start Creating
-                    </button>
-                  </Link>
-                </div>
+            <div className=' space-y-20 h-full flex flex-col'>
+              <div className='w-full flex flex-col justify-center items-center mt-10'>
+                <Hero />
+                <Features />
+                <Partners />
+                <Footer />
               </div>
-              {/* <Guide /> */}
-              {/* <CoolShit /> */}
             </div>
           </Layout.Body>
         </Layout>
