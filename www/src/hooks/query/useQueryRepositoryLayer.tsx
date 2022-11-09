@@ -11,7 +11,7 @@ export const useQueryRepositoryLayer = () => {
 
   if (!layers)
     return {
-      current: [],
+      current: undefined,
       all: [],
       isLoading,
       isError,
@@ -20,22 +20,24 @@ export const useQueryRepositoryLayer = () => {
   const current = layers.find((l) => l.name === layerName)
 
   return {
-    current: current && {
-      ...current,
-      traitElements: [
-        {
-          id: `none`,
-          name: 'None',
-          weight: 100 - sumBy(current.traitElements || 0, (x) => x.weight),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          layerElementId: current.id,
-          rulesPrimary: [],
-          rulesSecondary: [],
-        },
-        ...current.traitElements,
-      ],
-    },
+    current:
+      (current && {
+        ...current,
+        traitElements: [
+          {
+            id: `none`,
+            name: 'None',
+            weight: 100 - sumBy(current.traitElements || 0, (x) => x.weight),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            layerElementId: current.id,
+            rulesPrimary: [],
+            rulesSecondary: [],
+          },
+          ...current.traitElements,
+        ],
+      }) ||
+      (layers && layers[0]),
     all: layers?.map((x) => ({
       ...x,
       traitElements: [
