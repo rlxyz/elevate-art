@@ -48,19 +48,23 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
   return (
     <div className={clsx(className, 'relative flex-col h-full w-full overflow-hidden')} {...props}>
       <div className='relative overflow-hidden h-[75%] w-full flex items-center'>
-        {elements.map(([l, t], index) => {
-          return (
-            <img
-              key={`${hash}-${t}-${index}`}
-              className={clsx('absolute w-full border-box object-contain')}
-              src={getImageForTrait({
-                r: repositoryId,
-                l,
-                t,
-              })}
-            />
-          )
-        })}
+        {elements
+          // filters out none trait
+          // see useQueryRepositoryLayer for more info
+          .filter(([l, t]) => t !== `none-${l}`)
+          .map(([l, t], index) => {
+            return (
+              <img
+                key={`${hash}-${t}-${index}`}
+                className={clsx('absolute w-full border-box object-contain')}
+                src={getImageForTrait({
+                  r: repositoryId,
+                  l,
+                  t,
+                })}
+              />
+            )
+          })}
       </div>
       <div className='h-[25%] flex flex-col w-full'>{children}</div>
     </div>
@@ -98,7 +102,7 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
   const hash = v.hash(elements)
 
   return (
-    <div className='h-[50vh] w-auto flex items-center'>
+    <div className='h-[50vh] w-auto flex items-center' {...props}>
       {elements.map(([l, t], index) => {
         return (
           <img
