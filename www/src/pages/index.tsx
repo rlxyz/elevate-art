@@ -1,33 +1,33 @@
 // import { Header } from '@components/Layout/Header'
 import { Layout } from '@components/Layout/core/Layout'
 import { Link } from '@components/Layout/Link'
-import type { NextPage } from 'next'
+import { useAuthenticated } from '@hooks/utils/useAuthenticated'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { useAuthenticated } from '../hooks/utils/useAuthenticated'
 
 const Hero = () => {
   return (
-    <div>
+    <div className=' flex flex-row justify-center items-center'>
       <div className='w-[50%] h-auto'>
-        <div className='relative'>
+        <div className='relative mt-10'>
           <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
-          <img className='absolute bottom-[-60px] right-[-40px] w-72' src='/images/ffc.png' alt='demo' />
+          <img className='absolute bottom-[-60px] right-[-60px] w-72' src='/images/ffc.png' alt='demo' />
           <img src='/images/journey.png' alt='demo' />
-          <div className='bg-darkGrey h-32 w-32 absolute right-[-50]'></div>
+          <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10'></div>
         </div>
       </div>
       <div className='w-[50%] h-auto'>
-        <h1 className='text-4xl font-bold tracking-wide text-right'>
+        <h1 className='text-5xl font-bold tracking-wide text-right mb-8'>
           Elevate your
           <br /> NFT Collection
         </h1>
-        <p className='text-sm text-right'>
+        <p className='text-normal text-right mb-8'>
           Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
         </p>
         <Link className='text-white' external={true} href='#'>
-          <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
+          <button className='rounded-full bg-black px-4 py-1 right-0 flex items-center float-right'>
             <img className='w-8' src='./images/logo-white.png' />
             Start Creating
           </button>
