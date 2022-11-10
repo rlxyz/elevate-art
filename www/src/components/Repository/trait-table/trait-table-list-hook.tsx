@@ -1,11 +1,9 @@
 import { Popover, Transition } from '@headlessui/react'
 import {
-  CheckCircleIcon,
   InformationCircleIcon,
   LockClosedIcon,
   LockOpenIcon,
   MinusIcon,
-  PlusCircleIcon,
   PlusIcon,
   RefreshIcon,
   XCircleIcon,
@@ -36,7 +34,8 @@ export const useTraitElementTable = ({
   key: string
   searchFilter?: string
 }) => {
-  const [hasFormChange, setHasFormChange] = useState<boolean>(false)
+  const [isRarityResettable, setIsRarityResettable] = useState<boolean>(false)
+  const [isTraitDeletable, setIsTraitDeletable] = useState<boolean>(false)
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
   const changeTimer: React.MutableRefObject<NodeJS.Timer | null> = React.useRef(null)
@@ -64,7 +63,7 @@ export const useTraitElementTable = ({
     incrementRarityByIndex,
   } = useTraitElementForm({
     traitElements,
-    onChange: () => setHasFormChange(true),
+    onChange: () => setIsRarityResettable(true),
   })
 
   /**
@@ -98,7 +97,6 @@ export const useTraitElementTable = ({
    * Source: https://react-hook-form.com/api/useform/watch
    */
   const traitElementsArray = watch('traitElements')
-  const allCheckboxesChecked = watch('allCheckboxesChecked')
 
   /**
    * Used to check if the trait is a none trait. These traits are not allowed to be deleted, renamed, etc.
@@ -113,28 +111,10 @@ export const useTraitElementTable = ({
    */
   useEffect(() => {
     setValue('allCheckboxesChecked', false)
-    setHasFormChange(false)
+    setIsRarityResettable(false)
+    setIsTraitDeletable(false)
     reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })) })
   }, [key])
-
-  /**
-   * Delete All Checkbox Effect
-   * This effect allows the ability to force set all delete checkboxes to be clicked
-   * based on the TableHeader checkbox.
-   */
-  useEffect(() => {
-    traitElementsArray.forEach((x, index) => {
-      /**
-       * Skip none trait. Cannot be deleted.
-       * @todo Is there a better method to handle this? Possibly a TraitElement variable in db called "none".
-       */
-      if (isNoneTraitElement(x.id)) {
-        return
-      }
-
-      setValue(`traitElements.${index}.checked`, allCheckboxesChecked)
-    })
-  }, [allCheckboxesChecked])
 
   const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementFormType, 'traitElements', 'id'>>[]>(
     () => [
@@ -151,6 +131,28 @@ export const useTraitElementTable = ({
               'invalid:border-redError invalid:text-redError',
               'focus:invalid:border-redError focus:invalid:ring-redError'
             )}
+            onClick={(e) => {
+              const checked = e.currentTarget.checked
+
+              /** Set the trait deletable boolean to allow user to click delete modal */
+              if (checked) {
+                setIsTraitDeletable(true)
+              } else {
+                setIsTraitDeletable(false)
+              }
+
+              getValues(`traitElements`).forEach((x, index) => {
+                /**
+                 * Skip none trait. Cannot be deleted.
+                 * @todo Is there a better method to handle this? Possibly a TraitElement variable in db called "none".
+                 */
+                if (isNoneTraitElement(x.id)) {
+                  return
+                }
+
+                setValue(`traitElements.${index}.checked`, checked)
+              })
+            }}
           />
         ),
         accessorKey: 'select',
@@ -174,6 +176,35 @@ export const useTraitElementTable = ({
                   'invalid:border-redError invalid:text-redError',
                   'focus:invalid:border-redError focus:invalid:ring-redError'
                 )}
+                onClick={(e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+                  const checked = e.currentTarget.checked
+
+                  /** Preempt set the value */
+                  setValue(`traitElements.${index}.checked`, checked)
+
+                  /** Set the deletable trait to true or false */
+                  if (
+                    checked ||
+                    getValues(`traitElements`)
+                      .filter((_, i) => i !== index)
+                      .some((x) => x.checked)
+                  ) {
+                    setIsTraitDeletable(true)
+                  } else {
+                    setIsTraitDeletable(false)
+                  }
+
+                  /** Set the allCheckboxesChecked depending on the total checkbox state */
+                  if (
+                    getValues(`traitElements`)
+                      .slice(1)
+                      .every((x) => x.checked)
+                  ) {
+                    setValue(`allCheckboxesChecked`, true)
+                  } else {
+                    setValue(`allCheckboxesChecked`, false)
+                  }
+                }}
               />
             )}
           </>
@@ -424,7 +455,7 @@ export const useTraitElementTable = ({
                     d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
                   />
                 </svg>
-                {hasFormChange && (
+                {(isRarityResettable || isTraitDeletable) && (
                   <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
                     1
                   </span>
@@ -442,39 +473,39 @@ export const useTraitElementTable = ({
                 <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
                   <div className='overflow-hidden rounded-[5px] bg-white shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
-                      {
-                        name: 'Add',
-                        icon: <PlusCircleIcon className='w-4 h-4' />,
-                        onClick: () => {
-                          setIsCreateClicked(true)
-                        },
-                        disabled: false,
-                      },
-                      {
-                        name: 'Save',
-                        icon: <CheckCircleIcon className='w-4 h-4' />,
-                        onClick: () => {
-                          handleSubmit((values) => {
-                            console.log(values)
-                          })
-                        },
-                        disabled: !hasFormChange,
-                      },
+                      // {
+                      //   name: 'Add',
+                      //   icon: <PlusCircleIcon className='w-4 h-4' />,
+                      //   onClick: () => {
+                      //     setIsCreateClicked(true)
+                      //   },
+                      //   disabled: false,
+                      // },
+                      // {
+                      //   name: 'Save',
+                      //   icon: <CheckCircleIcon className='w-4 h-4' />,
+                      //   onClick: () => {
+                      //     handleSubmit((values) => {
+                      //       console.log(values)
+                      //     })
+                      //   },
+                      //   disabled: !hasFormChange,
+                      // },
                       {
                         name: 'Reset',
                         icon: <RefreshIcon className='w-4 h-4' />,
                         onClick: () => {
                           reset()
-                          setHasFormChange(false)
+                          setIsRarityResettable(false)
                           resetRarityInterval()
                         },
-                        disabled: !hasFormChange,
+                        disabled: !isRarityResettable,
                       },
                       {
                         name: 'Delete',
                         icon: <XCircleIcon className='w-4 h-4' />,
                         onClick: () => setIsDeletedClicked(true),
-                        // disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
+                        disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
                       },
                     ].map(({ disabled, name, icon, onClick }) => (
                       <button
@@ -559,7 +590,7 @@ export const useTraitElementTable = ({
           ),
       },
     ],
-    [hasFormChange]
+    [isRarityResettable, isTraitDeletable]
   )
 
   const table = useReactTable({

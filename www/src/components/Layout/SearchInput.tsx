@@ -28,7 +28,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
   ...props
 }: SearchProps & typeof defaultProps) => {
   return (
-    <div className='relative'>
+    <div className='relative w-full'>
       <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
