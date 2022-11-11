@@ -14,7 +14,9 @@ const Hero = () => {
         <div className='relative mt-10'>
           <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
           <img className='absolute bottom-[-60px] right-[-60px] w-72' src='/images/ffc.png' alt='demo' />
+          <img className='absolute bottom-[120px] right-[-100px] w-16' src='/images/squiggle.png' alt='demo' />
           <img src='/images/journey.png' alt='demo' />
+
           <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10'></div>
         </div>
       </div>
@@ -39,31 +41,37 @@ const Hero = () => {
 
 const Features = () => {
   return (
-    <div className='w-[70%]'>
-      <div className='w-full flex flex-row justify-center items-center p-4'>
-        <div>
-          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center'>Generate in Seconds</h3>
-          <p className='text-center text-xs'>Drag & drop to upload traits & generate in seconds</p>
+    <div className='w-full mt-20 relative bg-white'>
+      <div className='w-full flex flex-row justify-center items-center'>
+        <div className='p-2  border-lightGray border-2'>
+          <img className='mt-4' src='/images/feature-generate.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center my-4'>Generate in Seconds</h3>
+          <p className='text-center text-xs mb-4'>
+            Drag & drop to upload traits &<br /> generate in seconds
+          </p>
         </div>
-        <div>
-          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center'>Refine with Ease</h3>
-          <p className='text-center text-xs'>Apply Custom Rules & Rarity for your specific traits</p>
+        <div className='px-2  border-lightGray border-2'>
+          <img className='mt-4' src='/images/feature-refine.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center my-4'>Refine with Ease</h3>
+          <p className='text-center text-xs mb-4'>
+            Apply Custom Rules & Rarity for your <br />
+            specific traits
+          </p>
         </div>
-        <div>
-          <img className='' src='/images/feature-generate.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center'>Curation made Easy</h3>
-          <p className='text-center text-xs'>Use filters to view your collection by rarity and tweak before exporting</p>
+        <div className='px-2  border-lightGray border-2'>
+          <img className='mt-4' src='/images/feature-curate.png' alt='Generate Feature' />
+          <h3 className='font-bold text-sm text-center my-4'>Curation made Easy</h3>
+          <p className='text-center text-xs mb-4'>Use filters to view your collection by rarity and tweak before exporting</p>
         </div>
       </div>
+      <div className='bg-lightGray absolute h-[750px] w-[100%] -z-10 top-[-160px]'></div>
     </div>
   )
 }
 
 const Partners = () => {
   return (
-    <div className='w-[70%]'>
+    <div className='w-[90%] mt-20'>
       <div className='w-full flex flex-col justify-center items-center space-y-6 my-2'>
         <div className='grid grid-cols-5 gap-1'>
           <img className='' src='/images/pfp-1.png' alt='pfp-1' />
@@ -79,7 +87,7 @@ const Partners = () => {
 
 const Footer = () => {
   return (
-    <div className='w-[70%]'>
+    <div className='w-full mt-20'>
       <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-darkGrey'>
         <h2 className='text-4xl'>
           Design your NFT collection seamlessly.
@@ -120,7 +128,7 @@ const Home: NextPage = () => {
               <div className='w-full flex flex-col justify-center items-center mt-10'>
                 <Hero />
                 <Features />
-                <Partners />
+                {/* <Partners /> */}
                 <Footer />
               </div>
             </div>
