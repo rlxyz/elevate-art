@@ -45,14 +45,14 @@ const Features = () => {
       <div className='w-full  flex justify-center items-center'>
         <div className='w-[70%] bg-white flex flex-row'>
           <div className='p-2  border-lightGray border-2'>
-            <img className='mt-4' src='/images/feature-generate.png' alt='Generate Feature' />
+            <img className='mt-4 min-h-[250px]' src='/images/feature-generate.png' alt='Generate Feature' />
             <h3 className='font-bold text-sm text-center my-4'>Generate in Seconds</h3>
             <p className='text-center text-xs mb-4'>
               Drag & drop to upload traits &<br /> generate in seconds
             </p>
           </div>
           <div className='px-2  border-lightGray border-2'>
-            <img className='mt-4' src='/images/feature-refine.png' alt='Generate Feature' />
+            <img className='mt-4 min-h-[250px]' src='/images/feature-refine.png' alt='Generate Feature' />
             <h3 className='font-bold text-sm text-center my-4'>Refine with Ease</h3>
             <p className='text-center text-xs mb-4'>
               Apply Custom Rules & Rarity for your <br />
@@ -60,7 +60,7 @@ const Features = () => {
             </p>
           </div>
           <div className='px-2  border-lightGray border-2'>
-            <img className='mt-4' src='/images/feature-curate.png' alt='Generate Feature' />
+            <img className='mt-4 min-h-[250px] items-center' src='/images/feature-curate.png' alt='Generate Feature' />
             <h3 className='font-bold text-sm text-center my-4'>Curation made Easy</h3>
             <p className='text-center text-xs mb-4'>Use filters to view your collection by rarity and tweak before exporting</p>
           </div>
@@ -88,6 +88,10 @@ const Partners = () => {
 }
 
 const Footer = () => {
+  const style = {
+    textShadow: '-0.5px -1px 0 #FFF, 0.5px -1px 0 #FFF, -0.5px 1px 0 #FFF, 0.5px 1px 0 #FFF',
+  }
+
   return (
     <div className='w-full mt-24 '>
       <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-black h-[320px]'>
@@ -96,7 +100,11 @@ const Footer = () => {
             Design your NFT collection seamlessly.
             <div className='flex flex-row justify-between items-center'>
               <h2 className='text-[#e7e7e7]'>
-                Let's <span className='hollow text-black'>elevate art</span> together
+                Let's{' '}
+                <span style={style} className=' text-black'>
+                  elevate art
+                </span>{' '}
+                together
               </h2>
               <div className='relative flex flex-row'>
                 <img className='w-16 h-16' src='/images/circle1.png' alt='circle1' />
