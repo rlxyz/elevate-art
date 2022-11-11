@@ -53,7 +53,7 @@ export const LayoutLandingPage = ({
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
+      <div className='w-full h-full'>{children}</div>
     </div>
   )
 }

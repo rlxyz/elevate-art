@@ -29,6 +29,7 @@ module.exports = {
       lightPink: '#FFB3B3',
       lightPurple: '#D296F0',
       lightBlue: '#A4E9FF',
+      transparent: 'transparent',
     },
     fontFamily: {
       sans: ['"Plus Jakarta Sans"', 'sans-serif'],

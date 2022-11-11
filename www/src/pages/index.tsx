@@ -41,30 +41,32 @@ const Hero = () => {
 
 const Features = () => {
   return (
-    <div className='w-full mt-20 relative bg-white'>
-      <div className='w-full flex flex-row justify-center items-center'>
-        <div className='p-2  border-lightGray border-2'>
-          <img className='mt-4' src='/images/feature-generate.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center my-4'>Generate in Seconds</h3>
-          <p className='text-center text-xs mb-4'>
-            Drag & drop to upload traits &<br /> generate in seconds
-          </p>
-        </div>
-        <div className='px-2  border-lightGray border-2'>
-          <img className='mt-4' src='/images/feature-refine.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center my-4'>Refine with Ease</h3>
-          <p className='text-center text-xs mb-4'>
-            Apply Custom Rules & Rarity for your <br />
-            specific traits
-          </p>
-        </div>
-        <div className='px-2  border-lightGray border-2'>
-          <img className='mt-4' src='/images/feature-curate.png' alt='Generate Feature' />
-          <h3 className='font-bold text-sm text-center my-4'>Curation made Easy</h3>
-          <p className='text-center text-xs mb-4'>Use filters to view your collection by rarity and tweak before exporting</p>
+    <div className='w-full mt-32 relative '>
+      <div className='w-full  flex justify-center items-center'>
+        <div className='w-[70%] bg-white flex flex-row'>
+          <div className='p-2  border-lightGray border-2'>
+            <img className='mt-4' src='/images/feature-generate.png' alt='Generate Feature' />
+            <h3 className='font-bold text-sm text-center my-4'>Generate in Seconds</h3>
+            <p className='text-center text-xs mb-4'>
+              Drag & drop to upload traits &<br /> generate in seconds
+            </p>
+          </div>
+          <div className='px-2  border-lightGray border-2'>
+            <img className='mt-4' src='/images/feature-refine.png' alt='Generate Feature' />
+            <h3 className='font-bold text-sm text-center my-4'>Refine with Ease</h3>
+            <p className='text-center text-xs mb-4'>
+              Apply Custom Rules & Rarity for your <br />
+              specific traits
+            </p>
+          </div>
+          <div className='px-2  border-lightGray border-2'>
+            <img className='mt-4' src='/images/feature-curate.png' alt='Generate Feature' />
+            <h3 className='font-bold text-sm text-center my-4'>Curation made Easy</h3>
+            <p className='text-center text-xs mb-4'>Use filters to view your collection by rarity and tweak before exporting</p>
+          </div>
         </div>
       </div>
-      <div className='bg-lightGray absolute h-[750px] w-[100%] -z-10 top-[-160px]'></div>
+      <div className='bg-lightGray absolute h-[850px] w-[100%] -z-10 top-[-200px]'></div>
     </div>
   )
 }
@@ -87,29 +89,34 @@ const Partners = () => {
 
 const Footer = () => {
   return (
-    <div className='w-full mt-20 '>
-      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-black h-[420px]'>
+    <div className='w-full mt-24 '>
+      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-black h-[320px]'>
         <div className='w-[70%]'>
           <h2 className='text-4xl text-[#e7e7e7]'>
             Design your NFT collection seamlessly.
-            <div className='flex flex-row justify-between'>
+            <div className='flex flex-row justify-between items-center'>
               <h2 className='text-[#e7e7e7]'>
-                Let's <span className='stroke-cyan-300'>elevate art</span> together
+                Let's <span className='hollow text-black'>elevate art</span> together
               </h2>
               <div className='relative flex flex-row'>
-                <img className='' src='/images/circle1.png' alt='circle1' />
-                <img className='' src='/images/circle2.png' alt='circle2' />
-                <img src='/images/circle3.png' alt='circle3' />
+                <img className='w-16 h-16' src='/images/circle1.png' alt='circle1' />
+                <img className='w-16 h-16' src='/images/circle2.png' alt='circle2' />
+                <img className='w-16 h-16' src='/images/circle3.png' alt='circle3' />
+                <hr className='color-white'></hr>
               </div>
             </div>
           </h2>
         </div>
-        <Link className='text-white' external={true} href='#'>
-          <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
-            <img className='w-8' src='./images/logo-white.png' />
-            Start Creating
-          </button>
-        </Link>
+        <div className='w-[70%]'>
+          <div className='flex flex-row justify-start'>
+            <Link className='text-white right-0' external={true} href='#'>
+              <button className='rounded-full bg-white px-4 py-1 right-0 flex items-center float-right '>
+                <img className='w-8' src='./images/logo-black.png' />
+                <span className=' text-black'>Start Creating</span>
+              </button>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -131,8 +138,8 @@ const Home: NextPage = () => {
           <Layout.BodyLanding>
             <div className=' space-y-20 h-full flex flex-col'>
               <div className='w-full flex flex-col justify-center items-center mt-10'>
-                {/* <Hero /> */}
-                {/* <Features /> */}
+                <Hero />
+                <Features />
                 {/* <Partners /> */}
                 <Footer />
               </div>
