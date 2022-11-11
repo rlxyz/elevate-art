@@ -87,24 +87,29 @@ const Partners = () => {
 
 const Footer = () => {
   return (
-    <div className='w-full mt-20'>
-      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-darkGrey'>
-        <h2 className='text-4xl'>
-          Design your NFT collection seamlessly.
-          <br />
-          Let's elevate art together
-        </h2>
+    <div className='w-full mt-20 '>
+      <div className='w-full flex flex-col justify-center items-center space-y-6 my-2 bg-black h-[420px]'>
+        <div className='w-[70%]'>
+          <h2 className='text-4xl text-[#e7e7e7]'>
+            Design your NFT collection seamlessly.
+            <div className='flex flex-row justify-between'>
+              <h2 className='text-[#e7e7e7]'>
+                Let's <span className='stroke-cyan-300'>elevate art</span> together
+              </h2>
+              <div className='relative flex flex-row'>
+                <img className='' src='/images/circle1.png' alt='circle1' />
+                <img className='' src='/images/circle2.png' alt='circle2' />
+                <img src='/images/circle3.png' alt='circle3' />
+              </div>
+            </div>
+          </h2>
+        </div>
         <Link className='text-white' external={true} href='#'>
           <button className='rounded-full bg-darkGrey px-4 py-1 right-0 flex items-center float-right'>
             <img className='w-8' src='./images/logo-white.png' />
             Start Creating
           </button>
         </Link>
-        <div className='relative flex flex-row'>
-          <img className='' src='/images/circle1.png' alt='circle1' />
-          <img className='' src='/images/circle2.png' alt='circle2' />
-          <img src='/images/circle3.png' alt='circle3' />
-        </div>
       </div>
     </div>
   )
@@ -123,16 +128,16 @@ const Home: NextPage = () => {
       <>
         <Layout>
           <Layout.Header />
-          <Layout.Body>
+          <Layout.BodyLanding>
             <div className=' space-y-20 h-full flex flex-col'>
               <div className='w-full flex flex-col justify-center items-center mt-10'>
-                <Hero />
-                <Features />
+                {/* <Hero /> */}
+                {/* <Features /> */}
                 {/* <Partners /> */}
                 <Footer />
               </div>
             </div>
-          </Layout.Body>
+          </Layout.BodyLanding>
         </Layout>
       </>
     )

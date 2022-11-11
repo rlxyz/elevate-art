@@ -35,6 +35,28 @@ export const LayoutContainer = ({
   )
 }
 
+export const LayoutLandingPage = ({
+  className,
+  children,
+  border = 'lower',
+}: {
+  border?: 'upper' | 'lower' | 'none'
+  className?: string
+  children: React.ReactNode
+}) => {
+  return (
+    <div
+      className={clsx(
+        ' justify-center h-full w-screen',
+        className,
+        border === 'lower' && 'border-b border-mediumGrey',
+        border === 'upper' && 'border-t border-mediumGrey'
+      )}
+    >
+      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
+    </div>
+  )
+}
 export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   return (
     <main className='layout'>
@@ -84,6 +106,29 @@ const LayoutBody = ({
   )
 }
 
+const LayoutBodyLanding = ({
+  children,
+  border = 'none',
+}: {
+  children: React.ReactNode[] | React.ReactNode
+  border?: 'upper' | 'lower' | 'none'
+}) => {
+  const childrens = React.Children.toArray(children)
+  return (
+    <div className='min-h-[calc(100vh-9.14rem)]'>
+      <div className='h-full w-screen'>
+        {childrens.map((child, index) => {
+          return (
+            <LayoutLandingPage border={border} key={index}>
+              <div className='-ml-2 h-full w-full space-y-8'>{child}</div>
+            </LayoutLandingPage>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
   <LayoutContainer className='title'>{children}</LayoutContainer>
 )
@@ -91,3 +136,4 @@ const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
 Layout.Header = LayoutHeader
 Layout.Title = LayoutTitle
 Layout.Body = LayoutBody
+Layout.BodyLanding = LayoutBodyLanding
