@@ -101,7 +101,7 @@ export const useTraitElementTable = ({
     setIsRarityResettable(false)
     setIsTraitDeletable(false)
     reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })) })
-  }, [key])
+  }, [key, traitElements.length])
 
   /** Run during rarity change */
   const onFormSuccess = () => {
