@@ -87,8 +87,8 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                 <Dialog.Description>
                   <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                     <span className='text-sm'>{description}</span>
-                    {data.map(({ label, value }) => (
-                      <div className='space-y-1'>
+                    {data?.map(({ label, value }, index) => (
+                      <div className='space-y-1' key={`${label}-${index}`}>
                         <span className='text-[0.6rem] uppercase'>{label}</span>
                         <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{value}</div>
                       </div>

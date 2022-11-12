@@ -31,7 +31,6 @@ const Page = () => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
-
   const currentLayerId = layers?.find((l) => l.name === layerName)?.id || ''
 
   return (

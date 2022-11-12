@@ -30,28 +30,28 @@ interface Props {
   }) => void
 }
 
-const defaultProps: Props = {
-  depth: 4,
-  gridSize: 'lg',
-  onDropCallback: ({
-    files,
-    setUploadedFiles,
-    setUploadState,
-  }: {
-    files: FileWithPath[]
-    setUploadedFiles: Dispatch<
-      SetStateAction<{
-        [key: string]: {
-          name: string
-          imageUrl: string
-          size: number
-          uploaded: boolean
-        }[]
-      }>
-    >
-    setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
-  }) => {},
-}
+// const defaultProps: Props = {
+//   depth: 4,
+//   gridSize: 'lg',
+//   onDropCallback: ({
+//     files,
+//     setUploadedFiles,
+//     setUploadState,
+//   }: {
+//     files: FileWithPath[]
+//     setUploadedFiles: Dispatch<
+//       SetStateAction<{
+//         [key: string]: {
+//           name: string
+//           imageUrl: string
+//           size: number
+//           uploaded: boolean
+//         }[]
+//       }>
+//     >
+//     setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
+//   }) => {},
+// }
 
 type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>
 export type UploadProps = Props & NativeAttrs
@@ -67,7 +67,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   className,
   gridSize,
   ...props
-}: React.PropsWithChildren<UploadProps> & typeof defaultProps) => {
+}: React.PropsWithChildren<UploadProps>) => {
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: {
       name: string
@@ -120,8 +120,8 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
         </div>
       )}
       <div className='space-y-6'>
-        {Object.entries(uploadedFiles).map((files) => (
-          <UploadDisplay layerName={files[0]} traits={files[1]} gridSize={gridSize} />
+        {Object.entries(uploadedFiles).map((files, index) => (
+          <UploadDisplay key={`${index}-${files[0]}`} layerName={files[0]} traits={files[1]} gridSize={gridSize} />
         ))}
       </div>
     </div>
@@ -129,5 +129,4 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
 }
 
 Upload.displayName = 'Upload'
-Upload.defaultProps = defaultProps
 export default Upload
