@@ -8,17 +8,20 @@ export const WEIGHT_STEP_COUNT = Big(1)
 export const WEIGHT_LOWER_BOUNDARY = Big(0)
 export const WEIGHT_UPPER_BOUNDARY = Big(100)
 
-export type TraitElementFormType = {
-  traitElements: {
-    checked: boolean
-    locked: boolean
-    weight: Big
-    id: string
-    name: string
-    layerElementId: string
-    createdAt: Date
-    updatedAt: Date
-  }[]
+export type TraitElementFields = {
+  checked: boolean
+  locked: boolean
+  weight: Big
+  id: string
+  name: string
+  layerElementId: string
+  createdAt: Date
+  updatedAt: Date
+  readonly: boolean
+}
+
+export type TraitElementRarityFormType = {
+  traitElements: TraitElementFields[]
   allCheckboxesChecked: boolean
 }
 
@@ -37,7 +40,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     getValues,
     setValue,
     ...props
-  } = useForm<TraitElementFormType>({
+  } = useForm<TraitElementRarityFormType>({
     defaultValues: {
       allCheckboxesChecked: false,
       traitElements: [...traitElements].map((x) => ({
@@ -49,6 +52,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
         layerElementId: x.layerElementId,
         createdAt: x.createdAt,
         updatedAt: x.updatedAt,
+        readonly: x.readonly,
       })),
     },
   })
@@ -264,6 +268,10 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     })
   }
 
+  const isNoneTraitElement = (index: number) => {
+    return getValues(`traitElements.${index}.readonly`)
+  }
+
   return {
     incrementRarityByIndex,
     decrementRarityByIndex,
@@ -275,6 +283,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     watch,
     getValues,
     setValue,
+    isNoneTraitElement,
     formState: { errors },
     ...props,
   }

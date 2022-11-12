@@ -9,7 +9,7 @@ import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
-import { TraitElementFormType, useTraitElementForm, WEIGHT_LOWER_BOUNDARY } from './trait-table-list-form-hook'
+import { TraitElementRarityFormType, useTraitElementForm, WEIGHT_LOWER_BOUNDARY } from './trait-table-list-form-hook'
 import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
 
 /**
@@ -54,6 +54,7 @@ export const useTraitElementTable = ({
     isDecreaseRarityPossible,
     decrementRarityByIndex,
     incrementRarityByIndex,
+    isNoneTraitElement,
   } = useTraitElementForm({
     traitElements,
     onChange: () => setIsRarityResettable(true),
@@ -92,13 +93,6 @@ export const useTraitElementTable = ({
   const traitElementsArray = watch('traitElements')
 
   /**
-   * Used to check if the trait is a none trait. These traits are not allowed to be deleted, renamed, etc.
-   */
-  const isNoneTraitElement = (id: string) => {
-    return id === 'none'
-  }
-
-  /**
    * Reset Effect
    * This effect resets the Table.
    */
@@ -114,7 +108,7 @@ export const useTraitElementTable = ({
     setIsRarityResettable(false)
   }
 
-  const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementFormType, 'traitElements', 'id'>>[]>(
+  const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementRarityFormType, 'traitElements', 'id'>>[]>(
     () => [
       {
         header: () => (
@@ -144,7 +138,7 @@ export const useTraitElementTable = ({
                  * Skip none trait. Cannot be deleted.
                  * @todo Is there a better method to handle this? Possibly a TraitElement variable in db called "none".
                  */
-                if (isNoneTraitElement(x.id)) {
+                if (isNoneTraitElement(index)) {
                   return
                 }
 
@@ -161,7 +155,7 @@ export const useTraitElementTable = ({
           },
         }) => (
           <>
-            {!isNoneTraitElement(id) && (
+            {!isNoneTraitElement(index) && (
               <input
                 key={id}
                 type='checkbox'
@@ -215,11 +209,12 @@ export const useTraitElementTable = ({
         cell: ({
           row: {
             original: { id: t, layerElementId: l },
+            index,
           },
         }) => (
           <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center px-1'>
             <div className='rounded-[5px] border border-mediumGrey'>
-              {!isNoneTraitElement(t) && (
+              {!isNoneTraitElement(index) && (
                 <img
                   className='w-full h-full rounded-[5px]'
                   src={getImageForTrait({
@@ -245,7 +240,7 @@ export const useTraitElementTable = ({
         }) => (
           <>
             <div>{errors.traitElements && errors.traitElements[index]?.name?.message}</div>
-            {!isNoneTraitElement(id) ? (
+            {!isNoneTraitElement(index) ? (
               <input
                 placeholder={name}
                 {...register(`traitElements.${index}.name`)}
@@ -346,7 +341,7 @@ export const useTraitElementTable = ({
             </button>
             <div className='w-full flex items-center justify-between py-1 text-xs px-2'>
               <button
-                disabled={isNoneTraitElement(original.id)}
+                disabled={isNoneTraitElement(index)}
                 onClick={(e) => {
                   e.preventDefault()
                   if (original.locked) {
@@ -527,7 +522,7 @@ export const useTraitElementTable = ({
         accessorKey: 'actions',
         footer: (props) => props.column.id,
         cell: ({ row: { original, index } }) =>
-          !isNoneTraitElement(original.id) && (
+          !isNoneTraitElement(index) && (
             <div className='relative'>
               <Popover className='relative flex space-x-1'>
                 <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>

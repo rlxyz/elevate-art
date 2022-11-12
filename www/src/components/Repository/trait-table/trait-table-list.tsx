@@ -1,20 +1,11 @@
 import { Table } from '@components/Layout/core/Table'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
-import Big from 'big.js'
 import clsx from 'clsx'
 import { FC } from 'react'
+import { TraitElementFields } from './trait-table-list-form-hook'
 
 interface Props {
-  table: ReactTable<{
-    checked: boolean
-    locked: boolean
-    weight: Big
-    id: string
-    name: string
-    layerElementId: string
-    createdAt: Date
-    updatedAt: Date
-  }>
+  table: ReactTable<TraitElementFields>
 }
 
 export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>

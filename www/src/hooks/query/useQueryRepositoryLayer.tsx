@@ -25,8 +25,9 @@ export const useQueryRepositoryLayer = () => {
         ...current,
         traitElements: [
           {
-            id: `none`,
+            id: `none-${current.id}`,
             name: 'None',
+            readonly: true,
             weight: 100 - sumBy(current.traitElements || 0, (x) => x.weight),
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -44,11 +45,12 @@ export const useQueryRepositoryLayer = () => {
         ...x.traitElements,
         {
           id: `none-${x.id}`,
+          readonly: true,
           name: 'None',
           weight: 100 - sumBy(x.traitElements || 0, (x) => x.weight),
           createdAt: new Date(),
           updatedAt: new Date(),
-          layerElementId: '',
+          layerElementId: x.id,
           rulesPrimary: [],
           rulesSecondary: [],
         },
