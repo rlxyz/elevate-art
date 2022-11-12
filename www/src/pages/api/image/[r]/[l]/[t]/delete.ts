@@ -1,4 +1,4 @@
-import { deleteImageFromCloudinary } from '@server/common/cld-delete-image'
+import { deleteImageFromCloudinary } from '@server/scripts/cld-delete-image'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 // @todo authenticated?

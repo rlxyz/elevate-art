@@ -6,7 +6,10 @@ import { createRouter } from '../context'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
-const TraitElementRenameInput = z.array(z.object({ name: z.string(), traitElementId: z.string(), repositoryId: z.string() }))
+const TraitElementUpdateNameInput = z.array(z.object({ name: z.string(), traitElementId: z.string(), repositoryId: z.string() }))
+const TraitElementUpdateWeightInput = z.array(
+  z.object({ weight: z.number(), traitElementId: z.string(), layerElementId: z.string() })
+)
 
 /**
  * TraitElement Router
@@ -80,9 +83,9 @@ export const traitElementRouter = createRouter()
    * Renames a TraitElement with their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
    */
-  .mutation('rename', {
+  .mutation('update.name', {
     input: z.object({
-      traitElements: TraitElementRenameInput.min(1),
+      traitElements: TraitElementUpdateNameInput.min(1),
     }),
     async resolve({ ctx, input }) {
       const { traitElements } = input
@@ -98,5 +101,34 @@ export const traitElementRouter = createRouter()
           })
         )
       })
+    },
+  })
+  /**
+   * Updates weight of TraitElements with their associated LayerElement.
+   */
+  .mutation('update.weight', {
+    input: z.object({
+      traitElements: TraitElementUpdateWeightInput.min(1),
+    }),
+    async resolve({ ctx, input }) {
+      const { traitElements } = input
+
+      /* Update many traits based on their traitElementId & weight */
+      await ctx.prisma.$transaction(
+        async (tx) => {
+          await Promise.all(
+            traitElements.map(async ({ traitElementId: id, weight }) => {
+              return await tx.traitElement.update({
+                where: { id },
+                data: { weight },
+              })
+            })
+          )
+        },
+        {
+          maxWait: 20000,
+          timeout: 20000,
+        }
+      )
     },
   })

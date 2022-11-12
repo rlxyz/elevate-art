@@ -7,7 +7,7 @@ export const useMutateRenameTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
-  return trpc.useMutation('traits.rename', {
+  return trpc.useMutation('traits.update.name', {
     onSuccess: async (data, variable) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])

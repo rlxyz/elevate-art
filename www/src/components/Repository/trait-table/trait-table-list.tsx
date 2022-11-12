@@ -1,18 +1,20 @@
 import { Table } from '@components/Layout/core/Table'
-import { TraitElement } from '@prisma/client'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
 import Big from 'big.js'
 import clsx from 'clsx'
 import { FC } from 'react'
 
 interface Props {
-  table: ReactTable<
-    TraitElement & {
-      checked: boolean
-      locked: boolean
-      weight: Big
-    }
-  >
+  table: ReactTable<{
+    checked: boolean
+    locked: boolean
+    weight: Big
+    id: string
+    name: string
+    layerElementId: string
+    createdAt: Date
+    updatedAt: Date
+  }>
 }
 
 export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
@@ -25,7 +27,7 @@ export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, key
  */
 const TraitElementTable: FC<TraitElementTableProps> = ({ table, className }) => {
   return (
-    <form className={clsx(className)}>
+    <div className={clsx(className)}>
       <Table>
         <Table.Head>
           {table.getHeaderGroups().map((headerGroup) =>
@@ -54,7 +56,7 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className }) => 
           })}
         </Table.Body>
       </Table>
-    </form>
+    </div>
   )
 }
 

@@ -78,7 +78,12 @@ const TableHeadRow = ({
 
 const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   return (
-    <tbody className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-mediumGrey')}>
+    <tbody
+      className={clsx(
+        loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white',
+        'divide-y divide-mediumGrey overflow-auto'
+      )}
+    >
       {children}
     </tbody>
   )

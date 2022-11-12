@@ -1,13 +1,5 @@
 import { Popover, Transition } from '@headlessui/react'
-import {
-  InformationCircleIcon,
-  LockClosedIcon,
-  LockOpenIcon,
-  MinusIcon,
-  PlusIcon,
-  RefreshIcon,
-  XCircleIcon,
-} from '@heroicons/react/outline'
+import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
 import { TraitElement } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { getImageForTrait } from '@utils/image'
@@ -17,8 +9,8 @@ import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
-import { useMutateRenameTraitElement } from './trait-rename-mutate-hook'
 import { TraitElementFormType, useTraitElementForm, WEIGHT_LOWER_BOUNDARY } from './trait-table-list-form-hook'
+import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
 
 /**
  * This hook handles all the core logic for the TraitElement table form.
@@ -59,6 +51,7 @@ export const useTraitElementTable = ({
     getValues,
     setValue,
     isIncreaseRarityPossible,
+    isDecreaseRarityPossible,
     decrementRarityByIndex,
     incrementRarityByIndex,
   } = useTraitElementForm({
@@ -115,6 +108,11 @@ export const useTraitElementTable = ({
     setIsTraitDeletable(false)
     reset({ traitElements: traitElements.map((x) => ({ ...x, checked: false, locked: false })) })
   }, [key])
+
+  /** Run during rarity change */
+  const onFormSuccess = () => {
+    setIsRarityResettable(false)
+  }
 
   const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementFormType, 'traitElements', 'id'>>[]>(
     () => [
@@ -331,7 +329,7 @@ export const useTraitElementTable = ({
             )}
           >
             <button
-              // disabled={!!Big(original.weight).eq(WEIGHT_LOWER_BOUNDARY)}
+              disabled={isDecreaseRarityPossible(index)}
               className='border-r border-mediumGrey px-2 py-2 disabled:cursor-not-allowed'
               onMouseDown={(e) => {
                 decrementRarityInterval(index)
@@ -455,7 +453,7 @@ export const useTraitElementTable = ({
                     d='M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z'
                   />
                 </svg>
-                {(isRarityResettable || isTraitDeletable) && (
+                {isTraitDeletable && (
                   <span className='absolute left-[-20px] top-[-2.5px] px-2 bg-blueHighlight text-white inline-flex items-center rounded-full border border-mediumGrey text-[0.65rem] font-medium'>
                     1
                   </span>
@@ -491,16 +489,16 @@ export const useTraitElementTable = ({
                       //   },
                       //   disabled: !hasFormChange,
                       // },
-                      {
-                        name: 'Reset',
-                        icon: <RefreshIcon className='w-4 h-4' />,
-                        onClick: () => {
-                          reset()
-                          setIsRarityResettable(false)
-                          resetRarityInterval()
-                        },
-                        disabled: !isRarityResettable,
-                      },
+                      // {
+                      //   name: 'Reset',
+                      //   icon: <RefreshIcon className='w-4 h-4' />,
+                      //   onClick: () => {
+                      //     reset()
+                      //     setIsRarityResettable(false)
+                      //     resetRarityInterval()
+                      //   },
+                      //   disabled: !isRarityResettable,
+                      // },
                       {
                         name: 'Delete',
                         icon: <XCircleIcon className='w-4 h-4' />,
@@ -604,7 +602,17 @@ export const useTraitElementTable = ({
     table,
     delete: { open: isDeleteClicked, set: setIsDeletedClicked },
     create: { open: isCreateClicked, set: setIsCreateClicked },
+    isSaveable: !isRarityResettable, // do not be afriad to add move states here aside from isRarityResettable for isSaveable
+    isResettable: !isRarityResettable, // do not be afriad to add move states here aside from isRarityResettable for isSaveable
+    onFormSuccess: () => onFormSuccess(),
+    onFormReset: () => {
+      reset()
+      setIsRarityResettable(false)
+      resetRarityInterval()
+    },
+    handleSubmit,
     getFilteredTraitElements: () => traitElementsArray.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase())),
     getCheckedTraitElements: () => traitElementsArray.filter((x) => x.checked),
+    getAllTraitElements: () => traitElementsArray,
   }
 }

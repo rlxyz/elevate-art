@@ -1,13 +1,22 @@
 import ModalComponent from '@components/Layout/Modal'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { TraitElement } from '@prisma/client'
+import Big from 'big.js'
 import { FC } from 'react'
 import { useMutateDeleteTraitElement } from './trait-delete-mutate-hook'
 
 interface Props {
   onClose: () => void
   visible: boolean
-  traitElements: TraitElement[]
+  traitElements: {
+    checked: boolean
+    locked: boolean
+    weight: Big
+    id: string
+    name: string
+    layerElementId: string
+    updatedAt: Date
+    createdAt: Date
+  }[]
 }
 
 const TraitElementDeleteModal: FC<Props> = ({ visible, onClose, traitElements }) => {

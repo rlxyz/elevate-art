@@ -15,9 +15,9 @@ export type TraitElementFormType = {
     weight: Big
     id: string
     name: string
+    layerElementId: string
     createdAt: Date
     updatedAt: Date
-    layerElementId: string
   }[]
   allCheckboxesChecked: boolean
 }
@@ -40,7 +40,16 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
   } = useForm<TraitElementFormType>({
     defaultValues: {
       allCheckboxesChecked: false,
-      traitElements: [...traitElements].map((x) => ({ ...x, checked: false, locked: false, weight: Big(x.weight) })),
+      traitElements: [...traitElements].map((x) => ({
+        id: x.id,
+        name: x.name,
+        checked: false,
+        locked: false,
+        weight: Big(x.weight),
+        layerElementId: x.layerElementId,
+        createdAt: x.createdAt,
+        updatedAt: x.updatedAt,
+      })),
     },
   })
 
@@ -66,6 +75,27 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     //   sumByBig(lockedTraitElements, (x) => x.weight).minus(WEIGHT_STEP_COUNT.mul(lockedTraitElements.length))
     // ).lte(0)
     return lockCheck || maxCheck
+  }
+
+  const isDecreaseRarityPossible = (index: number) => {
+    const traitElements = getValues().traitElements
+    const weight = Big(getValues(`traitElements.${index}.weight`))
+    const none = Big(getValues(`traitElements.${0}.weight`))
+    const locked = getValues(`traitElements.${index}.locked`)
+
+    // checks the max boundary
+    const minCheck = weight.eq(WEIGHT_LOWER_BOUNDARY)
+
+    // checks the None trait can be distribute to if locked
+    const lockCheck = locked && none.eq(WEIGHT_UPPER_BOUNDARY)
+
+    // checks if there is there is leftover weight to consume
+    // @todo fix this
+    // const lockedTraitElements = traitElements.filter((x) => !x.locked).filter((_, i) => i !== index)
+    // const leftoverCheck = Big(
+    //   sumByBig(lockedTraitElements, (x) => x.weight).minus(WEIGHT_STEP_COUNT.mul(lockedTraitElements.length))
+    // ).lte(0)
+    return lockCheck || minCheck
   }
 
   const getMaxGrowthAllowance = (index: number, locked: boolean): Big => {
@@ -132,7 +162,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
       .filter((x) => !x.locked) // remove the locked trait elements
       .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)) // remove the trait elements that has reached lower boundary
 
-    /** Get max the rarity can grow to */
+    /** Get min the rarity can grow to */
     const min = getMinGrowthAllowance(index, locked)
 
     /** If has reached upper boundary max, return */
@@ -194,6 +224,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     /** If has reached upper boundary max, return */
     if (isEqual(weight, max)) return
 
+    console.log(max.toNumber(), weight.toNumber())
     /** Figure out how much to change */
     const growth = getAllowableIncrementGrowth(weight, max)
 
@@ -232,8 +263,6 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
       setValue(`traitElements.${index}.weight`, w.minus(linear))
     })
   }
-
-  const isDecreaseRarityPossible = (index: number) => {}
 
   return {
     incrementRarityByIndex,
