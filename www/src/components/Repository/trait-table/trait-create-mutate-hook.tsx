@@ -1,7 +1,7 @@
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
-import { getTraitUploadObjectUrls, uploadCollectionLayerImageCloudinary } from '@utils/cloudinary'
+import { createCloudinaryFormData, getTraitUploadObjectUrls } from '@utils/cloudinary'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
@@ -10,10 +10,11 @@ import { FileWithPath } from 'react-dropzone'
 export const useMutateCreateTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate: createManyTrait, isLoading } = trpc.useMutation('traits.create')
+  const { mutateAsync: createManyTrait, isLoading } = trpc.useMutation('traits.create')
   const { current: layer } = useQueryRepositoryLayer()
   const { notifyError, notifySuccess } = useNotification()
-  const mutate = ({
+
+  const mutate = async ({
     files,
     setUploadedFiles,
     setUploadState,
@@ -56,63 +57,135 @@ export const useMutateCreateTraitElement = () => {
         repositoryId: repositoryId,
       }))
 
-    createManyTrait(
-      { traitElements: allNewTraits },
-      {
-        onSuccess: async (data, variable) => {
-          notifySuccess(`Saved ${variable.traitElements.length} traits. We are now uploading the images to the cloud...`)
-
-          // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-          await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
-
-          // Snapshot the previous value
-          const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
-          if (!backup) return { backup }
-
-          // Optimistically update to the new value
-          const next = produce(backup, (draft) => {
-            Object.entries(data).map(([layerElementId, traitElements]) => {
-              const layer = draft.find((l) => l.id === layerElementId)
-              if (!layer) return
-              layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
-            })
-          })
-
-          ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
-          const allTraits = Object.entries(data).flatMap((x) => x[1])
-          files.map((file: FileWithPath) => {
-            const reader = new FileReader()
-            const traitName = file.path?.replace('.png', '') || ''
-            if (!traitName) return
-            reader.onload = async () => {
-              const traitElement = allTraits.find((x) => x.name === traitName)
-              if (!traitElement) return
-              uploadCollectionLayerImageCloudinary({
-                file,
-                traitElement,
-                repositoryId,
-              }).then(() => {
-                setUploadedFiles((state) =>
-                  produce(state, (draft) => {
-                    const trait = draft[layer.name]?.find((x) => x.name === traitName)
-                    if (!trait) return
-                    trait.uploaded = true
-                  })
-                )
+    try {
+      const response = await createManyTrait({ traitElements: allNewTraits })
+      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
+      const allTraits = Object.entries(response).flatMap((x) => x[1])
+      const filePromises = files.map((file: FileWithPath) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          const name = file.path?.replace('.png', '') || ''
+          const traitElement = allTraits.find((x) => x.name === name)
+          if (!traitElement) return
+          reader.onload = async () => {
+            try {
+              const response = await fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
+                method: 'post',
+                body: createCloudinaryFormData(file, traitElement, repositoryId),
               })
+              const data = await response.json()
+              const { secure_url } = data as { secure_url: string }
+              setUploadedFiles((state) =>
+                produce(state, (draft) => {
+                  const trait = draft[layer.name]?.find((x) => x.name === name)
+                  if (!trait) return
+                  trait.uploaded = true
+                })
+              )
+              resolve({ traitElementId: traitElement.createdAt, imageUrl: secure_url })
+            } catch (err) {
+              reject(err)
             }
-            reader.readAsArrayBuffer(file)
-          })
-        },
-        onError: async (error, variables, context) => {
-          if (JSON.parse(error.message).code === 'too_small') {
-            notifyError("We couldn't find any new traits.")
-          } else {
-            notifyError('Something went wrong')
           }
-        },
-      }
-    )
+          reader.onerror = (err) => reject(err)
+          reader.readAsBinaryString(file)
+        })
+      })
+      await Promise.all(filePromises).then((data) => {
+        setUploadState('done')
+        // @todo Too fast!
+        notifySuccess('Trait elements created successfully')
+        const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+        if (!backup) return
+        const next = produce(backup, (draft) => {
+          Object.entries(response).map(([layerElementId, traitElements]) => {
+            const layer = draft.find((l) => l.id === layerElementId)
+            if (!layer) return
+            layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
+          })
+        })
+        ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+      })
+    } catch (err) {
+      setUploadState('error')
+      notifyError('Something went wrong. Please refresh the page to try again.')
+      return
+    } finally {
+      setUploadState('done')
+      notifySuccess('Uploaded....')
+      return
+    }
+
+    // {
+    //   onSuccess: async (data, variable) => {
+    //     notifySuccess(`Saved ${variable.traitElements.length} traits. We are now uploading the images to the cloud...`)
+
+    //     // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+    //     await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
+
+    //     // Snapshot the previous value
+    //     const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+    //     if (!backup) return { backup }
+
+    //     // Optimistically update to the new value
+    //     const allTraits = Object.entries(data).flatMap((x) => x[1])
+    //     const next = produce(backup, (draft) => {
+    //       Object.entries(data).map(([layerElementId, traitElements]) => {
+    //         const layer = draft.find((l) => l.id === layerElementId)
+    //         if (!layer) return
+    //         layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
+    //       })
+    //     })
+
+    //     // ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+    //     files.map((file: FileWithPath) => {
+    //       const reader = new FileReader()
+    //       const traitName = file.path?.replace('.png', '') || ''
+    //       if (!traitName) return
+    //       reader.onload = async () => {
+    //         const traitElement = allTraits.find((x) => x.name === traitName)
+    //         if (!traitElement) return
+    //         try {
+    //           const data = createCloudinaryFormData(file, traitElement, repositoryId)
+    //           const response = await fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
+    //             method: 'post',
+    //             body: data,
+    //           })
+    //           setUploadedFiles((state) =>
+    //             produce(state, (draft) => {
+    //               const trait = draft[layer.name]?.find((x) => x.name === traitName)
+    //               if (!trait) return
+    //               trait.uploaded = true
+    //             })
+    //           )
+    //           resolve(response)
+    //         } catch (err) {
+    //           reject(err)
+    //         }
+    //         // .then(() => {
+    //         //   setUploadedFiles((state) =>
+    //         //     produce(state, (draft) => {
+    //         //       const trait = draft[layer.name]?.find((x) => x.name === traitName)
+    //         //       if (!trait) return
+    //         //       trait.uploaded = true
+    //         //     })
+    //         //   )
+    //         // })
+    //       }
+    //       reader.readAsArrayBuffer(file)
+    //     })
+    //   },
+    //   onError: async (error, variables, context) => {
+    //     if (JSON.parse(error.message).code === 'too_small') {
+    //       notifyError("We couldn't find any new traits.")
+    //     } else {
+    //       notifyError('Something went wrong')
+    //     }
+    //   },
+    //   onSettled: () => {
+    //     notifySuccess(`Uploaded all...`)
+    //   },
+    // }
   }
   return { mutate, isLoading }
 }

@@ -1,8 +1,7 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
-import { TraitElement } from '@prisma/client'
+import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { getImageForTrait } from '@utils/image'
 import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import clsx from 'clsx'
@@ -21,7 +20,7 @@ export const useTraitElementTable = ({
   key,
   searchFilter = '',
 }: {
-  traitElements: TraitElement[]
+  traitElements: TraitElementWithImage[]
   repositoryId: string
   key: string
   searchFilter?: string
@@ -208,22 +207,12 @@ export const useTraitElementTable = ({
         accessorKey: 'imageUrl',
         cell: ({
           row: {
-            original: { id: t, layerElementId: l },
-            index,
+            original: { imageUrl },
           },
         }) => (
           <div className='w-10 h-10 lg:w-20 lg:h-20 flex items-center px-1'>
             <div className='rounded-[5px] border border-mediumGrey'>
-              {!isNoneTraitElement(index) && (
-                <img
-                  className='w-full h-full rounded-[5px]'
-                  src={getImageForTrait({
-                    r: repositoryId,
-                    l,
-                    t,
-                  })}
-                />
-              )}
+              {imageUrl && <img className='w-full h-full rounded-[5px]' src={imageUrl} />}
             </div>
           </div>
         ),

@@ -113,7 +113,6 @@ export const traitElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { traitElements } = input
 
-      /* Update many traits based on their traitElementId & weight */
       await ctx.prisma.$transaction(
         async (tx) => {
           await Promise.all(

@@ -1,6 +1,7 @@
 import SearchInput from '@components/Layout/SearchInput'
 import { CheckCircleIcon } from '@heroicons/react/outline'
-import { LayerElement, TraitElement } from '@prisma/client'
+import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
+import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'
@@ -27,7 +28,7 @@ export const TraitElementView = z.nativeEnum(
 export type TraitElementViewType = z.infer<typeof TraitElementView>
 
 interface Props {
-  layerElement: (LayerElement & { traitElements: TraitElement[] }) | undefined
+  layerElement: (LayerElement & { traitElements: TraitElementWithImage[] }) | undefined
   repositoryId: string
 }
 

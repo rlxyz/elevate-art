@@ -1,22 +1,13 @@
 import { truncate } from '@utils/format'
-import { getImageForTrait } from '@utils/image'
 import { sumByBig } from '@utils/object-utils'
 import { timeAgo } from '@utils/time'
 import Big from 'big.js'
 import clsx from 'clsx'
 import { FC } from 'react'
+import { TraitElementFields } from './trait-table-list-form-hook'
 
 interface Props {
-  traitElements: {
-    checked: boolean
-    locked: boolean
-    weight: Big
-    id: string
-    name: string
-    layerElementId: string
-    createdAt: Date
-    updatedAt: Date
-  }[]
+  traitElements: TraitElementFields[]
   repositoryId: string
 }
 
@@ -37,11 +28,7 @@ const TraitElementGrid: FC<TraitElementGridProps> = ({ traitElements, repository
                 <img
                   loading='lazy'
                   className='w-auto h-auto border-t border-b border-mediumGrey object-contain'
-                  src={getImageForTrait({
-                    r: repositoryId,
-                    l: trait.layerElementId,
-                    t: trait.id,
-                  })}
+                  src={trait.imageUrl}
                 />
               )}
             </div>

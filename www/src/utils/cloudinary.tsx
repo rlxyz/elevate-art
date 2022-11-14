@@ -4,14 +4,14 @@ import { env } from 'src/env/client.mjs'
 import { clientEnv } from 'src/env/schema.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
-// export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
-export const IMAGE_QUALITY_SETTINGS: string[] = []
+export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
+// export const IMAGE_QUALITY_SETTINGS: string[] = []
 export const IMAGE_VERSION = 'v1'
 
 export const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
-  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join('/')}/${
-    clientEnv.NEXT_PUBLIC_NODE_ENV
-  }/${r}/${l}/${t}.png`
+  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join(
+    '/'
+  )}/${IMAGE_VERSION}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
 
 export const uploadCollectionLayerImageCloudinary = ({
@@ -26,31 +26,6 @@ export const uploadCollectionLayerImageCloudinary = ({
   return new Promise((resolve, reject) => {
     const data = createCloudinaryFormData(file, traitElement, repositoryId)
     fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
-      method: 'post',
-      body: data,
-    })
-      .then(async (response) => {
-        resolve(response)
-      })
-      .catch((err) => {
-        reject(err)
-      })
-  })
-}
-
-export const deleteCollectionLayerImageCloudinary = ({
-  repositoryId,
-  traitElement,
-}: {
-  repositoryId: string
-  traitElement: TraitElement
-}) => {
-  return new Promise((resolve, reject) => {
-    const { id, name, layerElementId } = traitElement
-    const data = new FormData()
-    data.append('public_id', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}.png`)
-    data.append('signature', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}.png`)
-    fetch('https://api.cloudinary.com/v1_1/rlxyz/image/destroy', {
       method: 'post',
       body: data,
     })

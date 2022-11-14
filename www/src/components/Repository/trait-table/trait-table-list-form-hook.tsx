@@ -1,4 +1,4 @@
-import { TraitElement } from '@prisma/client'
+import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import { useForm } from 'react-hook-form'
@@ -18,6 +18,7 @@ export type TraitElementFields = {
   createdAt: Date
   updatedAt: Date
   readonly: boolean
+  imageUrl: string
 }
 
 export type TraitElementRarityFormType = {
@@ -25,7 +26,13 @@ export type TraitElementRarityFormType = {
   allCheckboxesChecked: boolean
 }
 
-export const useTraitElementForm = ({ traitElements, onChange }: { traitElements: TraitElement[]; onChange: () => void }) => {
+export const useTraitElementForm = ({
+  traitElements,
+  onChange,
+}: {
+  traitElements: TraitElementWithImage[]
+  onChange: () => void
+}) => {
   /**
    * Table data based on react-hook-form
    * Handles default values in the table, and any hooks needed for the table.
@@ -53,6 +60,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
         createdAt: x.createdAt,
         updatedAt: x.updatedAt,
         readonly: x.readonly,
+        imageUrl: x.imageUrl,
       })),
     },
   })
