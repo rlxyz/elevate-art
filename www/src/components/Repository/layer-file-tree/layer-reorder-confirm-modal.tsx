@@ -17,7 +17,6 @@ const LayerElementReorderConfirmModal: FC<Props> = ({ visible, onClose, layerEle
       onClose={onClose}
       title='Reorder Layers'
       description={`You are reordering the layers. This will be applied to all collections in the project`}
-      data={[]}
       isLoading={isLoading}
       onClick={(e) => {
         e.preventDefault()

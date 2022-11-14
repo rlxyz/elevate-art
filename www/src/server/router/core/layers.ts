@@ -1,3 +1,4 @@
+import { env } from 'src/env/server.mjs'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -60,26 +61,96 @@ export const layerElementRouter = createRouter()
     input: z.object({
       repositoryId: z.string(),
       name: z.string(),
-      traitElements: z.array(z.object({ name: z.string() })),
     }),
     async resolve({ ctx, input }) {
-      const { repositoryId, name, traitElements } = input
+      const { repositoryId, name } = input
+
+      /** Infer current count as priority */
+      const count = await ctx.prisma.layerElement.count({ where: { repositoryId } })
 
       /** Create LayerElement & TraitElements in Db */
       return await ctx.prisma.layerElement.create({
         data: {
           repositoryId,
           name,
-          traitElements: {
-            createMany: {
-              data: traitElements.map(({ name }) => ({ name, weight: 1 })),
-            },
-          },
-        },
-        include: {
-          traitElements: true,
+          priority: count,
         },
       })
+    },
+  })
+  /**
+   * Delete LayerElement with their associated repository id.
+   * This function is NOT dynamic. It only allows a single LayerElement to be created.
+   * It also created all associated TraitElements.
+   *
+   * @todo make this more dynamic so it can create multiple LayerElements at once.
+   */
+  .mutation('delete', {
+    input: z.object({
+      repositoryId: z.string(),
+      layerElementId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const { layerElementId, repositoryId } = input
+
+      /** Find and delete all existing traits of this LayerElement */
+      const data = await ctx.prisma.traitElement.findMany({ where: { layerElementId } })
+
+      const traitElements = data.map(({ id, layerElementId }) => {
+        return {
+          id,
+          layerElementId,
+          repositoryId,
+        }
+      })
+
+      /* Delete many TraitElement from Db  */
+      await ctx.prisma.traitElement.deleteMany({
+        where: {
+          id: {
+            in: data.map((x) => x.id),
+          },
+        },
+      })
+
+      /* Delete many TraitElement from Cloudinary */
+      /* This fetch sends request to Qstash to run delete jobs with retries if failed */
+      await Promise.all(
+        traitElements.map(async ({ repositoryId: r, layerElementId: l, id: t }) => {
+          const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${r}/${l}/${t}/delete`)
+          if (response.status === 200) {
+            // @todo log
+            console.log(`delete ${r}/${l}/${t}`)
+          } else {
+            // @todo qstash
+            console.log(`failed ${r}/${l}/${t}`)
+          }
+        })
+      )
+
+      /** Create LayerElement & TraitElements in Db */
+      const layerElement = await ctx.prisma.layerElement.delete({
+        where: {
+          id: layerElementId,
+        },
+      })
+
+      /** Update priority of all other LayerElements */
+      await ctx.prisma.layerElement.updateMany({
+        where: {
+          repositoryId,
+          priority: {
+            gt: layerElement.priority,
+          },
+        },
+        data: {
+          priority: {
+            decrement: 1,
+          },
+        },
+      })
+
+      return layerElement
     },
   })
   .query('traits.find', {

@@ -109,6 +109,8 @@ model LayerElement {
     repositoryId String
 
     traitElements TraitElement[]
+
+    @@unique([name, repositoryId])
 }
 
 model TraitElement {

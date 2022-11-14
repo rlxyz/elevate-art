@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import clsx from 'clsx'
-import { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Loading from './Loading'
 
 interface Props {
@@ -96,13 +96,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                     {children}
                   </div>
                   <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        closeModal()
-                      }}
-                      className={clsx('text-xs text-darkGrey hover:bg-lightGray py-6')}
-                    >
+                    <button type='reset' onClick={closeModal} className={clsx('text-xs text-darkGrey hover:bg-lightGray py-6')}>
                       Cancel
                     </button>
                     <button

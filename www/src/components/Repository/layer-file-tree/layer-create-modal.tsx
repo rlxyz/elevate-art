@@ -1,6 +1,8 @@
 import ModalComponent from '@components/Layout/Modal'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import clsx from 'clsx'
 import { FC } from 'react'
-import Upload from '../upload-new-traits'
+import { useForm } from 'react-hook-form'
 import { useMutateCreateLayerElement } from './layer-create-modal-hook'
 
 interface Props {
@@ -10,20 +12,57 @@ interface Props {
 
 const LayerElementCreateModal: FC<Props> = ({ visible, onClose }) => {
   const { mutate, isLoading } = useMutateCreateLayerElement()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<{ name: string }>({
+    defaultValues: {
+      name: '',
+    },
+  })
+
   return (
     <ModalComponent
       visible={visible}
-      onClose={onClose}
-      title='Add Layer'
-      description={`You can upload a layer folder here. This will be applied to all collections in the project.`}
-      isLoading={isLoading}
-      onClick={(e) => {
-        e.preventDefault()
+      onClose={() => {
+        reset()
         onClose()
       }}
-      className='md:max-w-2xl' // @todo fix this
+      title='Add Layer'
+      description={`This will create a new layer, you can then upload traits to this layer.`}
+      isLoading={isLoading}
     >
-      <Upload className='h-[30vh]' depth={2} onDropCallback={mutate} gridSize='md' />
+      <form
+        onSubmit={handleSubmit((data) =>
+          mutate({
+            repositoryId,
+            name: data.name,
+          })
+        )}
+      >
+        <div className='divide-y divide-mediumGrey space-y-6'>
+          <div className='space-y-1 flex flex-col'>
+            <span className='text-xs font-base'>Layer Name</span>
+            <input
+              className={clsx('block text-xs w-full pl-2 rounded-[5px] py-2')}
+              type='string'
+              {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
+            />
+            {errors.name && (
+              <span className='text-xs text-redError'>
+                {errors.name.type === 'required'
+                  ? 'This field is required'
+                  : errors.name.type === 'pattern'
+                  ? 'We only accept - and / for special characters'
+                  : 'Must be between 3 and 20 characters long'}
+              </span>
+            )}
+          </div>
+        </div>
+      </form>
     </ModalComponent>
   )
 }

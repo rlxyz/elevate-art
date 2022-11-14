@@ -1,6 +1,4 @@
 import { LayerElement } from '@prisma/client'
-import { truncate } from '@utils/format'
-import clsx from 'clsx'
 import { AnimatePresence, Reorder } from 'framer-motion'
 import { FC } from 'react'
 import { ReorderItem } from './layer-reorder-item'
@@ -24,18 +22,9 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({
 }) => {
   return (
     <AnimatePresence>
-      <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items} className={clsx('overflow-hidden', className)}>
+      <Reorder.Group axis='y' layoutScroll onReorder={onReorder} values={items} className={className}>
         {items.map((item, index) => {
-          return (
-            <ReorderItem
-              rounded={index === 0 || index === items.length - 1 ? true : false}
-              canReorder={isReorderable}
-              key={item.id}
-              name={truncate(item.name)}
-              item={item}
-              enabled={index === itemEnabledIndex}
-            />
-          )
+          return <ReorderItem isReorderable={isReorderable} key={item.id} item={item} enabled={index === itemEnabledIndex} />
         })}
       </Reorder.Group>
     </AnimatePresence>
