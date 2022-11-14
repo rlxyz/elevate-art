@@ -61,7 +61,7 @@ const Page = () => {
               <div className='flex justify-center'>
                 <div className='space-y-1 w-full'>
                   <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                  {layers && <RuleSelector layers={layers} />}
+                  <RuleSelector layers={layers} />
                 </div>
               </div>
             </div>

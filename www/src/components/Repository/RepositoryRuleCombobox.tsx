@@ -1,8 +1,8 @@
-import { TraitElement } from '@prisma/client'
+import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import clsx from 'clsx'
 import { forwardRef, HTMLProps } from 'react'
 
-type ComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElement | null | undefined }
+type ComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElementWithRules | null | undefined }
 export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & HTMLProps<ComboboxInputProps>>(
   ({ highlight = true, layerName, traitElement, placeholder, className, ...props }, ref) => {
     return (

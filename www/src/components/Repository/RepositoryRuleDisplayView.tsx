@@ -1,7 +1,7 @@
 import { TrashIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
+import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { Rules, TraitElement } from '@prisma/client'
 import { RulesEnum } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import { RulesType } from 'src/types/enums'
@@ -14,8 +14,8 @@ const TraitRulesDisplayPerItem = ({
   secondary,
 }: {
   id: string
-  primary: TraitElement
-  secondary: TraitElement
+  primary: TraitElementWithRules
+  secondary: TraitElementWithRules
   condition: RulesType
 }) => {
   const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
@@ -57,61 +57,36 @@ const TraitRulesDisplayPerItem = ({
   )
 }
 
-export const RuleDisplayAll = ({
-  traitElements,
-}: {
-  traitElements: (TraitElement & {
-    rulesPrimary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-    rulesSecondary: (Rules & {
-      primaryTraitElement: TraitElement
-      secondaryTraitElement: TraitElement
-    })[]
-  })[]
-}) => {
+export const RuleDisplayAll = ({ traitElements }: { traitElements: TraitElementWithRules[] }) => {
   return (
     <div className='w-full flex flex-col space-y-2'>
       {traitElements
         .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
-        .map(
-          (
-            {
-              rulesPrimary,
-            }: TraitElement & {
-              rulesPrimary: (Rules & {
-                primaryTraitElement: TraitElement
-                secondaryTraitElement: TraitElement
-              })[]
-            },
-            index
-          ) => {
-            return (
-              <div key={index}>
-                {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {
-                  return (
-                    <div className='space-y-2' key={index}>
-                      {rulesPrimary
-                        .filter((rule) => rule.condition === ruleType)
-                        .map((rule, index) => {
-                          return (
-                            <TraitRulesDisplayPerItem
-                              id={rule.id}
-                              key={index}
-                              primary={rule.primaryTraitElement}
-                              condition={rule.condition as RulesType}
-                              secondary={rule.secondaryTraitElement}
-                            />
-                          )
-                        })}
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          }
-        )}
+        .map(({ rulesPrimary }: TraitElementWithRules, index) => {
+          return (
+            <div key={index}>
+              {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {
+                return (
+                  <div className='space-y-2' key={index}>
+                    {rulesPrimary
+                      .filter((rule) => rule.condition === ruleType)
+                      .map((rule, index) => {
+                        return (
+                          <TraitRulesDisplayPerItem
+                            id={rule.id}
+                            key={index}
+                            primary={rule.primaryTraitElement}
+                            condition={rule.condition as RulesType}
+                            secondary={rule.secondaryTraitElement}
+                          />
+                        )
+                      })}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
     </div>
   )
 }

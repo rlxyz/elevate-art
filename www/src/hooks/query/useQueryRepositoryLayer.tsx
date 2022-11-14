@@ -1,10 +1,23 @@
-import { LayerElement, TraitElement } from '@prisma/client'
+import { LayerElement, Rules, TraitElement } from '@prisma/client'
 import { getImageForTrait } from '@utils/image'
 import { sumBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import { useRouter } from 'next/router'
 import useRepositoryStore from '../store/useRepositoryStore'
 
+export type LayerElementWithRules = LayerElement & {
+  traitElements: TraitElementWithRules[]
+}
+export type TraitElementWithRules = TraitElementWithImage & {
+  rulesPrimary: (Rules & {
+    primaryTraitElement: TraitElement
+    secondaryTraitElement: TraitElement
+  })[]
+  rulesSecondary: (Rules & {
+    primaryTraitElement: TraitElement
+    secondaryTraitElement: TraitElement
+  })[]
+}
 export type TraitElementWithImage = TraitElement & { imageUrl: string }
 
 export const useQueryRepositoryLayer = () => {
@@ -45,8 +58,8 @@ export const useQueryRepositoryLayer = () => {
             ...x,
             imageUrl: getImageForTrait({ r: repositoryId, l: current.id, t: x.id }),
           })),
-        ] as TraitElementWithImage[],
-      } as LayerElement & { traitElements: TraitElementWithImage[] }),
+        ] as TraitElementWithRules[],
+      } as LayerElementWithRules),
     all: layers?.map((x) => ({
       ...x,
       traitElements: [
@@ -64,7 +77,7 @@ export const useQueryRepositoryLayer = () => {
           imageUrl: '',
         },
       ],
-    })) as (LayerElement & { traitElements: TraitElementWithImage[] })[],
+    })) as LayerElementWithRules[],
     isLoading,
     isError,
   }

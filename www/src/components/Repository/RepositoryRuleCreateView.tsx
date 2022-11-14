@@ -1,62 +1,27 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import {
+  LayerElementWithRules,
+  TraitElementWithImage,
+  TraitElementWithRules,
+  useQueryRepositoryLayer,
+} from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
-import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { TraitElement } from '@prisma/client'
 import { RulesEnum, RulesType } from '@utils/compiler'
 import { classNames } from '@utils/format'
-import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { RepositoryCreateRuleDialog } from './RepositoryCreateRuleDialog'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
-export const RuleSelector = ({
-  layers,
-}: {
-  layers: (LayerElement & {
-    traitElements: (TraitElement & {
-      rulesPrimary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
-      })[]
-      rulesSecondary: (Rules & {
-        primaryTraitElement: TraitElement
-        secondaryTraitElement: TraitElement
-      })[]
-    })[]
-  })[]
-}) => {
+export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
-  const [selectedLeftTrait, setSelectedLeftTrait] = useState<
-    | null
-    | (TraitElement & {
-        rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-        rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-      })
-  >(null)
-  const [selectedRightTrait, setSelectedRightTrait] = useState<
-    | null
-    | (TraitElement & {
-        rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-        rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-      })
-  >(null)
+  const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElementWithRules>(null)
+  const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElementWithRules>(null)
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate, isLoading } = useMutateRepositoryCreateRule()
 
@@ -216,34 +181,9 @@ export const RuleSelectorCombobox = ({
   selected,
   onChange,
 }: {
-  traitElements: TraitElement[]
-  selected:
-    | null
-    | (TraitElement & {
-        rulesPrimary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-        rulesSecondary: (Rules & {
-          primaryTraitElement: TraitElement
-          secondaryTraitElement: TraitElement
-        })[]
-      })
-  onChange: Dispatch<
-    SetStateAction<
-      | (TraitElement & {
-          rulesPrimary: (Rules & {
-            primaryTraitElement: TraitElement
-            secondaryTraitElement: TraitElement
-          })[]
-          rulesSecondary: (Rules & {
-            primaryTraitElement: TraitElement
-            secondaryTraitElement: TraitElement
-          })[]
-        })
-      | null
-    >
-  >
+  traitElements: TraitElementWithImage[]
+  selected: null | TraitElementWithRules
+  onChange: Dispatch<SetStateAction<TraitElementWithRules | null>>
 }) => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryRepositoryLayer()
@@ -285,14 +225,7 @@ export const RuleSelectorCombobox = ({
                   <div className='flex flex-row items-center space-x-3'>
                     <div className='relative h-[35px] w-[35px]'>
                       <div className='absolute w-full h-full border border-mediumGrey rounded-[5px]'>
-                        <img
-                          src={getImageForTrait({
-                            r: repositoryId,
-                            l: traitElement.layerElementId,
-                            t: traitElement.id,
-                          })}
-                          className='rounded-[3px]'
-                        />
+                        <img src={traitElement.imageUrl} className='rounded-[3px]' />
                       </div>
                     </div>
                     <div className='flex flex-row space-x-2 items-center'>
