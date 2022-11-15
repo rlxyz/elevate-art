@@ -1,6 +1,6 @@
 import CollectionCreateDialog from '@components/Collection/CollectionCreateDialog'
 import Button from '@components/Layout/Button'
-import SearchInput from '@components/Layout/SearchInput'
+import SearchInput from '@components/Layout/search-input/SearchInput'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'

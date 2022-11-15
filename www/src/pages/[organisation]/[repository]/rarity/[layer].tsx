@@ -63,14 +63,9 @@ const Page = () => {
           ]}
         />
         <Layout.Body border='none'>
-          <div className='py-6 grid grid-flow-row-dense grid-cols-10 grid-rows-1 gap-x-6'>
-            <div className='col-span-2 space-y-3'>
-              <div className='text-lg font-semibold uppercase'>Layers</div>
-              <LayerElementFileTree layers={layers} currentLayerId={currentLayerId} />
-            </div>
-            <div className='col-span-8'>
-              <TraitTable layerElement={layer} repositoryId={repositoryId} />
-            </div>
+          <div className='py-6 grid grid-cols-10 gap-x-6'>
+            <LayerElementFileTree className='col-span-2' layers={layers} currentLayerId={currentLayerId} />
+            <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
           </div>
         </Layout.Body>
       </Layout>

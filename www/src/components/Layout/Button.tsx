@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from 'react'
-import LoadingComponent from './Loading'
+import LoadingComponent from './loading/Loading'
 
 /**
  * All the component types allowed by the Button component.

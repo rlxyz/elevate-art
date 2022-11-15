@@ -1,4 +1,4 @@
-import SearchInput from '@components/Layout/SearchInput'
+import SearchInput from '@components/Layout/search-input/SearchInput'
 import { CheckCircleIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'
@@ -30,9 +30,10 @@ export type TraitElementViewType = z.infer<typeof TraitElementView>
 interface Props {
   layerElement: (LayerElement & { traitElements: TraitElementWithImage[] }) | undefined
   repositoryId: string
+  className: string
 }
 
-const Index: FC<Props> = ({ layerElement, repositoryId }) => {
+const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
   /**
    * Data needed for this component
    * Note, during first render, the key is empty string. The table then gets repopulated with the correct key.
@@ -70,7 +71,7 @@ const Index: FC<Props> = ({ layerElement, repositoryId }) => {
   })
 
   return (
-    <>
+    <div className={clsx(className)}>
       <form>
         <div className='space-y-3'>
           <div id='trait-table-controls' className='grid grid-cols-10'>
@@ -140,7 +141,7 @@ const Index: FC<Props> = ({ layerElement, repositoryId }) => {
         traitElements={getAllTraitElements()}
         onSuccess={() => onFormSuccess()}
       />
-    </>
+    </div>
   )
 }
 

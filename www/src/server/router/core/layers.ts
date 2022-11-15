@@ -2,6 +2,8 @@ import { env } from 'src/env/server.mjs'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
+const LayerElementUpdateNameInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
+
 /**
  * LayerElement Router
  * Any LayerElement functionality should implemented here.
@@ -130,6 +132,30 @@ export const layerElementRouter = createRouter()
       })
 
       return layerElement
+    },
+  })
+  /**
+   * Renames a TraitElement with their associated LayerElement.
+   * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
+   */
+  .mutation('update.name', {
+    input: z.object({
+      layerElements: LayerElementUpdateNameInput.min(1),
+    }),
+    async resolve({ ctx, input }) {
+      const { layerElements } = input
+
+      /* Update many traits based on their traitElementId & name */
+      await ctx.prisma.$transaction(async (tx) => {
+        await Promise.all(
+          layerElements.map(async ({ layerElementId: id, name }) => {
+            await tx.layerElement.update({
+              where: { id },
+              data: { name },
+            })
+          })
+        )
+      })
     },
   })
   .query('traits.find', {

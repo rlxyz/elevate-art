@@ -12,7 +12,7 @@ import Image from 'next/image'
 import { default as NextLink } from 'next/link'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-import { ConnectButton } from '../ConnectButton'
+import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
 
 const externalRoutes = [

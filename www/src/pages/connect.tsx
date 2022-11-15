@@ -1,6 +1,6 @@
-import Card from '@components/Layout/Card'
-import { ConnectButton } from '@components/Layout/ConnectButton'
+import Card from '@components/Layout/card/Card'
 import { Layout } from '@components/Layout/core/Layout'
+import { ConnectButton } from '@components/Layout/eth/ConnectButton'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/future/image'

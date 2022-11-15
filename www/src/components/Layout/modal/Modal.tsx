@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useState } from 'react'
-import Loading from './Loading'
+import Loading from '../loading/Loading'
 
 interface Props {
   title: string
@@ -10,9 +10,12 @@ interface Props {
   isLoading: boolean
   onClose?: () => void
   visible?: boolean
+  type?: 'submit' | 'button'
+  form?: boolean
 }
 
 const defaultProps: Props = {
+  type: 'button',
   title: '',
   description: '',
   data: [],
@@ -31,6 +34,8 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
   children,
   onClick,
   className,
+  type,
+  onSubmit,
   ...props
 }: ModalProps & typeof defaultProps) => {
   const [visible, setVisible] = useState(false)
@@ -85,31 +90,33 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                   {title}
                 </Dialog.Title>
                 <Dialog.Description>
-                  <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
-                    <span className='text-sm'>{description}</span>
-                    {data?.map(({ label, value }, index) => (
-                      <div className='space-y-1' key={`${label}-${index}`}>
-                        <span className='text-[0.6rem] uppercase'>{label}</span>
-                        <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{value}</div>
-                      </div>
-                    ))}
-                    {children}
-                  </div>
-                  <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                    <button type='reset' onClick={closeModal} className={clsx('text-xs text-darkGrey hover:bg-lightGray py-6')}>
-                      Cancel
-                    </button>
-                    <button
-                      onClick={onClick}
-                      disabled={isLoading}
-                      className={clsx(
-                        'text-xs text-darkGrey hover:bg-lightGray hover:text-blueHighlight py-6',
-                        isLoading && 'cursor-not-allowed'
-                      )}
-                    >
-                      {isLoading ? <Loading /> : 'Confirm'}
-                    </button>
-                  </div>
+                  <form onSubmit={onSubmit}>
+                    <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
+                      <span className='text-sm'>{description}</span>
+                      {data?.map(({ label, value }, index) => (
+                        <div className='space-y-1' key={`${label}-${index}`}>
+                          <span className='text-[0.6rem] uppercase'>{label}</span>
+                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{value}</div>
+                        </div>
+                      ))}
+                      {children}
+                    </div>
+                    <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
+                      <button type='reset' onClick={closeModal} className={clsx('text-xs text-darkGrey hover:bg-lightGray py-6')}>
+                        Cancel
+                      </button>
+                      <button
+                        onClick={onClick}
+                        disabled={isLoading}
+                        className={clsx(
+                          'text-xs text-darkGrey hover:bg-lightGray hover:text-blueHighlight py-6',
+                          isLoading && 'cursor-not-allowed'
+                        )}
+                      >
+                        {isLoading ? <Loading /> : 'Confirm'}
+                      </button>
+                    </div>
+                  </form>
                 </Dialog.Description>
               </Dialog.Panel>
             </Transition.Child>

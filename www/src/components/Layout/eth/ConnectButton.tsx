@@ -1,6 +1,6 @@
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import React from 'react'
-import AvatarComponent from './Avatar'
+import AvatarComponent from '../avatar/Avatar'
 
 interface ConnectButtonProps {
   normalButton?: boolean

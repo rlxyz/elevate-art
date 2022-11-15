@@ -1,29 +1,37 @@
-import ModalComponent from '@components/Layout/Modal'
+import ModalComponent from '@components/Layout/modal/Modal'
 import { LayerElement } from '@prisma/client'
 import { FC } from 'react'
 import { useMutateDeleteLayerElement } from './layer-delete-modal-hook'
 
-interface Props {
-  onSuccess: () => void
+export interface FormModalProps {
+  onSuccess?: () => void
+  onError?: () => void
   onClose: () => void
   visible: boolean
+}
+
+export interface LayerElementDeleteProps extends FormModalProps {
   layerElement: LayerElement
 }
 
-const LayerElementDeleteModal: FC<Props> = ({ layerElement, visible, onClose, onSuccess }) => {
+const LayerElementDeleteModal: FC<LayerElementDeleteProps> = ({ layerElement, visible, onClose, onSuccess }) => {
   const { mutate, isLoading } = useMutateDeleteLayerElement()
+
+  const handleClose = () => {
+    onClose()
+  }
+
+  const handleSuccess = () => {
+    onSuccess && onSuccess()
+    handleClose()
+  }
+
   return (
     <ModalComponent
       visible={visible}
-      onClose={onClose}
+      onClose={handleClose}
       onClick={() =>
-        mutate(
-          {
-            layerElementId: layerElement.id,
-            repositoryId: layerElement.repositoryId,
-          },
-          { onSuccess }
-        )
+        mutate({ layerElementId: layerElement.id, repositoryId: layerElement.repositoryId }, { onSuccess: handleSuccess })
       }
       title={`Delete Layer`}
       description={`This will delete an existing layer, you can't revert this action.`}

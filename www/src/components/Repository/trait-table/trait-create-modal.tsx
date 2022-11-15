@@ -1,4 +1,4 @@
-import ModalComponent from '@components/Layout/Modal'
+import ModalComponent from '@components/Layout/modal/Modal'
 import Upload from '@components/Repository/upload-new-traits'
 import { FC } from 'react'
 import { useMutateCreateTraitElement } from './trait-create-mutate-hook'
