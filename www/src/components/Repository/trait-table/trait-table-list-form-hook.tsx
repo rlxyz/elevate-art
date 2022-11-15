@@ -224,7 +224,7 @@ export const useTraitElementForm = ({
       const w = Big(x.weight)
       const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
-      lt(w.plus(linear), max)
+      gt(w.plus(linear), max)
         ? setValue(`traitElements.${index}.weight`, max)
         : setValue(`traitElements.${index}.weight`, w.plus(linear))
     })
