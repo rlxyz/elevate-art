@@ -23,6 +23,7 @@
     "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.4",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.2",
+    "@tanstack/match-sorter-utils": "^8.5.14",
     "@tanstack/react-table": "^8.5.15",
     "@trpc/client": "^9.27.1",
     "@trpc/next": "^9.27.1",

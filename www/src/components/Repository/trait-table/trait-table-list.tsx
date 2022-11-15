@@ -1,4 +1,5 @@
 import { Table } from '@components/Layout/core/Table'
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { FC } from 'react'
@@ -25,7 +26,20 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className }) => 
             headerGroup.headers.map((header) => {
               return (
                 <Table.Head.Row key={header.id}>
-                  {header.isPlaceholder ? null : <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>}
+                  {header.isPlaceholder ? null : (
+                    <div
+                      {...{
+                        className: header.column.getCanSort() ? 'cursor-pointer select-none flex items-center space-x-1' : '',
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {{
+                        asc: <ChevronUpIcon className='w-3 h-3 text-darkGrey' />,
+                        desc: <ChevronDownIcon className='w-3 h-3 text-darkGrey' />,
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                  )}
                 </Table.Head.Row>
               )
             })
