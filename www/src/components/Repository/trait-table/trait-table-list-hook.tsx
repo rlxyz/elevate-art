@@ -112,6 +112,7 @@ export const useTraitElementTable = ({
       {
         header: () => (
           <input
+            disabled={getValues('traitElements').length === 1} // only none trait exists
             key={key}
             type='checkbox'
             {...register(`allCheckboxesChecked`)}
@@ -120,7 +121,8 @@ export const useTraitElementTable = ({
               'text-xs rounded-[5px]',
               'focus:outline-none focus:ring-blueHighlight',
               'invalid:border-redError invalid:text-redError',
-              'focus:invalid:border-redError focus:invalid:ring-redError'
+              'focus:invalid:border-redError focus:invalid:ring-redError',
+              'disabled:cursor-not-allowed'
             )}
             onClick={(e) => {
               const checked = e.currentTarget.checked
@@ -455,34 +457,6 @@ export const useTraitElementTable = ({
                 <Popover.Panel className='absolute z-10 py-6 max-w-xs'>
                   <div className='overflow-hidden rounded-[5px] bg-white shadow-md ring-1 ring-black ring-opacity-5 divide-y divide-mediumGrey'>
                     {[
-                      // {
-                      //   name: 'Add',
-                      //   icon: <PlusCircleIcon className='w-4 h-4' />,
-                      //   onClick: () => {
-                      //     setIsCreateClicked(true)
-                      //   },
-                      //   disabled: false,
-                      // },
-                      // {
-                      //   name: 'Save',
-                      //   icon: <CheckCircleIcon className='w-4 h-4' />,
-                      //   onClick: () => {
-                      //     handleSubmit((values) => {
-                      //       console.log(values)
-                      //     })
-                      //   },
-                      //   disabled: !hasFormChange,
-                      // },
-                      // {
-                      //   name: 'Reset',
-                      //   icon: <RefreshIcon className='w-4 h-4' />,
-                      //   onClick: () => {
-                      //     reset()
-                      //     setIsRarityResettable(false)
-                      //     resetRarityInterval()
-                      //   },
-                      //   disabled: !isRarityResettable,
-                      // },
                       {
                         name: 'Delete',
                         icon: <XCircleIcon className='w-4 h-4' />,
