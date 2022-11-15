@@ -7,7 +7,7 @@ export const useMutateReorderLayers = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
-  return trpc.useMutation('layers.reorder', {
+  return trpc.useMutation('layers.update.order', {
     onSuccess: async (data, variable) => {
       // Notify
       notifySuccess(`You have reordered the layers. All collections have been regenerated with the new order.`)

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import * as trpc from '@trpc/server'
 import { Result } from '@utils/result'
@@ -145,6 +146,7 @@ export const layerElementRouter = createRouter()
         {
           maxWait: 5000,
           timeout: 10000,
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
         }
       )
     },
@@ -187,7 +189,10 @@ export const layerElementRouter = createRouter()
       })
     },
   })
-  .mutation('reorder', {
+  /**
+   * @todo update to serializable tx
+   */
+  .mutation('update.order', {
     input: z.object({
       layerElementOrder: z.array(z.string()),
     }),
@@ -207,32 +212,6 @@ export const layerElementRouter = createRouter()
           maxWait: 5000,
           timeout: 10000,
         }
-      )
-    },
-  })
-  .mutation('weight.update', {
-    input: z.object({
-      layerId: z.string(),
-      repositoryId: z.string(),
-      traits: z.array(
-        z.object({
-          id: z.string(),
-          weight: z.number(),
-        })
-      ),
-    }),
-    async resolve({ ctx, input }) {
-      return await Promise.all(
-        input.traits.map(async ({ id, weight }) => {
-          return await ctx.prisma.traitElement.update({
-            where: {
-              id,
-            },
-            data: {
-              weight,
-            },
-          })
-        })
       )
     },
   })
