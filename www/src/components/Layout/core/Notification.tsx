@@ -4,7 +4,7 @@ import * as React from 'react'
 interface Props {
   children: React.ReactNode
   id: string
-  type: 'success' | 'error'
+  type: 'success' | 'error' | 'info'
 }
 
 export const Notification = ({ children, id, type }: Props) => {
@@ -14,6 +14,7 @@ export const Notification = ({ children, id, type }: Props) => {
       className={clsx(
         type === 'error' && 'bg-redError',
         type === 'success' && 'bg-blueHighlight',
+        type === 'info' && 'bg-black',
         'relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-lg z-[1000]'
       )}
       role='alert'

@@ -1,18 +1,17 @@
-import { deleteImageFileFromCloudinary } from '@server/scripts/cld-delete-image'
+import { deleteImageFolderFromCloudinary } from '@server/scripts/cld-delete-image'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 // @todo authenticated?
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  // r: repositoryId, l: layerElementId, t: traitElementId
-  const { r, l, t } = req.query as { r: string; l: string; t: string }
-  if (!r || !l || !t) {
+  // r: repositoryId, l: layerElementId
+  const { r, l } = req.query as { r: string; l: string }
+  if (!r || !l) {
     return res.status(400).send('Bad Request')
   }
 
-  const data = await deleteImageFileFromCloudinary({
+  const data = await deleteImageFolderFromCloudinary({
     r,
     l,
-    t,
   })
 
   if (data.result === 'Error') {

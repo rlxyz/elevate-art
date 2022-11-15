@@ -93,40 +93,19 @@ export const layerElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { layerElementId, repositoryId } = input
 
-      /** Find and delete all existing traits of this LayerElement */
-      const data = await ctx.prisma.traitElement.findMany({ where: { layerElementId } })
-
-      const traitElements = data.map(({ id, layerElementId }) => {
-        return {
-          id,
-          layerElementId,
-          repositoryId,
-        }
-      })
-
       /* Delete many TraitElement from Db  */
-      await ctx.prisma.traitElement.deleteMany({
-        where: {
-          id: {
-            in: data.map((x) => x.id),
-          },
-        },
-      })
+      await ctx.prisma.traitElement.deleteMany({ where: { layerElementId } })
 
       /* Delete many TraitElement from Cloudinary */
       /* This fetch sends request to Qstash to run delete jobs with retries if failed */
-      await Promise.all(
-        traitElements.map(async ({ repositoryId: r, layerElementId: l, id: t }) => {
-          const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${r}/${l}/${t}/delete`)
-          if (response.status === 200) {
-            // @todo log
-            console.log(`delete ${r}/${l}/${t}`)
-          } else {
-            // @todo qstash
-            console.log(`failed ${r}/${l}/${t}`)
-          }
-        })
-      )
+      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${repositoryId}/${layerElementId}/delete`)
+      if (response.status === 200) {
+        // @todo log
+        console.log(`delete ${repositoryId}/${layerElementId}`)
+      } else {
+        // @todo qstash
+        console.log(`failed ${repositoryId}/${layerElementId}`)
+      }
 
       /** Create LayerElement & TraitElements in Db */
       const layerElement = await ctx.prisma.layerElement.delete({

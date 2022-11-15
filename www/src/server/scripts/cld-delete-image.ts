@@ -10,7 +10,7 @@ v2.config({
 
 // Source: https://cloudinary.com/documentation/image_upload_api_reference#destroy_method
 // @todo more roboust promise
-export const deleteImageFromCloudinary = ({
+export const deleteImageFileFromCloudinary = ({
   r,
   l,
   t,
@@ -22,6 +22,25 @@ export const deleteImageFromCloudinary = ({
   return new Promise((resolve, reject) => {
     v2.uploader
       .destroy(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}`, {
+        invalidate: true, // force invalidate cdn
+      })
+      .then((res) =>
+        resolve({
+          result: 'Ok',
+        })
+      )
+      .catch((err) =>
+        reject({
+          result: 'Error',
+        })
+      )
+  })
+}
+
+export const deleteImageFolderFromCloudinary = ({ r, l }: { r: string; l: string }): Promise<{ result: 'Ok' | 'Error' }> => {
+  return new Promise((resolve, reject) => {
+    v2.api
+      .delete_resources_by_prefix(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}`, {
         invalidate: true, // force invalidate cdn
       })
       .then((res) =>

@@ -72,6 +72,10 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers = [], curr
               </div>
             </Popover.Panel>
           </Popover>
+
+          <button onClick={() => setIsCreateDialogOpen(true)} className='text-darkGrey items-center flex space-x-2'>
+            <PlusIcon className='w-3 h-3' />
+          </button>
         </div>
         <LayerElementFileSelector
           className='border-t border-mediumGrey'
