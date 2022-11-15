@@ -1,4 +1,3 @@
-import SearchInput from '@components/Layout/search-input/SearchInput'
 import { CheckCircleIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'
@@ -8,7 +7,7 @@ import { FC, useState } from 'react'
 import { z } from 'zod'
 import { TraitActionControl } from './trait-table-action-control'
 import TraitElementTable from './trait-table-list'
-import { useTraitElementTable } from './trait-table-list-hook'
+import { Filter, useTraitElementTable } from './trait-table-list-hook'
 import { TraitNavigationButton } from './trait-table-navigation-button'
 import TraitElementUpdateWeightModal from './trait-update-weight-modal'
 
@@ -77,13 +76,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
           <div id='trait-table-controls' className='grid grid-cols-10'>
             <div id='trait-table-controls-navigation' className='col-span-5 flex space-x-3'>
               <TraitNavigationButton viewFilter={viewFilter} setViewFilter={setViewFilter} />
-              <SearchInput
-                onChange={(e) => {
-                  e.preventDefault()
-                  setSearchFilter(e.target.value)
-                }}
-                isLoading={false}
-              />
+              <Filter column={table.getHeaderGroups()[0]?.headers[2]?.column} />
             </div>
 
             <div id='trait-table-controls-action' className='col-span-5'>
