@@ -96,17 +96,17 @@ export const traitElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { traitElements } = input
 
-      /* Update many traits based on their traitElementId & name */
-      await ctx.prisma.$transaction(async (tx) => {
-        await Promise.all(
-          traitElements.map(async ({ traitElementId: id, name }) => {
-            await tx.traitElement.update({
-              where: { id },
-              data: { name },
-            })
+      /** Run sequential operations; as they don't depend on each other. */
+      /** Source: https://www.prisma.io/docs/concepts/components/prisma-client/transactions#sequential-prisma-client-operations */
+      await ctx.prisma.$transaction(
+        traitElements.map(({ traitElementId: id, name }) =>
+          ctx.prisma.traitElement.update({
+            where: { id },
+            data: { name },
           })
-        )
-      })
+        ),
+        { isolationLevel: Prisma.TransactionIsolationLevel.ReadUncommitted }
+      )
     },
   })
   /**
@@ -119,22 +119,16 @@ export const traitElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { traitElements } = input
 
+      /** Run sequential operations; as they don't depend on each other. */
+      /** Source: https://www.prisma.io/docs/concepts/components/prisma-client/transactions#sequential-prisma-client-operations */
       await ctx.prisma.$transaction(
-        async (tx) => {
-          await Promise.all(
-            traitElements.map(async ({ traitElementId: id, weight }) => {
-              return await tx.traitElement.update({
-                where: { id },
-                data: { weight },
-              })
-            })
-          )
-        },
-        {
-          maxWait: 10000,
-          timeout: 20000,
-          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-        }
+        traitElements.map(({ traitElementId: id, weight }) =>
+          ctx.prisma.traitElement.update({
+            where: { id },
+            data: { weight },
+          })
+        ),
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
       )
     },
   })
