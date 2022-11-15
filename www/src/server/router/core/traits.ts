@@ -1,6 +1,8 @@
+import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
+import * as trpc from '@trpc/server'
 import { groupBy } from '@utils/object-utils'
-import { env } from 'src/env/server.mjs'
+import { Result } from '@utils/result'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -14,11 +16,17 @@ const TraitElementUpdateWeightInput = z.array(
 /**
  * TraitElement Router
  * Any TraitElement functionality should implemented here.
+ *
+ * @note the "None" is not in the db. This allow us to dynamically update the current weight of the none trait by
+ * summing up all TraitElements weights and subtracting it from 100. This is done at client-side. One of the advantages,
+ * is that we don't have to update the 'None' TraitElement everytime another TraitElement is updated. For e.g, a TraitElement
+ * is deleted, we don't have to update the 'None' TraitElement.
  */
 export const traitElementRouter = createRouter()
   /**
    * Delete TraitElement from their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
+   *
    */
   .mutation('delete', {
     input: z.object({
@@ -27,29 +35,26 @@ export const traitElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { traitElements } = input
 
+      /* Delete many TraitElement from Cloudinary */
+      const response: Result<DeleteTraitElementResponse[]> = await deleteImageFilesFromCloudinary(
+        traitElements.map((x) => ({ r: x.repositoryId, l: x.layerElementId, t: x.id }))
+      )
+
+      if (response.failed) {
+        throw new trpc.TRPCError({
+          code: `INTERNAL_SERVER_ERROR`,
+          message: response.error,
+        })
+      }
+
       /* Delete many TraitElement from Db  */
-      await ctx.prisma.traitElement.deleteMany({
+      return await ctx.prisma.traitElement.deleteMany({
         where: {
           id: {
             in: traitElements.map((x) => x.id),
           },
         },
       })
-
-      /* Delete many TraitElement from Cloudinary */
-      /* This fetch sends request to Qstash to run delete jobs with retries if failed */
-      await Promise.all(
-        traitElements.map(async ({ repositoryId: r, layerElementId: l, id: t }) => {
-          const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${r}/${l}/${t}/delete`)
-          if (response.status === 200) {
-            // @todo log
-            console.log(`delete ${r}/${l}/${t}`)
-          } else {
-            // @todo qstash
-            console.log(`failed ${r}/${l}/${t}`)
-          }
-        })
-      )
     },
   })
   /**

@@ -1,4 +1,6 @@
-import { env } from 'src/env/server.mjs'
+import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
+import * as trpc from '@trpc/server'
+import { Result } from '@utils/result'
 import { z } from 'zod'
 import { createRouter } from '../context'
 
@@ -95,43 +97,56 @@ export const layerElementRouter = createRouter()
     async resolve({ ctx, input }) {
       const { layerElementId, repositoryId } = input
 
-      /* Delete many TraitElement from Db  */
-      await ctx.prisma.traitElement.deleteMany({ where: { layerElementId } })
-
       /* Delete many TraitElement from Cloudinary */
-      /* This fetch sends request to Qstash to run delete jobs with retries if failed */
-      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/image/${repositoryId}/${layerElementId}/delete`)
-      if (response.status === 200) {
-        // @todo log
-        console.log(`delete ${repositoryId}/${layerElementId}`)
-      } else {
-        // @todo qstash
-        console.log(`failed ${repositoryId}/${layerElementId}`)
+      /** @todo if any item in DeleteFolderResponse is not boolean true, then what? */
+      const response: Result<DeleteTraitElementResponse[]> = await deleteImageFolderFromCloudinary({
+        r: repositoryId,
+        l: layerElementId,
+      })
+
+      /** Return if failed */
+      if (response.failed) {
+        throw new trpc.TRPCError({
+          code: `INTERNAL_SERVER_ERROR`,
+          message: response.error,
+        })
       }
 
-      /** Create LayerElement & TraitElements in Db */
-      const layerElement = await ctx.prisma.layerElement.delete({
-        where: {
-          id: layerElementId,
-        },
-      })
+      /** Run Delete atomically */
+      return await ctx.prisma.$transaction(
+        async (tx) => {
+          /* Delete many TraitElement from Db  */
+          await tx.traitElement.deleteMany({ where: { layerElementId } })
 
-      /** Update priority of all other LayerElements */
-      await ctx.prisma.layerElement.updateMany({
-        where: {
-          repositoryId,
-          priority: {
-            gt: layerElement.priority,
-          },
-        },
-        data: {
-          priority: {
-            decrement: 1,
-          },
-        },
-      })
+          /** Create LayerElement & TraitElements in Db */
+          const layerElement = await tx.layerElement.delete({
+            where: {
+              id: layerElementId,
+            },
+          })
 
-      return layerElement
+          /** Update priority of all other LayerElements */
+          await tx.layerElement.updateMany({
+            where: {
+              repositoryId,
+              priority: {
+                gt: layerElement.priority,
+              },
+            },
+            data: {
+              priority: {
+                decrement: 1,
+              },
+            },
+          })
+
+          return layerElement
+        },
+        {
+          maxWait: 5000,
+          timeout: 10000,
+        }
+      )
     },
   })
   /**

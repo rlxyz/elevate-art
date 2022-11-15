@@ -1,4 +1,4 @@
-import { deleteImageFileFromCloudinary } from '@server/scripts/cld-delete-image'
+import { deleteImageFilesFromCloudinary } from '@server/scripts/cld-delete-image-files'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 // @todo authenticated?
@@ -9,7 +9,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  const data = await deleteImageFileFromCloudinary({
+  const data = await deleteImageFilesFromCloudinary({
     r,
     l,
     t,
