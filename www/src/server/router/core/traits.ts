@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
 import * as trpc from '@trpc/server'
@@ -130,8 +131,9 @@ export const traitElementRouter = createRouter()
           )
         },
         {
-          maxWait: 20000,
+          maxWait: 10000,
           timeout: 20000,
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
         }
       )
     },

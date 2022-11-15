@@ -163,6 +163,14 @@ export const useTraitElementForm = ({
     return weightToChange
   }
 
+  const gt = (a: Big, b: Big): boolean => {
+    return Big(a).gt(b)
+  }
+
+  const lt = (a: Big, b: Big): boolean => {
+    return Big(a).lt(b)
+  }
+
   const decrementRarityByIndex = (index: number) => {
     /** Get latest values for the form */
     const weight = Big(getValues(`traitElements.${index}.weight`))
@@ -176,6 +184,7 @@ export const useTraitElementForm = ({
 
     /** Get min the rarity can grow to */
     const min = getMinGrowthAllowance(index, locked)
+    const max = getMaxGrowthAllowance(index, locked)
 
     /** If has reached upper boundary max, return */
     if (isEqual(weight, min)) return
@@ -215,7 +224,9 @@ export const useTraitElementForm = ({
       const w = Big(x.weight)
       const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
-      setValue(`traitElements.${index}.weight`, w.plus(linear))
+      lt(w.plus(linear), max)
+        ? setValue(`traitElements.${index}.weight`, max)
+        : setValue(`traitElements.${index}.weight`, w.plus(linear))
     })
   }
 
@@ -232,11 +243,11 @@ export const useTraitElementForm = ({
 
     /** Get max the rarity can grow to */
     const max = getMaxGrowthAllowance(index, locked)
+    const min = getMinGrowthAllowance(index, locked)
 
     /** If has reached upper boundary max, return */
     if (isEqual(weight, max)) return
 
-    console.log(max.toNumber(), weight.toNumber())
     /** Figure out how much to change */
     const growth = getAllowableIncrementGrowth(weight, max)
 
@@ -272,7 +283,9 @@ export const useTraitElementForm = ({
       const w = Big(x.weight)
       const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
-      setValue(`traitElements.${index}.weight`, w.minus(linear))
+      lt(w.minus(linear), min)
+        ? setValue(`traitElements.${index}.weight`, min)
+        : setValue(`traitElements.${index}.weight`, w.minus(linear))
     })
   }
 
