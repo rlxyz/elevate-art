@@ -1,7 +1,6 @@
 import NextLinkComponent from '@components/Layout/link/NextLink'
 import Menu from '@components/Layout/menu'
-import { ArrowSmUpIcon, LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline'
-import { DotsHorizontalIcon } from '@heroicons/react/solid'
+import { ArrowSmUpIcon, LinkIcon, PencilIcon, SelectorIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
 import { LayerElement } from '@prisma/client'
 import { timeAgo } from '@utils/time'
@@ -63,7 +62,7 @@ export const ReorderItem: FC<ModalProps> = ({ item, enabled, isReorderable, clas
       >
         <div className='relative flex w-full items-center'>
           {isReorderable && (
-            <DotsHorizontalIcon
+            <SelectorIcon
               className='ml-2 absolute w-3 h-3'
               onPointerDown={(e) => {
                 e.preventDefault()
@@ -76,7 +75,7 @@ export const ReorderItem: FC<ModalProps> = ({ item, enabled, isReorderable, clas
           </span>
         </div>
       </NextLinkComponent>
-      {isHovered && (
+      {isHovered && !isReorderable && (
         <Menu className='bg-black'>
           <Menu.Items>
             <Menu.Item
@@ -112,9 +111,13 @@ export const ReorderItem: FC<ModalProps> = ({ item, enabled, isReorderable, clas
           </Menu.Items>
 
           <Menu.Items>
-            <div className='text-darkGrey text-[0.6rem] space-x-1'>
+            <div className='text-darkGrey text-[0.6rem] space-x-1 overflow-hidden text-ellipsis whitespace-nowrap'>
               <span>Last Edited</span>
               <span>{timeAgo(item.updatedAt)}</span>
+            </div>
+            <div className='text-darkGrey text-[0.6rem] space-x-1 overflow-hidden text-ellipsis whitespace-nowrap'>
+              <span>Created</span>
+              <span>{timeAgo(item.createdAt)}</span>
             </div>
           </Menu.Items>
         </Menu>
