@@ -1,3 +1,4 @@
+import { DebouncedSearchComponent } from '@components/Layout/search/DebouncedSearch'
 import { CheckCircleIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'
@@ -7,7 +8,7 @@ import { FC, useState } from 'react'
 import { z } from 'zod'
 import { TraitActionControl } from './trait-table-action-control'
 import TraitElementTable from './trait-table-list'
-import { Filter, useTraitElementTable } from './trait-table-list-hook'
+import { useTraitElementTable } from './trait-table-list-hook'
 import { TraitNavigationButton } from './trait-table-navigation-button'
 import TraitElementUpdateWeightModal from './trait-update-weight-modal'
 
@@ -62,6 +63,8 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
     getAllTraitElements,
     getFilteredTraitElements,
     getCheckedTraitElements,
+    globalFilter,
+    setGlobalFilter,
   } = useTraitElementTable({
     key: id,
     traitElements,
@@ -76,7 +79,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
           <div id='trait-table-controls' className='grid grid-cols-10'>
             <div id='trait-table-controls-navigation' className='col-span-5 flex space-x-3'>
               <TraitNavigationButton viewFilter={viewFilter} setViewFilter={setViewFilter} />
-              <Filter column={table.getHeaderGroups()[0]?.headers[2]?.column} />
+              <DebouncedSearchComponent value={globalFilter ?? ''} onChange={(value) => setGlobalFilter(String(value))} />
             </div>
 
             <div id='trait-table-controls-action' className='col-span-5'>
@@ -112,7 +115,6 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
             </div>
           </div>
 
-          {/* <div id='trait-table' className='h-[calc(100vh-13.5rem)] overflow-y-scroll no-scrollbar pb-6'> */}
           <div id='trait-table'>
             <TraitElementTable table={table} className={clsx(viewFilter !== TraitElementView.enum.Table && 'hidden')} id={id} />
             <TraitElementGrid

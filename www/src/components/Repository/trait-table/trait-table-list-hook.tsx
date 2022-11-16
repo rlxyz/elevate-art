@@ -1,8 +1,8 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
+import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 import {
-  Column,
   ColumnDef,
   FilterFn,
   getCoreRowModel,
@@ -12,17 +12,19 @@ import {
   sortingFns,
   useReactTable,
 } from '@tanstack/react-table'
+import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
-import { TraitElementRarityFormType, useTraitElementForm, WEIGHT_LOWER_BOUNDARY } from './trait-table-list-form-hook'
+import {
+  TraitElementFields,
+  TraitElementRarityFormType,
+  useTraitElementForm,
+  WEIGHT_LOWER_BOUNDARY,
+} from './trait-table-list-form-hook'
 import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
-
-import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
-import { sumByBig } from '@utils/object-utils'
-import { DebouncedSearchComponent } from '../../Layout/search/DebouncedSearch'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -31,43 +33,6 @@ declare module '@tanstack/table-core' {
   interface FilterMeta {
     itemRank: RankingInfo
   }
-}
-
-export const Filter = ({ column }: { column: Column<any, unknown> }) => {
-  const columnFilterValue = column.getFilterValue()
-  return (
-    <DebouncedSearchComponent
-      type='text'
-      value={(columnFilterValue ?? '') as string}
-      onChange={(value) => column.setFilterValue(value)}
-      list={column.id + 'list'}
-    />
-  )
-}
-
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value)
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  })
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed
-}
-
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(rowA.columnFiltersMeta[columnId]?.itemRank!, rowB.columnFiltersMeta[columnId]?.itemRank!)
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 /**
@@ -621,15 +586,11 @@ export const useTraitElementTable = ({
 
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const table = useReactTable({
+  const table = useReactTable<TraitElementFields>({
     data: traitElementsArray,
     columns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    state: {
-      globalFilter,
-    },
+    filterFns: { fuzzy: fuzzyFilter },
+    state: { globalFilter },
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
@@ -653,8 +614,35 @@ export const useTraitElementTable = ({
       resetRarityInterval()
     },
     handleSubmit,
+    globalFilter,
+    setGlobalFilter,
     getFilteredTraitElements: () => traitElementsArray.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase())),
     getCheckedTraitElements: () => traitElementsArray.filter((x) => x.checked),
     getAllTraitElements: () => traitElementsArray,
   }
+}
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  })
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
+
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0
+
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(rowA.columnFiltersMeta[columnId]?.itemRank!, rowB.columnFiltersMeta[columnId]?.itemRank!)
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
