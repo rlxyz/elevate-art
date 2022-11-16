@@ -111,7 +111,6 @@ model LayerElement {
     traitElements TraitElement[]
 
     @@unique([name, repositoryId])
-    @@unique([priority, repositoryId])
 }
 
 model TraitElement {

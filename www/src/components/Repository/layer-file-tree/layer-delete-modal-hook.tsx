@@ -18,7 +18,14 @@ export const useMutateDeleteLayerElement = () => {
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        draft = draft.filter((x) => x.id !== variables.layerElementId)
+        const index = draft.findIndex((layer) => layer.id === variables.layerElementId)
+        draft.splice(index, 1)
+        draft = draft.map((x) => {
+          if (x.priority > data.priority) {
+            x.priority = x.priority - 1
+          }
+          return x
+        })
       })
 
       // Notify

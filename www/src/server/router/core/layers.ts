@@ -30,7 +30,7 @@ export const layerElementRouter = createRouter()
       /** Fetch many LayerElement & TraitElements & Rules from Db */
       return await ctx.prisma.layerElement.findMany({
         where: { repositoryId },
-        orderBy: [{ priority: 'asc' }, { name: 'asc' }],
+        orderBy: [{ priority: 'asc' }],
         include: {
           traitElements: {
             orderBy: [{ weight: 'desc' }, { name: 'asc' }],
@@ -145,7 +145,7 @@ export const layerElementRouter = createRouter()
             where: {
               repositoryId,
               priority: {
-                gt: layerElement.priority,
+                gte: layerElement.priority,
               },
             },
             data: {
@@ -157,11 +157,7 @@ export const layerElementRouter = createRouter()
 
           return layerElement
         },
-        {
-          maxWait: 5000,
-          timeout: 10000,
-          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-        }
+        { maxWait: 5000, timeout: 10000 }
       )
     },
   })

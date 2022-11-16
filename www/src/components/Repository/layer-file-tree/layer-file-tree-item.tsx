@@ -47,7 +47,7 @@ export const LayerElementTreeItem: FC<ModalProps> = ({ item, enabled, className,
       <NextLinkComponent href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`} className='py-2'>
         <div className='relative flex w-full items-center'>
           <span className='mx-7 w-full flex items-center text-xs whitespace-nowrap overflow-hidden' {...props}>
-            {item.name}
+            {`${item.priority}---${item.name}`}
           </span>
         </div>
       </NextLinkComponent>
