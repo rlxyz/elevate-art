@@ -25,7 +25,7 @@ const TraitElementGrid: FC<TraitElementGridProps> = ({ table, id, className }) =
         .rows.sort((a, b) => (a.original.id === `none-${id}` ? -1 : 1))
         .map(({ original }, index) => {
           return (
-            <div key={original.id} className='w-auto h-auto flex-col border border-mediumGrey rounded-[5px] shadow-md'>
+            <div key={original.id} className='w-auto h-auto flex-col border border-mediumGrey rounded-[5px]'>
               <div className='h-[10rem] w-auto overflow-hidden flex items-center border-b border-mediumGrey'>
                 {index !== 0 && (
                   <img

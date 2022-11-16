@@ -6,7 +6,7 @@ import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
 import { FC, useEffect, useState } from 'react'
 import LayerElementCreateModal from './layer-create-modal'
-import LayerElementFileSelector from './layer-reorder'
+import LayerElementFileSelector from './layer-file-tree'
 import LayerElementReorderModal from './layer-reorder-modal'
 
 interface Props {
@@ -61,7 +61,6 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
                 <span className='text-xs'>Reorder Items</span>
               </Menu.Item>
             </Menu.Items>
-
             <Menu.Items>
               <div className='text-darkGrey text-[0.6rem] space-x-1 overflow-hidden text-ellipsis whitespace-nowrap'>
                 <span>Last Edited</span>
