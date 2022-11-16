@@ -4,7 +4,6 @@ import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import {
   Column,
   ColumnDef,
-  ColumnFiltersState,
   FilterFn,
   getCoreRowModel,
   getFilteredRowModel,
@@ -21,9 +20,9 @@ import { env } from 'src/env/client.mjs'
 import { TraitElementRarityFormType, useTraitElementForm, WEIGHT_LOWER_BOUNDARY } from './trait-table-list-form-hook'
 import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
 
-import SearchComponent from '@components/Layout/search-input/SearchInput'
 import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 import { sumByBig } from '@utils/object-utils'
+import { DebouncedSearchComponent } from '../../Layout/search/DebouncedSearch'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -37,41 +36,13 @@ declare module '@tanstack/table-core' {
 export const Filter = ({ column }: { column: Column<any, unknown> }) => {
   const columnFilterValue = column.getFilterValue()
   return (
-    <DebouncedInput
+    <DebouncedSearchComponent
       type='text'
       value={(columnFilterValue ?? '') as string}
       onChange={(value) => column.setFilterValue(value)}
       list={column.id + 'list'}
     />
   )
-}
-
-// A debounced input react component
-export const DebouncedInput = ({
-  value: initialValue,
-  onChange,
-  debounce = 50,
-  ...props
-}: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) => {
-  const [value, setValue] = React.useState(initialValue)
-
-  React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
-
-  return <SearchComponent {...props} value={value} onChange={(e) => setValue(e.target.value)} />
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -291,6 +262,7 @@ export const useTraitElementTable = ({
           </>
         ),
         footer: (props) => props.column.id,
+        enableSorting: false,
       },
       {
         header: () => <span></span>,
@@ -307,6 +279,7 @@ export const useTraitElementTable = ({
           </div>
         ),
         footer: (props) => props.column.id,
+        enableSorting: false,
       },
       {
         header: () => <span>Name</span>,
@@ -369,6 +342,7 @@ export const useTraitElementTable = ({
         footer: (props) => props.column.id,
         filterFn: 'fuzzy',
         sortingFn: fuzzySort,
+        enableSorting: true,
       },
       {
         header: () => (
@@ -473,6 +447,7 @@ export const useTraitElementTable = ({
           </div>
         ),
         footer: (props) => props.column.id,
+        enableSorting: false,
       },
       {
         header: () => (
@@ -500,7 +475,7 @@ export const useTraitElementTable = ({
             </Popover>
           </div>
         ),
-        accessorKey: 'rarityScore',
+        accessorKey: 'weight',
         cell: ({ row: { original } }) => (
           <span>
             {Number(
@@ -511,6 +486,7 @@ export const useTraitElementTable = ({
         footer: (props) => props.column.id,
         filterFn: 'fuzzy',
         sortingFn: fuzzySort,
+        enableSorting: true,
       },
       {
         header: () => (
@@ -577,6 +553,7 @@ export const useTraitElementTable = ({
         ),
         accessorKey: 'actions',
         footer: (props) => props.column.id,
+        enableSorting: false,
         cell: ({ row: { original, index } }) =>
           !isNoneTraitElement(index) && (
             <div className='relative'>
@@ -642,7 +619,6 @@ export const useTraitElementTable = ({
     [isRarityResettable, isTraitDeletable]
   )
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   const table = useReactTable({
@@ -652,10 +628,8 @@ export const useTraitElementTable = ({
       fuzzy: fuzzyFilter,
     },
     state: {
-      columnFilters,
       globalFilter,
     },
-    onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),

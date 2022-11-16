@@ -1,5 +1,5 @@
 import { Link } from '@components/Layout/Link'
-import SearchInput from '@components/Layout/search-input/SearchInput'
+import SearchInput from '@components/Layout/search/Search'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import { capitalize } from '@utils/format'

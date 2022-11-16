@@ -114,7 +114,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
 
           {/* <div id='trait-table' className='h-[calc(100vh-13.5rem)] overflow-y-scroll no-scrollbar pb-6'> */}
           <div id='trait-table'>
-            <TraitElementTable table={table} className={clsx(viewFilter !== TraitElementView.enum.Table && 'hidden')} />
+            <TraitElementTable table={table} className={clsx(viewFilter !== TraitElementView.enum.Table && 'hidden')} id={id} />
             <TraitElementGrid
               traitElements={getFilteredTraitElements()}
               repositoryId={repositoryId}

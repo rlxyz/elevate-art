@@ -7,6 +7,7 @@ import { TraitElementFields } from './trait-table-list-form-hook'
 
 interface Props {
   table: ReactTable<TraitElementFields>
+  id: string
 }
 
 export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
@@ -17,9 +18,9 @@ export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, key
  *
  * @todo initialSum removed as prop. it should be generated here.
  */
-const TraitElementTable: FC<TraitElementTableProps> = ({ table, className }) => {
+const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, ...props }) => {
   return (
-    <div className={clsx(className)}>
+    <div className={clsx(className)} {...props}>
       <Table>
         <Table.Head>
           {table.getHeaderGroups().map((headerGroup) =>
@@ -48,19 +49,23 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className }) => 
           )}
         </Table.Head>
         <Table.Body>
-          {table.getRowModel().rows.map((row, index) => {
-            return (
-              <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <Table.Body.Row.Data key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Table.Body.Row.Data>
-                  )
-                })}
-              </Table.Body.Row>
-            )
-          })}
+          {/** Sort the None TraitElement to index 0 then displays the Table */}
+          {table
+            .getRowModel()
+            .rows.sort((a, b) => (a.original.id === `none-${id}` ? -1 : 1))
+            .map((row, index) => {
+              return (
+                <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <Table.Body.Row.Data key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Table.Body.Row.Data>
+                    )
+                  })}
+                </Table.Body.Row>
+              )
+            })}
         </Table.Body>
       </Table>
     </div>
