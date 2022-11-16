@@ -80,7 +80,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
               axis='y'
               layoutScroll
               values={items}
-              className='flex flex-col space-y-2 max-h-[calc(100vh-17.5rem)] no-scrollbar border border-mediumGrey rounded-[5px] p-2 overflow-hidden'
+              className='flex flex-col space-y-2 max-h-[calc(100vh-17.5rem)] no-scrollbar overflow-y-scroll border border-mediumGrey rounded-[5px] p-2 overflow-hidden'
               onReorder={setItems}
             >
               {items.map((x) => (
