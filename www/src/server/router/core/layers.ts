@@ -145,7 +145,7 @@ export const layerElementRouter = createRouter()
             where: {
               repositoryId,
               priority: {
-                gte: layerElement.priority,
+                gt: layerElement.priority,
               },
             },
             data: {
