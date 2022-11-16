@@ -191,6 +191,7 @@ export const useTraitElementForm = ({
 
     /** Figure out how much to change */
     const growth = getAllowableDecrementGrowth(weight, min)
+
     /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.minus(growth))
     onChange && onChange()
@@ -254,6 +255,15 @@ export const useTraitElementForm = ({
     /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.plus(growth))
     onChange && onChange()
+
+    /** If any is 100, everything else is 0 */
+    if (isEqual(Big(getValues(`traitElements.${index}.weight`)), WEIGHT_UPPER_BOUNDARY)) {
+      traitElements.forEach((x, i) => {
+        if (x.id === id) return
+        setValue(`traitElements.${i}.weight`, WEIGHT_LOWER_BOUNDARY)
+      })
+      return
+    }
 
     /**
      * Locked Distribution
