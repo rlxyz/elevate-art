@@ -77,7 +77,7 @@ const LayerElementRenameModal: FC<LayerElementRenameProps> = ({ layerElement, vi
                 : errors.name.type === 'pattern'
                 ? 'We only accept - and / for special characters'
                 : errors.name.type === 'validate'
-                ? 'This layer name already exists'
+                ? 'A layer with this name already exists'
                 : 'Must be between 3 and 20 characters long'}
             </span>
           )}

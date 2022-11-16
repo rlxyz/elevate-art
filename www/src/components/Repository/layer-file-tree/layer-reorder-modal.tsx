@@ -5,14 +5,13 @@ import { LayerElementWithRules, useQueryRepositoryLayer } from '@hooks/query/use
 import { LayerElement, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { FormModalProps } from './layer-delete-modal'
 import { useMutateRenameLayerElement } from './layer-rename-modal-hook'
 import { useRaisedShadow } from './layer-reorder-item-shadow'
 
 interface LayerElementRenameProps extends FormModalProps {
   layerElements: LayerElementWithRules[]
-  onReorder: (newOrder: any[]) => void
   repository: Repository
 }
 
@@ -54,9 +53,17 @@ export const ReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, classNam
   )
 }
 
-const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose, onReorder }) => {
+const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
+  const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
   const { mutate, isLoading } = useMutateRenameLayerElement()
   const { all: layers } = useQueryRepositoryLayer()
+
+  useEffect(() => {
+    setItems(layerElements)
+  }, [layerElements.length])
+
+  if (!repository) return null
+
   return (
     <ModalComponent
       visible={visible}
@@ -72,11 +79,11 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
             <Reorder.Group
               axis='y'
               layoutScroll
-              values={layerElements}
+              values={items}
               className='flex flex-col space-y-2 max-h-[calc(100vh-17.5rem)] no-scrollbar border border-mediumGrey rounded-[5px] p-2 overflow-hidden'
-              onReorder={onReorder}
+              onReorder={setItems}
             >
-              {layerElements.map((x) => (
+              {items.map((x) => (
                 <ReorderItem key={x.id} item={x} repositoryId={repository.id} />
               ))}
             </Reorder.Group>

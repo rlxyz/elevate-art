@@ -31,5 +31,8 @@ export const useMutateCreateLayerElement = () => {
       // Save
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
     },
+    onError: (err) => {
+      notifyError(err.message)
+    },
   })
 }

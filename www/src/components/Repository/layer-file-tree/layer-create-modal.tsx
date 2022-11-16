@@ -1,20 +1,23 @@
 import ModalComponent from '@components/Layout/modal/Modal'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutateCreateLayerElement } from './layer-create-modal-hook'
 import { FormModalProps } from './layer-delete-modal'
 
-export interface LayerElementCreateProps extends FormModalProps {}
+export interface LayerElementCreateProps extends FormModalProps {
+  repository: Repository
+}
 
 export type LayerElementCreateForm = {
   name: string
 }
 
-const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose, onSuccess }) => {
+const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose, onSuccess, repository }) => {
   const { mutate, isLoading } = useMutateCreateLayerElement()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const { all: layers } = useQueryRepositoryLayer()
   const {
     register,
     handleSubmit,
@@ -40,7 +43,7 @@ const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose
     <ModalComponent
       visible={visible}
       onClose={handleClose}
-      onSubmit={handleSubmit((data) => mutate({ repositoryId, name: data.name }, { onSuccess: handleSuccess }))}
+      onSubmit={handleSubmit((data) => mutate({ repositoryId: repository.id, name: data.name }, { onSuccess: handleSuccess }))}
       title='Add Layer'
       description={`This will create a new layer, you can then upload traits to this layer.`}
       isLoading={isLoading}
@@ -51,7 +54,13 @@ const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose
           <input
             className={clsx('block text-xs w-full pl-2 rounded-[5px] py-2')}
             type='string'
-            {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9 ]+$/gi })}
+            {...register('name', {
+              required: true,
+              maxLength: 20,
+              minLength: 3,
+              pattern: /^[-/a-z0-9 ]+$/gi,
+              validate: (value) => !layers.map((x) => x.name).includes(value),
+            })}
           />
           {errors.name && (
             <span className='text-xs text-redError'>
@@ -59,6 +68,8 @@ const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose
                 ? 'This field is required'
                 : errors.name.type === 'pattern'
                 ? 'We only accept - and / for special characters'
+                : errors.name.type === 'validate'
+                ? 'A layer with this name already exists'
                 : 'Must be between 3 and 20 characters long'}
             </span>
           )}

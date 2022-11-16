@@ -74,13 +74,27 @@ export const layerElementRouter = createRouter()
       const count = await ctx.prisma.layerElement.count({ where: { repositoryId } })
 
       /** Create LayerElement & TraitElements in Db */
-      return await ctx.prisma.layerElement.create({
-        data: {
-          repositoryId,
-          name,
-          priority: count,
-        },
-      })
+      try {
+        return await ctx.prisma.layerElement.create({
+          data: {
+            repositoryId,
+            name,
+            priority: count,
+          },
+        })
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          if (e.code === 'P2002') {
+            /** Unique constaint error! */
+            throw new trpc.TRPCError({
+              code: `BAD_REQUEST`,
+              message:
+                'A LayerElement with that name already exists in this repository. Please choose a different name and try again.',
+            })
+          }
+        }
+        throw e
+      }
     },
   })
   /**

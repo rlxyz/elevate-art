@@ -4,7 +4,7 @@ import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'
 import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import LayerElementCreateModal from './layer-create-modal'
 import LayerElementFileSelector from './layer-file-tree'
 import LayerElementReorderModal from './layer-reorder-modal'
@@ -27,13 +27,8 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
   className,
   ...props
 }) => {
-  const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
   const [openReordering, setOpenReordering] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-
-  useEffect(() => {
-    setItems(layerElements)
-  }, [currentLayerId, layerElements.length])
 
   /** Handles the last updated LayerElement */
   const layerElementLastEdited = () => {
@@ -73,21 +68,28 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
           </Menu>
         </div>
 
-        <LayerElementFileSelector items={items} itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)} />
+        <LayerElementFileSelector
+          items={layerElements}
+          itemEnabledIndex={layerElements.findIndex((x) => x.id === currentLayerId)}
+        />
       </div>
 
-      {/** @todo Fix this */}
+      {/** Handles all Repository related mutations */}
       {repository && (
-        <LayerElementReorderModal
-          onReorder={setItems}
-          layerElements={items}
-          repository={repository}
-          onClose={() => setOpenReordering(false)}
-          visible={openReordering}
-        />
+        <>
+          <LayerElementReorderModal
+            onClose={() => setOpenReordering(false)}
+            visible={openReordering}
+            repository={repository}
+            layerElements={layerElements}
+          />
+          <LayerElementCreateModal
+            onClose={() => setIsCreateDialogOpen(false)}
+            visible={isCreateDialogOpen}
+            repository={repository}
+          />
+        </>
       )}
-
-      <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} />
     </div>
   )
 }
