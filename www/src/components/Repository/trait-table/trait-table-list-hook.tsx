@@ -12,7 +12,6 @@ import {
   sortingFns,
   useReactTable,
 } from '@tanstack/react-table'
-import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
@@ -23,6 +22,7 @@ import {
   TraitElementRarityFormType,
   useTraitElementForm,
   WEIGHT_LOWER_BOUNDARY,
+  WEIGHT_UPPER_BOUNDARY,
 } from './trait-table-list-form-hook'
 import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
 
@@ -384,11 +384,7 @@ export const useTraitElementTable = ({
                 )}
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
-                {`${new Big(original.weight)
-                  // .abs()
-                  // .div(sumByBig(watch(`traitElements`), (x) => x.weight))
-                  // .mul(100)
-                  .toFixed(4)}`}
+                {`${Big(original.weight).toFixed(4)}`}
                 <span>%</span>
               </span>
             </div>
@@ -443,9 +439,7 @@ export const useTraitElementTable = ({
         accessorKey: 'weight',
         cell: ({ row: { original } }) => (
           <span>
-            {Number(
-              -Math.log(new Big(original.weight).div(sumByBig(watch(`traitElements`), (x) => x.weight)).toNumber()).toFixed(3)
-            ) % Infinity || 0}
+            {Number(-Math.log(new Big(original.weight).div(WEIGHT_UPPER_BOUNDARY).toNumber()).toFixed(3)) % Infinity || 0}
           </span>
         ),
         footer: (props) => props.column.id,

@@ -117,11 +117,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
 
           <div id='trait-table'>
             <TraitElementTable table={table} className={clsx(viewFilter !== TraitElementView.enum.Table && 'hidden')} id={id} />
-            <TraitElementGrid
-              traitElements={getFilteredTraitElements()}
-              repositoryId={repositoryId}
-              className={clsx(viewFilter !== TraitElementView.enum.Grid && 'hidden')}
-            />
+            <TraitElementGrid table={table} id={id} className={clsx(viewFilter !== TraitElementView.enum.Grid && 'hidden')} />
           </div>
         </div>
       </form>
