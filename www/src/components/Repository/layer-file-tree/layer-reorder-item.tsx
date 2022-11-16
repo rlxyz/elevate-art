@@ -54,7 +54,7 @@ export const ReorderItem: FC<ModalProps> = ({ item, enabled, isReorderable, clas
       dragControls={dragControls}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className={clsx(className, 'relative', enabled ? 'font-bold bg-lightGray' : 'hover:font-semibold')}
+      className={clsx(className, 'relative', enabled && 'font-bold bg-lightGray')}
     >
       <NextLinkComponent
         href={`/${organisationName}/${repositoryName}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`}
@@ -76,7 +76,7 @@ export const ReorderItem: FC<ModalProps> = ({ item, enabled, isReorderable, clas
         </div>
       </NextLinkComponent>
       {isHovered && !isReorderable && (
-        <Menu className='bg-black'>
+        <Menu>
           <Menu.Items>
             <Menu.Item
               as='button'

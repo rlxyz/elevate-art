@@ -1,6 +1,7 @@
 import Menu from '@components/Layout/menu'
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
-import { LayerElement } from '@prisma/client'
+import { LayerElement, Repository } from '@prisma/client'
+import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
 import { FC, useEffect, useState } from 'react'
 import LayerElementCreateModal from './layer-create-modal'
@@ -8,7 +9,8 @@ import LayerElementFileSelector from './layer-reorder'
 import LayerElementReorderConfirmModal from './layer-reorder-confirm-modal'
 
 interface Props {
-  layers: LayerElement[] | undefined
+  repository: Repository | undefined
+  layerElements: LayerElement[] | undefined
   currentLayerId: string // current layer id
 }
 
@@ -17,15 +19,21 @@ export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, 
 /**
  * The core LayerElement File Tree. It handles selection of the current layer route & reordering of layers.
  */
-const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers = [], currentLayerId, className, ...props }) => {
-  const [items, setItems] = useState<LayerElement[]>(layers)
+const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
+  repository,
+  layerElements = [],
+  currentLayerId,
+  className,
+  ...props
+}) => {
+  const [items, setItems] = useState<LayerElement[]>(layerElements)
   const [openReordering, setOpenReordering] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   useEffect(() => {
-    setItems(layers)
-  }, [currentLayerId, layers.length])
+    setItems(layerElements)
+  }, [currentLayerId, layerElements.length])
 
   const onReorderButtonClicked = () => {
     if (!openReordering) {
@@ -36,10 +44,20 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers = [], curr
     }
   }
 
+  /** Handles the last updated LayerElement */
+  const layerElementLastEdited = () => {
+    return layerElements.sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())[0]?.updatedAt || new Date()
+  }
+
+  /** Handles the first LayerElement that was created. Basically, the inception of the repository. */
+  const layerElementCreatedAt = () => {
+    return repository?.createdAt || new Date()
+  }
+
   return (
     <div {...props} className={clsx(className)}>
       <div className={'border border-mediumGrey rounded-[5px]'}>
-        <div className='relative py-4 flex space-x-2 justify-end items-center h-full w-full px-2'>
+        <div className='relative py-4 flex justify-end items-center px-2'>
           <Menu>
             <Menu.Items>
               <Menu.Item as='button' type='button' onClick={() => setIsCreateDialogOpen(true)}>
@@ -50,6 +68,17 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ layers = [], curr
                 <SwitchVerticalIcon className='w-3 h-3' />
                 <span className='text-xs'>Reorder Items</span>
               </Menu.Item>
+            </Menu.Items>
+
+            <Menu.Items>
+              <div className='text-darkGrey text-[0.6rem] space-x-1 overflow-hidden text-ellipsis whitespace-nowrap'>
+                <span>Last Edited</span>
+                <span>{timeAgo(layerElementLastEdited())}</span>
+              </div>
+              <div className='text-darkGrey text-[0.6rem] space-x-1 overflow-hidden text-ellipsis whitespace-nowrap'>
+                <span>Created</span>
+                <span>{timeAgo(layerElementCreatedAt())}</span>
+              </div>
             </Menu.Items>
           </Menu>
         </div>
