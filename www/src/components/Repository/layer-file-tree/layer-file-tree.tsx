@@ -5,8 +5,6 @@ import { LayerElementTreeItem } from './layer-file-tree-item'
 interface Props {
   items: LayerElement[]
   itemEnabledIndex: number
-  onReorder: (newOrder: any[]) => void
-  isReorderable: boolean
 }
 
 export type LayerElementFileSelectorProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>

@@ -29,7 +29,6 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
 }) => {
   const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
   const [openReordering, setOpenReordering] = useState(false)
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
 
   return (
     <div {...props} className={clsx(className)}>
-      <div className={'border border-mediumGrey rounded-[5px]'}>
+      <div className={'border border-mediumGrey rounded-[5px] divide-y divide-mediumGrey'}>
         <div className='relative py-4 flex justify-end items-center px-2'>
           <Menu>
             <Menu.Items>
@@ -73,14 +72,10 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
             </Menu.Items>
           </Menu>
         </div>
-        <LayerElementFileSelector
-          className='border-t border-mediumGrey'
-          items={items}
-          isReorderable={openReordering}
-          onReorder={setItems}
-          itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)}
-        />
+
+        <LayerElementFileSelector items={items} itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)} />
       </div>
+
       {/** @todo Fix this */}
       {repository && (
         <LayerElementReorderModal

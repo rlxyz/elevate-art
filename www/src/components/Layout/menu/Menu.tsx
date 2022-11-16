@@ -10,8 +10,8 @@ export type MenuProps = Props & Omit<React.AnchorHTMLAttributes<any>, keyof Prop
 const MenuComponent: FC<MenuProps> = ({ className, children, ...props }) => {
   return (
     <Menu as='div' className='absolute flex right-0 mr-2 top-1/2 -translate-y-1/2 items-center z-[5] '>
-      <Menu.Button className='p-0.5 rounded-[5px] text-darkGrey'>
-        <DotsHorizontalIcon className='w-3 h-3' />
+      <Menu.Button className='rounded-[5px] text-darkGrey'>
+        <DotsHorizontalIcon className='rounded-[3px] hover:bg-mediumGrey w-4 h-4 mx-0.25' />
       </Menu.Button>
       <Transition
         as={Fragment}
