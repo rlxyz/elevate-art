@@ -79,7 +79,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
               <Dialog.Panel
                 className={clsx(
                   className,
-                  'relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all max-w-md'
+                  'relative rounded-[5px] bg-white border border-mediumGrey text-left overflow-hidden shadow-xl transform transition-all'
                 )}
                 {...props}
               >

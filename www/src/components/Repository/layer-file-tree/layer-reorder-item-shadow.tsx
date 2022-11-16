@@ -13,7 +13,7 @@ export function useRaisedShadow(value: MotionValue<number>) {
       if (latest !== 0) {
         isActive = true
         if (isActive !== wasActive) {
-          animate(boxShadow, '5px 2px 5px rgba(0,0,0,0.3)')
+          animate(boxShadow, '5px 2px 5px rgba(0,0,0,0.1)')
         }
       } else {
         isActive = false

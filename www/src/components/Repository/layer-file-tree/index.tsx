@@ -1,16 +1,17 @@
 import Menu from '@components/Layout/menu'
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
-import { LayerElement, Repository } from '@prisma/client'
+import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
+import { Repository } from '@prisma/client'
 import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
 import { FC, useEffect, useState } from 'react'
 import LayerElementCreateModal from './layer-create-modal'
 import LayerElementFileSelector from './layer-reorder'
-import LayerElementReorderConfirmModal from './layer-reorder-confirm-modal'
+import LayerElementReorderModal from './layer-reorder-modal'
 
 interface Props {
   repository: Repository | undefined
-  layerElements: LayerElement[] | undefined
+  layerElements: LayerElementWithRules[] | undefined
   currentLayerId: string // current layer id
 }
 
@@ -26,7 +27,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
   className,
   ...props
 }) => {
-  const [items, setItems] = useState<LayerElement[]>(layerElements)
+  const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
   const [openReordering, setOpenReordering] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -34,15 +35,6 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
   useEffect(() => {
     setItems(layerElements)
   }, [currentLayerId, layerElements.length])
-
-  const onReorderButtonClicked = () => {
-    if (!openReordering) {
-      setOpenReordering(true)
-    } else {
-      setIsConfirmDialogOpen(true)
-      setOpenReordering(false)
-    }
-  }
 
   /** Handles the last updated LayerElement */
   const layerElementLastEdited = () => {
@@ -64,7 +56,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
                 <PlusIcon className='w-3 h-3' />
                 <span className='text-xs'>New</span>
               </Menu.Item>
-              <Menu.Item as='button' type='button' onClick={() => onReorderButtonClicked()}>
+              <Menu.Item as='button' type='button' onClick={() => setOpenReordering(true)}>
                 <SwitchVerticalIcon className='w-3 h-3' />
                 <span className='text-xs'>Reorder Items</span>
               </Menu.Item>
@@ -90,11 +82,17 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({
           itemEnabledIndex={items.findIndex((x) => x.id === currentLayerId)}
         />
       </div>
-      <LayerElementReorderConfirmModal
-        layerElements={items}
-        onClose={() => setIsConfirmDialogOpen(false)}
-        visible={isConfirmDialogOpen}
-      />
+      {/** @todo Fix this */}
+      {repository && (
+        <LayerElementReorderModal
+          onReorder={setItems}
+          layerElements={items}
+          repository={repository}
+          onClose={() => setOpenReordering(false)}
+          visible={openReordering}
+        />
+      )}
+
       <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} />
     </div>
   )

@@ -7,7 +7,6 @@ import { FC } from 'react'
 interface Props {
   id: number
   collection: Collection
-  repositoryId: string
   layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
   canHover?: boolean
 }
@@ -19,7 +18,6 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
   id,
   collection,
   layers,
-  repositoryId,
   children,
   className,
   canHover = false,
@@ -40,7 +38,7 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
         })),
       }))
     ),
-    v.seed(repositoryId, collection.name, collection.generations, id)
+    v.seed(collection.repositoryId, collection.name, collection.generations, id)
   )
 
   const hash = v.hash(elements)
@@ -49,16 +47,14 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
     <div className={clsx(className, 'relative flex-col h-full w-full overflow-hidden')} {...props}>
       <div className='relative overflow-hidden h-[75%] w-full flex items-center'>
         {elements
-          // filters out none trait
-          // see useQueryRepositoryLayer for more info
-          .filter(([l, t]) => t !== `none-${l}`)
+          .filter(([l, t]) => !t.startsWith('none'))
           .map(([l, t], index) => {
             return (
               <img
                 key={`${hash}-${t}-${index}`}
                 className={clsx('absolute w-full border-box object-contain')}
                 src={getImageForTrait({
-                  r: repositoryId,
+                  r: collection.repositoryId,
                   l,
                   t,
                 })}
@@ -75,7 +71,6 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
   id,
   collection,
   layers,
-  repositoryId,
   children,
   className,
   canHover = false,
@@ -96,26 +91,30 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
         })),
       }))
     ),
-    v.seed(repositoryId, collection.name, collection.generations, id)
+    v.seed(collection.repositoryId, collection.name, collection.generations, id)
   )
 
   const hash = v.hash(elements)
 
   return (
-    <div className='h-[50vh] w-auto flex items-center' {...props}>
-      {elements.map(([l, t], index) => {
-        return (
-          <img
-            key={`${hash}-${t}-${index}`}
-            className={clsx('absolute w-full border-box object-contain')}
-            src={getImageForTrait({
-              r: repositoryId,
-              l,
-              t,
-            })}
-          />
-        )
-      })}
-    </div>
+    <>
+      {elements
+        .filter(([l, t]) => !t.startsWith('none'))
+        .map(([l, t], index) => {
+          return (
+            <img
+              key={`${hash}-${t}-${index}`}
+              width={100}
+              className={clsx('absolute w-full h-full object-contain rounded-[5px]')}
+              // className={clsx('border object-contain')}
+              src={getImageForTrait({
+                r: collection.repositoryId,
+                l,
+                t,
+              })}
+            />
+          )
+        })}
+    </>
   )
 }

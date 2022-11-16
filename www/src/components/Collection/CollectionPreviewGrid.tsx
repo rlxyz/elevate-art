@@ -56,13 +56,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                 className='flex flex-col rounded-[5px] cursor-pointer xl:h-[17.5rem] md:h-[15rem] sm:h-[20rem] h-[20rem] border border-mediumGrey bg-white shadow-lg'
                 onClick={() => setSelectedToken(item || null)}
               >
-                <PreviewImageCardWithChildren
-                  canHover
-                  id={item}
-                  collection={collection}
-                  layers={layers}
-                  repositoryId={repositoryId}
-                >
+                <PreviewImageCardWithChildren canHover id={item} collection={collection} layers={layers}>
                   <div className='px-2 flex flex-col h-full items-center justify-center py-2'>
                     <span className='text-[0.6rem] xl:text-xs font-semibold overflow-hidden w-full whitespace-nowrap'>{`${
                       current?.tokenName || ''
@@ -107,12 +101,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border max-w-lg border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
-                    <PreviewImageCardStandalone
-                      id={selectedToken}
-                      collection={collection}
-                      layers={layers}
-                      repositoryId={repositoryId}
-                    />
+                    <PreviewImageCardStandalone id={selectedToken} collection={collection} layers={layers} className='h-[50vh]' />
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
