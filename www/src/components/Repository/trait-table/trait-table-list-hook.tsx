@@ -78,6 +78,7 @@ export const useTraitElementTable = ({
     decrementRarityByIndex,
     incrementRarityByIndex,
     isNoneTraitElement,
+    randomiseValues,
   } = useTraitElementForm({
     traitElements,
     onChange: () => setIsRarityResettable(true),
@@ -610,6 +611,7 @@ export const useTraitElementTable = ({
     handleSubmit,
     globalFilter,
     setGlobalFilter,
+    onFormRandom: () => randomiseValues(),
     getFilteredTraitElements: () => traitElementsArray.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase())),
     getCheckedTraitElements: () => traitElementsArray.filter((x) => x.checked),
     getAllTraitElements: () => traitElementsArray,

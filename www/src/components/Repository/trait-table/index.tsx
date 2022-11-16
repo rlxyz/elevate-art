@@ -1,5 +1,5 @@
 import { DebouncedSearchComponent } from '@components/Layout/search/DebouncedSearch'
-import { CheckCircleIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
@@ -64,6 +64,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
     getFilteredTraitElements,
     getCheckedTraitElements,
     globalFilter,
+    onFormRandom,
     setGlobalFilter,
   } = useTraitElementTable({
     key: id,
@@ -84,6 +85,18 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
 
             <div id='trait-table-controls-action' className='col-span-5'>
               <div className='flex justify-end h-full space-x-3'>
+                <button
+                  type='button'
+                  onClick={() => onFormRandom()}
+                  className={clsx(
+                    'disabled:bg-lightGray disabled:text-darkGrey disabled:border-mediumGrey',
+                    'bg-lightGray border border-blueHighlight text-blueHighlight rounded-[5px] flex items-center justify-center text-xs px-2 disabled:cursor-not-allowed space-x-1'
+                  )}
+                >
+                  <CubeTransparentIcon className='w-4 h-4' />
+                  <span>Random</span>
+                </button>
+
                 {/** Reset Button */}
                 <button
                   disabled={isResettable}
@@ -104,7 +117,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
                   onClick={() => setIsSaveDialogOpen(true)}
                   className={clsx(
                     'disabled:bg-lightGray disabled:text-darkGrey disabled:border-mediumGrey',
-                    'bg-lightGray border border-blueHighlight text-blueHighlight rounded-[5px] flex items-center justify-center text-xs px-2 disabled:cursor-not-allowed space-x-1'
+                    'bg-lightGray border border-greenDot text-greenDot rounded-[5px] flex items-center justify-center text-xs px-2 disabled:cursor-not-allowed space-x-1'
                   )}
                 >
                   <CheckCircleIcon className='w-4 h-4' />

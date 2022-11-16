@@ -303,6 +303,13 @@ export const useTraitElementForm = ({
     return getValues(`traitElements.${index}.readonly`)
   }
 
+  const randomiseValues = () => {
+    randomFill(getValues(`traitElements`).length, 0.2, 0.5).forEach((value, index) => {
+      setValue(`traitElements.${index}.weight`, Big(value).times(100))
+    })
+    onChange && onChange()
+  }
+
   return {
     incrementRarityByIndex,
     decrementRarityByIndex,
@@ -312,10 +319,31 @@ export const useTraitElementForm = ({
     handleSubmit,
     reset,
     watch,
+    randomiseValues,
     getValues,
     setValue,
     isNoneTraitElement,
     formState: { errors },
     ...props,
   }
+}
+
+const random = (min: number, max: number) => {
+  return min + Math.random() * (max - min)
+}
+
+const randomFill = (amount: number, min: number, max: number) => {
+  const arr: number[] = []
+  let total = 0
+
+  // fill an array with random numbers
+  for (let i = 0; i < amount; i++) arr.push(random(min, max))
+
+  // add up all the numbers
+  for (let i = 0; i < amount; i++) total += arr[i] || 0
+
+  // normalise so numbers add up to 1
+  for (let i = 0; i < amount; i++) arr[i] /= total
+
+  return arr
 }
