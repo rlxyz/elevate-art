@@ -622,7 +622,7 @@ export const useTraitElementTable = ({
   }
 }
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+const fuzzyFilter: FilterFn<TraitElementFields> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
@@ -631,11 +631,14 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     itemRank,
   })
 
+  // Don't filter-out readonly
+  if (row.original.readonly) return true
+
   // Return if the item should be filtered in/out
   return itemRank.passed
 }
 
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortingFn<TraitElementFields> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
