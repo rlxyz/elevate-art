@@ -1,6 +1,5 @@
 import { Result } from '@server/utils/response-result'
 import { v2 } from 'cloudinary'
-import { clientEnv } from 'src/env/schema.mjs'
 import { env } from 'src/env/server.mjs'
 
 /**
@@ -11,7 +10,7 @@ import { env } from 'src/env/server.mjs'
  */
 
 v2.config({
-  cloud_name: clientEnv.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  cloud_name: env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: env.CLOUDINARY_API_KEY,
   api_secret: env.CLOUDINARY_API_SECRET,
 })
@@ -43,7 +42,7 @@ export const deleteImageFilesFromCloudinary = (
   return new Promise((resolve, reject) => {
     v2.api
       .delete_resources(
-        files.map((x) => `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${x.r}/${x.l}/${x.t}`),
+        files.map((x) => `${env.NEXT_PUBLIC_NODE_ENV}/${x.r}/${x.l}/${x.t}`),
         /** Invalidate Image in cdn */
         { invalidate: true }
       )
@@ -67,7 +66,7 @@ export const deleteImageFolderFromCloudinary = ({
 }): Promise<Result<DeleteTraitElementResponse[]>> => {
   return new Promise((resolve, reject) => {
     v2.api
-      .delete_resources_by_prefix(`${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}`, {
+      .delete_resources_by_prefix(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}`, {
         /** Invalidate Image in cdn */
         invalidate: true,
       })

@@ -1,7 +1,6 @@
 import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
 import { env } from 'src/env/client.mjs'
-import { clientEnv } from 'src/env/schema.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
 export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
@@ -11,7 +10,7 @@ export const IMAGE_VERSION = 'v1'
 export const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
   return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join(
     '/'
-  )}/${IMAGE_VERSION}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
+  )}/${IMAGE_VERSION}/${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
 
 export const uploadCollectionLayerImageCloudinary = ({
@@ -44,7 +43,7 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
     files.filter(
       (file) =>
         file.path?.split('/').length !== depth ||
-        file.size > (clientEnv?.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED || DEFAULT_IMAGES_BYTES_ALLOWED)
+        file.size > (env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED || DEFAULT_IMAGES_BYTES_ALLOWED)
     ).length === 0
   )
 }
@@ -116,6 +115,6 @@ export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement
   data.append('original_filename', name)
   data.append('upload_preset', 'collection-upload')
   data.append('cloud_name', 'rlxyz')
-  data.append('folder', `${clientEnv.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`)
+  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`)
   return data
 }
