@@ -1,10 +1,9 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
-import { RuleSelector } from '@components/Repository/RepositoryRuleCreateView'
-import { RuleDisplayAll } from '@components/Repository/RepositoryRuleDisplayView'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
+import { RuleSelector } from '@components/Repository/rules/RepositoryRuleCreateView'
+import { RuleDisplayAll } from '@components/Repository/rules/RepositoryRuleDisplayView'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
-import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'
@@ -17,16 +16,10 @@ const Page = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
-  const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
-  const { setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-    }
-  })
-  const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
+  const { all: organisations } = useQueryOrganisation()
+  const { mainRepositoryHref } = useRepositoryRoute()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
 
   useEffect(() => {
     if (!repository) return
@@ -45,21 +38,21 @@ const Page = () => {
             internalNavigation={[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                loading: mainRepositoryHref === null || isLoading,
                 href: `/${mainRepositoryHref}`,
                 enabled: false,
+                loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                loading: mainRepositoryHref === null || isLoading,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
                 enabled: false,
+                loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                loading: mainRepositoryHref === null || isLoading,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
                 enabled: true,
+                loading: isLoadingLayers,
               },
             ]}
           />
@@ -68,7 +61,7 @@ const Page = () => {
               <div className='flex justify-center'>
                 <div className='space-y-1 w-full'>
                   <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                  {layers && <RuleSelector layers={layers} />}
+                  <RuleSelector layers={layers} />
                 </div>
               </div>
             </div>

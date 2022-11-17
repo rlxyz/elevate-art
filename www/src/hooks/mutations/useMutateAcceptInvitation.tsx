@@ -7,17 +7,17 @@ export const useMutateAcceptInvitation = () => {
   const ctx = trpc.useContext()
   const { data: session } = useSession()
   const { pendings } = useQueryOrganisation()
-  return trpc.useMutation('organisation.acceptInvitation', {
+  return trpc.useMutation('organisation.user.invite.accept', {
     onSuccess: async (data, input) => {
       if (!session?.user?.id) return
       const userId = session.user.id
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['organisation.getManyOrganisationByUserId'])
-      await ctx.cancelQuery(['organisation.getManyPendingOrganisationByUserId'])
+      await ctx.cancelQuery(['organisation.getAll'])
+      await ctx.cancelQuery(['organisation.user.invite.getAll'])
 
       // Snapshot the previous value
-      const backupOrganisations = ctx.getQueryData(['organisation.getManyOrganisationByUserId'])
-      const backupPending = ctx.getQueryData(['organisation.getManyPendingOrganisationByUserId'])
+      const backupOrganisations = ctx.getQueryData(['organisation.getAll'])
+      const backupPending = ctx.getQueryData(['organisation.user.invite.getAll'])
       if (!backupOrganisations || !backupPending) return { backupOrganisations, backupPending }
 
       const organisationPending = pendings?.find((x) => x.id === input.pendingId)
@@ -53,7 +53,7 @@ export const useMutateAcceptInvitation = () => {
           pendings: [],
         })
       })
-      ctx.setQueryData(['organisation.getManyOrganisationByUserId'], next)
+      ctx.setQueryData(['organisation.getAll'], next)
 
       const nextPending = produce(backupPending, (draft) => {
         draft.splice(
@@ -62,8 +62,7 @@ export const useMutateAcceptInvitation = () => {
         )
       })
 
-      console.log({ nextPending, next })
-      ctx.setQueryData(['organisation.getManyPendingOrganisationByUserId'], nextPending)
+      ctx.setQueryData(['organisation.user.invite.getAll'], nextPending)
 
       // return backup
       return { backupOrganisations, backupPending }

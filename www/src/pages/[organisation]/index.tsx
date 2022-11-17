@@ -1,31 +1,17 @@
 import { Layout } from '@components/Layout/core/Layout'
 import ViewAllRepositories from '@components/Organisation/OrganisationViewAllRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
-import { useEffect } from 'react'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { OrganisationAuthLayout } from '../../components/Layout/core/AuthLayout'
+import { OrganisationAuthLayout } from '../../components/Organisation/OrganisationAuthLayout'
 
 const Page: NextPage = () => {
-  const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      organisationId: state.organisationId,
-      setOrganisationId: state.setOrganisationId,
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
-    }
-  })
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Overview)
-  }, [])
 
   return (
-    <OrganisationAuthLayout>
+    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
       <Layout>
         <Layout.Header
           connectButton

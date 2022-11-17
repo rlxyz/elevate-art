@@ -3,84 +3,13 @@ import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
-import * as v from '@utils/compiler'
-import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
-import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import { Fragment, ReactNode, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import { PreviewImageCardStandalone, PreviewImageCardWithChildren } from './CollectionPreviewImage'
 
 const DynamicCollectionPreviewGridFilterLabels = dynamic(() => import('./CollectionPreviewGridFilterLabels'), { ssr: false })
-
-const PreviewImage = ({
-  id,
-  collection,
-  layers,
-  repositoryId,
-  children,
-  canHover = false,
-}: {
-  id: number
-  collection: Collection
-  repositoryId: string
-  layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
-  children: ReactNode
-  canHover?: boolean
-}) => {
-  const elements = v.one(
-    v.parseLayer(
-      layers.map((l) => ({
-        ...l,
-        traits: l.traitElements.map((t) => ({
-          ...t,
-          rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-              type: condition as v.RulesType,
-              with: left === t.id ? right : left,
-            })
-          ),
-        })),
-      }))
-    ),
-    v.seed(repositoryId, collection.name, collection.generations, id)
-  )
-
-  const hash = v.hash(elements)
-
-  return (
-    <div className={clsx('relative flex-col border border-mediumGrey rounded-[5px] shadow-lg')}>
-      <div className='py-8 overflow-hidden'>
-        <motion.div
-          whileHover={{
-            scale: canHover ? 1.05 : 1.0,
-            transition: { duration: 1 },
-          }}
-          className='relative'
-        >
-          {elements.map(([l, t], index) => {
-            return (
-              <img
-                key={`${hash}-${t}-${index}`}
-                className={clsx(
-                  index === elements.length - 1 ? 'relative' : 'absolute',
-                  'w-full h-auto border-t border-b border-mediumGrey'
-                )}
-                src={getImageForTrait({
-                  r: repositoryId,
-                  l,
-                  t,
-                })}
-              />
-            )
-          })}
-        </motion.div>
-      </div>
-      {children}
-    </div>
-  )
-}
 
 const InfiniteScrollGridLoading = () => {
   return (
@@ -113,7 +42,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   })
 
   return (
-    <div className='py-2 grid grid-cols-4 gap-6 overflow-hidden'>
+    <div className='py-2 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 overflow-hidden'>
       {!collection || !layers ? (
         <>
           <InfiniteScrollGridLoading />
@@ -122,27 +51,25 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
         <>
           {tokens.slice(0, length).map((item, index) => {
             return (
-              <div
+              <article
                 key={`${item}-${index}`}
-                className='flex flex-col rounded-[5px] cursor-pointer'
+                className='flex flex-col rounded-[5px] cursor-pointer xl:h-[17.5rem] md:h-[15rem] sm:h-[20rem] h-[20rem] border border-mediumGrey bg-white shadow-lg'
                 onClick={() => setSelectedToken(item || null)}
               >
-                <PreviewImage canHover id={item} collection={collection} layers={layers} repositoryId={repositoryId}>
-                  <div className='px-1 flex flex-col space-y-1 mb-3'>
-                    <span className='text-xs font-semibold overflow-hidden w-full'>{`${current?.tokenName || ''} #${
-                      item || 0
-                    }`}</span>
-                    <div className='flex flex-col text-[0.6rem]'>
-                      <span className='font-semibold overflow-hidden w-full'>
-                        <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
-                      </span>
-                      <span className='text-darkGrey overflow-hidden w-full'>
-                        OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
-                      </span>
-                    </div>
+                <PreviewImageCardWithChildren canHover id={item} collection={collection} layers={layers}>
+                  <div className='px-2 flex flex-col h-full items-center justify-center py-2'>
+                    <span className='text-[0.6rem] xl:text-xs font-semibold overflow-hidden w-full whitespace-nowrap'>{`${
+                      current?.tokenName || ''
+                    } #${item || 0}`}</span>
+                    <span className='font-semibold w-full xl:text-[0.6rem] text-[0.5rem]'>
+                      <span className='text-darkGrey'>Rank {tokenRanking.findIndex((x) => x.index === item) + 1}</span>
+                    </span>
+                    <span className='hidden xl:block text-darkGrey w-full xl:text-[0.6rem] text-[0.5rem]'>
+                      OpenRarity Score {tokenRanking.find((x) => x.index === item)?.score.toFixed(3)}
+                    </span>
                   </div>
-                </PreviewImage>
-              </div>
+                </PreviewImageCardWithChildren>
+              </article>
             )
           })}
         </>
@@ -174,9 +101,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
                   leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                 >
                   <Dialog.Panel className='relative bg-white rounded-[5px] border max-w-lg border-lightGray overflow-hidden shadow-xl transform transition-all w-1/2'>
-                    <PreviewImage id={selectedToken} collection={collection} layers={layers} repositoryId={repositoryId}>
-                      <></>
-                    </PreviewImage>
+                    <PreviewImageCardStandalone id={selectedToken} collection={collection} layers={layers} className='h-[50vh]' />
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
@@ -219,7 +144,10 @@ export const InfiniteScrollGrid = () => {
   return (
     <>
       <span
-        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50', 'text-xs text-darkGrey mb-1')}
+        className={clsx(
+          !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50',
+          'lg:text-xs text-[0.6rem] text-darkGrey'
+        )}
       >
         <span className={clsx(!collection && 'invisible')}>{`${collection?.generations || 0} generations`}</span>
       </span>
@@ -245,14 +173,14 @@ export const InfiniteScrollGrid = () => {
 const Index = () => {
   const { current: collection } = useQueryRepositoryCollection()
   return (
-    <main className='space-y-3'>
+    <main className='space-y-1'>
       <div className='flex flex-col'>
         <div className='col-span-6 font-plus-jakarta-sans space-y-1'>
           <div className='flex space-x-2'>
             <h1
               className={clsx(
                 !collection && 'animate-pulse flex flex-row rounded-[5px] bg-mediumGrey bg-opacity-50 w-2/6',
-                'text-2xl font-bold text-black'
+                'lg:text-2xl text-lg font-bold text-black'
               )}
             >
               <span className={clsx(!collection && 'invisible')}>Generate your Collection</span>
@@ -261,16 +189,14 @@ const Index = () => {
           <p
             className={clsx(
               !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
-              'text-sm text-darkGrey w-1/2'
+              'lg:text-sm text-xs text-darkGrey w-1/2'
             )}
           >
             <span className={clsx(!collection && 'invisible')}>Create different token sets before finalising the collection</span>
           </p>
         </div>
       </div>
-      <div>
-        <InfiniteScrollGrid />
-      </div>
+      <InfiniteScrollGrid />
     </main>
   )
 }

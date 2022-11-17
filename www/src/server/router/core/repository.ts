@@ -12,51 +12,6 @@ export const repositoryRouter = createProtectedRouter()
       })
     },
   })
-  .query('getRepositoryLayers', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.layerElement.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { priority: 'asc' },
-        include: {
-          traitElements: {
-            orderBy: { weight: 'asc' }, // guarantee rarest first
-            include: {
-              rulesPrimary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-              rulesSecondary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
-  .query('getRepositoryCollections', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.collection.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { createdAt: 'asc' },
-      })
-    },
-  })
   .mutation('create', {
     input: z.object({
       organisationId: z.string(),
@@ -108,53 +63,6 @@ export const repositoryRouter = createProtectedRouter()
       await ctx.prisma.repository.delete({
         where: {
           id: input.repositoryId,
-        },
-      })
-    },
-  })
-  // todo: refactor to use transactions
-  .mutation('updateLayer', {
-    input: z.object({
-      layerId: z.string(),
-      repositoryId: z.string(),
-      traits: z.array(
-        z.object({
-          id: z.string(),
-          weight: z.number(),
-        })
-      ),
-    }),
-    async resolve({ ctx, input }) {
-      return Promise.all(
-        input.traits.map(async ({ id, weight }) => {
-          return await ctx.prisma.traitElement.update({
-            where: {
-              id,
-            },
-            data: {
-              weight,
-            },
-          })
-        })
-      )
-    },
-  })
-  // todo: better naming conventions?
-  .mutation('createRule', {
-    input: z.object({
-      type: z.string(),
-      primaryLayerElementId: z.string(),
-      primaryTraitElementId: z.string(),
-      secondaryLayerElementId: z.string(),
-      secondaryTraitElementId: z.string(),
-      repositoryId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      await ctx.prisma.rules.create({
-        data: {
-          condition: input.type,
-          primaryTraitElementId: input.primaryTraitElementId,
-          secondaryTraitElementId: input.secondaryTraitElementId,
         },
       })
     },

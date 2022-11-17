@@ -1,4 +1,4 @@
-import Loader from '@components/Layout/Loader'
+import LoadingComponent from '@components/Layout/loading/Loading'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from '@hooks/utils/useNotification'
@@ -102,7 +102,7 @@ export const OrganisationTeamAddUserDialog = ({
                         }}
                         className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
-                        {isLoading ? <Loader /> : 'Add'}
+                        {isLoading ? <LoadingComponent /> : 'Add'}
                       </button>
                     </div>
                   </Dialog.Description>

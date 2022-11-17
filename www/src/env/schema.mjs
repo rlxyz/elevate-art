@@ -9,7 +9,12 @@ export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: z.string(),
-  NEXTAUTH_URL: z.string().url().nullish(),
+  NEXTAUTH_URL: z.string().url(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
+  QSTASH_NEXT_SIGNING_KEY: z.string(),
+  QSTASH_CURRENT_SIGNING_KEY: z.string(),
+  QSTASH_TOKEN: z.string(),
 })
 
 /**
@@ -20,12 +25,14 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
   NEXT_PUBLIC_INFURA_ID: z.string(),
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),
+  NEXT_PUBLIC_ENABLE_TESTNETS: z.boolean(),
   NEXT_PUBLIC_NETWORK_ID: z.number(),
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.string(),
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string(),
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: z.number(),
   NEXT_PUBLIC_API_URL: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
 })
 
 /**
@@ -37,6 +44,7 @@ export const clientSchema = z.object({
 export const clientEnv = {
   NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
   NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+  NEXT_PUBLIC_ENABLE_TESTNETS: Boolean(process.env.NEXT_PUBLIC_ENABLE_TESTNETS),
   NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
   NEXT_PUBLIC_APP_NAME: 'elevate.art',
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
@@ -47,4 +55,5 @@ export const clientEnv = {
     : process.env.VERCEL_URL
     ? `${process.env.VERCEL_URL}/api`
     : 'http://localhost:3000/api',
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
 }

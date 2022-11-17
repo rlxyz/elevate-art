@@ -1,41 +1,31 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import { SettingsNavigations } from '@components/Organisation/OrganisationSettings'
 import { OrganisationTeamAddUser } from '@components/Organisation/OrganisationTeamAddUser'
 import { OrganisationTeamDisplayPending } from '@components/Organisation/OrganisationTeamDisplayPending'
 import { OrganisationTeamDisplayUsers } from '@components/Organisation/OrganisationTeamDisplayUsers'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
 
 const Page: NextPage = () => {
-  const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
-    (state) => {
-      return {
-        organisationId: state.organisationId,
-        setOrganisationId: state.setOrganisationId,
-        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
-        setCurrentRoute: state.setCurrentRoute,
-        currentRoute: state.currentRoute,
-      }
+  const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {
+    return {
+      setCurrentSettingsRoute: state.setCurrentSettingsRoute,
+      currentRoute: state.currentRoute,
     }
-  )
+  })
 
   useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Settings)
     setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.Team)
   }, [])
 
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
 
   return (
-    <OrganisationAuthLayout>
+    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
         <Layout.Header
           connectButton

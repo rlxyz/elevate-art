@@ -1,6 +1,6 @@
 import CollectionCreateDialog from '@components/Collection/CollectionCreateDialog'
 import Button from '@components/Layout/Button'
-import { SearchInput } from '@components/Layout/SearchInput'
+import SearchInput from '@components/Layout/search/Search'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -83,7 +83,12 @@ const Index = () => {
                 <div className=' bg-white divide-y divide-mediumGrey'>
                   <div className='p-2 grid grid-cols-10 gap-x-1'>
                     <div className='col-span-8'>
-                      <SearchInput isLoading={!collections} setQuery={setQuery} />
+                      <SearchInput
+                        isLoading={!collections}
+                        onChange={(e) => {
+                          setQuery(e.target.value)
+                        }}
+                      />
                     </div>
                     <div className='col-span-2'>
                       <button

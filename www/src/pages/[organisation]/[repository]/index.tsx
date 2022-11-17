@@ -2,8 +2,8 @@ import CollectionBranchSelectorCard from '@components/Collection/CollectionBranc
 import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
@@ -30,13 +30,12 @@ const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
+  const { current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
-  const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+  const { all: organisations } = useQueryOrganisation()
+  const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
-  const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
 
   useEffect(() => {
     if (!repository) return
@@ -64,21 +63,21 @@ const Page = () => {
           internalNavigation={[
             {
               name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}`,
               enabled: true,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
             {
               name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
               href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
               enabled: false,
+              loading: isLoadingLayers,
             },
           ]}
         />

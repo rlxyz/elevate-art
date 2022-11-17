@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 
 export const organisationRouter = createProtectedRouter()
-  .query('getManyOrganisationByUserId', {
+  .query('getAll', {
     async resolve({ ctx }) {
       return await ctx.prisma.organisation.findMany({
         where: {
@@ -33,26 +33,7 @@ export const organisationRouter = createProtectedRouter()
       })
     },
   })
-  .query('getManyPendingOrganisationByUserId', {
-    async resolve({ ctx }) {
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-      })
-      if (!user) return
-      return await ctx.prisma.organisationPending.findMany({
-        where: {
-          address: user.address,
-        },
-        include: {
-          organisation: true,
-        },
-      })
-    },
-  })
-
-  .query('getManyRepositoryByOrganisationId', {
+  .query('repository.getAll', {
     input: z.object({
       id: z.string(),
     }),
@@ -74,7 +55,25 @@ export const organisationRouter = createProtectedRouter()
       })
     },
   })
-  .mutation('addUser', {
+  .query('user.invite.getAll', {
+    async resolve({ ctx }) {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+      })
+      if (!user) return
+      return await ctx.prisma.organisationPending.findMany({
+        where: {
+          address: user.address,
+        },
+        include: {
+          organisation: true,
+        },
+      })
+    },
+  })
+  .mutation('user.invite.send', {
     input: z.object({
       organisationId: z.string(),
       address: z.string(),
@@ -94,7 +93,7 @@ export const organisationRouter = createProtectedRouter()
       })
     },
   })
-  .mutation('acceptInvitation', {
+  .mutation('user.invite.accept', {
     input: z.object({
       pendingId: z.string(),
     }),

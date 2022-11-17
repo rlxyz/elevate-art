@@ -9,9 +9,10 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { default as NextLink } from 'next/link'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
-import { ConnectButton } from '../ConnectButton'
+import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
 
 const externalRoutes = [
@@ -60,6 +61,7 @@ const socialRoutes = [
 ]
 
 const HeaderExternalRoutes = () => {
+  const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
       {/* <aside className='flex flex-row items-center justify-center space-x-3'>
@@ -78,7 +80,13 @@ const HeaderExternalRoutes = () => {
           </Link>
         </div>
       ))}
-      <ConnectButton />
+      {status === 'authenticated' ? (
+        <ConnectButton />
+      ) : (
+        <NextLink href='/connect'>
+          <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
+        </NextLink>
+      )}
     </div>
   )
 }

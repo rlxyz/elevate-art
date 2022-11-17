@@ -1,38 +1,15 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
+import { OrganisationAuthLayout } from '@components/Organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountNavigation } from '@components/Organisation/PersonalOrganisationAccountNavigation'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
-  const reset = useRepositoryStore((state) => state.reset)
-  const { setOrganisationId, setCurrentSettingsRoute, setCurrentRoute, currentRoute } = useOrganisationNavigationStore(
-    (state) => {
-      return {
-        organisationId: state.organisationId,
-        setOrganisationId: state.setOrganisationId,
-        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
-        setCurrentRoute: state.setCurrentRoute,
-        currentRoute: state.currentRoute,
-      }
-    }
-  )
-
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Account)
-    setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General)
-  }, [])
-
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-  const { data: session } = useSession()
   return (
-    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal}>
+    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Account}>
       <Layout>
         <Layout.Header
           connectButton

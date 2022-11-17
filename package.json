@@ -18,5 +18,7 @@
   "bugs": {
     "url": "https://github.com/rlxyz/rlxyz-compiler-client/issues"
   },
-  "homepage": "https://github.com/rlxyz/rlxyz-compiler-client#readme"
+  "homepage": "https://github.com/rlxyz/rlxyz-compiler-client#readme",
+  "dependencies": {},
+  "devDependencies": {}
 }

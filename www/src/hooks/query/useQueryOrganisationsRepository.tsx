@@ -9,6 +9,6 @@ export const useQueryOrganisationsRepository = () => {
     data: repositories,
     isLoading,
     isError,
-  } = trpc.useQuery(['organisation.getManyRepositoryByOrganisationId', { id: organisationId || '' }])
+  } = trpc.useQuery(['organisation.repository.getAll', { id: organisationId || '' }])
   return { all: repositories, isLoading, isError }
 }

@@ -1,16 +1,17 @@
-import { Cloudinary } from '@cloudinary/url-gen'
 import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
+import { env } from 'src/env/client.mjs'
 import { clientEnv } from 'src/env/schema.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
+export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
+// export const IMAGE_QUALITY_SETTINGS: string[] = []
+export const IMAGE_VERSION = 'v1'
 
-export const createCloudinary = () => {
-  return new Cloudinary({
-    cloud: {
-      cloudName: 'rlxyz',
-    },
-  })
+export const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
+  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join(
+    '/'
+  )}/${IMAGE_VERSION}/${clientEnv.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
 }
 
 export const uploadCollectionLayerImageCloudinary = ({
@@ -47,13 +48,34 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
     ).length === 0
   )
 }
-export const getRepositoryLayerObjectUrls = (
+export const getRepositoryUploadLayerObjectUrls = (
   files: FileWithPath[]
 ): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
   return files.reduce((acc: any, file: FileWithPath) => {
     const pathArray = file.path?.split('/') || []
     const layerName: string = pathArray[2] || ''
     const traitName: string = pathArray[3]?.replace('.png', '') || ''
+    acc[layerName] = [
+      ...(acc[layerName] || []),
+      {
+        name: traitName,
+        imageUrl: URL.createObjectURL(file),
+        path: file.path,
+        size: file.size,
+        uploaded: false,
+      },
+    ]
+    return acc
+  }, {})
+}
+
+// @todo combine with function getRepositoryUploadLayerObjectUrls
+export const getTraitUploadObjectUrls = (
+  layerName: string,
+  files: FileWithPath[]
+): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
+  return files.reduce((acc: any, file: FileWithPath) => {
+    const traitName: string = file.path?.replace('.png', '') || ''
     acc[layerName] = [
       ...(acc[layerName] || []),
       {

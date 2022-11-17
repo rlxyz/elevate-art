@@ -115,9 +115,14 @@ export const FilterByTrait = () => {
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
-              <div key={layer.id} className='flex flex-col text-xs'>
+              <div
+                key={layer.id}
+                className={clsx('flex flex-col text-xs', layer.traitElements.length === 0 && 'cursor-not-allowed')}
+              >
                 <div
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (layer.traitElements.length === 0) return
                     if (layerDropdown === optionIdx) {
                       setLayerDropdown(null)
                     } else {
@@ -147,29 +152,27 @@ export const FilterByTrait = () => {
                 >
                   {layer.traitElements
                     .sort((a, b) => a.weight - b.weight)
-                    .map((traitElement: TraitElement, index) => {
+                    .map((traitElement: TraitElement) => {
                       return (
-                        <div key={index}>
-                          <div
-                            key={traitElement.id}
-                            className='flex flex-row justify-between items-center py-3 px-3 hover:bg-lightGray w-full'
-                          >
-                            <span>{truncate(traitElement.name)}</span>
-                            <div className='flex items-center space-x-2'>
-                              <span className='text-darkGrey text-xs'>
-                                {traitMapping.traitMap.size > 0 && (traitMapping?.traitMap.get(traitElement.id) || 0)}
-                              </span>
-                              <Field
-                                type='checkbox'
-                                name='checked'
-                                value={`${layer.id}/${traitElement.id}`}
-                                className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
-                                onChange={(e: any) => {
-                                  handleChange(e)
-                                  submitForm()
-                                }}
-                              />
-                            </div>
+                        <div
+                          className='flex flex-row justify-between items-center py-3 px-3 hover:bg-lightGray w-full'
+                          key={traitElement.id}
+                        >
+                          <span>{truncate(traitElement.name)}</span>
+                          <div className='flex items-center space-x-2'>
+                            <span className='text-darkGrey text-xs'>
+                              {traitMapping.traitMap.size > 0 && (traitMapping?.traitMap.get(traitElement.id) || 0)}
+                            </span>
+                            <Field
+                              type='checkbox'
+                              name='checked'
+                              value={`${layer.id}/${traitElement.id}`}
+                              className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                              onChange={(e: any) => {
+                                handleChange(e)
+                                submitForm()
+                              }}
+                            />
                           </div>
                         </div>
                       )
