@@ -1,7 +1,7 @@
 import ModalComponent from '@components/Layout/modal/Modal'
-import { useMutateRepositoryLayersWeight } from '@components/Repository/trait-table/useMutateRepositoryLayersWeight'
 import Big from 'big.js'
 import { FC } from 'react'
+import { useMutateRepositoryLayersWeight } from './trait-update-weight-mutate-hook'
 
 interface Props {
   onClose: () => void
