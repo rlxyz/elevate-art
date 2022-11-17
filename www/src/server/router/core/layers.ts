@@ -1,17 +1,18 @@
 import { Prisma } from '@prisma/client'
 import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
+import { updateManyByField } from '@server/utils/prisma'
 import * as trpc from '@trpc/server'
 import { Result } from '@utils/result'
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
 const LayerElementUpdateNameInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
-
+const LayerElementUpdateOrderInput = z.array(z.object({ priority: z.number(), layerElementId: z.string() }))
 /**
  * LayerElement Router
  * Any LayerElement functionality should implemented here.
  */
-export const layerElementRouter = createRouter()
+export const layerElementRouter = createProtectedRouter()
   /**
    * Get All LayerElements based on their associated repository id.
    * Also, returns the associated TraitElements & Rules.
@@ -200,28 +201,67 @@ export const layerElementRouter = createRouter()
     },
   })
   /**
-   * @todo update to serializable tx
+   * Updates priority of each LayerElement with their associated LayerElement.
    */
   .mutation('update.order', {
     input: z.object({
-      layerElementOrder: z.array(z.string()),
+      layerElements: LayerElementUpdateOrderInput.min(1),
     }),
     async resolve({ ctx, input }) {
-      await ctx.prisma.$transaction(
-        async (tx) => {
-          await Promise.all(
-            input.layerElementOrder.map(async (layerId, index) => {
-              await tx.layerElement.update({
-                where: { id: layerId },
-                data: { priority: index },
-              })
-            })
-          )
+      const { layerElements } = input
+      const { session, prisma } = ctx
+
+      /** Check if there is an equal number of layerElements input to LayerElement in Db */
+      const groupedLayerElements = await prisma.layerElement.groupBy({
+        where: { id: { in: layerElements.map(({ layerElementId }) => layerElementId) } },
+        by: ['repositoryId'],
+        _count: true,
+      })
+
+      /** Ensure only a single Repository LayerElements are being changed at once. */
+      if (groupedLayerElements.length !== 1 || groupedLayerElements[0] === undefined) {
+        throw new trpc.TRPCError({
+          code: `BAD_REQUEST`,
+          message: 'Invalid input. Please try again.',
+        })
+      }
+
+      /** Get the repository and count of items being changed */
+      const { repositoryId, _count } = groupedLayerElements[0]
+
+      /** Ensure user is in the repository */
+      const repository = await prisma.organisationMember.findFirst({
+        where: {
+          userId: session.user.id,
+          organisation: {
+            repositories: {
+              some: {
+                id: repositoryId,
+              },
+            },
+          },
         },
-        {
-          maxWait: 5000,
-          timeout: 10000,
+      })
+      if (!repository) {
+        throw new trpc.TRPCError({
+          code: `BAD_REQUEST`,
+          message: 'User doesnt have access to this repository. Please try again.',
+        })
+      }
+
+      /** Ensure the number of items being changed is the same as the number of items in the Db */
+      await prisma.$transaction(async (tx) => {
+        const total = await tx.layerElement.count({ where: { repositoryId } })
+        if (total !== _count) {
+          throw new trpc.TRPCError({
+            code: `BAD_REQUEST`,
+            message: 'Invalid input. Please try again.',
+          })
         }
-      )
+
+        /** Update priority of each LayerElement */
+        await updateManyByField(tx, 'LayerElement', 'priority', layerElements, (x) => [x.layerElementId, x.priority + 100]) // @todo fix
+        await updateManyByField(tx, 'LayerElement', 'priority', layerElements, (x) => [x.layerElementId, x.priority])
+      })
     },
   })

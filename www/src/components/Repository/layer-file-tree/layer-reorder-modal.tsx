@@ -7,8 +7,8 @@ import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
 import { FormModalProps } from './layer-delete-modal'
-import { useMutateRenameLayerElement } from './layer-rename-modal-hook'
 import { useRaisedShadow } from './layer-reorder-item-shadow'
+import { useMutateReorderLayers } from './layer-reorder-modal-hook'
 
 interface LayerElementRenameProps extends FormModalProps {
   layerElements: LayerElementWithRules[]
@@ -55,7 +55,7 @@ export const ReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, classNam
 
 const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
   const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
-  const { mutate, isLoading } = useMutateRenameLayerElement()
+  const { mutate, isLoading } = useMutateReorderLayers()
 
   useEffect(() => {
     setItems(layerElements)
@@ -71,6 +71,17 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
       description={`This action will be applied to all collections automatically.`}
       isLoading={isLoading}
       className='w-[600px]'
+      onClick={(e) => {
+        mutate(
+          {
+            layerElements: items.map(({ id }, index) => ({
+              layerElementId: id,
+              priority: index,
+            })),
+          },
+          { onSettled: onClose }
+        )
+      }}
     >
       <div className='grid grid-cols-10 gap-x-6'>
         <div className='col-span-5'>

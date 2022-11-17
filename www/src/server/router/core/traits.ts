@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
+import { updateManyByField } from '@server/utils/prisma'
 import * as trpc from '@trpc/server'
 import { groupBy } from '@utils/object-utils'
 import { Result } from '@utils/result'
@@ -120,19 +121,6 @@ export const traitElementRouter = createRouter()
       const { traitElements } = input
 
       /** Run sequential operations; as they don't depend on each other. */
-      /** Source: https://www.prisma.io/docs/concepts/components/prisma-client/transactions#sequential-prisma-client-operations */
-      await ctx.prisma.$transaction(
-        async (tx) => {
-          await Promise.all(
-            traitElements.map(({ traitElementId: id, weight }) =>
-              tx.traitElement.update({
-                where: { id },
-                data: { weight },
-              })
-            )
-          )
-        },
-        { maxWait: 10000, timeout: 20000, isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
-      )
+      await updateManyByField(ctx.prisma, 'TraitElement', 'weight', traitElements, (x) => [x.traitElementId, x.weight])
     },
   })
