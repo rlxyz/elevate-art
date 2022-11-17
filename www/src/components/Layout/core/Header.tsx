@@ -9,11 +9,11 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { default as NextLink } from 'next/link'
 import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
+import NextLink from '../link/NextLink'
 
 const externalRoutes = [
   {
