@@ -1,5 +1,5 @@
 import ModalComponent from '@components/Layout/modal/Modal'
-import { useMutateRepositoryLayersWeight } from '@hooks/mutations/useMutateRepositoryLayersWeight'
+import { useMutateRepositoryLayersWeight } from '@components/Repository/trait-table/useMutateRepositoryLayersWeight'
 import Big from 'big.js'
 import { FC } from 'react'
 

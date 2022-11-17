@@ -3,7 +3,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import { groupBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
+import { useQueryRepositoryLayer } from '../../../hooks/query/useQueryRepositoryLayer'
 
 export const useMutateRepositoryLayersWeight = () => {
   const ctx = trpc.useContext()
@@ -58,7 +58,6 @@ export const useMutateRepositoryLayersWeight = () => {
       notifySuccess(
         `Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`
       )
-      notifySuccess(`We have sorted the rarities by weight.`)
     },
     onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })
