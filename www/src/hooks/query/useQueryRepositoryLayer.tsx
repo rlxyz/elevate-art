@@ -10,12 +10,12 @@ export type LayerElementWithRules = LayerElement & {
 }
 export type TraitElementWithRules = TraitElementWithImage & {
   rulesPrimary: (Rules & {
-    primaryTraitElement: TraitElement
-    secondaryTraitElement: TraitElement
+    primaryTraitElement: TraitElementWithRules
+    secondaryTraitElement: TraitElementWithRules
   })[]
   rulesSecondary: (Rules & {
-    primaryTraitElement: TraitElement
-    secondaryTraitElement: TraitElement
+    primaryTraitElement: TraitElementWithRules
+    secondaryTraitElement: TraitElementWithRules
   })[]
 }
 export type TraitElementWithImage = TraitElement & { imageUrl: string }
@@ -63,7 +63,10 @@ export const useQueryRepositoryLayer = () => {
     all: layers?.map((x) => ({
       ...x,
       traitElements: [
-        ...x.traitElements,
+        ...x.traitElements.map((x) => ({
+          ...x,
+          imageUrl: getImageForTrait({ r: repositoryId, l: x.layerElementId, t: x.id }),
+        })),
         {
           id: `none-${x.id}`,
           readonly: true,

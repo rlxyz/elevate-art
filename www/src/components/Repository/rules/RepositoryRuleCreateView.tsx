@@ -49,7 +49,7 @@ export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | und
     .map((rule) => rule.with)
 
   const allRightTraitElements = layers
-    .filter((layer) => !selectedLeftTrait || (selectedLeftTrait && layer.id !== selectedLeftTrait.layerElementId))
+    ?.filter((layer) => !selectedLeftTrait || (selectedLeftTrait && layer.id !== selectedLeftTrait.layerElementId))
     .flatMap((layer) => layer.traitElements)
     .filter((trait) => {
       if (!selectedLeftTrait) return true
@@ -61,7 +61,7 @@ export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | und
       <div className='grid grid-cols-10 space-x-3'>
         <div className='col-span-3 relative mt-1'>
           <RuleSelectorCombobox
-            traitElements={layers.flatMap((layer) => layer.traitElements)}
+            traitElements={layers?.flatMap((layer) => layer.traitElements) || []}
             selected={selectedLeftTrait}
             onChange={setSelectedLeftTrait}
           />
@@ -71,7 +71,7 @@ export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | und
         </div>
         <div className='col-span-4 relative mt-1'>
           <RuleSelectorCombobox
-            traitElements={allRightTraitElements}
+            traitElements={allRightTraitElements || []}
             selected={selectedRightTrait}
             onChange={setSelectedRightTrait}
           />
@@ -187,6 +187,7 @@ export const RuleSelectorCombobox = ({
 }) => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryRepositoryLayer()
+  console.log(layers)
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const filteredTraits =
     query === ''

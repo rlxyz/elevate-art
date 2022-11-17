@@ -9,5 +9,4 @@ export type MenuComponentType = typeof Menu & {
 ;(Menu as MenuComponentType).Item = MenuItem
 ;(Menu as MenuComponentType).Items = MenuItems
 
-export type { MenuProps } from './Menu'
 export default Menu as MenuComponentType

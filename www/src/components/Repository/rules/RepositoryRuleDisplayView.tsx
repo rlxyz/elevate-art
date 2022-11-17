@@ -62,7 +62,7 @@ export const RuleDisplayAll = ({ traitElements }: { traitElements: TraitElementW
     <div className='w-full flex flex-col space-y-2'>
       {traitElements
         .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
-        .map(({ rulesPrimary }: TraitElementWithRules, index) => {
+        .map(({ rulesPrimary }, index) => {
           return (
             <div key={index}>
               {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {

@@ -3,11 +3,7 @@ import { DotsHorizontalIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { FC, Fragment } from 'react'
 
-export interface Props {}
-
-export type MenuProps = Props & Omit<React.AnchorHTMLAttributes<any>, keyof Props>
-
-const MenuComponent: FC<MenuProps> = ({ className, children, ...props }) => {
+const MenuComponent: FC<React.AnchorHTMLAttributes<any>> = ({ className, children, ...props }) => {
   return (
     <Menu as='div' className='absolute flex right-0 mr-2 top-1/2 -translate-y-1/2 items-center z-[5] '>
       <Menu.Button className='rounded-[5px] text-darkGrey'>

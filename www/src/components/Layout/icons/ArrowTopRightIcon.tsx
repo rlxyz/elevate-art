@@ -1,10 +1,6 @@
 import { FC } from 'react'
 
-interface Props {}
-
-type IconProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
-
-export const ArrowTopRightIcon: FC<IconProps> = ({ className }) => (
+export const ArrowTopRightIcon: FC<React.HTMLAttributes<any>> = ({ className, ...props }) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
@@ -12,6 +8,7 @@ export const ArrowTopRightIcon: FC<IconProps> = ({ className }) => (
     strokeWidth={1.5}
     stroke='currentColor'
     className={className}
+    {...props}
   >
     <path
       strokeLinecap='round'
