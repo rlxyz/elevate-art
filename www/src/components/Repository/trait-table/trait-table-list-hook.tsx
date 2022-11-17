@@ -639,7 +639,11 @@ const fuzzySort: SortingFn<TraitElementFields> = (rowA, rowB, columnId) => {
 
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(rowA.columnFiltersMeta[columnId]?.itemRank!, rowB.columnFiltersMeta[columnId]?.itemRank!)
+    const rankA = rowA.columnFiltersMeta[columnId]?.itemRank
+    const rankB = rowB.columnFiltersMeta[columnId]?.itemRank
+    if (rankA && rankB) {
+      dir = compareItems(rankA, rankB)
+    }
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal

@@ -28,11 +28,10 @@ export class Result<T> {
   }
 
   public getValue(): T {
-    if (!this.ok) {
+    if (!this.ok || !this._value) {
       throw new Error('Cant retrieve the value from a failed result.')
     }
 
-    // @ts-ignore
     return this._value
   }
 
