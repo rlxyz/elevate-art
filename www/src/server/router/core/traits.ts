@@ -6,7 +6,7 @@ import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
 import { groupBy } from '@utils/object-utils'
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
@@ -24,7 +24,7 @@ const TraitElementUpdateWeightInput = z.array(
  * is that we don't have to update the 'None' TraitElement everytime another TraitElement is updated. For e.g, a TraitElement
  * is deleted, we don't have to update the 'None' TraitElement.
  */
-export const traitElementRouter = createRouter()
+export const traitElementRouter = createProtectedRouter()
   /**
    * Delete TraitElement from their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.

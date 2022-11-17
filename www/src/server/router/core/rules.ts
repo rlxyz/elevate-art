@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const rulesRouter = createRouter()
+export const rulesRouter = createProtectedRouter()
   .mutation('delete', {
     input: z.object({
       condition: z.string(),
