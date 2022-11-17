@@ -1,11 +1,13 @@
 import Card from '@components/Layout/card/Card'
 import { Layout } from '@components/Layout/core/Layout'
 import { ConnectButton } from '@components/Layout/eth/ConnectButton'
+import LinkComponent from '@components/Layout/link/Link'
+import NextLinkComponent from '@components/Layout/link/NextLink'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/future/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { OrganisationNavigationEnum } from 'src/types/enums'
 
 /**
  * Handles connection to the Ethereum wallet providers through rainbow-kit.
@@ -29,7 +31,7 @@ const Connect: NextPage = () => {
               src='/images/refikanadol.jpeg'
               alt='refik-moma'
             />
-            <Link href='/'>
+            <NextLinkComponent href='/'>
               <Image
                 className='absolute bg-black rounded-full border border-border left-5 top-5 p-2 cursor-pointer'
                 width={50}
@@ -37,16 +39,24 @@ const Connect: NextPage = () => {
                 src='/images/logo-white.png'
                 alt='elevate-art-logo'
               />
-            </Link>
+            </NextLinkComponent>
           </div>
           <div className='relative col-span-4 w-full flex flex-col justify-center space-y-6'>
             <div className='space-y-4'>
               <h1 className='text-3xl font-semibold'>Connect your Wallet</h1>
               <p className='text-sm text-accents_6'>
                 Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{' '}
-                <Link href='https://feature.elevate.art' rel='noreferrer nofollow' target='_blank' className='w-fit'>
-                  <span className='text-blueHighlight underline cursor-pointer'>feature.elevate.art</span>
-                </Link>
+                <LinkComponent
+                  href='https://feature.elevate.art'
+                  rel='noreferrer nofollow'
+                  target='_blank'
+                  className='w-fit'
+                  icon
+                  color
+                  underline
+                >
+                  feature.elevate.art
+                </LinkComponent>
               </p>
             </div>
             <ConnectButton>
@@ -72,7 +82,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session?.user?.id) {
     return {
       redirect: {
-        destination: '/dashboard',
+        destination: `/${OrganisationNavigationEnum.enum.Dashboard}`,
         permanant: false,
       },
     }

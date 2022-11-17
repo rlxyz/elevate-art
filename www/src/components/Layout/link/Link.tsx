@@ -41,10 +41,10 @@ const LinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChildre
         className={clsx(
           'inline-flex items-baseline no-underline',
           'text-inherit w-full h-auto',
-          underline && 'hover:underline hover:text-success',
-          color && 'text-success',
+          underline && 'hover:underline hover:text-blueHighlight',
+          color && 'text-blueHighlight',
           block && 'rounded-[5px] hover:bg-accents_8 px-3 py-2',
-          block && color && 'hover:bg-linkLighter',
+          block && color && 'hover:bg-lightGray',
           className
         )}
         href={href}

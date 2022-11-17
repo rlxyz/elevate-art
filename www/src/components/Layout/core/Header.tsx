@@ -13,12 +13,17 @@ import { Fragment } from 'react'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
 import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
+import LinkComponent from '../link/Link'
 import NextLink from '../link/NextLink'
 
 const externalRoutes = [
   {
     name: 'Docs',
     href: 'https://docs.elevate.art',
+  },
+  {
+    name: 'Features',
+    href: 'https://feature.elevate.art',
   },
 ]
 
@@ -64,19 +69,21 @@ const HeaderExternalRoutes = () => {
   const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      {/* <aside className='flex flex-row items-center justify-center space-x-3'>
+      <aside className='flex flex-row items-center justify-center space-x-3'>
         {externalRoutes.map((item, index) => {
           return (
-            <Link external={true} key={index} href={item.href}>
-              <span className='cursor-pointer hover:text-black text-xs text-darkGrey'>{item.name}</span>
-            </Link>
+            <LinkComponent key={index} href={item.href}>
+              <span className='cursor-pointer hover:text-black text-xs text-darkGrey' aria-hidden='true'>
+                {item.name}
+              </span>
+            </LinkComponent>
           )
         })}
-      </aside> */}
+      </aside>
       {socialRoutes.map((item, index) => (
         <div key={index} className='cursor-pointer'>
           <Link external={true} href={item.href}>
-            <item.icon className='h-4 w-4 text-darkGrey' aria-hidden='true' />
+            <item.icon className='cursor-pointer hover:text-black h-4 w-4 text-darkGrey' aria-hidden='true' />
           </Link>
         </div>
       ))}

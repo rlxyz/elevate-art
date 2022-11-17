@@ -10,5 +10,5 @@ export const useAuthenticated = () => {
       router.push('/')
     }
   }, [status])
-  return { session, isLoggedIn: !!session }
+  return { session, isLoggedIn: !!session, status }
 }
