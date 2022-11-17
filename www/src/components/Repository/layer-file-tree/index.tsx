@@ -1,6 +1,6 @@
 import Menu from '@components/Layout/menu'
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'
 import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
@@ -12,6 +12,7 @@ import LayerElementReorderModal from './layer-reorder-modal'
 
 interface Props {
   repository: Repository | undefined
+  layerElements: LayerElementWithRules[]
 }
 
 export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
@@ -19,11 +20,10 @@ export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, 
 /**
  * The core LayerElement File Tree. It handles selection of the current layer route & reordering of layers.
  */
-const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, className, ...props }) => {
+const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layerElements, className, ...props }) => {
   const [openReordering, setOpenReordering] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const layerName: string = router.query.layer as string
-  const { all: layerElements, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
 
   /** Handles the last updated LayerElement */
   const layerElementLastEdited = () => {
