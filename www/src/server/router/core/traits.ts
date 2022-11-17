@@ -122,13 +122,18 @@ export const traitElementRouter = createRouter()
       /** Run sequential operations; as they don't depend on each other. */
       /** Source: https://www.prisma.io/docs/concepts/components/prisma-client/transactions#sequential-prisma-client-operations */
       await ctx.prisma.$transaction(
-        traitElements.map(({ traitElementId: id, weight }) =>
-          ctx.prisma.traitElement.update({
-            where: { id },
-            data: { weight },
-          })
-        ),
-        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+        async (tx) => {
+          await Promise.all(
+            traitElements.map(
+              async ({ traitElementId: id, weight }) =>
+                await tx.traitElement.update({
+                  where: { id },
+                  data: { weight },
+                })
+            )
+          )
+        },
+        { maxWait: 10000, timeout: 20000, isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
       )
     },
   })

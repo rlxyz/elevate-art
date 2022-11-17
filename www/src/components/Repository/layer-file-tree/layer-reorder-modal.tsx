@@ -1,7 +1,7 @@
 import { PreviewImageCardStandalone } from '@components/Collection/CollectionPreviewImage'
 import ModalComponent from '@components/Layout/modal/Modal'
 import { SelectorIcon } from '@heroicons/react/outline'
-import { LayerElementWithRules, useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
@@ -56,7 +56,6 @@ export const ReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, classNam
 const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
   const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
   const { mutate, isLoading } = useMutateRenameLayerElement()
-  const { all: layers } = useQueryRepositoryLayer()
 
   useEffect(() => {
     setItems(layerElements)
@@ -103,7 +102,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
                 updatedAt: new Date(),
                 repositoryId: repository.id,
               }}
-              layers={layerElements}
+              layers={items}
             />
           </div>
         </div>

@@ -71,10 +71,10 @@ export const layerElementRouter = createRouter()
       const { repositoryId, name } = input
 
       /** Infer current count as priority */
-      const count = await ctx.prisma.layerElement.count({ where: { repositoryId } })
 
       /** Create LayerElement & TraitElements in Db */
       try {
+        const count = await ctx.prisma.layerElement.count({ where: { repositoryId } })
         return await ctx.prisma.layerElement.create({
           data: {
             repositoryId,
