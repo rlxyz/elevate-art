@@ -12,9 +12,9 @@ export const serverSchema = z.object({
   NEXTAUTH_URL: z.string().url(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
-  QSTASH_NEXT_SIGNING_KEY: z.string(),
-  QSTASH_CURRENT_SIGNING_KEY: z.string(),
-  QSTASH_TOKEN: z.string(),
+  // QSTASH_NEXT_SIGNING_KEY: z.string(),
+  // QSTASH_CURRENT_SIGNING_KEY: z.string(),
+  // QSTASH_TOKEN: z.string(),
 })
 
 /**
