@@ -3,7 +3,7 @@ import { ErrorBoundary } from '@highlight-run/react'
 import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
-import { connectorsForWallets, getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
@@ -77,7 +77,18 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
       <WagmiConfig client={wagmiClient}>
         <SessionProvider refetchInterval={60} session={pageProps.session}>
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
-            <RainbowKitProvider appInfo={appInfo} chains={chains} initialChain={env.NEXT_PUBLIC_NETWORK_ID}>
+            <RainbowKitProvider
+              appInfo={appInfo}
+              chains={chains}
+              initialChain={env.NEXT_PUBLIC_NETWORK_ID}
+              theme={lightTheme({
+                accentColor: '#0070F3',
+                accentColorForeground: 'white',
+                borderRadius: 'small',
+                fontStack: 'system',
+                overlayBlur: 'small',
+              })}
+            >
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
                 <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
                   <RepositoryContext.Provider createStore={() => createRepositoryStore}>
