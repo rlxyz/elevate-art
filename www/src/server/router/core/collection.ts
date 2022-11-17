@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const collectionRouter = createRouter()
+export const collectionRouter = createProtectedRouter()
   .query('getAll', {
     input: z.object({
       id: z.string(),
@@ -9,9 +9,7 @@ export const collectionRouter = createRouter()
     async resolve({ ctx, input }) {
       const { id } = input
       return await ctx.prisma.collection.findMany({
-        where: {
-          repositoryId: input.id,
-        },
+        where: { repositoryId: id },
         orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
       })
     },

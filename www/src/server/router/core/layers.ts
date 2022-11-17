@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client'
 import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
-import { updateManyByField } from '@server/utils/prisma'
+import { updateManyByField } from '@server/utils/prisma-utils'
+import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
-import { Result } from '@utils/result'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 

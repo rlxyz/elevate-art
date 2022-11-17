@@ -31,7 +31,7 @@ export const OrganisationAuthLayout = ({
   }, [])
 
   useEffect(() => {
-    if (organisations && organisations.length > 0) {
+    if (isLoggedIn && organisations && organisations.length > 0) {
       switch (isLoading) {
         case true:
           return

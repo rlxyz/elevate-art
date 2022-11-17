@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const repositoryRouter = createRouter()
+export const repositoryRouter = createProtectedRouter()
   .query('getRepositoryByName', {
     input: z.object({
       name: z.string(),

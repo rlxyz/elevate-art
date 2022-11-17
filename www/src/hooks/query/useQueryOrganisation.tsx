@@ -10,8 +10,8 @@ export const useQueryOrganisation = () => {
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const { data: session } = useSession()
-  const { data: organisations, isLoading, isError } = trpc.useQuery(['organisation.getAll', { id: session?.user?.id || '' }])
-  const { data: pendings } = trpc.useQuery(['organisation.user.invite.getAll', { id: session?.user?.id || '' }])
+  const { data: organisations, isLoading, isError } = trpc.useQuery(['organisation.getAll'])
+  const { data: pendings } = trpc.useQuery(['organisation.user.invite.getAll'])
   if (!session) {
     return {
       all: undefined,

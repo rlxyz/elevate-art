@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client'
 import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
-import { updateManyByField } from '@server/utils/prisma'
+import { updateManyByField } from '@server/utils/prisma-utils'
+import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
 import { groupBy } from '@utils/object-utils'
-import { Result } from '@utils/result'
 import { z } from 'zod'
 import { createRouter } from '../context'
 

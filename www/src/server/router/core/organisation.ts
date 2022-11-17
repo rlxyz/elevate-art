@@ -1,18 +1,15 @@
 import { OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { z } from 'zod'
-import { createRouter } from '../context'
+import { createProtectedRouter } from '../context'
 
-export const organisationRouter = createRouter()
+export const organisationRouter = createProtectedRouter()
   .query('getAll', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
+    async resolve({ ctx }) {
       return await ctx.prisma.organisation.findMany({
         where: {
           members: {
             some: {
-              userId: input.id,
+              userId: ctx.session.user.id,
             },
           },
         },
@@ -59,13 +56,10 @@ export const organisationRouter = createRouter()
     },
   })
   .query('user.invite.getAll', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ input: { id }, ctx }) {
+    async resolve({ ctx }) {
       const user = await ctx.prisma.user.findUnique({
         where: {
-          id,
+          id: ctx.session.user.id,
         },
       })
       if (!user) return

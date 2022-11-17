@@ -1,4 +1,4 @@
-import { Result } from '@utils/result'
+import { Result } from '@server/utils/response-result'
 import { v2 } from 'cloudinary'
 import { clientEnv } from 'src/env/schema.mjs'
 import { env } from 'src/env/server.mjs'

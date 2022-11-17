@@ -247,7 +247,7 @@ export interface HeaderProps {
   internalNavigation?: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = false }: HeaderProps) => {
+const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) => {
   const { isLoggedIn } = useAuthenticated()
   return (
     <header className='pointer-events-auto'>
@@ -256,7 +256,7 @@ const Index = ({ internalRoutes = [], internalNavigation = [], connectButton = f
           <Link className='' external={true} href={isLoggedIn ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </Link>
-          <HeaderInternalAppRoutes routes={internalRoutes} />
+          {isLoggedIn && <HeaderInternalAppRoutes routes={internalRoutes} />}
         </div>
         <HeaderExternalRoutes />
       </div>
