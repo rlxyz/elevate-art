@@ -63,7 +63,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, class
           </Menu>
         </div>
 
-        <LayerElementFileSelector items={layerElements} itemEnabledIndex={layerElements.findIndex((x) => x.id === '')} />
+        <LayerElementFileSelector items={layerElements} itemEnabledIndex={layerElements.findIndex((x) => x.name === layerName)} />
       </div>
 
       {/** Handles all Repository related mutations */}
