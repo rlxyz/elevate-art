@@ -13,7 +13,6 @@ import { CollectionNavigationEnum } from 'src/types/enums'
 
 const Page = () => {
   const router: NextRouter = useRouter()
-  const layerName: string = router.query.layer as string
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
@@ -31,7 +30,6 @@ const Page = () => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
-  const currentLayerId = layers?.find((l) => l.name === layerName)?.id || ''
 
   return (
     <OrganisationAuthLayout>
@@ -64,12 +62,7 @@ const Page = () => {
         />
         <Layout.Body border='none'>
           <div className='py-6 grid grid-cols-10 gap-x-6'>
-            <LayerElementFileTree
-              className='col-span-2'
-              layerElements={layers}
-              currentLayerId={currentLayerId}
-              repository={repository}
-            />
+            <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
             <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
           </div>
         </Layout.Body>

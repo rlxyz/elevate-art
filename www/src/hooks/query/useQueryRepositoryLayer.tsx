@@ -60,7 +60,7 @@ export const useQueryRepositoryLayer = () => {
           })),
         ] as TraitElementWithRules[],
       } as LayerElementWithRules),
-    all: layers?.map((x) => ({
+    all: layers.map((x) => ({
       ...x,
       traitElements: [
         ...x.traitElements.map((x) => ({
