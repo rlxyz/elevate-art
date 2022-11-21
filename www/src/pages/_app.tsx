@@ -1,6 +1,5 @@
 // src/pages/_app.tsx
 import { ErrorBoundary } from '@highlight-run/react'
-import { CollectionRouterContext, createCollectionNavigationStore } from '@hooks/store/useCollectionNavigationStore'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
@@ -90,26 +89,24 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
               })}
             >
               <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-                <CollectionRouterContext.Provider createStore={() => createCollectionNavigationStore}>
-                  <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-                    <DefaultSeo
-                      title='elevate.art'
-                      description='a general purpose image compiler for nft projects'
-                      openGraph={{
-                        type: 'website',
-                        locale: 'en_US',
-                        url: 'https://elevate.art/',
-                        site_name: 'elevate.art',
-                      }}
-                      twitter={{
-                        handle: '@elevate_art',
-                        cardType: 'summary',
-                      }}
-                    />
-                    <Component {...pageProps} />
-                    <Toaster />
-                  </RepositoryContext.Provider>
-                </CollectionRouterContext.Provider>
+                <RepositoryContext.Provider createStore={() => createRepositoryStore}>
+                  <DefaultSeo
+                    title='elevate.art'
+                    description='a general purpose image compiler for nft projects'
+                    openGraph={{
+                      type: 'website',
+                      locale: 'en_US',
+                      url: 'https://elevate.art/',
+                      site_name: 'elevate.art',
+                    }}
+                    twitter={{
+                      handle: '@elevate_art',
+                      cardType: 'summary',
+                    }}
+                  />
+                  <Component {...pageProps} />
+                  <Toaster />
+                </RepositoryContext.Provider>
               </OrganisationRouterContext.Provider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
