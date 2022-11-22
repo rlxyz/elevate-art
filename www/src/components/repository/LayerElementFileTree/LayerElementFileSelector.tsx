@@ -1,6 +1,6 @@
 import { LayerElement } from '@prisma/client'
 import { FC } from 'react'
-import { LayerElementTreeItem } from './layer-file-tree-item'
+import { LayerElementFileTreeItem } from './LayerElementFileTreeItem'
 
 interface Props {
   items: LayerElement[]
@@ -20,7 +20,7 @@ const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({ items, it
   return (
     <div className={className} {...props}>
       {items.map((item, index) => {
-        return <LayerElementTreeItem key={item.id} item={item} enabled={index === itemEnabledIndex} />
+        return <LayerElementFileTreeItem key={item.id} item={item} enabled={index === itemEnabledIndex} />
       })}
     </div>
   )

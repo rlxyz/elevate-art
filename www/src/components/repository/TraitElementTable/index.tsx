@@ -1,4 +1,4 @@
-import { DebouncedSearchComponent } from '@components/Layout/search/DebouncedSearch'
+import { DebouncedSearchComponent } from '@components/layout/search/DebouncedSearch'
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'
@@ -6,16 +6,16 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'
 import { z } from 'zod'
-import { TraitActionControl } from './trait-table-action-control'
-import TraitElementTable from './trait-table-list'
-import { useTraitElementTable } from './trait-table-list-hook'
-import { TraitNavigationButton } from './trait-table-navigation-button'
-import TraitElementUpdateWeightModal from './trait-update-weight-modal'
+import { useTraitElementTable } from '../../../hooks/utils/useTraitElementTable'
+import { TraitElementActionControl } from './TraitElementActionControl'
+import { TraitElementNavigationButton } from './TraitElementNavigationButton'
+import TraitElementTable from './TraitElementTable'
+import TraitElementUpdateWeightModal from './TraitElementUpdateWeightModal'
 
 /** Server-Side Rendering is set to false as we do not need these components on startup */
-export const TraitElementCreateModal = dynamic(() => import('./trait-create-modal'), { ssr: false })
-const TraitElementDeleteModal = dynamic(() => import('./trait-delete-modal'), { ssr: false })
-const TraitElementGrid = dynamic(() => import('./trait-table-grid'))
+export const TraitElementCreateModal = dynamic(() => import('./TraitElementCreateModal'), { ssr: false })
+const TraitElementDeleteModal = dynamic(() => import('./TraitElementDeleteModal'), { ssr: false })
+const TraitElementGrid = dynamic(() => import('./TraitElementGrid'))
 
 /** View Enum */
 export const TraitElementView = z.nativeEnum(
@@ -79,7 +79,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
         <div className='space-y-3'>
           <div id='trait-table-controls' className='grid grid-cols-10'>
             <div id='trait-table-controls-navigation' className='col-span-5 flex space-x-3'>
-              <TraitNavigationButton viewFilter={viewFilter} setViewFilter={setViewFilter} />
+              <TraitElementNavigationButton viewFilter={viewFilter} setViewFilter={setViewFilter} />
               <DebouncedSearchComponent value={globalFilter ?? ''} onChange={(value) => setGlobalFilter(String(value))} />
             </div>
 
@@ -123,7 +123,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
                   <CheckCircleIcon className='w-4 h-4' />
                   <span>Save</span>
                 </button>
-                <TraitActionControl />
+                <TraitElementActionControl />
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import LoadingComponent from '@components/Layout/loading/Loading'
+import LoadingComponent from '@components/layout/loading/Loading'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateAcceptInvitation } from '@hooks/mutations/useMutateAcceptInvitation'
 import { useNotification } from '@hooks/utils/useNotification'

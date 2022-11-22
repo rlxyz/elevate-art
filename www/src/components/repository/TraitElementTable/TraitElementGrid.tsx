@@ -4,7 +4,7 @@ import { timeAgo } from '@utils/time'
 import Big from 'big.js'
 import clsx from 'clsx'
 import { FC } from 'react'
-import { TraitElementFields } from './trait-table-list-form-hook'
+import { TraitElementFields } from '../../../hooks/utils/useTraitElementForm'
 
 interface Props {
   table: ReactTable<TraitElementFields>

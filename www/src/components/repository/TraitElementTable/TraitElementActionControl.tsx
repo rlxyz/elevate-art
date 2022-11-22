@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import { TraitElementCreateModal } from './index'
 
-export const TraitActionControl: FC<any> = () => {
+export const TraitElementActionControl: FC<any> = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   return (
     <>

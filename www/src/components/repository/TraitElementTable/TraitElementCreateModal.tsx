@@ -1,7 +1,7 @@
-import ModalComponent from '@components/Layout/modal/Modal'
-import Upload from '@components/Repository/upload-new-traits'
+import ModalComponent from '@components/layout/modal/Modal'
+import Upload from '@components/layout/upload'
 import { FC } from 'react'
-import { useMutateCreateTraitElement } from './trait-create-mutate-hook'
+import { useMutateCreateTraitElement } from '../../../hooks/mutations/useMutateCreateTraitElement'
 
 interface Props {
   onClose: () => void

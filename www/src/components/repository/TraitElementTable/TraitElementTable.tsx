@@ -1,9 +1,9 @@
-import { Table } from '@components/Layout/core/Table'
+import { Table } from '@components/layout/core/Table'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { FC } from 'react'
-import { TraitElementFields } from './trait-table-list-form-hook'
+import { TraitElementFields } from '../../../hooks/utils/useTraitElementForm'
 
 interface Props {
   table: ReactTable<TraitElementFields>

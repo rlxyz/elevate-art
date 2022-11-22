@@ -17,14 +17,14 @@ import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
+import { useMutateRenameTraitElement } from '../mutations/useMutateRenameTraitElement'
 import {
   TraitElementFields,
   TraitElementRarityFormType,
   useTraitElementForm,
   WEIGHT_LOWER_BOUNDARY,
   WEIGHT_UPPER_BOUNDARY,
-} from './trait-table-list-form-hook'
-import { useMutateRenameTraitElement } from './trait-update-name-mutate-hook'
+} from './useTraitElementForm'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {

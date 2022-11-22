@@ -1,7 +1,7 @@
-import ModalComponent from '@components/Layout/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
+import { useMutateDeleteLayerElement } from '@hooks/mutations/useMutateDeleteLayerElement'
 import { LayerElement } from '@prisma/client'
 import { FC } from 'react'
-import { useMutateDeleteLayerElement } from './layer-delete-modal-hook'
 
 export interface FormModalProps {
   onSuccess?: () => void

@@ -1,4 +1,4 @@
-import Menu from '@components/Layout/menu'
+import Menu from '@components/layout/menu'
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'
@@ -6,9 +6,9 @@ import { timeAgo } from '@utils/time'
 import clsx from 'clsx'
 import router from 'next/router'
 import { FC, useState } from 'react'
-import LayerElementCreateModal from './layer-create-modal'
-import LayerElementFileSelector from './layer-file-tree'
-import LayerElementReorderModal from './layer-reorder-modal'
+import LayerElementCreateModal from './LayerElementCreateModal'
+import LayerElementFileSelector from './LayerElementFileSelector'
+import LayerElementReorderModal from './LayerElementReorderItem'
 
 interface Props {
   repository: Repository | undefined

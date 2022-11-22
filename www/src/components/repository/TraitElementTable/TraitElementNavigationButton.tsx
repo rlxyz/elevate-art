@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { FC } from 'react'
 import { TraitElementView, TraitElementViewType } from './index'
 
-export const TraitNavigationButton: FC<{
+export const TraitElementNavigationButton: FC<{
   viewFilter: TraitElementViewType
   setViewFilter: (view: TraitElementViewType) => void
 }> = ({ viewFilter, setViewFilter }) => {

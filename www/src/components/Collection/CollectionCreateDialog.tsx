@@ -1,4 +1,4 @@
-import Button from '@components/Layout/Button'
+import Button from '@components/layout/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { NextRouter, useRouter } from 'next/router'

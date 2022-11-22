@@ -1,14 +1,14 @@
-import { PreviewImageCardStandalone } from '@components/Collection/CollectionPreviewImage'
-import ModalComponent from '@components/Layout/modal/Modal'
+import { PreviewImageCardStandalone } from '@components/collection/CollectionPreviewImage'
+import ModalComponent from '@components/layout/modal/Modal'
 import { SelectorIcon } from '@heroicons/react/outline'
 import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
-import { FormModalProps } from './layer-delete-modal'
-import { useRaisedShadow } from './layer-reorder-item-shadow'
-import { useMutateReorderLayers } from './layer-reorder-modal-hook'
+import { useMutateReorderLayers } from '../../../hooks/mutations/useMutateReorderLayers'
+import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
+import { FormModalProps } from './LayerElementDeleteModal'
 
 interface LayerElementRenameProps extends FormModalProps {
   layerElements: LayerElementWithRules[]
@@ -22,7 +22,7 @@ interface Props {
 
 export type ReorderItemProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
 
-export const ReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, className, ...props }) => {
+export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, className, ...props }) => {
   const y = useMotionValue(0)
   const boxShadow = useRaisedShadow(y)
   const dragControls = useDragControls()
@@ -94,7 +94,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
               onReorder={setItems}
             >
               {items.map((x) => (
-                <ReorderItem key={x.id} item={x} repositoryId={repository.id} />
+                <LayerElementReorderItem key={x.id} item={x} repositoryId={repository.id} />
               ))}
             </Reorder.Group>
           </AnimatePresence>

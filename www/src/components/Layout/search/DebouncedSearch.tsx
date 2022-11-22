@@ -1,4 +1,4 @@
-import SearchComponent from '@components/Layout/search/Search'
+import SearchComponent from '@components/layout/search/Search'
 import React from 'react'
 
 export const DebouncedSearchComponent = ({

@@ -1,6 +1,6 @@
-import { ArrowTopRightIcon } from '@components/Layout/icons/ArrowTopRightIcon'
-import NextLinkComponent from '@components/Layout/link/NextLink'
-import Menu from '@components/Layout/menu'
+import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
+import NextLinkComponent from '@components/layout/link/NextLink'
+import Menu from '@components/layout/menu'
 import { LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
@@ -10,8 +10,8 @@ import clsx from 'clsx'
 import router from 'next/router'
 import { FC, useState } from 'react'
 import { CollectionNavigationEnum } from 'src/types/enums'
-import LayerElementDeleteModal from './layer-delete-modal'
-import LayerElementRenameModal from './layer-rename-modal'
+import LayerElementDeleteModal from './LayerElementDeleteModal'
+import LayerElementRenameModal from './LayerElementRenameModal'
 
 interface Props {
   item: LayerElement
@@ -25,7 +25,7 @@ export type ModalProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
  *
  * @todo rework the Link component being used here
  */
-export const LayerElementTreeItem: FC<ModalProps> = ({ item, enabled, className, ...props }) => {
+export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, className, ...props }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const { notifyInfo } = useNotification()

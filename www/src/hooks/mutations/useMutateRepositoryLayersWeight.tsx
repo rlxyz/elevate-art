@@ -3,7 +3,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import { groupBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { useQueryRepositoryLayer } from '../../../hooks/query/useQueryRepositoryLayer'
+import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 
 export const useMutateRepositoryLayersWeight = () => {
   const ctx = trpc.useContext()

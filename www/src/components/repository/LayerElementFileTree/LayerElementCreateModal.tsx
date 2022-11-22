@@ -1,11 +1,11 @@
-import ModalComponent from '@components/Layout/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutateCreateLayerElement } from './layer-create-modal-hook'
-import { FormModalProps } from './layer-delete-modal'
+import { useMutateCreateLayerElement } from '../../../hooks/mutations/useMutateCreateLayerElement'
+import { FormModalProps } from './LayerElementDeleteModal'
 
 export interface LayerElementCreateProps extends FormModalProps {
   repository: Repository

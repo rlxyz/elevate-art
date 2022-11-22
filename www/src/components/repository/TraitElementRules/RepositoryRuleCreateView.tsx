@@ -1,6 +1,6 @@
-import { useMutateRepositoryCreateRule } from '@components/Repository/rules/useMutateRepositoryCreateRule'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
 import {
   LayerElementWithRules,
   TraitElementWithImage,

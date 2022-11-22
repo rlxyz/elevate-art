@@ -1,12 +1,12 @@
-import ModalComponent from '@components/Layout/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
+import { useMutateRenameLayerElement } from '@hooks/mutations/useMutateRenameLayerElement'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { FormModalProps } from './layer-delete-modal'
-import { useMutateRenameLayerElement } from './layer-rename-modal-hook'
+import { FormModalProps } from './LayerElementDeleteModal'
 
 interface LayerElementRenameProps extends FormModalProps {
   layerElement: LayerElement
