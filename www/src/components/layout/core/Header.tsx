@@ -113,7 +113,7 @@ export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps
           <div key={index} className='flex items-center justify-center'>
             <Image priority width={30} height={30} src='/images/logo-slash.svg' alt='Logo Slash 1' />
             <Popover className='flex space-x-1'>
-              <Link href={href} enabled={false} external>
+              <NextLinkComponent href={href} className='w-fit'>
                 {isLoading ? (
                   <div className='w-36 animate-pulse h-5 rounded-[5px] bg-mediumGrey' />
                 ) : (
@@ -125,7 +125,7 @@ export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps
                     </div>
                   </>
                 )}
-              </Link>
+              </NextLinkComponent>
               {organisations ? (
                 <>
                   <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
@@ -249,7 +249,7 @@ const Index = ({ internalRoutes = [], authenticated = true, children }: HeaderPr
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <NextLinkComponent href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
+          <NextLinkComponent className='w-fit' href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </NextLinkComponent>
           {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>}
