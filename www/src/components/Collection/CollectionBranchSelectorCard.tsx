@@ -1,4 +1,3 @@
-import CollectionCreateDialog from '@components/collection/CollectionCreateDialog'
 import Button from '@components/layout/Button'
 import SearchInput from '@components/layout/search/Search'
 import { Listbox, Transition } from '@headlessui/react'
@@ -8,6 +7,7 @@ import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import CollectionCreateDialog from './CollectionCreateDialog'
 
 const Index = () => {
   const [query, setQuery] = useState('')

@@ -1,15 +1,11 @@
 import Button from '@components/layout/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { NextRouter, useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutateCreateCollection } from '../../hooks/mutations/useMutateCreateCollection'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
   const {
     register,
     handleSubmit,
