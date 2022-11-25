@@ -1,6 +1,6 @@
 // import { Header } from '@components/layout/Header'
-import { Layout } from '@components/layout/core/Layout'
-import { Link } from '@components/layout/Link'
+import { Layout } from '@components/y/core/Layout'
+import { Link } from '@components/y/Link'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 

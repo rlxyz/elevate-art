@@ -1,4 +1,4 @@
-import ModalComponent from '@components/layout/modal/Modal'
+import ModalComponent from '@components/y/modal/Modal'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import Big from 'big.js'
 import { FC } from 'react'

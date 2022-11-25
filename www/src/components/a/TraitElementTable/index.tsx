@@ -1,4 +1,4 @@
-import { DebouncedSearchComponent } from '@components/layout/search/DebouncedSearch'
+import { DebouncedSearchComponent } from '@components/y/search/DebouncedSearch'
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { TraitElementWithImage } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement } from '@prisma/client'

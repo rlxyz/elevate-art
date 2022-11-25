@@ -1,11 +1,11 @@
-import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
-import { Layout } from '@components/layout/core/Layout'
-import ViewAllRepositories from '@components/organisation/OrganisationViewAllRepository'
+import { HeaderInternalPageRoutes } from '@components/y/core/Header'
+import { Layout } from '@components/y/core/Layout'
+import ViewAllRepositories from '@components/z/OrganisationViewAllRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import type { NextPage } from 'next'
 import { OrganisationNavigationEnum } from 'src/types/enums'
-import { OrganisationAuthLayout } from '../../components/organisation/OrganisationAuthLayout'
+import { OrganisationAuthLayout } from '../../components/z/OrganisationAuthLayout'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)

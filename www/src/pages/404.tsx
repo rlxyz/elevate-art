@@ -1,4 +1,4 @@
-import { Layout } from '@components/layout/core/Layout'
+import { Layout } from '@components/y/core/Layout'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'

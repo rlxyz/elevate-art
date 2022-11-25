@@ -1,4 +1,4 @@
-import Button from '@components/layout/Button'
+import Button from '@components/y/Button'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
 import clsx from 'clsx'
 import Image from 'next/image'

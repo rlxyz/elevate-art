@@ -1,5 +1,5 @@
-import { Link } from '@components/layout/Link'
-import SearchInput from '@components/layout/search/Search'
+import { Link } from '@components/y/Link'
+import SearchInput from '@components/y/search/Search'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from '@hooks/query/useQueryOrganisationsRepository'

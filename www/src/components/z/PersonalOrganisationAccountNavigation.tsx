@@ -1,4 +1,4 @@
-import { Link } from '@components/layout/Link'
+import { Link } from '@components/y/Link'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
 import { capitalize } from '@utils/format'

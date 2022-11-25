@@ -1,4 +1,4 @@
-import LoadingComponent from '@components/layout/loading/Loading'
+import LoadingComponent from '@components/y/loading/Loading'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAddUser } from '@hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from '@hooks/utils/useNotification'

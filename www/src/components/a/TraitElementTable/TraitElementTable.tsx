@@ -1,4 +1,4 @@
-import { Table } from '@components/layout/core/Table'
+import { Table } from '@components/y/core/Table'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'

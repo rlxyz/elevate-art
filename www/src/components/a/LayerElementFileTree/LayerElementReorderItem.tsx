@@ -1,5 +1,5 @@
-import { PreviewImageCardStandalone } from '@components/collection/CollectionPreviewImage'
-import ModalComponent from '@components/layout/modal/Modal'
+import { PreviewImageCardStandalone } from '@components/x/CollectionPreviewImage'
+import ModalComponent from '@components/y/modal/Modal'
 import { SelectorIcon } from '@heroicons/react/outline'
 import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { LayerElement, Repository } from '@prisma/client'

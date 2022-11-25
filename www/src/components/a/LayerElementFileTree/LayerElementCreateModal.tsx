@@ -1,4 +1,4 @@
-import ModalComponent from '@components/layout/modal/Modal'
+import ModalComponent from '@components/y/modal/Modal'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'

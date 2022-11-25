@@ -1,4 +1,4 @@
-import Button from '@components/layout/Button'
+import Button from '@components/y/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { Fragment } from 'react'
