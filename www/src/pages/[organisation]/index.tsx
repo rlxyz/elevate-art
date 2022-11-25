@@ -1,3 +1,4 @@
+import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import ViewAllRepositories from '@components/organisation/OrganisationViewAllRepository'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -14,7 +15,6 @@ const Page: NextPage = () => {
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
       <Layout>
         <Layout.Header
-          connectButton
           internalRoutes={[
             {
               current: organisation?.name || '',
@@ -22,21 +22,24 @@ const Page: NextPage = () => {
               organisations,
             },
           ]}
-          internalNavigation={[
-            {
-              name: OrganisationNavigationEnum.enum.Overview,
-              href: `/${organisation?.name}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
-              loading: isLoadingOrganisations,
-            },
-            {
-              name: OrganisationNavigationEnum.enum.Settings,
-              href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-              loading: isLoadingOrganisations,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: OrganisationNavigationEnum.enum.Overview,
+                href: `/${organisation?.name}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
+                loading: isLoadingOrganisations,
+              },
+              {
+                name: OrganisationNavigationEnum.enum.Settings,
+                href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
+                loading: isLoadingOrganisations,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body>
           <div className='py-8 space-y-8'>
             <ViewAllRepositories />

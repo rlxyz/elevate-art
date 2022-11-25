@@ -2,7 +2,6 @@ import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { Organisation } from '@prisma/client'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
@@ -14,7 +13,7 @@ import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/
 import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
 import LinkComponent from '../link/Link'
-import NextLink from '../link/NextLink'
+import { default as NextLink, default as NextLinkComponent } from '../link/NextLink'
 
 const externalRoutes = [
   {
@@ -65,29 +64,27 @@ const socialRoutes = [
   },
 ]
 
-const HeaderExternalRoutes = () => {
+const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => {
   const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
       <aside className='flex flex-row items-center justify-center space-x-3'>
-        {externalRoutes.map((item, index) => {
+        {externalRoutes.map((item) => {
           return (
-            <LinkComponent key={index} href={item.href}>
+            <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
               <span className='cursor-pointer hover:text-black text-xs text-darkGrey' aria-hidden='true'>
                 {item.name}
               </span>
             </LinkComponent>
           )
         })}
-      </aside>
-      {socialRoutes.map((item, index) => (
-        <div key={index} className='cursor-pointer'>
-          <Link external={true} href={item.href}>
+        {socialRoutes.map((item) => (
+          <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
             <item.icon className='cursor-pointer hover:text-black h-4 w-4 text-darkGrey' aria-hidden='true' />
-          </Link>
-        </div>
-      ))}
-      {status === 'authenticated' ? (
+          </LinkComponent>
+        ))}
+      </aside>
+      {authenticated ? (
         <ConnectButton />
       ) : (
         <NextLink href='/connect'>
@@ -105,16 +102,9 @@ type HeaderInternalAppRoutesProps = {
     organisations?: Organisation[]
   }[]
 }
-const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
-  const { data: session } = useSession()
+export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   const { currentHref } = useQueryOrganisation()
-  const { setOrganisationId } = useOrganisationNavigationStore((state) => {
-    return {
-      setOrganisationId: state.setOrganisationId,
-    }
-  })
-
-  if (!routes.length) return <></>
+  const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
   return (
     <>
       {routes.map(({ current, href, organisations }, index) => {
@@ -224,7 +214,7 @@ export interface HeaderInternalPageRoutesProps {
   links: { name: string; enabled: boolean; href: string; loading: boolean }[]
 }
 
-const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
+export const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProps) => {
   return (
     <aside className='-ml-5'>
       <ul className='flex list-none'>
@@ -250,24 +240,23 @@ export interface HeaderProps {
     href: string
     organisations?: Organisation[]
   }[]
-  connectButton?: boolean
-  internalNavigation?: { name: string; enabled: boolean; href: string; loading: boolean }[]
+  authenticated?: boolean
+  children?: React.ReactNode
 }
 
-const Index = ({ internalRoutes = [], internalNavigation = [] }: HeaderProps) => {
-  const { isLoggedIn } = useAuthenticated()
+const Index = ({ internalRoutes = [], authenticated = true, children }: HeaderProps) => {
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
-          <Link className='' external={true} href={isLoggedIn ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
+          <NextLinkComponent href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
-          </Link>
-          {isLoggedIn && <HeaderInternalAppRoutes routes={internalRoutes} />}
+          </NextLinkComponent>
+          {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>}
         </div>
-        <HeaderExternalRoutes />
+        <HeaderExternalRoutes authenticated={authenticated} />
       </div>
-      <HeaderInternalPageRoutes links={internalNavigation} />
+      {children}
     </header>
   )
 }

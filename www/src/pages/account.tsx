@@ -1,3 +1,4 @@
+import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountNavigation } from '@components/organisation/PersonalOrganisationAccountNavigation'
@@ -12,7 +13,6 @@ const Page = () => {
     <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Account}>
       <Layout>
         <Layout.Header
-          connectButton
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
@@ -20,21 +20,24 @@ const Page = () => {
               organisations,
             },
           ]}
-          internalNavigation={[
-            {
-              name: OrganisationNavigationEnum.enum.Overview,
-              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              loading: isLoadingOrganisations,
-            },
-            {
-              name: OrganisationNavigationEnum.enum.Account,
-              href: `/${OrganisationNavigationEnum.enum.Account}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-              loading: isLoadingOrganisations,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: OrganisationNavigationEnum.enum.Overview,
+                href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+                loading: isLoadingOrganisations,
+              },
+              {
+                name: OrganisationNavigationEnum.enum.Account,
+                href: `/${OrganisationNavigationEnum.enum.Account}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+                loading: isLoadingOrganisations,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body>
           <div className='-ml-4 py-8 space-y-8'>
             {

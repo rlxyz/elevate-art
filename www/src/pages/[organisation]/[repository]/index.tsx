@@ -2,6 +2,7 @@ import CollectionBranchSelectorCard from '@components/collection/CollectionBranc
 import { GenerateButton } from '@components/collection/CollectionGenerateCard'
 import CollectionPreviewFilters from '@components/collection/CollectionPreviewFilters'
 import CollectionPreviewGrid from '@components/collection/CollectionPreviewGrid'
+import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -60,27 +61,30 @@ const Page = () => {
             { current: organisationName, href: `/${organisationName}`, organisations },
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              href: `/${mainRepositoryHref}`,
-              enabled: true,
-              loading: isLoadingLayers,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: false,
-              loading: isLoadingLayers,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: false,
-              loading: isLoadingLayers,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: CollectionNavigationEnum.enum.Preview,
+                href: `/${mainRepositoryHref}`,
+                enabled: true,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8 -ml-4'>

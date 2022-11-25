@@ -1,3 +1,4 @@
+import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import LayerElementFileTree from '@components/repository/LayerElementFileTree'
@@ -39,27 +40,30 @@ const Page = () => {
             { current: organisationName, href: `/${organisationName}`, organisations },
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              href: `/${mainRepositoryHref}`,
-              enabled: false,
-              loading: isLoadingLayers,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: true,
-              loading: isLoadingLayers,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: false,
-              loading: isLoadingLayers,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: CollectionNavigationEnum.enum.Preview,
+                href: `/${mainRepositoryHref}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                enabled: true,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body border='none'>
           <div className='py-6 grid grid-cols-10 gap-x-6'>
             <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />

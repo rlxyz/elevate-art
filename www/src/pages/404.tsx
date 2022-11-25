@@ -1,11 +1,13 @@
 import { Layout } from '@components/layout/core/Layout'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function NotFound() {
+  const { status } = useSession()
   return (
     <Layout>
-      <Layout.Header />
+      <Layout.Header authenticated={status === 'authenticated'} />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>

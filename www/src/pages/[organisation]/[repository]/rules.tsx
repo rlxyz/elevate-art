@@ -1,3 +1,4 @@
+import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import { RuleSelector } from '@components/repository/TraitElementRules/RepositoryRuleCreateView'
@@ -29,13 +30,14 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <>
-          <Layout.Header
-            internalRoutes={[
-              { current: organisationName, href: `/${organisationName}`, organisations },
-              { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-            ]}
-            internalNavigation={[
+        <Layout.Header
+          internalRoutes={[
+            { current: organisationName, href: `/${organisationName}`, organisations },
+            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+          ]}
+        >
+          <HeaderInternalPageRoutes
+            links={[
               {
                 name: CollectionNavigationEnum.enum.Preview,
                 href: `/${mainRepositoryHref}`,
@@ -56,26 +58,26 @@ const Page = () => {
               },
             ]}
           />
-          <Layout.Body border='lower'>
-            <div className='w-full py-16'>
-              <div className='flex justify-center'>
-                <div className='space-y-1 w-full'>
-                  <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                  <RuleSelector layers={layers} />
-                </div>
+        </Layout.Header>
+        <Layout.Body border='lower'>
+          <div className='w-full py-16'>
+            <div className='flex justify-center'>
+              <div className='space-y-1 w-full'>
+                <span className='text-xs font-semibold uppercase'>Create a condition</span>
+                <RuleSelector layers={layers} />
               </div>
             </div>
-            {layers &&
-            layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
-              <div className='w-full py-16'>
-                <div className='space-y-3 w-full flex flex-col justify-center'>
-                  <span className='text-xs font-semibold uppercase'>All rules created</span>
-                  {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
-                </div>
+          </div>
+          {layers &&
+          layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
+            <div className='w-full py-16'>
+              <div className='space-y-3 w-full flex flex-col justify-center'>
+                <span className='text-xs font-semibold uppercase'>All rules created</span>
+                {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
               </div>
-            ) : null}
-          </Layout.Body>
-        </>
+            </div>
+          ) : null}
+        </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
   )
