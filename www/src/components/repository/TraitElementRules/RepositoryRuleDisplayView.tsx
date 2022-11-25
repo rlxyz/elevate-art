@@ -1,11 +1,11 @@
 import { TrashIcon } from '@heroicons/react/outline'
+import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
 import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { RulesEnum } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import { RulesType } from 'src/types/enums'
 import { ComboboxInput } from './RepositoryRuleCombobox'
-import { useMutateRepositoryDeleteRule } from './useMutateRepositoryDeleteRule'
 
 const TraitRulesDisplayPerItem = ({
   id,
