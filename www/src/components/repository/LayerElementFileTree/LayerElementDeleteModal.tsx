@@ -1,4 +1,4 @@
-import ModalComponent from '@components/y/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
 import { useMutateDeleteLayerElement } from '@hooks/mutations/useMutateDeleteLayerElement'
 import { LayerElement } from '@prisma/client'
 import { FC } from 'react'

@@ -1,31 +1,30 @@
-import LoadingComponent from '@components/y/loading/Loading'
+import LoadingComponent from '@components/layout/loading/Loading'
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateAcceptInvitation } from '@hooks/mutations/useMutateAcceptInvitation'
-import { useNotification } from '@hooks/utils/useNotification'
-import { Organisation, OrganisationPending } from '@prisma/client'
-import { capitalize } from '@utils/format'
-import { Fragment, useState } from 'react'
+import { useMutateRepositoryCreateRule } from '@hooks/mutations/useMutateRepositoryCreateRule'
+import { TraitElement } from '@prisma/client'
+import { RulesType } from '@utils/compiler'
+import { Fragment } from 'react'
 
-export const PersonalOrganisationTeamInvitesAcceptDialog = ({
-  pending,
+export const RepositoryCreateRuleDialog = ({
+  isOpen,
+  onClose,
+  condition,
+  onSuccess,
+  primaryTrait,
+  secondaryTrait,
 }: {
-  pending: OrganisationPending & {
-    organisation: Organisation
-  }
+  onSuccess: () => void
+  isOpen: boolean
+  onClose: () => void
+  condition: RulesType
+  primaryTrait: TraitElement
+  secondaryTrait: TraitElement
 }) => {
-  const { notifySuccess } = useNotification()
-  const { mutate, isLoading } = useMutateAcceptInvitation()
-  const [isOpen, setIsOpen] = useState(false)
+  const { mutate, isLoading } = useMutateRepositoryCreateRule()
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className='text-white bg-blueHighlight border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
-      >
-        Accept
-      </button>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
+        <Dialog as='div' className='relative z-10' onClose={onClose}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -54,50 +53,62 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                     as='h3'
                     className='p-8 border-b border-mediumGrey bg-white text-black text-xl justify-center flex leading-6 font-semibold'
                   >
-                    Join Team
+                    Add Rule
                   </Dialog.Title>
                   <Dialog.Description>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>
-                        Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate
-                        tons of collections.
+                        Add a new rule to the repository. This rule will be applied to all collections in the repository.
                       </span>
                       <div>
                         <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Name</span>
+                          <span className='text-[0.6rem] uppercase'>Trait</span>
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
-                            {pending.organisation.name}
+                            {primaryTrait.name}
                           </div>
                         </div>
                         <div className='space-y-1'>
-                          <span className='text-[0.6rem] uppercase'>Role</span>
+                          <span className='text-[0.6rem] uppercase'>Condition</span>
+                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{condition}</div>
+                        </div>
+                        <div className='space-y-1'>
+                          <span className='text-[0.6rem] uppercase'>With</span>
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
-                            {capitalize(pending.role)}
+                            {secondaryTrait.name}
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className='grid grid-cols-2 bg-white divide-x divide-mediumGrey'>
-                      <button onClick={() => setIsOpen(false)} className='text-xs text-darkGrey py-6 hover:text-black'>
+                      <button onClick={onClose} className='text-xs text-darkGrey hover:bg-lightGray py-6'>
                         Cancel
                       </button>
                       <button
-                        onClick={() =>
+                        disabled={isLoading}
+                        onClick={(e) => {
+                          e.preventDefault()
                           mutate(
                             {
-                              pendingId: pending.id,
+                              condition,
+                              primaryTraitElementId: primaryTrait.id,
+                              primaryLayerElementId: primaryTrait.layerElementId,
+                              secondaryTraitElementId: secondaryTrait.id,
+                              secondaryLayerElementId: secondaryTrait.layerElementId,
                             },
                             {
                               onSuccess: () => {
-                                notifySuccess('You have successfully joined the team')
-                                setIsOpen(false)
+                                onSuccess && onSuccess()
+                                onClose()
+                              },
+                              onError: () => {
+                                onClose()
                               },
                             }
                           )
-                        }
-                        className='text-xs text-darkGrey py-6 hover:text-black'
+                        }}
+                        className='text-xs text-blueHighlight hover:bg-lightGray py-6'
                       >
-                        {isLoading ? <LoadingComponent /> : 'Join'}
+                        {isLoading ? <LoadingComponent /> : 'Add'}
                       </button>
                     </div>
                   </Dialog.Description>

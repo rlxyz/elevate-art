@@ -1,5 +1,5 @@
-import Button from '@components/y/Button'
-import SearchInput from '@components/y/search/Search'
+import Button from '@components/layout/Button'
+import SearchInput from '@components/layout/search/Search'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'

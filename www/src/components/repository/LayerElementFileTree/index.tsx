@@ -1,4 +1,4 @@
-import Menu from '@components/y/menu'
+import Menu from '@components/layout/menu'
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
 import { LayerElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { Repository } from '@prisma/client'

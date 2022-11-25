@@ -1,4 +1,4 @@
-import ModalComponent from '@components/y/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
 import Big from 'big.js'
 import { FC } from 'react'
 import { useMutateRepositoryLayersWeight } from '../../../hooks/mutations/useMutateRepositoryLayersWeight'

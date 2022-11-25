@@ -1,5 +1,5 @@
-import ModalComponent from '@components/y/modal/Modal'
-import Upload from '@components/y/upload'
+import ModalComponent from '@components/layout/modal/Modal'
+import Upload from '@components/layout/upload'
 import { FC } from 'react'
 import { useMutateCreateTraitElement } from '../../../hooks/mutations/useMutateCreateTraitElement'
 

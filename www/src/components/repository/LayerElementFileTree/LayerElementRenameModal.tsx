@@ -1,4 +1,4 @@
-import ModalComponent from '@components/y/modal/Modal'
+import ModalComponent from '@components/layout/modal/Modal'
 import { useMutateRenameLayerElement } from '@hooks/mutations/useMutateRenameLayerElement'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
