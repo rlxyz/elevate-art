@@ -1,10 +1,11 @@
+import { RulesEnum } from '@utils/compiler'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 
 export const rulesRouter = createProtectedRouter()
   .mutation('delete', {
     input: z.object({
-      condition: z.string(),
+      condition: RulesEnum,
       primaryLayerElementId: z.string(),
       primaryTraitElementId: z.string(),
       secondaryLayerElementId: z.string(),
@@ -21,7 +22,7 @@ export const rulesRouter = createProtectedRouter()
   })
   .mutation('create', {
     input: z.object({
-      condition: z.string(),
+      condition: RulesEnum,
       primaryLayerElementId: z.string(),
       primaryTraitElementId: z.string(),
       secondaryLayerElementId: z.string(),

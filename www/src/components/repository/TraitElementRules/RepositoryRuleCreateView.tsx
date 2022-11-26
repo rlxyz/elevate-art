@@ -14,7 +14,7 @@ import { RulesEnum, RulesType } from '@utils/compiler'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
-import { RepositoryCreateRuleDialog } from './RepositoryCreateRuleDialog'
+import { TraitElementCreateRuleModal } from './RepositoryCreateRuleModal'
 import { ComboboxInput } from './RepositoryRuleCombobox'
 
 export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
@@ -97,8 +97,8 @@ export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | und
             Add
           </button>
           {selectedCondition && selectedLeftTrait && selectedRightTrait && (
-            <RepositoryCreateRuleDialog
-              isOpen={isOpen}
+            <TraitElementCreateRuleModal
+              visible={isOpen}
               onClose={() => setIsOpen(false)}
               onSuccess={() => {
                 setSelectedLeftTrait(null)
@@ -106,8 +106,7 @@ export const RuleSelector = ({ layers }: { layers: LayerElementWithRules[] | und
                 setSelectedCondition(null)
               }}
               condition={selectedCondition}
-              primaryTrait={selectedLeftTrait}
-              secondaryTrait={selectedRightTrait}
+              traitElements={[selectedLeftTrait, selectedRightTrait]}
             />
           )}
         </div>

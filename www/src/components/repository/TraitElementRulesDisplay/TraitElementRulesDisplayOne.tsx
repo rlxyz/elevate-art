@@ -2,12 +2,11 @@ import { TrashIcon } from '@heroicons/react/outline'
 import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
 import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { RulesEnum } from '@utils/compiler'
+import { RulesType } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { RulesType } from 'src/types/enums'
-import { ComboboxInput } from './RepositoryRuleCombobox'
+import { ComboboxInput } from '../TraitElementRules/RepositoryRuleCombobox'
 
-const TraitRulesDisplayPerItem = ({
+export const TraitElementRulesDisplayOne = ({
   id,
   primary,
   condition,
@@ -53,40 +52,6 @@ const TraitRulesDisplayPerItem = ({
           <TrashIcon className='w-4 h-4 text-mediumGrey' />
         </button>
       </div>
-    </div>
-  )
-}
-
-export const RuleDisplayAll = ({ traitElements }: { traitElements: TraitElementWithRules[] }) => {
-  return (
-    <div className='w-full flex flex-col space-y-2'>
-      {traitElements
-        .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
-        .map(({ rulesPrimary }, index) => {
-          return (
-            <div key={index}>
-              {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {
-                return (
-                  <div className='space-y-2' key={index}>
-                    {rulesPrimary
-                      .filter((rule) => rule.condition === ruleType)
-                      .map((rule, index) => {
-                        return (
-                          <TraitRulesDisplayPerItem
-                            id={rule.id}
-                            key={index}
-                            primary={rule.primaryTraitElement}
-                            condition={rule.condition as RulesType}
-                            secondary={rule.secondaryTraitElement}
-                          />
-                        )
-                      })}
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
     </div>
   )
 }

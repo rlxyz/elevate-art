@@ -2,7 +2,7 @@ import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import { RuleSelector } from '@components/repository/TraitElementRules/RepositoryRuleCreateView'
-import { RuleDisplayAll } from '@components/repository/TraitElementRules/RepositoryRuleDisplayView'
+import { TraitElementDisplayRules } from '@components/repository/TraitElementRulesDisplay'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -73,7 +73,7 @@ const Page = () => {
             <div className='w-full py-16'>
               <div className='space-y-3 w-full flex flex-col justify-center'>
                 <span className='text-xs font-semibold uppercase'>All rules created</span>
-                {layers && <RuleDisplayAll traitElements={layers.flatMap((x) => x.traitElements)} />}
+                {layers && <TraitElementDisplayRules traitElements={layers.flatMap((x) => x.traitElements)} />}
               </div>
             </div>
           ) : null}
