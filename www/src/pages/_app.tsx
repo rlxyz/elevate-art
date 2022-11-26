@@ -3,7 +3,6 @@ import { ErrorBoundary } from '@highlight-run/react'
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
-import { trpc } from '@utils/trpc'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
@@ -17,7 +16,8 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import '../client/styles/globals.css'
-import '../utils/highlight'
+import '../client/utils/highlight'
+import { trpc } from '../client/utils/trpc'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, chain.goerli],

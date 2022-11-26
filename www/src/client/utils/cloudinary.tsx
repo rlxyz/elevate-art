@@ -3,15 +3,6 @@ import { FileWithPath } from 'react-dropzone'
 import { env } from 'src/env/client.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
-export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
-// export const IMAGE_QUALITY_SETTINGS: string[] = []
-export const IMAGE_VERSION = 'v1'
-
-export const getCldImgUrl = ({ r, l, t }: { r: string; l: string; t: string }) => {
-  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${IMAGE_QUALITY_SETTINGS.join(
-    '/'
-  )}/${IMAGE_VERSION}/${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`
-}
 
 export const uploadCollectionLayerImageCloudinary = ({
   repositoryId,
@@ -24,7 +15,7 @@ export const uploadCollectionLayerImageCloudinary = ({
 }) => {
   return new Promise((resolve, reject) => {
     const data = createCloudinaryFormData(file, traitElement, repositoryId)
-    fetch('https://api.cloudinary.com/v1_1/rlxyz/image/upload', {
+    fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
       method: 'post',
       body: data,
     })
@@ -46,6 +37,7 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
     ).length === 0
   )
 }
+
 export const getRepositoryUploadLayerObjectUrls = (
   files: FileWithPath[]
 ): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
@@ -113,7 +105,7 @@ export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement
   data.append('public_id', id)
   data.append('original_filename', name)
   data.append('upload_preset', 'collection-upload')
-  data.append('cloud_name', 'rlxyz')
+  data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
   data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`)
   return data
 }

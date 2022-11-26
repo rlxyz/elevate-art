@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createProtectedRouter } from '../context'
+import { createProtectedRouter } from '../../router/context'
 
 export const collectionRouter = createProtectedRouter()
   .query('getAll', {

@@ -1,4 +1,3 @@
-import { createCloudinaryFormData, getTraitUploadObjectUrls } from '@utils/cloudinary'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
@@ -6,6 +5,7 @@ import { FileWithPath } from 'react-dropzone'
 import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { createCloudinaryFormData, getTraitUploadObjectUrls } from 'src/client/utils/cloudinary'
 
 export const useMutateCreateTraitElement = () => {
   const ctx = trpc.useContext()

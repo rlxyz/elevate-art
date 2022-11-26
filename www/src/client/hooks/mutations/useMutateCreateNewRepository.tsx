@@ -5,11 +5,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
-import {
-  getRepositoryLayerNames,
-  getRepositoryUploadLayerObjectUrls,
-  uploadCollectionLayerImageCloudinary,
-} from '../../../utils/cloudinary'
+import { getRepositoryLayerNames, getRepositoryUploadLayerObjectUrls, uploadCollectionLayerImageCloudinary } from '../../utils/cloudinary'
 
 export const useMutateCreateNewRepository = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
