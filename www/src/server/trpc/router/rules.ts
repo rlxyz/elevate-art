@@ -1,4 +1,4 @@
-import { RulesEnum } from '@utils/compiler'
+import { RulesEnum } from 'src/shared/compiler'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 

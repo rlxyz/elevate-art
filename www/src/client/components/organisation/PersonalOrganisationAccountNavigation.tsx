@@ -1,8 +1,8 @@
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from '@utils/enums'
 import { capitalize } from '@utils/format'
 import { Link } from 'src/client/components/layout/Link'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountNavigation = () => {
   const { current: organisation, isLoading } = useQueryOrganisation()

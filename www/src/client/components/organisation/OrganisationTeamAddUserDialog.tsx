@@ -1,10 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { OrganisationDatabaseRoleEnumType } from '@utils/enums'
 import { capitalize } from '@utils/format'
 import { Fragment } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'
 import { useMutateOrganisationAddUser } from 'src/client/hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
 
 export const OrganisationTeamAddUserDialog = ({
   organisationId,

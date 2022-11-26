@@ -4,7 +4,7 @@ import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-wit
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
-import { groupBy, sumBy } from 'src/utils/object-utils'
+import { groupBy, sumBy } from 'src/shared/object-utils'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 

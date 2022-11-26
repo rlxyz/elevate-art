@@ -1,4 +1,3 @@
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -7,6 +6,7 @@ import { PersonalOrganisationAccountTeam } from 'src/client/components/organisat
 import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)

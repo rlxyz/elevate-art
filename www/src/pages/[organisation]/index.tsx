@@ -1,10 +1,10 @@
-import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { OrganisationAuthLayout } from '../../client/components/organisation/OrganisationAuthLayout'
 
 const Page: NextPage = () => {

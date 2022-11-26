@@ -1,8 +1,8 @@
 import { TraitElement } from '@prisma/client'
-import { RulesType } from '@utils/compiler'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { useMutateCreateRule } from 'src/client/hooks/mutations/useMutateCreateRule'
+import { RulesType } from 'src/shared/compiler'
 
 export interface FormModalProps {
   onSuccess?: () => void

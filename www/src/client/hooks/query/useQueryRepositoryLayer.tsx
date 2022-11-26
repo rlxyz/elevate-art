@@ -1,9 +1,9 @@
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
-import { RulesType } from '@utils/compiler'
 import { getImageForTrait } from '@utils/image'
-import { sumBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import { useRouter } from 'next/router'
+import { RulesType } from 'src/shared/compiler'
+import { sumBy } from 'src/shared/object-utils'
 import useRepositoryStore from '../store/useRepositoryStore'
 
 export type LayerElementWithRules = LayerElement & {

@@ -1,8 +1,8 @@
 import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
-import * as v from '@utils/compiler'
 import { getImageForTrait } from '@utils/image'
 import clsx from 'clsx'
 import { FC } from 'react'
+import * as v from 'src/shared/compiler'
 
 interface Props {
   id: number

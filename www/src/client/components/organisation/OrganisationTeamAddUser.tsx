@@ -1,5 +1,4 @@
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
-import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from '@utils/enums'
 import { getAddressFromEns } from '@utils/ethers'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
@@ -7,6 +6,7 @@ import { ethers } from 'ethers'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
 import { OrganisationTeamAddUserDialog } from './OrganisationTeamAddUserDialog'
 export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisation()

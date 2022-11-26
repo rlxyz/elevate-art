@@ -1,4 +1,3 @@
-import { CollectionNavigationEnum } from '@utils/enums'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
@@ -13,6 +12,7 @@ import { useQueryRepository } from 'src/client/hooks/query/useQueryRepository'
 import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { CollectionNavigationEnum } from 'src/shared/enums'
 import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {

@@ -1,4 +1,3 @@
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -10,6 +9,7 @@ import { OrganisationTeamDisplayPending } from 'src/client/components/organisati
 import { OrganisationTeamDisplayUsers } from 'src/client/components/organisation/OrganisationTeamDisplayUsers'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {

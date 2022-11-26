@@ -1,8 +1,8 @@
-import { groupBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { groupBy } from 'src/shared/object-utils'
 
 export const useMutateDeleteTraitElement = () => {
   const ctx = trpc.useContext()

@@ -1,4 +1,3 @@
-import { CollectionNavigationEnum } from '@utils/enums'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -10,6 +9,7 @@ import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisatio
 import { useQueryRepository } from 'src/client/hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { CollectionNavigationEnum } from 'src/shared/enums'
 import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {

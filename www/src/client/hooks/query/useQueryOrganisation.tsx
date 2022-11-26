@@ -1,8 +1,8 @@
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from '@utils/enums'
 import { trpc } from '@utils/trpc'
 import produce, { setAutoFreeze } from 'immer'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 setAutoFreeze(false)
 

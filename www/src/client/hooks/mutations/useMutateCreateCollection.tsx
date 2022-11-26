@@ -1,11 +1,11 @@
 import { Collection } from '@prisma/client'
-import { CollectionDatabaseEnum } from '@utils/enums'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { NextRouter, useRouter } from 'next/router'
 import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { CollectionDatabaseEnum } from 'src/shared/enums'
 
 export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()

@@ -1,5 +1,4 @@
 import { Organisation, OrganisationMember, User } from '@prisma/client'
-import { OrganisationDatabaseEnum } from '@utils/enums'
 import { capitalize } from '@utils/format'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
@@ -8,6 +7,7 @@ import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import { Link } from 'src/client/components/layout/Link'
 import SearchInput from 'src/client/components/layout/search/Search'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import { OrganisationDatabaseEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisation()

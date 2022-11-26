@@ -1,5 +1,4 @@
 import { Repository } from '@prisma/client'
-import { OrganisationNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -9,6 +8,7 @@ import Upload from 'src/client/components/layout/upload/upload'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { useMutateCreateNewRepository } from 'src/client/hooks/mutations/useMutateCreateNewRepository'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisation()

@@ -1,7 +1,7 @@
-import { sumByBig } from '@utils/object-utils'
 import Big from 'big.js'
 import { useForm } from 'react-hook-form'
 import { TraitElementWithImage } from 'src/client/hooks/query/useQueryRepositoryLayer'
+import { sumByBig } from 'src/shared/object-utils'
 
 /** Note, we use big.js's Big to ensure precision. Javascript just sux tbh. */
 export const WEIGHT_STEP_COUNT = Big(1)

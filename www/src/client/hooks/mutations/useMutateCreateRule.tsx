@@ -1,8 +1,8 @@
-import { RulesType } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { RulesType } from 'src/shared/compiler'
 
 export const useMutateCreateRule = () => {
   const ctx = trpc.useContext()
