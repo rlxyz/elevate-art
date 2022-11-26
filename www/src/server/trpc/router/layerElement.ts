@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
-import * as trpc from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 
@@ -87,7 +87,7 @@ export const layerElementRouter = createProtectedRouter()
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           if (e.code === 'P2002') {
             /** Unique constaint error! */
-            throw new trpc.TRPCError({
+            throw new TRPCError({
               code: `BAD_REQUEST`,
               message: 'A LayerElement with that name already exists in this repository. Please choose a different name and try again.',
             })
@@ -121,7 +121,7 @@ export const layerElementRouter = createProtectedRouter()
 
       /** Return if failed */
       if (response.failed) {
-        throw new trpc.TRPCError({
+        throw new TRPCError({
           code: `INTERNAL_SERVER_ERROR`,
           message: response.error,
         })
@@ -219,7 +219,7 @@ export const layerElementRouter = createProtectedRouter()
 
       /** Ensure only a single Repository LayerElements are being changed at once. */
       if (groupedLayerElements.length !== 1 || groupedLayerElements[0] === undefined) {
-        throw new trpc.TRPCError({
+        throw new TRPCError({
           code: `BAD_REQUEST`,
           message: 'Invalid input. Please try again.',
         })
@@ -242,7 +242,7 @@ export const layerElementRouter = createProtectedRouter()
         },
       })
       if (!repository) {
-        throw new trpc.TRPCError({
+        throw new TRPCError({
           code: `BAD_REQUEST`,
           message: 'User doesnt have access to this repository. Please try again.',
         })
@@ -252,7 +252,7 @@ export const layerElementRouter = createProtectedRouter()
       await prisma.$transaction(async (tx) => {
         const total = await tx.layerElement.count({ where: { repositoryId } })
         if (total !== _count) {
-          throw new trpc.TRPCError({
+          throw new TRPCError({
             code: `BAD_REQUEST`,
             message: 'Invalid input. Please try again.',
           })

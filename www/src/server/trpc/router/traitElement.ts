@@ -1,9 +1,9 @@
 import { Prisma } from '@prisma/client'
-import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
-import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-with-traits'
+import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/common/cld-delete-image'
+import { getLayerElementsWithTraitElements } from '@server/common/get-layer-with-traits'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
-import * as trpc from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 import { groupBy, sumBy } from 'src/shared/object-utils'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
@@ -38,7 +38,7 @@ export const traitElementRouter = router({
       )
 
       if (response.failed) {
-        throw new trpc.TRPCError({
+        throw new TRPCError({
           code: `INTERNAL_SERVER_ERROR`,
           message: response.error,
         })
@@ -110,7 +110,7 @@ export const traitElementRouter = router({
       /** @todo check this! */
       const sum = sumBy(traitElements, (x) => x.weight)
       if (sum > 100) {
-        throw new trpc.TRPCError({
+        throw new TRPCError({
           code: `BAD_REQUEST`,
           message: `Sum of weights cannot be greater than 100`,
         })
