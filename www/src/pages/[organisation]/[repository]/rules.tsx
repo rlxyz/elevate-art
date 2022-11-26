@@ -2,7 +2,7 @@ import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
 import { Layout } from '@components/layout/core/Layout'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
 import { TraitElementDisplayRules } from '@components/repository/RulesDisplay'
-import { TraitElementRulesSelector } from '@components/repository/RulesSelector'
+import { RulesSelector } from '@components/repository/RulesSelector'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/query/useQueryRepository'
 import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
@@ -64,7 +64,7 @@ const Page = () => {
             <div className='flex justify-center'>
               <div className='space-y-1 w-full'>
                 <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                <TraitElementRulesSelector layers={layers} />
+                <RulesSelector layers={layers} />
               </div>
             </div>
           </div>

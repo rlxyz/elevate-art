@@ -5,7 +5,7 @@ import { RulesCreateModal } from './RulesCreateModal'
 import { RulesSelectConditionCombobox } from './RulesSelectConditionCombobox'
 import { RulesSelectTraitElementCombobox } from './RulesSelectTraitElementCombobox'
 
-export const TraitElementRulesSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
+export const RulesSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
   const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElementWithRules>(null)
