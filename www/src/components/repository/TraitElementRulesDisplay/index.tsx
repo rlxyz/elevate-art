@@ -1,28 +1,32 @@
 import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
-import { RulesEnum, RulesType } from '@utils/compiler'
+import { RulesEnum } from '@utils/compiler'
+import { FC } from 'react'
 import { TraitElementRulesDisplayOne } from './TraitElementRulesDisplayOne'
 
-export const TraitElementDisplayRules = ({ traitElements }: { traitElements: TraitElementWithRules[] }) => {
+interface TraitElementDisplayRulesProps {
+  traitElements: TraitElementWithRules[]
+}
+
+export const TraitElementDisplayRules: FC<TraitElementDisplayRulesProps> = ({ traitElements }) => {
   return (
     <div className='w-full flex flex-col space-y-2'>
       {traitElements
         .filter(({ rulesPrimary }) => rulesPrimary && rulesPrimary.length)
-        .map(({ rulesPrimary }, index) => {
+        .map(({ id, rulesPrimary }, index) => {
           return (
-            <div key={index}>
-              {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((ruleType: string, index) => {
+            <div key={`${id}-${index}`}>
+              {[RulesEnum.enum['cannot mix with'], RulesEnum.enum['only mixes with']].map((condition, index) => {
                 return (
                   <div className='space-y-2' key={index}>
                     {rulesPrimary
-                      .filter((rule) => rule.condition === ruleType)
-                      .map((rule, index) => {
+                      .filter((rule) => rule.condition === condition)
+                      .map((rule) => {
                         return (
                           <TraitElementRulesDisplayOne
                             id={rule.id}
-                            key={index}
-                            primary={rule.primaryTraitElement}
-                            condition={rule.condition as RulesType}
-                            secondary={rule.secondaryTraitElement}
+                            key={rule.id}
+                            traitElements={[rule.primaryTraitElement, rule.secondaryTraitElement]}
+                            condition={rule.condition}
                           />
                         )
                       })}

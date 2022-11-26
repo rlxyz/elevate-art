@@ -8,15 +8,14 @@ import { ComboboxInput } from '../TraitElementRules/RepositoryRuleCombobox'
 
 export const TraitElementRulesDisplayOne = ({
   id,
-  primary,
+  traitElements,
   condition,
-  secondary,
 }: {
   id: string
-  primary: TraitElementWithRules
-  secondary: TraitElementWithRules
+  traitElements: [TraitElementWithRules, TraitElementWithRules]
   condition: RulesType
 }) => {
+  const [primary, secondary] = traitElements
   const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { data: layers } = trpc.useQuery(['layers.getAll', { id: repositoryId }])

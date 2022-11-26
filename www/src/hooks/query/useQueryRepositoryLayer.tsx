@@ -1,4 +1,5 @@
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
+import { RulesType } from '@utils/compiler'
 import { getImageForTrait } from '@utils/image'
 import { sumBy } from '@utils/object-utils'
 import { trpc } from '@utils/trpc'
@@ -8,16 +9,20 @@ import useRepositoryStore from '../store/useRepositoryStore'
 export type LayerElementWithRules = LayerElement & {
   traitElements: TraitElementWithRules[]
 }
+
+export type TraitElementRule = Rules & { condition: RulesType }
+
 export type TraitElementWithRules = TraitElementWithImage & {
-  rulesPrimary: (Rules & {
+  rulesPrimary: (TraitElementRule & {
     primaryTraitElement: TraitElementWithRules
     secondaryTraitElement: TraitElementWithRules
   })[]
-  rulesSecondary: (Rules & {
+  rulesSecondary: (TraitElementRule & {
     primaryTraitElement: TraitElementWithRules
     secondaryTraitElement: TraitElementWithRules
   })[]
 }
+
 export type TraitElementWithImage = TraitElement & { imageUrl: string }
 
 export const useQueryRepositoryLayer = () => {
@@ -65,6 +70,8 @@ export const useQueryRepositoryLayer = () => {
       traitElements: [
         ...x.traitElements.map((x) => ({
           ...x,
+          rulesPrimary: x.rulesPrimary.map((r) => ({ ...r, condition: r.condition as RulesType })),
+          rulesSecondary: x.rulesSecondary.map((r) => ({ ...r, condition: r.condition as RulesType })),
           imageUrl: getImageForTrait({ r: repositoryId, l: x.layerElementId, t: x.id }),
         })),
         {

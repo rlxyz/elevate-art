@@ -68,15 +68,12 @@ const Page = () => {
               </div>
             </div>
           </div>
-          {layers &&
-          layers.flatMap((x) => x.traitElements).filter((x) => x.rulesPrimary.length || x.rulesSecondary.length).length ? (
-            <div className='w-full py-16'>
-              <div className='space-y-3 w-full flex flex-col justify-center'>
-                <span className='text-xs font-semibold uppercase'>All rules created</span>
-                {layers && <TraitElementDisplayRules traitElements={layers.flatMap((x) => x.traitElements)} />}
-              </div>
+          <div className='w-full py-16'>
+            <div className='space-y-3 w-full flex flex-col justify-center'>
+              <span className='text-xs font-semibold uppercase'>All rules created</span>
+              <TraitElementDisplayRules traitElements={layers.flatMap((x) => x.traitElements)} />
             </div>
-          ) : null}
+          </div>
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
