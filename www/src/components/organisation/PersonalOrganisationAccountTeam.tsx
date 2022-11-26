@@ -1,3 +1,4 @@
+import AvatarComponent from '@components/layout/avatar/Avatar'
 import { Link } from '@components/layout/Link'
 import SearchInput from '@components/layout/search/Search'
 import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
@@ -46,7 +47,7 @@ export const PersonalOrganisationAccountTeam = () => {
               return (
                 <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <div className='h-6 w-6 border rounded-full bg-blueHighlight border-mediumGrey' />
+                    <AvatarComponent src='images/avatar-blank.png' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
