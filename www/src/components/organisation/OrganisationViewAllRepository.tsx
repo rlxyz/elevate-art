@@ -1,3 +1,4 @@
+import AvatarComponent from '@components/layout/avatar/Avatar'
 import { Link } from '@components/layout/Link'
 import SearchInput from '@components/layout/search/Search'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
@@ -153,7 +154,7 @@ const ViewAllRepositories = () => {
               <Link href={`/${organisationName}/${repository.name}`} external>
                 <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
-                    <div className='bg-blueHighlight h-6 w-6 rounded-full' />
+                    <AvatarComponent src='images/avatar-blank.png' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
                       <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>
