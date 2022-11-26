@@ -1,8 +1,8 @@
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from '@utils/enums'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
 import { env } from 'src/env/server.mjs'
-import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/types/enums'
 import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {

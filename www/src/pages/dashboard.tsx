@@ -1,12 +1,12 @@
-import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
-import { Layout } from '@components/layout/core/Layout'
-import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
-import { PersonalOrganisationAccountTeam } from '@components/organisation/PersonalOrganisationAccountTeam'
-import { PersonalOrganisationAccountTeamInvites } from '@components/organisation/PersonalOrganisationAccountTeamInvites'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
+import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
+import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)

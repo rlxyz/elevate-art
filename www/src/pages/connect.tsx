@@ -1,13 +1,13 @@
-import Card from '@components/layout/card/Card'
-import { Layout } from '@components/layout/core/Layout'
-import { ConnectButton } from '@components/layout/eth/ConnectButton'
-import LinkComponent from '@components/layout/link/Link'
-import NextLinkComponent from '@components/layout/link/NextLink'
+import { OrganisationNavigationEnum } from '@utils/enums'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import Card from 'src/client/components/layout/card/Card'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { ConnectButton } from 'src/client/components/layout/eth/ConnectButton'
+import LinkComponent from 'src/client/components/layout/link/Link'
+import NextLinkComponent from 'src/client/components/layout/link/NextLink'
 
 /**
  * Handles connection to the Ethereum wallet providers through rainbow-kit.

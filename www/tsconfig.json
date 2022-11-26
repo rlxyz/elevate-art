@@ -16,8 +16,8 @@
     "jsx": "preserve",
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@hooks/*": ["src/hooks/*"],
+      "@components/*": ["src/client/components/*"],
+      "@hooks/*": ["src/client/hooks/*"],
       "@utils/*": ["src/utils/*"],
       "@server/*": ["src/server/*"],
       "@scripts/*": ["src/scripts/*"]

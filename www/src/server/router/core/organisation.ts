@@ -1,4 +1,4 @@
-import { OrganisationDatabaseRoleEnum } from 'src/types/enums'
+import { OrganisationDatabaseRoleEnum } from '@utils/enums'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 

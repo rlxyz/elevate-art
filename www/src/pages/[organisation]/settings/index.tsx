@@ -1,12 +1,12 @@
-import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
-import { Layout } from '@components/layout/core/Layout'
-import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
-import { OrganisationGeneralSettings, SettingsNavigations } from '@components/organisation/OrganisationSettings'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/types/enums'
+import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { OrganisationGeneralSettings, SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
+import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()

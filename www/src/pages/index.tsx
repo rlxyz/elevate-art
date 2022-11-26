@@ -1,8 +1,8 @@
 // import { Header } from '@components/layout/Header'
-import { Layout } from '@components/layout/core/Layout'
-import { Link } from '@components/layout/Link'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { Link } from 'src/client/components/layout/Link'
 
 const Home: NextPage = () => {
   const { status } = useSession()

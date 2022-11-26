@@ -1,36 +1,23 @@
 // src/pages/_app.tsx
 import { ErrorBoundary } from '@highlight-run/react'
-import { createOrganisationNavigationStore, OrganisationRouterContext } from '@hooks/store/useOrganisationNavigationStore'
-import { createRepositoryStore, RepositoryContext } from '@hooks/store/useRepositoryStore'
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
-import { H } from 'highlight.run'
+import { trpc } from '@utils/trpc'
+import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
+import { AppType } from 'next/app'
 import { Toaster } from 'react-hot-toast'
+import { createOrganisationNavigationStore, OrganisationRouterContext } from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { createRepositoryStore, RepositoryContext } from 'src/client/hooks/store/useRepositoryStore'
 import { env } from 'src/env/client.mjs'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import '../styles/globals.css'
-
-import { trpc } from '@utils/trpc'
-import { Session } from 'next-auth'
-import { AppType } from 'next/app'
-
-if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
-  H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
-    environment: env.NEXT_PUBLIC_NODE_ENV,
-    networkRecording: {
-      enabled: true,
-      recordHeadersAndBody: true,
-    },
-    // version: (process.env.VERCEL_GIT_COMMIT_SHA as string) || env.NEXT_PUBLIC_NODE_ENV, // default to production
-    // enableStrictPrivacy: false, see: https://docs.highlight.run/privacy#pU2Cn
-  })
-}
+import '../client/styles/globals.css'
+import '../utils/highlight'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, chain.goerli],
