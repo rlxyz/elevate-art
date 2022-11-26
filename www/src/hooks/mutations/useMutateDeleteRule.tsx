@@ -3,7 +3,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import { trpc } from '@utils/trpc'
 import produce from 'immer'
 
-export const useMutateRepositoryDeleteRule = () => {
+export const useMutateDeleteRule = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess } = useNotification()

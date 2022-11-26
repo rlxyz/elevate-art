@@ -1,5 +1,5 @@
 import { TrashIcon } from '@heroicons/react/outline'
-import { useMutateRepositoryDeleteRule } from '@hooks/mutations/useMutateRepositoryDeleteRule'
+import { useMutateDeleteRule } from '@hooks/mutations/useMutateDeleteRule'
 import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { RulesType } from '@utils/compiler'
@@ -16,7 +16,7 @@ export const RulesDisplayOneItem = ({
   condition: RulesType
 }) => {
   const [primary, secondary] = traitElements
-  const { mutate: deleteRule } = useMutateRepositoryDeleteRule()
+  const { mutate: deleteRule } = useMutateDeleteRule()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { data: layers } = trpc.useQuery(['layers.getAll', { id: repositoryId }])
   const primaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === primary.id))
