@@ -89,8 +89,7 @@ export const layerElementRouter = createProtectedRouter()
             /** Unique constaint error! */
             throw new trpc.TRPCError({
               code: `BAD_REQUEST`,
-              message:
-                'A LayerElement with that name already exists in this repository. Please choose a different name and try again.',
+              message: 'A LayerElement with that name already exists in this repository. Please choose a different name and try again.',
             })
           }
         }

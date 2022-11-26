@@ -144,10 +144,7 @@ export const InfiniteScrollGrid = () => {
   return (
     <>
       <span
-        className={clsx(
-          !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50',
-          'lg:text-xs text-[0.6rem] text-darkGrey'
-        )}
+        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50', 'lg:text-xs text-[0.6rem] text-darkGrey')}
       >
         <span className={clsx(!collection && 'invisible')}>{`${collection?.generations || 0} generations`}</span>
       </span>

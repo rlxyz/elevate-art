@@ -11,9 +11,7 @@ import { protectedProcedure, router } from '../trpc'
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementUpdateNameInput = z.array(z.object({ name: z.string(), traitElementId: z.string(), repositoryId: z.string() }))
-const TraitElementUpdateWeightInput = z.array(
-  z.object({ weight: z.number(), traitElementId: z.string(), layerElementId: z.string() })
-)
+const TraitElementUpdateWeightInput = z.array(z.object({ weight: z.number(), traitElementId: z.string(), layerElementId: z.string() }))
 
 /**
  * TraitElement Router

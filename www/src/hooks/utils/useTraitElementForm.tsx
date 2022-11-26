@@ -26,13 +26,7 @@ export type TraitElementRarityFormType = {
   allCheckboxesChecked: boolean
 }
 
-export const useTraitElementForm = ({
-  traitElements,
-  onChange,
-}: {
-  traitElements: TraitElementWithImage[]
-  onChange: () => void
-}) => {
+export const useTraitElementForm = ({ traitElements, onChange }: { traitElements: TraitElementWithImage[]; onChange: () => void }) => {
   /**
    * Table data based on react-hook-form
    * Handles default values in the table, and any hooks needed for the table.
@@ -225,9 +219,7 @@ export const useTraitElementForm = ({
       const w = Big(x.weight)
       const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
-      gt(w.plus(linear), max)
-        ? setValue(`traitElements.${index}.weight`, max)
-        : setValue(`traitElements.${index}.weight`, w.plus(linear))
+      gt(w.plus(linear), max) ? setValue(`traitElements.${index}.weight`, max) : setValue(`traitElements.${index}.weight`, w.plus(linear))
     })
   }
 
@@ -293,9 +285,7 @@ export const useTraitElementForm = ({
       const w = Big(x.weight)
       const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
       const linear = growth.mul(size)
-      lt(w.minus(linear), min)
-        ? setValue(`traitElements.${index}.weight`, min)
-        : setValue(`traitElements.${index}.weight`, w.minus(linear))
+      lt(w.minus(linear), min) ? setValue(`traitElements.${index}.weight`, min) : setValue(`traitElements.${index}.weight`, w.minus(linear))
     })
   }
 

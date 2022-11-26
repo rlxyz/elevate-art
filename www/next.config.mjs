@@ -1,6 +1,6 @@
-import withBundleAnalyzer from '@next/bundle-analyzer';
+import withBundleAnalyzer from '@next/bundle-analyzer'
 
-!process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
+!process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
 
 /**
  * Don't be scared of the generics here.
@@ -24,7 +24,7 @@ export default defineNextConfig({
     domains: ['res.cloudinary.com', 'localhost'],
   },
   i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
+    locales: ['en'],
+    defaultLocale: 'en',
   },
 })

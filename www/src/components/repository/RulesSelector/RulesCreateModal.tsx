@@ -33,10 +33,7 @@ export const RulesCreateModal: FC<TraitElementCreateRuleProps> = ({ visible, onC
       visible={visible}
       onClose={handleClose}
       onClick={() => {
-        mutate(
-          { condition, traitElements: [traitElements[0].id, traitElements[1].id] },
-          { onSuccess: handleSuccess, onError: handleClose }
-        )
+        mutate({ condition, traitElements: [traitElements[0].id, traitElements[1].id] }, { onSuccess: handleSuccess, onError: handleClose })
       }}
       data={[
         { label: 'Trait', value: traitElements[0].name },

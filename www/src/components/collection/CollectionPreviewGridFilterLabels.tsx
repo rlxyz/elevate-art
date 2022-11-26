@@ -14,10 +14,7 @@ const CollectionPreviewGridFilterLabels = () => {
   return (
     <>
       <div
-        className={clsx(
-          !collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full',
-          'whitespace-nowrap text-ellipsis'
-        )}
+        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full', 'whitespace-nowrap text-ellipsis')}
       >
         <div className={clsx(!collection && 'invisible')}>
           {rarityFilter !== 'All' ? (

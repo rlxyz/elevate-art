@@ -83,9 +83,7 @@ const LayoutBody = ({
   )
 }
 
-const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
-  <LayoutContainer className='title'>{children}</LayoutContainer>
-)
+const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className='title'>{children}</LayoutContainer>
 
 Layout.Header = LayoutHeader
 Layout.Title = LayoutTitle

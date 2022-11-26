@@ -1,8 +1,4 @@
-export const calculateTraitRarityScore = (
-  traitWeight: number,
-  traitsTotalWeight: number,
-  collectionTotalSupply: number
-): number => {
+export const calculateTraitRarityScore = (traitWeight: number, traitsTotalWeight: number, collectionTotalSupply: number): number => {
   return collectionTotalSupply / calculateTraitQuantityInCollection(traitWeight, traitsTotalWeight, collectionTotalSupply)
 }
 
@@ -18,10 +14,6 @@ export const calculateTraitQuantityInCollection = (
   return (collectionTotalSupply * traitWeight) / traitsTotalWeight
 }
 
-export const calculateTraitRarityFromQuantity = (
-  quantity: number,
-  traitsTotalWeight: number,
-  collectionTotalSupply: number
-): number => {
+export const calculateTraitRarityFromQuantity = (quantity: number, traitsTotalWeight: number, collectionTotalSupply: number): number => {
   return collectionTotalSupply / (quantity * traitsTotalWeight)
 }

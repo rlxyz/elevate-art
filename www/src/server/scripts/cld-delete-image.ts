@@ -57,13 +57,7 @@ export const deleteImageFilesFromCloudinary = (
  * @param r repositoryId
  * @param l layerElementId
  */
-export const deleteImageFolderFromCloudinary = ({
-  r,
-  l,
-}: {
-  r: string
-  l: string
-}): Promise<Result<DeleteTraitElementResponse[]>> => {
+export const deleteImageFolderFromCloudinary = ({ r, l }: { r: string; l: string }): Promise<Result<DeleteTraitElementResponse[]>> => {
   return new Promise((resolve, reject) => {
     v2.api
       .delete_resources_by_prefix(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}`, {

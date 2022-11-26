@@ -3,12 +3,7 @@ import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigati
 import { useAuthenticated } from '@hooks/utils/useAuthenticated'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import {
-  OrganisationDatabaseEnum,
-  OrganisationDatabaseType,
-  OrganisationNavigationEnum,
-  OrganisationNavigationType,
-} from 'src/types/enums'
+import { OrganisationDatabaseEnum, OrganisationDatabaseType, OrganisationNavigationEnum, OrganisationNavigationType } from 'src/types/enums'
 
 export const OrganisationAuthLayout = ({
   children,

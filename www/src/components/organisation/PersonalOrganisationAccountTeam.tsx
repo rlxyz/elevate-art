@@ -27,9 +27,7 @@ export const PersonalOrganisationAccountTeam = () => {
         <span className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'text-xl font-semibold')}>
           <span className={clsx(isLoading && 'invisible')}>Your Teams</span>
         </span>
-        <div
-          className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}
-        >
+        <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}>
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
@@ -50,9 +48,7 @@ export const PersonalOrganisationAccountTeam = () => {
                     <AvatarComponent src='images/avatar-blank.png' />
                     <div className='flex flex-col space-y-1'>
                       <span className='text-xs font-bold'>
-                        {organisation.type === OrganisationDatabaseEnum.enum.Personal
-                          ? capitalize(organisation.name)
-                          : organisation.name}
+                        {organisation.type === OrganisationDatabaseEnum.enum.Personal ? capitalize(organisation.name) : organisation.name}
                       </span>
                       <span className='text-xs text-darkGrey'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
@@ -61,10 +57,7 @@ export const PersonalOrganisationAccountTeam = () => {
                       </span>
                     </div>
                   </div>
-                  <Link
-                    href={`/${organisation.name}`}
-                    className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
-                  >
+                  <Link href={`/${organisation.name}`} className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
                     View
                   </Link>
                 </div>

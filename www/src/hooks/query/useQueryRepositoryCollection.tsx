@@ -5,8 +5,8 @@ import useRepositoryStore from '../store/useRepositoryStore'
 import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
 
 export const useQueryRepositoryCollection = () => {
-  const { rarityFilter, setTraitMapping, setTokens, setTokenRanking, repositoryId, collectionId, setCollectionId } =
-    useRepositoryStore((state) => {
+  const { rarityFilter, setTraitMapping, setTokens, setTokenRanking, repositoryId, collectionId, setCollectionId } = useRepositoryStore(
+    (state) => {
       return {
         rarityFilter: state.rarityFilter,
         setTokens: state.setTokens,
@@ -16,7 +16,8 @@ export const useQueryRepositoryCollection = () => {
         collectionId: state.collectionId,
         setCollectionId: state.setCollectionId,
       }
-    })
+    }
+  )
   const { data: collections, isLoading, isError } = trpc.useQuery(['collections.getAll', { id: repositoryId }])
   const { all: layers } = useQueryRepositoryLayer()
 

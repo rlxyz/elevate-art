@@ -68,10 +68,7 @@ const ViewAllRepositories = () => {
         <div className='col-span-1 h-full flex items-center'>
           <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
             <button
-              className={clsx(
-                isLoading && 'invisible',
-                'w-full border h-full rounded-[5px] text-xs text-white bg-black font-semibold'
-              )}
+              className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black font-semibold')}
               onClick={(e: any) => {
                 e.preventDefault()
                 router.push(`${organisationName}/new`)

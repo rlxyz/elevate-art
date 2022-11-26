@@ -29,10 +29,7 @@ export const RulesDisplayOneItem = ({ rule }: { rule: TraitElementRule }) => {
         <RulesComboboxInput traitElement={secondary} layerName={secondaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
-        <button
-          className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center'
-          onClick={() => setIsOpen(true)}
-        >
+        <button className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center' onClick={() => setIsOpen(true)}>
           <TrashIcon className='w-4 h-4 text-mediumGrey' />
         </button>
         <RulesDeleteModal visible={isOpen} onClose={() => setIsOpen(false)} rule={rule} />

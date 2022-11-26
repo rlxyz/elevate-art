@@ -10,8 +10,8 @@ import { useState } from 'react'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } =
-    useRepositoryStore((state) => {
+  const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
+    (state) => {
       return {
         setTraitFilters: state.setTraitFilters,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
@@ -21,7 +21,8 @@ export const FilterByTrait = () => {
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
       }
-    })
+    }
+  )
   const { all: layers } = useQueryRepositoryLayer()
   const { current: collection } = useQueryRepositoryCollection()
   return (
@@ -115,10 +116,7 @@ export const FilterByTrait = () => {
         <Form>
           <div className='rounded-[5px] max-h-[70vh] overflow-y-scroll no-scrollbar'>
             {layers?.map((layer: LayerElement & { traitElements: TraitElement[] }, optionIdx: number) => (
-              <div
-                key={layer.id}
-                className={clsx('flex flex-col text-xs', layer.traitElements.length === 0 && 'cursor-not-allowed')}
-              >
+              <div key={layer.id} className={clsx('flex flex-col text-xs', layer.traitElements.length === 0 && 'cursor-not-allowed')}>
                 <div
                   onClick={(e) => {
                     e.preventDefault()
@@ -135,19 +133,13 @@ export const FilterByTrait = () => {
                     <label>{truncate(layer.name)}</label>
                     <div className='flex items-center space-x-2'>
                       <span className='text-xs'>{layer.traitElements.length}</span>
-                      {layerDropdown !== optionIdx ? (
-                        <ChevronDownIcon className='w-3 h-3' />
-                      ) : (
-                        <ChevronUpIcon className='w-3 h-3' />
-                      )}
+                      {layerDropdown !== optionIdx ? <ChevronDownIcon className='w-3 h-3' /> : <ChevronUpIcon className='w-3 h-3' />}
                     </div>
                   </div>
                 </div>
                 <div
                   className={
-                    layerDropdown === optionIdx
-                      ? 'max-h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey'
-                      : 'hidden'
+                    layerDropdown === optionIdx ? 'max-h-[17.5rem] overflow-y-scroll no-scrollbar border-b border-mediumGrey' : 'hidden'
                   }
                 >
                   {layer.traitElements

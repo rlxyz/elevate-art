@@ -22,13 +22,7 @@ interface RepositoryStoreStateInterface {
 
 interface RepositoryStoreFunctionInterface {
   setTokens: (tokens: number[]) => void
-  setTraitMapping: ({
-    tokenIdMap,
-    traitMap,
-  }: {
-    tokenIdMap: Map<string, Map<string, number[]>>
-    traitMap: Map<string, number>
-  }) => void
+  setTraitMapping: ({ tokenIdMap, traitMap }: { tokenIdMap: Map<string, Map<string, number[]>>; traitMap: Map<string, number> }) => void
   setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => void
   setTokenRanking: (indices: { score: number; index: number }[]) => void
   setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => void
@@ -62,13 +56,8 @@ export const createRepositoryStore = create<RepositoryStoreInterface>()(
       setRarityFilter: (filter: 'Top 10' | 'Middle 10' | 'Bottom 10' | 'All') => set((_) => ({ rarityFilter: filter })),
       setTokens: (tokens: number[]) => set((_) => ({ tokens: tokens })),
       setTraitFilters: (filters: { layer: LayerElement; trait: TraitElement }[]) => set((_) => ({ traitFilters: [...filters] })),
-      setTraitMapping: ({
-        tokenIdMap,
-        traitMap,
-      }: {
-        tokenIdMap: Map<string, Map<string, number[]>>
-        traitMap: Map<string, number>
-      }) => set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
+      setTraitMapping: ({ tokenIdMap, traitMap }: { tokenIdMap: Map<string, Map<string, number[]>>; traitMap: Map<string, number> }) =>
+        set((_) => ({ traitMapping: { tokenIdMap, traitMap } })),
       setRepositoryId: (repositoryId: string) => set((_) => ({ repositoryId })),
       setCollectionId: (collectionId: string) => set((_) => ({ collectionId })),
       setTokenRanking: (indices: { score: number; index: number }[]) => set((_) => ({ tokenRanking: indices })),

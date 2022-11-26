@@ -56,15 +56,13 @@ export const OrganisationTeamAddUserDialog = ({
                   <Dialog.Description>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>
-                        Add people to your team and collaborate with them. They can create projects, add layers with associates
-                        traits, set rarity, create rules, and generate collections.
+                        Add people to your team and collaborate with them. They can create projects, add layers with associates traits, set
+                        rarity, create rules, and generate collections.
                       </span>
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Address</span>
-                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>
-                            {addNewUserData.address}
-                          </div>
+                          <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{addNewUserData.address}</div>
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>

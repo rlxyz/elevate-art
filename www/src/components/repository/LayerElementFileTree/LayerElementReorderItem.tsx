@@ -34,10 +34,7 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, it
       style={{ boxShadow, y }}
       dragListener={false}
       dragControls={dragControls}
-      className={clsx(
-        className,
-        'bg-lightGray relative flex w-full items-center border border-mediumGrey rounded-[5px] px-4 py-2'
-      )}
+      className={clsx(className, 'bg-lightGray relative flex w-full items-center border border-mediumGrey rounded-[5px] px-4 py-2')}
     >
       <SelectorIcon
         className='absolute w-3 h-3'

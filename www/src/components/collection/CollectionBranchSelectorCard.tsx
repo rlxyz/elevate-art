@@ -25,12 +25,7 @@ const Index = () => {
   const buttonRef = useRef<null | HTMLButtonElement>(null) // useRef<HTMLButtonElement>(null)
   const optionRef = useRef<null | HTMLDivElement>(null) // useRef<HTMLDivElement>(null)
   const handleClickOutside = (event: any) => {
-    if (
-      buttonRef.current &&
-      !buttonRef.current.contains(event.target) &&
-      optionRef.current &&
-      !optionRef?.current.contains(event.target)
-    ) {
+    if (buttonRef.current && !buttonRef.current.contains(event.target) && optionRef.current && !optionRef?.current.contains(event.target)) {
       setOpenState(false)
     } else {
       event.stopPropagation()
@@ -127,9 +122,7 @@ const Index = () => {
                                   {'master'}
                                 </span>
                               )}
-                              {collection.name === selectedCollection?.name && (
-                                <CheckIcon className='w-4 h-4 text-blueHighlight' />
-                              )}
+                              {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-blueHighlight' />}
                             </div>
                           </div>
                         </Button>

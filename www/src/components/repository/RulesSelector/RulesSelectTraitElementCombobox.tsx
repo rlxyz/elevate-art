@@ -68,10 +68,7 @@ export const RulesSelectTraitElementCombobox = ({
                   </div>
                   {selected && (
                     <span
-                      className={classNames(
-                        'absolute inset-y-0 right-0 flex items-center pr-4',
-                        active ? 'text-white' : 'text-indigo-600'
-                      )}
+                      className={classNames('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600')}
                     >
                       <CheckIcon className='h-5 w-5' aria-hidden='true' />
                     </span>

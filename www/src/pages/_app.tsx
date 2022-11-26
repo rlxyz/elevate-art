@@ -34,11 +34,7 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIG
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, chain.goerli],
-  [
-    alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }),
-    infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }),
-    publicProvider(),
-  ]
+  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }), publicProvider()]
 )
 
 const { wallets } = getDefaultWallets({

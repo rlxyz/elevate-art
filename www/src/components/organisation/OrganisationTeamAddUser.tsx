@@ -107,9 +107,7 @@ export const OrganisationTeamAddUser = () => {
                     {...register('role', { required: true })}
                     className='text-xs p-2 w-full h-full rounded-[5px] border border-mediumGrey'
                   >
-                    <option value={OrganisationDatabaseRoleEnum.enum.Admin}>
-                      {capitalize(OrganisationDatabaseRoleEnum.enum.Admin)}
-                    </option>
+                    <option value={OrganisationDatabaseRoleEnum.enum.Admin}>{capitalize(OrganisationDatabaseRoleEnum.enum.Admin)}</option>
                     <option value={OrganisationDatabaseRoleEnum.enum.Curator}>
                       {capitalize(OrganisationDatabaseRoleEnum.enum.Curator)}
                     </option>

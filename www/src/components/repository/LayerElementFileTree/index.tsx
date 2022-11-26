@@ -75,11 +75,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layer
             repository={repository}
             layerElements={layerElements}
           />
-          <LayerElementCreateModal
-            onClose={() => setIsCreateDialogOpen(false)}
-            visible={isCreateDialogOpen}
-            repository={repository}
-          />
+          <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} repository={repository} />
         </>
       )}
     </div>

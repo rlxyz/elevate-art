@@ -59,8 +59,8 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                   <Dialog.Description>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>
-                        Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate
-                        tons of collections.
+                        Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate tons of
+                        collections.
                       </span>
                       <div>
                         <div className='space-y-1'>

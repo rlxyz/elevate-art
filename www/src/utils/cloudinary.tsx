@@ -42,8 +42,7 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
   return (
     files.filter(
       (file) =>
-        file.path?.split('/').length !== depth ||
-        file.size > (env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED || DEFAULT_IMAGES_BYTES_ALLOWED)
+        file.path?.split('/').length !== depth || file.size > (env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED || DEFAULT_IMAGES_BYTES_ALLOWED)
     ).length === 0
   )
 }

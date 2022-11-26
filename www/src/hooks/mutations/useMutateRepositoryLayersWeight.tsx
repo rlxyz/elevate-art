@@ -55,9 +55,7 @@ export const useMutateRepositoryLayersWeight = () => {
     },
     onSuccess: (data, variable) => {
       // return backup
-      notifySuccess(
-        `Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`
-      )
+      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`)
     },
     onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })

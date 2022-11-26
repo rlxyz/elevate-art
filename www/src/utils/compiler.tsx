@@ -51,18 +51,14 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
 
 const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
-    const exclude = rules.filter(
-      (rule) => rule.type === RulesEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with)
-    )
+    const exclude = rules.filter((rule) => rule.type === RulesEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with))
     return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])]
   }, [])
 }
 
 const combination = (elements: [string, string][], traits: Trait[]): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
-    const combine = rules.filter(
-      (rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with)
-    )
+    const combine = rules.filter((rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with))
     return [...acc, ...(combine.length > 0 ? [{ id, rules, weight }] : [])]
   }, [])
 }
@@ -105,9 +101,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
 }
 
 export const many = (layers: Layer[], seeds: string[]): [string, string][][] => {
-  const sorted = layers
-    .map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) }))
-    .sort((a, b) => a.priority - b.priority)
+  const sorted = layers.map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) })).sort((a, b) => a.priority - b.priority)
   return seeds.map((x) => one(sorted, x))
 }
 

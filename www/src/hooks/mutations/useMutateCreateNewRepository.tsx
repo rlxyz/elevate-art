@@ -5,17 +5,9 @@ import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
-import {
-  getRepositoryLayerNames,
-  getRepositoryUploadLayerObjectUrls,
-  uploadCollectionLayerImageCloudinary,
-} from '../../utils/cloudinary'
+import { getRepositoryLayerNames, getRepositoryUploadLayerObjectUrls, uploadCollectionLayerImageCloudinary } from '../../utils/cloudinary'
 
-export const useMutateCreateNewRepository = ({
-  setRepository,
-}: {
-  setRepository: Dispatch<SetStateAction<null | Repository>>
-}) => {
+export const useMutateCreateNewRepository = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
   const { current: organisation, isLoading } = useQueryOrganisation()
   const { mutate: createRepository } = trpc.useMutation('repository.create')

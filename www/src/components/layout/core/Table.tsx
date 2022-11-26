@@ -24,16 +24,12 @@ const TableHead = ({ children, loading = false }: { children: ReactNode | ReactN
               key={index}
               className={clsx(
                 !loading && index === 0 && 'border-t border-l border-b border-mediumGrey rounded-tl-[5px] pl-3',
-                !loading &&
-                  index === childrens.length - 1 &&
-                  'pr-3 border-b border-t border-r border-mediumGrey rounded-tr-[5px]',
+                !loading && index === childrens.length - 1 && 'pr-3 border-b border-t border-r border-mediumGrey rounded-tr-[5px]',
                 !loading && 'text-left border-b border-t border-mediumGrey', // everything else
                 'py-2'
               )}
             >
-              <div className={clsx(loading && 'invisible', 'text-[0.6rem] w-full font-normal text-darkGrey uppercase')}>
-                {children}
-              </div>
+              <div className={clsx(loading && 'invisible', 'text-[0.6rem] w-full font-normal text-darkGrey uppercase')}>{children}</div>
             </th>
           )
         })}
@@ -81,12 +77,7 @@ const TableHeadRow = ({
 
 const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   return (
-    <tbody
-      className={clsx(
-        loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white',
-        'divide-y divide-mediumGrey overflow-auto'
-      )}
-    >
+    <tbody className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-mediumGrey overflow-auto')}>
       {children}
     </tbody>
   )

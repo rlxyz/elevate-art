@@ -58,9 +58,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                   >
                     <div className='divide-y divide-mediumGrey space-y-6'>
                       <div>
-                        <p className='text-sm'>
-                          This will create a new collection, your existing collection will remain the same
-                        </p>
+                        <p className='text-sm'>This will create a new collection, your existing collection will remain the same</p>
                       </div>
                       <div className='pt-6 space-y-2'>
                         <div className='space-y-1 flex flex-col'>

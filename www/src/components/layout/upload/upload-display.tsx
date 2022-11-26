@@ -74,16 +74,12 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
           >
             <Disclosure.Panel>
-              <div
-                className={clsx('grid gap-x-3 gap-y-3', gridSize === 'md' && 'grid-cols-6', gridSize == 'lg' && 'grid-cols-12')}
-              >
+              <div className={clsx('grid gap-x-3 gap-y-3', gridSize === 'md' && 'grid-cols-6', gridSize == 'lg' && 'grid-cols-12')}>
                 {traits.map((item, index) => {
                   return (
                     <div key={`${item}-${index}`} className='relative flex flex-col space-y-1 items-center'>
                       <img width={200} height={200} src={item.imageUrl} className='rounded-[5px] border border-mediumGrey' />
-                      {item.uploaded && (
-                        <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />
-                      )}
+                      {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />}
                       {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
                       <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
                     </div>

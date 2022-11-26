@@ -224,9 +224,7 @@ export const HeaderInternalPageRoutes = ({ links }: HeaderInternalPageRoutesProp
               <div className={clsx('mb-1', loading && 'pointer-events-none')}>
                 <Link disabled={loading} enabled={enabled} title={capitalize(name)} href={href} />
               </div>
-              {enabled && (
-                <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />
-              )}
+              {enabled && <motion.div className='absolute bg-black mx-3 h-[2px] bottom-[-1px] left-0 right-0' layoutId='underline' />}
             </li>
           )
         })}

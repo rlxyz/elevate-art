@@ -58,9 +58,7 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, .
                 <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <Table.Body.Row.Data key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Table.Body.Row.Data>
+                      <Table.Body.Row.Data key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Body.Row.Data>
                     )
                   })}
                 </Table.Body.Row>

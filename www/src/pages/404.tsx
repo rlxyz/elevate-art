@@ -18,9 +18,7 @@ export default function NotFound() {
                   <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
                   <div className=' mt-4 flex flex-col'>
                     <span className='text-sm font-semibold'>“Control can sometimes be an illusion.</span>
-                    <span className='text-sm font-semibold'>
-                      But sometimes you need illusion to gain control.” &#8212; Mr. Robot
-                    </span>
+                    <span className='text-sm font-semibold'>But sometimes you need illusion to gain control.” &#8212; Mr. Robot</span>
                   </div>
                   <div className='mt-2'>
                     <Link href='/'>

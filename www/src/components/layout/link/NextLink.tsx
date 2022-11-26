@@ -15,30 +15,12 @@ export type NextLinkProps = LinkProps & Omit<React.AnchorHTMLAttributes<any>, ke
 
 const NextLinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
   (
-    {
-      href,
-      color,
-      underline,
-      children,
-      className,
-      block,
-      icon,
-      ...props
-    }: React.PropsWithChildren<LinkProps> & typeof defaultProps,
+    { href, color, underline, children, className, block, icon, ...props }: React.PropsWithChildren<LinkProps> & typeof defaultProps,
     ref: React.Ref<HTMLAnchorElement>
   ) => {
     return (
       <NextLink href={href || '/404'} legacyBehavior>
-        <Link
-          href={href}
-          className={className}
-          ref={ref}
-          color={color}
-          underline={underline}
-          block={block}
-          icon={icon}
-          {...props}
-        >
+        <Link href={href} className={className} ref={ref} color={color} underline={underline} block={block} icon={icon} {...props}>
           {children}
         </Link>
       </NextLink>
