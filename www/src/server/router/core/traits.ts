@@ -120,6 +120,7 @@ export const traitElementRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { traitElements } = input
 
+      /** @todo check this! */
       const sum = sumBy(traitElements, (x) => x.weight)
       if (sum > 100) {
         throw new trpc.TRPCError({
