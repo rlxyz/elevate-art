@@ -3,11 +3,11 @@ import { RulesEnum } from '@utils/compiler'
 import { FC } from 'react'
 import { RulesDisplayOneItem } from './RulesDisplayOneItem'
 
-interface TraitElementDisplayRulesProps {
+interface RulesDisplayProps {
   traitElements: TraitElementWithRules[]
 }
 
-export const TraitElementDisplayRules: FC<TraitElementDisplayRulesProps> = ({ traitElements }) => {
+export const RulesDisplay: FC<RulesDisplayProps> = ({ traitElements }) => {
   return (
     <div className='w-full flex flex-col space-y-2'>
       {traitElements
