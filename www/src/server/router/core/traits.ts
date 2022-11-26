@@ -4,7 +4,7 @@ import { getLayerElementsWithTraitElements } from '@server/scripts/get-layer-wit
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
-import { groupBy } from '@utils/object-utils'
+import { groupBy, sumBy } from '@utils/object-utils'
 import { z } from 'zod'
 import { createProtectedRouter } from '../context'
 
@@ -119,6 +119,14 @@ export const traitElementRouter = createProtectedRouter()
     }),
     async resolve({ ctx, input }) {
       const { traitElements } = input
+
+      const sum = sumBy(traitElements, (x) => x.weight)
+      if (sum > 100) {
+        throw new trpc.TRPCError({
+          code: `BAD_REQUEST`,
+          message: `Sum of weights cannot be greater than 100`,
+        })
+      }
 
       /** Run sequential operations; as they don't depend on each other. */
       await updateManyByField(ctx.prisma, 'TraitElement', 'weight', traitElements, (x) => [x.traitElementId, x.weight])
