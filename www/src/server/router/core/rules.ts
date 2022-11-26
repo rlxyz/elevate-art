@@ -5,7 +5,6 @@ import { createProtectedRouter } from '../context'
 /**
  * Rules Router
  * Any TraitElement Rules functionality should implemented here.
- *
  */
 export const rulesRouter = createProtectedRouter()
   /**
@@ -23,20 +22,13 @@ export const rulesRouter = createProtectedRouter()
       })
     },
   })
+  /**
+   * Creates a Rule with two associated TraitElements and a "condition" based on the compiler's supported conditions.
+   */
   .mutation('delete', {
-    input: z.object({
-      condition: RulesEnum,
-      primaryLayerElementId: z.string(),
-      primaryTraitElementId: z.string(),
-      secondaryLayerElementId: z.string(),
-      secondaryTraitElementId: z.string(),
-      id: z.string(),
-    }),
+    input: z.object({ id: z.string() }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.rules.delete({
-        where: {
-          id: input.id,
-        },
-      })
+      const { id } = input
+      return await ctx.prisma.rules.delete({ where: { id } })
     },
   })

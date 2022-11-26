@@ -20,16 +20,9 @@ export const TraitElementDisplayRules: FC<TraitElementDisplayRulesProps> = ({ tr
                   <div className='space-y-2' key={index}>
                     {rulesPrimary
                       .filter((rule) => rule.condition === condition)
-                      .map((rule) => {
-                        return (
-                          <RulesDisplayOneItem
-                            id={rule.id}
-                            key={rule.id}
-                            traitElements={[rule.primaryTraitElement, rule.secondaryTraitElement]}
-                            condition={rule.condition}
-                          />
-                        )
-                      })}
+                      .map((rule) => (
+                        <RulesDisplayOneItem rule={rule} key={rule.id} />
+                      ))}
                   </div>
                 )
               })}

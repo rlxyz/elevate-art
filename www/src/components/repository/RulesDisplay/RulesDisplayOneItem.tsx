@@ -1,26 +1,20 @@
 import { TrashIcon } from '@heroicons/react/outline'
-import { useMutateDeleteRule } from '@hooks/mutations/useMutateDeleteRule'
-import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { RulesType } from '@utils/compiler'
-import { trpc } from '@utils/trpc'
+import { TraitElementRule, useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { useState } from 'react'
 import { RulesComboboxInput } from './RulesComboboxInput'
+import { RulesDeleteModal } from './RulesDeleteModal'
 
-export const RulesDisplayOneItem = ({
-  id,
-  traitElements,
-  condition,
-}: {
-  id: string
-  traitElements: [TraitElementWithRules, TraitElementWithRules]
-  condition: RulesType
-}) => {
-  const [primary, secondary] = traitElements
-  const { mutate: deleteRule } = useMutateDeleteRule()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers } = trpc.useQuery(['layers.getAll', { id: repositoryId }])
+export const RulesDisplayOneItem = ({ rule }: { rule: TraitElementRule }) => {
+  const { primaryTraitElementId, secondaryTraitElementId, condition } = rule
+  const { all: layers } = useQueryRepositoryLayer() // @todo remove this
+  const [isOpen, setIsOpen] = useState(false)
+  const allTraitElements = layers.flatMap((x) => x.traitElements)
+  const primary = allTraitElements.find((x) => x.id === primaryTraitElementId)
+  const secondary = allTraitElements.find((x) => x.id === secondaryTraitElementId)
+  if (typeof primary === 'undefined' || typeof secondary === 'undefined') return null
   const primaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === primary.id))
   const secondaryLayer = layers?.find((l) => l.traitElements.find((t) => t.id === secondary.id))
+
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
@@ -37,19 +31,11 @@ export const RulesDisplayOneItem = ({
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <button
           className='w-full flex bg-white disabled:bg-white disabled:text-mediumGrey justify-center'
-          onClick={() => {
-            deleteRule({
-              id,
-              condition: condition,
-              primaryLayerElementId: primary.layerElementId,
-              secondaryLayerElementId: secondary.layerElementId,
-              primaryTraitElementId: primary.id,
-              secondaryTraitElementId: secondary.id,
-            })
-          }}
+          onClick={() => setIsOpen(true)}
         >
           <TrashIcon className='w-4 h-4 text-mediumGrey' />
         </button>
+        <RulesDeleteModal visible={isOpen} onClose={() => setIsOpen(false)} rule={rule} />
       </div>
     </div>
   )

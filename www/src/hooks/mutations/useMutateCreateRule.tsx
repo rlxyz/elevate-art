@@ -9,9 +9,6 @@ export const useMutateCreateRule = () => {
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.useMutation('rules.create', {
-    onError: () => {
-      notifyError("We couldn't create the rule. Try again.")
-    },
     onSuccess: (data, variables) => {
       const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return
@@ -38,6 +35,9 @@ export const useMutateCreateRule = () => {
       })
 
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+    },
+    onError: () => {
+      notifyError("We couldn't create the rule. Try again.")
     },
   })
 }

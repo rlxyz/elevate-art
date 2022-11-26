@@ -6,29 +6,30 @@ import produce from 'immer'
 export const useMutateDeleteRule = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
   return trpc.useMutation('rules.delete', {
-    onMutate: async (input) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
-
-      // Snapshot the previous value
+    onSuccess: async (data) => {
       const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
       if (!backup) return { backup }
 
       const next = produce(backup, (draft) => {
-        const primaryId = draft.findIndex((l) => l.id === input.primaryLayerElementId)
-        const secondaryId = draft.findIndex((l) => l.id === input.secondaryLayerElementId)
-        const primaryTrait = draft[primaryId]?.traitElements.find((t) => t.id === input.primaryTraitElementId)
-        const secondaryTrait = draft[secondaryId]?.traitElements.find((t) => t.id === input.secondaryTraitElementId)
+        const allTraitElements = draft.flatMap((x) => x.traitElements)
 
-        if (typeof primaryTrait === 'undefined' || typeof secondaryTrait === 'undefined') return
+        /** Get the Traits */
+        const primary = allTraitElements.find((l) => l.id === data.primaryTraitElementId)
+        const secondary = allTraitElements.find((l) => l.id === data.secondaryTraitElementId)
+        if (typeof primary === 'undefined' || typeof secondary === 'undefined') return
 
-        const ruleIndexPrimary = primaryTrait.rulesPrimary.findIndex((r) => r.id === input.id)
-        const ruleIndexSecondary = secondaryTrait.rulesSecondary.findIndex((r) => r.id === input.id)
-        primaryTrait.rulesPrimary.splice(ruleIndexPrimary, 1)
-        secondaryTrait.rulesSecondary.splice(ruleIndexSecondary, 1)
-        notifySuccess(`Deleted ${primaryTrait.name} ${input.condition} ${secondaryTrait.name} rule`)
+        /** Find the index of the rules in their assocaited TraitElement */
+        const ruleIndexPrimary = primary.rulesPrimary.findIndex((r) => r.id === data.id)
+        const ruleIndexSecondary = secondary.rulesSecondary.findIndex((r) => r.id === data.id)
+        if (ruleIndexPrimary < 0 || ruleIndexSecondary < 0) return
+
+        /** Remove rule  */
+        primary.rulesPrimary.splice(ruleIndexPrimary, 1)
+        secondary.rulesSecondary.splice(ruleIndexSecondary, 1)
+
+        notifySuccess(`Deleted ${primary.name} ${data.condition} ${secondary.name} rule`)
       })
 
       ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
@@ -36,10 +37,8 @@ export const useMutateDeleteRule = () => {
       // Notify Success
       return { backup }
     },
-    onError: (err, variables, context) => {
-      if (!context?.backup) return
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
+    onError: () => {
+      notifyError("We couldn't create the rule. Try again.")
     },
-    onSettled: (data) => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
   })
 }
