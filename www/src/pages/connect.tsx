@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Card from 'src/client/components/layout/card/Card'
 import { Layout } from 'src/client/components/layout/core/Layout'

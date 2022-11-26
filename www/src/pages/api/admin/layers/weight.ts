@@ -1,4 +1,4 @@
-import { getLayerElementsWithTraitElementsTotalWeight } from '@server/scripts/get-all-layer-elements-total-weight-'
+import { getLayerElementsWithTraitElementsTotalWeight } from '@server/common/get-all-layer-elements-total-weight-'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 // @todo authenticate this
