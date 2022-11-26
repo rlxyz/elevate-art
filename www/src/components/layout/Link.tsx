@@ -32,7 +32,7 @@ export const Link = ({
       {children}
     </div>
   ) : (
-    <NextLink.default href={href}>
+    <NextLink.default href={href} legacyBehavior>
       {external ? (
         <a className={clsx(className)}>{children}</a>
       ) : (

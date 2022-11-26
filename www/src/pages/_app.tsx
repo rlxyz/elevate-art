@@ -5,22 +5,20 @@ import { createRepositoryStore, RepositoryContext } from '@hooks/store/useReposi
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
-import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
-import { loggerLink } from '@trpc/client/links/loggerLink'
-import { withTRPC } from '@trpc/next'
 import { H } from 'highlight.run'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
-import { AppProps } from 'next/app'
 import { Toaster } from 'react-hot-toast'
 import { env } from 'src/env/client.mjs'
-import superjson from 'superjson'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
-import type { AppRouter } from '../server/router'
 import '../styles/globals.css'
+
+import { trpc } from '@utils/trpc'
+import { Session } from 'next-auth'
+import { AppType } from 'next/app'
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
@@ -70,11 +68,11 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: 'sign in to elevate.art',
 })
 
-const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
+const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <ErrorBoundary showDialog>
       <WagmiConfig client={wagmiClient}>
-        <SessionProvider refetchInterval={60} session={pageProps.session}>
+        <SessionProvider refetchInterval={60} session={session}>
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
             <RainbowKitProvider
               appInfo={appInfo}
@@ -116,51 +114,4 @@ const ElevateCompilerApp = ({ Component, pageProps }: AppProps) => {
   )
 }
 
-const getBaseUrl = () => {
-  if (typeof window !== 'undefined') return '' // browser should use relative url
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}` // SSR should use vercel url
-  return `http://localhost:${process.env.PORT ?? 3000}` // dev SSR should use localhost
-}
-
-export default withTRPC<AppRouter>({
-  config({ ctx }) {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
-    const url = `${getBaseUrl()}/api/trpc`
-
-    return {
-      links: [
-        loggerLink({
-          enabled: (opts) =>
-            process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
-        }),
-        httpBatchLink({ url }),
-      ],
-      url,
-      transformer: superjson,
-      /**
-       * @link https://react-query.tanstack.com/reference/QueryClient
-       */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-
-      // To use SSR properly you need to forward the client's headers to the server
-      headers: () => {
-        if (ctx?.req) {
-          const headers = ctx?.req?.headers
-          delete headers?.connection
-          return {
-            ...headers,
-            'x-ssr': '1',
-          }
-        }
-        return {}
-      },
-    }
-  },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
-  ssr: false,
-})(ElevateCompilerApp)
+export default trpc.withTRPC(ElevateCompilerApp)

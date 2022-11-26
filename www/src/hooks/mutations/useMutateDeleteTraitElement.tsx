@@ -8,7 +8,7 @@ export const useMutateDeleteTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
-  return trpc.useMutation('traits.delete', {
+  return trpc.traitElement.delete.useMutation({
     onSuccess: async (data, variable) => {
       // Notify
       notifySuccess(`You have delete ${variable.traitElements.length} traits.`)

@@ -6,7 +6,7 @@ import { Result } from '@server/utils/response-result'
 import * as trpc from '@trpc/server'
 import { groupBy, sumBy } from '@utils/object-utils'
 import { z } from 'zod'
-import { createProtectedRouter } from '../context'
+import { protectedProcedure, router } from '../trpc'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
@@ -24,17 +24,14 @@ const TraitElementUpdateWeightInput = z.array(
  * is that we don't have to update the 'None' TraitElement everytime another TraitElement is updated. For e.g, a TraitElement
  * is deleted, we don't have to update the 'None' TraitElement.
  */
-export const traitElementRouter = createProtectedRouter()
-  /**
-   * Delete TraitElement from their associated LayerElement.
-   * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
-   *
-   */
-  .mutation('delete', {
-    input: z.object({
-      traitElements: TraitElementDeleteInput,
-    }),
-    async resolve({ ctx, input }) {
+export const traitElementRouter = router({
+  delete: protectedProcedure
+    .input(
+      z.object({
+        traitElements: TraitElementDeleteInput,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { traitElements } = input
 
       /* Delete many TraitElement from Cloudinary */
@@ -57,17 +54,14 @@ export const traitElementRouter = createProtectedRouter()
           },
         },
       })
-    },
-  })
-  /**
-   * Creates a TraitElement with their associated LayerElement.
-   * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
-   */
-  .mutation('create', {
-    input: z.object({
-      traitElements: TraitElementCreateInput.min(1),
     }),
-    async resolve({ ctx, input }) {
+  create: protectedProcedure
+    .input(
+      z.object({
+        traitElements: TraitElementCreateInput,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { traitElements } = input
 
       /* Create many traits based on their layerElementId & name */
@@ -84,17 +78,14 @@ export const traitElementRouter = createProtectedRouter()
         layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)),
         prisma: ctx.prisma,
       })
-    },
-  })
-  /**
-   * Renames a TraitElement with their associated LayerElement.
-   * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
-   */
-  .mutation('update.name', {
-    input: z.object({
-      traitElements: TraitElementUpdateNameInput.min(1),
     }),
-    async resolve({ ctx, input }) {
+  updateName: protectedProcedure
+    .input(
+      z.object({
+        traitElements: TraitElementUpdateNameInput,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { traitElements } = input
 
       /** Run sequential operations; as they don't depend on each other. */
@@ -108,16 +99,14 @@ export const traitElementRouter = createProtectedRouter()
         ),
         { isolationLevel: Prisma.TransactionIsolationLevel.ReadUncommitted }
       )
-    },
-  })
-  /**
-   * Updates weight of TraitElements with their associated LayerElement.
-   */
-  .mutation('update.weight', {
-    input: z.object({
-      traitElements: TraitElementUpdateWeightInput.min(1),
     }),
-    async resolve({ ctx, input }) {
+  updateWeight: protectedProcedure
+    .input(
+      z.object({
+        traitElements: TraitElementUpdateWeightInput,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { traitElements } = input
 
       /** @todo check this! */
@@ -131,5 +120,5 @@ export const traitElementRouter = createProtectedRouter()
 
       /** Run sequential operations; as they don't depend on each other. */
       await updateManyByField(ctx.prisma, 'TraitElement', 'weight', traitElements, (x) => [x.traitElementId, x.weight])
-    },
-  })
+    }),
+})

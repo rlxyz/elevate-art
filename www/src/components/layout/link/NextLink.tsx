@@ -28,7 +28,7 @@ const NextLinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChi
     ref: React.Ref<HTMLAnchorElement>
   ) => {
     return (
-      <NextLink href={href || '/404'}>
+      <NextLink href={href || '/404'} legacyBehavior>
         <Link
           href={href}
           className={className}
