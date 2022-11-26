@@ -16,13 +16,7 @@ interface TraitElementCreateRuleProps extends FormModalProps {
   condition: RulesType
 }
 
-export const TraitElementCreateRuleModal: FC<TraitElementCreateRuleProps> = ({
-  visible,
-  onClose,
-  condition,
-  onSuccess,
-  traitElements,
-}) => {
+export const RulesCreateModal: FC<TraitElementCreateRuleProps> = ({ visible, onClose, condition, onSuccess, traitElements }) => {
   const { mutate, isLoading } = useMutateRepositoryCreateRule()
 
   const handleClose = () => {

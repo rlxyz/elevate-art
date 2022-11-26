@@ -4,9 +4,9 @@ import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { RulesType } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { ComboboxInput } from './RepositoryRuleCombobox'
+import { RulesComboboxInput } from './RulesComboboxInput'
 
-export const TraitElementRulesDisplayOne = ({
+export const RulesDisplayOneItem = ({
   id,
   traitElements,
   condition,
@@ -24,7 +24,7 @@ export const TraitElementRulesDisplayOne = ({
   return (
     <div className='grid grid-cols-10 space-x-3 text-darkGrey'>
       <div className='col-span-3 h-full relative'>
-        <ComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
+        <RulesComboboxInput traitElement={primary} layerName={primaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-2 h-full relative'>
         <div className='w-full h-full rounded-[5px] overflow-hidden border border-mediumGrey bg-hue-light py-2 pl-3 text-xs'>
@@ -32,7 +32,7 @@ export const TraitElementRulesDisplayOne = ({
         </div>
       </div>
       <div className='col-span-4 h-full relative'>
-        <ComboboxInput traitElement={secondary} layerName={secondaryLayer?.name || ''} highlight={false} />
+        <RulesComboboxInput traitElement={secondary} layerName={secondaryLayer?.name || ''} highlight={false} />
       </div>
       <div className='col-span-1 h-full relative flex items-center right-0 justify-center'>
         <button

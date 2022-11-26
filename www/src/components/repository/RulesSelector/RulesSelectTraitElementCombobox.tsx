@@ -6,7 +6,7 @@ import { TraitElement } from '@prisma/client'
 import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
-import { ComboboxInput } from '../TraitElementRulesDisplay/RepositoryRuleCombobox'
+import { RulesComboboxInput } from '../RulesDisplay/RulesComboboxInput'
 
 export const RulesSelectTraitElementCombobox = ({
   traitElements,
@@ -30,7 +30,7 @@ export const RulesSelectTraitElementCombobox = ({
   return (
     <Combobox as='div' value={selected} onChange={onChange}>
       <Combobox.Input
-        as={ComboboxInput}
+        as={RulesComboboxInput}
         className={clsx(selected && 'border-blueHighlight')}
         onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}

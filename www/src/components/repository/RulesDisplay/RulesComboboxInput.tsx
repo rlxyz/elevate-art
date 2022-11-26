@@ -2,8 +2,8 @@ import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import clsx from 'clsx'
 import { forwardRef, HTMLProps } from 'react'
 
-type ComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElementWithRules | null | undefined }
-export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & HTMLProps<ComboboxInputProps>>(
+type RulesComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElementWithRules | null | undefined }
+export const RulesComboboxInput = forwardRef<HTMLInputElement, RulesComboboxInputProps & HTMLProps<RulesComboboxInputProps>>(
   ({ highlight = true, layerName, traitElement, placeholder, className, ...props }, ref) => {
     return (
       <div
@@ -31,4 +31,4 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps & H
   }
 )
 
-ComboboxInput.displayName = 'ComboboxInput'
+RulesComboboxInput.displayName = 'ComboboxInput'

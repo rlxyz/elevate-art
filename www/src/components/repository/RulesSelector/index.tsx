@@ -1,9 +1,9 @@
 import { LayerElementWithRules, TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { RulesType } from '@utils/compiler'
 import { useState } from 'react'
+import { RulesCreateModal } from './RulesCreateModal'
 import { RulesSelectConditionCombobox } from './RulesSelectConditionCombobox'
 import { RulesSelectTraitElementCombobox } from './RulesSelectTraitElementCombobox'
-import { TraitElementCreateRuleModal } from './TraitElementCreateRuleModal'
 
 export const TraitElementRulesSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -83,7 +83,7 @@ export const TraitElementRulesSelector = ({ layers }: { layers: LayerElementWith
             Add
           </button>
           {selectedCondition && selectedLeftTrait && selectedRightTrait && (
-            <TraitElementCreateRuleModal
+            <RulesCreateModal
               visible={isOpen}
               onClose={() => setIsOpen(false)}
               onSuccess={() => {

@@ -1,7 +1,7 @@
 import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import { RulesEnum } from '@utils/compiler'
 import { FC } from 'react'
-import { TraitElementRulesDisplayOne } from './TraitElementRulesDisplayOne'
+import { RulesDisplayOneItem } from './RulesDisplayOneItem'
 
 interface TraitElementDisplayRulesProps {
   traitElements: TraitElementWithRules[]
@@ -22,7 +22,7 @@ export const TraitElementDisplayRules: FC<TraitElementDisplayRulesProps> = ({ tr
                       .filter((rule) => rule.condition === condition)
                       .map((rule) => {
                         return (
-                          <TraitElementRulesDisplayOne
+                          <RulesDisplayOneItem
                             id={rule.id}
                             key={rule.id}
                             traitElements={[rule.primaryTraitElement, rule.secondaryTraitElement]}
