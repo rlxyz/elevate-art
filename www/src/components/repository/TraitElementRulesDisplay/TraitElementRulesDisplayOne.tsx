@@ -4,7 +4,7 @@ import { TraitElementWithRules } from '@hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { RulesType } from '@utils/compiler'
 import { trpc } from '@utils/trpc'
-import { ComboboxInput } from '../TraitElementRules/RepositoryRuleCombobox'
+import { ComboboxInput } from './RepositoryRuleCombobox'
 
 export const TraitElementRulesDisplayOne = ({
   id,
