@@ -11,10 +11,7 @@ export const rulesRouter = createProtectedRouter()
    * Creates a Rule with two associated TraitElements and a "condition" based on the compiler's supported conditions.
    */
   .mutation('create', {
-    input: z.object({
-      condition: RulesEnum,
-      traitElements: z.tuple([z.string(), z.string()]),
-    }),
+    input: z.object({ condition: RulesEnum, traitElements: z.tuple([z.string(), z.string()]) }),
     async resolve({ ctx, input }) {
       const { condition, traitElements } = input
       return await ctx.prisma.rules.create({
