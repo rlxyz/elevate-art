@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -9,7 +9,7 @@ import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisati
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
   const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {
     return {
       setCurrentSettingsRoute: state.setCurrentSettingsRoute,

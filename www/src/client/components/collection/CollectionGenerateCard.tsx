@@ -1,4 +1,4 @@
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Button from 'src/client/components/layout/Button'
@@ -8,7 +8,7 @@ import CollectionIncrementGenerationDialog from './CollectionIncrementGeneration
 
 export const GenerateButton = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { current: collection } = useQueryRepositoryCollection()
+  const { current: collection } = useQueryCollectionFindAll()
   return (
     <div
       className={clsx(

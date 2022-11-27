@@ -1,7 +1,7 @@
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/router/repository/useQueryRepositoryFindByName'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
@@ -32,9 +32,9 @@ const Page = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations } = useQueryOrganisation()
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: organisations } = useQueryOrganisationFindAll()
   const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
 

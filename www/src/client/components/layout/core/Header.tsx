@@ -1,6 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { Organisation } from '@prisma/client'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -103,7 +103,7 @@ type HeaderInternalAppRoutesProps = {
   }[]
 }
 export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
-  const { currentHref } = useQueryOrganisation()
+  const { currentHref } = useQueryOrganisationFindAll()
   const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
   return (
     <>

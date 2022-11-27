@@ -1,6 +1,6 @@
 import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/router/repository/useQueryRepositoryFindByName'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -17,8 +17,8 @@ const Page = () => {
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisationFindAll()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)

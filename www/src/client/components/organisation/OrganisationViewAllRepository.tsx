@@ -1,6 +1,6 @@
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
-import { useQueryOrganisationsRepository } from '@hooks/router/organisation/useQueryOrganisationsRepository'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAllRepository } from '@hooks/router/organisation/useQueryOrganisationFindAllRepository'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
@@ -11,7 +11,7 @@ import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { timeAgo } from 'src/client/utils/time'
 
 const NoRepositoryExistPlaceholder = () => {
-  const { current } = useQueryOrganisation()
+  const { current } = useQueryOrganisationFindAll()
   return (
     <div className='h-full w-full flex flex-col items-center min-h-[calc(100vh-14rem)] justify-center'>
       <div className='flex flex-col space-y-6'>
@@ -48,7 +48,7 @@ const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const [query, setQuery] = useState('')
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
+  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationFindAllRepository()
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories

@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
@@ -6,7 +6,7 @@ import { capitalize } from 'src/client/utils/format'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 export const SettingsNavigations = () => {
-  const { current: organisation } = useQueryOrganisation()
+  const { current: organisation } = useQueryOrganisationFindAll()
   const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
   return (
     <div>
@@ -27,7 +27,7 @@ export const SettingsNavigations = () => {
 }
 
 export const OrganisationGeneralSettings = () => {
-  const { current: organisation } = useQueryOrganisation()
+  const { current: organisation } = useQueryOrganisationFindAll()
   const {
     register,
     handleSubmit,

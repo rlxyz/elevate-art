@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { Repository } from '@prisma/client'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
@@ -10,7 +10,7 @@ import { createCloudinaryFormData, getRepositoryLayerNames, getRepositoryUploadL
 
 export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
-  const { current: organisation, isLoading } = useQueryOrganisation()
+  const { current: organisation, isLoading } = useQueryOrganisationFindAll()
   const { mutateAsync: createRepository } = trpc.repository.create.useMutation()
   const { notifyError, notifySuccess } = useNotification()
 

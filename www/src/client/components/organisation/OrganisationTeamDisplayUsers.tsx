@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { OrganisationMember, User } from '@prisma/client'
 import clsx from 'clsx'
 import { useState } from 'react'
@@ -8,7 +8,7 @@ import { capitalize } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 
 export const OrganisationTeamDisplayUsers = () => {
-  const { current: organisation } = useQueryOrganisation()
+  const { current: organisation } = useQueryOrganisationFindAll()
   const [allMembers, setAllMembers] = useState<
     | {
         ens: string | null

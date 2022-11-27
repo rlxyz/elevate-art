@@ -1,4 +1,4 @@
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
@@ -6,7 +6,7 @@ import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateCollectionUpdateGeneration = ({ onMutate }: { onMutate?: () => void }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate } = useQueryRepositoryCollection()
+  const { mutate } = useQueryCollectionFindAll()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
   return trpc.collection.updateGeneration.useMutation({

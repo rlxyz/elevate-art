@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'
@@ -7,7 +7,7 @@ import { capitalize } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 
 export const OrganisationTeamDisplayPending = () => {
-  const { current: organisation } = useQueryOrganisation()
+  const { current: organisation } = useQueryOrganisationFindAll()
   const [pending, setPending] = useState<
     | {
         ens: string | null

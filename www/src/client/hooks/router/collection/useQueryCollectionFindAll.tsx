@@ -4,7 +4,7 @@ import * as v from 'src/shared/compiler'
 import useRepositoryStore from '../../store/useRepositoryStore'
 import { useQueryLayerElementFindAll } from '../layerElement/useQueryLayerElementFindAll'
 
-export const useQueryRepositoryCollection = () => {
+export const useQueryCollectionFindAll = () => {
   const { rarityFilter, setTraitMapping, setTokens, setTokenRanking, repositoryId, collectionId, setCollectionId } = useRepositoryStore(
     (state) => {
       return {

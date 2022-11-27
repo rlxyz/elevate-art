@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
@@ -10,7 +10,7 @@ import { capitalize } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountTeam = () => {
-  const { all: organisations } = useQueryOrganisation()
+  const { all: organisations } = useQueryOrganisationFindAll()
   const [query, setQuery] = useState('')
   const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   const session = useSession()

@@ -1,4 +1,4 @@
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import clsx from 'clsx'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 
@@ -10,7 +10,7 @@ const CollectionPreviewGridFilterLabels = () => {
       rarityFilter: state.rarityFilter,
     }
   })
-  const { current: collection } = useQueryRepositoryCollection()
+  const { current: collection } = useQueryCollectionFindAll()
   return (
     <>
       <div

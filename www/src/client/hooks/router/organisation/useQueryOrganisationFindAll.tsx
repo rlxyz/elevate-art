@@ -6,7 +6,7 @@ import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared
 
 setAutoFreeze(false)
 
-export const useQueryOrganisation = () => {
+export const useQueryOrganisationFindAll = () => {
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const { data: session } = useSession()

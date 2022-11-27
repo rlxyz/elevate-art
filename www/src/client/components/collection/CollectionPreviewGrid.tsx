@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
+import { useQueryRepositoryFindByName } from '@hooks/router/repository/useQueryRepositoryFindByName'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useState } from 'react'
@@ -31,8 +31,8 @@ const InfiniteScrollGridLoading = () => {
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const { all: layers } = useQueryLayerElementFindAll()
-  const { current: collection } = useQueryRepositoryCollection()
-  const { current } = useQueryRepository()
+  const { current: collection } = useQueryCollectionFindAll()
+  const { current } = useQueryRepositoryFindByName()
   const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {
     return {
       tokenRanking: state.tokenRanking,
@@ -114,7 +114,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 }
 
 export const InfiniteScrollGrid = () => {
-  const { current: collection } = useQueryRepositoryCollection()
+  const { current: collection } = useQueryCollectionFindAll()
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [hasMore, setHasMore] = useState(true)
 
@@ -168,7 +168,7 @@ export const InfiniteScrollGrid = () => {
 }
 
 const Index = () => {
-  const { current: collection } = useQueryRepositoryCollection()
+  const { current: collection } = useQueryCollectionFindAll()
   return (
     <main className='space-y-1'>
       <div className='flex flex-col'>

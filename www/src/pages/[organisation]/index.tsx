@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -9,7 +9,7 @@ import { OrganisationAuthLayout } from '../../client/components/organisation/Org
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>

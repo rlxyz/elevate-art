@@ -1,10 +1,10 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { useSession } from 'next-auth/react'
 import { capitalize } from 'src/client/utils/format'
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
 
 export const PersonalOrganisationAccountTeamInvites = () => {
-  const { pendings } = useQueryOrganisation()
+  const { pendings } = useQueryOrganisationFindAll()
   const session = useSession()
   return (
     <>

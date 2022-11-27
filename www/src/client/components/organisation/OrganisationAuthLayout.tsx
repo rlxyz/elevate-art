@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
@@ -22,7 +22,7 @@ export const OrganisationAuthLayout = ({
   const { isLoggedIn, session } = useAuthenticated()
   const router = useRouter()
   const organisationName = router.query.organisation as string
-  const { all: organisations, isLoading } = useQueryOrganisation()
+  const { all: organisations, isLoading } = useQueryOrganisationFindAll()
   const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
   const setCurrentRoute = useOrganisationNavigationStore((state) => state.setCurrentRoute)
 

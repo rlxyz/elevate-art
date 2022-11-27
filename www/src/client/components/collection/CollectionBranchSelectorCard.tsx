@@ -1,6 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
-import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
+import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { Collection } from '@prisma/client'
 import clsx from 'clsx'
@@ -12,7 +12,7 @@ import CollectionCreateDialog from './CollectionCreateDialog'
 const Index = () => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryLayerElementFindAll()
-  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryRepositoryCollection()
+  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryCollectionFindAll()
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const filteredCollections =

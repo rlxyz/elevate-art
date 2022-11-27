@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { useNotification } from '@hooks/utils/useNotification'
 import produce from 'immer'
 import { useSession } from 'next-auth/react'
@@ -7,7 +7,7 @@ import { trpc } from 'src/client/utils/trpc'
 export const useMutateOrganisationAcceptInvite = () => {
   const ctx = trpc.useContext()
   const { data: session } = useSession()
-  const { pendings } = useQueryOrganisation()
+  const { pendings } = useQueryOrganisationFindAll()
   const { notifySuccess, notifyError } = useNotification()
   return trpc.organisation.acceptInvite.useMutation({
     onSuccess: (data, input) => {

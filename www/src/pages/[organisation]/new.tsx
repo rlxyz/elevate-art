@@ -1,4 +1,4 @@
-import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
 import { useMutateRepositoryCreate } from '@hooks/router/repository/useMutateRepositoryCreate'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
@@ -11,7 +11,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
-  const { all: organisations, current: organisation } = useQueryOrganisation()
+  const { all: organisations, current: organisation } = useQueryOrganisationFindAll()
   const router = useRouter()
   const [repository, setRepository] = useState<null | Repository>(null)
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
