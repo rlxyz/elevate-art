@@ -21,11 +21,7 @@ const Page = () => {
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-    }
-  })
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
 
   useEffect(() => {
     if (!repository) return
