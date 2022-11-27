@@ -85,7 +85,7 @@ export const useMutateTraitElementCreate = () => {
                   trait.uploaded = true
                 })
               )
-              resolve({ traitElementId: traitElement.createdAt, imageUrl: secure_url })
+              resolve({ traitElementId: traitElement.id, imageUrl: secure_url })
             } catch (err) {
               reject(err)
             }
@@ -106,14 +106,13 @@ export const useMutateTraitElementCreate = () => {
           })
         })
         ctx.layerElement.findAll.setData({ repositoryId }, next)
+        setUploadState('done')
+        notifySuccess('Uploaded....')
       })
+      return
     } catch (err) {
       setUploadState('error')
       notifyError('Something went wrong. Please refresh the page to try again.')
-      return
-    } finally {
-      setUploadState('done')
-      notifySuccess('Uploaded....')
       return
     }
   }

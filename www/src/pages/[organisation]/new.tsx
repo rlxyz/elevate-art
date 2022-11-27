@@ -31,23 +31,22 @@ const Page: NextPage = () => {
         />
         <Layout.Body>
           <div className='left-0 absolute w-full p-12'>
-            {uploadState === 'uploading' ||
-              (uploadState === 'done' && (
-                <div className='w-full flex items-end justify-between pb-3'>
-                  <span className='text-lg font-bold'>Layers</span>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      router.push(`/${organisation?.name}/${repository?.name}`)
-                    }}
-                    type='button'
-                    disabled={uploadState !== 'done'}
-                    className='border border-mediumGrey p-2 text-xs bg-black text-white rounded-[5px] disabled:cursor-not-allowed disabled:bg-mediumGrey disabled:text-white'
-                  >
-                    Continue
-                  </button>
-                </div>
-              ))}
+            {(uploadState === 'uploading' || uploadState === 'done') && (
+              <div className='w-full flex items-end justify-between pb-3'>
+                <span className='text-lg font-bold'>Layers</span>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    router.push(`/${organisation?.name}/${repository?.name}`)
+                  }}
+                  type='button'
+                  disabled={uploadState !== 'done'}
+                  className='border border-mediumGrey p-2 text-xs bg-black text-white rounded-[5px] disabled:cursor-not-allowed disabled:bg-mediumGrey disabled:text-white'
+                >
+                  Continue
+                </button>
+              </div>
+            )}
             <Upload className='h-[50vh]' depth={4} onDropCallback={createRepository} setUploadState={setUploadState} gridSize='lg'>
               <div className='h-[30vh] flex items-center'>
                 <div className='space-y-6'>
