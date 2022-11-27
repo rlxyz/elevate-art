@@ -1,27 +1,26 @@
-import { trpc } from '@utils/trpc'
+import { useNotification } from '@hooks/utils/useNotification'
 import produce from 'immer'
 import { useSession } from 'next-auth/react'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateAcceptInvitation = () => {
   const ctx = trpc.useContext()
   const { data: session } = useSession()
   const { pendings } = useQueryOrganisation()
-  return trpc.useMutation('organisation.user.invite.accept', {
-    onSuccess: async (data, input) => {
+  const { notifySuccess, notifyError } = useNotification()
+  return trpc.organisation.acceptInvite.useMutation({
+    onSuccess: (data, input) => {
       if (!session?.user?.id) return
       const userId = session.user.id
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['organisation.getAll'])
-      await ctx.cancelQuery(['organisation.user.invite.getAll'])
 
       // Snapshot the previous value
-      const backupOrganisations = ctx.getQueryData(['organisation.getAll'])
-      const backupPending = ctx.getQueryData(['organisation.user.invite.getAll'])
-      if (!backupOrganisations || !backupPending) return { backupOrganisations, backupPending }
+      const backupOrganisations = ctx.organisation.findAll.getData()
+      const backupPending = ctx.organisation.findAllInvites.getData()
+      if (!backupOrganisations || !backupPending) return
 
       const organisationPending = pendings?.find((x) => x.id === input.pendingId)
-      if (!organisationPending) return { backupOrganisations, backupPending }
+      if (!organisationPending) return
 
       // Optimistically update to the new value
       const next = produce(backupOrganisations, (draft) => {
@@ -53,7 +52,8 @@ export const useMutateAcceptInvitation = () => {
           pendings: [],
         })
       })
-      ctx.setQueryData(['organisation.getAll'], next)
+
+      ctx.organisation.findAll.setData(undefined, next)
 
       const nextPending = produce(backupPending, (draft) => {
         draft.splice(
@@ -62,10 +62,12 @@ export const useMutateAcceptInvitation = () => {
         )
       })
 
-      ctx.setQueryData(['organisation.user.invite.getAll'], nextPending)
+      ctx.organisation.findAllInvites.setData(undefined, nextPending)
 
-      // return backup
-      return { backupOrganisations, backupPending }
+      notifySuccess(`You have succcessfully accepted the invite`)
+    },
+    onError: (err, variables, context) => {
+      notifyError('Something went wrong when accepting the invite')
     },
   })
 }

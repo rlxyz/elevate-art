@@ -9,18 +9,11 @@ export const useMutateDeleteTraitElement = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
   return trpc.traitElement.delete.useMutation({
-    onSuccess: async (data, variable) => {
-      // Notify
-      notifySuccess(`You have delete ${variable.traitElements.length} traits.`)
+    onSuccess: (data, variable) => {
+      const backup = ctx.layerElement.findAll.getData({ repositoryId })
+      if (!backup) return
 
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
-
-      // Snapshot the previous value
-      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
-      if (!backup) return { backup }
-
-      // Optimistically update to the new value
+      /** Update State */
       const next = produce(backup, (draft) => {
         Object.entries(groupBy(variable.traitElements, (x) => x.layerElementId)).map(([layerElementId, traitElements]) => {
           const layer = draft.find((l) => l.id === layerElementId)
@@ -30,8 +23,9 @@ export const useMutateDeleteTraitElement = () => {
         })
       })
 
-      // Save
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+      ctx.layerElement.findAll.setData({ repositoryId }, next)
+
+      notifySuccess(`You have delete ${variable.traitElements.length} traits.`)
     },
     onError: (err, variables, context) => {
       notifyError('Something went wrong when deleting the traits')
