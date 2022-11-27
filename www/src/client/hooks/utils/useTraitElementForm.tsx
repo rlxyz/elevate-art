@@ -4,7 +4,7 @@ import { TraitElementWithImage } from 'src/client/hooks/query/useQueryRepository
 import { sumByBig } from 'src/shared/object-utils'
 
 /** Note, we use big.js's Big to ensure precision. Javascript just sux tbh. */
-export const WEIGHT_STEP_COUNT = Big(1)
+export const WEIGHT_STEP_COUNT = Big(0.1)
 export const WEIGHT_LOWER_BOUNDARY = Big(0)
 export const WEIGHT_UPPER_BOUNDARY = Big(100)
 
@@ -210,14 +210,34 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
      *        also linearly distributing in a way that makes sense.
      *        Other solutions, I've explored are such that one would reduce everything at the same rate (or amount),
      *        but this would mean that smaller values would hit 0 before others. That is not linear.
+     *
+     * @todo ensure invariant is equal; before and after summation is almost equal with some error boundary
+     * Use this to debug the algorithm
+     *
+     * // top of algo
+     * let sizes: Big[] = []
+     * let linears: Big[] = []
+     *
+     * // inside loop
+     * sizes.push(size), linears.push(linear)
+     *
+     * // outside algo
+     * console.log({
+     *    arr: sizes.map((x) => x.toNumber()),
+     *    sum: sumByBig(sizes, (x) => x).toNumber(),
+     *    linear: linears.map((x) => x.toNumber()),
+     *    lsum: sumByBig(linears, (x) => x).toNumber(),
+     *    growth: growth.toNumber(),
+     * })
      */
     const sum = sumByBig(alterableTraitElements, (x) => x.weight)
     if (sum.eq(0)) return // error handling
+
     traitElements.forEach((x, index) => {
       if (x.id === id) return
       if (x.locked) return
       const w = Big(x.weight)
-      const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
+      const size = w.div(sum)
       const linear = growth.mul(size)
       gt(w.plus(linear), max) ? setValue(`traitElements.${index}.weight`, max) : setValue(`traitElements.${index}.weight`, w.plus(linear))
     })
@@ -277,13 +297,29 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
      *        also linearly distributing in a way that makes sense.
      *        Other solutions, I've explored are such that one would reduce everything at the same rate (or amount),
      *        but this would mean that smaller values would hit 0 before others. That is not linear.
+     *
+     * // top of algo
+     * let sizes: Big[] = []
+     * let linears: Big[] = []
+     *
+     * // inside loop
+     * sizes.push(size), linears.push(linear)
+     *
+     * // outside algo
+     * console.log({
+     *    arr: sizes.map((x) => x.toNumber()),
+     *    sum: sumByBig(sizes, (x) => x).toNumber(),
+     *    linear: linears.map((x) => x.toNumber()),
+     *    lsum: sumByBig(linears, (x) => x).toNumber(),
+     *    growth: growth.toNumber(),
+     * })
      */
     const sum = sumByBig(alterableTraitElements, (x) => x.weight)
     traitElements.forEach((x, index) => {
       if (x.id === id) return
       if (x.locked) return
       const w = Big(x.weight)
-      const size = w.div(sum).mul(growth).div(WEIGHT_STEP_COUNT) // the percentage of growth this traitElement can consume
+      const size = w.div(sum)
       const linear = growth.mul(size)
       lt(w.minus(linear), min) ? setValue(`traitElements.${index}.weight`, min) : setValue(`traitElements.${index}.weight`, w.minus(linear))
     })

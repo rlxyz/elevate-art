@@ -1,5 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { flexRender, Table as ReactTable } from '@tanstack/react-table'
+import { sumByBig } from '@utils/object-utils'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { Table } from 'src/client/components/layout/core/Table'
@@ -21,6 +22,7 @@ export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, key
 const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, ...props }) => {
   return (
     <div className={clsx(className)} {...props}>
+      <span>{sumByBig(table.getRowModel().rows, (x) => x.original.weight).toNumber()}</span>
       <Table>
         <Table.Head>
           {table.getHeaderGroups().map((headerGroup) =>
