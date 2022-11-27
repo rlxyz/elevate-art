@@ -11,7 +11,7 @@ import {
   uploadCollectionLayerImageCloudinary,
 } from '../../../utils/cloudinary'
 
-export const useMutateCreateNewRepository = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
+export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
   const { current: organisation, isLoading } = useQueryOrganisation()
   const { mutate: createRepository } = trpc.repository.create.useMutation()

@@ -1,5 +1,5 @@
 import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
-import { useMutateCreateNewRepository } from '@hooks/router/repository/useMutateCreateNewRepository'
+import { useMutateRepositoryCreate } from '@hooks/router/repository/useMutateRepositoryCreate'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const router = useRouter()
   const [repository, setRepository] = useState<null | Repository>(null)
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
-  const { mutate: createRepository } = useMutateCreateNewRepository({
+  const { mutate: createRepository } = useMutateRepositoryCreate({
     setRepository,
   })
   const isLoading = !organisation
