@@ -18,6 +18,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import '../client/styles/globals.css'
 import '../client/utils/highlight'
 import { trpc } from '../client/utils/trpc'
+export { reportWebVitals } from 'next-axiom'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.hardhat, chain.goerli],

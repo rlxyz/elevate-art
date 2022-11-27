@@ -1,4 +1,5 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import { withAxiom } from 'next-axiom'
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
 
@@ -14,7 +15,7 @@ function defineNextConfig(config) {
   if (process.env.ANALYZE) {
     return withBundleAnalyzer(config)
   }
-  return config
+  return withAxiom(config)
 }
 
 export default defineNextConfig({
