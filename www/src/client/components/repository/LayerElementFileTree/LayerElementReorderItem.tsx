@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from 'react'
 import { PreviewImageCardStandalone } from 'src/client/components/collection/CollectionPreviewImage'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { LayerElementWithRules } from 'src/client/hooks/query/useQueryRepositoryLayer'
-import { useMutateReorderLayers } from '../../../hooks/mutations/useMutateReorderLayers'
+import { useMutateLayerElementUpdateOrder } from '../../../hooks/mutations/useMutateLayerElementUpdateOrder'
 import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
 import { FormModalProps } from './LayerElementDeleteModal'
 
@@ -52,7 +52,7 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, it
 
 const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
   const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
-  const { mutate, isLoading } = useMutateReorderLayers()
+  const { mutate, isLoading } = useMutateLayerElementUpdateOrder()
 
   useEffect(() => {
     setItems(layerElements)

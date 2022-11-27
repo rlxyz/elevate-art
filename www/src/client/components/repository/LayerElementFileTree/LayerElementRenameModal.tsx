@@ -1,9 +1,9 @@
+import { useMutateLayerElementUpdateName } from '@hooks/mutations/useMutateLayerElementUpdateName'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateRenameLayerElement } from 'src/client/hooks/mutations/useMutateRenameLayerElement'
 import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { useRepositoryRoute } from 'src/client/hooks/utils/useRepositoryRoute'
 import { FormModalProps } from './LayerElementDeleteModal'
@@ -17,7 +17,7 @@ export type LayerElementRenameForm = {
 }
 
 const LayerElementRenameModal: FC<LayerElementRenameProps> = ({ layerElement, visible, onClose }) => {
-  const { mutate, isLoading } = useMutateRenameLayerElement()
+  const { mutate, isLoading } = useMutateLayerElementUpdateName()
   const { mainRepositoryHref } = useRepositoryRoute()
   const { all: layers } = useQueryRepositoryLayer()
   const {

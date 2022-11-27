@@ -17,7 +17,7 @@ import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
 import { TraitElementWithImage } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { env } from 'src/env/client.mjs'
-import { useMutateRenameTraitElement } from '../mutations/useMutateRenameTraitElement'
+import { useMutateTraitElementUpdateName } from '../mutations/useMutateTraitElementUpdateName'
 import {
   TraitElementFields,
   TraitElementRarityFormType,
@@ -58,7 +58,7 @@ export const useTraitElementTable = ({
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
    */
-  const { mutate } = useMutateRenameTraitElement()
+  const { mutate } = useMutateTraitElementUpdateName()
 
   /**
    * Table data based on react-hook-form
