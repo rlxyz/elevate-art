@@ -1,4 +1,4 @@
-import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Button from 'src/client/components/layout/Button'

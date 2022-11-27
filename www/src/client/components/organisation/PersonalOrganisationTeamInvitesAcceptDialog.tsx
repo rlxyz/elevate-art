@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateOrganisationAcceptInvite } from '@hooks/router/organisation/useMutateOrganisationAcceptInvite'
+import { useMutateOrganisationAcceptInvite } from '@hooks/trpc/organisation/useMutateOrganisationAcceptInvite'
 import { Organisation, OrganisationPending } from '@prisma/client'
 import { Fragment, useState } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'

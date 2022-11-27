@@ -1,4 +1,4 @@
-import { TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
 import { forwardRef, HTMLProps } from 'react'
 

@@ -3,7 +3,7 @@ import { flexRender, Table as ReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { Table } from 'src/client/components/layout/core/Table'
-import { TraitElementFields } from '../../../hooks/router/traitElement/useTraitElementForm'
+import { TraitElementFields } from '../../../hooks/trpc/traitElement/useTraitElementForm'
 
 interface Props {
   table: ReactTable<TraitElementFields>

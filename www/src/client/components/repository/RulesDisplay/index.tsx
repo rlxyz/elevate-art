@@ -1,4 +1,4 @@
-import { TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { FC } from 'react'
 import { RulesEnum } from 'src/shared/compiler'
 import { RulesDisplayOneItem } from './RulesDisplayOneItem'

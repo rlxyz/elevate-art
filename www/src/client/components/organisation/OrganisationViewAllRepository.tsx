@@ -1,6 +1,6 @@
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
-import { useQueryOrganisationFindAllRepository } from '@hooks/router/organisation/useQueryOrganisationFindAllRepository'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'

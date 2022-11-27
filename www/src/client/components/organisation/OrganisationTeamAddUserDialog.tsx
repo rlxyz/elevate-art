@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateOrganisationSendInvite } from '@hooks/router/organisation/useMutateOrganisationSendInvite'
+import { useMutateOrganisationSendInvite } from '@hooks/trpc/organisation/useMutateOrganisationSendInvite'
 import { Fragment } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'
 import { useNotification } from 'src/client/hooks/utils/useNotification'

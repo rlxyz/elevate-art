@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'

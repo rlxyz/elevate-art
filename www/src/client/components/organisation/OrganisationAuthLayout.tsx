@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'

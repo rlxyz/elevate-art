@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'

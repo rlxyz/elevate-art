@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'

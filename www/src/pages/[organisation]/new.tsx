@@ -1,5 +1,5 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
-import { useMutateRepositoryCreate } from '@hooks/router/repository/useMutateRepositoryCreate'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepositoryCreate'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'

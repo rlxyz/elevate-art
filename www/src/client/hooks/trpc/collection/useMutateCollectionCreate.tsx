@@ -1,4 +1,4 @@
-import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { Collection } from '@prisma/client'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'

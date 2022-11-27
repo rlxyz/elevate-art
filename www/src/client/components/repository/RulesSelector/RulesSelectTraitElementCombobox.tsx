@@ -1,6 +1,6 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { TraitElement, useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { TraitElement, useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'

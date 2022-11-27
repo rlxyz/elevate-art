@@ -2,7 +2,7 @@ import Big from 'big.js'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateTraitElementDelete } from '../../../hooks/router/traitElement/useMutateTraitElementDelete'
+import { useMutateTraitElementDelete } from '../../../hooks/trpc/traitElement/useMutateTraitElementDelete'
 
 interface Props {
   onClose: () => void

@@ -2,7 +2,7 @@ import { UploadState } from '@components/layout/upload/upload'
 import { FC, useState } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import Upload from 'src/client/components/layout/upload'
-import { useMutateTraitElementCreate } from '../../../hooks/router/traitElement/useMutateTraitElementCreate'
+import { useMutateTraitElementCreate } from '../../../hooks/trpc/traitElement/useMutateTraitElementCreate'
 
 interface Props {
   onClose: () => void

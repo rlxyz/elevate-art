@@ -1,7 +1,7 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
-import { TraitElementWithImage } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useMutateTraitElementUpdateName } from '@hooks/router/traitElement/useMutateTraitElementUpdateName'
+import { TraitElementWithImage } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useMutateTraitElementUpdateName } from '@hooks/trpc/traitElement/useMutateTraitElementUpdateName'
 import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 import {
   ColumnDef,

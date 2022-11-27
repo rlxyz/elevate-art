@@ -1,5 +1,5 @@
-import { useMutateLayerElementUpdateName } from '@hooks/router/layerElement/useMutateLayerElementUpdateName'
-import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { useMutateLayerElementUpdateName } from '@hooks/trpc/layerElement/useMutateLayerElementUpdateName'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'

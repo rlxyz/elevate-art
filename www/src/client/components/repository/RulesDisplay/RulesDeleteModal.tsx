@@ -1,5 +1,5 @@
-import { Rules } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useMutateRuleDelete } from '@hooks/router/rule/useMutateRuleDelete'
+import { Rules } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useMutateRuleDelete } from '@hooks/trpc/rule/useMutateRuleDelete'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 

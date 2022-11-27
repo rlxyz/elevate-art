@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from '@heroicons/react/outline'
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useState } from 'react'

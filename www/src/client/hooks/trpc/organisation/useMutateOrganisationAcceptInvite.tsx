@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useNotification } from '@hooks/utils/useNotification'
 import produce from 'immer'
 import { useSession } from 'next-auth/react'

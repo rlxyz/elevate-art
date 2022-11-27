@@ -1,6 +1,6 @@
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
-import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
-import { useTraitElementTable } from '@hooks/router/traitElement/useTraitElementTable'
+import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useTraitElementTable } from '@hooks/trpc/traitElement/useTraitElementTable'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'

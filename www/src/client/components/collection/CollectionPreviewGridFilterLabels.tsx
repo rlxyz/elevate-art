@@ -1,4 +1,4 @@
-import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import clsx from 'clsx'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 

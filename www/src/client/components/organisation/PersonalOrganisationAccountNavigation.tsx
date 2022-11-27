@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'

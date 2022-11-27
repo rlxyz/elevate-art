@@ -1,4 +1,4 @@
-import { LayerElement, TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { LayerElement, TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useState } from 'react'
 import { RulesType } from 'src/shared/compiler'
 import { RulesCreateModal } from './RulesCreateModal'

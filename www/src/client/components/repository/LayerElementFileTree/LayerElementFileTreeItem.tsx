@@ -1,5 +1,5 @@
 import { LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline'
-import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
 import router from 'next/router'
 import { FC, useState } from 'react'

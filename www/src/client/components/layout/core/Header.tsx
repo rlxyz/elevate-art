@@ -1,6 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Organisation } from '@prisma/client'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'

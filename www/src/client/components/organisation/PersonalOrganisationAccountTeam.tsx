@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Organisation, OrganisationMember, User } from '@prisma/client'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'

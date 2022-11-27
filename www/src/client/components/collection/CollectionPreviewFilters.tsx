@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { useQueryCollectionFindAll } from '@hooks/router/collection/useQueryCollectionFindAll'
-import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { LayerElement, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'

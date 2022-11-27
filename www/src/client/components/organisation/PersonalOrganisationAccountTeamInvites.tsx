@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useSession } from 'next-auth/react'
 import { capitalize } from 'src/client/utils/format'
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'

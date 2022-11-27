@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import Button from 'src/client/components/layout/Button'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateCollectionUpdateGeneration } from '../../hooks/router/collection/useMutateCollectionUpdateGeneration'
+import { useMutateCollectionUpdateGeneration } from '../../hooks/trpc/collection/useMutateCollectionUpdateGeneration'
 
 const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { mutate, isLoading } = useMutateCollectionUpdateGeneration({ onMutate: () => setIsOpen(false) })

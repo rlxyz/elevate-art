@@ -1,4 +1,4 @@
-import { useQueryOrganisationFindAll } from '@hooks/router/organisation/useQueryOrganisationFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
