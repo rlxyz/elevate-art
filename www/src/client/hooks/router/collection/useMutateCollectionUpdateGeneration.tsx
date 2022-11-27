@@ -4,7 +4,7 @@ import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
+export const useMutateCollectionUpdateGeneration = ({ onMutate }: { onMutate?: () => void }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate } = useQueryRepositoryCollection()
   const ctx = trpc.useContext()

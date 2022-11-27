@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from 'src/client/components/layout/Button'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateCreateCollection } from '../../hooks/router/collection/useMutateCreateCollection'
+import { useMutateCollectionCreate } from '../../hooks/router/collection/useMutateCollectionCreate'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
@@ -11,7 +11,7 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { mutate: createCollection } = useMutateCreateCollection({
+  const { mutate: createCollection } = useMutateCollectionCreate({
     onMutate: onClose,
   })
   const repositoryId = useRepositoryStore((state) => state.repositoryId)

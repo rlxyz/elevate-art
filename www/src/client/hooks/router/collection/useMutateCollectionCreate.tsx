@@ -6,7 +6,7 @@ import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { CollectionDatabaseEnum } from 'src/shared/enums'
 
-export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
+export const useMutateCollectionCreate = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
   const { mutate } = useQueryRepositoryCollection()
   const { notifySuccess } = useNotification()
