@@ -1,5 +1,5 @@
+import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
 import clsx from 'clsx'
-import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 
 const CollectionPreviewGridFilterLabels = () => {

@@ -4,7 +4,7 @@ import { getImageForTrait } from 'src/client/utils/image'
 import { trpc } from 'src/client/utils/trpc'
 import { RulesType } from 'src/shared/compiler'
 import { sumBy } from 'src/shared/object-utils'
-import useRepositoryStore from '../store/useRepositoryStore'
+import useRepositoryStore from '../../store/useRepositoryStore'
 
 export type LayerElementWithRules = LayerElement & {
   traitElements: TraitElementWithRules[]

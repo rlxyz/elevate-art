@@ -1,6 +1,6 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from 'src/client/hooks/utils/useAuthenticated'
 import {

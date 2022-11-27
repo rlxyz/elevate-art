@@ -1,9 +1,9 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { TraitElementWithImage, TraitElementWithRules, useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import { TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
-import { TraitElementWithImage, TraitElementWithRules, useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'
 import { RulesComboboxInput } from '../RulesDisplay/RulesComboboxInput'
 

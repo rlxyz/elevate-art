@@ -1,6 +1,6 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import clsx from 'clsx'
 import { useState } from 'react'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'
 import { getEnsName } from 'src/client/utils/ethers'
 import { capitalize } from 'src/client/utils/format'

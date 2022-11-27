@@ -1,5 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
+import { TraitElementWithImage } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import { useMutateTraitElementUpdateName } from '@hooks/router/traitElement/useMutateTraitElementUpdateName'
 import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -16,7 +17,6 @@ import Big from 'big.js'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { FieldArrayWithId } from 'react-hook-form'
-import { TraitElementWithImage } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { env } from 'src/env/client.mjs'
 import {
   TraitElementFields,

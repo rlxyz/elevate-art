@@ -2,7 +2,7 @@ import Big from 'big.js'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateDeleteTraitElement } from '../../../hooks/mutations/useMutateDeleteTraitElement'
+import { useMutateTraitElementDelete } from '../../../hooks/router/traitElement/useMutateTraitElementDelete'
 
 interface Props {
   onClose: () => void
@@ -21,7 +21,7 @@ interface Props {
 
 const TraitElementDeleteModal: FC<Props> = ({ visible, onClose, traitElements }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutate, isLoading } = useMutateDeleteTraitElement()
+  const { mutate, isLoading } = useMutateTraitElementDelete()
   return (
     <ModalComponent
       visible={visible}

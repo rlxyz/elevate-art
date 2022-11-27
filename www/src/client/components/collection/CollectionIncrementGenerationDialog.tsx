@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import Button from 'src/client/components/layout/Button'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateGenerationIncrement } from '../../hooks/mutations/useMutateGenerationIncrement'
+import { useMutateGenerationIncrement } from '../../hooks/router/collection/useMutateGenerationIncrement'
 
 const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { mutate, isLoading } = useMutateGenerationIncrement({ onMutate: () => setIsOpen(false) })

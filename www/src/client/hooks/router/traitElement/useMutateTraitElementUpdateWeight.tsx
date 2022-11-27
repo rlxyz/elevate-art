@@ -3,7 +3,7 @@ import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { groupBy } from 'src/shared/object-utils'
-import { useQueryRepositoryLayer } from '../../query/useQueryRepositoryLayer'
+import { useQueryRepositoryLayer } from '../layerElement/useQueryRepositoryLayer'
 
 export const useMutateTraitElementUpdateWeight = () => {
   const ctx = trpc.useContext()

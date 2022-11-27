@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import Upload from 'src/client/components/layout/upload'
-import { useMutateCreateTraitElement } from '../../../hooks/mutations/useMutateCreateTraitElement'
+import { useMutateTraitElementCreate } from '../../../hooks/router/traitElement/useMutateTraitElementCreate'
 
 interface Props {
   onClose: () => void
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
-  const { mutate, isLoading } = useMutateCreateTraitElement()
+  const { mutate, isLoading } = useMutateTraitElementCreate()
   return (
     <ModalComponent
       visible={visible}

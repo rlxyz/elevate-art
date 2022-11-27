@@ -1,5 +1,5 @@
+import { TraitElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import { FC } from 'react'
-import { TraitElementWithRules } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { RulesEnum } from 'src/shared/compiler'
 import { RulesDisplayOneItem } from './RulesDisplayOneItem'
 

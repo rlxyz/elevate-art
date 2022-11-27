@@ -1,7 +1,7 @@
+import { TraitElementRule } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useMutateDeleteRule } from '@hooks/router/rule/useMutateDeleteRule'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateDeleteRule } from 'src/client/hooks/mutations/useMutateDeleteRule'
-import { TraitElementRule } from 'src/client/hooks/query/useQueryRepositoryLayer'
 
 export interface FormModalProps {
   onSuccess?: () => void

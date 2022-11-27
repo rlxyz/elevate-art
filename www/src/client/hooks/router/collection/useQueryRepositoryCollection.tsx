@@ -1,8 +1,8 @@
 import { Collection } from '@prisma/client'
 import { trpc } from 'src/client/utils/trpc'
 import * as v from 'src/shared/compiler'
-import useRepositoryStore from '../store/useRepositoryStore'
-import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
+import useRepositoryStore from '../../store/useRepositoryStore'
+import { useQueryRepositoryLayer } from '../layerElement/useQueryRepositoryLayer'
 
 export const useQueryRepositoryCollection = () => {
   const { rarityFilter, setTraitMapping, setTokens, setTokenRanking, repositoryId, collectionId, setCollectionId } = useRepositoryStore(

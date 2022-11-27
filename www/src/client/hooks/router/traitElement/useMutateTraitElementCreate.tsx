@@ -1,13 +1,13 @@
+import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
-import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { createCloudinaryFormData, getTraitUploadObjectUrls } from 'src/client/utils/cloudinary'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useMutateCreateTraitElement = () => {
+export const useMutateTraitElementCreate = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutateAsync: createManyTrait, isLoading } = trpc.traitElement.create.useMutation()

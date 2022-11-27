@@ -1,7 +1,7 @@
+import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Button from 'src/client/components/layout/Button'
-import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 
 import { useState } from 'react'
 import CollectionIncrementGenerationDialog from './CollectionIncrementGenerationDialog'

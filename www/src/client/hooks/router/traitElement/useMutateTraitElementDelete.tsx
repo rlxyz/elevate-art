@@ -4,7 +4,7 @@ import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { groupBy } from 'src/shared/object-utils'
 
-export const useMutateDeleteTraitElement = () => {
+export const useMutateTraitElementDelete = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()

@@ -1,6 +1,6 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'

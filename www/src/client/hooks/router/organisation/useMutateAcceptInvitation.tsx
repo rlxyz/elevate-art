@@ -1,7 +1,7 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useNotification } from '@hooks/utils/useNotification'
 import produce from 'immer'
 import { useSession } from 'next-auth/react'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateAcceptInvitation = () => {

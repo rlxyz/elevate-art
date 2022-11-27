@@ -1,6 +1,6 @@
+import { TraitElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import clsx from 'clsx'
 import { forwardRef, HTMLProps } from 'react'
-import { TraitElementWithRules } from 'src/client/hooks/query/useQueryRepositoryLayer'
 
 type RulesComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElementWithRules | null | undefined }
 export const RulesComboboxInput = forwardRef<HTMLInputElement, RulesComboboxInputProps & HTMLProps<RulesComboboxInputProps>>(

@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/outline'
+import { TraitElementRule, useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import { useState } from 'react'
-import { TraitElementRule, useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { RulesComboboxInput } from './RulesComboboxInput'
 import { RulesDeleteModal } from './RulesDeleteModal'
 

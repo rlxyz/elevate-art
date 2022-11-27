@@ -1,3 +1,4 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -7,7 +8,6 @@ import { SettingsNavigations } from 'src/client/components/organisation/Organisa
 import { OrganisationTeamAddUser } from 'src/client/components/organisation/OrganisationTeamAddUser'
 import { OrganisationTeamDisplayPending } from 'src/client/components/organisation/OrganisationTeamDisplayPending'
 import { OrganisationTeamDisplayUsers } from 'src/client/components/organisation/OrganisationTeamDisplayUsers'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 

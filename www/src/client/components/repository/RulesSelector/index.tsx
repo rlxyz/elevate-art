@@ -1,5 +1,5 @@
+import { LayerElementWithRules, TraitElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
 import { useState } from 'react'
-import { LayerElementWithRules, TraitElementWithRules } from 'src/client/hooks/query/useQueryRepositoryLayer'
 import { RulesType } from 'src/shared/compiler'
 import { RulesCreateModal } from './RulesCreateModal'
 import { RulesSelectConditionCombobox } from './RulesSelectConditionCombobox'

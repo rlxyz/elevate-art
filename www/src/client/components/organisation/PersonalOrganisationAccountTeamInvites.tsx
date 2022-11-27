@@ -1,5 +1,5 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useSession } from 'next-auth/react'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { capitalize } from 'src/client/utils/format'
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
 

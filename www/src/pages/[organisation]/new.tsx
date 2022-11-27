@@ -1,3 +1,5 @@
+import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useMutateCreateNewRepository } from '@hooks/router/repository/useMutateCreateNewRepository'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
@@ -6,8 +8,6 @@ import { useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import Upload from 'src/client/components/layout/upload/upload'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { useMutateCreateNewRepository } from 'src/client/hooks/mutations/useMutateCreateNewRepository'
-import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {

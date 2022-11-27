@@ -1,6 +1,6 @@
+import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
 import { Collection } from '@prisma/client'
 import produce from 'immer'
-import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
