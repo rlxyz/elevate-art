@@ -1,7 +1,7 @@
+import { useMutateRuleCreate } from '@hooks/router/rule/useMutateRuleCreate'
 import { TraitElement } from '@prisma/client'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateCreateRule } from 'src/client/hooks/mutations/useMutateCreateRule'
 import { RulesType } from 'src/shared/compiler'
 
 export interface FormModalProps {
@@ -17,7 +17,7 @@ interface TraitElementCreateRuleProps extends FormModalProps {
 }
 
 export const RulesCreateModal: FC<TraitElementCreateRuleProps> = ({ visible, onClose, condition, onSuccess, traitElements }) => {
-  const { mutate, isLoading } = useMutateCreateRule()
+  const { mutate, isLoading } = useMutateRuleCreate()
 
   const handleClose = () => {
     onClose()

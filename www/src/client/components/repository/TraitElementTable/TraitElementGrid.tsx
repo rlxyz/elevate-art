@@ -26,13 +26,9 @@ const TraitElementGrid: FC<TraitElementGridProps> = ({ table, id, className }) =
         .map(({ original }, index) => {
           return (
             <div key={original.id} className='w-auto h-auto flex-col border border-mediumGrey rounded-[5px]'>
-              <div className='h-[10rem] w-auto overflow-hidden flex items-center border-b border-mediumGrey'>
-                {index !== 0 && (
-                  <img
-                    loading='lazy'
-                    className='w-auto h-auto border-t border-b border-mediumGrey object-contain'
-                    src={original.imageUrl}
-                  />
+              <div className='h-[10rem] lg:h-[12.5rem] xl:h-[15rem] 2xl:h-[20rem] w-auto overflow-hidden flex items-center border-b border-mediumGrey'>
+                {!original.readonly && (
+                  <img loading='lazy' className='w-auto h-auto border-t border-b border-mediumGrey' src={original.imageUrl} />
                 )}
               </div>
               <div className='px-1 py-2 flex flex-col space-y-1'>

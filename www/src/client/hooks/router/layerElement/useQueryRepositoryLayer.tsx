@@ -23,7 +23,7 @@ export type TraitElementWithRules = TraitElementWithImage & {
   })[]
 }
 
-export type TraitElementWithImage = TraitElement & { imageUrl: string }
+export type TraitElementWithImage = TraitElement & { imageUrl: string; readonly: boolean }
 
 export const useQueryRepositoryLayer = () => {
   const router = useRouter()
@@ -62,6 +62,7 @@ export const useQueryRepositoryLayer = () => {
           ...current.traitElements.map((x) => ({
             ...x,
             imageUrl: getImageForTrait({ r: repositoryId, l: current.id, t: x.id }),
+            readonly: false,
           })),
         ] as TraitElementWithRules[],
       } as LayerElementWithRules),

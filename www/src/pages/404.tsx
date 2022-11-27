@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Layout } from 'src/client/components/layout/core/Layout'
 
-export default function NotFound() {
+const Page = () => {
   const { status } = useSession()
   return (
     <Layout>
@@ -44,3 +44,5 @@ export default function NotFound() {
     </Layout>
   )
 }
+
+export default Page

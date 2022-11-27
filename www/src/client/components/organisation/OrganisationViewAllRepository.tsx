@@ -1,12 +1,12 @@
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
+import { useQueryOrganisationsRepository } from '@hooks/router/organisation/useQueryOrganisationsRepository'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useState } from 'react'
 import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import { Link } from 'src/client/components/layout/Link'
 import SearchInput from 'src/client/components/layout/search/Search'
-import { useQueryOrganisationsRepository } from 'src/client/hooks/query/useQueryOrganisationsRepository'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { timeAgo } from 'src/client/utils/time'
 

@@ -1,8 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { useMutateOrganisationAcceptInvite } from '@hooks/router/organisation/useMutateOrganisationAcceptInvite'
 import { Organisation, OrganisationPending } from '@prisma/client'
 import { Fragment, useState } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'
-import { useMutateAcceptInvitation } from 'src/client/hooks/mutations/useMutateAcceptInvitation'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { capitalize } from 'src/client/utils/format'
 
@@ -14,7 +14,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
   }
 }) => {
   const { notifySuccess } = useNotification()
-  const { mutate, isLoading } = useMutateAcceptInvitation()
+  const { mutate, isLoading } = useMutateOrganisationAcceptInvite()
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
