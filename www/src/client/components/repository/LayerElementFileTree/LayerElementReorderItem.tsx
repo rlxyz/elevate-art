@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from 'react'
 import { PreviewImageCardStandalone } from 'src/client/components/collection/CollectionPreviewImage'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { LayerElementWithRules } from 'src/client/hooks/query/useQueryRepositoryLayer'
-import { useMutateLayerElementUpdateOrder } from '../../../hooks/mutations/useMutateLayerElementUpdateOrder'
+import { useMutateLayerElementUpdateOrder } from '../../../hooks/router/layerElement/useMutateLayerElementUpdateOrder'
 import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
 import { FormModalProps } from './LayerElementDeleteModal'
 

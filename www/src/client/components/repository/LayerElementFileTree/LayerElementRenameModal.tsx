@@ -1,4 +1,4 @@
-import { useMutateLayerElementUpdateName } from '@hooks/mutations/useMutateLayerElementUpdateName'
+import { useMutateLayerElementUpdateName } from '@hooks/router/layerElement/useMutateLayerElementUpdateName'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
