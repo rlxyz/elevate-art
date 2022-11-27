@@ -1,10 +1,8 @@
 import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
-import { H } from 'highlight.run'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from 'src/client/hooks/utils/useAuthenticated'
-import { env } from 'src/env/client.mjs'
 import {
   OrganisationDatabaseEnum,
   OrganisationDatabaseType,
@@ -30,10 +28,6 @@ export const OrganisationAuthLayout = ({
 
   useEffect(() => {
     setCurrentRoute(route)
-  }, [])
-
-  useEffect(() => {
-    env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '' && H.identify(session?.user?.id, { highlightDisplayName: session?.user?.address })
   }, [])
 
   useEffect(() => {
