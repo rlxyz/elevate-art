@@ -3,11 +3,11 @@ import { ErrorBoundary } from '@highlight-run/react'
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import '@rainbow-me/rainbowkit/styles.css'
+import { Analytics } from '@vercel/analytics/react'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
 import { AppType } from 'next/app'
-import { Toaster } from 'react-hot-toast'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from 'src/client/hooks/store/useRepositoryStore'
 import { env } from 'src/env/client.mjs'
@@ -94,7 +94,7 @@ const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, p
                     }}
                   />
                   <Component {...pageProps} />
-                  <Toaster />
+                  <Analytics />
                 </RepositoryContext.Provider>
               </OrganisationRouterContext.Provider>
             </RainbowKitProvider>
