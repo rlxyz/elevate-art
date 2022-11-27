@@ -6,10 +6,12 @@ import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import UploadDisplay from './upload-display'
 
+export type UploadState = 'idle' | 'uploading' | 'done' | 'error'
+
 interface Props {
   depth: number
   gridSize: 'md' | 'lg'
-  setUploadState?: (state: 'idle' | 'uploading' | 'done' | 'error') => void
+  setUploadState?: (state: UploadState) => void
   onDropCallback: ({
     files,
     setUploadedFiles,
@@ -26,7 +28,7 @@ interface Props {
         }[]
       }>
     >
-    setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
+    setUploadState: (state: UploadState) => void
   }) => void
 }
 
@@ -77,11 +79,11 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
     }[]
   }>({})
   const { notifyError } = useNotification()
-  const [uploadState, setInternalUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
+  const [internalUploadState, setInternalUploadState] = useState<UploadState>('idle')
 
   useEffect(() => {
-    setUploadState && setUploadState(uploadState)
-  }, [uploadState])
+    setUploadState && setUploadState(internalUploadState)
+  }, [internalUploadState])
 
   const onDrop = useCallback(async (files: FileWithPath[]) => {
     const folderDepth = files[0]?.path?.split('/').length
@@ -92,7 +94,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       return
     }
 
-    onDropCallback && onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
+    onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

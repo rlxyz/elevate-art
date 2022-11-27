@@ -15,9 +15,7 @@ const Page: NextPage = () => {
   const router = useRouter()
   const [repository, setRepository] = useState<null | Repository>(null)
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
-  const { mutate: createRepository } = useMutateRepositoryCreate({
-    setRepository,
-  })
+  const { mutate: createRepository } = useMutateRepositoryCreate({ setRepository })
   const isLoading = !organisation
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
@@ -38,9 +36,11 @@ const Page: NextPage = () => {
                 <div className='w-full flex items-end justify-between pb-3'>
                   <span className='text-lg font-bold'>Layers</span>
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
                       router.push(`/${organisation?.name}/${repository?.name}`)
                     }}
+                    type='button'
                     disabled={uploadState !== 'done'}
                     className='border border-mediumGrey p-2 text-xs bg-black text-white rounded-[5px] disabled:cursor-not-allowed disabled:bg-mediumGrey disabled:text-white'
                   >
