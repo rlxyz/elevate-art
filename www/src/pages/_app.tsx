@@ -10,7 +10,7 @@ import '../client/utils/highlight'
 import { trpc } from '../client/utils/trpc'
 export { reportWebVitals } from 'next-axiom'
 
-const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
+const Application: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <ErrorBoundary showDialog>
       <EthereumAuthenticationLayout session={session}>
@@ -24,4 +24,4 @@ const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, p
   )
 }
 
-export default trpc.withTRPC(ElevateCompilerApp)
+export default trpc.withTRPC(Application)
