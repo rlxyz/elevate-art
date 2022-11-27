@@ -69,6 +69,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
       isLoading={isLoading}
       className='w-[600px]'
       onClick={(e) => {
+        e.preventDefault()
         mutate(
           {
             layerElements: items.map(({ id }, index) => ({
