@@ -1,7 +1,7 @@
 import { H } from 'highlight.run'
 import { env } from 'src/env/client.mjs'
 
-if (process.env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
+if (env.NEXT_PUBLIC_NODE_ENV === 'production' && env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID !== '') {
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
     environment: env.NEXT_PUBLIC_NODE_ENV,
     networkRecording: {
