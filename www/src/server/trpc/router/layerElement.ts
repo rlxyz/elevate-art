@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/scripts/cld-delete-image'
+import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@server/common/cld-delete-image'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import { createProtectedRouter } from '../context'
+import { protectedProcedure, router } from '../trpc'
 
 const LayerElementUpdateNameInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
 const LayerElementUpdateOrderInput = z.array(z.object({ priority: z.number(), layerElementId: z.string() }))
@@ -12,7 +12,7 @@ const LayerElementUpdateOrderInput = z.array(z.object({ priority: z.number(), la
  * LayerElement Router
  * Any LayerElement functionality should implemented here.
  */
-export const layerElementRouter = createProtectedRouter()
+export const layerElementRouter = router({
   /**
    * Get All LayerElements based on their associated repository id.
    * Also, returns the associated TraitElements & Rules.
@@ -21,12 +21,14 @@ export const layerElementRouter = createProtectedRouter()
    *       much data to fetch at once. requires big restructuring of data fetch in app
    * @todo rename input id to repositoryId; not specific enough
    */
-  .query('getAll', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      const { id: repositoryId } = input
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryId } = input
 
       /** Fetch many LayerElement & TraitElements & Rules from Db */
       return await ctx.prisma.layerElement.findMany({
@@ -54,8 +56,22 @@ export const layerElementRouter = createProtectedRouter()
           },
         },
       })
-    },
-  })
+    }),
+  getAllTraitElements: protectedProcedure
+    .input(
+      z.object({
+        layerElementId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { layerElementId } = input
+      return await ctx.prisma.layerElement.findFirst({
+        where: {
+          id: layerElementId,
+        },
+        select: { traitElements: true },
+      })
+    }),
   /**
    * Create LayerElement with their associated repository id.
    * This function is NOT dynamic. It only allows a single LayerElement to be created.
@@ -63,12 +79,14 @@ export const layerElementRouter = createProtectedRouter()
    *
    * @todo make this more dynamic so it can create multiple LayerElements at once.
    */
-  .mutation('create', {
-    input: z.object({
-      repositoryId: z.string(),
-      name: z.string(),
-    }),
-    async resolve({ ctx, input }) {
+  create: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { repositoryId, name } = input
 
       /** Infer current count as priority */
@@ -95,8 +113,7 @@ export const layerElementRouter = createProtectedRouter()
         }
         throw e
       }
-    },
-  })
+    }),
   /**
    * Delete LayerElement with their associated repository id.
    * This function is NOT dynamic. It only allows a single LayerElement to be created.
@@ -104,12 +121,14 @@ export const layerElementRouter = createProtectedRouter()
    *
    * @todo make this more dynamic so it can create multiple LayerElements at once.
    */
-  .mutation('delete', {
-    input: z.object({
-      repositoryId: z.string(),
-      layerElementId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
+  delete: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        layerElementId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { layerElementId, repositoryId } = input
 
       /* Delete many TraitElement from Cloudinary */
@@ -159,17 +178,18 @@ export const layerElementRouter = createProtectedRouter()
         },
         { maxWait: 5000, timeout: 10000 }
       )
-    },
-  })
+    }),
   /**
    * Renames a TraitElement with their associated LayerElement.
    * This function is dynamic in that it allows a non-sorted list of TraitElements with different associated LayerElements.
    */
-  .mutation('update.name', {
-    input: z.object({
-      layerElements: LayerElementUpdateNameInput.min(1),
-    }),
-    async resolve({ ctx, input }) {
+  updateName: protectedProcedure
+    .input(
+      z.object({
+        layerElements: LayerElementUpdateNameInput.min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { layerElements } = input
 
       /* Update many traits based on their traitElementId & name */
@@ -183,30 +203,17 @@ export const layerElementRouter = createProtectedRouter()
           })
         )
       })
-    },
-  })
-  .query('traits.find', {
-    input: z.object({
-      id: z.string(),
     }),
-    async resolve({ ctx, input }) {
-      const { id } = input
-      return await ctx.prisma.layerElement.findFirst({
-        where: {
-          id,
-        },
-        select: { traitElements: true },
-      })
-    },
-  })
   /**
    * Updates priority of each LayerElement with their associated LayerElement.
    */
-  .mutation('update.order', {
-    input: z.object({
-      layerElements: LayerElementUpdateOrderInput.min(1),
-    }),
-    async resolve({ ctx, input }) {
+  updateOrder: protectedProcedure
+    .input(
+      z.object({
+        layerElements: LayerElementUpdateOrderInput.min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { layerElements } = input
       const { session, prisma } = ctx
 
@@ -262,5 +269,5 @@ export const layerElementRouter = createProtectedRouter()
         await updateManyByField(tx, 'LayerElement', 'priority', layerElements, (x) => [x.layerElementId, x.priority + 100]) // @todo fix
         await updateManyByField(tx, 'LayerElement', 'priority', layerElements, (x) => [x.layerElementId, x.priority])
       })
-    },
-  })
+    }),
+})
