@@ -6,7 +6,7 @@ import { protectedProcedure, router } from '../trpc'
  * Rules Router
  * Any TraitElement Rules functionality should implemented here.
  */
-export const rulesRouter = router({
+export const ruleRouter = router({
   /**
    * Creates a Rule with two associated TraitElements and a "condition" based on the compiler's supported conditions.
    */

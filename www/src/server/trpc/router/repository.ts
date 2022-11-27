@@ -1,24 +1,32 @@
 import { z } from 'zod'
-import { createProtectedRouter } from '../context'
+import { protectedProcedure, router } from '../trpc'
 
-export const repositoryRouter = createProtectedRouter()
-  .query('getRepositoryByName', {
-    input: z.object({
-      name: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findFirst({
-        where: { ...input },
+/**
+ * Repository Router
+ * Any Repository functionality should implemented here.
+ *
+ * @todo protect this router by checking if the user is the owner of the repository
+ */
+export const repositoryRouter = router({
+  findByName: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
       })
-    },
-  })
-  .mutation('create', {
-    input: z.object({
-      organisationId: z.string(),
-      name: z.string(),
-      layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
+    )
+    .query(async ({ ctx, input }) => {
+      const { name } = input
+      return await ctx.prisma.repository.findFirst({ where: { name } })
     }),
-    async resolve({ ctx, input }) {
+  create: protectedProcedure
+    .input(
+      z.object({
+        organisationId: z.string(),
+        name: z.string(),
+        layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       const { name, organisationId, layerElements } = input
       return await ctx.prisma.repository.create({
         data: {
@@ -53,17 +61,5 @@ export const repositoryRouter = createProtectedRouter()
           },
         },
       })
-    },
-  })
-  .mutation('delete', {
-    input: z.object({
-      repositoryId: z.string(),
     }),
-    async resolve({ ctx, input }) {
-      await ctx.prisma.repository.delete({
-        where: {
-          id: input.repositoryId,
-        },
-      })
-    },
-  })
+})

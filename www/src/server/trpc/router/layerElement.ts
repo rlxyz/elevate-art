@@ -21,7 +21,7 @@ export const layerElementRouter = router({
    *       much data to fetch at once. requires big restructuring of data fetch in app
    * @todo rename input id to repositoryId; not specific enough
    */
-  getAll: protectedProcedure
+  findAll: protectedProcedure
     .input(
       z.object({
         repositoryId: z.string(),
@@ -57,7 +57,7 @@ export const layerElementRouter = router({
         },
       })
     }),
-  getAllTraitElements: protectedProcedure
+  findAllTraitElements: protectedProcedure
     .input(
       z.object({
         layerElementId: z.string(),
