@@ -1,4 +1,4 @@
-import { useMutateDeleteLayerElement } from '@hooks/router/layerElement/useMutateDeleteLayerElement'
+import { useMutateLayerElementDelete } from '@hooks/router/layerElement/useMutateLayerElementDelete'
 import { LayerElement } from '@prisma/client'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
@@ -15,7 +15,7 @@ export interface LayerElementDeleteProps extends FormModalProps {
 }
 
 const LayerElementDeleteModal: FC<LayerElementDeleteProps> = ({ layerElement, visible, onClose, onSuccess }) => {
-  const { mutate, isLoading } = useMutateDeleteLayerElement()
+  const { mutate, isLoading } = useMutateLayerElementDelete()
 
   const handleClose = () => {
     onClose()
