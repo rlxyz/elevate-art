@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutateOrganisationAddUser } from '@hooks/router/organisation/useMutateOrganisationAddUser'
+import { useMutateOrganisationSendInvite } from '@hooks/router/organisation/useMutateOrganisationSendInvite'
 import { Fragment } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
@@ -18,7 +18,7 @@ export const OrganisationTeamAddUserDialog = ({
   onClose: () => void
 }) => {
   const { notifySuccess, notifyError } = useNotification()
-  const { mutate, isLoading } = useMutateOrganisationAddUser()
+  const { mutate, isLoading } = useMutateOrganisationSendInvite()
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>

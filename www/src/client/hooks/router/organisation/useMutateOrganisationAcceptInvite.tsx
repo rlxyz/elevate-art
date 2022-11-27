@@ -4,7 +4,7 @@ import produce from 'immer'
 import { useSession } from 'next-auth/react'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useMutateAcceptInvitation = () => {
+export const useMutateOrganisationAcceptInvite = () => {
   const ctx = trpc.useContext()
   const { data: session } = useSession()
   const { pendings } = useQueryOrganisation()
