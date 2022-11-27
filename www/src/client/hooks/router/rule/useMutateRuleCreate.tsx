@@ -4,7 +4,7 @@ import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { RulesType } from 'src/shared/compiler'
 
-export const useMutateCreateRule = () => {
+export const useMutateRuleCreate = () => {
   const ctx = trpc.useContext()
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
