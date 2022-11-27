@@ -4,7 +4,7 @@ import { TraitElementWithImage } from 'src/client/hooks/query/useQueryRepository
 import { sumByBig } from 'src/shared/object-utils'
 
 /** Note, we use big.js's Big to ensure precision. Javascript just sux tbh. */
-export const WEIGHT_STEP_COUNT = Big(0.1)
+export const WEIGHT_STEP_COUNT = Big(1)
 export const WEIGHT_LOWER_BOUNDARY = Big(0)
 export const WEIGHT_UPPER_BOUNDARY = Big(100)
 

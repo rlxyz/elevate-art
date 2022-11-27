@@ -22,6 +22,10 @@ export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, key
 const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, ...props }) => {
   return (
     <div className={clsx(className)} {...props}>
+      {/*
+       * Use this to debug the sum of traitElement's weight
+       * <span>{sumByBig(table.getRowModel().rows, (x) => x.original.weight).toNumber()}</span>
+       */}
       <span>{sumByBig(table.getRowModel().rows, (x) => x.original.weight).toNumber()}</span>
       <Table>
         <Table.Head>
