@@ -1,14 +1,14 @@
-import { Layout } from '@components/layout/core/Layout'
-import Upload from '@components/layout/upload/upload'
-import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
-import { useMutateCreateNewRepository } from '@hooks/mutations/useMutateCreateNewRepository'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import Upload from 'src/client/components/layout/upload/upload'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { useMutateCreateNewRepository } from 'src/client/hooks/mutations/useMutateCreateNewRepository'
+import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisation()
@@ -48,13 +48,7 @@ const Page: NextPage = () => {
                   </button>
                 </div>
               ))}
-            <Upload
-              className='h-[50vh]'
-              depth={4}
-              onDropCallback={createRepository}
-              setUploadState={setUploadState}
-              gridSize='lg'
-            >
+            <Upload className='h-[50vh]' depth={4} onDropCallback={createRepository} setUploadState={setUploadState} gridSize='lg'>
               <div className='h-[30vh] flex items-center'>
                 <div className='space-y-6'>
                   <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>

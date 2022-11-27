@@ -1,5 +1,5 @@
+import { getCldImgUrl } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { getCldImgUrl } from '@utils/cloudinary'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {

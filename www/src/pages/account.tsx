@@ -1,10 +1,10 @@
-import { HeaderInternalPageRoutes } from '@components/layout/core/Header'
-import { Layout } from '@components/layout/core/Layout'
-import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
-import { PersonalOrganisationAccountNavigation } from '@components/organisation/PersonalOrganisationAccountNavigation'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/types/enums'
+import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { PersonalOrganisationAccountNavigation } from 'src/client/components/organisation/PersonalOrganisationAccountNavigation'
+import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
+import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
@@ -48,9 +48,7 @@ const Page = () => {
                 <div className='col-span-8'>
                   <div className='space-y-1'>
                     <span className='text-sm font-semibold'>We intend to implement this page soon</span>
-                    <p className='text-xs text-darkGrey'>
-                      Hopefully the universe doesnt collapse into a black hole in the meantime
-                    </p>
+                    <p className='text-xs text-darkGrey'>Hopefully the universe doesnt collapse into a black hole in the meantime</p>
                   </div>
                 </div>
               </div>

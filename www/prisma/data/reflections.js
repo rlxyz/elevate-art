@@ -173,14 +173,7 @@ module.exports = {
         type: 'EXCLUSION',
         // remove the metadata for the bottoms
         exclude: {
-          'LIGHTS.png': [
-            'SPRING.png',
-            'ICELAND.png',
-            'SNOWY VILLAGE.png',
-            'WINTER.png',
-            'VENICE.png',
-            'DEAD TREES.png',
-          ],
+          'LIGHTS.png': ['SPRING.png', 'ICELAND.png', 'SNOWY VILLAGE.png', 'WINTER.png', 'VENICE.png', 'DEAD TREES.png'],
         },
         occuranceRate: 1 / 8,
       },
@@ -205,14 +198,7 @@ module.exports = {
       options: {
         type: 'EXCLUSION',
         exclude: {
-          'LIGHTS.png': [
-            'SPRING.png',
-            'ICELAND.png',
-            'SNOWY VILLAGE.png',
-            'WINTER.png',
-            'VENICE.png',
-            'DEAD TREES.png',
-          ],
+          'LIGHTS.png': ['SPRING.png', 'ICELAND.png', 'SNOWY VILLAGE.png', 'WINTER.png', 'VENICE.png', 'DEAD TREES.png'],
           // remove the metadata for the bottoms
           'WATERFALL.png': ['SNOWY VILLAGE.png', 'WINTER.png'], // top right top left
           'DRY-LAKE.png': ['SNOWY VILLAGE.png', 'WINTER.png'], // top right top left -- bottom left x bottom right

@@ -12,10 +12,7 @@ class CompilerDocument extends Document {
         <Head>
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
-          <link
-            href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap'
-            rel='stylesheet'
-          />
+          <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap' rel='stylesheet' />
           <link rel='stylesheet' type='text/css' href='/font.css' />
         </Head>
         <body className='min-h-full'>
