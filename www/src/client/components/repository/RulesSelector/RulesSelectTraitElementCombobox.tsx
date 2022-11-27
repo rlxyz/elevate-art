@@ -1,7 +1,6 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { TraitElementWithImage, TraitElementWithRules, useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
-import { TraitElement } from '@prisma/client'
+import { TraitElement, useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { useDeepCompareEffect } from 'src/client/hooks/utils/useDeepCompareEffect'
@@ -12,12 +11,12 @@ export const RulesSelectTraitElementCombobox = ({
   selected,
   onChange,
 }: {
-  traitElements: TraitElementWithImage[]
-  selected: null | TraitElementWithRules
-  onChange: Dispatch<SetStateAction<TraitElementWithRules | null>>
+  traitElements: TraitElement[]
+  selected: null | TraitElement
+  onChange: Dispatch<SetStateAction<TraitElement | null>>
 }) => {
   const [query, setQuery] = useState('')
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const filteredTraits =
     query === ''
       ? traitElements

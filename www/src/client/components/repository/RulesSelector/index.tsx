@@ -1,15 +1,15 @@
-import { LayerElementWithRules, TraitElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { LayerElement, TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useState } from 'react'
 import { RulesType } from 'src/shared/compiler'
 import { RulesCreateModal } from './RulesCreateModal'
 import { RulesSelectConditionCombobox } from './RulesSelectConditionCombobox'
 import { RulesSelectTraitElementCombobox } from './RulesSelectTraitElementCombobox'
 
-export const RulesSelector = ({ layers }: { layers: LayerElementWithRules[] | undefined }) => {
+export const RulesSelector = ({ layers }: { layers: LayerElement[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null)
-  const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElementWithRules>(null)
-  const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElementWithRules>(null)
+  const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>(null)
+  const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>(null)
 
   // note: this will transform all rules in the selected trait to a standard format and return the trait ids that are already selected
   const allInvalidRightTraitElements = [...(selectedLeftTrait?.rulesPrimary || []), ...(selectedLeftTrait?.rulesSecondary || [])]

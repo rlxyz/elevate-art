@@ -38,38 +38,11 @@ export const layerElementRouter = router({
           traitElements: {
             orderBy: [{ weight: 'desc' }, { name: 'asc' }],
             include: {
-              rulesPrimary: {
-                orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }],
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-              rulesSecondary: {
-                orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }],
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
+              rulesPrimary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
+              rulesSecondary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
             },
           },
         },
-      })
-    }),
-  findAllTraitElements: protectedProcedure
-    .input(
-      z.object({
-        layerElementId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { layerElementId } = input
-      return await ctx.prisma.layerElement.findFirst({
-        where: {
-          id: layerElementId,
-        },
-        select: { traitElements: true },
       })
     }),
   /**

@@ -1,12 +1,12 @@
 import { TrashIcon } from '@heroicons/react/outline'
-import { TraitElementRule, useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { Rules, useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useState } from 'react'
 import { RulesComboboxInput } from './RulesComboboxInput'
 import { RulesDeleteModal } from './RulesDeleteModal'
 
-export const RulesDisplayOneItem = ({ rule }: { rule: TraitElementRule }) => {
+export const RulesDisplayOneItem = ({ rule }: { rule: Rules }) => {
   const { primaryTraitElementId, secondaryTraitElementId, condition } = rule
-  const { all: layers } = useQueryRepositoryLayer() // @todo remove this
+  const { all: layers } = useQueryLayerElementFindAll() // @todo remove this
   const [isOpen, setIsOpen] = useState(false)
   const allTraitElements = layers.flatMap((x) => x.traitElements)
   const primary = allTraitElements.find((x) => x.id === primaryTraitElementId)

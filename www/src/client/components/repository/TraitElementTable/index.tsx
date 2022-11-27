@@ -1,7 +1,6 @@
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
-import { TraitElementWithImage } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useTraitElementTable } from '@hooks/router/traitElement/useTraitElementTable'
-import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'
@@ -28,7 +27,7 @@ export const TraitElementView = z.nativeEnum(
 export type TraitElementViewType = z.infer<typeof TraitElementView>
 
 interface Props {
-  layerElement: (LayerElement & { traitElements: TraitElementWithImage[] }) | undefined
+  layerElement: LayerElement | undefined
   repositoryId: string
   className: string
 }

@@ -1,4 +1,4 @@
-import { TraitElementRule } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { Rules } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useMutateRuleDelete } from '@hooks/router/rule/useMutateRuleDelete'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
@@ -11,7 +11,7 @@ export interface FormModalProps {
 }
 
 interface TraitElementDeleteRuleProps extends FormModalProps {
-  rule: TraitElementRule
+  rule: Rules
 }
 
 export const RulesDeleteModal: FC<TraitElementDeleteRuleProps> = ({ visible, rule, onClose, onSuccess }) => {

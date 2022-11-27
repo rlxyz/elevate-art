@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { LayerElement, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'
@@ -23,7 +23,7 @@ export const FilterByTrait = () => {
       }
     }
   )
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryRepositoryCollection()
   return (
     <Formik
@@ -281,7 +281,7 @@ export const FilterByRarity = () => {
 }
 
 const Index = () => {
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryRepositoryCollection()
   const isLoading = !layers?.length || !collection
   return (

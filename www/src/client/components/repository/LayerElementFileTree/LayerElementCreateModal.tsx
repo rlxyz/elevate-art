@@ -1,4 +1,4 @@
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
@@ -17,7 +17,7 @@ export type LayerElementCreateForm = {
 
 const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose, onSuccess, repository }) => {
   const { mutate, isLoading } = useMutateLayerElementCreate()
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const {
     register,
     handleSubmit,

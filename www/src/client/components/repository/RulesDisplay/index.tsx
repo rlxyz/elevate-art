@@ -1,10 +1,10 @@
-import { TraitElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { FC } from 'react'
 import { RulesEnum } from 'src/shared/compiler'
 import { RulesDisplayOneItem } from './RulesDisplayOneItem'
 
 interface RulesDisplayProps {
-  traitElements: TraitElementWithRules[]
+  traitElements: TraitElement[]
 }
 
 export const RulesDisplay: FC<RulesDisplayProps> = ({ traitElements }) => {

@@ -3,11 +3,11 @@ import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { groupBy } from 'src/shared/object-utils'
-import { useQueryRepositoryLayer } from '../layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '../layerElement/useQueryLayerElementFindAll'
 
 export const useMutateTraitElementUpdateWeight = () => {
   const ctx = trpc.useContext()
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
   return trpc.traitElement.updateWeight.useMutation({

@@ -1,6 +1,6 @@
 import { SelectorIcon } from '@heroicons/react/outline'
-import { LayerElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
-import { LayerElement, Repository } from '@prisma/client'
+import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
+import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
 import { FormModalProps } from './LayerElementDeleteModal'
 
 interface LayerElementRenameProps extends FormModalProps {
-  layerElements: LayerElementWithRules[]
+  layerElements: LayerElement[]
   repository: Repository
 }
 
@@ -51,7 +51,7 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, it
 }
 
 const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
-  const [items, setItems] = useState<LayerElementWithRules[]>(layerElements)
+  const [items, setItems] = useState<LayerElement[]>(layerElements)
   const { mutate, isLoading } = useMutateLayerElementUpdateOrder()
 
   useEffect(() => {

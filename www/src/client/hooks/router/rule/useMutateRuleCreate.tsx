@@ -24,8 +24,6 @@ export const useMutateRuleCreate = () => {
         primary.rulesPrimary.push({
           id: data.id,
           condition: data.condition as RulesType,
-          primaryTraitElement: primary,
-          secondaryTraitElement: secondary,
           primaryTraitElementId: primary.id,
           secondaryTraitElementId: secondary.id,
         })

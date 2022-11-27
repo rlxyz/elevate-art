@@ -1,5 +1,5 @@
 import { PlusIcon, SwitchVerticalIcon } from '@heroicons/react/solid'
-import { LayerElementWithRules } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import router from 'next/router'
@@ -12,7 +12,7 @@ import LayerElementReorderModal from './LayerElementReorderItem'
 
 interface Props {
   repository: Repository | undefined
-  layerElements: LayerElementWithRules[]
+  layerElements: LayerElement[]
 }
 
 export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>

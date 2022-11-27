@@ -1,4 +1,4 @@
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
 import { NextRouter, useRouter } from 'next/router'
@@ -16,7 +16,7 @@ const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
+  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()

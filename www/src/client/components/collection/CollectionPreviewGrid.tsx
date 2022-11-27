@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
@@ -30,7 +30,7 @@ const InfiniteScrollGridLoading = () => {
 
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryRepositoryCollection()
   const { current } = useQueryRepository()
   const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {

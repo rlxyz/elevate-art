@@ -1,5 +1,5 @@
 import { useQueryRepositoryCollection } from '@hooks/router/collection/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisation } from '@hooks/router/organisation/useQueryOrganisation'
 import { useQueryRepository } from '@hooks/router/repository/useQueryRepository'
 import { NextRouter, useRouter } from 'next/router'
@@ -31,7 +31,7 @@ const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
+  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
   const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
   const { all: organisations } = useQueryOrganisation()

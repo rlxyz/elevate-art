@@ -1,5 +1,5 @@
 import { UploadState } from '@components/layout/upload/upload'
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
@@ -13,7 +13,7 @@ export const useMutateTraitElementCreate = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutateAsync: createManyTrait, isLoading } = trpc.traitElement.create.useMutation()
-  const { current: layer } = useQueryRepositoryLayer()
+  const { current: layer } = useQueryLayerElementFindAll()
   const { notifyError, notifySuccess } = useNotification()
 
   const mutate = async ({

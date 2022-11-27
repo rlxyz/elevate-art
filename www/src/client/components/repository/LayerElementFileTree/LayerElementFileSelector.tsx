@@ -1,4 +1,4 @@
-import { LayerElement } from '@prisma/client'
+import { LayerElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { FC } from 'react'
 import { LayerElementFileTreeItem } from './LayerElementFileTreeItem'
 

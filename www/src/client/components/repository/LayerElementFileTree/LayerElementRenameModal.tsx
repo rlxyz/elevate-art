@@ -1,5 +1,5 @@
 import { useMutateLayerElementUpdateName } from '@hooks/router/layerElement/useMutateLayerElementUpdateName'
-import { useQueryRepositoryLayer } from '@hooks/router/layerElement/useQueryRepositoryLayer'
+import { useQueryLayerElementFindAll } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { LayerElement } from '@prisma/client'
 import clsx from 'clsx'
 import { FC } from 'react'
@@ -19,7 +19,7 @@ export type LayerElementRenameForm = {
 const LayerElementRenameModal: FC<LayerElementRenameProps> = ({ layerElement, visible, onClose }) => {
   const { mutate, isLoading } = useMutateLayerElementUpdateName()
   const { mainRepositoryHref } = useRepositoryRoute()
-  const { all: layers } = useQueryRepositoryLayer()
+  const { all: layers } = useQueryLayerElementFindAll()
   const {
     register,
     handleSubmit,

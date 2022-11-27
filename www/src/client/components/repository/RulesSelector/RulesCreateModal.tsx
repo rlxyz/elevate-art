@@ -1,5 +1,5 @@
+import { TraitElement } from '@hooks/router/layerElement/useQueryLayerElementFindAll'
 import { useMutateRuleCreate } from '@hooks/router/rule/useMutateRuleCreate'
-import { TraitElement } from '@prisma/client'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { RulesType } from 'src/shared/compiler'
