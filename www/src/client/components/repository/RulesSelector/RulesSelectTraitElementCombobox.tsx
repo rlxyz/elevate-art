@@ -1,7 +1,6 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { TraitElement } from '@prisma/client'
-import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { TraitElementWithImage, TraitElementWithRules, useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryRepositoryLayer'
@@ -48,7 +47,7 @@ export const RulesSelectTraitElementCombobox = ({
               key={traitElement.id}
               value={traitElement}
               className={({ active }) =>
-                classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-darkGrey')
+                clsx('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-darkGrey')
               }
             >
               {({ active, selected }) => (
@@ -60,16 +59,14 @@ export const RulesSelectTraitElementCombobox = ({
                       </div>
                     </div>
                     <div className='flex flex-row space-x-2 items-center'>
-                      <span className={classNames('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}>
+                      <span className={clsx('block truncate text-xs tracking-tight', selected ? 'font-semibold' : '')}>
                         {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
                       </span>
-                      <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{traitElement.name}</span>
+                      <span className={clsx('block truncate', selected ? 'font-semibold' : '')}>{traitElement.name}</span>
                     </div>
                   </div>
                   {selected && (
-                    <span
-                      className={classNames('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600')}
-                    >
+                    <span className={clsx('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600')}>
                       <CheckIcon className='h-5 w-5' aria-hidden='true' />
                     </span>
                   )}

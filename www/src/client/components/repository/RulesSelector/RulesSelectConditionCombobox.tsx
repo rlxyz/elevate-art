@@ -1,6 +1,5 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { classNames } from '@utils/format'
 import clsx from 'clsx'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { RulesEnum, RulesType } from 'src/shared/compiler'
@@ -40,16 +39,14 @@ export const RulesSelectConditionCombobox = ({
             key={condition}
             value={condition}
             className={({ active }) =>
-              classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-black')
+              clsx('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'text-blueHighlight' : 'text-black')
             }
           >
             {({ active, selected }) => (
               <>
-                <span className={classNames('block truncate', selected ? 'font-semibold' : '')}>{condition}</span>
+                <span className={clsx('block truncate', selected ? 'font-semibold' : '')}>{condition}</span>
                 {selected && (
-                  <span
-                    className={classNames('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-black' : 'text-indigo-600')}
-                  >
+                  <span className={clsx('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-black' : 'text-indigo-600')}>
                     <CheckIcon className='h-5 w-5' aria-hidden='true' />
                   </span>
                 )}

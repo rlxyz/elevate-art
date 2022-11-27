@@ -9,7 +9,7 @@ export const toPascalCaseWithSpace = (name: string) => {
 
 export const capitalize = (s: string) => s[0]?.toUpperCase() + s.slice(1) || ''
 
-export const classNames = (...classes: string[]) => {
+export const clsx = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ')
 }
 

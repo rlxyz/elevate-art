@@ -1,9 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { capitalize } from '@utils/format'
 import { Fragment } from 'react'
 import LoadingComponent from 'src/client/components/layout/loading/Loading'
 import { useMutateOrganisationAddUser } from 'src/client/hooks/mutations/useMutateOrganisationAddUser'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { capitalize } from 'src/client/utils/format'
 import { OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
 
 export const OrganisationTeamAddUserDialog = ({

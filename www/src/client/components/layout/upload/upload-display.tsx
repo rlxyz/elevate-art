@@ -1,10 +1,10 @@
 import { Disclosure, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { formatBytes } from '@utils/format'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { FC, Fragment, PropsWithChildren } from 'react'
+import { formatBytes } from 'src/client/utils/format'
 
 interface Props {
   layerName?: string
@@ -40,7 +40,7 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
                 <div className='flex space-x-3'>
                   <div className='flex items-center'>
                     <div className='w-[25px] h-[25px] border border-lightGray flex items-center justify-center bg-darkGrey rounded-[5px]'>
-                      <Image src={'/images/not-found.svg'} width={15} height={15} />
+                      <Image src={'/images/not-found.svg'} width={15} height={15} alt={'not-found'} />
                     </div>
                   </div>
                   <div className='w-full items-start flex flex-col space-y-1'>

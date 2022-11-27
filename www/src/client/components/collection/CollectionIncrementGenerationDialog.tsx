@@ -6,11 +6,7 @@ import { useMutateGenerationIncrement } from '../../hooks/mutations/useMutateGen
 
 const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { mutate, isLoading } = useMutateGenerationIncrement({ onMutate: () => setIsOpen(false) })
-  const { collectionId } = useRepositoryStore((state) => {
-    return {
-      collectionId: state.collectionId,
-    }
-  })
+  const collectionId = useRepositoryStore((state) => state.collectionId)
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={() => setIsOpen(false)}>
@@ -47,7 +43,7 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
                   </div>
                   <div className='flex justify-between'>
                     <div className='ml-[auto]'>
-                      <Button disabled={isLoading} onClick={() => mutate({ id: collectionId })}>
+                      <Button disabled={isLoading} onClick={() => mutate({ collectionId })}>
                         <span className='flex items-center justify-center space-x-2 px-4 py-4'>
                           <span className='text-xs'>Confirm</span>
                         </span>

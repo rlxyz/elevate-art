@@ -31,7 +31,7 @@ export const RulesDeleteModal: FC<TraitElementDeleteRuleProps> = ({ visible, rul
       visible={visible}
       onClose={handleClose}
       onClick={() => {
-        mutate({ id: rule.id }, { onSuccess: handleSuccess, onError: handleClose })
+        mutate({ ruleId: rule.id }, { onSuccess: handleSuccess, onError: handleClose })
       }}
       title='Delete Rule'
       description={`Delete an existing rule from the repository. This rule will be applied to all collections in the repository.`}

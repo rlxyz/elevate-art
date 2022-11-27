@@ -1,8 +1,8 @@
-import { formatBytes } from '@utils/format'
 import clsx from 'clsx'
 import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import UploadDisplay from './upload-display'
 

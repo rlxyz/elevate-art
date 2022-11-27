@@ -8,7 +8,7 @@ import SearchInput from 'src/client/components/layout/search/Search'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { useQueryOrganisationsRepository } from 'src/client/hooks/query/useQueryOrganisationsRepository'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { timeAgo } from '../../../shared/time'
+import { timeAgo } from 'src/client/utils/time'
 
 const NoRepositoryExistPlaceholder = () => {
   const { current } = useQueryOrganisation()
