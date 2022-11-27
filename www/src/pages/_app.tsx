@@ -1,12 +1,10 @@
-// src/pages/_app.tsx
 import { EthereumAuthenticationLayout } from '@components/layout/core/EthereumAuthenticationLayout'
 import { ErrorBoundary } from '@highlight-run/react'
 import '@rainbow-me/rainbowkit/styles.css'
-import { Session } from 'next-auth'
+import { Session } from 'next-auth/core/types'
 import { AppType } from 'next/app'
-import { createOrganisationNavigationStore, OrganisationRouterContext } from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { createRepositoryStore, RepositoryContext } from 'src/client/hooks/store/useRepositoryStore'
 import { AnalyticsLayout } from '../client/components/layout/core/AnalyticsLayout'
+import { StoreLayout } from '../client/components/layout/core/StoreLayout'
 import '../client/styles/globals.css'
 import '../client/utils/highlight'
 import { trpc } from '../client/utils/trpc'
@@ -17,11 +15,9 @@ const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, p
     <ErrorBoundary showDialog>
       <EthereumAuthenticationLayout session={session}>
         <AnalyticsLayout>
-          <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
-            <RepositoryContext.Provider createStore={() => createRepositoryStore}>
-              <Component {...pageProps} />
-            </RepositoryContext.Provider>
-          </OrganisationRouterContext.Provider>
+          <StoreLayout>
+            <Component {...pageProps} />
+          </StoreLayout>
         </AnalyticsLayout>
       </EthereumAuthenticationLayout>
     </ErrorBoundary>
