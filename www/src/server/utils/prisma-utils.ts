@@ -21,7 +21,7 @@ export const updateManyByField = async <T>(
     array.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
   )) {
     const values: [string, any][] = chunk.flatMap((record, index) => predicate(record, index, array))
-    await prisma.$executeRawUnsafe(
+    return await prisma.$executeRawUnsafe(
       `UPDATE ${model} SET ${field} = CASE ${chunk.map(() => `WHEN id = ? THEN ?`).join('\n')} ELSE ${field} END;`,
       ...values
     )

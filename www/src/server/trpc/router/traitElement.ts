@@ -117,6 +117,6 @@ export const traitElementRouter = router({
       }
 
       /** Run sequential operations; as they don't depend on each other. */
-      await updateManyByField(ctx.prisma, 'TraitElement', 'weight', traitElements, (x) => [x.traitElementId, x.weight])
+      return await updateManyByField(ctx.prisma, 'TraitElement', 'weight', traitElements, (x) => [x.traitElementId, x.weight])
     }),
 })

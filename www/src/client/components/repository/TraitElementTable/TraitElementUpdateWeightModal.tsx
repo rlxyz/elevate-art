@@ -1,7 +1,7 @@
 import Big from 'big.js'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateRepositoryLayersWeight } from '../../../hooks/mutations/useMutateRepositoryLayersWeight'
+import { useMutateTraitElementUpdateWeight } from '../../../hooks/mutations/useMutateTraitElementUpdateWeight'
 
 interface Props {
   onClose: () => void
@@ -21,7 +21,7 @@ interface Props {
 
 const TraitElementUpdateWeightModal: FC<Props> = ({ visible, onClose, onSuccess, traitElements }) => {
   /** Update weight mutation */
-  const { mutate, isLoading } = useMutateRepositoryLayersWeight()
+  const { mutate, isLoading } = useMutateTraitElementUpdateWeight()
 
   return (
     <ModalComponent
