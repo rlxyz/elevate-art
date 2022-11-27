@@ -4,30 +4,6 @@ import { env } from 'src/env/client.mjs'
 
 export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
 
-export const uploadCollectionLayerImageCloudinary = ({
-  repositoryId,
-  traitElement,
-  file,
-}: {
-  repositoryId: string
-  file: FileWithPath
-  traitElement: TraitElement
-}) => {
-  return new Promise((resolve, reject) => {
-    const data = createCloudinaryFormData(file, traitElement, repositoryId)
-    fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
-      method: 'post',
-      body: data,
-    })
-      .then(async (response) => {
-        resolve(response)
-      })
-      .catch((err) => {
-        reject(err)
-      })
-  })
-}
-
 export const validateFiles = (files: FileWithPath[], folderDepth: number): boolean => {
   const depth = folderDepth + 1 // + 1 because we are adding the root folder
   return (
