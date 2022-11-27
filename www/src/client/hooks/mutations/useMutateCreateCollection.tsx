@@ -1,16 +1,14 @@
 import { Collection } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
-import { NextRouter, useRouter } from 'next/router'
 import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 import { CollectionDatabaseEnum } from 'src/shared/enums'
 
 export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
   const { mutate } = useQueryRepositoryCollection()
-  const router: NextRouter = useRouter()
   const { notifySuccess } = useNotification()
   const { repositoryId, setCollectionId } = useRepositoryStore((state) => {
     return {
@@ -18,14 +16,15 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
       setCollectionId: state.setCollectionId,
     }
   })
-  return trpc.useMutation('collections.create', {
+
+  return trpc.collection.create.useMutation({
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
+      await ctx.collection.findAll.cancel({ repositoryId })
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
+      const backup = ctx.collection.findAll.getData({ repositoryId })
       if (!backup) return { backup }
 
       const collection: Collection = {
@@ -46,20 +45,20 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
 
       mutate({ collection })
       onMutate && onMutate()
-      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
+      ctx.collection.findAll.setData({ repositoryId }, next)
       return { backup }
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['collections.getAll', { id: repositoryId }], context.backup)
+      ctx.collection.findAll.setData({ repositoryId }, context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['collections.getAll', { id: repositoryId }]),
+    onSettled: () => ctx.collection.findAll.invalidate({ repositoryId }),
     onSuccess: async (data, variables) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
+      await ctx.collection.findAll.cancel({ repositoryId })
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
+      const backup = ctx.collection.findAll.getData({ repositoryId })
       if (!backup) return { backup }
 
       // Optimistically update to the new value
@@ -67,8 +66,9 @@ export const useMutateCreateCollection = ({ onMutate }: { onMutate?: () => void 
         const c = draft.find((c) => c.id === `${repositoryId}-${c.name}`)
         if (c) c.id = data.id
       })
+
       setCollectionId(data.id)
-      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
+      ctx.collection.findAll.setData({ repositoryId }, next)
       return { backup }
     },
   })
