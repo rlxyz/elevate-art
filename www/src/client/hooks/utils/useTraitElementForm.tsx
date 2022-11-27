@@ -74,13 +74,13 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     // checks the None trait can be distribute to if locked
     const lockCheck = locked && none.eq(WEIGHT_LOWER_BOUNDARY)
 
-    // checks if there is there is leftover weight to consume
-    // @todo fix this
-    // const lockedTraitElements = traitElements.filter((x) => !x.locked).filter((_, i) => i !== index)
-    // const leftoverCheck = Big(
-    //   sumByBig(lockedTraitElements, (x) => x.weight).minus(WEIGHT_STEP_COUNT.mul(lockedTraitElements.length))
-    // ).lte(0)
-    return lockCheck || maxCheck
+    // check if any unlocked traits to consume
+    const unlockCheck = sumByBig(
+      traitElements.filter((x) => !x.locked).filter((_, i) => i !== index),
+      (x) => x.weight
+    ).gt(0)
+
+    return lockCheck || maxCheck || !unlockCheck
   }
 
   const isDecreaseRarityPossible = (index: number) => {
@@ -175,6 +175,9 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
       .filter((x) => x.id !== id) // remove the current trait element
       .filter((x) => !x.locked) // remove the locked trait elements
       .filter((x) => !Big(x.weight).eq(WEIGHT_LOWER_BOUNDARY)) // remove the trait elements that has reached lower boundary
+
+    /** Nothing to alter */
+    if (alterableTraitElements.length === 0) return
 
     /** Get min the rarity can grow to */
     const min = getMinGrowthAllowance(index, locked)
