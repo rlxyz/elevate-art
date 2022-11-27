@@ -1,6 +1,5 @@
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { useTraitElementTable } from '@hooks/trpc/traitElement/useTraitElementTable'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'
@@ -10,6 +9,7 @@ import { TraitElementActionControl } from './TraitElementActionControl'
 import { TraitElementNavigationButton } from './TraitElementNavigationButton'
 import TraitElementTable from './TraitElementTable'
 import TraitElementUpdateWeightModal from './TraitElementUpdateWeightModal'
+import { useTraitElementTable } from './useTraitElementTable'
 
 /** Server-Side Rendering is set to false as we do not need these components on startup */
 export const TraitElementCreateModal = dynamic(() => import('./TraitElementCreateModal'), { ssr: false })
@@ -60,7 +60,6 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
     onFormReset,
     onFormSuccess,
     getAllTraitElements,
-    getFilteredTraitElements,
     getCheckedTraitElements,
     globalFilter,
     onFormRandom,

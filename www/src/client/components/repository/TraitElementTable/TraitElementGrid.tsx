@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { FC } from 'react'
 import { truncate } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
-import { TraitElementFields } from '../../../hooks/trpc/traitElement/useTraitElementForm'
+import { TraitElementFields } from './useTraitElementForm'
 
 interface Props {
   table: ReactTable<TraitElementFields>
