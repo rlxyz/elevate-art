@@ -63,7 +63,7 @@ export const layerElementRouter = router({
         layerElementId: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const { layerElementId } = input
       return await ctx.prisma.layerElement.findFirst({
         where: {

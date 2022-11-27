@@ -10,8 +10,8 @@ export const useQueryOrganisation = () => {
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const { data: session } = useSession()
-  const { data: organisations, isLoading, isError } = trpc.useQuery(['organisation.getAll'])
-  const { data: pendings } = trpc.useQuery(['organisation.user.invite.getAll'])
+  const { data: organisations, isLoading, isError } = trpc.organisation.findAll.useQuery()
+  const { data: pendings } = trpc.organisation.findAllInvites.useQuery()
   if (!session) {
     return {
       all: undefined,
@@ -21,6 +21,7 @@ export const useQueryOrganisation = () => {
     }
   }
 
+  // @todo remove this when we have a better way to handle this
   // Little hack: change the name of personal organisation to the "You"
   const next = produce(organisations, (draft) => {
     const personal = draft?.find((x) => x.type === OrganisationDatabaseEnum.enum.Personal)

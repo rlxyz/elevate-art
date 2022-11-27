@@ -1,7 +1,7 @@
 import { LayerElement, Rules, TraitElement } from '@prisma/client'
-import { getImageForTrait } from '@utils/image'
-import { trpc } from '@utils/trpc'
 import { useRouter } from 'next/router'
+import { getImageForTrait } from 'src/client/utils/image'
+import { trpc } from 'src/client/utils/trpc'
 import { RulesType } from 'src/shared/compiler'
 import { sumBy } from 'src/shared/object-utils'
 import useRepositoryStore from '../store/useRepositoryStore'
@@ -29,7 +29,7 @@ export const useQueryRepositoryLayer = () => {
   const router = useRouter()
   const layerName = router.query.layer
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { data: layers, isLoading, isError } = trpc.useQuery(['layers.getAll', { id: repositoryId }])
+  const { data: layers, isLoading, isError } = trpc.layerElement.findAll.useQuery({ repositoryId }, { enabled: !!repositoryId })
 
   if (!layers)
     return {

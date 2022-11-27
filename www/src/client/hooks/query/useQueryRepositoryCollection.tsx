@@ -1,5 +1,5 @@
 import { Collection } from '@prisma/client'
-import { trpc } from '@utils/trpc'
+import { trpc } from 'src/client/utils/trpc'
 import * as v from 'src/shared/compiler'
 import useRepositoryStore from '../store/useRepositoryStore'
 import { useQueryRepositoryLayer } from './useQueryRepositoryLayer'
@@ -18,7 +18,7 @@ export const useQueryRepositoryCollection = () => {
       }
     }
   )
-  const { data: collections, isLoading, isError } = trpc.useQuery(['collections.getAll', { id: repositoryId }])
+  const { data: collections, isLoading, isError } = trpc.collection.findAll.useQuery({ repositoryId }, { enabled: !!repositoryId })
   const { all: layers } = useQueryRepositoryLayer()
 
   // update the current tokens
