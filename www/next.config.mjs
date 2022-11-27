@@ -15,7 +15,10 @@ function defineNextConfig(config) {
   if (process.env.ANALYZE) {
     return withBundleAnalyzer(config)
   }
-  return withAxiom(config)
+  if (process.env.NODE_ENV === 'production') {
+    return withAxiom(config)
+  }
+  return config
 }
 
 export default defineNextConfig({
