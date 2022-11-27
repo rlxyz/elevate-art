@@ -75,12 +75,12 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     const lockCheck = locked && none.eq(WEIGHT_LOWER_BOUNDARY)
 
     // check if any unlocked traits to consume
-    const unlockCheck = sumByBig(
+    const leftoverCheck = sumByBig(
       traitElements.filter((x) => !x.locked).filter((_, i) => i !== index),
       (x) => x.weight
     ).gt(0)
 
-    return lockCheck || maxCheck || !unlockCheck
+    return lockCheck || maxCheck || !leftoverCheck
   }
 
   const isDecreaseRarityPossible = (index: number) => {
@@ -96,12 +96,16 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     const lockCheck = locked && none.eq(WEIGHT_UPPER_BOUNDARY)
 
     // checks if there is there is leftover weight to consume
-    // @todo fix this
+    const leftoverCheck = sumByBig(
+      traitElements.filter((x) => !x.locked).filter((_, i) => i !== index),
+      (x) => x.weight
+    ).gt(0)
+
     // const lockedTraitElements = traitElements.filter((x) => !x.locked).filter((_, i) => i !== index)
     // const leftoverCheck = Big(
     //   sumByBig(lockedTraitElements, (x) => x.weight).minus(WEIGHT_STEP_COUNT.mul(lockedTraitElements.length))
     // ).lte(0)
-    return lockCheck || minCheck
+    return lockCheck || minCheck || !leftoverCheck
   }
 
   const getMaxGrowthAllowance = (index: number, locked: boolean): Big => {

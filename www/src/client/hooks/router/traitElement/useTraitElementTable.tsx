@@ -373,16 +373,17 @@ export const useTraitElementTable = ({
                 }}
                 className='text-darkGrey text-[0.6rem] disabled:cursor-not-allowed'
               >
-                {original.locked ? (
-                  <LockClosedIcon
-                    className={clsx(
-                      Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY) && 'text-redError',
-                      'w-3 h-3 text-blueHighlight'
-                    )}
-                  />
-                ) : (
-                  <LockOpenIcon className='w-3 h-3 text-darkGrey' />
-                )}
+                {!original.readonly &&
+                  (original.locked ? (
+                    <LockClosedIcon
+                      className={clsx(
+                        Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY) && 'text-redError',
+                        'w-3 h-3 text-blueHighlight'
+                      )}
+                    />
+                  ) : (
+                    <LockOpenIcon className='w-3 h-3 text-darkGrey' />
+                  ))}
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
                 {`${Big(original.weight).toFixed(4)}`}
