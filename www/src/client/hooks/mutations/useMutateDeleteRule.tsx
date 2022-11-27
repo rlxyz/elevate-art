@@ -1,15 +1,15 @@
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateDeleteRule = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess, notifyError } = useNotification()
-  return trpc.useMutation('rules.delete', {
+  return trpc.rule.delete.useMutation({
     onSuccess: async (data) => {
-      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+      const backup = ctx.layerElement.findAll.getData({ repositoryId })
       if (!backup) return { backup }
 
       const next = produce(backup, (draft) => {
@@ -32,7 +32,7 @@ export const useMutateDeleteRule = () => {
         notifySuccess(`Deleted ${primary.name} ${data.condition} ${secondary.name} rule`)
       })
 
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+      ctx.layerElement.findAll.setData({ repositoryId }, next)
 
       // Notify Success
       return { backup }

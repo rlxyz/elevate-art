@@ -1,16 +1,16 @@
 import { Repository } from '@prisma/client'
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 import { useQueryOrganisation } from 'src/client/hooks/query/useQueryOrganisation'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 import { getRepositoryLayerNames, getRepositoryUploadLayerObjectUrls, uploadCollectionLayerImageCloudinary } from '../../utils/cloudinary'
 
 export const useMutateCreateNewRepository = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
   const { current: organisation, isLoading } = useQueryOrganisation()
-  const { mutate: createRepository } = trpc.useMutation('repository.create')
+  const { mutate: createRepository } = trpc.repository.create.useMutation()
   const { notifyError, notifySuccess } = useNotification()
 
   const mutate = ({
@@ -50,7 +50,7 @@ export const useMutateCreateNewRepository = ({ setRepository }: { setRepository:
         onSuccess: (data, variables) => {
           setRepository(data)
           notifySuccess('We have created the project for you. Starting upload...')
-          ctx.setQueryData(['repository.getRepositoryByName', { name: data.name }], data)
+          ctx.repository.findByName.setData({ name: data.name }, data)
           files.map((file: FileWithPath) => {
             const reader = new FileReader()
             const pathArray = String(file.path).split('/')

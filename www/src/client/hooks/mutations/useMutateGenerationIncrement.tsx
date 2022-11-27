@@ -1,34 +1,34 @@
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { useQueryRepositoryCollection } from 'src/client/hooks/query/useQueryRepositoryCollection'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => void }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { mutate } = useQueryRepositoryCollection()
   const ctx = trpc.useContext()
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('collections.generation.increment', {
+  return trpc.collection.updateGeneration.useMutation({
     // Optimistic Update
     onMutate: async (input) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['collections.getAll', { id: repositoryId }])
+      await ctx.collection.findAll.cancel({ repositoryId })
 
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['collections.getAll', { id: repositoryId }])
+      const backup = ctx.collection.findAll.getData({ repositoryId })
       if (!backup) return { backup }
 
       // Optimistically update to the new value
       const next = produce(backup, (draft) => {
-        const collection = draft.find((c) => c.id === input.id)
+        const collection = draft.find((c) => c.id === input.collectionId)
         if (!collection) return
         collection.generations = collection?.generations + 1
       })
 
-      const collection = next.find((c) => c.id === input.id)
+      const collection = next.find((c) => c.id === input.collectionId)
       if (collection) mutate({ collection })
-      ctx.setQueryData(['collections.getAll', { id: repositoryId }], next)
+      ctx.collection.findAll.setData({ repositoryId }, next)
 
       onMutate && onMutate()
       notifySuccess(`Successfully generated a new collection!`)
@@ -36,8 +36,8 @@ export const useMutateGenerationIncrement = ({ onMutate }: { onMutate?: () => vo
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['collections.getAll', { id: repositoryId }], context.backup)
+      ctx.collection.findAll.setData({ repositoryId }, context.backup)
     },
-    onSettled: () => ctx.invalidateQueries(['collections.getAll', { id: repositoryId }]),
+    onSettled: () => ctx.collection.findAll.invalidate({ repositoryId }),
   })
 }

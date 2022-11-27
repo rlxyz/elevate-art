@@ -1,7 +1,7 @@
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 import { groupBy } from 'src/shared/object-utils'
 import { useQueryRepositoryLayer } from '../query/useQueryRepositoryLayer'
 
@@ -10,16 +10,13 @@ export const useMutateRepositoryLayersWeight = () => {
   const { all: layers, isLoading } = useQueryRepositoryLayer()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const { notifySuccess } = useNotification()
-  return trpc.useMutation('traits.update.weight', {
+  return trpc.traitElement.updateWeight.useMutation({
     // Optimistic Update
     onMutate: async (input) => {
       const { traitElements } = input
 
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
-
       // Snapshot the previous value
-      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+      const backup = ctx.layerElement.findAll.getData({ repositoryId })
       if (!backup) return { backup }
 
       const allLayers = groupBy(traitElements, (x) => x.layerElementId)
@@ -46,17 +43,16 @@ export const useMutateRepositoryLayersWeight = () => {
         })
       })
 
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+      ctx.layerElement.findAll.setData({ repositoryId }, next)
       return { backup }
     },
     onError: (err, variables, context) => {
       if (!context?.backup) return
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], context.backup)
+      ctx.layerElement.findAll.setData({ repositoryId }, context.backup)
     },
     onSuccess: (data, variable) => {
-      // return backup
       notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`)
     },
-    onSettled: () => ctx.invalidateQueries(['layers.getAll', { id: repositoryId }]),
+    onSettled: () => ctx.layerElement.findAll.invalidate({ repositoryId }),
   })
 }

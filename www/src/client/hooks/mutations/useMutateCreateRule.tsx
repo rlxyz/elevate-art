@@ -1,16 +1,16 @@
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
+import { trpc } from 'src/client/utils/trpc'
 import { RulesType } from 'src/shared/compiler'
 
 export const useMutateCreateRule = () => {
   const ctx = trpc.useContext()
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  return trpc.useMutation('rules.create', {
+  return trpc.rule.create.useMutation({
     onSuccess: (data, variables) => {
-      const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+      const backup = ctx.layerElement.findAll.getData({ repositoryId })
       if (!backup) return
       const next = produce(backup, (draft) => {
         const allTraitElements = draft.flatMap((x) => x.traitElements)
@@ -34,7 +34,7 @@ export const useMutateCreateRule = () => {
         notifySuccess(`${primary.name} now ${data.condition} ${secondary.name}`)
       })
 
-      ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+      ctx.layerElement.findAll.setData({ repositoryId }, next)
     },
     onError: () => {
       notifyError("We couldn't create the rule. Try again.")

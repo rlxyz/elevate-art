@@ -1,4 +1,3 @@
-import { trpc } from '@utils/trpc'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
@@ -6,11 +5,12 @@ import { useQueryRepositoryLayer } from 'src/client/hooks/query/useQueryReposito
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { createCloudinaryFormData, getTraitUploadObjectUrls } from 'src/client/utils/cloudinary'
+import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateCreateTraitElement = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { mutateAsync: createManyTrait, isLoading } = trpc.useMutation('traits.create')
+  const { mutateAsync: createManyTrait, isLoading } = trpc.traitElement.create.useMutation()
   const { current: layer } = useQueryRepositoryLayer()
   const { notifyError, notifySuccess } = useNotification()
 
@@ -59,7 +59,7 @@ export const useMutateCreateTraitElement = () => {
 
     try {
       const response = await createManyTrait({ traitElements: allNewTraits })
-      await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
+      await ctx.layerElement.findAll.cancel({ repositoryId })
       const allTraits = Object.entries(response).flatMap((x) => x[1])
       const filePromises = files.map((file: FileWithPath) => {
         return new Promise((resolve, reject) => {
@@ -95,7 +95,7 @@ export const useMutateCreateTraitElement = () => {
         setUploadState('done')
         // @todo Too fast!
         notifySuccess('Trait elements created successfully')
-        const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+        const backup = ctx.layerElement.findAll.getData({ repositoryId })
         if (!backup) return
         const next = produce(backup, (draft) => {
           Object.entries(response).map(([layerElementId, traitElements]) => {
@@ -104,7 +104,7 @@ export const useMutateCreateTraitElement = () => {
             layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
           })
         })
-        ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+        ctx.layerElement.findAll.setData({ repositoryId }, next)
       })
     } catch (err) {
       setUploadState('error')
@@ -124,7 +124,7 @@ export const useMutateCreateTraitElement = () => {
     //     await ctx.cancelQuery(['layers.getAll', { id: repositoryId }])
 
     //     // Snapshot the previous value
-    //     const backup = ctx.getQueryData(['layers.getAll', { id: repositoryId }])
+    //           const backup = ctx.layerElement.findAll.getData({ repositoryId })
     //     if (!backup) return { backup }
 
     //     // Optimistically update to the new value
@@ -137,7 +137,7 @@ export const useMutateCreateTraitElement = () => {
     //       })
     //     })
 
-    //     // ctx.setQueryData(['layers.getAll', { id: repositoryId }], next)
+    //     //       ctx.layerElement.findAll.setData({ repositoryId }, next)
     //     files.map((file: FileWithPath) => {
     //       const reader = new FileReader()
     //       const traitName = file.path?.replace('.png', '') || ''
