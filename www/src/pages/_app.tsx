@@ -95,7 +95,7 @@ const ElevateCompilerApp: AppType<{ session: Session | null }> = ({ Component, p
                     }}
                   />
                   <Component {...pageProps} />
-                  <Analytics />
+                  <Analytics debug={!(env.NEXT_PUBLIC_NODE_ENV === 'production')} />
                 </RepositoryContext.Provider>
               </OrganisationRouterContext.Provider>
             </RainbowKitProvider>
