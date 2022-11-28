@@ -76,7 +76,7 @@ const createTraitElementNone = (current: PrismaLayerElementWithTraitElement): Tr
 
 const createTraitElement = (traitElement: PrismaTraitElementWithRule, repositoryId: string): TraitElement => ({
   ...traitElement,
-  imageUrl: getImageForTrait({ r: repositoryId, l: traitElement.layerElementId, t: traitElement.name }),
+  imageUrl: getImageForTrait({ r: repositoryId, l: traitElement.layerElementId, t: traitElement.id }),
   rulesPrimary: traitElement.rulesPrimary.map((r) => ({ ...r, condition: r.condition as RulesType })),
   rulesSecondary: traitElement.rulesSecondary.map((r) => ({ ...r, condition: r.condition as RulesType })),
 })
