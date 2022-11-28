@@ -69,13 +69,17 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layer
       {/** Handles all Repository related mutations */}
       {repository && (
         <>
-          <LayerElementReorderModal
-            onClose={() => setOpenReordering(false)}
-            visible={openReordering}
-            repository={repository}
-            layerElements={layerElements}
-          />
-          <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} repository={repository} />
+          {openReordering && (
+            <LayerElementReorderModal
+              onClose={() => setOpenReordering(false)}
+              visible={openReordering}
+              repository={repository}
+              layerElements={layerElements}
+            />
+          )}
+          {isCreateDialogOpen && (
+            <LayerElementCreateModal onClose={() => setIsCreateDialogOpen(false)} visible={isCreateDialogOpen} repository={repository} />
+          )}
         </>
       )}
     </div>

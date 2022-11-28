@@ -81,10 +81,11 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
     v.seed('1', '', 0, '')
   )
 
-  const orderedElements = Array.from({ length: layerElements.length }, (_, i) => 0)
+  const orderedElements: [string, string][] = Array.from({ length: layerElements.length }, () => ['', ''])
   items.forEach((item, index) => {
-    console.log(item.name, item.priority, index)
-    orderedElements[item.priority] = elements[index]
+    const element = elements[index]
+    if (!element) return
+    orderedElements[item.priority] = element
   })
 
   return (
@@ -128,7 +129,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
           <div className='relative h-full w-full'>
             <PreviewImageCardStandaloneNoNone
               id={0}
-              elements={orderedElements.reverse()}
+              elements={orderedElements}
               collection={{
                 id: '',
                 name: 'reorder',
