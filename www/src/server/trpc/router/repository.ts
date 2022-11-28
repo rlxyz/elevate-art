@@ -1,3 +1,4 @@
+import Big from 'big.js'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -46,7 +47,7 @@ export const repositoryRouter = router({
               priority: index,
               traitElements: {
                 createMany: {
-                  data: traitElements.map(({ name }) => ({ name, weight: 1 })),
+                  data: traitElements.map(({ name }) => ({ name, weight: Big(1).div(traitElements.length).mul(100).toNumber() })),
                 },
               },
             })),
