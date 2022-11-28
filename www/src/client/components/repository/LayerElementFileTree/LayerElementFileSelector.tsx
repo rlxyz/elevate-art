@@ -19,9 +19,11 @@ export type LayerElementFileSelectorProps = Props & Omit<React.HTMLAttributes<an
 const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({ items, itemEnabledIndex, className, ...props }) => {
   return (
     <div className={className} {...props}>
-      {items.map((item, index) => {
-        return <LayerElementFileTreeItem key={item.id} item={item} enabled={index === itemEnabledIndex} />
-      })}
+      {items
+        .sort((a, b) => a.priority - b.priority)
+        .map((item, index) => {
+          return <LayerElementFileTreeItem key={item.id} item={item} enabled={index === itemEnabledIndex} />
+        })}
     </div>
   )
 }

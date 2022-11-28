@@ -56,10 +56,12 @@ const createCurrentLayerElement = (layerElement: PrismaLayerElementWithTraitElem
 })
 
 const createAllLayerElement = (layerElements: PrismaLayerElementWithTraitElement[], repositoryId: string): LayerElement[] =>
-  layerElements.map((x) => ({
-    ...x,
-    traitElements: [...x.traitElements.map((x) => createTraitElement(x, repositoryId)), createTraitElementNone(x)],
-  }))
+  layerElements
+    .map((x) => ({
+      ...x,
+      traitElements: [...x.traitElements.map((x) => createTraitElement(x, repositoryId)), createTraitElementNone(x)],
+    }))
+    .sort((a, b) => a.priority - b.priority)
 
 const createTraitElementNone = (current: PrismaLayerElementWithTraitElement): TraitElement => ({
   id: `none-${current.id}`,

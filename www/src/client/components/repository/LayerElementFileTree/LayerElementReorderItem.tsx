@@ -35,15 +35,16 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, it
       style={{ boxShadow, y }}
       dragListener={false}
       dragControls={dragControls}
-      className={clsx(className, 'bg-lightGray relative flex w-full items-center border border-mediumGrey rounded-[5px] px-4 py-2')}
+      className={clsx(
+        className,
+        'bg-lightGray relative flex w-full items-center border border-mediumGrey rounded-[5px] px-4 py-2 cursor-move'
+      )}
+      onPointerDown={(e) => {
+        e.preventDefault()
+        dragControls.start(e)
+      }}
     >
-      <SelectorIcon
-        className='absolute w-3 h-3'
-        onPointerDown={(e) => {
-          e.preventDefault()
-          dragControls.start(e)
-        }}
-      />
+      <SelectorIcon className='absolute w-3 h-3' />
       <span className='mx-7 w-full flex items-center text-xs whitespace-nowrap overflow-hidden' {...props}>
         {item.name}
       </span>
@@ -52,24 +53,26 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, it
 }
 
 const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
-  const [items, setItems] = useState<LayerElement[]>(layerElements)
+  const sorted = layerElements.sort((a, b) => a.priority - b.priority)
+  const [items, setItems] = useState<LayerElement[]>(sorted)
   const { mutate, isLoading } = useMutateLayerElementUpdateOrder()
 
   useEffect(() => {
     setItems(layerElements)
-  }, [layerElements.length])
+  }, [sorted.length])
 
   if (!repository) return null
 
   const elements = v
     .one(
       v.parseLayer(
-        layerElements.map((l) => ({
+        sorted.map((l) => ({
           ...l,
           traits: l.traitElements
             .filter((x) => !x.readonly)
             .map((t) => ({
               ...t,
+              weight: t.weight || 1, // override weight to 1 if it's null
               rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
                 ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
                   type: condition as v.RulesType,
@@ -79,13 +82,13 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
             })),
         }))
       ),
-      v.seed('', '', 0, '')
+      v.seed('', '', 1, '')
     )
     .reverse()
 
   /** Maps Reordered List to Element */
   const orderedElements: [string, string][] = []
-  items.map((item) => {
+  items.map((item, index) => {
     const element = elements[item.priority]
     if (!element) return
     orderedElements.push(element)
@@ -120,7 +123,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
               axis='y'
               layoutScroll
               values={items}
-              className='flex flex-col space-y-2 max-h-[calc(100vh-17.5rem)] no-scrollbar overflow-y-scroll border border-mediumGrey rounded-[5px] p-2 overflow-hidden'
+              className='flex flex-col space-y-2 max-h-[calc(100vh-17.5rem)] no-scrollbar overflow-y-scroll rounded-[5px] p-2 overflow-hidden'
               onReorder={setItems}
             >
               {items.map((x) => (
