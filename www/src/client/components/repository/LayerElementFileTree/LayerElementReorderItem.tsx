@@ -1,10 +1,10 @@
+import { PreviewImageCardStandaloneNoNone } from '@components/collection/CollectionPreviewImage'
 import { SelectorIcon } from '@heroicons/react/outline'
 import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
-import { PreviewImageCardStandaloneNoNone } from 'src/client/components/collection/CollectionPreviewImage'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import * as v from 'src/shared/compiler'
 import { useMutateLayerElementUpdateOrder } from '../../../hooks/trpc/layerElement/useMutateLayerElementUpdateOrder'
@@ -61,32 +61,36 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
 
   if (!repository) return null
 
-  const elements = v.one(
-    v.parseLayer(
-      layerElements.map((l) => ({
-        ...l,
-        traits: l.traitElements
-          .filter((x) => !x.readonly)
-          .map((t) => ({
-            ...t,
-            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-                type: condition as v.RulesType,
-                with: left === t.id ? right : left,
-              })
-            ),
-          })),
-      }))
-    ),
-    v.seed('1', '', 0, '')
-  )
+  const elements = v
+    .one(
+      v.parseLayer(
+        layerElements.map((l) => ({
+          ...l,
+          traits: l.traitElements
+            .filter((x) => !x.readonly)
+            .map((t) => ({
+              ...t,
+              rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+                ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                  type: condition as v.RulesType,
+                  with: left === t.id ? right : left,
+                })
+              ),
+            })),
+        }))
+      ),
+      v.seed('', '', 0, '')
+    )
+    .reverse()
 
-  const orderedElements: [string, string][] = Array.from({ length: layerElements.length }, () => ['', ''])
-  items.forEach((item, index) => {
-    const element = elements[index]
+  /** Maps Reordered List to Element */
+  const orderedElements: [string, string][] = []
+  items.map((item) => {
+    const element = elements[item.priority]
     if (!element) return
-    orderedElements[item.priority] = element
+    orderedElements.push(element)
   })
+  orderedElements.reverse()
 
   return (
     <ModalComponent
@@ -125,24 +129,22 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
             </Reorder.Group>
           </AnimatePresence>
         </div>
-        <div className='col-span-5'>
-          <div className='relative h-full w-full'>
-            <PreviewImageCardStandaloneNoNone
-              id={0}
-              elements={orderedElements}
-              collection={{
-                id: '',
-                name: 'reorder',
-                type: '',
-                totalSupply: 1,
-                generations: 1,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                repositoryId: repository.id,
-              }}
-              layers={items}
-            />
-          </div>
+        <div className='col-span-5 relative h-full w-full'>
+          <PreviewImageCardStandaloneNoNone
+            id={0}
+            elements={orderedElements}
+            collection={{
+              id: '',
+              name: 'reorder',
+              type: '',
+              totalSupply: 1,
+              generations: 1,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              repositoryId: repository.id,
+            }}
+            layers={items}
+          />
         </div>
       </div>
     </ModalComponent>
