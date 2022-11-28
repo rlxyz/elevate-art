@@ -4,7 +4,7 @@ import { LayerElementFileTreeItem } from './LayerElementFileTreeItem'
 
 interface Props {
   items: LayerElement[]
-  itemEnabledIndex: number
+  enabledItem: LayerElement | undefined
 }
 
 export type LayerElementFileSelectorProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
@@ -16,13 +16,13 @@ export type LayerElementFileSelectorProps = Props & Omit<React.HTMLAttributes<an
  * It maintains two states, one for the layer element that is currently being hovered over.
  * In the hovered state of an element, the user can rename or delete the layer element.
  */
-const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({ items, itemEnabledIndex, className, ...props }) => {
+const LayerElementFileSelector: FC<LayerElementFileSelectorProps> = ({ items, enabledItem, className, ...props }) => {
   return (
     <div className={className} {...props}>
       {items
         .sort((a, b) => a.priority - b.priority)
         .map((item, index) => {
-          return <LayerElementFileTreeItem key={item.id} item={item} enabled={index === itemEnabledIndex} />
+          return <LayerElementFileTreeItem key={item.id} item={item} enabled={index === items.findIndex((x) => x.id === enabledItem?.id)} />
         })}
     </div>
   )

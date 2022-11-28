@@ -21,13 +21,14 @@ export type LayerElementFileTreeProps = Props & Omit<React.HTMLAttributes<any>, 
  * The core LayerElement File Tree. It handles selection of the current layer route & reordering of layers.
  */
 const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layerElements, className, ...props }) => {
+  const sorted = layerElements.sort((a, b) => a.priority - b.priority)
   const [openReordering, setOpenReordering] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const layerName: string = router.query.layer as string
 
   /** Handles the last updated LayerElement */
   const layerElementLastEdited = () => {
-    return layerElements.sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())[0]?.updatedAt || new Date()
+    return sorted.sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())[0]?.updatedAt || new Date()
   }
 
   /** Handles the first LayerElement that was created. Basically, the inception of the repository. */
@@ -63,7 +64,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layer
           </Menu>
         </div>
 
-        <LayerElementFileSelector items={layerElements} itemEnabledIndex={layerElements.findIndex((x) => x.name === layerName)} />
+        <LayerElementFileSelector items={sorted} enabledItem={sorted.find((x) => x.name === layerName)} />
       </div>
 
       {/** Handles all Repository related mutations */}
@@ -74,7 +75,7 @@ const LayerElementFileTree: FC<LayerElementFileTreeProps> = ({ repository, layer
               onClose={() => setOpenReordering(false)}
               visible={openReordering}
               repository={repository}
-              layerElements={layerElements}
+              layerElements={sorted}
             />
           )}
           {isCreateDialogOpen && (
