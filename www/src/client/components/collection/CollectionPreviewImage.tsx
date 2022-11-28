@@ -8,6 +8,7 @@ interface Props {
   id: number
   collection: Collection
   layers: (LayerElement & { traitElements: (TraitElement & { rulesPrimary: Rules[]; rulesSecondary: Rules[] })[] })[]
+  elements?: [string, string][]
   canHover?: boolean
 }
 
@@ -64,6 +65,41 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
       </div>
       <div className='h-[25%] flex flex-col w-full'>{children}</div>
     </div>
+  )
+}
+
+export const PreviewImageCardStandaloneNoNone: FC<PreviewImageProps> = ({
+  id,
+  collection,
+  layers,
+  children,
+  elements,
+  className,
+  canHover = false,
+  ...props
+}: PreviewImageProps) => {
+  if (!elements) return null
+  const hash = v.hash(elements)
+  return (
+    <>
+      {elements
+        .filter(([l, t]) => !t.startsWith('none'))
+        .map(([l, t], index) => {
+          return (
+            <img
+              key={`${hash}-${t}-${index}`}
+              width={100}
+              className={clsx('absolute w-full h-full object-contain rounded-[5px]')}
+              // className={clsx('border object-contain')}
+              src={getImageForTrait({
+                r: collection.repositoryId,
+                l,
+                t,
+              })}
+            />
+          )
+        })}
+    </>
   )
 }
 

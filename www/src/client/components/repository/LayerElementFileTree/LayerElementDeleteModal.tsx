@@ -30,7 +30,10 @@ const LayerElementDeleteModal: FC<LayerElementDeleteProps> = ({ layerElement, vi
     <ModalComponent
       visible={visible}
       onClose={handleClose}
-      onClick={() => mutate({ layerElementId: layerElement.id, repositoryId: layerElement.repositoryId }, { onSuccess: handleSuccess })}
+      onClick={(e) => {
+        e.preventDefault()
+        mutate({ layerElementId: layerElement.id, repositoryId: layerElement.repositoryId }, { onSuccess: handleSuccess })
+      }}
       title={`Delete Layer`}
       description={`This will delete an existing layer, you can't revert this action.`}
       isLoading={isLoading}

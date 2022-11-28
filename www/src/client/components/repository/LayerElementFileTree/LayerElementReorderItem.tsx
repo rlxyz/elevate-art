@@ -4,8 +4,9 @@ import { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import { AnimatePresence, Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
-import { PreviewImageCardStandalone } from 'src/client/components/collection/CollectionPreviewImage'
+import { PreviewImageCardStandaloneNoNone } from 'src/client/components/collection/CollectionPreviewImage'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
+import * as v from 'src/shared/compiler'
 import { useMutateLayerElementUpdateOrder } from '../../../hooks/trpc/layerElement/useMutateLayerElementUpdateOrder'
 import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
 import { FormModalProps } from './LayerElementDeleteModal'
@@ -60,6 +61,32 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
 
   if (!repository) return null
 
+  const elements = v.one(
+    v.parseLayer(
+      layerElements.map((l) => ({
+        ...l,
+        traits: l.traitElements
+          .filter((x) => !x.readonly)
+          .map((t) => ({
+            ...t,
+            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                type: condition as v.RulesType,
+                with: left === t.id ? right : left,
+              })
+            ),
+          })),
+      }))
+    ),
+    v.seed('1', '', 0, '')
+  )
+
+  const orderedElements = Array.from({ length: layerElements.length }, (_, i) => 0)
+  items.forEach((item, index) => {
+    console.log(item.name, item.priority, index)
+    orderedElements[item.priority] = elements[index]
+  })
+
   return (
     <ModalComponent
       visible={visible}
@@ -99,8 +126,9 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, lay
         </div>
         <div className='col-span-5'>
           <div className='relative h-full w-full'>
-            <PreviewImageCardStandalone
+            <PreviewImageCardStandaloneNoNone
               id={0}
+              elements={orderedElements.reverse()}
               collection={{
                 id: '',
                 name: 'reorder',
