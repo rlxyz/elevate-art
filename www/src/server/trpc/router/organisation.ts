@@ -73,6 +73,11 @@ export const organisationRouter = router({
             },
           },
         },
+        include: {
+          _count: { select: { repositories: true } },
+          members: { include: { user: true } },
+          pendings: { include: { organisation: true } },
+        },
       })
     }),
   acceptInvite: protectedProcedure
@@ -111,45 +116,32 @@ export const organisationRouter = router({
       }
 
       // @todo introduce and test this
-      // await ctx.prisma.organisation.update({
-      //   where: { id: pending.organisationId },
-      //   data: {
-      //     members: {
-      //       create: {
-      //         userId: user.id,
-      //         type:
-      //           pending.role === OrganisationDatabaseRoleEnum.enum.Admin
-      //             ? OrganisationDatabaseRoleEnum.enum.Admin
-      //             : OrganisationDatabaseRoleEnum.enum.Curator,
-      //       },
-      //     },
-      //     pendings: {
-      //       delete: {
-      //         address_organisationId: {
-      //           address: pending.address,
-      //           organisationId: pending.organisationId,
-      //         },
-      //       },
-      //     },
-      //   },
-      // })
-
-      await ctx.prisma.$transaction(async (tx) => {
-        await tx.organisationPending.delete({ where: { id: pendingId } })
-        await tx.organisation.update({
-          where: { id: pending.organisationId },
-          data: {
-            members: {
-              create: {
-                userId: user.id,
-                type:
-                  pending.role === OrganisationDatabaseRoleEnum.enum.Admin
-                    ? OrganisationDatabaseRoleEnum.enum.Admin
-                    : OrganisationDatabaseRoleEnum.enum.Curator,
+      return await ctx.prisma.organisation.update({
+        where: { id: pending.organisationId },
+        data: {
+          members: {
+            create: {
+              userId: user.id,
+              type:
+                pending.role === OrganisationDatabaseRoleEnum.enum.Admin
+                  ? OrganisationDatabaseRoleEnum.enum.Admin
+                  : OrganisationDatabaseRoleEnum.enum.Curator,
+            },
+          },
+          pendings: {
+            delete: {
+              address_organisationId: {
+                address: pending.address,
+                organisationId: pending.organisationId,
               },
             },
           },
-        })
+        },
+        include: {
+          _count: { select: { repositories: true } },
+          members: { include: { user: true } },
+          pendings: { include: { organisation: true } },
+        },
       })
     }),
 })
