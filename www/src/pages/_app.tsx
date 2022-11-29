@@ -4,7 +4,6 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { Session } from 'next-auth/core/types'
 import { AppType } from 'next/app'
 import { AnalyticsLayout } from '../client/components/layout/core/AnalyticsLayout'
-import { StoreLayout } from '../client/components/layout/core/StoreLayout'
 import '../client/styles/globals.css'
 import '../client/utils/highlight'
 import { trpc } from '../client/utils/trpc'
@@ -15,9 +14,7 @@ const Application: AppType<{ session: Session | null }> = ({ Component, pageProp
     <ErrorBoundary showDialog>
       <EthereumAuthenticationLayout session={session}>
         <AnalyticsLayout>
-          <StoreLayout>
-            <Component {...pageProps} />
-          </StoreLayout>
+          <Component {...pageProps} />
         </AnalyticsLayout>
       </EthereumAuthenticationLayout>
     </ErrorBoundary>

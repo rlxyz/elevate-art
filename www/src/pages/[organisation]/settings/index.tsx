@@ -1,3 +1,4 @@
+import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
@@ -71,4 +72,4 @@ const Page: NextPage = () => {
   )
 }
 
-export default Page
+export default withOrganisationStore(Page)

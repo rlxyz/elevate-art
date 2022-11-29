@@ -1,3 +1,4 @@
+import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepositoryCreate'
 import { Repository } from '@prisma/client'
@@ -68,4 +69,4 @@ const Page: NextPage = () => {
   )
 }
 
-export default Page
+export default withOrganisationStore(Page)

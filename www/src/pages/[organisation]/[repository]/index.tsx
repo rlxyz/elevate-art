@@ -1,3 +1,4 @@
+import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -114,4 +115,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default withOrganisationStore(Page)
