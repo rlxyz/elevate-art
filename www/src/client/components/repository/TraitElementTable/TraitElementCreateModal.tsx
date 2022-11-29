@@ -25,7 +25,7 @@ const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boo
       }}
       className='md:max-w-2xl' // @todo fix this
     >
-      <Upload className='h-[30vh]' depth={1} onDropCallback={mutate} setUploadState={setUploadState} gridSize='md' />
+      <Upload className='h-[30vh]' depth={1} onDropCallback={mutate} setUploadState={setUploadState} gridSize='md' withTooltip={true} />
     </ModalComponent>
   )
 }

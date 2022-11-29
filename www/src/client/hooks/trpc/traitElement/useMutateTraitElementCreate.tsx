@@ -1,4 +1,5 @@
 import { UploadState } from '@components/layout/upload/upload'
+import { TraitElementUploadState } from '@components/layout/upload/upload-display'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
@@ -22,16 +23,7 @@ export const useMutateTraitElementCreate = () => {
     setUploadState,
   }: {
     files: FileWithPath[]
-    setUploadedFiles: Dispatch<
-      SetStateAction<{
-        [key: string]: {
-          name: string
-          imageUrl: string
-          size: number
-          uploaded: boolean
-        }[]
-      }>
-    >
+    setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
   }) => {
     // step 0: validate layer
@@ -59,7 +51,46 @@ export const useMutateTraitElementCreate = () => {
         repositoryId: repositoryId,
       }))
 
-    const allExistingTraits = names.filter((x) => layer.traitElements.map((x) => x.name).includes(x))
+    const allExistingTraits = names
+      .filter((x) => layer.traitElements.map((x) => x.name).includes(x))
+      .map((x) => ({
+        name: x,
+        layerElementId: layer.id,
+        repositoryId: repositoryId,
+      }))
+
+    /** Update New Traits */
+    setUploadedFiles((old) => {
+      return produce(old, (draft) => {
+        allNewTraits.forEach((item) => {
+          Object.entries(draft).find(([key, value]) => {
+            const trait = value.find((x) => x.name === item.name)
+            if (trait) {
+              trait.type = 'new'
+              return true
+            }
+            return false
+          })
+        })
+      })
+    })
+
+    /** Update Existing Traits */
+    setUploadedFiles((old) => {
+      return produce(old, (draft) => {
+        allExistingTraits.forEach((item) => {
+          Object.entries(draft).find(([key, value]) => {
+            const trait = value.find((x) => x.name === item.name)
+            if (!trait) return
+            if (trait.name === 'None' || trait?.name === 'none') {
+              trait.type = 'invalid'
+            } else {
+              trait.type = 'existing'
+            }
+          })
+        })
+      })
+    })
 
     try {
       const response = await createManyTrait({ traitElements: allNewTraits })

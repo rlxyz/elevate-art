@@ -48,7 +48,14 @@ const Page: NextPage = () => {
                 </button>
               </div>
             )}
-            <Upload className='h-[50vh]' depth={4} onDropCallback={createRepository} setUploadState={setUploadState} gridSize='lg'>
+            <Upload
+              className='h-[50vh]'
+              depth={4}
+              onDropCallback={createRepository}
+              setUploadState={setUploadState}
+              gridSize='lg'
+              withTooltip={true}
+            >
               <div className='h-[30vh] flex items-center'>
                 <div className='space-y-6'>
                   <div className={clsx(isLoading && 'animate-pulse bg-mediumGrey rounded-[5px]')}>

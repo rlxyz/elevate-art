@@ -1,20 +1,32 @@
 import { Disclosure, Transition } from '@headlessui/react'
-import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import {
+  CheckCircleIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DocumentAddIcon,
+  DocumentDuplicateIcon,
+  XCircleIcon,
+} from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { FC, Fragment, PropsWithChildren } from 'react'
 import { formatBytes } from 'src/client/utils/format'
+import Tooltip from '../tooltip'
+
+export type TraitElementUploadState = {
+  name: string
+  imageUrl: string
+  size: number
+  uploaded: boolean
+  type: 'new' | 'existing' | 'invalid'
+}
 
 interface Props {
   layerName?: string
-  traits?: {
-    name: string
-    imageUrl: string
-    size: number
-    uploaded: boolean
-  }[]
+  traits?: TraitElementUploadState[]
   gridSize?: 'md' | 'lg'
+  withTooltip?: boolean
 }
 
 const defaultProps: Props = {
@@ -28,6 +40,7 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
   layerName = '',
   traits = [],
   gridSize,
+  withTooltip = false,
   ...props
 }: React.PropsWithChildren<UploadDisplayProps> & typeof defaultProps) => {
   return (
@@ -75,16 +88,41 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
           >
             <Disclosure.Panel>
               <div className={clsx('grid gap-x-3 gap-y-3', gridSize === 'md' && 'grid-cols-6', gridSize == 'lg' && 'grid-cols-12')}>
-                {traits.map((item, index) => {
-                  return (
-                    <div key={`${item}-${index}`} className='relative flex flex-col space-y-1 items-center'>
-                      <img width={200} height={200} src={item.imageUrl} className='rounded-[5px] border border-mediumGrey' />
-                      {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />}
-                      {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
-                      <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
-                    </div>
-                  )
-                })}
+                {traits
+                  .sort((a) => (a.type === 'new' ? 1 : a.type === 'existing' ? 0 : a.type === 'invalid' ? -1 : -2))
+                  .map((item, index) => {
+                    return (
+                      <div key={`${item}-${index}`} className='relative flex flex-col space-y-1 items-center'>
+                        <img width={200} height={200} src={item.imageUrl} className='rounded-[5px] border border-mediumGrey' />
+                        {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />}
+                        {withTooltip &&
+                          (item.type === 'existing' ? (
+                            <Tooltip
+                              as={DocumentDuplicateIcon}
+                              variant='warning'
+                              className='absolute rounded-[3px] left-0 top-0 w-4 h-4 m-1'
+                              description={'Duplicate file found. We are reuploading the image.'}
+                            />
+                          ) : item.type === 'new' ? (
+                            <Tooltip
+                              as={DocumentAddIcon}
+                              variant='success'
+                              className='absolute rounded-[3px] left-0 top-0 w-4 h-4 m-1'
+                              description={'You are uploading a new trait.'}
+                            />
+                          ) : item.type === 'invalid' ? (
+                            <Tooltip
+                              as={XCircleIcon}
+                              variant='error'
+                              className='absolute rounded-[3px] left-0 top-0 w-4 h-4 m-1 overflow-auto'
+                              description={'This file cant be upload. Try again...'}
+                            />
+                          ) : null)}
+                        {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
+                        <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
+                      </div>
+                    )
+                  })}
               </div>
             </Disclosure.Panel>
           </Transition>
