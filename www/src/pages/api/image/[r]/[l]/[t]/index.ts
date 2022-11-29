@@ -1,4 +1,4 @@
-import { getCldImgUrl } from '@server/common/cld-get-image'
+import { getTraitElementImage, getTraitElementInfo } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -15,9 +15,17 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  const data = await fetch(getCldImgUrl({ r, l, t }))
+  const response = await getTraitElementInfo({ r, l, t })
+  if (response.failed) {
+    return res.status(404)
+  }
+
+  /** This always ensures that user gets the latest version! */
+  const { version } = response.getValue()
+
+  const data = await fetch(getTraitElementImage({ r, l, t, version }))
   if (data.status === 404) {
-    return res.status(404).send('Not Found')
+    return res.status(404)
   }
 
   if (data.status === 200) {
