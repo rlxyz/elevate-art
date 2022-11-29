@@ -1,10 +1,16 @@
 import { getTraitElementImage, getTraitElementInfo } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { Redis } from '@upstash/redis'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { env } from 'src/env/server.mjs'
+
+export const redis = new Redis({
+  url: 'https://global-noted-narwhal-30117.upstash.io',
+  token: 'AXWlASQgNTE1MzVkMDYtNTY4My00NzI1LTk0NjgtODRiZjUzZjQ5ZWYzZmVhN2QwNmM0ZWMxNDNmYmE4YTBlYTA2MjAxY2U2N2Y=',
+})
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
-
   if (!session || !session.user) {
     return res.status(401).send('Unauthorized')
   }
@@ -15,22 +21,39 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
+  const exist = await redis.get(`${env.NODE_ENV}/${r}/${l}/${t}`)
+  if (exist) {
+    const data = await fetch(getTraitElementImage({ r, l, t }))
+    if (data.status === 404) {
+      return res.status(404)
+    }
+
+    if (data.status === 200) {
+      return res.send(data.body)
+    }
+  }
+
   const response = await getTraitElementInfo({ r, l, t })
   if (response.failed) {
     return res.status(404)
   }
+  const { version, traitElementId } = response.getValue()
 
-  /** This always ensures that user gets the latest version! */
-  const { version } = response.getValue()
+  try {
+    const exist = await redis.get(traitElementId)
+    if (!exist) {
+      await redis.set(traitElementId, version)
+    }
+  } catch (error) {
+    console.error(error)
+  }
 
-  const data = await fetch(getTraitElementImage({ r, l, t, version }))
+  const data = await fetch(getTraitElementImage({ r, l, t }))
   if (data.status === 404) {
     return res.status(404)
   }
 
   if (data.status === 200) {
-    // res.setHeader('Cache-Control', 'private, s-maxage=1, stale-while-revalidate=59')
-    // res.setHeader('Content-Type', 'image/png')
     return res.send(data.body)
   }
 }

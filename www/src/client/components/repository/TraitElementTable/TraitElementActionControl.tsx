@@ -12,7 +12,7 @@ export const TraitElementActionControl: FC<any> = () => {
       >
         New
       </button>
-      <TraitElementCreateModal visible={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
+      {isCreateDialogOpen && <TraitElementCreateModal visible={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />}
     </>
   )
 }

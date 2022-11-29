@@ -18,7 +18,7 @@ const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boo
       onClose={onClose}
       title='Add Trait'
       description={`You can upload new traits here. This will be applied to all collections in the project.`}
-      isLoading={!(uploadState === 'done') && !isLoading}
+      isLoading={!(uploadState === 'done') || isLoading}
       onClick={(e) => {
         e.preventDefault()
         onClose()

@@ -59,6 +59,8 @@ export const useMutateTraitElementCreate = () => {
         repositoryId: repositoryId,
       }))
 
+    const allExistingTraits = names.filter((x) => layer.traitElements.map((x) => x.name).includes(x))
+
     try {
       const response = await createManyTrait({ traitElements: allNewTraits })
       await ctx.layerElement.findAll.cancel({ repositoryId })

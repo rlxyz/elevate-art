@@ -13,6 +13,7 @@ export const serverSchema = z.object({
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
+  REDIS_URL: z.string(),
 })
 
 /**
