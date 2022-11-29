@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { ElementType, forwardRef, Fragment } from 'react'
 
 interface Props {
-  variant?: 'success' | 'error' | 'warning' | 'info'
+  variant?: 'success' | 'error' | 'warning' | 'info' | 'highlight'
   as?: ElementType<any> | undefined
   className?: string
   description: string
@@ -21,6 +21,7 @@ const Tooltip = forwardRef<HTMLAnchorElement, React.PropsWithChildren<Props>>(
           className={clsx(
             'w-3 h-3',
             variant === 'info' && 'text-darkGrey',
+            variant === 'highlight' && 'text-blueHighlight',
             variant === 'success' && 'text-greenDot',
             variant === 'error' && 'text-redError',
             variant === 'warning' && 'text-orangeWarning',

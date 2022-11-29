@@ -94,7 +94,7 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
                     return (
                       <div key={`${item}-${index}`} className='relative flex flex-col space-y-1 items-center'>
                         <img width={200} height={200} src={item.imageUrl} className='rounded-[5px] border border-mediumGrey' />
-                        {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-greenDot m-1' />}
+                        {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-3 h-3 text-greenDot m-1' />}
                         {withTooltip &&
                           (item.type === 'existing' ? (
                             <Tooltip
@@ -106,7 +106,7 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
                           ) : item.type === 'new' ? (
                             <Tooltip
                               as={DocumentAddIcon}
-                              variant='success'
+                              variant='highlight'
                               className='absolute rounded-[3px] left-0 top-0 w-4 h-4 m-1'
                               description={'You are uploading a new trait.'}
                             />

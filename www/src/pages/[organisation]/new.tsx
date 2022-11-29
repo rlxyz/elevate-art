@@ -54,7 +54,7 @@ const Page: NextPage = () => {
               onDropCallback={createRepository}
               setUploadState={setUploadState}
               gridSize='lg'
-              withTooltip={true}
+              withTooltip={false}
             >
               <div className='h-[30vh] flex items-center'>
                 <div className='space-y-6'>
