@@ -1,35 +1,27 @@
 import produce from 'immer'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
+import { useMutationContext } from '../useMutationContext'
 
 export const useMutateLayerElementUpdateName = () => {
-  const ctx = trpc.useContext()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifyError, notifySuccess } = useNotification()
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
   return trpc.layerElement.updateName.useMutation({
-    onSuccess: async (data, variables) => {
-      /** Get the Change */
+    onSuccess: (_, variables) => {
       const { layerElements } = variables
-
-      /** Update the cache */
-      ctx.layerElement.findAll.setData({ repositoryId }, (old) =>
-        produce(old, (draft) => {
-          if (!draft) return
-
+      ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
+        if (!old) return old
+        const next = produce(old, (draft) => {
           layerElements.forEach(({ layerElementId, name }) => {
             const layer = draft.find((x) => x.id === layerElementId)
             if (!layer) return
             layer.name = name
           })
         })
-      )
-
-      /** Notify Success */
-      notifySuccess(`Successfully renamed layer`)
+        notifySuccess(`Successfully renamed layer`)
+        return next
+      })
     },
     onError: (error) => {
-      notifyError('Something went wrong...')
+      notifyError('Something went wrong when renaming layer. Try again...')
     },
   })
 }

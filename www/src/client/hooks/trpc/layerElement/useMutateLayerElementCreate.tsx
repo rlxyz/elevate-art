@@ -1,32 +1,22 @@
 import produce from 'immer'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
+import { useMutationContext } from '../useMutationContext'
 
 export const useMutateLayerElementCreate = () => {
-  const ctx = trpc.useContext()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifyError, notifySuccess } = useNotification()
-
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
   return trpc.layerElement.create.useMutation({
-    onSuccess: async (data) => {
-      // Snapshot the previous value
-      const backup = ctx.layerElement.findAll.getData({ repositoryId })
-      if (!backup) return { backup }
-
-      // Optimistically update to the new value
-      const next = produce(backup, (draft) => {
-        draft.push({
-          ...data,
-          traitElements: [],
+    onSuccess: (data) => {
+      ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
+        if (!old) return old
+        const next = produce(old, (draft) => {
+          draft.push({
+            ...data,
+            traitElements: [],
+          })
         })
+        notifySuccess(`You have created a new layer called ${data.name}.`)
+        return next
       })
-
-      // Save
-      ctx.layerElement.findAll.setData({ repositoryId }, next)
-
-      // Notify
-      notifySuccess(`You have created a new layer called ${data.name}.`)
     },
     onError: (err) => {
       notifyError(err.message)

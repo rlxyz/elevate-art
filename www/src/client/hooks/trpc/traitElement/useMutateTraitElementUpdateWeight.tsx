@@ -1,25 +1,21 @@
 import produce from 'immer'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { groupBy } from 'src/shared/object-utils'
 import { useQueryLayerElementFindAll } from '../layerElement/useQueryLayerElementFindAll'
+import { useMutationContext } from '../useMutationContext'
 
 export const useMutateTraitElementUpdateWeight = () => {
-  const ctx = trpc.useContext()
-  const { all: layers } = useQueryLayerElementFindAll()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifySuccess, notifyError } = useNotification()
+  const { all: layers } = useQueryLayerElementFindAll() // @todo remove
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
   return trpc.traitElement.updateWeight.useMutation({
     onSuccess: (_, variable) => {
       /** Get the Change */
       const { traitElements } = variable
 
       /** Update the cache */
-      ctx.layerElement.findAll.setData({ repositoryId }, (old) =>
-        produce(old, (draft) => {
-          if (!draft) return
-
+      ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
+        if (!old) return old
+        const next = produce(old, (draft) => {
           Object.entries(groupBy(traitElements, (x) => x.layerElementId)).forEach(([layerElementId]) => {
             /** Find the Layer */
             const layer = draft.find((x) => x.id === layerElementId)
@@ -39,10 +35,11 @@ export const useMutateTraitElementUpdateWeight = () => {
             layer.traitElements = layer.traitElements.sort((a, b) => b.weight - a.weight)
           })
         })
-      )
 
-      /** Notify Success */
-      notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`)
+        /** Notify Success */
+        notifySuccess(`Successfully updated ${layers?.find((l) => l.id === variable.traitElements[0]?.layerElementId)?.name} rarities.`)
+        return next
+      })
     },
     onError: (err, variables, context) => {
       // @todo better error handling

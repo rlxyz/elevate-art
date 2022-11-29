@@ -1,35 +1,26 @@
 import produce from 'immer'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
+import { useMutationContext } from '../useMutationContext'
 
 export const useMutateLayerElementUpdateOrder = () => {
-  const ctx = trpc.useContext()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifySuccess, notifyError } = useNotification()
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
   return trpc.layerElement.updateOrder.useMutation({
-    onSuccess: async (data, variable) => {
-      // Snapshot the previous value
-      const backup = ctx.layerElement.findAll.getData({ repositoryId })
-      if (!backup) return { backup }
-
-      // Optimistically update to the new value
-      const next = produce(backup, (draft) => {
-        variable.layerElements.forEach(({ layerElementId: id, priority }) => {
-          const layer = draft.find((l) => l.id === id)
-          if (layer) {
-            layer.priority = priority
-          }
+    onSuccess: (_, variable) => {
+      const { layerElements } = variable
+      ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
+        if (!old) return old
+        const next = produce(old, (draft) => {
+          layerElements.forEach(({ layerElementId: id, priority }) => {
+            const layer = draft.find((l) => l.id === id)
+            if (layer) {
+              layer.priority = priority
+            }
+          })
+          draft = draft.sort((a, b) => a.priority - b.priority)
         })
-        // @todo this seems unsafe; we should depend on server for sorting
-        draft = draft.sort((a, b) => a.priority - b.priority)
+        notifySuccess(`You have reordered the layers. All collections have been regenerated with the new order.`)
+        return next
       })
-
-      // Save
-      ctx.layerElement.findAll.setData({ repositoryId }, next)
-
-      // Notify
-      notifySuccess(`You have reordered the layers. All collections have been regenerated with the new order.`)
     },
     onError: (err, variables, context) => {
       notifyError('Something went wrong when reordering layers. Try again...')
