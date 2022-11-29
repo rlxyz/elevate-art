@@ -23,20 +23,22 @@ export const EthereumAuthenticationLayout: FC<{ session: Session | null; childre
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider refetchInterval={60} session={session}>
-        <RainbowKitProvider
-          appInfo={appInfo}
-          chains={chains}
-          initialChain={env.NEXT_PUBLIC_NETWORK_ID}
-          theme={lightTheme({
-            accentColor: '#0070F3',
-            accentColorForeground: 'white',
-            borderRadius: 'small',
-            fontStack: 'system',
-            overlayBlur: 'small',
-          })}
-        >
-          <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>{children}</RainbowKitSiweNextAuthProvider>
-        </RainbowKitProvider>
+        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+          <RainbowKitProvider
+            appInfo={appInfo}
+            chains={chains}
+            initialChain={env.NEXT_PUBLIC_NETWORK_ID}
+            theme={lightTheme({
+              accentColor: '#0070F3',
+              accentColorForeground: 'white',
+              borderRadius: 'small',
+              fontStack: 'system',
+              overlayBlur: 'small',
+            })}
+          >
+            {children}
+          </RainbowKitProvider>
+        </RainbowKitSiweNextAuthProvider>
       </SessionProvider>
     </WagmiConfig>
   )

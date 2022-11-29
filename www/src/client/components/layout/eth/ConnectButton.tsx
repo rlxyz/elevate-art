@@ -12,11 +12,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading'
         const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated')
-
         return (
           <div
             {...(!ready && {
