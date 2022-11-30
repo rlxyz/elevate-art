@@ -144,4 +144,30 @@ export const organisationRouter = router({
         },
       })
     }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name } = input
+
+      return await ctx.prisma.organisation.create({
+        data: {
+          name,
+          members: {
+            create: {
+              userId: ctx.session.user.id,
+              type: OrganisationDatabaseRoleEnum.enum.Admin,
+            },
+          },
+        },
+        include: {
+          _count: { select: { repositories: true } },
+          members: { include: { user: true } },
+          pendings: { include: { organisation: true } },
+        },
+      })
+    }),
 })
