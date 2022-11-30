@@ -41,11 +41,20 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   ...props
 }: React.PropsWithChildren<UploadProps>) => {
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: TraitElementUploadState[] }>({})
-  const { notifyError } = useNotification()
   const [internalUploadState, setInternalUploadState] = useState<UploadState>('idle')
+  const { notifySuccess, notifyError } = useNotification()
 
   useEffect(() => {
-    setUploadState && setUploadState(internalUploadState)
+    const state = internalUploadState
+    console.log('running')
+    setUploadState && setUploadState(state)
+    if (state === 'done') {
+      notifySuccess('Successfully created and uploaded the traits.')
+    } else if (state === 'error') {
+      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
+    } else if (state === 'uploading') {
+      notifySuccess('Uploading your new traits and their associated images.')
+    }
   }, [internalUploadState])
 
   const onDrop = useCallback(async (files: FileWithPath[]) => {

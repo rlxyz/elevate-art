@@ -1,15 +1,17 @@
 import { Prisma } from '@prisma/client'
 import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@server/common/cld-delete-image'
-import { getLayerElementsWithTraitElements } from '@server/common/get-layer-with-traits'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import { TRPCError } from '@trpc/server'
-import { groupBy, sumBy } from 'src/shared/object-utils'
+import { sumBy } from 'src/shared/object-utils'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
 const TraitElementDeleteInput = z.array(z.object({ id: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
-const TraitElementCreateInput = z.array(z.object({ name: z.string(), layerElementId: z.string(), repositoryId: z.string() }))
+const TraitElementCreateManyByLayerElementIdInput = z.object({
+  layerElementId: z.string(),
+  traitElements: z.array(z.object({ name: z.string() })),
+})
 const TraitElementUpdateNameInput = z.array(z.object({ name: z.string(), traitElementId: z.string(), repositoryId: z.string() }))
 const TraitElementUpdateWeightInput = z.array(z.object({ weight: z.number(), traitElementId: z.string(), layerElementId: z.string() }))
 
@@ -53,30 +55,20 @@ export const traitElementRouter = router({
         },
       })
     }),
-  create: protectedProcedure
-    .input(
-      z.object({
-        traitElements: TraitElementCreateInput,
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { traitElements } = input
+  createManyByLayerElementId: protectedProcedure.input(TraitElementCreateManyByLayerElementIdInput).mutation(async ({ ctx, input }) => {
+    const { layerElementId, traitElements } = input
 
-      /* Create many traits based on their layerElementId & name */
-      await ctx.prisma.traitElement.createMany({
-        data: traitElements.map(({ name, layerElementId }) => ({
-          layerElementId,
-          name,
-          weight: 0, // weight set to 0 to not fuck up existing collections
-        })),
-      })
+    /* Create many traits based on their layerElementId & name */
+    await ctx.prisma.traitElement.createMany({
+      data: traitElements.map(({ name }) => ({
+        layerElementId,
+        name,
+        weight: 0, // weight set to 0 to not fuck up existing collections
+      })),
+    })
 
-      /* Return all the new TraitElement grouped by LayerElement */
-      return await getLayerElementsWithTraitElements({
-        layerElementIds: Object.keys(groupBy(traitElements, (x) => x.layerElementId)),
-        prisma: ctx.prisma,
-      })
-    }),
+    return await ctx.prisma.traitElement.findMany({ where: { layerElementId: layerElementId } })
+  }),
   updateName: protectedProcedure
     .input(
       z.object({

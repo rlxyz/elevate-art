@@ -1,16 +1,18 @@
 import { UploadState } from '@components/layout/upload/upload'
 import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
-import { createCloudinaryFormData, parseLayerElementFolder } from 'src/client/utils/cloudinary'
+import { createCloudinaryFormData } from 'src/client/utils/cloudinary'
 import { trpc } from 'src/client/utils/trpc'
+import { parseLayerElementFolder, ParseLayerElementFolderOutput } from 'src/client/utils/upload'
 import { env } from 'src/env/client.mjs'
+import { useQueryLayerElementFindAll } from '../layerElement/useQueryLayerElementFindAll'
 import { useMutationContext } from '../useMutationContext'
 
-export const useMutateTraitElementCreate = ({ layerElementId }: { layerElementId: string | undefined }) => {
-  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
-  const { mutateAsync: createManyTrait, isLoading } = trpc.traitElement.create.useMutation()
+export const useMutateTraitElementCreate = () => {
+  const { current: layerElement } = useQueryLayerElementFindAll()
+  const { ctx, repositoryId } = useMutationContext()
+  const { mutateAsync: createManyByLayerElementId, isLoading } = trpc.traitElement.createManyByLayerElementId.useMutation()
 
   const mutate = async ({
     files,
@@ -21,115 +23,77 @@ export const useMutateTraitElementCreate = ({ layerElementId }: { layerElementId
     setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
   }) => {
-    // step 0: validate layer
-    const layerElements = ctx.layerElement.findAll.getData({ repositoryId })
-    const layerElement = layerElements?.find((x) => x.id === layerElementId)
-
     if (!layerElement) {
-      setUploadState('error')
-      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
-      return
+      return setUploadState('error')
     }
 
-    // step 1: get traits being uploaded
-    const traitElements = parseLayerElementFolder(layerElement.name, files)
-    const names = traitElements[layerElement.name]?.map((x) => x.name)
-    if (!names) {
-      setUploadState('error')
-      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
-      return
+    /**
+     * Find all the files that are in the correct folder structure
+     */
+    const parsed: ParseLayerElementFolderOutput = parseLayerElementFolder({
+      files,
+      traitElements: layerElement.traitElements,
+      layerElementName: layerElement.name,
+    })
+
+    /** Error handle */
+    const traitElements = parsed[layerElement.name]
+    if (!traitElements?.length) {
+      return setUploadState('error')
     }
 
-    const allExistingTraitElements = layerElement.traitElements.map((x) => x.name)
-    setUploadedFiles(traitElements)
-    setUploadedFiles((old) => {
-      return produce(old, (draft) => {
-        names.forEach((name) => {
-          Object.entries(draft).find(([key, value]) => {
-            const trait = value.find((x) => x.name === name)
-            if (!trait) return
+    /**
+     * Create the TraitElements
+     */
+    const createTraitElements = traitElements
+      .filter((x) => x.type === 'new')
+      .map((x) => ({
+        name: x.name,
+      }))
 
-            if (allExistingTraitElements.includes(name)) {
-              if (trait.name.toLocaleLowerCase() === 'none') {
-                trait.type = 'invalid'
-              } else {
-                trait.type = 'existing'
-              }
-            } else {
-              trait.type = 'new'
-            }
-          })
-        })
+    const response = await createManyByLayerElementId({
+      layerElementId: layerElement.id,
+      traitElements: createTraitElements,
+    })
+    setUploadState('uploading')
+
+    /** Upload all to the Cloud */
+    const filePromises = files.map((file: FileWithPath) => {
+      return new Promise((resolve, reject) => {
+        /** Find the TraitElement */
+        const traitElement = response.find((x) => x.name === file.name.replace('.png', ''))
+        if (!traitElement) return
+
+        /** Create the reader */
+        const reader = new FileReader()
+
+        /** Load and upload */
+        reader.onload = async () => {
+          try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+              method: 'post',
+              body: createCloudinaryFormData(file, traitElement, repositoryId),
+            })
+            const data = await response.json()
+            const { secure_url } = data as { secure_url: string }
+            resolve({ traitElementId: traitElement.id, imageUrl: secure_url })
+          } catch (err) {
+            reject(err)
+          }
+        }
+        reader.onabort = (err) => reject(err)
+        reader.onerror = (err) => reject(err)
+        reader.readAsBinaryString(file)
       })
     })
 
-    try {
-      /** Create new traits, if any */
-      const newTraitElements = names
-        .filter((x) => !layerElement.traitElements.map((x) => x.name).includes(x))
-        .map((x) => ({
-          name: x,
-          layerElementId: layerElement.id,
-          repositoryId: repositoryId,
-        }))
-      const response = await createManyTrait({ traitElements: newTraitElements })
-      await ctx.layerElement.findAll.cancel({ repositoryId })
-      const allTraits = [...Object.entries(response).flatMap((x) => x[1]), ...layerElement.traitElements].map((x) => x.id)
-      // const set = new Set(allTraits)
-
-      setUploadState('uploading')
-      // ...Object.entries(response).flatMap((x) => x[1]), ...layerElement.traitElements
-      const filePromises = files.map((file: FileWithPath) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          const name = file.path?.replace('.png', '') || ''
-          const traitElement = allTraits.find((x) => x.name === name)
-          if (!traitElement) return
-          reader.onload = async () => {
-            try {
-              const response = await fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
-                method: 'post',
-                body: createCloudinaryFormData(file, traitElement, repositoryId),
-              })
-              const data = await response.json()
-              const { secure_url } = data as { secure_url: string }
-              setUploadedFiles((state) =>
-                produce(state, (draft) => {
-                  const trait = draft[layerElement.name]?.find((x) => x.name === name)
-                  if (!trait) return
-                  trait.uploaded = true
-                })
-              )
-              resolve({ traitElementId: traitElement.id, imageUrl: secure_url })
-            } catch (err) {
-              reject(err)
-            }
-          }
-          reader.onerror = (err) => reject(err)
-          reader.readAsBinaryString(file)
-        })
+    await Promise.all(filePromises)
+      .then(() => {
+        return setUploadState('done')
       })
-      await Promise.all(filePromises).then((data) => {
-        notifySuccess('Trait elements created successfully')
-        const backup = ctx.layerElement.findAll.getData({ repositoryId })
-        if (!backup) return
-        const next = produce(backup, (draft) => {
-          Object.entries(response).map(([layerElementId, traitElements]) => {
-            const layer = draft.find((l) => l.id === layerElementId)
-            if (!layer) return
-            layer.traitElements = traitElements.map((x) => ({ ...x, rulesPrimary: [], rulesSecondary: [] }))
-          })
-        })
-        ctx.layerElement.findAll.setData({ repositoryId }, next)
-        setUploadState('done')
-        notifySuccess('Uploaded....')
+      .catch(() => {
+        return setUploadState('error')
       })
-      return
-    } catch (err) {
-      setUploadState('error')
-      notifyError('Something went wrong. Please refresh the page to try again.')
-      return
-    }
   }
   return { mutate, isLoading }
 }
