@@ -67,7 +67,14 @@ export const traitElementRouter = router({
       })),
     })
 
-    return await ctx.prisma.traitElement.findMany({ where: { layerElementId: layerElementId } })
+    return await ctx.prisma.traitElement.findMany({
+      where: { layerElementId: layerElementId },
+      orderBy: [{ weight: 'desc' }, { name: 'asc' }],
+      include: {
+        rulesPrimary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
+        rulesSecondary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
+      },
+    })
   }),
   updateName: protectedProcedure
     .input(

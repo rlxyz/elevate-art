@@ -47,7 +47,7 @@ export const parseLayerElementFolder = (opts: ParseLayerElementFolderInput): Par
         uploaded: false,
         type: existing.includes(t) ? 'existing' : readonly.includes(t) ? 'readonly' : 'new',
       }
-      draft[l] ? draft[l]?.push(upload) : [...(draft[l] = []), upload]
+      draft[l] ? draft[l]?.push(upload) : (draft[l] = [upload])
     })
   }, {} as ParseLayerElementFolderOutput)
 }

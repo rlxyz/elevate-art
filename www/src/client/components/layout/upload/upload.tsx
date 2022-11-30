@@ -46,7 +46,6 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
 
   useEffect(() => {
     const state = internalUploadState
-    console.log('running')
     setUploadState && setUploadState(state)
     if (state === 'done') {
       notifySuccess('Successfully created and uploaded the traits.')

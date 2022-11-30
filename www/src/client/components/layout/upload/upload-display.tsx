@@ -11,7 +11,7 @@ import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { FC, Fragment, PropsWithChildren } from 'react'
-import { formatBytes } from 'src/client/utils/format'
+import { formatBytes, truncate } from 'src/client/utils/format'
 import Tooltip from '../tooltip'
 
 export type TraitElementUploadState = {
@@ -119,7 +119,9 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
                             />
                           ) : null)}
                         {/* <XCircleIcon className='absolute rounded-[3px] top-0 right-0 w-4 h-4 text-redError m-1' /> */}
-                        <span className='text-xs overflow-scroll whitespace-nowrap no-scrollbar'>{item.name}</span>
+                        <span className='flex w-full items-center justify-center text-[0.6rem] whitespace-nowrap text-ellipsis overflow-hidden'>
+                          {truncate(item.name)}
+                        </span>
                       </div>
                     )
                   })}

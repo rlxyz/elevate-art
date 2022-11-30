@@ -1,5 +1,6 @@
 import { UploadState } from '@components/layout/upload/upload'
 import { TraitElementUploadState } from '@components/layout/upload/upload-display'
+import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 import { createCloudinaryFormData } from 'src/client/utils/cloudinary'
@@ -11,7 +12,7 @@ import { useMutationContext } from '../useMutationContext'
 
 export const useMutateTraitElementCreate = () => {
   const { current: layerElement } = useQueryLayerElementFindAll()
-  const { ctx, repositoryId } = useMutationContext()
+  const { repositoryId, ctx } = useMutationContext()
   const { mutateAsync: createManyByLayerElementId, isLoading } = trpc.traitElement.createManyByLayerElementId.useMutation()
 
   const mutate = async ({
@@ -42,6 +43,10 @@ export const useMutateTraitElementCreate = () => {
       return setUploadState('error')
     }
 
+    /** Update UploadState */
+    setUploadedFiles(parsed)
+    setUploadState('uploading')
+
     /**
      * Create the TraitElements
      */
@@ -55,7 +60,6 @@ export const useMutateTraitElementCreate = () => {
       layerElementId: layerElement.id,
       traitElements: createTraitElements,
     })
-    setUploadState('uploading')
 
     /** Upload all to the Cloud */
     const filePromises = files.map((file: FileWithPath) => {
@@ -76,24 +80,36 @@ export const useMutateTraitElementCreate = () => {
             })
             const data = await response.json()
             const { secure_url } = data as { secure_url: string }
+            setUploadedFiles((state) =>
+              produce(state, (draft) => {
+                const trait = draft[layerElement.name]?.find((x) => x.name === traitElement.name)
+                if (!trait) return
+                trait.uploaded = true
+              })
+            )
             resolve({ traitElementId: traitElement.id, imageUrl: secure_url })
           } catch (err) {
             reject(err)
           }
         }
+        reader.onloadend = () => {}
         reader.onabort = (err) => reject(err)
         reader.onerror = (err) => reject(err)
         reader.readAsBinaryString(file)
       })
     })
-
-    await Promise.all(filePromises)
-      .then(() => {
-        return setUploadState('done')
+    await Promise.all(filePromises).then(() => {
+      ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
+        if (!old) return
+        const next = produce(old, (draft) => {
+          const layer = draft.find((l) => l.id === layerElement.id)
+          if (!layer) return
+          layer.traitElements = response
+        })
+        return next
       })
-      .catch(() => {
-        return setUploadState('error')
-      })
+      setUploadState('done')
+    })
   }
   return { mutate, isLoading }
 }
