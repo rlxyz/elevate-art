@@ -92,7 +92,6 @@ export const useMutateTraitElementCreate = () => {
             reject(err)
           }
         }
-        reader.onloadend = () => {}
         reader.onabort = (err) => reject(err)
         reader.onerror = (err) => reject(err)
         reader.readAsBinaryString(file)

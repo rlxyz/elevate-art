@@ -49,4 +49,5 @@ const Tooltip = forwardRef<HTMLAnchorElement, React.PropsWithChildren<Props>>(
   }
 )
 
+Tooltip.displayName = 'Tooltip'
 export default Tooltip
