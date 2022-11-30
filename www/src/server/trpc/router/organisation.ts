@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { OrganisationDatabaseRoleEnum } from 'src/shared/enums'
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/shared/enums'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -156,6 +156,7 @@ export const organisationRouter = router({
       return await ctx.prisma.organisation.create({
         data: {
           name,
+          type: OrganisationDatabaseEnum.enum.Team,
           members: {
             create: {
               userId: ctx.session.user.id,

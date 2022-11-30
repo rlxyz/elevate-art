@@ -1,5 +1,6 @@
 import { FormModalProps } from '@components/repository/RulesSelector/RulesCreateModal'
-import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useMutateOrganisationCreateTeam } from '@hooks/trpc/organisation/useMutateOrganisationCreateTeam'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,7 +14,7 @@ export type OrganisationCreateTeamForm = {
 
 const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible, onClose, onSuccess }) => {
   const { mutate, isLoading } = useMutateOrganisationCreateTeam()
-  const { all: layers } = useQueryLayerElementFindAll()
+  const { all: organisations } = useQueryOrganisationFindAll()
   const {
     register,
     handleSubmit,
@@ -40,9 +41,10 @@ const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible,
       visible={visible}
       onClose={handleClose}
       onSubmit={handleSubmit((data) => mutate({ name: data.name }, { onSuccess: handleSuccess }))}
-      title='Create New Team'
-      description={`This will create a team.`}
+      title='Create Team'
+      description={`This will create a new team. You will be able to add members to this team later.`}
       isLoading={isLoading}
+      className='w-[30rem]'
     >
       <div className='divide-y divide-mediumGrey space-y-6'>
         <div className='space-y-1 flex flex-col'>
@@ -55,7 +57,7 @@ const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible,
               maxLength: 20,
               minLength: 4,
               pattern: /^[-/a-z0-9 ]+$/gi,
-              validate: (value) => !layers.map((x) => x.name).includes(value),
+              validate: (value) => !organisations?.map((x) => x.name).includes(value),
             })}
           />
           {errors.name && (
@@ -65,7 +67,7 @@ const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible,
                 : errors.name.type === 'pattern'
                 ? 'We only accept - and / for special characters'
                 : errors.name.type === 'validate'
-                ? 'A layer with this name already exists'
+                ? 'An organisation with this name already exists'
                 : 'Must be between 4 and 20 characters long'}
             </span>
           )}
@@ -76,6 +78,3 @@ const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible,
 }
 
 export default OrganisationCreateTeamModal
-function useMutateOrganisationCreateTeam(): { mutate: any; isLoading: any } {
-  throw new Error('Function not implemented.')
-}

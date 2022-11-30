@@ -107,6 +107,9 @@ type HeaderInternalAppRoutesProps = {
 export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps) => {
   const { currentHref } = useQueryOrganisationFindAll()
   const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false)
+
+  console.log(`isCreateTeamOpen: ${isCreateTeamOpen}`)
+
   const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
   return (
     <>
@@ -193,17 +196,25 @@ export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps
                           )}
                           <div className='pt-2'>
                             <div className='py-1 border border-mediumGrey rounded-[5px] bg-lightGray flex space-x-2 items-center'>
-                              <button className='space-x-2' onClick={() => setIsCreateTeamOpen(true)}>
-                                <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
-                                <span className='text-black'>Create Team</span>
-                              </button>
-                              <OrganisationCreateTeamModal visible={isCreateTeamOpen} onClose={() => setIsCreateTeamOpen(false)} />
+                              <div>
+                                <button
+                                  className='flex flex-row space-x-2'
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    setIsCreateTeamOpen(true)
+                                  }}
+                                >
+                                  <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
+                                  <span className='text-black'>Create Team</span>
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </Popover.Panel>
                   </Transition>
+                  <OrganisationCreateTeamModal visible={isCreateTeamOpen} onClose={() => setIsCreateTeamOpen(false)} />
                 </>
               ) : null}
             </Popover>
