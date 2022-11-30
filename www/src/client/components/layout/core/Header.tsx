@@ -1,5 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
+import PlusCircleIcon from '@heroicons/react/solid/PlusCircleIcon'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Organisation } from '@prisma/client'
 import clsx from 'clsx'
@@ -10,6 +11,7 @@ import { Fragment } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
+import Button from '../Button'
 import { ConnectButton } from '../eth/ConnectButton'
 import { Link } from '../Link'
 import LinkComponent from '../link/Link'
@@ -188,14 +190,14 @@ export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps
                           ) : (
                             <></>
                           )}
-                          {/* <div className='pt-2'>
+                          <div className='pt-2'>
                             <div className='py-1 border border-mediumGrey rounded-[5px] bg-lightGray flex space-x-2 items-center'>
                               <Button variant='ghost' className='space-x-2'>
                                 <PlusCircleIcon className='text-blueHighlight w-5 h-5' />
                                 <span className='text-black'>Create Team</span>
                               </Button>
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                       </div>
                     </Popover.Panel>
