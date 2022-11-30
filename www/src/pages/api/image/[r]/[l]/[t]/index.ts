@@ -5,8 +5,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 
 export const redis = new Redis({
-  url: 'https://global-noted-narwhal-30117.upstash.io',
-  token: 'AXWlASQgNTE1MzVkMDYtNTY4My00NzI1LTk0NjgtODRiZjUzZjQ5ZWYzZmVhN2QwNmM0ZWMxNDNmYmE4YTBlYTA2MjAxY2U2N2Y=',
+  url: env.REDIS_URL,
+  token: env.REDIS_TOKEN,
 })
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
