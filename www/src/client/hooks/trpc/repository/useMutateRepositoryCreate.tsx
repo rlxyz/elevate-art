@@ -1,3 +1,5 @@
+import { UploadState } from '@components/layout/upload/upload'
+import { TraitElementUploadState } from '@components/layout/upload/upload-display'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Repository } from '@prisma/client'
 import produce from 'immer'
@@ -20,17 +22,8 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
     setUploadState,
   }: {
     files: FileWithPath[]
-    setUploadedFiles: Dispatch<
-      SetStateAction<{
-        [key: string]: {
-          name: string
-          imageUrl: string
-          size: number
-          uploaded: boolean
-        }[]
-      }>
-    >
-    setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
+    setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
+    setUploadState: (state: UploadState) => void
   }) => {
     // step 0: validate organisation
     if (isLoading || !organisation) {

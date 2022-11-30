@@ -4,13 +4,14 @@ import { FileWithPath, useDropzone } from 'react-dropzone'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import UploadDisplay from './upload-display'
+import UploadDisplay, { TraitElementUploadState } from './upload-display'
 
 export type UploadState = 'idle' | 'uploading' | 'done' | 'error'
 
 interface Props {
   depth: number
   gridSize: 'md' | 'lg'
+  withTooltip: boolean
   setUploadState?: (state: UploadState) => void
   onDropCallback: ({
     files,
@@ -18,42 +19,10 @@ interface Props {
     setUploadState,
   }: {
     files: FileWithPath[]
-    setUploadedFiles: Dispatch<
-      SetStateAction<{
-        [key: string]: {
-          name: string
-          imageUrl: string
-          size: number
-          uploaded: boolean
-        }[]
-      }>
-    >
+    setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
   }) => void
 }
-
-// const defaultProps: Props = {
-//   depth: 4,
-//   gridSize: 'lg',
-//   onDropCallback: ({
-//     files,
-//     setUploadedFiles,
-//     setUploadState,
-//   }: {
-//     files: FileWithPath[]
-//     setUploadedFiles: Dispatch<
-//       SetStateAction<{
-//         [key: string]: {
-//           name: string
-//           imageUrl: string
-//           size: number
-//           uploaded: boolean
-//         }[]
-//       }>
-//     >
-//     setUploadState: (state: 'idle' | 'uploading' | 'done' | 'error') => void
-//   }) => {},
-// }
 
 type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>
 export type UploadProps = Props & NativeAttrs
@@ -68,21 +37,23 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   children,
   className,
   gridSize,
+  withTooltip,
   ...props
 }: React.PropsWithChildren<UploadProps>) => {
-  const [uploadedFiles, setUploadedFiles] = useState<{
-    [key: string]: {
-      name: string
-      imageUrl: string
-      size: number
-      uploaded: boolean
-    }[]
-  }>({})
-  const { notifyError } = useNotification()
+  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: TraitElementUploadState[] }>({})
   const [internalUploadState, setInternalUploadState] = useState<UploadState>('idle')
+  const { notifySuccess, notifyError } = useNotification()
 
   useEffect(() => {
-    setUploadState && setUploadState(internalUploadState)
+    const state = internalUploadState
+    setUploadState && setUploadState(state)
+    if (state === 'done') {
+      notifySuccess('Successfully created and uploaded the traits.')
+    } else if (state === 'error') {
+      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
+    } else if (state === 'uploading') {
+      notifySuccess('Uploading your new traits and their associated images.')
+    }
   }, [internalUploadState])
 
   const onDrop = useCallback(async (files: FileWithPath[]) => {
@@ -123,7 +94,13 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       )}
       <div className='space-y-6'>
         {Object.entries(uploadedFiles).map((files, index) => (
-          <UploadDisplay key={`${index}-${files[0]}`} layerName={files[0]} traits={files[1]} gridSize={gridSize} />
+          <UploadDisplay
+            key={`${index}-${files[0]}`}
+            layerName={files[0]}
+            traits={files[1]}
+            gridSize={gridSize}
+            withTooltip={withTooltip}
+          />
         ))}
       </div>
     </div>

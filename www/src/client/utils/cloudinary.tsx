@@ -1,3 +1,4 @@
+import { TraitElementUploadState } from '@components/layout/upload/upload-display'
 import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
 import { env } from 'src/env/client.mjs'
@@ -14,9 +15,7 @@ export const validateFiles = (files: FileWithPath[], folderDepth: number): boole
   )
 }
 
-export const getRepositoryUploadLayerObjectUrls = (
-  files: FileWithPath[]
-): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
+export const getRepositoryUploadLayerObjectUrls = (files: FileWithPath[]): { [key: string]: TraitElementUploadState[] } => {
   return files.reduce((acc: any, file: FileWithPath) => {
     const pathArray = file.path?.split('/') || []
     const layerName: string = pathArray[2] || ''
@@ -29,28 +28,8 @@ export const getRepositoryUploadLayerObjectUrls = (
         path: file.path,
         size: file.size,
         uploaded: false,
-      },
-    ]
-    return acc
-  }, {})
-}
-
-// @todo combine with function getRepositoryUploadLayerObjectUrls
-export const getTraitUploadObjectUrls = (
-  layerName: string,
-  files: FileWithPath[]
-): { [key: string]: { name: string; imageUrl: string; path: string; size: number; uploaded: boolean }[] } => {
-  return files.reduce((acc: any, file: FileWithPath) => {
-    const traitName: string = file.path?.replace('.png', '') || ''
-    acc[layerName] = [
-      ...(acc[layerName] || []),
-      {
-        name: traitName,
-        imageUrl: URL.createObjectURL(file),
-        path: file.path,
-        size: file.size,
-        uploaded: false,
-      },
+        type: 'new',
+      } as TraitElementUploadState,
     ]
     return acc
   }, {})
