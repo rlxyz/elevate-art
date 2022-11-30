@@ -1,21 +1,16 @@
 import { UploadState } from '@components/layout/upload/upload'
 import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import produce from 'immer'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
-import { createCloudinaryFormData, getTraitUploadObjectUrls } from 'src/client/utils/cloudinary'
+import { createCloudinaryFormData, parseLayerElementFolder } from 'src/client/utils/cloudinary'
 import { trpc } from 'src/client/utils/trpc'
 import { env } from 'src/env/client.mjs'
+import { useMutationContext } from '../useMutationContext'
 
-export const useMutateTraitElementCreate = () => {
-  const ctx = trpc.useContext()
-  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+export const useMutateTraitElementCreate = ({ layerElementId }: { layerElementId: string | undefined }) => {
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext()
   const { mutateAsync: createManyTrait, isLoading } = trpc.traitElement.create.useMutation()
-  const { current: layer } = useQueryLayerElementFindAll()
-  const { notifyError, notifySuccess } = useNotification()
 
   const mutate = async ({
     files,
@@ -27,65 +22,41 @@ export const useMutateTraitElementCreate = () => {
     setUploadState: (state: UploadState) => void
   }) => {
     // step 0: validate layer
-    if (!layer) {
+    const layerElements = ctx.layerElement.findAll.getData({ repositoryId })
+    const layerElement = layerElements?.find((x) => x.id === layerElementId)
+
+    if (!layerElement) {
       setUploadState('error')
-      notifyError('We couldnt find the layer. Please refresh the page to try again.')
+      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
       return
     }
 
     // step 1: get traits being uploaded
-    const traits = getTraitUploadObjectUrls(layer.name, files)
-    setUploadedFiles(traits)
-    const names = traits[layer.name]?.map((x) => x.name)
+    const traitElements = parseLayerElementFolder(layerElement.name, files)
+    const names = traitElements[layerElement.name]?.map((x) => x.name)
     if (!names) {
       setUploadState('error')
-      notifyError('We couldnt find the layer. Please refresh the page to try again.')
+      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
       return
     }
 
-    const allNewTraits = names
-      .filter((x) => !layer.traitElements.map((x) => x.name).includes(x))
-      .map((x) => ({
-        name: x,
-        layerElementId: layer.id,
-        repositoryId: repositoryId,
-      }))
-
-    const allExistingTraits = names
-      .filter((x) => layer.traitElements.map((x) => x.name).includes(x))
-      .map((x) => ({
-        name: x,
-        layerElementId: layer.id,
-        repositoryId: repositoryId,
-      }))
-
-    /** Update New Traits */
+    const allExistingTraitElements = layerElement.traitElements.map((x) => x.name)
+    setUploadedFiles(traitElements)
     setUploadedFiles((old) => {
       return produce(old, (draft) => {
-        allNewTraits.forEach((item) => {
+        names.forEach((name) => {
           Object.entries(draft).find(([key, value]) => {
-            const trait = value.find((x) => x.name === item.name)
-            if (trait) {
-              trait.type = 'new'
-              return true
-            }
-            return false
-          })
-        })
-      })
-    })
-
-    /** Update Existing Traits */
-    setUploadedFiles((old) => {
-      return produce(old, (draft) => {
-        allExistingTraits.forEach((item) => {
-          Object.entries(draft).find(([key, value]) => {
-            const trait = value.find((x) => x.name === item.name)
+            const trait = value.find((x) => x.name === name)
             if (!trait) return
-            if (trait.name === 'None' || trait?.name === 'none') {
-              trait.type = 'invalid'
+
+            if (allExistingTraitElements.includes(name)) {
+              if (trait.name.toLocaleLowerCase() === 'none') {
+                trait.type = 'invalid'
+              } else {
+                trait.type = 'existing'
+              }
             } else {
-              trait.type = 'existing'
+              trait.type = 'new'
             }
           })
         })
@@ -93,10 +64,21 @@ export const useMutateTraitElementCreate = () => {
     })
 
     try {
-      const response = await createManyTrait({ traitElements: allNewTraits })
+      /** Create new traits, if any */
+      const newTraitElements = names
+        .filter((x) => !layerElement.traitElements.map((x) => x.name).includes(x))
+        .map((x) => ({
+          name: x,
+          layerElementId: layerElement.id,
+          repositoryId: repositoryId,
+        }))
+      const response = await createManyTrait({ traitElements: newTraitElements })
       await ctx.layerElement.findAll.cancel({ repositoryId })
-      const allTraits = Object.entries(response).flatMap((x) => x[1])
+      const allTraits = [...Object.entries(response).flatMap((x) => x[1]), ...layerElement.traitElements].map((x) => x.id)
+      // const set = new Set(allTraits)
+
       setUploadState('uploading')
+      // ...Object.entries(response).flatMap((x) => x[1]), ...layerElement.traitElements
       const filePromises = files.map((file: FileWithPath) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader()
@@ -113,7 +95,7 @@ export const useMutateTraitElementCreate = () => {
               const { secure_url } = data as { secure_url: string }
               setUploadedFiles((state) =>
                 produce(state, (draft) => {
-                  const trait = draft[layer.name]?.find((x) => x.name === name)
+                  const trait = draft[layerElement.name]?.find((x) => x.name === name)
                   if (!trait) return
                   trait.uploaded = true
                 })

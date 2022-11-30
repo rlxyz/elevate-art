@@ -1,4 +1,5 @@
 import { UploadState } from '@components/layout/upload/upload'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { FC, useState } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import Upload from 'src/client/components/layout/upload'
@@ -10,7 +11,8 @@ interface Props {
 }
 
 const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
-  const { mutate, isLoading } = useMutateTraitElementCreate()
+  const { current: layer } = useQueryLayerElementFindAll()
+  const { mutate, isLoading } = useMutateTraitElementCreate({ layerElementId: layer?.id })
   const [uploadState, setUploadState] = useState<UploadState>('idle')
   return (
     <ModalComponent

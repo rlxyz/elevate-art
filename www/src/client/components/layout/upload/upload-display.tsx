@@ -19,7 +19,7 @@ export type TraitElementUploadState = {
   imageUrl: string
   size: number
   uploaded: boolean
-  type: 'new' | 'existing' | 'invalid'
+  type: 'new' | 'existing' | 'invalid' | 'readonly'
 }
 
 interface Props {
