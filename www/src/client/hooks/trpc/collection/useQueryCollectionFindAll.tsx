@@ -44,9 +44,6 @@ export const useQueryCollectionFindAll = () => {
       Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
     )
 
-    // console.log(layers, tokens[6])
-    tokens[6]?.forEach(([l, t]) => console.log(layers.find((x) => x.id === l)?.traitElements.find((x) => x.id === t)?.name))
-
     const traitMap = v.occurances.traits(tokens)
     const tokenIdMap = v.occurances.tokens(tokens)
     const rarity = v.rarity(tokens)

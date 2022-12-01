@@ -42,6 +42,12 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
     v.seed(collection.repositoryId, collection.name, collection.generations, id)
   )
 
+  // elements?.forEach(([l, t]) => {
+  //   const layer = layers.find((x) => x.id === l)
+  //   const trait = layer?.traitElements.find((x) => x.id === t)
+  //   console.log('x', layer?.name, trait?.name)
+  // })
+
   const hash = v.hash(elements)
 
   return (
