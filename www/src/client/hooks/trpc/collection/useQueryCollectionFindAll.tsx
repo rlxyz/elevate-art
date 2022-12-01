@@ -25,7 +25,6 @@ export const useQueryCollectionFindAll = () => {
   const mutate = ({ collection }: { collection: Collection }) => {
     if (!layers) return
 
-    // create tokens
     const tokens = v.many(
       v.parseLayer(
         layers.map((l) => ({
@@ -43,10 +42,10 @@ export const useQueryCollectionFindAll = () => {
       ),
       Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
     )
+
     const traitMap = v.occurances.traits(tokens)
     const tokenIdMap = v.occurances.tokens(tokens)
     const rarity = v.rarity(tokens)
-
     setTraitMapping({
       traitMap,
       tokenIdMap,

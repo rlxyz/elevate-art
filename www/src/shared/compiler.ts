@@ -101,7 +101,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
 }
 
 export const many = (layers: Layer[], seeds: string[]): [string, string][][] => {
-  const sorted = layers.map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) })).sort((a, b) => a.priority - b.priority)
+  const sorted = layers.map((x) => ({ ...x, traits: x.traits.sort((a, b) => b.weight - a.weight) })).sort((a, b) => a.priority - b.priority)
   return seeds.map((x) => one(sorted, x))
 }
 
@@ -133,20 +133,14 @@ export const rarity = (
   index: number
   score: number
 }[] => {
-  const max = elements.length
   const occurs = occurances.traits(elements)
+  const max = elements.length
   return elements
-    .map((token, index) => {
-      return {
-        index,
-        score: token.reduce((result, item) => {
-          return result - Math.log((occurs.get(item[1]) || 0) / max)
-        }, 0),
-      }
-    })
-    .sort((a, b) => {
-      return b.score - a.score
-    })
+    .map((token, index) => ({
+      index,
+      score: token.reduce((result, [_, traitElementId]) => result - Math.log((occurs.get(traitElementId) || 1) / max), 0 as number),
+    }))
+    .sort((a, b) => b.score - a.score)
 }
 
 export const seed = (...values: (string | number)[]) => {
