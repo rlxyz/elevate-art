@@ -6,12 +6,11 @@ import { FC, ReactNode } from 'react'
 import { env } from 'src/env/client.mjs'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.hardhat, chain.goerli],
-  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_ID }), publicProvider()]
+  [chain.mainnet, chain.goerli],
+  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
 )
 const { wallets } = getDefaultWallets({ appName: env.NEXT_PUBLIC_APP_NAME, chains })
 export const appInfo = { appName: env.NEXT_PUBLIC_APP_NAME }
