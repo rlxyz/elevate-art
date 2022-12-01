@@ -14,12 +14,7 @@ export interface LayerElementDeleteProps extends FormModalProps {
   layerElement: LayerElement;
 }
 
-const LayerElementDeleteModal: FC<LayerElementDeleteProps> = ({
-  layerElement,
-  visible,
-  onClose,
-  onSuccess,
-}) => {
+const LayerElementDeleteModal: FC<LayerElementDeleteProps> = ({ layerElement, visible, onClose, onSuccess }) => {
   const { mutate, isLoading } = useMutateLayerElementDelete();
 
   const handleClose = () => {

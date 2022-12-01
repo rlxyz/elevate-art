@@ -3,8 +3,7 @@ import { trpc } from "src/utils/trpc";
 import { useMutationContext } from "../useMutationContext";
 
 export const useMutateLayerElementUpdateOrder = () => {
-  const { ctx, repositoryId, notifyError, notifySuccess } =
-    useMutationContext();
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext();
   return trpc.layerElement.updateOrder.useMutation({
     onSuccess: (_, variable) => {
       const { layerElements } = variable;
@@ -19,9 +18,7 @@ export const useMutateLayerElementUpdateOrder = () => {
           });
           draft = draft.sort((a, b) => a.priority - b.priority);
         });
-        notifySuccess(
-          `You have reordered the layers. All collections have been regenerated with the new order.`,
-        );
+        notifySuccess(`You have reordered the layers. All collections have been regenerated with the new order.`);
         return next;
       });
     },

@@ -1,10 +1,7 @@
 import { Prisma } from "@elevateart/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import {
-  deleteImageFolderFromCloudinary,
-  DeleteTraitElementResponse
-} from "../common/cld-delete-image";
+import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from "../common/cld-delete-image";
 import { protectedProcedure, router } from "../trpc";
 import { updateManyByField } from "../utils/prisma-utils";
 import { Result } from "../utils/response-result";
@@ -16,9 +13,7 @@ const LayerElementUpdateNameInput = z.array(
     repositoryId: z.string(),
   }),
 );
-const LayerElementUpdateOrderInput = z.array(
-  z.object({ priority: z.number(), layerElementId: z.string() }),
-);
+const LayerElementUpdateOrderInput = z.array(z.object({ priority: z.number(), layerElementId: z.string() }));
 /**
  * LayerElement Router
  * Any LayerElement functionality should implemented here.
@@ -50,16 +45,10 @@ export const layerElementRouter = router({
             orderBy: [{ weight: "desc" }, { name: "asc" }],
             include: {
               rulesPrimary: {
-                orderBy: [
-                  { condition: "asc" },
-                  { primaryTraitElement: { name: "asc" } },
-                ],
+                orderBy: [{ condition: "asc" }, { primaryTraitElement: { name: "asc" } }],
               },
               rulesSecondary: {
-                orderBy: [
-                  { condition: "asc" },
-                  { primaryTraitElement: { name: "asc" } },
-                ],
+                orderBy: [{ condition: "asc" }, { primaryTraitElement: { name: "asc" } }],
               },
             },
           },
@@ -103,8 +92,7 @@ export const layerElementRouter = router({
             /** Unique constaint error! */
             throw new TRPCError({
               code: `BAD_REQUEST`,
-              message:
-                "A LayerElement with that name already exists in this repository. Please choose a different name and try again.",
+              message: "A LayerElement with that name already exists in this repository. Please choose a different name and try again.",
             });
           }
         }
@@ -130,11 +118,10 @@ export const layerElementRouter = router({
 
       /* Delete many TraitElement from Cloudinary */
       /** @todo if any item in DeleteFolderResponse is not boolean true, then what? */
-      const response: Result<DeleteTraitElementResponse[]> =
-        await deleteImageFolderFromCloudinary({
-          r: repositoryId,
-          l: layerElementId,
-        });
+      const response: Result<DeleteTraitElementResponse[]> = await deleteImageFolderFromCloudinary({
+        r: repositoryId,
+        l: layerElementId,
+      });
 
       /** Return if failed */
       if (response.failed) {
@@ -225,10 +212,7 @@ export const layerElementRouter = router({
       });
 
       /** Ensure only a single Repository LayerElements are being changed at once. */
-      if (
-        groupedLayerElements.length !== 1 ||
-        groupedLayerElements[0] === undefined
-      ) {
+      if (groupedLayerElements.length !== 1 || groupedLayerElements[0] === undefined) {
         throw new TRPCError({
           code: `BAD_REQUEST`,
           message: "Invalid input. Please try again.",
@@ -254,8 +238,7 @@ export const layerElementRouter = router({
       if (!repository) {
         throw new TRPCError({
           code: `BAD_REQUEST`,
-          message:
-            "User doesnt have access to this repository. Please try again.",
+          message: "User doesnt have access to this repository. Please try again.",
         });
       }
 
@@ -270,20 +253,8 @@ export const layerElementRouter = router({
         }
 
         /** Update priority of each LayerElement */
-        await updateManyByField(
-          tx,
-          "LayerElement",
-          "priority",
-          layerElements,
-          (x) => [x.layerElementId, x.priority + 100],
-        ); // @todo fix
-        await updateManyByField(
-          tx,
-          "LayerElement",
-          "priority",
-          layerElements,
-          (x) => [x.layerElementId, x.priority],
-        );
+        await updateManyByField(tx, "LayerElement", "priority", layerElements, (x) => [x.layerElementId, x.priority + 100]); // @todo fix
+        await updateManyByField(tx, "LayerElement", "priority", layerElements, (x) => [x.layerElementId, x.priority]);
       });
     }),
 });

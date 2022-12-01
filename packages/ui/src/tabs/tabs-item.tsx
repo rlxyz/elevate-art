@@ -14,8 +14,7 @@ const defaultProps: Props = {
   value: "",
 };
 
-export type TabsItemProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type TabsItemProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
 const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
   children,
@@ -50,8 +49,7 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
           active ? "after:scale-x-100 after:opacity-100" : "after:scale-x-75",
           active ? "text-foreground" : "text-accents_5",
           disabled && "cursor-not-allowed hover:text-accents_3",
-          hideBorder &&
-            "before:height-0 before:invisible before:block before:overflow-hidden before:font-semibold after:hidden",
+          hideBorder && "before:height-0 before:invisible before:block before:overflow-hidden before:font-semibold after:hidden",
           hideBorder && active && "text-semibold",
         )}
         role="button"

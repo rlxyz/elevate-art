@@ -12,9 +12,7 @@ export const OrganisationDatabaseRoleEnum = z.nativeEnum(
     Curator: "curator",
   }),
 );
-export type OrganisationDatabaseRoleEnumType = z.infer<
-  typeof OrganisationDatabaseRoleEnum
->;
+export type OrganisationDatabaseRoleEnumType = z.infer<typeof OrganisationDatabaseRoleEnum>;
 
 export const OrganisationDatabaseEnum = z.nativeEnum(
   Object.freeze({

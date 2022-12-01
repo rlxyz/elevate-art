@@ -3,9 +3,7 @@ import { FileWithPath } from "react-dropzone";
 import { TraitElementUploadState } from "src/components/layout/upload/upload-display";
 import { env } from "src/env/client.mjs";
 
-export const getRepositoryUploadLayerObjectUrls = (
-  files: FileWithPath[],
-): { [key: string]: TraitElementUploadState[] } => {
+export const getRepositoryUploadLayerObjectUrls = (files: FileWithPath[]): { [key: string]: TraitElementUploadState[] } => {
   return files.reduce((acc: any, file: FileWithPath) => {
     const pathArray = file.path?.split("/") || [];
     const layerName: string = pathArray[2] || "";
@@ -43,11 +41,7 @@ export const getRepositoryLayerNames = (fileObject: {
   }));
 };
 
-export const createCloudinaryFormData = (
-  file: FileWithPath,
-  trait: TraitElement,
-  repositoryId: string,
-) => {
+export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement, repositoryId: string) => {
   const { id, name, layerElementId } = trait;
   const data = new FormData();
   data.append("file", file);
@@ -55,9 +49,6 @@ export const createCloudinaryFormData = (
   data.append("original_filename", name);
   data.append("upload_preset", "collection-upload");
   data.append("cloud_name", env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
-  data.append(
-    "folder",
-    `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`,
-  );
+  data.append("folder", `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`);
   return data;
 };

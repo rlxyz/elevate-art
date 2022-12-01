@@ -81,9 +81,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                     {data.map(({ label, value }) => (
                       <div className="space-y-1">
                         <span className="text-[0.6rem] uppercase">{label}</span>
-                        <div className="w-full rounded-primary border border-border bg-background p-2 text-xs">
-                          {value}
-                        </div>
+                        <div className="w-full rounded-primary border border-border bg-background p-2 text-xs">{value}</div>
                       </div>
                     ))}
                   </div>
@@ -93,9 +91,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                         e.preventDefault();
                         closeModal();
                       }}
-                      className={clsx(
-                        "py-6 text-xs text-accents_5 hover:bg-accents_8",
-                      )}
+                      className={clsx("py-6 text-xs text-accents_5 hover:bg-accents_8")}
                     >
                       Cancel
                     </button>
@@ -104,10 +100,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                         e.preventDefault();
                       }}
                       disabled={isLoading}
-                      className={clsx(
-                        "py-6 text-xs text-accents_3 hover:bg-accents_8",
-                        isLoading && "cursor-not-allowed",
-                      )}
+                      className={clsx("py-6 text-xs text-accents_3 hover:bg-accents_8", isLoading && "cursor-not-allowed")}
                     >
                       {isLoading ? <Loading /> : "Add"}
                     </button>

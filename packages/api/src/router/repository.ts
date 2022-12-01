@@ -54,10 +54,7 @@ export const repositoryRouter = router({
                 createMany: {
                   data: traitElements.map(({ name }) => ({
                     name,
-                    weight: Big(1)
-                      .div(traitElements.length)
-                      .mul(100)
-                      .toNumber(),
+                    weight: Big(1).div(traitElements.length).mul(100).toNumber(),
                   })),
                 },
               },

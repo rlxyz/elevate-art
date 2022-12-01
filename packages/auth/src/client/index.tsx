@@ -1,13 +1,5 @@
-import {
-  connectorsForWallets,
-  getDefaultWallets,
-  lightTheme,
-  RainbowKitProvider
-} from "@rainbow-me/rainbowkit";
-import {
-  GetSiweMessageOptions,
-  RainbowKitSiweNextAuthProvider
-} from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { FC, ReactNode } from "react";
@@ -40,9 +32,7 @@ export const EthereumAuthenticationLayout: FC<{
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider refetchInterval={60} session={session}>
-        <RainbowKitSiweNextAuthProvider
-          getSiweMessageOptions={getSiweMessageOptions}
-        >
+        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
           <RainbowKitProvider
             appInfo={appInfo}
             chains={chains}

@@ -2,9 +2,7 @@ import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavig
 import { trpc } from "src/utils/trpc";
 
 export const useQueryOrganisationFindAllRepository = () => {
-  const organisationId = useOrganisationNavigationStore(
-    (state) => state.organisationId,
-  );
+  const organisationId = useOrganisationNavigationStore((state) => state.organisationId);
   const {
     data: repositories,
     isLoading,

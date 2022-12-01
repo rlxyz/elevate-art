@@ -10,17 +10,11 @@ type PrismaTraitElementWithRule = PrismaTraitElement & {
 import { sumBy } from "@elevateart/api/src/utils/object-utils";
 /** useQueryLayerElementFindAll */
 import { RulesType } from "@elevateart/compiler";
-import {
-  LayerElement as PrismaLayerElement,
-  Rules as PrismaRules,
-  TraitElement as PrismaTraitElement
-} from "@elevateart/db";
+import { LayerElement as PrismaLayerElement, Rules as PrismaRules, TraitElement as PrismaTraitElement } from "@elevateart/db";
 import { useRouter } from "next/router";
 import useRepositoryStore from "src/hooks/store/useRepositoryStore";
 import { getImageForTrait } from "src/utils/image";
 import { trpc } from "src/utils/trpc";
-
-
 
 /**
  * Wrapper around Prisma Model for this application. It extends the Prisma Model
@@ -42,14 +36,7 @@ export const useQueryLayerElementFindAll = () => {
   const router = useRouter();
   const layerName = router.query.layer;
   const repositoryId = useRepositoryStore((state) => state.repositoryId);
-  const {
-    data: layers,
-    isLoading,
-    isError,
-  } = trpc.layerElement.findAll.useQuery(
-    { repositoryId },
-    { enabled: !!repositoryId },
-  );
+  const { data: layers, isLoading, isError } = trpc.layerElement.findAll.useQuery({ repositoryId }, { enabled: !!repositoryId });
 
   if (!layers)
     return {
@@ -75,36 +62,20 @@ export const useQueryLayerElementFindAll = () => {
  *
  * @todo move this to backend
  */
-const createCurrentLayerElement = (
-  layerElement: PrismaLayerElementWithTraitElement,
-  repositoryId: string,
-): LayerElement => ({
+const createCurrentLayerElement = (layerElement: PrismaLayerElementWithTraitElement, repositoryId: string): LayerElement => ({
   ...layerElement,
-  traitElements: [
-    createTraitElementNone(layerElement),
-    ...layerElement.traitElements.map((x) =>
-      createTraitElement(x, repositoryId),
-    ),
-  ],
+  traitElements: [createTraitElementNone(layerElement), ...layerElement.traitElements.map((x) => createTraitElement(x, repositoryId))],
 });
 
-const createAllLayerElement = (
-  layerElements: PrismaLayerElementWithTraitElement[],
-  repositoryId: string,
-): LayerElement[] =>
+const createAllLayerElement = (layerElements: PrismaLayerElementWithTraitElement[], repositoryId: string): LayerElement[] =>
   layerElements
     .map((x) => ({
       ...x,
-      traitElements: [
-        ...x.traitElements.map((x) => createTraitElement(x, repositoryId)),
-        createTraitElementNone(x),
-      ],
+      traitElements: [...x.traitElements.map((x) => createTraitElement(x, repositoryId)), createTraitElementNone(x)],
     }))
     .sort((a, b) => a.priority - b.priority);
 
-const createTraitElementNone = (
-  current: PrismaLayerElementWithTraitElement,
-): TraitElement => ({
+const createTraitElementNone = (current: PrismaLayerElementWithTraitElement): TraitElement => ({
   id: `none-${current.id}`,
   name: "None",
   readonly: true,
@@ -117,10 +88,7 @@ const createTraitElementNone = (
   imageUrl: undefined,
 });
 
-const createTraitElement = (
-  traitElement: PrismaTraitElementWithRule,
-  repositoryId: string,
-): TraitElement => ({
+const createTraitElement = (traitElement: PrismaTraitElementWithRule, repositoryId: string): TraitElement => ({
   ...traitElement,
   imageUrl: getImageForTrait({
     r: repositoryId,

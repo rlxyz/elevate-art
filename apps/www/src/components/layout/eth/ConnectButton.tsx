@@ -11,21 +11,9 @@ interface ConnectButtonProps {
 export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
   return (
     <RbConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openChainModal,
-        openConnectModal,
-        authenticationStatus,
-        mounted,
-      }) => {
+      {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
         const ready = mounted && authenticationStatus !== "loading";
-        const connected =
-          ready &&
-          account &&
-          chain &&
-          (!authenticationStatus || authenticationStatus === "authenticated");
+        const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === "authenticated");
         return (
           <div
             {...(!ready && {
@@ -40,11 +28,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
             {(() => {
               if (!connected) {
                 return (
-                  <button
-                    onClick={openConnectModal}
-                    type="button"
-                    className="w-full"
-                  >
+                  <button onClick={openConnectModal} type="button" className="w-full">
                     {children || (
                       <img
                         src="/images/lightGray-wallet.svg"
@@ -58,11 +42,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
 
               if (chain.unsupported) {
                 return (
-                  <button
-                    onClick={openChainModal}
-                    type="button"
-                    className="w-full"
-                  >
+                  <button onClick={openChainModal} type="button" className="w-full">
                     {children || (
                       <img
                         src="/images/lightGray-wallet.svg"
@@ -75,17 +55,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
               }
 
               return (
-                <button
-                  onClick={openAccountModal}
-                  type="button"
-                  className="w-full"
-                >
-                  {children || (
-                    <AvatarComponent
-                      className="text-darkGrey h-4 w-4"
-                      src="/images/avatar-blank.png"
-                    />
-                  )}
+                <button onClick={openAccountModal} type="button" className="w-full">
+                  {children || <AvatarComponent className="text-darkGrey h-4 w-4" src="/images/avatar-blank.png" />}
                 </button>
               );
             })()}

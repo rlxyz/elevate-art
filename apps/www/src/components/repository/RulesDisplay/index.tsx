@@ -15,10 +15,7 @@ export const RulesDisplay: FC<RulesDisplayProps> = ({ traitElements }) => {
         .map(({ id, rulesPrimary }, index) => {
           return (
             <div key={`${id}-${index}`}>
-              {[
-                RulesEnum.enum["cannot mix with"],
-                RulesEnum.enum["only mixes with"],
-              ].map((condition, index) => {
+              {[RulesEnum.enum["cannot mix with"], RulesEnum.enum["only mixes with"]].map((condition, index) => {
                 return (
                   <div className="space-y-2" key={index}>
                     {rulesPrimary

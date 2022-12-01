@@ -45,8 +45,7 @@ const Connect: NextPage = () => {
             <div className="space-y-4">
               <h1 className="text-3xl font-semibold">Connect your Wallet</h1>
               <p className="text-sm text-accents_6">
-                Rainbow helps you connect. If your wallet is not supported here,
-                please make a feature request at{" "}
+                Rainbow helps you connect. If your wallet is not supported here, please make a feature request at{" "}
                 <LinkComponent
                   href="https://feature.elevate.art"
                   rel="noreferrer nofollow"
@@ -63,13 +62,7 @@ const Connect: NextPage = () => {
             <ConnectButton>
               <Card>
                 <div className="flex cursor-pointer flex-row items-center space-x-2">
-                  <Image
-                    src="/images/rainbow.png"
-                    alt="rainbow-wallet"
-                    width={35}
-                    height={35}
-                    className="rounded-primary"
-                  />
+                  <Image src="/images/rainbow.png" alt="rainbow-wallet" width={35} height={35} className="rounded-primary" />
                   <span className="font-semibold">Rainbow</span>
                 </div>
               </Card>

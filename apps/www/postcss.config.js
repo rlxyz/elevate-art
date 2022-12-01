@@ -1,1 +1,1 @@
-module.exports = require("@elevatart/tailwind-config/postcss");
+module.exports = require("@elevateart/tailwind-config/postcss");

@@ -16,11 +16,7 @@ export const getLayerElementsWithTraitElements = async ({
   prisma,
 }: {
   layerElementIds: string[];
-  prisma: PrismaClient<
-    Prisma.PrismaClientOptions,
-    never,
-    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-  >;
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 }): Promise<LayerElementObjectWithTraitElements> => {
   return groupBy(
     await prisma.traitElement.findMany({

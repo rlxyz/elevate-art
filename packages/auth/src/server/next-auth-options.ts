@@ -1,8 +1,5 @@
-import {
-  OrganisationDatabaseEnum,
-  OrganisationDatabaseRoleEnum,
-  prisma
-} from "@elevateart/db";
+import { prisma } from "@elevateart/db";
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from "@elevateart/db/enums";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
@@ -44,9 +41,7 @@ export const nextAuthOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           /** Check SiweMessage for Ethereum Login */
-          const siwe = new SiweMessage(
-            JSON.parse(credentials?.message || "{}"),
-          );
+          const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
           const nextAuthUrl = env.NEXTAUTH_URL
             ? env.NEXTAUTH_URL
             : process.env.VERCEL
@@ -70,11 +65,7 @@ export const nextAuthOptions: NextAuthOptions = {
                   organisation: {
                     create: {
                       type: OrganisationDatabaseEnum.enum.Personal,
-                      name: `elevate-${address.substring(2, 8)}-${(
-                        Math.random() + 1
-                      )
-                        .toString(36)
-                        .substring(6)}`,
+                      name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1).toString(36).substring(6)}`,
                     },
                   },
                 },

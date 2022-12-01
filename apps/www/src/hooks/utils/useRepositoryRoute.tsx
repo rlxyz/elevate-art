@@ -6,9 +6,7 @@ export const useRepositoryRoute = () => {
   const organisationName: string = router.query.organisation as string;
   const collectionName: string = (router.query.collection as string) || "main";
   const repositoryName: string = router.query.repository as string;
-  const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(
-    null,
-  );
+  const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null);
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {
       setMainRepositoryHref(`${organisationName}/${repositoryName}`);

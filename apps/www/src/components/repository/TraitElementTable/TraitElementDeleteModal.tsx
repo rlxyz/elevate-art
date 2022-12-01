@@ -19,11 +19,7 @@ interface Props {
   }[];
 }
 
-const TraitElementDeleteModal: FC<Props> = ({
-  visible,
-  onClose,
-  traitElements,
-}) => {
+const TraitElementDeleteModal: FC<Props> = ({ visible, onClose, traitElements }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId);
   const { mutate, isLoading } = useMutateTraitElementDelete();
   return (

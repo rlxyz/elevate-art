@@ -6,11 +6,7 @@ import { LayerElement, Prisma, PrismaClient } from "@elevateart/db";
 export const getAllLayerElements = async ({
   prisma,
 }: {
-  prisma: PrismaClient<
-  Prisma.PrismaClientOptions,
-    never,
-    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-  >;
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 }): Promise<LayerElement[]> => {
   /* Start an transaction to ensure all runs at once. */
   return await prisma.layerElement.findMany();

@@ -11,10 +11,7 @@ export const General: ComponentStory<typeof Modal> = (args) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="rounded-primary border border-border p-2 text-xs text-accents_4"
-      >
+      <button onClick={() => setIsOpen(true)} className="rounded-primary border border-border p-2 text-xs text-accents_4">
         Show Modal
       </button>
       <Modal
@@ -32,10 +29,7 @@ export const withLoading: ComponentStory<typeof Modal> = (args) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="rounded-primary border border-border p-2 text-xs text-accents_4"
-      >
+      <button onClick={() => setIsOpen(true)} className="rounded-primary border border-border p-2 text-xs text-accents_4">
         Show Modal
       </button>
       <Modal

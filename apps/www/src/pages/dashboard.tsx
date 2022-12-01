@@ -11,20 +11,11 @@ import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavig
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 
 const Page: NextPage = () => {
-  const currentRoute = useOrganisationNavigationStore(
-    (state) => state.currentRoute,
-  );
-  const {
-    all: organisations,
-    current: organisation,
-    isLoading: isLoadingOrganisations,
-  } = useQueryOrganisationFindAll();
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute);
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll();
 
   return (
-    <OrganisationAuthLayout
-      type={OrganisationDatabaseEnum.enum.Personal}
-      route={OrganisationNavigationEnum.enum.Dashboard}
-    >
+    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Dashboard}>
       <Layout>
         <Layout.Header
           internalRoutes={[
@@ -40,15 +31,13 @@ const Page: NextPage = () => {
               {
                 name: OrganisationNavigationEnum.enum.Overview,
                 href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Account,
                 href: `/${OrganisationNavigationEnum.enum.Account}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Account,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
                 loading: isLoadingOrganisations,
               },
             ]}

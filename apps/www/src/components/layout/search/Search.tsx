@@ -60,9 +60,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
         type="text"
         className={clsx(
           className,
-          isLoading
-            ? "bg-mediumGrey animate-pulse rounded-[5px] border-none bg-opacity-50"
-            : "border-mediumGrey border",
+          isLoading ? "bg-mediumGrey animate-pulse rounded-[5px] border-none bg-opacity-50" : "border-mediumGrey border",
           "block w-full rounded-[5px] py-2 pl-10 text-xs",
           "focus:border-blueHighlight focus:ring-blueHighlight focus:outline-none focus:ring-1",
           "invalid:border-redError invalid:text-redError",

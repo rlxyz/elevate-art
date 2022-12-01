@@ -18,8 +18,7 @@ type HighlightPosition = {
   transition: string;
 };
 
-export type HighlightProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type HighlightProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
 const Highlight: React.FC<HighlightProps> = ({
   rect,

@@ -1,11 +1,7 @@
 import clsx from "clsx";
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
 import Breadcrumbs from "../breadcrumbs";
-import {
-  externalRoutes,
-  NavigationRoutes,
-  socialRoutes,
-} from "../elevateart-external-links";
+import { externalRoutes, NavigationRoutes, socialRoutes } from "../elevateart-external-links";
 import Link from "../link";
 import Tabs from "../tabs";
 import LayoutContainer from "./layout-container";
@@ -22,8 +18,7 @@ const defaultProps: Props = {
   children: <></>,
 };
 
-export type LayoutContainerProps = Props &
-  Omit<HTMLAttributes<any>, keyof Props>;
+export type LayoutContainerProps = Props & Omit<HTMLAttributes<any>, keyof Props>;
 
 /**
  * The core navigation component for applications.
@@ -47,9 +42,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
       name: "Elevate Art",
       href: "/",
       disabled: false,
-      icon: (props: any) => (
-        <img width={50} height={50} src="images/logo-black.png" {...props} />
-      ),
+      icon: (props: any) => <img width={50} height={50} src="images/logo-black.png" {...props} />,
     },
     ...(appNavigationRoutes || []),
   ];
@@ -79,11 +72,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
               target="_blank"
               className="cursor-pointer text-xs text-accents_5 hover:text-foreground"
             >
-              {item.icon ? (
-                <item.icon className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <span>{item.name}</span>
-              )}
+              {item.icon ? <item.icon className="h-4 w-4" aria-hidden="true" /> : <span>{item.name}</span>}
             </Link>
           );
         })}
@@ -104,10 +93,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
     <LayoutContainer
       {...props}
       border="lower"
-      className={clsx(
-        className,
-        "flex max-h-[5.64rem] min-h-[3.5rem] items-center whitespace-nowrap",
-      )}
+      className={clsx(className, "flex max-h-[5.64rem] min-h-[3.5rem] items-center whitespace-nowrap")}
     >
       <header>
         {topNav}

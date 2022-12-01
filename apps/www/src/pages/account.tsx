@@ -1,15 +1,15 @@
-import { OrganisationDatabaseEnum } from "@elevateart/db/enums"
-import { OrganisationNavigationEnum } from "@utils/enums"
-import { HeaderInternalPageRoutes } from "src/components/layout/core/Header"
-import { Layout } from "src/components/layout/core/Layout"
-import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout"
-import withOrganisationStore from "src/components/withOrganisationStore"
-import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore"
-import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll"
+import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
+import { OrganisationNavigationEnum } from "@utils/enums";
+import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
+import { Layout } from "src/components/layout/core/Layout";
+import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
+import withOrganisationStore from "src/components/withOrganisationStore";
+import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore";
+import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 
 const Page = () => {
-  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute);
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll();
   return (
     <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Account}>
       <Layout>
@@ -17,7 +17,7 @@ const Page = () => {
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name || ''}`,
+              href: `/${organisation?.name || ""}`,
               organisations,
             },
           ]}
@@ -40,16 +40,16 @@ const Page = () => {
           />
         </Layout.Header>
         <Layout.Body>
-          <div className='-ml-4 py-8 space-y-8'>
+          <div className="-ml-4 space-y-8 py-8">
             {
-              <div className='grid grid-cols-10 gap-x-6'>
-                <div className='col-span-2'>
+              <div className="grid grid-cols-10 gap-x-6">
+                <div className="col-span-2">
                   <PersonalOrganisationAccountNavigation />
                 </div>
-                <div className='col-span-8'>
-                  <div className='space-y-1'>
-                    <span className='text-sm font-semibold'>We intend to implement this page soon</span>
-                    <p className='text-xs text-darkGrey'>Hopefully the universe doesnt collapse into a black hole in the meantime</p>
+                <div className="col-span-8">
+                  <div className="space-y-1">
+                    <span className="text-sm font-semibold">We intend to implement this page soon</span>
+                    <p className="text-darkGrey text-xs">Hopefully the universe doesnt collapse into a black hole in the meantime</p>
                   </div>
                 </div>
               </div>
@@ -58,8 +58,7 @@ const Page = () => {
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
-  )
-}
+  );
+};
 
-
-export default withOrganisationStore(Page)
+export default withOrganisationStore(Page);

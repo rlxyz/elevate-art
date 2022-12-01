@@ -19,9 +19,7 @@ const getDuration = (timeAgoInSeconds: number) => {
   return null;
 };
 export const timeAgo = (date: Date) => {
-  const timeAgoInSeconds = Math.floor(
-    (new Date().getTime() - date.getTime()) / 1000,
-  );
+  const timeAgoInSeconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   const duration = getDuration(timeAgoInSeconds);
   if (!duration) return "just now";
   const { interval, epoch } = duration;

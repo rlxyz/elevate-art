@@ -3,16 +3,9 @@ import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import clsx from "clsx";
 import { FC, Fragment } from "react";
 
-const MenuComponent: FC<React.AnchorHTMLAttributes<any>> = ({
-  className,
-  children,
-  ...props
-}) => {
+const MenuComponent: FC<React.AnchorHTMLAttributes<any>> = ({ className, children, ...props }) => {
   return (
-    <Menu
-      as="div"
-      className="absolute right-0 top-1/2 z-[5] mr-2 flex -translate-y-1/2 items-center "
-    >
+    <Menu as="div" className="absolute right-0 top-1/2 z-[5] mr-2 flex -translate-y-1/2 items-center ">
       <Menu.Button className="text-darkGrey rounded-[5px]">
         <DotsHorizontalIcon className="hover:bg-mediumGrey mx-0.25 h-4 w-4 rounded-[3px]" />
       </Menu.Button>
@@ -33,9 +26,7 @@ const MenuComponent: FC<React.AnchorHTMLAttributes<any>> = ({
           )}
         >
           <div className="ring-black overflow-hidden rounded-[5px] shadow-lg ring-1 ring-opacity-5">
-            <div className="bg-lightGray divide-mediumGrey divide-y ">
-              {children}
-            </div>
+            <div className="bg-lightGray divide-mediumGrey divide-y ">{children}</div>
           </div>
         </Menu.Items>
       </Transition>

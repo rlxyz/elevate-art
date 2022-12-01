@@ -16,10 +16,7 @@ const defaultProps: Props = {
   className: "",
 };
 
-type NativeAttrs = Omit<
-  Partial<React.ImgHTMLAttributes<any> & React.HTMLAttributes<any>>,
-  keyof Props
->;
+type NativeAttrs = Omit<Partial<React.ImgHTMLAttributes<any> & React.HTMLAttributes<any>>, keyof Props>;
 export type AvatarProps = Props & NativeAttrs;
 
 const safeText = (text: string): string => {
@@ -48,22 +45,14 @@ const AvatarComponent: React.FC<AvatarProps> = ({
       {!showText && (
         <img
           alt="avatar-img"
-          className={clsx(
-            "w-full select-none object-cover",
-            isSquare ? "rounded-[5px]" : "rounded-full",
-          )}
+          className={clsx("w-full select-none object-cover", isSquare ? "rounded-[5px]" : "rounded-full")}
           src={src}
           draggable={false}
           {...props}
         />
       )}
       {showText && text && (
-        <span
-          className={clsx(
-            "flex h-full select-none items-center justify-center whitespace-nowrap text-xs",
-          )}
-          {...props}
-        >
+        <span className={clsx("flex h-full select-none items-center justify-center whitespace-nowrap text-xs")} {...props}>
           {safeText(text)}
         </span>
       )}

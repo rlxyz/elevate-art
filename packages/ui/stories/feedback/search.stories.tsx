@@ -6,10 +6,6 @@ export default {
   component: Search,
 } as ComponentMeta<typeof Search>;
 
-export const General: ComponentStory<typeof Search> = (args) => (
-  <Search {...args} />
-);
+export const General: ComponentStory<typeof Search> = (args) => <Search {...args} />;
 
-export const withLoading: ComponentStory<typeof Search> = (args) => (
-  <Search {...args} isLoading={true} />
-);
+export const withLoading: ComponentStory<typeof Search> = (args) => <Search {...args} isLoading={true} />;

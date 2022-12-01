@@ -15,9 +15,7 @@ const defaultProps: Props = {
 type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>;
 export type BreadcrumbsProps = Props & NativeAttrs;
 
-const BreadcrumbsComponent: React.FC<
-  React.PropsWithChildren<BreadcrumbsProps>
-> = ({
+const BreadcrumbsComponent: React.FC<React.PropsWithChildren<BreadcrumbsProps>> = ({
   separator,
   children,
   className,
@@ -26,18 +24,13 @@ const BreadcrumbsComponent: React.FC<
   const withSeparatorChildren = childrenArray.map((item, index) => {
     if (!React.isValidElement(item)) return item;
     const last = childrenArray[index - 1];
-    const lastIsSeparator =
-      React.isValidElement(last) && last.type === BreadcrumbsSeparator;
+    const lastIsSeparator = React.isValidElement(last) && last.type === BreadcrumbsSeparator;
     const currentIsSeparator = item.type === BreadcrumbsSeparator;
     if (!lastIsSeparator && !currentIsSeparator && index > 0) {
       return (
         <React.Fragment key={index}>
           <BreadcrumbsSeparator>{separator}</BreadcrumbsSeparator>
-          <span
-            className={clsx(index == childrenArray.length - 1 && "text-black")}
-          >
-            {item}
-          </span>
+          <span className={clsx(index == childrenArray.length - 1 && "text-black")}>{item}</span>
         </React.Fragment>
       );
     }
@@ -45,14 +38,7 @@ const BreadcrumbsComponent: React.FC<
   });
 
   return (
-    <nav
-      className={clsx(
-        className,
-        "box-border flex h-auto w-auto items-center text-xs text-foreground",
-      )}
-    >
-      {withSeparatorChildren}
-    </nav>
+    <nav className={clsx(className, "box-border flex h-auto w-auto items-center text-xs text-foreground")}>{withSeparatorChildren}</nav>
   );
 };
 

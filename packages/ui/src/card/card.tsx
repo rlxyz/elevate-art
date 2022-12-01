@@ -15,13 +15,7 @@ const CardComponent: React.FC<React.PropsWithChildren<CardProps>> = ({
   ...props
 }: CardProps & typeof defaultProps) => {
   return (
-    <div
-      className={clsx(
-        className,
-        "box-border rounded-primary border border-border bg-background p-4 transition-all",
-      )}
-      {...props}
-    >
+    <div className={clsx(className, "box-border rounded-primary border border-border bg-background p-4 transition-all")} {...props}>
       {children}
     </div>
   );

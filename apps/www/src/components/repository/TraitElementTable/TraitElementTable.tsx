@@ -10,8 +10,7 @@ interface Props {
   id: string;
 }
 
-export type TraitElementTableProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
 /**
  * This Functional Component maintains all the logic related to the TraitElementTable.
@@ -19,12 +18,7 @@ export type TraitElementTableProps = Props &
  *
  * @todo initialSum removed as prop. it should be generated here.
  */
-const TraitElementTable: FC<TraitElementTableProps> = ({
-  table,
-  className,
-  id,
-  ...props
-}) => {
+const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, ...props }) => {
   return (
     <div className={clsx(className)} {...props}>
       {/* Use this to debug the sum of traitElement's weight */}
@@ -39,23 +33,14 @@ const TraitElementTable: FC<TraitElementTableProps> = ({
                     <>
                       <div
                         {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none flex items-center space-x-1"
-                            : "",
+                          className: header.column.getCanSort() ? "cursor-pointer select-none flex items-center space-x-1" : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: (
-                            <ChevronUpIcon className="text-darkGrey h-3 w-3" />
-                          ),
-                          desc: (
-                            <ChevronDownIcon className="text-darkGrey h-3 w-3" />
-                          ),
+                          asc: <ChevronUpIcon className="text-darkGrey h-3 w-3" />,
+                          desc: <ChevronDownIcon className="text-darkGrey h-3 w-3" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     </>
@@ -72,19 +57,10 @@ const TraitElementTable: FC<TraitElementTableProps> = ({
             .rows.sort((a, b) => (a.original.id === `none-${id}` ? -1 : 1))
             .map((row, index) => {
               return (
-                <Table.Body.Row
-                  key={row.original.id}
-                  current={index}
-                  total={table.getRowModel().rows.length}
-                >
+                <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <Table.Body.Row.Data key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </Table.Body.Row.Data>
+                      <Table.Body.Row.Data key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Body.Row.Data>
                     );
                   })}
                 </Table.Body.Row>

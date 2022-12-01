@@ -27,9 +27,7 @@ export const LayoutContainer = ({
         border === "upper" && "border-t border-border",
       )}
     >
-      <div className="h-full w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%]">
-        {children}
-      </div>
+      <div className="h-full w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%]">{children}</div>
     </div>
   );
 };
@@ -81,9 +79,7 @@ const LayoutBody = ({
   );
 };
 
-const LayoutTitle = ({ children }: { children: React.ReactNode }) => (
-  <LayoutContainer className="title">{children}</LayoutContainer>
-);
+const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className="title">{children}</LayoutContainer>;
 
 Layout.Header = LayoutHeader;
 Layout.Title = LayoutTitle;

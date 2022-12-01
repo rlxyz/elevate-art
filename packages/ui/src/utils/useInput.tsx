@@ -1,9 +1,7 @@
 import React, { Dispatch, MutableRefObject, SetStateAction } from "react";
 import useCurrentState from "./useCurrentState";
 
-export type BindingsChangeTarget =
-  | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  | string;
+export type BindingsChangeTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string;
 
 const useInput = (
   initialValue: string,

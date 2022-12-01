@@ -2,12 +2,7 @@ import { SelectorIcon } from "@heroicons/react/outline";
 import { LayerElement } from "@hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { Repository } from "@psrc/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import clsx from "clsx";
-import {
-    AnimatePresence,
-    Reorder,
-    useDragControls,
-    useMotionValue
-} from "framer-motion";
+import { AnimatePresence, Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { FC, useEffect, useState } from "react";
 import { PreviewImageCardStandaloneNoNone } from "src/components/collection/CollectionPreviewImage";
 import ModalComponent from "src/components/layout/modal/Modal";
@@ -26,15 +21,9 @@ interface Props {
   item: LayerElement;
 }
 
-export type ReorderItemProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type ReorderItemProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
-export const LayerElementReorderItem: FC<ReorderItemProps> = ({
-  repositoryId,
-  item,
-  className,
-  ...props
-}) => {
+export const LayerElementReorderItem: FC<ReorderItemProps> = ({ repositoryId, item, className, ...props }) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const dragControls = useDragControls();
@@ -56,22 +45,14 @@ export const LayerElementReorderItem: FC<ReorderItemProps> = ({
       }}
     >
       <SelectorIcon className="absolute h-3 w-3" />
-      <span
-        className="mx-7 flex w-full items-center overflow-hidden whitespace-nowrap text-xs"
-        {...props}
-      >
+      <span className="mx-7 flex w-full items-center overflow-hidden whitespace-nowrap text-xs" {...props}>
         {item.name}
       </span>
     </Reorder.Item>
   );
 };
 
-const LayerElementReorderModal: FC<LayerElementRenameProps> = ({
-  repository,
-  layerElements,
-  visible,
-  onClose,
-}) => {
+const LayerElementReorderModal: FC<LayerElementRenameProps> = ({ repository, layerElements, visible, onClose }) => {
   const sorted = layerElements.sort((a, b) => a.priority - b.priority);
   const [items, setItems] = useState<LayerElement[]>(sorted);
   const { mutate, isLoading } = useMutateLayerElementUpdateOrder();
@@ -93,11 +74,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({
               ...t,
               weight: t.weight || 1, // override weight to 1 if it's null
               rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-                ({
-                  condition,
-                  primaryTraitElementId: left,
-                  secondaryTraitElementId: right,
-                }) => ({
+                ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
                   type: condition as v.RulesType,
                   with: left === t.id ? right : left,
                 }),
@@ -150,11 +127,7 @@ const LayerElementReorderModal: FC<LayerElementRenameProps> = ({
               onReorder={setItems}
             >
               {items.map((x) => (
-                <LayerElementReorderItem
-                  key={x.id}
-                  item={x}
-                  repositoryId={repository.id}
-                />
+                <LayerElementReorderItem key={x.id} item={x} repositoryId={repository.id} />
               ))}
             </Reorder.Group>
           </AnimatePresence>

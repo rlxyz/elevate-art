@@ -1,4 +1,4 @@
 /** @type {import("tailwindcss").Config} */
 module.exports = {
-  presets: [require("@elevatart/tailwind-config")],
+  presets: [require("@elevateart/tailwind-config")],
 }

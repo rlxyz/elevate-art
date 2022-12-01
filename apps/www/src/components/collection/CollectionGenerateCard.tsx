@@ -12,9 +12,7 @@ export const GenerateButton = () => {
   return (
     <div
       className={clsx(
-        !collection
-          ? "h-full animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50"
-          : "border border-border",
+        !collection ? "h-full animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50" : "border border-border",
         "flex h-full w-full items-center justify-center rounded-[5px]",
       )}
     >
@@ -36,10 +34,7 @@ export const GenerateButton = () => {
           </svg>
         </button>
       </div>
-      <CollectionIncrementGenerationDialog
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+      <CollectionIncrementGenerationDialog isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };
@@ -54,27 +49,16 @@ const Index = () => {
             <div className="flex items-center justify-between">
               <span className="font-semibold">Generate</span>
             </div>
-            <span className="text-accents_5">
-              You can regenerate your collection by clicking this button.
-            </span>
+            <span className="text-accents_5">You can regenerate your collection by clicking this button.</span>
             <Button onClick={() => setIsOpen(true)}>
               <span className="flex items-center justify-center space-x-2">
-                <Image
-                  priority
-                  width={30}
-                  height={30}
-                  src="/images/logo-white.png"
-                  alt="Logo"
-                />
+                <Image priority width={30} height={30} src="/images/logo-white.png" alt="Logo" />
                 <span className="text-xs">elevate.art</span>
               </span>
             </Button>
           </span>
         </div>
-        <CollectionIncrementGenerationDialog
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
+        <CollectionIncrementGenerationDialog isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>
   );

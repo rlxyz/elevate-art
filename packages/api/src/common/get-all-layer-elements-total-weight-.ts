@@ -6,11 +6,7 @@ import { Prisma, PrismaClient } from "@elevateart/db";
 export const getLayerElementsWithTraitElementsTotalWeight = async ({
   prisma,
 }: {
-  prisma: PrismaClient<
-    Prisma.PrismaClientOptions,
-    never,
-    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-  >;
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 }) => {
   return await prisma.traitElement.groupBy({
     by: ["layerElementId"],

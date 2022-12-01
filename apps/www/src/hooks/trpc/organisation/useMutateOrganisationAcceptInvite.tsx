@@ -27,9 +27,7 @@ export const useMutateOrganisationAcceptInvite = () => {
       });
     },
     onError: (err, variables, context) => {
-      notifyError(
-        "Something went wrong when accepting the invite. Try again...",
-      );
+      notifyError("Something went wrong when accepting the invite. Try again...");
     },
   });
 };

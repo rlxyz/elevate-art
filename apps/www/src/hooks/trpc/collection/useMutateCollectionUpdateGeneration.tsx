@@ -4,11 +4,7 @@ import { useNotification } from "src/hooks/utils/useNotification";
 import { trpc } from "src/utils/trpc";
 import { useQueryCollectionFindAll } from "./useQueryCollectionFindAll";
 
-export const useMutateCollectionUpdateGeneration = ({
-  onMutate,
-}: {
-  onMutate?: () => void;
-}) => {
+export const useMutateCollectionUpdateGeneration = ({ onMutate }: { onMutate?: () => void }) => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId);
   const { mutate } = useQueryCollectionFindAll();
   const ctx = trpc.useContext();

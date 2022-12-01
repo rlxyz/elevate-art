@@ -54,29 +54,20 @@ export const OrganisationTeamDisplayUsers = () => {
           <span className="text-accents_5">All</span>
         </div>
         <div className="divide-y divide-accents_7 rounded-b-[5px] border-x border-b border-border bg-background">
-          {organisation.members.map(
-            ({ id, user: { address }, createdAt, type }) => (
-              <div
-                key={id}
-                className="flex items-center justify-between px-6 py-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="h-7 w-7 rounded-full border border-border bg-success" />
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs font-semibold">{address}</span>
-                    <div className={clsx("flex items-baseline")}>
-                      <span className="text-xs text-accents_5">
-                        {createdAt && timeAgo(createdAt)}
-                      </span>
-                    </div>
+          {organisation.members.map(({ id, user: { address }, createdAt, type }) => (
+            <div key={id} className="flex items-center justify-between px-6 py-4">
+              <div className="flex items-center space-x-2">
+                <div className="h-7 w-7 rounded-full border border-border bg-success" />
+                <div className="flex flex-col space-y-1">
+                  <span className="text-xs font-semibold">{address}</span>
+                  <div className={clsx("flex items-baseline")}>
+                    <span className="text-xs text-accents_5">{createdAt && timeAgo(createdAt)}</span>
                   </div>
                 </div>
-                <span className="text-xs text-accents_5">
-                  {capitalize(type)}
-                </span>
               </div>
-            ),
-          )}
+              <span className="text-xs text-accents_5">{capitalize(type)}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

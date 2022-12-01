@@ -11,10 +11,7 @@ export const Success: ComponentStory<typeof Toaster> = (args) => {
   const { notifySuccess } = useNotification();
   return (
     <>
-      <button
-        onClick={() => notifySuccess("We like Fidenzas")}
-        className="rounded-primary border border-border p-2 text-xs text-accents_4"
-      >
+      <button onClick={() => notifySuccess("We like Fidenzas")} className="rounded-primary border border-border p-2 text-xs text-accents_4">
         Show Toast
       </button>
       <Toaster {...args} />

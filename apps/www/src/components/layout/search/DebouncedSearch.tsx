@@ -25,7 +25,5 @@ export const DebouncedSearchComponent = ({
     return () => clearTimeout(timeout);
   }, [value]);
 
-  return (
-    <SearchComponent {...props} onChange={(e) => setValue(e.target.value)} />
-  );
+  return <SearchComponent {...props} onChange={(e) => setValue(e.target.value)} />;
 };

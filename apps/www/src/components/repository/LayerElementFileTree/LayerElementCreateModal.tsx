@@ -15,12 +15,7 @@ export type LayerElementCreateForm = {
   name: string;
 };
 
-const LayerElementCreateModal: FC<LayerElementCreateProps> = ({
-  visible,
-  onClose,
-  onSuccess,
-  repository,
-}) => {
+const LayerElementCreateModal: FC<LayerElementCreateProps> = ({ visible, onClose, onSuccess, repository }) => {
   const { mutate, isLoading } = useMutateLayerElementCreate();
   const { all: layers } = useQueryLayerElementFindAll();
   const {
@@ -48,12 +43,7 @@ const LayerElementCreateModal: FC<LayerElementCreateProps> = ({
     <ModalComponent
       visible={visible}
       onClose={handleClose}
-      onSubmit={handleSubmit((data) =>
-        mutate(
-          { repositoryId: repository.id, name: data.name },
-          { onSuccess: handleSuccess },
-        ),
-      )}
+      onSubmit={handleSubmit((data) => mutate({ repositoryId: repository.id, name: data.name }, { onSuccess: handleSuccess }))}
       title="Add Layer"
       description={`This will create a new layer, you can then upload traits to this layer.`}
       isLoading={isLoading}

@@ -6,6 +6,4 @@ export default {
   component: LayoutFooter,
 } as ComponentMeta<typeof LayoutFooter>;
 
-export const Template: ComponentStory<typeof LayoutFooter> = () => (
-  <LayoutFooter />
-);
+export const Template: ComponentStory<typeof LayoutFooter> = () => <LayoutFooter />;

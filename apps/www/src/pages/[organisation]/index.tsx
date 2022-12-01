@@ -7,17 +7,11 @@ import ViewAllRepositories from "src/components/organisation/OrganisationViewAll
 import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
 import { OrganisationNavigationEnum } from "src/shared/enums";
 import { OrganisationAuthLayout } from "../../components/organisation/OrganisationAuthLayout";
-src/hooks/trpc/organisation/useQueryOrganisationFindAll
+src / hooks / trpc / organisation / useQueryOrganisationFindAll;
 
 const Page: NextPage = () => {
-  const currentRoute = useOrganisationNavigationStore(
-    (state) => state.currentRoute,
-  );
-  const {
-    all: organisations,
-    current: organisation,
-    isLoading: isLoadingOrganisations,
-  } = useQueryOrganisationFindAll();
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute);
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll();
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
@@ -36,15 +30,13 @@ const Page: NextPage = () => {
               {
                 name: OrganisationNavigationEnum.enum.Overview,
                 href: `/${organisation?.name}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Overview,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Settings,
                 href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Settings,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },
             ]}

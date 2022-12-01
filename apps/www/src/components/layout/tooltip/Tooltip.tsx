@@ -13,14 +13,7 @@ type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>;
 export type TooltipProps = Props & NativeAttrs;
 
 const Tooltip = forwardRef<HTMLAnchorElement, React.PropsWithChildren<Props>>(
-  ({
-    variant = "info",
-    as,
-    className,
-    children,
-    description,
-    ...props
-  }: React.PropsWithChildren<TooltipProps>) => {
+  ({ variant = "info", as, className, children, description, ...props }: React.PropsWithChildren<TooltipProps>) => {
     return (
       <Popover>
         <Popover.Button
@@ -47,9 +40,7 @@ const Tooltip = forwardRef<HTMLAnchorElement, React.PropsWithChildren<Props>>(
         >
           <Popover.Panel className="bg-black absolute top-0 left-6 z-10 w-[200px] -translate-y-1/4 rounded-[5px]">
             <div className="p-2 shadow-lg">
-              <p className="text-white whitespace-pre-wrap text-[0.65rem] font-normal normal-case">
-                {description}
-              </p>
+              <p className="text-white whitespace-pre-wrap text-[0.65rem] font-normal normal-case">{description}</p>
             </div>
           </Popover.Panel>
         </Transition>

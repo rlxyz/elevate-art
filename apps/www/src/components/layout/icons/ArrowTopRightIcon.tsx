@@ -1,9 +1,6 @@
 import { FC } from "react";
 
-export const ArrowTopRightIcon: FC<React.HTMLAttributes<any>> = ({
-  className,
-  ...props
-}) => (
+export const ArrowTopRightIcon: FC<React.HTMLAttributes<any>> = ({ className, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"

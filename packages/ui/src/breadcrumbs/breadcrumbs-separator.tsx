@@ -9,25 +9,13 @@ const defaultProps: Props = {
   className: "",
 };
 
-export type BreadcrumbsSeparatorProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type BreadcrumbsSeparatorProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
-const BreadcrumbsSeparatorComponent: React.FC<
-  React.PropsWithChildren<BreadcrumbsSeparatorProps>
-> = ({
+const BreadcrumbsSeparatorComponent: React.FC<React.PropsWithChildren<BreadcrumbsSeparatorProps>> = ({
   children,
   className,
 }: BreadcrumbsSeparatorProps & typeof defaultProps) => {
-  return (
-    <div
-      className={clsx(
-        className,
-        "pointer-events-none mx-0.5 inline-flex h-auto w-auto items-center",
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={clsx(className, "pointer-events-none mx-0.5 inline-flex h-auto w-auto items-center")}>{children}</div>;
 };
 
 BreadcrumbsSeparatorComponent.defaultProps = defaultProps;

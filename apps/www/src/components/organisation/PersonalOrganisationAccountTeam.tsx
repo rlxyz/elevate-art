@@ -8,9 +8,7 @@ import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQuer
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisationFindAll();
   const [query, setQuery] = useState("");
-  const filteredOrganisaitons = organisations?.filter((x) =>
-    x.name.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()));
   const session = useSession();
   const { bindings: inputBindings, state: input } = useInput("");
   const getUserRoleInOrganisation = (
@@ -18,9 +16,7 @@ export const PersonalOrganisationAccountTeam = () => {
       members: (OrganisationMember & { user: User })[];
     },
   ) => {
-    return organisation.members.find(
-      (x) => x.userId === session?.data?.user?.id,
-    )?.type;
+    return organisation.members.find((x) => x.userId === session?.data?.user?.id)?.type;
   };
 
   const isLoading = !organisations;
@@ -28,38 +24,16 @@ export const PersonalOrganisationAccountTeam = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <span
-          className={clsx(
-            isLoading &&
-              "animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50",
-            "text-xl font-semibold",
-          )}
-        >
+        <span className={clsx(isLoading && "animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50", "text-xl font-semibold")}>
           <span className={clsx(isLoading && "invisible")}>Your Teams</span>
         </span>
-        <div
-          className={clsx(
-            isLoading &&
-              "w-1/4 animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50",
-            "text-xs text-accents_5",
-          )}
-        >
-          <p className={clsx(isLoading && "invisible")}>
-            View the Teams that youre a part of
-          </p>
+        <div className={clsx(isLoading && "w-1/4 animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50", "text-xs text-accents_5")}>
+          <p className={clsx(isLoading && "invisible")}>View the Teams that youre a part of</p>
         </div>
       </div>
       <Search isLoading={isLoading} {...inputBindings} />
-      <div
-        className={clsx(
-          isLoading &&
-            "bg-mediumGrey w-1/4 animate-pulse rounded-[5px] bg-opacity-50",
-          "text-darkGrey text-xs",
-        )}
-      >
-        <p className={clsx(isLoading && "invisible")}>
-          View the Teams that youre a part of
-        </p>
+      <div className={clsx(isLoading && "bg-mediumGrey w-1/4 animate-pulse rounded-[5px] bg-opacity-50", "text-darkGrey text-xs")}>
+        <p className={clsx(isLoading && "invisible")}>View the Teams that youre a part of</p>
       </div>
     </div>
   );

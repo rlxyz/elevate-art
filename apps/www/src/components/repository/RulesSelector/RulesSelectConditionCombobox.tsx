@@ -9,21 +9,13 @@ export const RulesSelectConditionCombobox = ({
   onChange,
 }: {
   selected: "cannot mix with" | "only mixes with" | null;
-  onChange: Dispatch<
-    SetStateAction<"cannot mix with" | "only mixes with" | null>
-  >;
+  onChange: Dispatch<SetStateAction<"cannot mix with" | "only mixes with" | null>>;
 }) => {
   const [query, setQuery] = useState("");
   const filteredConditions: RulesType[] =
     query === ""
-      ? [
-          RulesEnum.enum["cannot mix with"] as RulesType,
-          RulesEnum.enum["only mixes with"] as RulesType,
-        ]
-      : [
-          RulesEnum.enum["cannot mix with"] as RulesType,
-          RulesEnum.enum["only mixes with"] as RulesType,
-        ].filter((conditions) => {
+      ? [RulesEnum.enum["cannot mix with"] as RulesType, RulesEnum.enum["only mixes with"] as RulesType]
+      : [RulesEnum.enum["cannot mix with"] as RulesType, RulesEnum.enum["only mixes with"] as RulesType].filter((conditions) => {
           return conditions.toLowerCase().includes(query.toLowerCase());
         });
 
@@ -47,29 +39,14 @@ export const RulesSelectConditionCombobox = ({
             key={condition}
             value={condition}
             className={({ active }) =>
-              clsx(
-                "relative cursor-default select-none py-2 pl-3 pr-9",
-                active ? "text-blueHighlight" : "text-black",
-              )
+              clsx("relative cursor-default select-none py-2 pl-3 pr-9", active ? "text-blueHighlight" : "text-black")
             }
           >
             {({ active, selected }) => (
               <>
-                <span
-                  className={clsx(
-                    "block truncate",
-                    selected ? "font-semibold" : "",
-                  )}
-                >
-                  {condition}
-                </span>
+                <span className={clsx("block truncate", selected ? "font-semibold" : "")}>{condition}</span>
                 {selected && (
-                  <span
-                    className={clsx(
-                      "absolute inset-y-0 right-0 flex items-center pr-4",
-                      active ? "text-black" : "text-indigo-600",
-                    )}
-                  >
+                  <span className={clsx("absolute inset-y-0 right-0 flex items-center pr-4", active ? "text-black" : "text-indigo-600")}>
                     <CheckIcon className="h-5 w-5" aria-hidden="true" />
                   </span>
                 )}

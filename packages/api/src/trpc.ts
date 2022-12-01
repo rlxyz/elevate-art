@@ -10,7 +10,6 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-
 /**
  * Reusable middleware to ensure
  * users are logged in
@@ -26,7 +25,6 @@ const isAuthed = t.middleware(({ ctx, next }) => {
     },
   });
 });
-
 
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(isAuthed);

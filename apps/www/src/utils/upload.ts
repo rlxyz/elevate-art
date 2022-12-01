@@ -3,7 +3,7 @@ import produce from "immer";
 import { FileWithPath } from "react-dropzone";
 import { TraitElementUploadState } from "src/components/layout/upload/upload-display";
 import { env } from "src/env/client.mjs";
-src/hooks/trpc/layerElement/useQueryLayerElementFindAll
+src / hooks / trpc / layerElement / useQueryLayerElementFindAll;
 
 export type ParseLayerElementFolderInput = {
   traitElements: TraitElement[];
@@ -20,9 +20,7 @@ export type ParseLayerElementFolderOutput = {
  * @param opts ParseLayerElementFolderInput; a list of existing TraitElements, and a list of files
  * @todo ensure user doesn't accidently drop in his entire fucking Document folder like a dumbass.
  */
-export const parseLayerElementFolder = (
-  opts: ParseLayerElementFolderInput,
-): ParseLayerElementFolderOutput => {
+export const parseLayerElementFolder = (opts: ParseLayerElementFolderInput): ParseLayerElementFolderOutput => {
   const { layerElementName, files, traitElements } = opts;
   const existing = traitElements.map((x) => x.name);
   const readonly = traitElements.filter((x) => x.readonly).map((x) => x.name);
@@ -56,13 +54,7 @@ export const parseLayerElementFolder = (
         imageUrl: URL.createObjectURL(file),
         size: file.size,
         uploaded: false,
-        type: existing.includes(t)
-          ? "existing"
-          : readonly.includes(t)
-          ? "readonly"
-          : validSize
-          ? "new"
-          : "invalid",
+        type: existing.includes(t) ? "existing" : readonly.includes(t) ? "readonly" : validSize ? "new" : "invalid",
       };
       draft[l] ? draft[l]?.push(upload) : (draft[l] = [upload]);
     });
@@ -73,12 +65,7 @@ export const validateFileSize = (file: FileWithPath): boolean => {
   return file.size <= env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED;
 };
 
-export const validateFolderDepth = (
-  files: FileWithPath[],
-  folderDepth: number,
-): boolean => {
+export const validateFolderDepth = (files: FileWithPath[], folderDepth: number): boolean => {
   const depth = folderDepth + 1; // + 1 because we are adding the root folder
-  return (
-    files.filter((file) => file.path?.split("/").length !== depth).length === 0
-  );
+  return files.filter((file) => file.path?.split("/").length !== depth).length === 0;
 };

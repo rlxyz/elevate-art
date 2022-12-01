@@ -6,14 +6,8 @@ export default {
   component: Loading,
 } as ComponentMeta<typeof Loading>;
 
-export const General: ComponentStory<typeof Loading> = (args) => (
-  <Loading {...args} />
-);
+export const General: ComponentStory<typeof Loading> = (args) => <Loading {...args} />;
 
-export const withText: ComponentStory<typeof Loading> = (args) => (
-  <Loading {...args}>Loading</Loading>
-);
+export const withText: ComponentStory<typeof Loading> = (args) => <Loading {...args}>Loading</Loading>;
 
-export const withSpace: ComponentStory<typeof Loading> = (args) => (
-  <Loading spaceRatio={3} {...args} />
-);
+export const withSpace: ComponentStory<typeof Loading> = (args) => <Loading spaceRatio={3} {...args} />;

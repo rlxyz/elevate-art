@@ -30,10 +30,8 @@ export const ruleRouter = router({
   /**
    * Creates a Rule with two associated TraitElements and a "condition" based on the compiler's supported conditions.
    */
-  delete: protectedProcedure
-    .input(z.object({ ruleId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { ruleId } = input;
-      return await ctx.prisma.rules.delete({ where: { id: ruleId } });
-    }),
+  delete: protectedProcedure.input(z.object({ ruleId: z.string() })).mutation(async ({ ctx, input }) => {
+    const { ruleId } = input;
+    return await ctx.prisma.rules.delete({ where: { id: ruleId } });
+  }),
 });

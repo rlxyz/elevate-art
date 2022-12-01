@@ -1,12 +1,5 @@
 import clsx from "clsx";
-import React, {
-  CSSProperties,
-  MouseEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { CSSProperties, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Highlight from "../shared/highlight";
 import { isUIElement } from "../utils/collections";
 import { useRect } from "../utils/useLayout";
@@ -60,9 +53,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
   ...props
 }: React.PropsWithChildren<TabsProps> & typeof defaultProps) => {
   const [tabs, setTabs] = useState<Array<TabsHeaderItem>>([]);
-  const [selfValue, setSelfValue] = useState<string | undefined>(
-    userCustomInitialValue,
-  );
+  const [selfValue, setSelfValue] = useState<string | undefined>(userCustomInitialValue);
   const ref = useRef<HTMLDivElement | null>(null);
   const [displayHighlight, setDisplayHighlight] = useState<boolean>(false);
   const { rect, setRect } = useRect();
@@ -110,21 +101,13 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
 
   return (
     <TabsContext.Provider value={initialValue}>
-      <div
-        className={clsx(className, "text-inherit w-initial m-0 h-auto p-0")}
-        {...props}
-      >
+      <div className={clsx(className, "text-inherit w-initial m-0 h-auto p-0")} {...props}>
         <header
           className="relative flex flex-nowrap items-center overflow-y-hidden overflow-x-scroll no-scrollbar"
           ref={ref}
           onMouseLeave={() => setDisplayHighlight(false)}
         >
-          <Highlight
-            rect={rect}
-            visible={displayHighlight}
-            hoverHeightRatio={hoverHeightRatio}
-            hoverWidthRatio={hoverWidthRatio}
-          />
+          <Highlight rect={rect} visible={displayHighlight} hoverHeightRatio={hoverHeightRatio} hoverWidthRatio={hoverWidthRatio} />
           <div
             className={clsx(
               "flex h-full w-full flex-1 flex-nowrap items-center border-b border-border",

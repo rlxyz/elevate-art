@@ -46,18 +46,13 @@ export const OrganisationTeamDisplayPending = () => {
         </div>
         <div className="divide-y divide-accents_7 rounded-b-[5px] border-x border-b border-border bg-background">
           {organisation.pendings.map(({ id, address, role, createdAt }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between px-6 py-4"
-            >
+            <div key={id} className="flex items-center justify-between px-6 py-4">
               <div className="flex items-center space-x-2">
                 <div className="h-7 w-7 rounded-full border border-border bg-success" />
                 <div className="flex flex-col space-y-1">
                   <span className="text-xs font-semibold">{address}</span>
                   <div className={clsx("flex items-baseline")}>
-                    <span className="text-xs text-accents_5">
-                      {createdAt && timeAgo(createdAt)}
-                    </span>
+                    <span className="text-xs text-accents_5">{createdAt && timeAgo(createdAt)}</span>
                     {/* {ens ? <span className='text-xs font-normal text-success'>{ens}</span> : null} */}
                   </div>
                 </div>

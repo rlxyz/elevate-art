@@ -19,12 +19,7 @@ interface Props {
   onSuccess: () => void;
 }
 
-const TraitElementUpdateWeightModal: FC<Props> = ({
-  visible,
-  onClose,
-  onSuccess,
-  traitElements,
-}) => {
+const TraitElementUpdateWeightModal: FC<Props> = ({ visible, onClose, onSuccess, traitElements }) => {
   /** Update weight mutation */
   const { mutate, isLoading } = useMutateTraitElementUpdateWeight();
 
@@ -39,13 +34,11 @@ const TraitElementUpdateWeightModal: FC<Props> = ({
         e.preventDefault();
         mutate(
           {
-            traitElements: traitElements
-              .slice(1)
-              .map(({ id, weight, layerElementId }) => ({
-                layerElementId,
-                traitElementId: id,
-                weight: weight.toNumber(),
-              })),
+            traitElements: traitElements.slice(1).map(({ id, weight, layerElementId }) => ({
+              layerElementId,
+              traitElementId: id,
+              weight: weight.toNumber(),
+            })),
           },
           {
             onSuccess: () => {

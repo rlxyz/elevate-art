@@ -3,8 +3,7 @@ import { trpc } from "src/utils/trpc";
 import { useMutationContext } from "../useMutationContext";
 
 export const useMutateLayerElementUpdateName = () => {
-  const { ctx, repositoryId, notifyError, notifySuccess } =
-    useMutationContext();
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext();
   return trpc.layerElement.updateName.useMutation({
     onSuccess: (_, variables) => {
       const { layerElements } = variables;

@@ -28,5 +28,4 @@ const defaultContext = {
 
 export const TabsContext = React.createContext<TabsConfig>(defaultContext);
 
-export const useTabsContext = (): TabsConfig =>
-  React.useContext<TabsConfig>(TabsContext);
+export const useTabsContext = (): TabsConfig => React.useContext<TabsConfig>(TabsContext);

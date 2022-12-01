@@ -5,13 +5,7 @@ import useRepositoryStore from "src/client/hooks/store/useRepositoryStore";
 import Button from "src/componensrc/hooks/store/useRepositoryStore";
 import { useMutateCollectionCreate } from "../../hooks/trpc/collection/useMutateCollectionCreate";
 
-const Index = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
+const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
     register,
     handleSubmit,
@@ -50,10 +44,7 @@ const Index = ({
             >
               <Dialog.Panel className="relative transform space-y-6 divide-y divide-accents_8 overflow-hidden rounded-[5px] border border-accents_8 bg-background p-8 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="space-y-4">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-xl font-semibold leading-6"
-                  >
+                  <Dialog.Title as="h3" className="text-xl font-semibold leading-6">
                     Create new collection
                   </Dialog.Title>
                   <form
@@ -67,16 +58,11 @@ const Index = ({
                   >
                     <div className="space-y-6 divide-y divide-accents_7">
                       <div>
-                        <p className="text-sm">
-                          This will create a new collection, your existing
-                          collection will remain the same
-                        </p>
+                        <p className="text-sm">This will create a new collection, your existing collection will remain the same</p>
                       </div>
                       <div className="space-y-2 pt-6">
                         <div className="flex flex-col space-y-1">
-                          <span className="font-base text-xs">
-                            Collection name
-                          </span>
+                          <span className="font-base text-xs">Collection name</span>
                           <input
                             className="rounded-lg focus:outline-black focus:border-gray-500 block w-full appearance-none border border-border bg-background py-3 px-4 font-plus-jakarta-sans text-sm text-foreground focus:bg-background"
                             defaultValue="development"
@@ -99,9 +85,7 @@ const Index = ({
                           )}
                         </div>
                         <div className="flex flex-col space-y-1">
-                          <span className="font-base text-xs">
-                            Total Supply
-                          </span>
+                          <span className="font-base text-xs">Total Supply</span>
                           <input
                             className="rounded-lg focus:outline-black focus:border-gray-500 block w-full appearance-none border border-border bg-background py-3 px-4 font-plus-jakarta-sans text-sm text-foreground focus:bg-background"
                             defaultValue={10000}
@@ -112,11 +96,7 @@ const Index = ({
                               max: 20000,
                             })}
                           />
-                          {errors.totalSupply && (
-                            <span className="text-xs text-error">
-                              Must be smaller than 10000
-                            </span>
-                          )}
+                          {errors.totalSupply && <span className="text-xs text-error">Must be smaller than 10000</span>}
                         </div>
                         <div className="flex justify-between pt-6">
                           <div className="ml-[auto]">

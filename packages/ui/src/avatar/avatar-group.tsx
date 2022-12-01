@@ -13,35 +13,20 @@ const defaultProps: Props = {
 type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>;
 export type AvatarGroupProps = Props & NativeAttrs;
 
-const AvatarGroupComponent: React.FC<
-  React.PropsWithChildren<AvatarGroupProps>
-> = ({
+const AvatarGroupComponent: React.FC<React.PropsWithChildren<AvatarGroupProps>> = ({
   count,
   className,
   children,
 }: AvatarGroupProps & typeof defaultProps) => {
   const childrens = React.Children.toArray(children);
   return (
-    <div
-      className={clsx(
-        className,
-        "m-0 flex h-auto w-[max-content] items-center p-0",
-      )}
-    >
+    <div className={clsx(className, "m-0 flex h-auto w-[max-content] items-center p-0")}>
       {childrens.map((item, index) => (
         <div key={index} className={clsx(item !== 0 && "-mr-2")}>
           {item}
         </div>
       ))}
-      {count && (
-        <span
-          className={clsx(
-            "inline-flex items-center pl-3 text-xs text-foreground",
-          )}
-        >
-          +{count}
-        </span>
-      )}
+      {count && <span className={clsx("inline-flex items-center pl-3 text-xs text-foreground")}>+{count}</span>}
     </div>
   );
 };

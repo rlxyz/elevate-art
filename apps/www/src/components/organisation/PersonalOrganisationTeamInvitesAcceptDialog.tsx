@@ -1,10 +1,9 @@
 import { Loading } from "@elevateart/ui";
 import { Dialog, Transition } from "@headlessui/react";
-import { Organisation, OrganisationPending } from "@prisma/client";
 import { Fragment, useState } from "react";
-import { capitalize } from "src/client/utils/format";
 import { useMutateOrganisationAcceptInvite } from "src/hooks/trpc/organisation/useMutateOrganisationAcceptInvite";
 import { useNotification } from "src/hooks/utils/useNotification";
+import { capitalize } from "src/utils/format";
 
 export const PersonalOrganisationTeamInvitesAcceptDialog = ({
   pending,
@@ -18,18 +17,11 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="rounded-[5px] border border-border bg-success px-4 py-1.5 text-xs text-accents_8"
-      >
+      <button onClick={() => setIsOpen(true)} className="rounded-[5px] border border-border bg-success px-4 py-1.5 text-xs text-accents_8">
         Accept
       </button>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setIsOpen(false)}
-        >
+        <Dialog as="div" className="relative z-10" onClose={() => setIsOpen(false)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -63,8 +55,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                   <Dialog.Description>
                     <div className="space-y-3 border-b border-border bg-accents_8 p-8">
                       <span className="text-sm">
-                        Collaborate with your team to create a collection. You
-                        can add layers, traits, set rules, and generate tons of
+                        Collaborate with your team to create a collection. You can add layers, traits, set rules, and generate tons of
                         collections.
                       </span>
                       <div>
@@ -83,10 +74,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                       </div>
                     </div>
                     <div className="grid grid-cols-2 divide-x divide-accents_7 bg-background">
-                      <button
-                        onClick={() => setIsOpen(false)}
-                        className="py-6 text-xs text-accents_5 hover:text-foreground"
-                      >
+                      <button onClick={() => setIsOpen(false)} className="py-6 text-xs text-accents_5 hover:text-foreground">
                         Cancel
                       </button>
                       <button
@@ -97,9 +85,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                             },
                             {
                               onSuccess: () => {
-                                notifySuccess(
-                                  "You have successfully joined the team",
-                                );
+                                notifySuccess("You have successfully joined the team");
                                 setIsOpen(false);
                               },
                             },

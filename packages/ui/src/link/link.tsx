@@ -20,24 +20,11 @@ const defaultProps: Props = {
   className: "",
 };
 
-export type LinkProps = Props &
-  Omit<React.AnchorHTMLAttributes<any>, keyof Props>;
+export type LinkProps = Props & Omit<React.AnchorHTMLAttributes<any>, keyof Props>;
 
-const LinkComponent = React.forwardRef<
-  HTMLAnchorElement,
-  React.PropsWithChildren<LinkProps>
->(
+const LinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChildren<LinkProps>>(
   (
-    {
-      href,
-      color,
-      underline,
-      children,
-      className,
-      block,
-      icon,
-      ...props
-    }: React.PropsWithChildren<LinkProps> & typeof defaultProps,
+    { href, color, underline, children, className, block, icon, ...props }: React.PropsWithChildren<LinkProps> & typeof defaultProps,
     ref: React.Ref<HTMLAnchorElement>,
   ) => {
     return (

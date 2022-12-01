@@ -27,10 +27,7 @@ const defaultRect: ReactiveDomReact = {
   elementTop: -1000,
 };
 
-const getRectFromDOMWithContainer = (
-  domRect?: DOMRect,
-  getContainer?: () => HTMLElement | null,
-): ReactiveDomReact => {
+const getRectFromDOMWithContainer = (domRect?: DOMRect, getContainer?: () => HTMLElement | null): ReactiveDomReact => {
   if (!domRect) return defaultRect;
   const container = getContainer ? getContainer() : null;
   const scrollElement = container || document.documentElement;
@@ -51,48 +48,31 @@ export const isUnplacedRect = (rect?: ReactiveDomReact): boolean => {
   return rect.top === defaultRect.top && rect.left === defaultRect.left;
 };
 
-export const getRefRect = (
-  ref?: MutableRefObject<HTMLElement | null>,
-  getContainer?: () => HTMLElement | null,
-): ReactiveDomReact => {
+export const getRefRect = (ref?: MutableRefObject<HTMLElement | null>, getContainer?: () => HTMLElement | null): ReactiveDomReact => {
   if (!ref || !ref.current) return defaultRect;
   const rect = ref.current.getBoundingClientRect();
   return getRectFromDOMWithContainer(rect, getContainer);
 };
 
-export const getEventRect = (
-  event?: MouseEvent<HTMLElement> | FocusEvent<HTMLElement>,
-  getContainer?: () => HTMLElement | null,
-) => {
+export const getEventRect = (event?: MouseEvent<HTMLElement> | FocusEvent<HTMLElement>, getContainer?: () => HTMLElement | null) => {
   const rect = (event?.target as HTMLElement)?.getBoundingClientRect();
   if (!rect) return defaultRect;
   return getRectFromDOMWithContainer(rect, getContainer);
 };
 
 const isRefTarget = (
-  eventOrRef:
-    | MouseEvent<HTMLElement>
-    | FocusEvent<HTMLElement>
-    | MutableRefObject<HTMLElement | null>,
+  eventOrRef: MouseEvent<HTMLElement> | FocusEvent<HTMLElement> | MutableRefObject<HTMLElement | null>,
 ): eventOrRef is MutableRefObject<HTMLElement | null> => {
   return typeof (eventOrRef as any)?.target === "undefined";
 };
-export const useRect = (
-  initialState?: ReactiveDomReact | (() => ReactiveDomReact),
-) => {
-  const [rect, setRect] = useState<ReactiveDomReact>(
-    initialState || defaultRect,
-  );
+export const useRect = (initialState?: ReactiveDomReact | (() => ReactiveDomReact)) => {
+  const [rect, setRect] = useState<ReactiveDomReact>(initialState || defaultRect);
 
   const updateRect = (
-    eventOrRef:
-      | MouseEvent<HTMLElement>
-      | FocusEvent<HTMLElement>
-      | MutableRefObject<HTMLElement | null>,
+    eventOrRef: MouseEvent<HTMLElement> | FocusEvent<HTMLElement> | MutableRefObject<HTMLElement | null>,
     getContainer?: () => HTMLElement | null,
   ) => {
-    if (isRefTarget(eventOrRef))
-      return setRect(getRefRect(eventOrRef, getContainer));
+    if (isRefTarget(eventOrRef)) return setRect(getRefRect(eventOrRef, getContainer));
     setRect(getEventRect(eventOrRef, getContainer));
   };
 

@@ -9,13 +9,7 @@ interface Props {
   visible: boolean;
 }
 
-const TraitElementCreateModal: FC<Props> = ({
-  visible,
-  onClose,
-}: {
-  visible: boolean;
-  onClose: () => void;
-}) => {
+const TraitElementCreateModal: FC<Props> = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
   const { mutate } = useMutateTraitElementCreate();
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   return (
@@ -31,14 +25,7 @@ const TraitElementCreateModal: FC<Props> = ({
       }}
       className="md:max-w-2xl" // @todo fix this
     >
-      <Upload
-        className="h-[30vh]"
-        depth={1}
-        onDropCallback={mutate}
-        setUploadState={setUploadState}
-        gridSize="md"
-        withTooltip={true}
-      />
+      <Upload className="h-[30vh]" depth={1} onDropCallback={mutate} setUploadState={setUploadState} gridSize="md" withTooltip={true} />
     </ModalComponent>
   );
 };

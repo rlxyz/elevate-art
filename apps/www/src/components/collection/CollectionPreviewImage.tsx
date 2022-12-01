@@ -36,11 +36,7 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
         traits: l.traitElements.map((t) => ({
           ...t,
           rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-            ({
-              condition,
-              primaryTraitElementId: left,
-              secondaryTraitElementId: right,
-            }) => ({
+            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
               type: condition as v.RulesType,
               with: left === t.id ? right : left,
             }),
@@ -48,24 +44,13 @@ export const PreviewImageCardWithChildren: FC<PreviewImageProps> = ({
         })),
       })),
     ),
-    v.seed(
-      collection.repositoryId,
-      collection.name,
-      collection.generations,
-      id,
-    ),
+    v.seed(collection.repositoryId, collection.name, collection.generations, id),
   );
 
   const hash = v.hash(elements);
 
   return (
-    <div
-      className={clsx(
-        className,
-        "relative h-full w-full flex-col overflow-hidden",
-      )}
-      {...props}
-    >
+    <div className={clsx(className, "relative h-full w-full flex-col overflow-hidden")} {...props}>
       <div className="relative flex h-[75%] w-full items-center overflow-hidden">
         {elements
           .filter(([l, t]) => !t.startsWith("none"))
@@ -109,9 +94,7 @@ export const PreviewImageCardStandaloneNoNone: FC<PreviewImageProps> = ({
             <img
               key={`${hash}-${t}-${index}`}
               width={100}
-              className={clsx(
-                "absolute h-full w-full rounded-[5px] object-contain",
-              )}
+              className={clsx("absolute h-full w-full rounded-[5px] object-contain")}
               // className={clsx('border object-contain')}
               src={getImageForTrait({
                 r: collection.repositoryId,
@@ -141,11 +124,7 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
         traits: l.traitElements.map((t) => ({
           ...t,
           rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-            ({
-              condition,
-              primaryTraitElementId: left,
-              secondaryTraitElementId: right,
-            }) => ({
+            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
               type: condition as v.RulesType,
               with: left === t.id ? right : left,
             }),
@@ -153,12 +132,7 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
         })),
       })),
     ),
-    v.seed(
-      collection.repositoryId,
-      collection.name,
-      collection.generations,
-      id,
-    ),
+    v.seed(collection.repositoryId, collection.name, collection.generations, id),
   );
 
   const hash = v.hash(elements);
@@ -172,9 +146,7 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
             <img
               key={`${hash}-${t}-${index}`}
               width={100}
-              className={clsx(
-                "absolute h-full w-full rounded-[5px] object-contain",
-              )}
+              className={clsx("absolute h-full w-full rounded-[5px] object-contain")}
               // className={clsx('border object-contain')}
               src={getImageForTrait({
                 r: collection.repositoryId,

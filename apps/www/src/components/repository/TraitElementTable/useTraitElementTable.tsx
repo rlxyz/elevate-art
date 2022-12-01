@@ -1,26 +1,15 @@
 import { Popover, Transition } from "@headlessui/react";
+import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from "@heroicons/react/outline";
+import { compareItems, RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import {
-    InformationCircleIcon,
-    LockClosedIcon,
-    LockOpenIcon,
-    MinusIcon,
-    PlusIcon,
-    XCircleIcon
-} from "@heroicons/react/outline";
-import {
-    compareItems,
-    RankingInfo,
-    rankItem
-} from "@tanstack/match-sorter-utils";
-import {
-    ColumnDef,
-    FilterFn,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getSortedRowModel,
-    SortingFn,
-    sortingFns,
-    useReactTable
+  ColumnDef,
+  FilterFn,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  SortingFn,
+  sortingFns,
+  useReactTable,
 } from "@tanstack/react-table";
 import Big from "big.js";
 import clsx from "clsx";
@@ -30,11 +19,11 @@ import { env } from "src/env/client.mjs";
 import { TraitElementWithImage } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { useMutateTraitElementUpdateName } from "src/hooks/trpc/traitElement/useMutateTraitElementUpdateName";
 import {
-    TraitElementFields,
-    TraitElementRarityFormType,
-    useTraitElementForm,
-    WEIGHT_LOWER_BOUNDARY,
-    WEIGHT_UPPER_BOUNDARY
+  TraitElementFields,
+  TraitElementRarityFormType,
+  useTraitElementForm,
+  WEIGHT_LOWER_BOUNDARY,
+  WEIGHT_UPPER_BOUNDARY,
 } from "./useTraitElementForm";
 
 declare module "@tanstack/table-core" {
@@ -64,8 +53,7 @@ export const useTraitElementTable = ({
   const [isTraitDeletable, setIsTraitDeletable] = useState<boolean>(false);
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false);
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false);
-  const changeTimer: React.MutableRefObject<NodeJS.Timer | null> =
-    React.useRef(null);
+  const changeTimer: React.MutableRefObject<NodeJS.Timer | null> = React.useRef(null);
 
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
@@ -150,11 +138,7 @@ export const useTraitElementTable = ({
     setIsRarityResettable(false);
   };
 
-  const columns = useMemo<
-    ColumnDef<
-      FieldArrayWithId<TraitElementRarityFormType, "traitElements", "id">
-    >[]
-  >(
+  const columns = useMemo<ColumnDef<FieldArrayWithId<TraitElementRarityFormType, "traitElements", "id">>[]>(
     () => [
       {
         header: () => (
@@ -216,9 +200,7 @@ export const useTraitElementTable = ({
                   "invalid:border-redError invalid:text-redError",
                   "focus:invalid:border-redError focus:invalid:ring-redError",
                 )}
-                onClick={(
-                  e: React.MouseEvent<HTMLInputElement, MouseEvent>,
-                ) => {
+                onClick={(e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
                   const checked = e.currentTarget.checked;
 
                   /** Preempt set the value */
@@ -264,9 +246,7 @@ export const useTraitElementTable = ({
         }) => (
           <div className="flex h-10 w-10 items-center px-1 lg:h-20 lg:w-20">
             <div className="border-mediumGrey rounded-[5px] border">
-              {imageUrl && (
-                <img className="h-full w-full rounded-[5px]" src={imageUrl} />
-              )}
+              {imageUrl && <img className="h-full w-full rounded-[5px]" src={imageUrl} />}
             </div>
           </div>
         ),
@@ -283,10 +263,7 @@ export const useTraitElementTable = ({
           },
         }) => (
           <>
-            <div>
-              {errors.traitElements &&
-                errors.traitElements[index]?.name?.message}
-            </div>
+            <div>{errors.traitElements && errors.traitElements[index]?.name?.message}</div>
             {!isNoneTraitElement(index) ? (
               <input
                 placeholder={name}
@@ -310,10 +287,7 @@ export const useTraitElementTable = ({
               <div className="flex items-center space-x-1">
                 <span>None</span>
                 <Popover>
-                  <Popover.Button
-                    as={InformationCircleIcon}
-                    className="text-darkGrey bg-lightGray h-3 w-3"
-                  />
+                  <Popover.Button as={InformationCircleIcon} className="text-darkGrey bg-lightGray h-3 w-3" />
                   <Transition
                     as={Fragment}
                     enter="transition ease-out duration-200"
@@ -326,9 +300,8 @@ export const useTraitElementTable = ({
                     <Popover.Panel className="bg-black absolute z-10 w-[200px] -translate-x-1/2 transform rounded-[5px]">
                       <div className="p-2 shadow-lg">
                         <p className="text-white whitespace-pre-wrap text-[0.65rem] font-normal normal-case">
-                          This trait can be used for situations where you dont
-                          want to assign a trait to a layer. It cannot be
-                          renamed or deleted.
+                          This trait can be used for situations where you dont want to assign a trait to a layer. It cannot be renamed or
+                          deleted.
                         </p>
                       </div>
                     </Popover.Panel>
@@ -348,10 +321,7 @@ export const useTraitElementTable = ({
           <div className="flex w-3/4 items-center justify-center space-x-1">
             <span>Rarity Percentage</span>
             <Popover>
-              <Popover.Button
-                as={InformationCircleIcon}
-                className="text-darkGrey bg-lightGray h-3 w-3"
-              />
+              <Popover.Button as={InformationCircleIcon} className="text-darkGrey bg-lightGray h-3 w-3" />
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-200"
@@ -364,8 +334,7 @@ export const useTraitElementTable = ({
                 <Popover.Panel className="bg-black absolute z-10 w-[200px] -translate-x-1/2 transform rounded-[5px]">
                   <div className="p-2 shadow-lg">
                     <p className="text-white text-[0.65rem] font-normal normal-case">
-                      This is the percentage rarity across all collections that
-                      this project has.
+                      This is the percentage rarity across all collections that this project has.
                     </p>
                   </div>
                 </Popover.Panel>
@@ -414,9 +383,7 @@ export const useTraitElementTable = ({
                   (original.locked ? (
                     <LockClosedIcon
                       className={clsx(
-                        Big(getValues(`traitElements.${0}.weight`)).eq(
-                          WEIGHT_LOWER_BOUNDARY,
-                        ) && "text-redError",
+                        Big(getValues(`traitElements.${0}.weight`)).eq(WEIGHT_LOWER_BOUNDARY) && "text-redError",
                         "text-blueHighlight h-3 w-3",
                       )}
                     />
@@ -456,10 +423,7 @@ export const useTraitElementTable = ({
           <div className="flex space-x-1">
             <span>Rarity Score</span>
             <Popover>
-              <Popover.Button
-                as={InformationCircleIcon}
-                className="text-darkGrey bg-lightGray h-3 w-3"
-              />
+              <Popover.Button as={InformationCircleIcon} className="text-darkGrey bg-lightGray h-3 w-3" />
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-200"
@@ -472,9 +436,7 @@ export const useTraitElementTable = ({
                 <Popover.Panel className="bg-black absolute z-10 w-[200px] -translate-x-1/2 transform rounded-[5px]">
                   <div className="p-2 shadow-lg">
                     <p className="text-white text-[0.65rem] normal-case">
-                      {
-                        "This is the rarity score of each trait in this layer. It is based on the OpenRarity standard."
-                      }
+                      {"This is the rarity score of each trait in this layer. It is based on the OpenRarity standard."}
                     </p>
                   </div>
                 </Popover.Panel>
@@ -484,13 +446,7 @@ export const useTraitElementTable = ({
         ),
         accessorKey: "weight",
         cell: ({ row: { original } }) => (
-          <span>
-            {Number(
-              -Math.log(
-                new Big(original.weight).div(WEIGHT_UPPER_BOUNDARY).toNumber(),
-              ).toFixed(3),
-            ) % Infinity || 0}
-          </span>
+          <span>{Number(-Math.log(new Big(original.weight).div(WEIGHT_UPPER_BOUNDARY).toNumber()).toFixed(3)) % Infinity || 0}</span>
         ),
         footer: (props) => props.column.id,
         filterFn: "fuzzy",
@@ -538,9 +494,7 @@ export const useTraitElementTable = ({
                         name: "Delete",
                         icon: <XCircleIcon className="h-4 w-4" />,
                         onClick: () => setIsDeletedClicked(true),
-                        disabled: !(
-                          traitElementsArray.filter((x) => x.checked).length > 0
-                        ),
+                        disabled: !(traitElementsArray.filter((x) => x.checked).length > 0),
                       },
                     ].map(({ disabled, name, icon, onClick }, index) => (
                       <button
@@ -663,21 +617,13 @@ export const useTraitElementTable = ({
     globalFilter,
     setGlobalFilter,
     onFormRandom: () => randomiseValues(),
-    getFilteredTraitElements: () =>
-      traitElementsArray.filter((x) =>
-        x.name.toLowerCase().includes(searchFilter.toLowerCase()),
-      ),
+    getFilteredTraitElements: () => traitElementsArray.filter((x) => x.name.toLowerCase().includes(searchFilter.toLowerCase())),
     getCheckedTraitElements: () => traitElementsArray.filter((x) => x.checked),
     getAllTraitElements: () => traitElementsArray,
   };
 };
 
-const fuzzyFilter: FilterFn<TraitElementFields> = (
-  row,
-  columnId,
-  value,
-  addMeta,
-) => {
+const fuzzyFilter: FilterFn<TraitElementFields> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
 

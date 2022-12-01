@@ -1,3 +1,4 @@
+// @ts-check
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
 
@@ -13,7 +14,7 @@ import { withAxiom } from 'next-axiom'
  */
 const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
-    return withBundleAnalyzer(config)
+    return withBundleAnalyzer()(config)
   }
   if (process.env.NODE_ENV === 'production') {
     return withAxiom(config)

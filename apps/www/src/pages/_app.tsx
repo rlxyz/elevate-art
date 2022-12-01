@@ -16,10 +16,7 @@ import "../utils/highlight";
 /** Helpers */
 export { reportWebVitals } from "next-axiom";
 
-const Application: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const Application: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <ErrorBoundary showDialog>
       <EthereumAuthenticationLayout session={session}>

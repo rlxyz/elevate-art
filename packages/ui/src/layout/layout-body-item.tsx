@@ -1,6 +1,4 @@
-import LayoutContainer, {
-  Props as LayoutContainerProps,
-} from "./layout-container";
+import LayoutContainer, { Props as LayoutContainerProps } from "./layout-container";
 
 export interface Props extends LayoutContainerProps {}
 
@@ -9,16 +7,13 @@ const defaultProps: Props = {
   hasMargin: true,
 };
 
-export type LayoutBodyProps = Props &
-  Omit<React.HTMLAttributes<any>, keyof Props>;
+export type LayoutBodyProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
 
 /**
  * Implements the LayoutBody component. Enforces that the body will be at least
  * the height of the viewport height minus the (footer + header) height.
  */
-const LayoutBodyItemComponent: React.FC<
-  React.PropsWithChildren<LayoutBodyProps>
-> = ({
+const LayoutBodyItemComponent: React.FC<React.PropsWithChildren<LayoutBodyProps>> = ({
   children,
   hasMargin,
   border,

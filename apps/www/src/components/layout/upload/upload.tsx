@@ -1,12 +1,5 @@
 import clsx from "clsx";
-import React, {
-    Dispatch,
-    PropsWithChildren,
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useState
-} from "react";
+import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { formatBytes } from "src/client/utils/format";
 import { env } from "src/env/client.mjs";
@@ -26,9 +19,7 @@ interface Props {
     setUploadState,
   }: {
     files: FileWithPath[];
-    setUploadedFiles: Dispatch<
-      SetStateAction<{ [key: string]: TraitElementUploadState[] }>
-    >;
+    setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>;
     setUploadState: (state: UploadState) => void;
   }) => void;
 }
@@ -52,8 +43,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key: string]: TraitElementUploadState[];
   }>({});
-  const [internalUploadState, setInternalUploadState] =
-    useState<UploadState>("idle");
+  const [internalUploadState, setInternalUploadState] = useState<UploadState>("idle");
   const { notifySuccess, notifyError } = useNotification();
 
   useEffect(() => {
@@ -62,9 +52,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
     if (state === "done") {
       notifySuccess("Successfully created and uploaded the traits.");
     } else if (state === "error") {
-      notifyError(
-        "Something went wrong with the upload. Please refresh the page to try again.",
-      );
+      notifyError("Something went wrong with the upload. Please refresh the page to try again.");
     } else if (state === "uploading") {
       notifySuccess("Uploading your new traits and their associated images.");
     }
@@ -102,13 +90,10 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
         <div {...props} className={clsx(className)} {...getRootProps()}>
           <input {...getInputProps()} />
           <div className="hover:bg-lightGray border-blueHighlight flex h-full flex-col  items-center justify-center rounded-[5px] border border-dashed">
-            <span className="text-blueHighlight text-lg">
-              {!isDragActive ? `Drag your files here` : "Drop them"}
-            </span>
+            <span className="text-blueHighlight text-lg">{!isDragActive ? `Drag your files here` : "Drop them"}</span>
             <span> to upload</span>
             <span className="text-darkGrey text-xs">
-              Only PNG files supported, max file size{" "}
-              {formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}
+              Only PNG files supported, max file size {formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}
             </span>
           </div>
         </div>

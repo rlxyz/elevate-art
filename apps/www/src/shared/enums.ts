@@ -11,9 +11,7 @@ export const OrganisationNavigationEnum = z.nativeEnum(
     Activity: "activity",
   }),
 );
-export type OrganisationNavigationType = z.infer<
-  typeof OrganisationNavigationEnum
->;
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>;
 
 export const OrganisationSettingsNavigationEnum = z.nativeEnum(
   Object.freeze({
@@ -21,9 +19,7 @@ export const OrganisationSettingsNavigationEnum = z.nativeEnum(
     Team: "members",
   }),
 );
-export type OrganisationSettingsNavigationType = z.infer<
-  typeof OrganisationSettingsNavigationEnum
->;
+export type OrganisationSettingsNavigationType = z.infer<typeof OrganisationSettingsNavigationEnum>;
 
 export const RepositoryNavigationEnum = z.nativeEnum(
   Object.freeze({

@@ -26,13 +26,7 @@ export type TraitElementRarityFormType = {
   allCheckboxesChecked: boolean;
 };
 
-export const useTraitElementForm = ({
-  traitElements,
-  onChange,
-}: {
-  traitElements: TraitElementWithImage[];
-  onChange: () => void;
-}) => {
+export const useTraitElementForm = ({ traitElements, onChange }: { traitElements: TraitElementWithImage[]; onChange: () => void }) => {
   /**
    * Table data based on react-hook-form
    * Handles default values in the table, and any hooks needed for the table.
@@ -119,9 +113,7 @@ export const useTraitElementForm = ({
       locked
         ? WEIGHT_UPPER_BOUNDARY.minus(
             sumByBig(
-              getValues().traitElements.filter(
-                (_, i) => !(i === 0 || i === index),
-              ),
+              getValues().traitElements.filter((_, i) => !(i === 0 || i === index)),
               (x) => x.weight,
             ),
           )
@@ -139,9 +131,7 @@ export const useTraitElementForm = ({
       locked
         ? WEIGHT_LOWER_BOUNDARY.plus(
             sumByBig(
-              getValues().traitElements.filter(
-                (x, i) => x.locked && i !== index,
-              ),
+              getValues().traitElements.filter((x, i) => x.locked && i !== index),
               (x) => x.weight,
             ),
           )
@@ -213,10 +203,7 @@ export const useTraitElementForm = ({
      * @future also distribute to any other locked traits
      */
     if (locked) {
-      setValue(
-        `traitElements.${0}.weight`,
-        Big(getValues(`traitElements.${0}.weight`)).plus(growth),
-      );
+      setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).plus(growth));
       return;
     }
 
@@ -259,9 +246,7 @@ export const useTraitElementForm = ({
       const w = Big(x.weight);
       const size = w.div(sum);
       const linear = growth.mul(size);
-      gt(w.plus(linear), max)
-        ? setValue(`traitElements.${index}.weight`, max)
-        : setValue(`traitElements.${index}.weight`, w.plus(linear));
+      gt(w.plus(linear), max) ? setValue(`traitElements.${index}.weight`, max) : setValue(`traitElements.${index}.weight`, w.plus(linear));
     });
   };
 
@@ -291,12 +276,7 @@ export const useTraitElementForm = ({
     onChange && onChange();
 
     /** If any is 100, everything else is 0 */
-    if (
-      isEqual(
-        Big(getValues(`traitElements.${index}.weight`)),
-        WEIGHT_UPPER_BOUNDARY,
-      )
-    ) {
+    if (isEqual(Big(getValues(`traitElements.${index}.weight`)), WEIGHT_UPPER_BOUNDARY)) {
       traitElements.forEach((x, i) => {
         if (x.id === id) return;
         setValue(`traitElements.${i}.weight`, WEIGHT_LOWER_BOUNDARY);
@@ -310,10 +290,7 @@ export const useTraitElementForm = ({
      * @future also distribute to any other locked traits
      */
     if (locked) {
-      setValue(
-        `traitElements.${0}.weight`,
-        Big(getValues(`traitElements.${0}.weight`)).minus(growth),
-      );
+      setValue(`traitElements.${0}.weight`, Big(getValues(`traitElements.${0}.weight`)).minus(growth));
       return;
     }
 
@@ -362,11 +339,9 @@ export const useTraitElementForm = ({
   };
 
   const randomiseValues = () => {
-    randomFill(getValues(`traitElements`).length, 0.2, 0.5).forEach(
-      (value, index) => {
-        setValue(`traitElements.${index}.weight`, Big(value).times(100));
-      },
-    );
+    randomFill(getValues(`traitElements`).length, 0.2, 0.5).forEach((value, index) => {
+      setValue(`traitElements.${index}.weight`, Big(value).times(100));
+    });
     onChange && onChange();
   };
 

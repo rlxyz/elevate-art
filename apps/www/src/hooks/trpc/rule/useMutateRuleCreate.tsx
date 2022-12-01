@@ -3,8 +3,7 @@ import { trpc } from "src/utils/trpc";
 import { useMutationContext } from "../useMutationContext";
 
 export const useMutateRuleCreate = () => {
-  const { ctx, repositoryId, notifyError, notifySuccess } =
-    useMutationContext();
+  const { ctx, repositoryId, notifyError, notifySuccess } = useMutationContext();
   return trpc.rule.create.useMutation({
     onSuccess: (data, variables) => {
       ctx.layerElement.findAll.setData({ repositoryId }, (old) => {
@@ -13,17 +12,9 @@ export const useMutateRuleCreate = () => {
           const allTraitElements = draft.flatMap((x) => x.traitElements);
 
           /** Get the Traits */
-          const primary = allTraitElements.find(
-            (l) => l.id === variables.traitElements[0],
-          );
-          const secondary = allTraitElements.find(
-            (l) => l.id === variables.traitElements[1],
-          );
-          if (
-            typeof primary === "undefined" ||
-            typeof secondary === "undefined"
-          )
-            return;
+          const primary = allTraitElements.find((l) => l.id === variables.traitElements[0]);
+          const secondary = allTraitElements.find((l) => l.id === variables.traitElements[1]);
+          if (typeof primary === "undefined" || typeof secondary === "undefined") return;
 
           /** Update their associated Rules */
           primary.rulesPrimary.push({
@@ -34,9 +25,7 @@ export const useMutateRuleCreate = () => {
           });
 
           /** Notify of the change! */
-          notifySuccess(
-            `${primary.name} now ${data.condition} ${secondary.name}`,
-          );
+          notifySuccess(`${primary.name} now ${data.condition} ${secondary.name}`);
         });
 
         return next;

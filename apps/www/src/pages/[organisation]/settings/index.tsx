@@ -5,30 +5,19 @@ import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisati
 import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
 import { Layout } from "src/components/layout/core/Layout";
 import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
-import {
-    OrganisationGeneralSettings,
-    SettingsNavigations
-} from "src/components/organisation/OrganisationSettings";
+import { OrganisationGeneralSettings, SettingsNavigations } from "src/components/organisation/OrganisationSettings";
 import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
-import {
-    OrganisationNavigationEnum,
-    OrganisationSettingsNavigationEnum
-} from "src/shared/enums";
-src/hooks/trpc/organisation/useQueryOrganisationFindAll
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/shared/enums";
+src / hooks / trpc / organisation / useQueryOrganisationFindAll;
 
 const Page: NextPage = () => {
-  const {
-    all: organisations,
-    current: organisation,
-    isLoading: isLoadingOrganisations,
-  } = useQueryOrganisationFindAll();
-  const { setCurrentSettingsRoute, currentRoute } =
-    useOrganisationNavigationStore((state) => {
-      return {
-        setCurrentSettingsRoute: state.setCurrentSettingsRoute,
-        currentRoute: state.currentRoute,
-      };
-    });
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll();
+  const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {
+    return {
+      setCurrentSettingsRoute: state.setCurrentSettingsRoute,
+      currentRoute: state.currentRoute,
+    };
+  });
 
   useEffect(() => {
     setCurrentSettingsRoute(OrganisationSettingsNavigationEnum.enum.General);
@@ -51,15 +40,13 @@ const Page: NextPage = () => {
               {
                 name: OrganisationNavigationEnum.enum.Overview,
                 href: `/${organisation?.name}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Overview,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Settings,
                 href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-                enabled:
-                  currentRoute === OrganisationNavigationEnum.enum.Settings,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },
             ]}

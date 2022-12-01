@@ -1,13 +1,7 @@
 import { NextPageContext } from "next";
 import { FunctionComponent } from "react";
-import {
-    createOrganisationNavigationStore,
-    OrganisationRouterContext
-} from "src/hooks/store/useOrganisationNavigationStore";
-import {
-    createRepositoryStore,
-    RepositoryContext
-} from "src/hooks/store/useRepositoryStore";
+import { createOrganisationNavigationStore, OrganisationRouterContext } from "src/hooks/store/useOrganisationNavigationStore";
+import { createRepositoryStore, RepositoryContext } from "src/hooks/store/useRepositoryStore";
 
 const withOrganisationStore = (
   Component: FunctionComponent<any> & {
@@ -16,9 +10,7 @@ const withOrganisationStore = (
 ) =>
   function AuthenticatedLayout(props: JSX.IntrinsicAttributes) {
     return (
-      <OrganisationRouterContext.Provider
-        createStore={() => createOrganisationNavigationStore}
-      >
+      <OrganisationRouterContext.Provider createStore={() => createOrganisationNavigationStore}>
         <RepositoryContext.Provider createStore={() => createRepositoryStore}>
           <Component {...props} />
         </RepositoryContext.Provider>

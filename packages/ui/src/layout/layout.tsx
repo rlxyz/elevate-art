@@ -22,10 +22,7 @@ const LayoutComponent: React.FC<React.PropsWithChildren<LayoutProps>> = ({
     <main {...props} className="bg-background">
       {children}
       {hasFooter ? (
-        <LayoutContainer
-          border="upper"
-          className="flex min-h-[3.5rem] items-center"
-        >
+        <LayoutContainer border="upper" className="flex min-h-[3.5rem] items-center">
           <LayoutFooter />
         </LayoutContainer>
       ) : null}

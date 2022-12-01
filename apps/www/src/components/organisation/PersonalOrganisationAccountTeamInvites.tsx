@@ -21,27 +21,16 @@ export const PersonalOrganisationAccountTeamInvites = () => {
           <div className="divide-y divide-accents_7 rounded-[5px] border border-border">
             {pendings.map((pending) => {
               return (
-                <div
-                  key={pending.id}
-                  className="flex flex-row items-center justify-between p-4"
-                >
+                <div key={pending.id} className="flex flex-row items-center justify-between p-4">
                   <div className="flex flex-row items-center space-y-1 space-x-3">
                     <div className="h-6 w-6 rounded-full border border-border bg-success" />
                     <div className="flex flex-col space-y-1">
-                      <span className="text-xs font-bold">
-                        {pending.organisation.name}
-                      </span>
-                      <span className="text-xs text-accents_5">
-                        {capitalize(pending.role)}
-                      </span>
+                      <span className="text-xs font-bold">{pending.organisation.name}</span>
+                      <span className="text-xs text-accents_5">{capitalize(pending.role)}</span>
                     </div>
                   </div>
                   <div className="flex flex-row space-x-2">
-                    {session?.data?.user?.address ? (
-                      <PersonalOrganisationTeamInvitesAcceptDialog
-                        pending={pending}
-                      />
-                    ) : null}
+                    {session?.data?.user?.address ? <PersonalOrganisationTeamInvitesAcceptDialog pending={pending} /> : null}
                   </div>
                 </div>
               );

@@ -12,14 +12,8 @@ import TraitElementUpdateWeightModal from "./TraitElementUpdateWeightModal";
 import { useTraitElementTable } from "./useTraitElementTable";
 
 /** Server-Side Rendering is set to false as we do not need these components on startup */
-export const TraitElementCreateModal = dynamic(
-  () => import("./TraitElementCreateModal"),
-  { ssr: false },
-);
-const TraitElementDeleteModal = dynamic(
-  () => import("./TraitElementDeleteModal"),
-  { ssr: false },
-);
+export const TraitElementCreateModal = dynamic(() => import("./TraitElementCreateModal"), { ssr: false });
+const TraitElementDeleteModal = dynamic(() => import("./TraitElementDeleteModal"), { ssr: false });
 const TraitElementGrid = dynamic(() => import("./TraitElementGrid"));
 
 /** View Enum */
@@ -49,9 +43,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
   const [searchFilter, setSearchFilter] = useState("");
 
   /** View Filter State; toggle between grid & table view */
-  const [viewFilter, setViewFilter] = useState<TraitElementViewType>(
-    TraitElementView.enum.Table,
-  );
+  const [viewFilter, setViewFilter] = useState<TraitElementViewType>(TraitElementView.enum.Table);
 
   /** Open Save Modal */
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
@@ -84,18 +76,9 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
       <form>
         <div className="space-y-3">
           <div id="trait-table-controls" className="grid grid-cols-10">
-            <div
-              id="trait-table-controls-navigation"
-              className="col-span-5 flex space-x-3"
-            >
-              <TraitElementNavigationButton
-                viewFilter={viewFilter}
-                setViewFilter={setViewFilter}
-              />
-              <DebouncedSearchComponent
-                value={globalFilter ?? ""}
-                onChange={(value) => setGlobalFilter(String(value))}
-              />
+            <div id="trait-table-controls-navigation" className="col-span-5 flex space-x-3">
+              <TraitElementNavigationButton viewFilter={viewFilter} setViewFilter={setViewFilter} />
+              <DebouncedSearchComponent value={globalFilter ?? ""} onChange={(value) => setGlobalFilter(String(value))} />
             </div>
 
             <div id="trait-table-controls-action" className="col-span-5">
@@ -144,20 +127,8 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
           </div>
 
           <div id="trait-table">
-            <TraitElementTable
-              table={table}
-              className={clsx(
-                viewFilter !== TraitElementView.enum.Table && "hidden",
-              )}
-              id={id}
-            />
-            <TraitElementGrid
-              table={table}
-              id={id}
-              className={clsx(
-                viewFilter !== TraitElementView.enum.Grid && "hidden",
-              )}
-            />
+            <TraitElementTable table={table} className={clsx(viewFilter !== TraitElementView.enum.Table && "hidden")} id={id} />
+            <TraitElementGrid table={table} id={id} className={clsx(viewFilter !== TraitElementView.enum.Grid && "hidden")} />
           </div>
         </div>
       </form>

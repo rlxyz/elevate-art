@@ -41,15 +41,7 @@ export type TraitElementInfoResponse = {
   version: string;
 };
 
-export const getTraitElementInfo = ({
-  r,
-  l,
-  t,
-}: {
-  r: string;
-  l: string;
-  t: string;
-}): Promise<Result<TraitElementInfoResponse>> => {
+export const getTraitElementInfo = ({ r, l, t }: { r: string; l: string; t: string }): Promise<Result<TraitElementInfoResponse>> => {
   return new Promise((resolve, reject) => {
     v2.api
       .resource(`${env.NODE_ENV}/${r}/${l}/${t}`)
@@ -58,9 +50,7 @@ export const getTraitElementInfo = ({
           version: number;
           public_id: string;
         };
-        return resolve(
-          Result.ok({ traitElementId: public_id, version: `${version}` }),
-        );
+        return resolve(Result.ok({ traitElementId: public_id, version: `${version}` }));
       })
       .catch((error) => {
         console.log("error", error);

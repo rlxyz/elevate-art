@@ -1,8 +1,8 @@
-import * as v from "@elevateart/compiler"
-import { Collection } from "@prisma/client"
-import useRepositoryStore from "src/hooks/store/useRepositoryStore"
-import { trpc } from "src/utils/trpc"
-import { useQueryLayerElementFindAll } from "../layerElement/useQueryLayerElementFindAll"
+import * as v from "@elevateart/compiler";
+import { Collection } from "@prisma/client";
+import useRepositoryStore from "src/hooks/store/useRepositoryStore";
+import { trpc } from "src/utils/trpc";
+import { useQueryLayerElementFindAll } from "../layerElement/useQueryLayerElementFindAll";
 
 export const useQueryCollectionFindAll = () => {
   const { rarityFilter, setTraitMapping, setTokens, setTokenRanking, repositoryId, collectionId, setCollectionId } = useRepositoryStore(
@@ -15,15 +15,15 @@ export const useQueryCollectionFindAll = () => {
         repositoryId: state.repositoryId,
         collectionId: state.collectionId,
         setCollectionId: state.setCollectionId,
-      }
-    }
-  )
-  const { data: collections, isLoading, isError } = trpc.collection.findAll.useQuery({ repositoryId }, { enabled: !!repositoryId })
-  const { all: layers } = useQueryLayerElementFindAll()
+      };
+    },
+  );
+  const { data: collections, isLoading, isError } = trpc.collection.findAll.useQuery({ repositoryId }, { enabled: !!repositoryId });
+  const { all: layers } = useQueryLayerElementFindAll();
 
   // update the current tokens
   const mutate = ({ collection }: { collection: Collection }) => {
-    if (!layers) return
+    if (!layers) return;
 
     const tokens = v.many(
       v.parseLayer(
@@ -35,45 +35,45 @@ export const useQueryCollectionFindAll = () => {
               ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
                 type: condition as v.RulesType,
                 with: left === t.id ? right : left,
-              })
+              }),
             ),
           })),
-        }))
+        })),
       ),
-      Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
-    )
+      Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i)),
+    );
 
-    const traitMap = v.occurances.traits(tokens)
-    const tokenIdMap = v.occurances.tokens(tokens)
-    const rarity = v.rarity(tokens)
+    const traitMap = v.occurances.traits(tokens);
+    const tokenIdMap = v.occurances.tokens(tokens);
+    const rarity = v.rarity(tokens);
     setTraitMapping({
       traitMap,
       tokenIdMap,
-    })
-    setTokenRanking(rarity)
+    });
+    setTokenRanking(rarity);
 
     setTokens(
       rarity
         .map((x) => x.index)
         .slice(
-          rarityFilter === 'Top 10'
+          rarityFilter === "Top 10"
             ? 0
-            : rarityFilter === 'Middle 10'
+            : rarityFilter === "Middle 10"
             ? parseInt((rarity.length / 2 - 5).toFixed(0))
-            : rarityFilter === 'Bottom 10'
+            : rarityFilter === "Bottom 10"
             ? rarity.length - 10
             : 0,
-          rarityFilter === 'Top 10'
+          rarityFilter === "Top 10"
             ? 10
-            : rarityFilter === 'Middle 10'
+            : rarityFilter === "Middle 10"
             ? parseInt((rarity.length / 2 + 5).toFixed(0))
-            : rarityFilter === 'Bottom 10'
+            : rarityFilter === "Bottom 10"
             ? rarity.length
-            : rarity.length
-        )
-    )
-    setCollectionId(collection.id)
-  }
+            : rarity.length,
+        ),
+    );
+    setCollectionId(collection.id);
+  };
 
   return {
     current: collections?.find((c) => c.id === collectionId),
@@ -81,5 +81,5 @@ export const useQueryCollectionFindAll = () => {
     isLoading,
     isError,
     mutate,
-  }
-}
+  };
+};

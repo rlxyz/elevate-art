@@ -6,6 +6,4 @@ export default {
   component: Layout,
 } as ComponentMeta<typeof Layout>;
 
-export const Template: ComponentStory<typeof Layout> = (args) => (
-  <Layout {...args} />
-);
+export const Template: ComponentStory<typeof Layout> = (args) => <Layout {...args} />;

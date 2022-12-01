@@ -2,10 +2,7 @@ import { Combobox } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import {
-    TraitElement,
-    useQueryLayerElementFindAll
-} from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { TraitElement, useQueryLayerElementFindAll } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { useDeepCompareEffect } from "src/hooks/utils/useDeepCompareEffect";
 import { RulesComboboxInput } from "../RulesDisplay/RulesComboboxInput";
 
@@ -33,16 +30,11 @@ export const RulesSelectTraitElementCombobox = ({
       <Combobox.Input
         as={RulesComboboxInput}
         className={clsx(selected && "border-blueHighlight")}
-        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-          setQuery(event.target.value)
-        }
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
         displayValue={(traitElement: TraitElement) => traitElement?.name}
         placeholder="Select Trait"
         traitElement={selected}
-        layerName={
-          layers.find((layer) => layer.id === selected?.layerElementId)?.name ||
-          ""
-        }
+        layerName={layers.find((layer) => layer.id === selected?.layerElementId)?.name || ""}
       />
       <Combobox.Button className="rounded-r-md absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
         <SelectorIcon className="text-darkGrey h-3 w-3" aria-hidden="true" />
@@ -54,10 +46,7 @@ export const RulesSelectTraitElementCombobox = ({
               key={traitElement.id}
               value={traitElement}
               className={({ active }) =>
-                clsx(
-                  "relative cursor-default select-none py-2 pl-3 pr-9",
-                  active ? "text-blueHighlight" : "text-darkGrey",
-                )
+                clsx("relative cursor-default select-none py-2 pl-3 pr-9", active ? "text-blueHighlight" : "text-darkGrey")
               }
             >
               {({ active, selected }) => (
@@ -65,42 +54,18 @@ export const RulesSelectTraitElementCombobox = ({
                   <div className="flex flex-row items-center space-x-3">
                     <div className="relative h-[35px] w-[35px]">
                       <div className="border-mediumGrey absolute h-full w-full rounded-[5px] border">
-                        <img
-                          src={traitElement.imageUrl}
-                          className="rounded-[3px]"
-                        />
+                        <img src={traitElement.imageUrl} className="rounded-[3px]" />
                       </div>
                     </div>
                     <div className="flex flex-row items-center space-x-2">
-                      <span
-                        className={clsx(
-                          "block truncate text-xs tracking-tight",
-                          selected ? "font-semibold" : "",
-                        )}
-                      >
-                        {
-                          layers.filter(
-                            (layer) => layer.id === traitElement.layerElementId,
-                          )[0]?.name
-                        }
+                      <span className={clsx("block truncate text-xs tracking-tight", selected ? "font-semibold" : "")}>
+                        {layers.filter((layer) => layer.id === traitElement.layerElementId)[0]?.name}
                       </span>
-                      <span
-                        className={clsx(
-                          "block truncate",
-                          selected ? "font-semibold" : "",
-                        )}
-                      >
-                        {traitElement.name}
-                      </span>
+                      <span className={clsx("block truncate", selected ? "font-semibold" : "")}>{traitElement.name}</span>
                     </div>
                   </div>
                   {selected && (
-                    <span
-                      className={clsx(
-                        "absolute inset-y-0 right-0 flex items-center pr-4",
-                        active ? "text-white" : "text-indigo-600",
-                      )}
-                    >
+                    <span className={clsx("absolute inset-y-0 right-0 flex items-center pr-4", active ? "text-white" : "text-indigo-600")}>
                       <CheckIcon className="h-5 w-5" aria-hidden="true" />
                     </span>
                   )}

@@ -17,31 +17,14 @@ const defaultProps: Props = {
   className: "",
 };
 
-export type BreadcrumbsItemProps = Props &
-  Omit<
-    Omit<React.AnchorHTMLAttributes<any>, keyof Props>,
-    keyof LinkBasicProps
-  >;
+export type BreadcrumbsItemProps = Props & Omit<Omit<React.AnchorHTMLAttributes<any>, keyof Props>, keyof LinkBasicProps>;
 
-const BreadcrumbsItemComponent = React.forwardRef<
-  HTMLAnchorElement,
-  React.PropsWithChildren<BreadcrumbsItemProps>
->(
+const BreadcrumbsItemComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChildren<BreadcrumbsItemProps>>(
   (
-    {
-      href,
-      nextLink,
-      onClick,
-      children,
-      className,
-      ...props
-    }: BreadcrumbsItemProps & typeof defaultProps,
+    { href, nextLink, onClick, children, className, ...props }: BreadcrumbsItemProps & typeof defaultProps,
     ref: React.Ref<HTMLAnchorElement>,
   ) => {
-    const isLink = useMemo(
-      () => href !== undefined || nextLink,
-      [href, nextLink],
-    );
+    const isLink = useMemo(() => href !== undefined || nextLink, [href, nextLink]);
     const [withoutSepChildren] = pickChild(children, BreadcrumbsSeparator);
     const classes = clsx(className, "inline-flex items-center");
 
@@ -58,13 +41,7 @@ const BreadcrumbsItemComponent = React.forwardRef<
     }
 
     return (
-      <Link
-        className={clsx(classes, "hover:text-blueHighlight")}
-        href={href}
-        onClick={clickHandler}
-        ref={ref}
-        {...props}
-      >
+      <Link className={clsx(classes, "hover:text-blueHighlight")} href={href} onClick={clickHandler} ref={ref} {...props}>
         {withoutSepChildren}
       </Link>
     );

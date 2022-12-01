@@ -6,10 +6,7 @@ import NextLink from "src/components/layout/link/NextLink";
 const Home: NextPage = () => (
   <Layout>
     <Layout.Header>
-      <NextLink
-        href="/connect"
-        className="rounded-primary border border-border bg-foreground p-2 text-xs text-background"
-      >
+      <NextLink href="/connect" className="rounded-primary border border-border bg-foreground p-2 text-xs text-background">
         Go to App
       </NextLink>
     </Layout.Header>
@@ -27,11 +24,7 @@ const Home: NextPage = () => (
           />
           <span className="text-xs uppercase">
             an&nbsp;
-            <Link
-              underline
-              href="https://twitter.com/rlxyz_eth"
-              className="w-fit"
-            >
+            <Link underline href="https://twitter.com/rlxyz_eth" className="w-fit">
               <span className="font-extrabold line-through">RLXYZ</span>
             </Link>
             &nbsp;production

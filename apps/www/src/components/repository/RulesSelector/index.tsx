@@ -1,32 +1,18 @@
 import { useState } from "react";
-import {
-    LayerElement,
-    TraitElement
-} from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { LayerElement, TraitElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { RulesType } from "src/shared/compiler";
 import { RulesCreateModal } from "./RulesCreateModal";
 import { RulesSelectConditionCombobox } from "./RulesSelectConditionCombobox";
 import { RulesSelectTraitElementCombobox } from "./RulesSelectTraitElementCombobox";
 
-export const RulesSelector = ({
-  layers,
-}: {
-  layers: LayerElement[] | undefined;
-}) => {
+export const RulesSelector = ({ layers }: { layers: LayerElement[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(
-    null,
-  );
-  const [selectedLeftTrait, setSelectedLeftTrait] =
-    useState<null | TraitElement>(null);
-  const [selectedRightTrait, setSelectedRightTrait] =
-    useState<null | TraitElement>(null);
+  const [selectedCondition, setSelectedCondition] = useState<null | RulesType>(null);
+  const [selectedLeftTrait, setSelectedLeftTrait] = useState<null | TraitElement>(null);
+  const [selectedRightTrait, setSelectedRightTrait] = useState<null | TraitElement>(null);
 
   // note: this will transform all rules in the selected trait to a standard format and return the trait ids that are already selected
-  const allInvalidRightTraitElements = [
-    ...(selectedLeftTrait?.rulesPrimary || []),
-    ...(selectedLeftTrait?.rulesSecondary || []),
-  ]
+  const allInvalidRightTraitElements = [...(selectedLeftTrait?.rulesPrimary || []), ...(selectedLeftTrait?.rulesSecondary || [])]
     .map((rule) => {
       if (selectedLeftTrait?.id === rule.primaryTraitElementId) {
         return {
@@ -49,11 +35,7 @@ export const RulesSelector = ({
     .map((rule) => rule.with);
 
   const allRightTraitElements = layers
-    ?.filter(
-      (layer) =>
-        !selectedLeftTrait ||
-        (selectedLeftTrait && layer.id !== selectedLeftTrait.layerElementId),
-    )
+    ?.filter((layer) => !selectedLeftTrait || (selectedLeftTrait && layer.id !== selectedLeftTrait.layerElementId))
     .flatMap((layer) => layer.traitElements)
     .filter((trait) => {
       if (!selectedLeftTrait) return true;
@@ -65,18 +47,13 @@ export const RulesSelector = ({
       <div className="grid grid-cols-10 space-x-3">
         <div className="relative col-span-3 mt-1">
           <RulesSelectTraitElementCombobox
-            traitElements={
-              layers?.flatMap((layer) => layer.traitElements) || []
-            }
+            traitElements={layers?.flatMap((layer) => layer.traitElements) || []}
             selected={selectedLeftTrait}
             onChange={setSelectedLeftTrait}
           />
         </div>
         <div className="relative col-span-2 mt-1">
-          <RulesSelectConditionCombobox
-            selected={selectedCondition}
-            onChange={setSelectedCondition}
-          />
+          <RulesSelectConditionCombobox selected={selectedCondition} onChange={setSelectedCondition} />
         </div>
         <div className="relative col-span-4 mt-1">
           <RulesSelectTraitElementCombobox
@@ -98,9 +75,7 @@ export const RulesSelector = ({
           </button>
           <button
             className="bg-black disabled:bg-disabledGray disabled:text-white text-white h-full w-full rounded-[5px] text-xs disabled:cursor-not-allowed"
-            disabled={
-              !(selectedCondition && selectedLeftTrait && selectedRightTrait)
-            }
+            disabled={!(selectedCondition && selectedLeftTrait && selectedRightTrait)}
             onClick={() => {
               setIsOpen(true);
             }}

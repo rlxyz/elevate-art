@@ -10,16 +10,13 @@ import Upload from "src/components/layout/upload/upload";
 import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
 import withOrganisationStore from "src/components/withOrganisationStore";
 import { OrganisationNavigationEnum } from "src/shared/enums";
-src/hooks/trpc/repository/useMutateRepositoryCreate
+src / hooks / trpc / repository / useMutateRepositoryCreate;
 
 const Page: NextPage = () => {
-  const { all: organisations, current: organisation } =
-    useQueryOrganisationFindAll();
+  const { all: organisations, current: organisation } = useQueryOrganisationFindAll();
   const router = useRouter();
   const [repository, setRepository] = useState<null | Repository>(null);
-  const [uploadState, setUploadState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
+  const [uploadState, setUploadState] = useState<"idle" | "uploading" | "done" | "error">("idle");
   const { mutate: createRepository } = useMutateRepositoryCreate({
     setRepository,
   });
@@ -64,28 +61,12 @@ const Page: NextPage = () => {
             >
               <div className="flex h-[30vh] items-center">
                 <div className="space-y-6">
-                  <div
-                    className={clsx(
-                      isLoading && "bg-mediumGrey animate-pulse rounded-[5px]",
-                    )}
-                  >
-                    <span
-                      className={clsx(
-                        isLoading && "invisible",
-                        "text-5xl font-bold",
-                      )}
-                    >
-                      Lets build something new.
-                    </span>
+                  <div className={clsx(isLoading && "bg-mediumGrey animate-pulse rounded-[5px]")}>
+                    <span className={clsx(isLoading && "invisible", "text-5xl font-bold")}>Lets build something new.</span>
                   </div>
-                  <div
-                    className={clsx(
-                      isLoading && "bg-mediumGrey animate-pulse rounded-[5px]",
-                    )}
-                  >
+                  <div className={clsx(isLoading && "bg-mediumGrey animate-pulse rounded-[5px]")}>
                     <p className={clsx(isLoading && "invisible", "text-md")}>
-                      To create a new Project, set the name and add layers, or
-                      get started with one of our templates.
+                      To create a new Project, set the name and add layers, or get started with one of our templates.
                     </p>
                   </div>
                 </div>

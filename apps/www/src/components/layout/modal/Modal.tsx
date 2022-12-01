@@ -95,24 +95,14 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                       <span className="text-sm">{description}</span>
                       {data?.map(({ label, value }, index) => (
                         <div className="space-y-1" key={`${label}-${index}`}>
-                          <span className="text-[0.6rem] uppercase">
-                            {label}
-                          </span>
-                          <div className="bg-white border-mediumGrey w-full rounded-[5px] border p-2 text-xs">
-                            {value}
-                          </div>
+                          <span className="text-[0.6rem] uppercase">{label}</span>
+                          <div className="bg-white border-mediumGrey w-full rounded-[5px] border p-2 text-xs">{value}</div>
                         </div>
                       ))}
                       {children}
                     </div>
                     <div className="bg-white divide-mediumGrey grid grid-cols-2 divide-x">
-                      <button
-                        type="reset"
-                        onClick={closeModal}
-                        className={clsx(
-                          "text-darkGrey hover:bg-lightGray py-6 text-xs",
-                        )}
-                      >
+                      <button type="reset" onClick={closeModal} className={clsx("text-darkGrey hover:bg-lightGray py-6 text-xs")}>
                         Cancel
                       </button>
                       <button

@@ -14,12 +14,7 @@ interface TraitElementDeleteRuleProps extends FormModalProps {
   rule: Rules;
 }
 
-export const RulesDeleteModal: FC<TraitElementDeleteRuleProps> = ({
-  visible,
-  rule,
-  onClose,
-  onSuccess,
-}) => {
+export const RulesDeleteModal: FC<TraitElementDeleteRuleProps> = ({ visible, rule, onClose, onSuccess }) => {
   const { mutate, isLoading } = useMutateRuleDelete();
 
   const handleClose = () => {
@@ -36,10 +31,7 @@ export const RulesDeleteModal: FC<TraitElementDeleteRuleProps> = ({
       visible={visible}
       onClose={handleClose}
       onClick={() => {
-        mutate(
-          { ruleId: rule.id },
-          { onSuccess: handleSuccess, onError: handleClose },
-        );
+        mutate({ ruleId: rule.id }, { onSuccess: handleSuccess, onError: handleClose });
       }}
       title="Delete Rule"
       description={`Delete an existing rule from the repository. This rule will be applied to all collections in the repository.`}

@@ -18,13 +18,7 @@ export const main = async () => {
 
       /** Fetch all LayerElements */
       const layerElements: LayerElement[] = await tx.layerElement.findMany();
-      log(
-        chalk.green("Found") +
-          " " +
-          chalk.underline.yellow(layerElements.length) +
-          " " +
-          chalk.green("LayerElements"),
-      );
+      log(chalk.green("Found") + " " + chalk.underline.yellow(layerElements.length) + " " + chalk.green("LayerElements"));
 
       /** Create many TraitElements in one go. */
       log(chalk.blue("Creating None layers"));

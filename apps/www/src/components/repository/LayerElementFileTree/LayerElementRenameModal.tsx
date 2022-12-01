@@ -16,11 +16,7 @@ export type LayerElementRenameForm = {
   name: string;
 };
 
-const LayerElementRenameModal: FC<LayerElementRenameProps> = ({
-  layerElement,
-  visible,
-  onClose,
-}) => {
+const LayerElementRenameModal: FC<LayerElementRenameProps> = ({ layerElement, visible, onClose }) => {
   const { mutate, isLoading } = useMutateLayerElementUpdateName();
   const { mainRepositoryHref } = useRepositoryRoute();
   const { all: layers } = useQueryLayerElementFindAll();
