@@ -1,6 +1,10 @@
+<<<<<<< HEAD:apps/www/src/server/db/client.ts
 // src/server/db/client.ts
 // @todo move to @elevateart/db
+=======
+>>>>>>> staging:www/src/server/db/client.ts
 import { PrismaClient } from '@prisma/client'
+
 import { env } from '../../env/server.mjs'
 
 declare global {
@@ -11,7 +15,8 @@ declare global {
 export const prisma =
   global.prisma ||
   new PrismaClient({
-    log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    // log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
 
 if (env.NODE_ENV !== 'production') {

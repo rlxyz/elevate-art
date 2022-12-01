@@ -1,12 +1,12 @@
-// @todo typesafe environment variables
 import { prisma } from "@elevateart/db";
-import {
-  OrganisationDatabaseEnum,
-  OrganisationDatabaseRoleEnum,
-} from "@elevateart/db/enums";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
+import { env } from "src/env/server.mjs";
+import {
+  OrganisationDatabaseEnum,
+  OrganisationDatabaseRoleEnum,
+} from "src/shared/enums";
 
 export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
@@ -43,22 +43,22 @@ export const nextAuthOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          /** Check SiweMessage for Ethereum Login */
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}")
           );
-          const nextAuthUrl =
-            process.env.NEXTAUTH_URL ||
-            (process.env.VERCEL_URL
-              ? `https://${process.env.VERCEL_URL}`
-              : "http://localhost:3000");
+          const nextAuthUrl = env.NEXTAUTH_URL
+            ? env.NEXTAUTH_URL
+            : process.env.VERCEL
+            ? `https://${process.env.VERCEL_URL}`
+            : "http://localhost:3000";
           if (!nextAuthUrl) return null;
           if (siwe.domain !== new URL(nextAuthUrl).host) return null;
           if (!siwe.address.length) return null;
-
           await siwe.validate(credentials?.signature || "");
           const { address } = siwe;
 
-          // https://github.com/prisma/prisma-client-js/issues/85#issuecomment-660057346
+          /** Create user if does not exists */
           const user = await prisma.user.upsert({
             where: { address },
             update: {},
@@ -87,7 +87,8 @@ export const nextAuthOptions: NextAuthOptions = {
             id: user.id,
             name: user.address,
           };
-        } catch (e) {
+        } catch (err) {
+          console.error(err);
           return null;
         }
       },

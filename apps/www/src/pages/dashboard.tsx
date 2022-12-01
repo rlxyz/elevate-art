@@ -1,34 +1,22 @@
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
-import { Layout } from '@components/Layout/core/Layout'
-import { PersonalOrganisationAccountTeam } from '@components/Organisation/PersonalOrganisationAccountTeam'
-import { PersonalOrganisationAccountTeamInvites } from '@components/Organisation/PersonalOrganisationAccountTeamInvites'
-import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import withOrganisationStore from '@components/withOrganisationStore'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
-import { useEffect } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
+import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
+import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
+import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
-  const { currentRoute, setCurrentRoute } = useOrganisationNavigationStore((state) => {
-    return {
-      organisationId: state.organisationId,
-      setOrganisationId: state.setOrganisationId,
-      setCurrentRoute: state.setCurrentRoute,
-      currentRoute: state.currentRoute,
-    }
-  })
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisation()
-
-  useEffect(() => {
-    setCurrentRoute(OrganisationNavigationEnum.enum.Dashboard)
-  }, [])
+  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
 
   return (
-    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal}>
+    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Dashboard}>
       <Layout>
         <Layout.Header
-          connectButton
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
@@ -36,21 +24,24 @@ const Page: NextPage = () => {
               organisations,
             },
           ]}
-          internalNavigation={[
-            {
-              name: OrganisationNavigationEnum.enum.Overview,
-              href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
-              loading: false,
-            },
-            {
-              name: OrganisationNavigationEnum.enum.Account,
-              href: `/${OrganisationNavigationEnum.enum.Account}`,
-              enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
-              loading: false,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: OrganisationNavigationEnum.enum.Overview,
+                href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+                loading: isLoadingOrganisations,
+              },
+              {
+                name: OrganisationNavigationEnum.enum.Account,
+                href: `/${OrganisationNavigationEnum.enum.Account}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+                loading: isLoadingOrganisations,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body>
           <div className='py-8 space-y-8'>
             <div className='space-y-9'>
@@ -64,4 +55,4 @@ const Page: NextPage = () => {
   )
 }
 
-export default Page
+export default withOrganisationStore(Page)

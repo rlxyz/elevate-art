@@ -1,6 +1,5 @@
 import seedrandom from "seedrandom";
 import { z } from "zod";
-
 //////////////////////////////////////////////////////////////////////////////////////////
 // compiler                                                                         //
 // a general purpose compiler for layering images with traits and rules                 //
@@ -161,20 +160,18 @@ export const rarity = (
   index: number;
   score: number;
 }[] => {
-  const max = elements.length;
   const occurs = occurances.traits(elements);
+  const max = elements.length;
   return elements
-    .map((token, index) => {
-      return {
-        index,
-        score: token.reduce((result, item) => {
-          return result - Math.log((occurs.get(item[1]) || 0) / max);
-        }, 0),
-      };
-    })
-    .sort((a, b) => {
-      return b.score - a.score;
-    });
+    .map((token, index) => ({
+      index,
+      score: token.reduce(
+        (result, [_, traitElementId]) =>
+          result - Math.log((occurs.get(traitElementId) || 1) / max),
+        0 as number
+      ),
+    }))
+    .sort((a, b) => b.score - a.score);
 };
 
 export const seed = (...values: (string | number)[]) => {

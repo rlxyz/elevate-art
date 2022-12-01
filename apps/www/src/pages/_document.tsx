@@ -12,10 +12,15 @@ class CompilerDocument extends Document {
         <Head>
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
+<<<<<<< HEAD:apps/www/src/pages/_document.tsx
           <link
             href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap'
             rel='stylesheet'
           />
+=======
+          <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap' rel='stylesheet' />
+          <link rel='stylesheet' type='text/css' href='/font.css' />
+>>>>>>> staging:www/src/pages/_document.tsx
         </Head>
         <body className='min-h-full'>
           <Main />

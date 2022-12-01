@@ -1,5 +1,8 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import { withAxiom } from 'next-axiom'
 import withTM from 'next-transpile-modules'
+
+!process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
 
 /**
  * Don't be scared of the generics here.
@@ -13,6 +16,9 @@ const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
     return withBundleAnalyzer(config)
   }
+  if (process.env.NODE_ENV === 'production') {
+    return withAxiom(config)
+  }
   return config
 }
 
@@ -21,7 +27,11 @@ export default withTM(['@elevateart/ui', '@elevateart/eth-auth', '@elevateart/db
     reactStrictMode: true,
     swcMinify: true,
     images: {
-      domains: ['res.cloudinary.com', 'localhost', 'cdn.feralfileassets.com'],
+      domains: ['res.cloudinary.com', 'localhost'],
+    },
+    i18n: {
+      locales: ['en'],
+      defaultLocale: 'en',
     },
   })
 )

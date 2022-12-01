@@ -1,18 +1,20 @@
-import CollectionBranchSelectorCard from '@components/Collection/CollectionBranchSelectorCard'
-import { GenerateButton } from '@components/Collection/CollectionGenerateCard'
-import CollectionPreviewFilters from '@components/Collection/CollectionPreviewFilters'
-import CollectionPreviewGrid from '@components/Collection/CollectionPreviewGrid'
-import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
-import { Layout } from '@components/Layout/core/Layout'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/query/useQueryRepository'
-import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
-import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import withOrganisationStore from '@components/withOrganisationStore'
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
-import { useRepositoryRoute } from '../../../hooks/utils/useRepositoryRoute'
+import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
+import { GenerateButton } from 'src/client/components/collection/CollectionGenerateCard'
+import CollectionPreviewFilters from 'src/client/components/collection/CollectionPreviewFilters'
+import CollectionPreviewGrid from 'src/client/components/collection/CollectionPreviewGrid'
+import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { Layout } from 'src/client/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { CollectionNavigationEnum } from 'src/shared/enums'
+import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -30,13 +32,12 @@ const Page = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryRepositoryCollection()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
-  const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: organisations } = useQueryOrganisationFindAll()
+  const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
-  const isLoading = isLoadingLayers && isLoadingCollection && isLoadingRepository && isRoutesLoading && isLoadingOrganisation
 
   useEffect(() => {
     if (!repository) return
@@ -61,27 +62,30 @@ const Page = () => {
             { current: organisationName, href: `/${organisationName}`, organisations },
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}`,
-              enabled: true,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: false,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: false,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: CollectionNavigationEnum.enum.Preview,
+                href: `/${mainRepositoryHref}`,
+                enabled: true,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8'>
@@ -111,4 +115,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default withOrganisationStore(Page)

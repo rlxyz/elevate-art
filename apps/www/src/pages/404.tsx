@@ -1,11 +1,19 @@
+<<<<<<< HEAD:apps/www/src/pages/404.tsx
 import { Layout } from '@components/Layout/core/Layout'
 import Link from '@components/Layout/Link'
 import Image from 'next/image'
+=======
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Layout } from 'src/client/components/layout/core/Layout'
+>>>>>>> staging:www/src/pages/404.tsx
 
-export default function NotFound() {
+const Page = () => {
+  const { status } = useSession()
   return (
     <Layout>
-      <Layout.Header />
+      <Layout.Header authenticated={status === 'authenticated'} />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
@@ -16,9 +24,7 @@ export default function NotFound() {
                   <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
                   <div className=' mt-4 flex flex-col'>
                     <span className='text-sm font-semibold'>“Control can sometimes be an illusion.</span>
-                    <span className='text-sm font-semibold'>
-                      But sometimes you need illusion to gain control.” &#8212; Mr. Robot
-                    </span>
+                    <span className='text-sm font-semibold'>But sometimes you need illusion to gain control.” &#8212; Mr. Robot</span>
                   </div>
                   <div className='mt-2'>
                     <Link href='/'>
@@ -44,3 +50,5 @@ export default function NotFound() {
     </Layout>
   )
 }
+
+export default Page

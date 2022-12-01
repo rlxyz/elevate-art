@@ -1,0 +1,49 @@
+<<<<<<<< HEAD:apps/www/src/components/Organisation/PersonalOrganisationAccountTeamInvites.tsx
+import { useSession } from '@elevateart/eth-auth'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import { capitalize } from '@utils/format'
+========
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useSession } from 'next-auth/react'
+import { capitalize } from 'src/client/utils/format'
+>>>>>>>> staging:apps/www/src/client/components/organisation/PersonalOrganisationAccountTeamInvites.tsx
+import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
+
+export const PersonalOrganisationAccountTeamInvites = () => {
+  const { pendings } = useQueryOrganisationFindAll()
+  const session = useSession()
+  return (
+    <>
+      {pendings?.length ? (
+        <div className='space-y-6'>
+          <div className='space-y-2'>
+            <span className='text-xl font-semibold'>
+              <span>Pending Invites</span>
+            </span>
+            <div className={'text-xs text-accents_5'}>
+              <p>Join teams youve been invited to</p>
+            </div>
+          </div>
+          <div className='border border-border rounded-[5px] divide-y divide-accents_7'>
+            {pendings.map((pending) => {
+              return (
+                <div key={pending.id} className='p-4 flex flex-row items-center justify-between'>
+                  <div className='flex flex-row space-y-1 items-center space-x-3'>
+                    <div className='h-6 w-6 border rounded-full bg-success border-border' />
+                    <div className='flex flex-col space-y-1'>
+                      <span className='text-xs font-bold'>{pending.organisation.name}</span>
+                      <span className='text-xs text-accents_5'>{capitalize(pending.role)}</span>
+                    </div>
+                  </div>
+                  <div className='flex flex-row space-x-2'>
+                    {session?.data?.user?.address ? <PersonalOrganisationTeamInvitesAcceptDialog pending={pending} /> : null}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ) : null}
+    </>
+  )
+}

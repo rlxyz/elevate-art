@@ -1,0 +1,98 @@
+<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationSettings.tsx
+import Link from '@components/Layout/Link'
+import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import { capitalize } from '@utils/format'
+import clsx from 'clsx'
+========
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+>>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationSettings.tsx
+import { useForm } from 'react-hook-form'
+import { Link } from 'src/client/components/layout/Link'
+import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { capitalize } from 'src/client/utils/format'
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
+
+export const SettingsNavigations = () => {
+  const { current: organisation } = useQueryOrganisationFindAll()
+  const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
+  return (
+    <div>
+      {[
+        {
+          name: OrganisationSettingsNavigationEnum.enum.General,
+          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+        },
+        {
+          name: OrganisationSettingsNavigationEnum.enum.Team,
+          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
+        },
+      ].map(({ name, href }) => {
+        return (
+          <Link key={name} href={href} block className={clsx(currentSettingsRoute === name && 'font-semibold', 'w-full text-xs')}>
+            {capitalize(name)}
+          </Link>
+        )
+      })}
+    </div>
+  )
+}
+
+export const OrganisationGeneralSettings = () => {
+  const { current: organisation } = useQueryOrganisationFindAll()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  return (
+    <form
+      onSubmit={handleSubmit((data) => {
+        // @todo to be implemented
+      })}
+    >
+      <div className='w-full rounded-[5px] border border-border'>
+        <div className='p-6 space-y-4'>
+          <div className='flex flex-col'>
+            <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
+              <h1 className='text-lg font-semibold text-foreground'>Team Name</h1>
+              <p className='text-xs text-foreground'>{'Used to identify your teams name on elevate.art'}</p>
+            </div>
+          </div>
+          <div className='w-full border border-border rounded-[5px]'>
+            <div className='h-full grid grid-cols-10 text-sm'>
+              <div className='col-span-4 border-r border-r-accents_7 rounded-l-[5px] bg-accents_8 text-accents_5 flex items-center'>
+                <span className='px-4 py-2'>{`elevate.art/`}</span>
+              </div>
+              <div className='col-span-6 flex items-center'>
+                {/* <input
+                  className='text-xs px-2 w-full h-full rounded-[5px]'
+                  defaultValue={organisation?.name || ''}
+                  type='string'
+                  {...register('name', { required: true, maxLength: 20, minLength: 3, pattern: /^[-/a-z0-9]+$/gi })}
+                /> */}
+                <span className='text-xs px-2 w-full h-full items-center flex rounded-[5px]'>{organisation?.name}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer className='w-full p-6 flex items-center h-[3rem] bg-accents_8 text-xs justify-end border-t border-t-accents_7'>
+          {/* <div className='flex items-center'>
+            <span>{`Learn more about`}&nbsp;</span>
+            <Link href='https://docs.elevate.art/team'>
+            <div className='flex items-center text-success'>
+              <span>{'Team Name'}</span>
+              <ArrowTopRightOnSquare className='w-3 h-3' />
+            </div>
+            </Link>
+          </div> */}
+          <div>
+            <div className='border border-border px-4 py-2 rounded-[5px]'>
+              <span className='text-accents_5'>Save</span>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </form>
+  )
+}
