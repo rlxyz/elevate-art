@@ -1,11 +1,18 @@
+/** Styles */
+import '@elevateart/ui/globals.css'
+import '@rainbow-me/rainbowkit/styles.css'
+
+/** Core Functional Components */
 import { EthereumAuthenticationLayout } from '@components/layout/core/EthereumAuthenticationLayout'
 import { ErrorBoundary } from '@highlight-run/react'
-import '@rainbow-me/rainbowkit/styles.css'
+import { AnalyticsLayout } from '../client/components/layout/core/AnalyticsLayout'
+
+/** Types */
 import { Session } from 'next-auth/core/types'
 import { AppType } from 'next/app'
-import { AnalyticsLayout } from '../client/components/layout/core/AnalyticsLayout'
-import '../client/styles/globals.css'
 import '../client/utils/highlight'
+
+/** Helpers */
 import { trpc } from '../client/utils/trpc'
 export { reportWebVitals } from 'next-axiom'
 

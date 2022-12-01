@@ -1,4 +1,5 @@
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
+import { EthereumConnectButton } from '@elevateart/eth-auth/src/components/EthereumConnectButton'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -12,7 +13,7 @@ import { capitalize } from 'src/client/utils/format'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { Link } from '../Link'
 import LinkComponent from '../link/Link'
-import { default as NextLinkComponent } from '../link/NextLink'
+import NextLink, { default as NextLinkComponent } from '../link/NextLink'
 
 const externalRoutes = [
   {
@@ -82,13 +83,13 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
           </LinkComponent>
         ))}
       </aside>
-      {/* {authenticated ? (
+      {authenticated ? (
         <EthereumConnectButton />
       ) : (
         <NextLink href='/connect'>
           <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
         </NextLink>
-      )} */}
+      )}
     </div>
   )
 }
