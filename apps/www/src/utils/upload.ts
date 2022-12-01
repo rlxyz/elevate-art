@@ -3,7 +3,6 @@ import produce from "immer";
 import { FileWithPath } from "react-dropzone";
 import { TraitElementUploadState } from "src/components/layout/upload/upload-display";
 import { env } from "src/env/client.mjs";
-src / hooks / trpc / layerElement / useQueryLayerElementFindAll;
 
 export type ParseLayerElementFolderInput = {
   traitElements: TraitElement[];

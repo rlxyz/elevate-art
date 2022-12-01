@@ -1,8 +1,8 @@
+import { RulesEnum, RulesType } from "@elevateart/compiler";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { Dispatch, SetStateAction, useState } from "react";
-import { RulesEnum, RulesType } from "src/shared/compiler";
 
 export const RulesSelectConditionCombobox = ({
   selected,

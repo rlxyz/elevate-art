@@ -1,17 +1,16 @@
+import { HeaderInternalPageRoutes } from "@components/layout/core/Header";
+import { Layout } from "@components/layout/core/Layout";
+import { OrganisationAuthLayout } from "@components/organisation/OrganisationAuthLayout";
+import { SettingsNavigations } from "@components/organisation/OrganisationSettings";
+import { OrganisationTeamAddUser } from "@components/organisation/OrganisationTeamAddUser";
+import { OrganisationTeamDisplayPending } from "@components/organisation/OrganisationTeamDisplayPending";
+import { OrganisationTeamDisplayUsers } from "@components/organisation/OrganisationTeamDisplayUsers";
+import withOrganisationStore from "@components/withOrganisationStore";
+import useOrganisationNavigationStore from "@hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
-import type { NextPage } from "next";
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "@utils/enums";
+import { NextPage } from "next";
 import { useEffect } from "react";
-import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
-import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
-import { Layout } from "src/components/layout/core/Layout";
-import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
-import { SettingsNavigations } from "src/components/organisation/OrganisationSettings";
-import { OrganisationTeamAddUser } from "src/components/organisation/OrganisationTeamAddUser";
-import { OrganisationTeamDisplayPending } from "src/components/organisation/OrganisationTeamDisplayPending";
-import { OrganisationTeamDisplayUsers } from "src/components/organisation/OrganisationTeamDisplayUsers";
-import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/shared/enums";
-src / hooks / trpc / organisation / useQueryOrganisationFindAll;
 
 const Page: NextPage = () => {
   const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {

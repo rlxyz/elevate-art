@@ -1,7 +1,7 @@
+import ModalComponent from "@components/layout/modal/Modal";
+import useRepositoryStore from "@hooks/store/useRepositoryStore";
 import Big from "big.js";
 import { FC } from "react";
-import useRepositoryStore from "src/client/hooks/store/useRepositoryStore";
-import ModalComponent from "src/src/hooks/store/useRepositoryStore";
 import { useMutateTraitElementDelete } from "../../../hooks/trpc/traitElement/useMutateTraitElementDelete";
 
 interface Props {

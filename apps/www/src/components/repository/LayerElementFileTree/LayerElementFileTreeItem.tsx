@@ -1,18 +1,17 @@
+import { ArrowTopRightIcon } from "@components/layout/icons/ArrowTopRightIcon";
+import NextLinkComponent from "@components/layout/link/NextLink";
+import { Menu } from "@headlessui/react";
 import { LinkIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
+import { LayerElement } from "@hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { useNotification } from "@hooks/utils/useNotification";
+import { useRepositoryRoute } from "@hooks/utils/useRepositoryRoute";
+import { CollectionNavigationEnum } from "@utils/enums";
 import clsx from "clsx";
 import router from "next/router";
 import { FC, useState } from "react";
-import { useNotification } from "src/client/hooks/utils/useNotification";
-import { useRepositoryRoute } from "src/client/hooks/utils/useRepositoryRoute";
-import { timeAgo } from "src/client/utils/time";
-import Menu from "src/components/layout/menu";
-import NextLinkComponent from "src/csrc/hooks/utils/useRepositoryRoute";
-import { LayerElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
-import { CollectionNavigationEnum } from "src/shared/enums";
+import { timeAgo } from "src/utils/time";
 import LayerElementDeleteModal from "./LayerElementDeleteModal";
 import LayerElementRenameModal from "./LayerElementRenameModal";
-import { ArrowTopRightIcon } from fromsrc / hooks / utils / useNotificationRightIcon;
-";
 
 interface Props {
   item: LayerElement;

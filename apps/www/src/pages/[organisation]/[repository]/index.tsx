@@ -1,22 +1,20 @@
+import CollectionBranchSelectorCard from "@components/collection/CollectionBranchSelectorCard";
+import { GenerateButton } from "@components/collection/CollectionGenerateCard";
+import CollectionPreviewFilters from "@components/collection/CollectionPreviewFilters";
+import CollectionPreviewGrid from "@components/collection/CollectionPreviewGrid";
+import { HeaderInternalPageRoutes } from "@components/layout/core/Header";
+import { Layout } from "@components/layout/core/Layout";
+import { OrganisationAuthLayout } from "@components/organisation/OrganisationAuthLayout";
+import withOrganisationStore from "@components/withOrganisationStore";
+import useRepositoryStore from "@hooks/store/useRepositoryStore";
 import { useQueryCollectionFindAll } from "@hooks/trpc/collection/useQueryCollectionFindAll";
-import { NextRouter, useRouter } from "next/rosrc/hooks/trpc/repository/useQueryRepositoryFindByName";
+import { useQueryLayerElementFindAll } from "@hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
+import { useQueryRepositoryFindByName } from "@hooks/trpc/repository/useQueryRepositoryFindByName";
+import { useRepositoryRoute } from "@hooks/utils/useRepositoryRoute";
+import { CollectionNavigationEnum } from "@utils/enums";
+import { NextRouter, useRouter } from "next/router";
 import { useEffect } from "react";
-import useRepositoryStore from "src/client/hooks/store/useRepositoryStore";
-import CollectionBranchSelectorCard from "src/components/collection/CollectionBranchSelectorCard";
-import { GenerateButton } from "src/components/collection/CollectionGenerateCard";
-import CollectionPreviewFilters from "src/components/collection/CollectionPreviewFilters";
-import CollectionPreviewGrid from "src/components/collection/CollectionPreviewGrid";
-import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
-import { Layout } from "src/components/layout/core/Layout";
-import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
-import { useQueryOrganisationFindAll } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
-import { CollectionNavigationEnum } from "src/shared/enums";
-import { useRepositoryRoute } from "../../../hooks/utils/useRepositoryRoute";
-import { useQueryLayerElementFindAll } from fromsrc / hooks / trpc / collection / useQueryCollectionFindAllindAll;
-import { useQueryRepositoryFindByName } from src / hooks / trpc / organisation / useQueryOrganisationFindAll;
-";
-";
-import withOrganisationStore frosrc/hooks/store/useRepositoryStore
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore(

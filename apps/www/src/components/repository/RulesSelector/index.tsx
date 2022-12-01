@@ -1,6 +1,6 @@
+import { RulesType } from "@elevateart/compiler";
 import { useState } from "react";
 import { LayerElement, TraitElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
-import { RulesType } from "src/shared/compiler";
 import { RulesCreateModal } from "./RulesCreateModal";
 import { RulesSelectConditionCombobox } from "./RulesSelectConditionCombobox";
 import { RulesSelectTraitElementCombobox } from "./RulesSelectTraitElementCombobox";

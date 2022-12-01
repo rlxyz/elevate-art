@@ -1,7 +1,6 @@
-import { getLayerElementsWithTraitElementsTotalWeight } from "@server/common/get-all-layer-elements-total-weight-";
-import { getServerAuthSession } from "@server/common/get-server-auth-session";
+import { getLayerElementsWithTraitElementsTotalWeight } from "@elevateart/api/src/common/get-all-layer-elements-total-weight";
+import { getServerAuthSession } from "@elevateart/auth/src/server/get-server-auth-session";
 import { NextApiRequest, NextApiResponse } from "next";
-
 const admins = new Map<string, boolean>([
   ["0xf8cA77ED09429aDe0d5C01ADB1D284C45324F608", true],
   ["0xd2a08007eeeaf1f81eeF54Ba6A8c4Effa1e545C6", true],

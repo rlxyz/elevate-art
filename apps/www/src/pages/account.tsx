@@ -1,3 +1,4 @@
+import { PersonalOrganisationAccountNavigation } from "@components/organisation/PersonalOrganisationAccountNavigation";
 import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
 import { OrganisationNavigationEnum } from "@utils/enums";
 import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";

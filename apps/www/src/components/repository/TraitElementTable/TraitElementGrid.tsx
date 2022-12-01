@@ -2,8 +2,8 @@ import { Table as ReactTable } from "@tanstack/react-table";
 import Big from "big.js";
 import clsx from "clsx";
 import { FC } from "react";
-import { truncate } from "src/client/utils/format";
-import { timeAgo } from "src/client/utils/time";
+import { truncate } from "src/utils/format";
+import { timeAgo } from "src/utils/time";
 import { TraitElementFields } from "./useTraitElementForm";
 
 interface Props {

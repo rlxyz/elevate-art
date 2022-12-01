@@ -1,6 +1,6 @@
+import { RulesEnum } from "@elevateart/compiler";
 import { FC } from "react";
 import { TraitElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
-import { RulesEnum } from "src/shared/compiler";
 import { RulesDisplayOneItem } from "./RulesDisplayOneItem";
 
 interface RulesDisplayProps {

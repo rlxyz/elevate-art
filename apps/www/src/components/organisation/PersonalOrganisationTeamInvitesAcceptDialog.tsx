@@ -1,3 +1,4 @@
+import { Organisation, OrganisationPending } from "@elevateart/db";
 import { Loading } from "@elevateart/ui";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";

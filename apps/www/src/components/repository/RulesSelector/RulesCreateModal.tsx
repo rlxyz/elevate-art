@@ -1,8 +1,8 @@
+import { RulesType } from "@elevateart/compiler";
 import { FC } from "react";
 import ModalComponent from "src/components/layout/modal/Modal";
 import { TraitElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { useMutateRuleCreate } from "src/hooks/trpc/rule/useMutateRuleCreate";
-import { RulesType } from "src/shared/compiler";
 
 export interface FormModalProps {
   onSuccess?: () => void;
