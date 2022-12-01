@@ -37,14 +37,14 @@ export const deleteImageFilesFromCloudinary = (
     r: string;
     l: string;
     t: string;
-  }[]
+  }[],
 ): Promise<Result<DeleteTraitElementResponse[]>> => {
   return new Promise((resolve, reject) => {
     v2.api
       .delete_resources(
         files.map((x) => `${env.NODE_ENV}/${x.r}/${x.l}/${x.t}`),
         /** Invalidate Image in cdn */
-        { invalidate: true }
+        { invalidate: true },
       )
       .then((res) => resolve(Result.ok(getDeleteTraitElementResponse(res))))
       .catch((err) => reject(Result.fail(err.error.message)));

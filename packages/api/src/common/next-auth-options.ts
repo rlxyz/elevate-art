@@ -45,7 +45,7 @@ export const nextAuthOptions: NextAuthOptions = {
         try {
           /** Check SiweMessage for Ethereum Login */
           const siwe = new SiweMessage(
-            JSON.parse(credentials?.message || "{}")
+            JSON.parse(credentials?.message || "{}"),
           );
           const nextAuthUrl = env.NEXTAUTH_URL
             ? env.NEXTAUTH_URL

@@ -10,11 +10,11 @@ import {
 export type CurrentStateType<S> = [
   S,
   Dispatch<SetStateAction<S>>,
-  MutableRefObject<S>
+  MutableRefObject<S>,
 ];
 
 const useCurrentState = <S,>(
-  initialState: S | (() => S)
+  initialState: S | (() => S),
 ): CurrentStateType<S> => {
   const [state, setState] = useState<S>(() => {
     return typeof initialState === "function"

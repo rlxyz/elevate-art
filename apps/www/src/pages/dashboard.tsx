@@ -1,21 +1,30 @@
-import withOrganisationStore from '@components/withOrganisationStore'
-import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import type { NextPage } from 'next'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
-import { Layout } from 'src/client/components/layout/core/Layout'
-import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
-import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
-import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { OrganisationNavigationEnum } from 'src/shared/enums'
+import withOrganisationStore from "@components/withOrganisationStore";
+import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
+import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
+import type { NextPage } from "next";
+import { HeaderInternalPageRoutes } from "src/client/components/layout/core/Header";
+import { Layout } from "src/client/components/layout/core/Layout";
+import { OrganisationAuthLayout } from "src/client/components/organisation/OrganisationAuthLayout";
+import { PersonalOrganisationAccountTeam } from "src/client/components/organisation/PersonalOrganisationAccountTeam";
+import { PersonalOrganisationAccountTeamInvites } from "src/client/components/organisation/PersonalOrganisationAccountTeamInvites";
+import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
+import { OrganisationNavigationEnum } from "src/shared/enums";
 
 const Page: NextPage = () => {
-  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
+  const currentRoute = useOrganisationNavigationStore(
+    (state) => state.currentRoute,
+  );
+  const {
+    all: organisations,
+    current: organisation,
+    isLoading: isLoadingOrganisations,
+  } = useQueryOrganisationFindAll();
 
   return (
-    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Dashboard}>
+    <OrganisationAuthLayout
+      type={OrganisationDatabaseEnum.enum.Personal}
+      route={OrganisationNavigationEnum.enum.Dashboard}
+    >
       <Layout>
         <Layout.Header
           internalRoutes={[
@@ -31,21 +40,23 @@ const Page: NextPage = () => {
               {
                 name: OrganisationNavigationEnum.enum.Overview,
                 href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+                enabled:
+                  currentRoute === OrganisationNavigationEnum.enum.Dashboard,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Account,
                 href: `/${OrganisationNavigationEnum.enum.Account}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+                enabled:
+                  currentRoute === OrganisationNavigationEnum.enum.Account,
                 loading: isLoadingOrganisations,
               },
             ]}
           />
         </Layout.Header>
         <Layout.Body>
-          <div className='py-8 space-y-8'>
-            <div className='space-y-9'>
+          <div className="space-y-8 py-8">
+            <div className="space-y-9">
               <PersonalOrganisationAccountTeam />
               <PersonalOrganisationAccountTeamInvites />
             </div>
@@ -53,7 +64,7 @@ const Page: NextPage = () => {
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
-  )
-}
+  );
+};
 
-export default withOrganisationStore(Page)
+export default withOrganisationStore(Page);

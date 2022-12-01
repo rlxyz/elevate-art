@@ -14,10 +14,10 @@ const LayerElementUpdateNameInput = z.array(
     name: z.string(),
     layerElementId: z.string(),
     repositoryId: z.string(),
-  })
+  }),
 );
 const LayerElementUpdateOrderInput = z.array(
-  z.object({ priority: z.number(), layerElementId: z.string() })
+  z.object({ priority: z.number(), layerElementId: z.string() }),
 );
 /**
  * LayerElement Router
@@ -36,7 +36,7 @@ export const layerElementRouter = router({
     .input(
       z.object({
         repositoryId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId } = input;
@@ -78,7 +78,7 @@ export const layerElementRouter = router({
       z.object({
         repositoryId: z.string(),
         name: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { repositoryId, name } = input;
@@ -123,7 +123,7 @@ export const layerElementRouter = router({
       z.object({
         repositoryId: z.string(),
         layerElementId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { layerElementId, repositoryId } = input;
@@ -174,7 +174,7 @@ export const layerElementRouter = router({
 
           return layerElement;
         },
-        { maxWait: 5000, timeout: 10000 }
+        { maxWait: 5000, timeout: 10000 },
       );
     }),
   /**
@@ -185,7 +185,7 @@ export const layerElementRouter = router({
     .input(
       z.object({
         layerElements: LayerElementUpdateNameInput.min(1),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { layerElements } = input;
@@ -198,7 +198,7 @@ export const layerElementRouter = router({
               where: { id },
               data: { name },
             });
-          })
+          }),
         );
       });
     }),
@@ -209,7 +209,7 @@ export const layerElementRouter = router({
     .input(
       z.object({
         layerElements: LayerElementUpdateOrderInput.min(1),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { layerElements } = input;
@@ -275,14 +275,14 @@ export const layerElementRouter = router({
           "LayerElement",
           "priority",
           layerElements,
-          (x) => [x.layerElementId, x.priority + 100]
+          (x) => [x.layerElementId, x.priority + 100],
         ); // @todo fix
         await updateManyByField(
           tx,
           "LayerElement",
           "priority",
           layerElements,
-          (x) => [x.layerElementId, x.priority]
+          (x) => [x.layerElementId, x.priority],
         );
       });
     }),

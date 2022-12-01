@@ -36,7 +36,7 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className={clsx(isLoading && "hidden", "w-4 h-4 text-accents_5")}
+          className={clsx(isLoading && "hidden", "h-4 w-4 text-accents_5")}
         >
           <path
             strokeLinecap="round"
@@ -61,12 +61,12 @@ const SearchComponent: React.FC<React.PropsWithChildren<SearchProps>> = ({
         className={clsx(
           className,
           isLoading
-            ? "bg-accents_7 bg-opacity-50 animate-pulse rounded-primary border-none"
+            ? "animate-pulse rounded-primary border-none bg-accents_7 bg-opacity-50"
             : "border border-border",
-          "block text-xs w-full pl-8 rounded-primary py-2",
-          "focus:outline-none focus:ring-1 focus:border-success focus:ring-success",
+          "block w-full rounded-primary py-2 pl-8 text-xs",
+          "focus:border-success focus:outline-none focus:ring-1 focus:ring-success",
           "invalid:border-error invalid:text-error",
-          "focus:invalid:border-error focus:invalid:ring-error"
+          "focus:invalid:border-error focus:invalid:ring-error",
         )}
         placeholder={isLoading ? "" : placeholder}
       />

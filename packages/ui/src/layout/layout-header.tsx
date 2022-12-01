@@ -57,7 +57,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
   const externalNavigationRoutesFinal = [...externalRoutes, ...socialRoutes];
 
   const topNav = (
-    <div className="flex justify-between items-center">
+    <div className="flex items-center justify-between">
       {/* App Navigation on the left side of the Header */}
       <Breadcrumbs className="space-x-2">
         {appNavigationRoutesFinal.map((item) => {
@@ -69,7 +69,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
         })}
       </Breadcrumbs>
       {/* External Routes Navigation on the right side of the Header */}
-      <div className="flex flex-row justify-center items-center space-x-3 text-xs">
+      <div className="flex flex-row items-center justify-center space-x-3 text-xs">
         {externalNavigationRoutesFinal.map((item) => {
           return (
             <Link
@@ -77,7 +77,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
               href={item.href}
               rel="noreferrer nofollow"
               target="_blank"
-              className="cursor-pointer hover:text-foreground text-xs text-accents_5"
+              className="cursor-pointer text-xs text-accents_5 hover:text-foreground"
             >
               {item.icon ? (
                 <item.icon className="h-4 w-4" aria-hidden="true" />
@@ -106,7 +106,7 @@ const LayoutHeaderComponent: FC<PropsWithChildren<LayoutContainerProps>> = ({
       border="lower"
       className={clsx(
         className,
-        "min-h-[3.5rem] max-h-[5.64rem] flex items-center whitespace-nowrap"
+        "flex max-h-[5.64rem] min-h-[3.5rem] items-center whitespace-nowrap",
       )}
     >
       <header>

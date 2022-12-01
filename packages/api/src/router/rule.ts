@@ -15,7 +15,7 @@ export const ruleRouter = router({
       z.object({
         condition: RulesEnum,
         traitElements: z.tuple([z.string(), z.string()]),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { condition, traitElements } = input;

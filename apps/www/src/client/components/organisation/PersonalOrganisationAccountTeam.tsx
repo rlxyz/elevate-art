@@ -1,39 +1,69 @@
-import { Organisation, OrganisationMember, User } from '@elevateart/db'
-import { Search, useInput } from '@elevateart/ui'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import clsx from 'clsx'
-import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { Organisation, OrganisationMember, User } from "@elevateart/db";
+import { Search, useInput } from "@elevateart/ui";
+import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
+import clsx from "clsx";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export const PersonalOrganisationAccountTeam = () => {
-  const { all: organisations } = useQueryOrganisationFindAll()
-  const [query, setQuery] = useState('')
-  const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
-  const session = useSession()
-  const { bindings: inputBindings, state: input } = useInput('')
-  const getUserRoleInOrganisation = (organisation: Organisation & { members: (OrganisationMember & { user: User })[] }) => {
-    return organisation.members.find((x) => x.userId === session?.data?.user?.id)?.type
-  }
+  const { all: organisations } = useQueryOrganisationFindAll();
+  const [query, setQuery] = useState("");
+  const filteredOrganisaitons = organisations?.filter((x) =>
+    x.name.toLowerCase().includes(query.toLowerCase()),
+  );
+  const session = useSession();
+  const { bindings: inputBindings, state: input } = useInput("");
+  const getUserRoleInOrganisation = (
+    organisation: Organisation & {
+      members: (OrganisationMember & { user: User })[];
+    },
+  ) => {
+    return organisation.members.find(
+      (x) => x.userId === session?.data?.user?.id,
+    )?.type;
+  };
 
-  const isLoading = !organisations
+  const isLoading = !organisations;
 
   return (
-    <div className='space-y-6'>
-      <div className='space-y-2'>
-        <span className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'text-xl font-semibold')}>
-          <span className={clsx(isLoading && 'invisible')}>Your Teams</span>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <span
+          className={clsx(
+            isLoading &&
+              "animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50",
+            "text-xl font-semibold",
+          )}
+        >
+          <span className={clsx(isLoading && "invisible")}>Your Teams</span>
         </span>
-        <div className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-accents_5')}>
-          <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
+        <div
+          className={clsx(
+            isLoading &&
+              "w-1/4 animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50",
+            "text-xs text-accents_5",
+          )}
+        >
+          <p className={clsx(isLoading && "invisible")}>
+            View the Teams that youre a part of
+          </p>
         </div>
       </div>
       <Search isLoading={isLoading} {...inputBindings} />
-      <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px] w-1/4', 'text-xs text-darkGrey')}>
-        <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
+      <div
+        className={clsx(
+          isLoading &&
+            "bg-mediumGrey w-1/4 animate-pulse rounded-[5px] bg-opacity-50",
+          "text-darkGrey text-xs",
+        )}
+      >
+        <p className={clsx(isLoading && "invisible")}>
+          View the Teams that youre a part of
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 // {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
 //   <>

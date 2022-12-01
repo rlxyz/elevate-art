@@ -15,7 +15,7 @@ const TraitElementDeleteInput = z.array(
     id: z.string(),
     layerElementId: z.string(),
     repositoryId: z.string(),
-  })
+  }),
 );
 const TraitElementCreateManyByLayerElementIdInput = z.object({
   layerElementId: z.string(),
@@ -26,14 +26,14 @@ const TraitElementUpdateNameInput = z.array(
     name: z.string(),
     traitElementId: z.string(),
     repositoryId: z.string(),
-  })
+  }),
 );
 const TraitElementUpdateWeightInput = z.array(
   z.object({
     weight: z.number(),
     traitElementId: z.string(),
     layerElementId: z.string(),
-  })
+  }),
 );
 
 /**
@@ -50,7 +50,7 @@ export const traitElementRouter = router({
     .input(
       z.object({
         traitElements: TraitElementDeleteInput,
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { traitElements } = input;
@@ -62,7 +62,7 @@ export const traitElementRouter = router({
             r: x.repositoryId,
             l: x.layerElementId,
             t: x.id,
-          }))
+          })),
         );
 
       if (response.failed) {
@@ -118,7 +118,7 @@ export const traitElementRouter = router({
     .input(
       z.object({
         traitElements: TraitElementUpdateNameInput,
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { traitElements } = input;
@@ -130,16 +130,16 @@ export const traitElementRouter = router({
           ctx.prisma.traitElement.update({
             where: { id },
             data: { name },
-          })
+          }),
         ),
-        { isolationLevel: Prisma.TransactionIsolationLevel.ReadUncommitted }
+        { isolationLevel: Prisma.TransactionIsolationLevel.ReadUncommitted },
       );
     }),
   updateWeight: protectedProcedure
     .input(
       z.object({
         traitElements: TraitElementUpdateWeightInput,
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { traitElements } = input;
@@ -159,7 +159,7 @@ export const traitElementRouter = router({
         "TraitElement",
         "weight",
         traitElements,
-        (x) => [x.traitElementId, x.weight]
+        (x) => [x.traitElementId, x.weight],
       );
     }),
 });

@@ -1,13 +1,4 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationSettings.tsx
-import Link from '@components/Layout/Link'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { capitalize } from '@utils/format'
-import clsx from 'clsx'
-========
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationSettings.tsx
-import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'

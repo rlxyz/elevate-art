@@ -18,7 +18,7 @@ export const organisationRouter = router({
     .input(
       z.object({
         organisationId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { organisationId } = input;
@@ -60,7 +60,7 @@ export const organisationRouter = router({
         organisationId: z.string(),
         address: z.string(),
         role: OrganisationDatabaseRoleEnum,
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.organisation.update({
@@ -84,7 +84,7 @@ export const organisationRouter = router({
     .input(
       z.object({
         pendingId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { pendingId } = input;

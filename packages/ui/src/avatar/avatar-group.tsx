@@ -25,7 +25,7 @@ const AvatarGroupComponent: React.FC<
     <div
       className={clsx(
         className,
-        "flex items-center w-[max-content] h-auto p-0 m-0"
+        "m-0 flex h-auto w-[max-content] items-center p-0",
       )}
     >
       {childrens.map((item, index) => (
@@ -36,7 +36,7 @@ const AvatarGroupComponent: React.FC<
       {count && (
         <span
           className={clsx(
-            "text-xs inline-flex items-center pl-3 text-foreground"
+            "inline-flex items-center pl-3 text-xs text-foreground",
           )}
         >
           +{count}

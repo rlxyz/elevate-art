@@ -5,7 +5,7 @@ export const getId = () => {
 };
 
 export const capitalize = (
-  str: string | symbol | number | undefined | null
+  str: string | symbol | number | undefined | null,
 ) => {
   const safeStr = String(str).trim();
   return safeStr.charAt(0).toUpperCase() + safeStr.slice(1);
@@ -13,7 +13,7 @@ export const capitalize = (
 
 export const hasChild = (
   children: ReactNode | undefined,
-  child: React.ElementType
+  child: React.ElementType,
 ): boolean => {
   const types = React.Children.map(children, (item) => {
     if (!React.isValidElement(item)) return null;
@@ -25,7 +25,7 @@ export const hasChild = (
 
 export const pickChild = (
   children: ReactNode | undefined,
-  targetChild: React.ElementType
+  targetChild: React.ElementType,
 ): [ReactNode | undefined, ReactNode | undefined] => {
   let target: ReactNode[] = [];
   const withoutTargetChildren = React.Children.map(children, (item) => {
@@ -45,7 +45,7 @@ export const pickChild = (
 export const pickChildByProps = (
   children: ReactNode | undefined,
   key: string,
-  value: any
+  value: any,
 ): [ReactNode | undefined, ReactNode | undefined] => {
   let target: ReactNode[] = [];
   const isArray = Array.isArray(value);
@@ -72,7 +72,7 @@ export const pickChildByProps = (
 };
 
 export const pickChildrenFirst = (
-  children: ReactNode | undefined
+  children: ReactNode | undefined,
 ): ReactNode | undefined => {
   return React.Children.toArray(children)[0];
 };
@@ -80,7 +80,7 @@ export const pickChildrenFirst = (
 export const setChildrenProps = (
   children: ReactNode | undefined,
   props: Record<string, unknown>,
-  targetComponents: Array<React.ElementType> = []
+  targetComponents: Array<React.ElementType> = [],
 ): ReactNode | undefined => {
   if (React.Children.count(children) === 0) return [];
   const allowAll = targetComponents.length === 0;
@@ -99,7 +99,7 @@ export const setChildrenProps = (
 
 export const setChildrenIndex = (
   children: ReactNode | undefined,
-  targetComponents: Array<React.ElementType> = []
+  targetComponents: Array<React.ElementType> = [],
 ): ReactNode | undefined => {
   if (React.Children.count(children) === 0) return [];
   const allowAll = targetComponents.length === 0;
@@ -120,7 +120,7 @@ export const setChildrenIndex = (
 };
 
 export const getReactNode = (
-  node?: React.ReactNode | (() => React.ReactNode)
+  node?: React.ReactNode | (() => React.ReactNode),
 ): React.ReactNode => {
   if (!node) return null;
 

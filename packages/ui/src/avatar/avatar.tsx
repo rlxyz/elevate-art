@@ -40,17 +40,17 @@ const AvatarComponent: React.FC<AvatarProps> = ({
     <span
       className={clsx(
         className,
-        "inline-block relative overflow-hidden border border-border align-top bg-background box-border h-6 w-6 p-0",
+        "relative box-border inline-block h-6 w-6 overflow-hidden border border-border bg-background p-0 align-top",
         stacked && "ml-2.5",
-        isSquare ? "rounded-primary" : "rounded-full"
+        isSquare ? "rounded-primary" : "rounded-full",
       )}
     >
       {!showText && (
         <img
           alt="avatar-img"
           className={clsx(
-            "object-cover w-full select-none",
-            isSquare ? "rounded-primary" : "rounded-full"
+            "w-full select-none object-cover",
+            isSquare ? "rounded-primary" : "rounded-full",
           )}
           src={src}
           draggable={false}
@@ -60,7 +60,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({
       {showText && text && (
         <span
           className={clsx(
-            "h-full flex justify-center text-xs items-center whitespace-nowrap select-none"
+            "flex h-full select-none items-center justify-center whitespace-nowrap text-xs",
           )}
           {...props}
         >

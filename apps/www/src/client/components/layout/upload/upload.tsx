@@ -1,31 +1,40 @@
-import clsx from 'clsx'
-import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from 'react'
-import { FileWithPath, useDropzone } from 'react-dropzone'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
-import { formatBytes } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
-import UploadDisplay, { TraitElementUploadState } from './upload-display'
+import clsx from "clsx";
+import React, {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { FileWithPath, useDropzone } from "react-dropzone";
+import { useNotification } from "src/client/hooks/utils/useNotification";
+import { formatBytes } from "src/client/utils/format";
+import { env } from "src/env/client.mjs";
+import UploadDisplay, { TraitElementUploadState } from "./upload-display";
 
-export type UploadState = 'idle' | 'uploading' | 'done' | 'error'
+export type UploadState = "idle" | "uploading" | "done" | "error";
 
 interface Props {
-  depth: number
-  gridSize: 'md' | 'lg'
-  withTooltip: boolean
-  setUploadState?: (state: UploadState) => void
+  depth: number;
+  gridSize: "md" | "lg";
+  withTooltip: boolean;
+  setUploadState?: (state: UploadState) => void;
   onDropCallback: ({
     files,
     setUploadedFiles,
     setUploadState,
   }: {
-    files: FileWithPath[]
-    setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
-    setUploadState: (state: UploadState) => void
-  }) => void
+    files: FileWithPath[];
+    setUploadedFiles: Dispatch<
+      SetStateAction<{ [key: string]: TraitElementUploadState[] }>
+    >;
+    setUploadState: (state: UploadState) => void;
+  }) => void;
 }
 
-type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>
-export type UploadProps = Props & NativeAttrs
+type NativeAttrs = Omit<React.HTMLAttributes<any>, keyof Props>;
+export type UploadProps = Props & NativeAttrs;
 
 /**
  * This component is a wrapper around react-dropzone. Allows users to drop files into the browser.
@@ -40,42 +49,51 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   withTooltip,
   ...props
 }: React.PropsWithChildren<UploadProps>) => {
-  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: TraitElementUploadState[] }>({})
-  const [internalUploadState, setInternalUploadState] = useState<UploadState>('idle')
-  const { notifySuccess, notifyError } = useNotification()
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    [key: string]: TraitElementUploadState[];
+  }>({});
+  const [internalUploadState, setInternalUploadState] =
+    useState<UploadState>("idle");
+  const { notifySuccess, notifyError } = useNotification();
 
   useEffect(() => {
-    const state = internalUploadState
-    setUploadState && setUploadState(state)
-    if (state === 'done') {
-      notifySuccess('Successfully created and uploaded the traits.')
-    } else if (state === 'error') {
-      notifyError('Something went wrong with the upload. Please refresh the page to try again.')
-    } else if (state === 'uploading') {
-      notifySuccess('Uploading your new traits and their associated images.')
+    const state = internalUploadState;
+    setUploadState && setUploadState(state);
+    if (state === "done") {
+      notifySuccess("Successfully created and uploaded the traits.");
+    } else if (state === "error") {
+      notifyError(
+        "Something went wrong with the upload. Please refresh the page to try again.",
+      );
+    } else if (state === "uploading") {
+      notifySuccess("Uploading your new traits and their associated images.");
     }
-  }, [internalUploadState])
+  }, [internalUploadState]);
 
   const onDrop = useCallback(async (files: FileWithPath[]) => {
-    const folderDepth = files[0]?.path?.split('/').length
+    const folderDepth = files[0]?.path?.split("/").length;
 
     if (depth !== folderDepth) {
-      setInternalUploadState('error')
-      notifyError('There seems to be something wrong with the folder format.')
-      return
+      setInternalUploadState("error");
+      notifyError("There seems to be something wrong with the folder format.");
+      return;
     }
 
-    onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
-  }, [])
+    onDropCallback({
+      files,
+      setUploadedFiles,
+      setUploadState: setInternalUploadState,
+    });
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/png': ['.png'],
+      "image/png": [".png"],
     },
     noClick: true,
     noDrag: false,
-  })
+  });
 
   return (
     <div>
@@ -83,16 +101,19 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       {Object.entries(uploadedFiles).length === 0 && (
         <div {...props} className={clsx(className)} {...getRootProps()}>
           <input {...getInputProps()} />
-          <div className='border border-dashed hover:bg-lightGray border-blueHighlight rounded-[5px]  flex flex-col justify-center items-center h-full'>
-            <span className='text-lg text-blueHighlight'>{!isDragActive ? `Drag your files here` : 'Drop them'}</span>
+          <div className="hover:bg-lightGray border-blueHighlight flex h-full flex-col  items-center justify-center rounded-[5px] border border-dashed">
+            <span className="text-blueHighlight text-lg">
+              {!isDragActive ? `Drag your files here` : "Drop them"}
+            </span>
             <span> to upload</span>
-            <span className='text-xs text-darkGrey'>
-              Only PNG files supported, max file size {formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}
+            <span className="text-darkGrey text-xs">
+              Only PNG files supported, max file size{" "}
+              {formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}
             </span>
           </div>
         </div>
       )}
-      <div className='space-y-6'>
+      <div className="space-y-6">
         {Object.entries(uploadedFiles).map((files, index) => (
           <UploadDisplay
             key={`${index}-${files[0]}`}
@@ -104,8 +125,8 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-Upload.displayName = 'Upload'
-export default Upload
+Upload.displayName = "Upload";
+export default Upload;

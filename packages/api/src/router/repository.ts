@@ -13,7 +13,7 @@ export const repositoryRouter = router({
     .input(
       z.object({
         name: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { name } = input;
@@ -28,9 +28,9 @@ export const repositoryRouter = router({
           z.object({
             name: z.string(),
             traitElements: z.array(z.object({ name: z.string() })),
-          })
+          }),
         ),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { name, organisationId, layerElements } = input;

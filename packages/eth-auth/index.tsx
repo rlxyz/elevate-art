@@ -2,11 +2,11 @@ import {
   connectorsForWallets,
   getDefaultWallets,
   lightTheme,
-  RainbowKitProvider
+  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import {
   GetSiweMessageOptions,
-  RainbowKitSiweNextAuthProvider
+  RainbowKitSiweNextAuthProvider,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
@@ -20,7 +20,7 @@ import { env } from "./src/env/client.mjs";
 export { EthereumConnectButton } from "./src/components/EthereumConnectButton";
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.goerli],
-  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
+  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()],
 );
 const { wallets } = getDefaultWallets({
   appName: env.NEXT_PUBLIC_APP_NAME,

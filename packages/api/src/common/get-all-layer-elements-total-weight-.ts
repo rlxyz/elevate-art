@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from "@prisma/client";
 
 /**
  * This function returns total weightage of the TraitElements based on weight
@@ -6,12 +6,16 @@ import { Prisma, PrismaClient } from '@prisma/client'
 export const getLayerElementsWithTraitElementsTotalWeight = async ({
   prisma,
 }: {
-  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  prisma: PrismaClient<
+    Prisma.PrismaClientOptions,
+    never,
+    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
+  >;
 }) => {
   return await prisma.traitElement.groupBy({
-    by: ['layerElementId'],
+    by: ["layerElementId"],
     _sum: {
       weight: true,
     },
-  })
-}
+  });
+};

@@ -1,4 +1,4 @@
-import { nextAuthOptions } from '@elevateart/api'
-import NextAuth from 'next-auth'
+import { nextAuthOptions } from "@elevateart/api";
+import NextAuth from "next-auth";
 
-export default NextAuth(nextAuthOptions)
+export default NextAuth(nextAuthOptions);

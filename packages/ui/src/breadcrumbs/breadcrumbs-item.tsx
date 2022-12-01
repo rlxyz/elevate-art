@@ -36,11 +36,11 @@ const BreadcrumbsItemComponent = React.forwardRef<
       className,
       ...props
     }: BreadcrumbsItemProps & typeof defaultProps,
-    ref: React.Ref<HTMLAnchorElement>
+    ref: React.Ref<HTMLAnchorElement>,
   ) => {
     const isLink = useMemo(
       () => href !== undefined || nextLink,
-      [href, nextLink]
+      [href, nextLink],
     );
     const [withoutSepChildren] = pickChild(children, BreadcrumbsSeparator);
     const classes = clsx(className, "inline-flex items-center");
@@ -68,7 +68,7 @@ const BreadcrumbsItemComponent = React.forwardRef<
         {withoutSepChildren}
       </Link>
     );
-  }
+  },
 );
 
 BreadcrumbsItemComponent.defaultProps = defaultProps;

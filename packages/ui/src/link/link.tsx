@@ -38,18 +38,18 @@ const LinkComponent = React.forwardRef<
       icon,
       ...props
     }: React.PropsWithChildren<LinkProps> & typeof defaultProps,
-    ref: React.Ref<HTMLAnchorElement>
+    ref: React.Ref<HTMLAnchorElement>,
   ) => {
     return (
       <a
         className={clsx(
           "inline-flex items-baseline no-underline",
-          "text-inherit w-full h-auto",
-          underline && "hover:underline hover:text-success",
+          "text-inherit h-auto w-full",
+          underline && "hover:text-success hover:underline",
           color && "text-success",
-          block && "rounded-[5px] hover:bg-accents_8 px-3 py-2",
+          block && "rounded-[5px] px-3 py-2 hover:bg-accents_8",
           block && color && "hover:bg-linkLighter",
-          className
+          className,
         )}
         href={href}
         {...props}
@@ -59,7 +59,7 @@ const LinkComponent = React.forwardRef<
         {icon && <LinkIcon />}
       </a>
     );
-  }
+  },
 );
 
 LinkComponent.defaultProps = defaultProps;

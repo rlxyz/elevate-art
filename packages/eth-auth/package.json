@@ -21,8 +21,8 @@
     "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.5",
     "clsx": "^1.2.1",
     "ethers": "^5.7.2",
-    "siwe": "^1.1.6",
     "next-auth": "^4.15.1",
+    "siwe": "^1.1.6",
     "wagmi": "^0.6.8"
   }
 }

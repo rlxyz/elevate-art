@@ -1,0 +1,8 @@
+packages:
+  - apps/www
+  - packages/api
+  - packages/eth-auth
+  - packages/db
+  - packages/compiler
+  - packages/ui
+  - packages/config/*

@@ -1,7 +1,9 @@
-import { Prisma, PrismaClient, TraitElement } from '@prisma/client'
-import { groupBy } from 'src/shared/object-utils'
+import { Prisma, PrismaClient, TraitElement } from "@prisma/client";
+import { groupBy } from "src/shared/object-utils";
 
-export type LayerElementObjectWithTraitElements = { [key: string]: TraitElement[] }
+export type LayerElementObjectWithTraitElements = {
+  [key: string]: TraitElement[];
+};
 
 /**
  * This function returns all the LayerElements based on a list of TraitElements with unordered LayerElements
@@ -13,16 +15,20 @@ export const getLayerElementsWithTraitElements = async ({
   layerElementIds,
   prisma,
 }: {
-  layerElementIds: string[]
-  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  layerElementIds: string[];
+  prisma: PrismaClient<
+    Prisma.PrismaClientOptions,
+    never,
+    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
+  >;
 }): Promise<LayerElementObjectWithTraitElements> => {
   return groupBy(
     await prisma.traitElement.findMany({
       where: {
         layerElementId: { in: layerElementIds },
       },
-      orderBy: { weight: 'desc' },
+      orderBy: { weight: "desc" },
     }),
-    (x) => x.layerElementId
-  )
-}
+    (x) => x.layerElementId,
+  );
+};

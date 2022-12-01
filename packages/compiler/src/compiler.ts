@@ -42,9 +42,9 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
           id,
           weight,
           rules,
-        })
+        }),
       ),
-    })
+    }),
   );
 };
 
@@ -53,7 +53,7 @@ const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
     const exclude = rules.filter(
       (rule) =>
         rule.type === RulesEnum.enum["cannot mix with"] &&
-        elements.map((x) => x[1]).includes(rule.with)
+        elements.map((x) => x[1]).includes(rule.with),
     );
     return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])];
   }, []);
@@ -61,13 +61,13 @@ const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
 
 const combination = (
   elements: [string, string][],
-  traits: Trait[]
+  traits: Trait[],
 ): Trait[] => {
   return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
     const combine = rules.filter(
       (rule) =>
         rule.type === RulesEnum.enum["only mixes with"] &&
-        elements.map((x) => x[1]).includes(rule.with)
+        elements.map((x) => x[1]).includes(rule.with),
     );
     return [...acc, ...(combine.length > 0 ? [{ id, rules, weight }] : [])];
   }, []);
@@ -102,7 +102,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
     // step 1.2: grab exclusion filtered tokens
     const excludes = exclude(
       elements,
-      combinations.length > 0 ? combinations : traits
+      combinations.length > 0 ? combinations : traits,
     );
 
     // step 2: find the next element
@@ -115,7 +115,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
 
 export const many = (
   layers: Layer[],
-  seeds: string[]
+  seeds: string[],
 ): [string, string][][] => {
   const sorted = layers
     .map((x) => ({
@@ -128,7 +128,7 @@ export const many = (
 
 export const occurances = {
   tokens: (
-    elements: [string, string][][]
+    elements: [string, string][][],
   ): Map<string, Map<string, number[]>> => {
     const occurance = new Map<string, Map<string, number[]>>();
     elements.forEach((x, i) => {
@@ -155,7 +155,7 @@ export const occurances = {
 // returns rarity score
 // based on openrarity
 export const rarity = (
-  elements: [string, string][][]
+  elements: [string, string][][],
 ): {
   index: number;
   score: number;
@@ -168,7 +168,7 @@ export const rarity = (
       score: token.reduce(
         (result, [_, traitElementId]) =>
           result - Math.log((occurs.get(traitElementId) || 1) / max),
-        0 as number
+        0 as number,
       ),
     }))
     .sort((a, b) => b.score - a.score);

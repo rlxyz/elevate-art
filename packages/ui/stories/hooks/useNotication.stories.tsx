@@ -13,7 +13,7 @@ export const Success: ComponentStory<typeof Toaster> = (args) => {
     <>
       <button
         onClick={() => notifySuccess("We like Fidenzas")}
-        className="border border-border text-xs text-accents_4 p-2 rounded-primary"
+        className="rounded-primary border border-border p-2 text-xs text-accents_4"
       >
         Show Toast
       </button>
@@ -28,7 +28,7 @@ export const Error: ComponentStory<typeof Toaster> = (args) => {
     <>
       <button
         onClick={() => notifyError("We still like Fidenzas")}
-        className="border border-border text-xs text-accents_4 p-2 rounded-primary"
+        className="rounded-primary border border-border p-2 text-xs text-accents_4"
       >
         Show Toast
       </button>

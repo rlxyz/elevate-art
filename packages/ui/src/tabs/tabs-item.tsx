@@ -42,17 +42,17 @@ const TabsItemComponent: React.FC<React.PropsWithChildren<TabsItemProps>> = ({
       <div
         ref={ref}
         className={clsx(
-          "relative flex items-center box-border cursor-pointer bg-transparent",
-          "w-auto h-auto py-3 px-2 mx-1 first-of-type:ml-0 z-1",
-          "outline-none capitalize whitespace-nowrap select-none text-inherit leading-normal",
+          "relative box-border flex cursor-pointer items-center bg-transparent",
+          "z-1 mx-1 h-auto w-auto py-3 px-2 first-of-type:ml-0",
+          "text-inherit select-none whitespace-nowrap capitalize leading-normal outline-none",
           "hover:text-foreground",
-          "after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:right-0 after:w-full after:h-[2px] after:rounded-secondary after:bg-foreground after:text-foreground after:transition-['transition: opacity, transform 200ms ease-in'] after:opacity-0",
-          active ? "after:opacity-100 after:scale-x-100" : "after:scale-x-75",
+          "after:transition-['transition: opacity, 200ms ease-in'] transform after:absolute after:-bottom-[1px] after:left-0 after:right-0 after:h-[2px] after:w-full after:rounded-secondary after:bg-foreground after:text-foreground after:opacity-0 after:content-['']",
+          active ? "after:scale-x-100 after:opacity-100" : "after:scale-x-75",
           active ? "text-foreground" : "text-accents_5",
           disabled && "cursor-not-allowed hover:text-accents_3",
           hideBorder &&
-            "before:block before:font-semibold before:height-0 before:overflow-hidden before:invisible after:hidden",
-          hideBorder && active && "text-semibold"
+            "before:height-0 before:invisible before:block before:overflow-hidden before:font-semibold after:hidden",
+          hideBorder && active && "text-semibold",
         )}
         role="button"
         key={value}

@@ -48,7 +48,7 @@ export const EthereumConnectButton: FC<ConnectButtonProps> = ({ children }) => {
                     {children || (
                       <img
                         src="/images/lightGray-wallet.svg"
-                        className="w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey"
+                        className="border-mediumGrey inline-block h-8 w-8 rounded-[5px] border p-2"
                         alt="Wallet"
                       />
                     )}
@@ -66,7 +66,7 @@ export const EthereumConnectButton: FC<ConnectButtonProps> = ({ children }) => {
                     {children || (
                       <img
                         src="/images/lightGray-wallet.svg"
-                        className="w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey"
+                        className="border-mediumGrey inline-block h-8 w-8 rounded-[5px] border p-2"
                         alt="Wallet"
                       />
                     )}
@@ -82,7 +82,7 @@ export const EthereumConnectButton: FC<ConnectButtonProps> = ({ children }) => {
                 >
                   {children || (
                     <Avatar
-                      className="w-4 h-4 text-darkGrey"
+                      className="text-darkGrey h-4 w-4"
                       src="/images/avatar-blank.png"
                     />
                   )}

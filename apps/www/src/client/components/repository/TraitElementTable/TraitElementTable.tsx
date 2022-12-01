@@ -1,16 +1,17 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { flexRender, Table as ReactTable } from '@tanstack/react-table'
-import clsx from 'clsx'
-import { FC } from 'react'
-import { Table } from 'src/client/components/layout/core/Table'
-import { TraitElementFields } from './useTraitElementForm'
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
+import { flexRender, Table as ReactTable } from "@tanstack/react-table";
+import clsx from "clsx";
+import { FC } from "react";
+import { Table } from "src/client/components/layout/core/Table";
+import { TraitElementFields } from "./useTraitElementForm";
 
 interface Props {
-  table: ReactTable<TraitElementFields>
-  id: string
+  table: ReactTable<TraitElementFields>;
+  id: string;
 }
 
-export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
+export type TraitElementTableProps = Props &
+  Omit<React.HTMLAttributes<any>, keyof Props>;
 
 /**
  * This Functional Component maintains all the logic related to the TraitElementTable.
@@ -18,7 +19,12 @@ export type TraitElementTableProps = Props & Omit<React.HTMLAttributes<any>, key
  *
  * @todo initialSum removed as prop. it should be generated here.
  */
-const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, ...props }) => {
+const TraitElementTable: FC<TraitElementTableProps> = ({
+  table,
+  className,
+  id,
+  ...props
+}) => {
   return (
     <div className={clsx(className)} {...props}>
       {/* Use this to debug the sum of traitElement's weight */}
@@ -33,21 +39,30 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, .
                     <>
                       <div
                         {...{
-                          className: header.column.getCanSort() ? 'cursor-pointer select-none flex items-center space-x-1' : '',
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none flex items-center space-x-1"
+                            : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                         {{
-                          asc: <ChevronUpIcon className='w-3 h-3 text-darkGrey' />,
-                          desc: <ChevronDownIcon className='w-3 h-3 text-darkGrey' />,
+                          asc: (
+                            <ChevronUpIcon className="text-darkGrey h-3 w-3" />
+                          ),
+                          desc: (
+                            <ChevronDownIcon className="text-darkGrey h-3 w-3" />
+                          ),
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     </>
                   )}
                 </Table.Head.Row>
-              )
-            })
+              );
+            }),
           )}
         </Table.Head>
         <Table.Body>
@@ -57,19 +72,28 @@ const TraitElementTable: FC<TraitElementTableProps> = ({ table, className, id, .
             .rows.sort((a, b) => (a.original.id === `none-${id}` ? -1 : 1))
             .map((row, index) => {
               return (
-                <Table.Body.Row key={row.original.id} current={index} total={table.getRowModel().rows.length}>
+                <Table.Body.Row
+                  key={row.original.id}
+                  current={index}
+                  total={table.getRowModel().rows.length}
+                >
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <Table.Body.Row.Data key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Body.Row.Data>
-                    )
+                      <Table.Body.Row.Data key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </Table.Body.Row.Data>
+                    );
                   })}
                 </Table.Body.Row>
-              )
+              );
             })}
         </Table.Body>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default TraitElementTable
+export default TraitElementTable;

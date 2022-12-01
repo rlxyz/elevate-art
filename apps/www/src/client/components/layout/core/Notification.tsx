@@ -1,10 +1,10 @@
-import clsx from 'clsx'
-import * as React from 'react'
+import clsx from "clsx";
+import * as React from "react";
 
 interface Props {
-  children: React.ReactNode
-  id: string
-  type: 'success' | 'error' | 'info'
+  children: React.ReactNode;
+  id: string;
+  type: "success" | "error" | "info";
 }
 
 export const Notification = ({ children, id, type }: Props) => {
@@ -12,14 +12,16 @@ export const Notification = ({ children, id, type }: Props) => {
     <div
       id={id}
       className={clsx(
-        type === 'error' && 'bg-redError',
-        type === 'success' && 'bg-blueHighlight',
-        type === 'info' && 'bg-black',
-        'relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-lg z-[1000]'
+        type === "error" && "bg-redError",
+        type === "success" && "bg-blueHighlight",
+        type === "info" && "bg-black",
+        "relative z-[1000] w-[350px] max-w-lg rounded-[5px] p-4 shadow-lg",
       )}
-      role='alert'
+      role="alert"
     >
-      <div className='w-full flex items-center text-accents_8 text-xs'>{children}</div>
+      <div className="flex w-full items-center text-xs text-accents_8">
+        {children}
+      </div>
     </div>
-  )
-}
+  );
+};

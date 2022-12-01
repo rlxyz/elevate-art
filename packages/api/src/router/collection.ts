@@ -11,7 +11,7 @@ export const collectionRouter = router({
     .input(
       z.object({
         repositoryId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId } = input;
@@ -26,7 +26,7 @@ export const collectionRouter = router({
         repositoryId: z.string(),
         name: z.string(),
         totalSupply: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { repositoryId, name, totalSupply } = input;
@@ -38,7 +38,7 @@ export const collectionRouter = router({
     .input(
       z.object({
         collectionId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { collectionId } = input;

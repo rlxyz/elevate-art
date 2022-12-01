@@ -1,5 +1,5 @@
-import Upload from './upload'
+import Upload from "./upload";
 
-export type UploadComponentType = typeof Upload
+export type UploadComponentType = typeof Upload;
 
-export default Upload as UploadComponentType
+export default Upload as UploadComponentType;

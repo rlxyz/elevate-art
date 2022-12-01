@@ -1,5 +1,5 @@
-import clsx from 'clsx'
-import * as NextLink from 'next/link'
+import clsx from "clsx";
+import * as NextLink from "next/link";
 
 export const Link = ({
   children,
@@ -12,20 +12,20 @@ export const Link = ({
   hover = false,
   rounded = true,
 }: {
-  href: string
-  enabled?: boolean
-  external?: boolean
-  disabled?: boolean
-  className?: string
-  children?: React.ReactNode
-  title?: string
-  hover?: boolean
-  rounded?: boolean
+  href: string;
+  enabled?: boolean;
+  external?: boolean;
+  disabled?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+  title?: string;
+  hover?: boolean;
+  rounded?: boolean;
 }) => {
   return disabled ? (
-    <div className={'py-2'}>
+    <div className={"py-2"}>
       {title && (
-        <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+        <div className="text-black flex w-full flex-row items-center justify-between px-5 text-xs">
           <span>{title}</span>
         </div>
       )}
@@ -39,15 +39,15 @@ export const Link = ({
         <a>
           <div
             className={clsx(
-              `cursor-pointer flex flex-row justify-between hover:bg-lightGray py-2`,
-              enabled ? 'font-semibold' : '',
-              enabled && hover ? 'bg-lightGray' : '',
-              rounded ? 'rounded-[5px]' : '',
-              className
+              `hover:bg-lightGray flex cursor-pointer flex-row justify-between py-2`,
+              enabled ? "font-semibold" : "",
+              enabled && hover ? "bg-lightGray" : "",
+              rounded ? "rounded-[5px]" : "",
+              className,
             )}
           >
             {title && (
-              <div className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>
+              <div className="text-black flex w-full flex-row items-center justify-between px-5 text-xs">
                 <span>{title}</span>
               </div>
             )}
@@ -56,5 +56,5 @@ export const Link = ({
         </a>
       )}
     </NextLink.default>
-  )
-}
+  );
+};
