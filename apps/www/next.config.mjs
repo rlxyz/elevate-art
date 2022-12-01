@@ -1,6 +1,5 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
-import withTM from 'next-transpile-modules'
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
 
@@ -22,16 +21,19 @@ const defineNextConfig = (config) => {
   return config
 }
 
-export default withTM(['@elevateart/ui', '@elevateart/eth-auth', '@elevateart/db', '@elevateart/api', '@elevateart/compiler'])(
-  defineNextConfig({
-    reactStrictMode: true,
-    swcMinify: true,
-    images: {
-      domains: ['res.cloudinary.com', 'localhost'],
-    },
-    i18n: {
-      locales: ['en'],
-      defaultLocale: 'en',
-    },
-  })
-)
+/** @type {import("next").NextConfig} */
+export default defineNextConfig({
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ['res.cloudinary.com', 'localhost'],
+  },
+  experimental: {
+    // Enables hot-reload and easy integration for local packages
+    transpilePackages: ['@elevateart/ui', '@elevateart/eth-auth', '@elevateart/db', '@elevateart/api', '@elevateart/compiler'],
+  },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
+})

@@ -1,13 +1,7 @@
-<<<<<<< HEAD:apps/www/src/pages/404.tsx
-import { Layout } from '@components/Layout/core/Layout'
-import Link from '@components/Layout/Link'
-import Image from 'next/image'
-=======
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Layout } from 'src/client/components/layout/core/Layout'
->>>>>>> staging:www/src/pages/404.tsx
 
 const Page = () => {
   const { status } = useSession()

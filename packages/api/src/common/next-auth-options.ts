@@ -1,12 +1,12 @@
-import { prisma } from "@elevateart/db";
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { SiweMessage } from "siwe";
-import { env } from "src/env/server.mjs";
 import {
   OrganisationDatabaseEnum,
   OrganisationDatabaseRoleEnum,
-} from "src/shared/enums";
+  prisma,
+} from "@elevateart/db";
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { SiweMessage } from "siwe";
+import { env } from "../env/server.mjs";
 
 export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
@@ -25,7 +25,7 @@ export const nextAuthOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Ethereum",

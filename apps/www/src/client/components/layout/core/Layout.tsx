@@ -4,11 +4,6 @@ import { Toaster } from 'react-hot-toast'
 import Footer from './Footer'
 import Header, { HeaderProps } from './Header'
 
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Layout.tsx
-========
-const DynamicFooter = dynamic(() => import('./Footer'))
-
->>>>>>>> staging:apps/www/src/client/components/layout/core/Layout.tsx
 interface LayoutProps {
   children: React.ReactElement[] | React.ReactElement
   hasFooter?: boolean
@@ -56,15 +51,10 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 }
 
 const LayoutHeader = (props: HeaderProps) => (
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Layout.tsx
-  <LayoutContainer className='min-h-[3.5rem] max-h-[5.64rem]'>
-    <Header connectButton {...props} />
-========
   <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
     <div className='-ml-2'>
       <Header {...props} />
     </div>
->>>>>>>> staging:apps/www/src/client/components/layout/core/Layout.tsx
   </LayoutContainer>
 )
 

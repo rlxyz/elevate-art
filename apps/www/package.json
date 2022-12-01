@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "doppler setup && doppler run next dev",
+        "dev": "doppler run next dev",
         "clean": "rm -rf .next .turbo node_modules",
         "build": "doppler run next build",
         "build:production": "next build",

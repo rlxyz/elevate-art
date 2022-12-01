@@ -1,10 +1,10 @@
 // import { Header } from '@components/layout/Header'
+import { Layout } from '@components/layout/core/Layout'
+import NextLink from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { Layout } from '../client/components/layout/core/Layout'
-import { Link } from '../client/components/layout/Link'
 
 const Home: NextPage = () => {
   const { status } = useSession()
@@ -21,9 +21,9 @@ const Home: NextPage = () => {
             </div>
             <span className='text-xs uppercase'>
               an&nbsp;
-              <Link external={true} href='https://twitter.com/rlxyz_eth'>
+              <NextLink className='w-fit' href='https://twitter.com/rlxyz_eth'>
                 <span className='font-extrabold line-through'>RLXYZ</span>
-              </Link>
+              </NextLink>
               &nbsp;production
             </span>
           </div>

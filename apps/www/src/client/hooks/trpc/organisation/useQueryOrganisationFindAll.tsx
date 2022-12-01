@@ -1,17 +1,9 @@
-<<<<<<<< HEAD:apps/www/src/hooks/query/useQueryOrganisation.tsx
 import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
-import { useSession } from '@elevateart/eth-auth'
-import { trpc } from '@utils/trpc'
-========
->>>>>>>> staging:apps/www/src/client/hooks/trpc/organisation/useQueryOrganisationFindAll.tsx
 import produce, { setAutoFreeze } from 'immer'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-<<<<<<<< HEAD:apps/www/src/hooks/query/useQueryOrganisation.tsx
-import { OrganisationNavigationEnum } from 'src/types/enums'
-========
 import { trpc } from 'src/client/utils/trpc'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
->>>>>>>> staging:apps/www/src/client/hooks/trpc/organisation/useQueryOrganisationFindAll.tsx
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 setAutoFreeze(false)
 
