@@ -20,42 +20,21 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!r || !l || !t) {
     return res.status(400).send('Bad Request')
   }
-
-  const exist = await redis.get(`${env.NODE_ENV}/${r}/${l}/${t}`)
-  if (exist) {
-    const data = await fetch(getTraitElementImage({ r, l, t }))
-    if (data.status === 404) {
-      return res.status(404)
-    }
-
-    if (data.status === 200) {
-      return res.send(data.body)
-    }
-  }
-
   const response = await getTraitElementInfo({ r, l, t })
   if (response.failed) {
-    return res.status(404)
+    return res.status(400).send('Bad Request')
   }
   const { version, traitElementId } = response.getValue()
 
-  try {
-    const exist = await redis.get(traitElementId)
-    if (!exist) {
-      await redis.set(traitElementId, version)
-    }
-  } catch (error) {
-    console.error(error)
-  }
+  getTraitElementImage({ r, l, t, version })
+    .then((response) => {
+      return res.setHeader('Content-Type', 'image/png').status(200).send(response.getValue())
+    })
+    .catch((err) => {
+      return res.status(500).send(err)
+    })
 
-  const data = await fetch(getTraitElementImage({ r, l, t }))
-  if (data.status === 404) {
-    return res.status(404)
-  }
-
-  if (data.status === 200) {
-    return res.send(data.body)
-  }
+  return res.status(504)
 }
 
 export default index
