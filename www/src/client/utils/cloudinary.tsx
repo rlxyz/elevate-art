@@ -3,8 +3,6 @@ import { TraitElement } from '@prisma/client'
 import { FileWithPath } from 'react-dropzone'
 import { env } from 'src/env/client.mjs'
 
-export const DEFAULT_IMAGES_BYTES_ALLOWED = 9990000
-
 export const getRepositoryUploadLayerObjectUrls = (files: FileWithPath[]): { [key: string]: TraitElementUploadState[] } => {
   return files.reduce((acc: any, file: FileWithPath) => {
     const pathArray = file.path?.split('/') || []
