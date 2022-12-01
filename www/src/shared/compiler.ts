@@ -136,18 +136,11 @@ export const rarity = (
   const occurs = occurances.traits(elements)
   const max = elements.length
   return elements
-    .map((token, index) => {
-      return {
-        index,
-        score: token.reduce((result, item) => {
-          const [_, traitElementId] = item
-          return result - Math.log((occurs.get(traitElementId) || 1) / max)
-        }, 0),
-      }
-    })
-    .sort((a, b) => {
-      return b.score - a.score
-    })
+    .map((token, index) => ({
+      index,
+      score: token.reduce((result, [_, traitElementId]) => result - Math.log((occurs.get(traitElementId) || 1) / max), 0 as number),
+    }))
+    .sort((a, b) => b.score - a.score)
 }
 
 export const seed = (...values: (string | number)[]) => {
