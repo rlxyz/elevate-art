@@ -1,6 +1,6 @@
 import {
-    OrganisationDatabaseEnum,
-    OrganisationDatabaseType
+  OrganisationDatabaseEnum,
+  OrganisationDatabaseType
 } from "@elevateart/db/enums";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
@@ -8,8 +8,8 @@ import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavig
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 import { useAuthenticated } from "src/hooks/utils/useAuthenticated";
 import {
-    OrganisationNavigationEnum,
-    OrganisationNavigationType
+  OrganisationNavigationEnum,
+  OrganisationNavigationType
 } from "src/shared/enums";
 
 export const OrganisationAuthLayout = ({

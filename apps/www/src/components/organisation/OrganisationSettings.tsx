@@ -1,8 +1,10 @@
-import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { capitalize } from "src/client/utilssrc/hooks/store/useOrganisationNavigationStore"
-import { Link } from 'src/components/layout/Link'
+import NextLinkComponent from '@components/layout/link/NextLink'
+import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
+import clsx from 'clsx'
+import { useForm } from 'react-hook-form'
 import { useQueryOrganisationFindAll } from 'src/hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
+import { capitalize } from 'src/utils/format'
 
 export const SettingsNavigations = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -20,9 +22,9 @@ export const SettingsNavigations = () => {
         },
       ].map(({ name, href }) => {
         return (
-          <Link key={name} href={href} block className={clsx(currentSettingsRoute === name && 'font-semibold', 'w-full text-xs')}>
+          <NextLinkComponent key={name} href={href} block className={clsx(currentSettingsRoute === name && 'font-semibold', 'w-full text-xs')}>
             {capitalize(name)}
-          </Link>
+          </NextLinkComponent>
         )
       })}
     </div>

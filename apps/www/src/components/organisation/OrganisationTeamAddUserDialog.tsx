@@ -1,18 +1,9 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationTeamAddUserDialog.tsx
-import { OrganisationDatabaseRoleEnumType } from '@elevateart/db/enums'
-import { Loading } from '@elevateart/ui'
-========
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationTeamAddUserDialog.tsx
-import { Dialog, Transition } from '@headlessui/react'
-import { useMutateOrganisationSendInvite } from '@hooks/trpc/organisation/useMutateOrganisationSendInvite'
-import { Fragment } from 'react'
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationTeamAddUserDialog.tsx
-========
-import LoadingComponent from 'src/client/components/layout/loading/Loading'
-import { useNotification } from 'src/client/hooks/utils/useNotification'
-import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationTeamAddUserDialog.tsx
+import { OrganisationDatabaseRoleEnumType } from "@elevateart/db/enums";
+import { Loading, useNotification } from "@elevateart/ui";
+import { Dialog, Transition } from "@headlessui/react";
+import { useMutateOrganisationSendInvite } from "@hooks/trpc/organisation/useMutateOrganisationSendInvite";
+import { Fragment } from "react";
+import { capitalize } from "src/utils/format";
 
 export const OrganisationTeamAddUserDialog = ({
   organisationId,
@@ -70,13 +61,7 @@ export const OrganisationTeamAddUserDialog = ({
                       <div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Address</span>
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationTeamAddUserDialog.tsx
-                          <div className='w-full bg-background text-xs p-2 border border-border rounded-[5px]'>
-                            {addNewUserData.address}
-                          </div>
-========
                           <div className='w-full bg-white text-xs p-2 border border-mediumGrey rounded-[5px]'>{addNewUserData.address}</div>
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationTeamAddUserDialog.tsx
                         </div>
                         <div className='space-y-1'>
                           <span className='text-[0.6rem] uppercase'>Role</span>
@@ -114,11 +99,7 @@ export const OrganisationTeamAddUserDialog = ({
                         }}
                         className='text-xs text-success hover:bg-accents_8 py-6'
                       >
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationTeamAddUserDialog.tsx
                         {isLoading ? <Loading /> : 'Add'}
-========
-                        {isLoading ? <LoadingComponent /> : 'Add'}
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationTeamAddUserDialog.tsx
                       </button>
                     </div>
                   </Dialog.Description>

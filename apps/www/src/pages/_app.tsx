@@ -4,11 +4,11 @@ import "../styles/globals.css";
 
 /** Core Functional Components */
 import { ErrorBoundary } from "@highlight-run/react";
-import { EthereumAuthenticationLayout } from "src/components/layout/core/EthereumAuthenticationLayout";
 import { AnalyticsLayout } from "../components/layout/core/AnalyticsLayout";
 
 /** Types */
-import { Session } from "next-auth/core/types";
+import { Session } from "@elevateart/auth";
+import { EthereumAuthenticationLayout } from "@elevateart/auth/src/client";
 import { AppType } from "next/app";
 import { trpc } from "src/utils/trpc";
 import "../utils/highlight";

@@ -1,23 +1,12 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
-import Link from '@components/Layout/Link'
-import { Search, useInput } from '@elevateart/ui'
-========
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
-import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
-import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
-import { timeAgo } from '../../utils/time'
-========
-import { useState } from 'react'
-import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
-import { Link } from 'src/client/components/layout/Link'
-import SearchInput from 'src/client/components/layout/search/Search'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { timeAgo } from 'src/client/utils/time'
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
+import { Avatar, Search, useInput } from "@elevateart/ui"
+import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from "@heroicons/react/outline"
+import useRepositoryStore from "@hooks/store/useRepositoryStore"
+import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll"
+import { useQueryOrganisationFindAllRepository } from "@hooks/trpc/organisation/useQueryOrganisationFindAllRepository"
+import clsx from "clsx"
+import Link from "next/link"
+import { NextRouter, useRouter } from "next/router"
+import { timeAgo } from "src/utils/time"
 
 const NoRepositoryExistPlaceholder = () => {
   const { current } = useQueryOrganisationFindAll()
@@ -56,13 +45,8 @@ const NoRepositoryExistPlaceholder = () => {
 const ViewAllRepositories = () => {
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
   const { bindings: inputBindings, state: input } = useInput('')
-  const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationsRepository()
-========
-  const [query, setQuery] = useState('')
   const { all: repositories, isLoading: isLoadingRepositories } = useQueryOrganisationFindAllRepository()
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   if (repositories && repositories.length === 0) return <NoRepositoryExistPlaceholder />
   const isLoading = !repositories
@@ -77,23 +61,12 @@ const ViewAllRepositories = () => {
     <>
       <div className='grid grid-cols-10 space-x-3 items-center'>
         <div className='col-span-9 h-full w-full'>
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
           <Search isLoading={isLoading} {...inputBindings} />
-========
-          <SearchInput isLoading={isLoading} onChange={(e) => setQuery(e.target.value)} />
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
         </div>
         <div className='col-span-1 h-full flex items-center'>
           <div className={clsx(isLoading && 'bg-accents_7 bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
             <button
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
-              className={clsx(
-                isLoading && 'invisible',
-                'w-full border h-full rounded-[5px] text-xs text-accents_8 bg-foreground font-semibold'
-              )}
-========
               className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black font-semibold')}
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
               onClick={(e: any) => {
                 e.preventDefault()
                 router.push(`${organisationName}/new`)
@@ -176,11 +149,7 @@ const ViewAllRepositories = () => {
               <Link href={`/${organisationName}/${repository.name}`}>
                 <div className='border border-border rounded-[5px] px-6 py-5 space-y-4 w-full'>
                   <div className='flex items-center space-x-3'>
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationViewAllRepository.tsx
-                    <div className='bg-success h-6 w-6 rounded-full' />
-========
-                    <AvatarComponent src='images/avatar-blank.png' />
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationViewAllRepository.tsx
+                    <Avatar src='images/avatar-blank.png' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
                       <span className='text-xs text-accents_5'>Last Edited {timeAgo(repository.updatedAt)}</span>

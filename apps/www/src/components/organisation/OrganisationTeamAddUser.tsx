@@ -1,10 +1,14 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/OrganisationTeamAddUser.tsx
-========
-import { getAddressFromEns } from 'src/client/utils/ethers'
-import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationTeamAddUser.tsx
+import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from '@elevateart/db/enums'
+import { ExclamationCircleIcon } from '@heroicons/react/outline'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import clsx from 'clsx'
+import { ethers } from 'ethers'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { getAddressFromEns } from 'src/utils/ethers'
+import { capitalize } from 'src/utils/format'
 import { OrganisationTeamAddUserDialog } from './OrganisationTeamAddUserDialog'
+
 export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
   const {

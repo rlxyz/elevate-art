@@ -25,7 +25,7 @@ export const nextAuthOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  secret: env.NEXTAUTH_SECRET,
+  secret: "env.NEXTAUTH_SECRET",
   providers: [
     CredentialsProvider({
       name: "Ethereum",

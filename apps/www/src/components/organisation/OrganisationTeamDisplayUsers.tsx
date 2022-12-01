@@ -1,11 +1,11 @@
 import { OrganisationMember, User } from "@prisma/client";
 import clsx from "clsx";
 import { useState } from "react";
-import { getEnsName } from "src/client/utils/ethers";
-import { capitalize } from "src/client/utils/format";
-import { timeAgo } from "src/client/utils/time";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 import { useDeepCompareEffect } from "src/hooks/utils/useDeepCompareEffect";
+import { getEnsName } from "src/utils/ethers";
+import { capitalize } from "src/utils/format";
+import { timeAgo } from "src/utils/time";
 
 export const OrganisationTeamDisplayUsers = () => {
   const { current: organisation } = useQueryOrganisationFindAll();
