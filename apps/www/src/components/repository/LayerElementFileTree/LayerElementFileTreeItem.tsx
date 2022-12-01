@@ -25,12 +25,7 @@ export type ModalProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>;
  *
  * @todo rework the Link component being used here
  */
-export const LayerElementFileTreeItem: FC<ModalProps> = ({
-  item,
-  enabled,
-  className,
-  ...props
-}) => {
+export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, className, ...props }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { notifyInfo } = useNotification();
@@ -38,13 +33,8 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({
   const { mainRepositoryHref } = useRepositoryRoute();
 
   const onClipboardCopy = () => {
-    const origin =
-      typeof window !== "undefined" && window.location.origin
-        ? window.location.origin
-        : "";
-    navigator.clipboard.writeText(
-      `${origin}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`,
-    );
+    const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : "";
+    navigator.clipboard.writeText(`${origin}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`);
     notifyInfo("Copied to clipboard");
   };
 
@@ -52,21 +42,11 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({
     <div
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
-      className={clsx(
-        className,
-        "relative hover:font-semibold",
-        enabled && "bg-lightGray font-semibold",
-      )}
+      className={clsx(className, "relative hover:font-semibold", enabled && "bg-lightGray font-semibold")}
     >
-      <NextLinkComponent
-        href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`}
-        className="py-2"
-      >
+      <NextLinkComponent href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`} className="py-2">
         <div className="relative flex w-full items-center">
-          <span
-            className="mx-7 flex w-full items-center overflow-hidden whitespace-nowrap text-xs"
-            {...props}
-          >
+          <span className="mx-7 flex w-full items-center overflow-hidden whitespace-nowrap text-xs" {...props}>
             {item.name}
           </span>
         </div>
@@ -124,16 +104,10 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({
         layerElement={item}
         onSuccess={() => {
           if (!enabled) return;
-          router.push(
-            `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}`,
-          );
+          router.push(`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}`);
         }}
       />
-      <LayerElementRenameModal
-        onClose={() => setIsRenameDialogOpen(false)}
-        visible={isRenameDialogOpen}
-        layerElement={item}
-      />
+      <LayerElementRenameModal onClose={() => setIsRenameDialogOpen(false)} visible={isRenameDialogOpen} layerElement={item} />
     </div>
   );
 };

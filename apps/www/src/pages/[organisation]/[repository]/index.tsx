@@ -17,15 +17,13 @@ import { NextRouter, useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Page = () => {
-  const { setCollectionId, reset, setRepositoryId } = useRepositoryStore(
-    (state) => {
-      return {
-        setRepositoryId: state.setRepositoryId,
-        setCollectionId: state.setCollectionId,
-        reset: state.reset,
-      };
-    },
-  );
+  const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
+    return {
+      setRepositoryId: state.setRepositoryId,
+      setCollectionId: state.setCollectionId,
+      reset: state.reset,
+    };
+  });
 
   useEffect(() => {
     reset();
@@ -34,15 +32,9 @@ const Page = () => {
   const router: NextRouter = useRouter();
   const organisationName: string = router.query.organisation as string;
   const repositoryName: string = router.query.repository as string;
-  const { current: layer, isLoading: isLoadingLayers } =
-    useQueryLayerElementFindAll();
-  const {
-    all: collections,
-    isLoading: isLoadingCollection,
-    mutate,
-  } = useQueryCollectionFindAll();
-  const { current: repository, isLoading: isLoadingRepository } =
-    useQueryRepositoryFindByName();
+  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll();
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll();
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName();
   const { all: organisations } = useQueryOrganisationFindAll();
   const { mainRepositoryHref } = useRepositoryRoute();
   const { collectionName } = useRepositoryRoute();
@@ -55,9 +47,7 @@ const Page = () => {
   useEffect(() => {
     if (!collections) return;
     if (!collections.length) return;
-    const collection = collections.find(
-      (collection) => collection.name === collectionName,
-    );
+    const collection = collections.find((collection) => collection.name === collectionName);
     if (!collection) return;
     setCollectionId(collection.id);
     // if (tokens.length === 0) return
