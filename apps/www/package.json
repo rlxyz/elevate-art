@@ -16,6 +16,7 @@
         "@elevateart/db": "*",
         "@elevateart/eth-auth": "*",
         "@elevateart/ui": "*",
+        "@elevatart/tailwind-config": "*",
         "@headlessui/react": "^1.7.3",
         "@heroicons/react": "v1",
         "@highlight-run/react": "^1.2.1",

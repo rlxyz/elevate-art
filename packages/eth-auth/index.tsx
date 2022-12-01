@@ -2,11 +2,11 @@ import {
   connectorsForWallets,
   getDefaultWallets,
   lightTheme,
-  RainbowKitProvider,
+  RainbowKitProvider
 } from "@rainbow-me/rainbowkit";
 import {
   GetSiweMessageOptions,
-  RainbowKitSiweNextAuthProvider,
+  RainbowKitSiweNextAuthProvider
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
