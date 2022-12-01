@@ -29,7 +29,7 @@ export const AnalyticsLayout: FC<{ children: ReactNode }> = ({ children }) => {
         }}
       />
       {children}
-      <Analytics debug={!(env.NEXT_PUBLIC_NODE_ENV === 'production')} />
+      {env.NEXT_PUBLIC_NODE_ENV === 'production' && <Analytics />}
     </>
   )
 }
