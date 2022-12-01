@@ -1,19 +1,18 @@
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { Organisation } from '@prisma/client'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
-import { ConnectButton } from '../eth/ConnectButton'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { Link } from '../Link'
 import LinkComponent from '../link/Link'
-import { default as NextLink, default as NextLinkComponent } from '../link/NextLink'
+import { default as NextLinkComponent } from '../link/NextLink'
 
 const externalRoutes = [
   {
@@ -65,7 +64,6 @@ const socialRoutes = [
 ]
 
 const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => {
-  const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
       <aside className='flex flex-row items-center justify-center space-x-3'>
@@ -84,13 +82,13 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
           </LinkComponent>
         ))}
       </aside>
-      {authenticated ? (
-        <ConnectButton />
+      {/* {authenticated ? (
+        <EthereumConnectButton />
       ) : (
         <NextLink href='/connect'>
           <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
         </NextLink>
-      )}
+      )} */}
     </div>
   )
 }

@@ -1,12 +1,8 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/PersonalOrganisationTeamInvitesAcceptDialog.tsx
 import { Loading } from '@elevateart/ui'
-========
->>>>>>>> staging:apps/www/src/client/components/organisation/PersonalOrganisationTeamInvitesAcceptDialog.tsx
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutateOrganisationAcceptInvite } from '@hooks/trpc/organisation/useMutateOrganisationAcceptInvite'
 import { Organisation, OrganisationPending } from '@prisma/client'
 import { Fragment, useState } from 'react'
-import LoadingComponent from 'src/client/components/layout/loading/Loading'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { capitalize } from 'src/client/utils/format'
 
@@ -22,10 +18,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className='text-accents_8 bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'
-      >
+      <button onClick={() => setIsOpen(true)} className='text-accents_8 bg-success border border-border px-4 py-1.5 rounded-[5px] text-xs'>
         Accept
       </button>
       <Transition appear show={isOpen} as={Fragment}>
@@ -101,11 +94,7 @@ export const PersonalOrganisationTeamInvitesAcceptDialog = ({
                         }
                         className='text-xs text-accents_5 py-6 hover:text-foreground'
                       >
-<<<<<<<< HEAD:apps/www/src/components/Organisation/PersonalOrganisationTeamInvitesAcceptDialog.tsx
                         {isLoading ? <Loading /> : 'Join'}
-========
-                        {isLoading ? <LoadingComponent /> : 'Join'}
->>>>>>>> staging:apps/www/src/client/components/organisation/PersonalOrganisationTeamInvitesAcceptDialog.tsx
                       </button>
                     </div>
                   </Dialog.Description>

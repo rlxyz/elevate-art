@@ -1,23 +1,10 @@
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/AuthLayout.tsx
 import { OrganisationDatabaseEnum, OrganisationDatabaseType } from '@elevateart/db/enums'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import useOrganisationNavigationStore from '@hooks/store/useOrganisationNavigationStore'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
-import { useRouter } from 'next/router'
-import { ReactNode, useEffect } from 'react'
-========
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { useAuthenticated } from 'src/client/hooks/utils/useAuthenticated'
-import {
-  OrganisationDatabaseEnum,
-  OrganisationDatabaseType,
-  OrganisationNavigationEnum,
-  OrganisationNavigationType,
-} from 'src/shared/enums'
->>>>>>>> staging:apps/www/src/client/components/organisation/OrganisationAuthLayout.tsx
+import { OrganisationNavigationEnum, OrganisationNavigationType } from 'src/shared/enums'
 
 export const OrganisationAuthLayout = ({
   children,

@@ -1,6 +1,6 @@
-import { Result } from '@server/utils/response-result'
-import { v2 } from 'cloudinary'
-import { env } from 'src/env/server.mjs'
+import { v2 } from "cloudinary";
+import { env } from "../env/server.mjs";
+import { Result } from "../utils/response-result";
 
 /**
  * @important Note, this current implementation uses "Cloudinary Admin API" to delete files by
@@ -10,22 +10,22 @@ import { env } from 'src/env/server.mjs'
  */
 
 v2.config({
-  cloud_name: env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  cloud_name: env.CLOUDINARY_CLOUD_NAME,
   api_key: env.CLOUDINARY_API_KEY,
   api_secret: env.CLOUDINARY_API_SECRET,
-})
+});
 
 export type DeleteTraitElementResponse = {
-  traitElementId: string
-  deleted: boolean
-}
+  traitElementId: string;
+  deleted: boolean;
+};
 
 const getDeleteTraitElementResponse = (response: { deleted: any }) => {
   return Object.entries(response.deleted).map(([key, value]) => ({
-    traitElementId: key.split('/').pop() as string,
-    deleted: !!(value === 'deleted') as boolean,
-  }))
-}
+    traitElementId: key.split("/").pop() as string,
+    deleted: !!(value === "deleted") as boolean,
+  }));
+};
 
 /**
  * This function is used to delete a LayerElement folder from Cloudinary.
@@ -34,22 +34,22 @@ const getDeleteTraitElementResponse = (response: { deleted: any }) => {
  */
 export const deleteImageFilesFromCloudinary = (
   files: {
-    r: string
-    l: string
-    t: string
+    r: string;
+    l: string;
+    t: string;
   }[]
 ): Promise<Result<DeleteTraitElementResponse[]>> => {
   return new Promise((resolve, reject) => {
     v2.api
       .delete_resources(
-        files.map((x) => `${env.NEXT_PUBLIC_NODE_ENV}/${x.r}/${x.l}/${x.t}`),
+        files.map((x) => `${env.NODE_ENV}/${x.r}/${x.l}/${x.t}`),
         /** Invalidate Image in cdn */
         { invalidate: true }
       )
       .then((res) => resolve(Result.ok(getDeleteTraitElementResponse(res))))
-      .catch((err) => reject(Result.fail(err.error.message)))
-  })
-}
+      .catch((err) => reject(Result.fail(err.error.message)));
+  });
+};
 
 /**
  * This function is used to delete a LayerElement folder from Cloudinary.
@@ -57,14 +57,20 @@ export const deleteImageFilesFromCloudinary = (
  * @param r repositoryId
  * @param l layerElementId
  */
-export const deleteImageFolderFromCloudinary = ({ r, l }: { r: string; l: string }): Promise<Result<DeleteTraitElementResponse[]>> => {
+export const deleteImageFolderFromCloudinary = ({
+  r,
+  l,
+}: {
+  r: string;
+  l: string;
+}): Promise<Result<DeleteTraitElementResponse[]>> => {
   return new Promise((resolve, reject) => {
     v2.api
-      .delete_resources_by_prefix(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}`, {
+      .delete_resources_by_prefix(`${env.NODE_ENV}/${r}/${l}`, {
         /** Invalidate Image in cdn */
         invalidate: true,
       })
       .then((res) => resolve(Result.ok(getDeleteTraitElementResponse(res))))
-      .catch((err) => reject(Result.fail(err.error.message)))
-  })
-}
+      .catch((err) => reject(Result.fail(err.error.message)));
+  });
+};

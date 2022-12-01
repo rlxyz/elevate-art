@@ -1,3 +1,4 @@
+import { OrganisationNavigationEnum } from '@utils/enums'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/image'

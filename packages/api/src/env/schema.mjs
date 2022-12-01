@@ -11,4 +11,8 @@ export const serverSchema = z.object({
       ? z.string().min(1)
       : z.string().min(1).optional(),
   NEXTAUTH_URL: z.string().url().optional(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  NODE_ENV: z.enum(["development", "test", "production"]),
 });

@@ -12,14 +12,9 @@ export const Notification = ({ children, id, type }: Props) => {
     <div
       id={id}
       className={clsx(
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Notification.tsx
-        type === 'error' && 'bg-error',
-        type === 'success' && 'bg-success',
-========
         type === 'error' && 'bg-redError',
         type === 'success' && 'bg-blueHighlight',
         type === 'info' && 'bg-black',
->>>>>>>> staging:apps/www/src/client/components/layout/core/Notification.tsx
         'relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-lg z-[1000]'
       )}
       role='alert'

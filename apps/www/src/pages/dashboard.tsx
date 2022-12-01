@@ -1,4 +1,5 @@
 import withOrganisationStore from '@components/withOrganisationStore'
+import { OrganisationDatabaseEnum } from '@elevateart/db/enums'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -7,7 +8,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
 import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)

@@ -1,14 +1,7 @@
-<<<<<<< HEAD:apps/www/src/pages/api/trpc/[trpc].ts
-// src/pages/api/trpc/[trpc].ts
-import { appRouter, createContext, createNextApiHandler } from '@elevateart/api'
-import { env } from '../../../env/server.mjs'
-=======
+import { appRouter, createContext } from '@elevateart/api'
 import { createNextApiHandler } from '@trpc/server/adapters/next'
 
 import { env } from '../../../env/server.mjs'
-import { createContext } from '../../../server/trpc/context'
-import { appRouter } from '../../../server/trpc/router/_app'
->>>>>>> staging:www/src/pages/api/trpc/[trpc].ts
 
 // export API handler
 export default createNextApiHandler({

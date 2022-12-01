@@ -1,67 +1,41 @@
-// @todo connect button export from here.
-// @todo typesafe environment variables
 import {
   connectorsForWallets,
   getDefaultWallets,
   lightTheme,
+  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import { GetSiweMessageOptions } from "@rainbow-me/rainbowkit-siwe-next-auth";
-import "@rainbow-me/rainbowkit/styles.css";
-import { chain, configureChains, createClient } from "wagmi";
+import {
+  GetSiweMessageOptions,
+  RainbowKitSiweNextAuthProvider,
+} from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import { FC, ReactNode } from "react";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
-
+import { env } from "./src/env/client.mjs";
+// @todo add this
+// import "@rainbow-me/rainbowkit/styles.css";
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.goerli], // note: hardhat disabled. add if needed.
-  [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
-    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
-    publicProvider(),
-  ]
+  [chain.mainnet, chain.goerli],
+  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
 );
-
 const { wallets } = getDefaultWallets({
-  appName: process.env.NEXT_PUBLIC_APP_NAME || "default-app",
+  appName: env.NEXT_PUBLIC_APP_NAME,
   chains,
 });
-const appInfo = { appName: process.env.NEXT_PUBLIC_APP_NAME };
+export const appInfo = { appName: env.NEXT_PUBLIC_APP_NAME };
 const connectors = connectorsForWallets([...wallets]);
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-});
-
+const wagmiClient = createClient({ autoConnect: true, connectors, provider });
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: "sign in to elevate.art",
 });
 
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
-import { SessionProvider, useSession } from "next-auth/react";
-import { ReactNode } from "react";
-import { WagmiConfig } from "wagmi";
-export { EthereumConnectButton } from "./components/ConnectButton";
-export {
-  getSiweMessageOptions,
-  wagmiClient,
-  chains,
-  appInfo,
-  connectors,
-  provider,
-  wallets,
-};
-export { useSession };
-
-export const EthereumNextAuthContext = ({
-  children,
-  session,
-}: {
+export const EthereumAuthenticationLayout: FC<{
+  session: Session | null;
   children: ReactNode;
-  session: any;
-}) => {
+}> = ({ children, session }) => {
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider refetchInterval={60} session={session}>
@@ -71,7 +45,7 @@ export const EthereumNextAuthContext = ({
           <RainbowKitProvider
             appInfo={appInfo}
             chains={chains}
-            initialChain={Number(process.env.NEXT_PUBLIC_NETWORK_ID)}
+            initialChain={env.NEXT_PUBLIC_NETWORK_ID}
             theme={lightTheme({
               accentColor: "#0070F3",
               accentColorForeground: "white",

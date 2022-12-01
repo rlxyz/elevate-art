@@ -1,12 +1,6 @@
-<<<<<<<< HEAD:apps/www/src/components/Organisation/PersonalOrganisationAccountTeamInvites.tsx
-import { useSession } from '@elevateart/eth-auth'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { capitalize } from '@utils/format'
-========
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useSession } from 'next-auth/react'
 import { capitalize } from 'src/client/utils/format'
->>>>>>>> staging:apps/www/src/client/components/organisation/PersonalOrganisationAccountTeamInvites.tsx
 import { PersonalOrganisationTeamInvitesAcceptDialog } from './PersonalOrganisationTeamInvitesAcceptDialog'
 
 export const PersonalOrganisationAccountTeamInvites = () => {
