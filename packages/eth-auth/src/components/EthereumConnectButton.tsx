@@ -1,6 +1,6 @@
 import { Avatar } from "@elevateart/ui";
 import { ConnectButton as RbConnectButton } from "@rainbow-me/rainbowkit";
-import React from "react";
+import React, { FC } from "react";
 
 interface ConnectButtonProps {
   normalButton?: boolean;
@@ -8,7 +8,7 @@ interface ConnectButtonProps {
   children?: React.ReactNode;
 }
 
-export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
+export const EthereumConnectButton: FC<ConnectButtonProps> = ({ children }) => {
   return (
     <RbConnectButton.Custom>
       {({

@@ -17,6 +17,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { env } from "./src/env/client.mjs";
 // @todo add this
 // import "@rainbow-me/rainbowkit/styles.css";
+export { EthereumConnectButton } from "./src/components/EthereumConnectButton";
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.goerli],
   [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
