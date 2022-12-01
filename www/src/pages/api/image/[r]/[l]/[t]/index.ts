@@ -1,4 +1,4 @@
-import { getTraitElementImage, getTraitElementInfo } from '@server/common/cld-get-image'
+import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { Redis } from '@upstash/redis'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -20,13 +20,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!r || !l || !t) {
     return res.status(400).send('Bad Request')
   }
-  const response = await getTraitElementInfo({ r, l, t })
-  if (response.failed) {
-    return res.status(400).send('Bad Request')
-  }
-  const { version, traitElementId } = response.getValue()
+  // const response = await getTraitElementInfo({ r, l, t })
+  // if (response.failed) {
+  //   return res.status(400).send('Bad Request')
+  // }
+  // const { version, traitElementId } = response.getValue()
 
-  getTraitElementImage({ r, l, t, version })
+  getTraitElementImage({ r, l, t })
     .then((response) => {
       return res.setHeader('Content-Type', 'image/png').status(200).send(response.getValue())
     })

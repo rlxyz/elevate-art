@@ -24,7 +24,7 @@ export const getTraitElementImage = ({
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
       secure: true,
       // transformation: IMAGE_QUALITY_SETTINGS,
-      version: version,
+      // version: version,
     })
     fetch(url)
       .then((res) => {
@@ -49,6 +49,9 @@ export const getTraitElementInfo = ({ r, l, t }: { r: string; l: string; t: stri
         const { version, public_id } = result as { version: number; public_id: string }
         return resolve(Result.ok({ traitElementId: public_id, version: `${version}` }))
       })
-      .catch((error) => reject(Result.fail(error)))
+      .catch((error) => {
+        console.log('error', error)
+        reject(Result.fail(error))
+      })
   })
 }

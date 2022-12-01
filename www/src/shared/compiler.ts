@@ -133,14 +133,15 @@ export const rarity = (
   index: number
   score: number
 }[] => {
-  const max = elements.length
   const occurs = occurances.traits(elements)
+  const max = elements.length
   return elements
     .map((token, index) => {
       return {
         index,
         score: token.reduce((result, item) => {
-          return result - Math.log((occurs.get(item[1]) || 0) / max)
+          const [_, traitElementId] = item
+          return result - Math.log((occurs.get(traitElementId) || 1) / max)
         }, 0),
       }
     })
