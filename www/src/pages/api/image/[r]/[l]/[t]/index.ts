@@ -11,7 +11,7 @@ export const redis = new Redis({
 
 export const config = {
   api: {
-    responseLimit: '20mb',
+    responseLimit: '8mb',
     externalResolver: true,
   },
 }
