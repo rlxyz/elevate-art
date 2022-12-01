@@ -1,4 +1,4 @@
-import { LayerElement } from "@prisma/client";
+import { LayerElement } from "@elevateart/db";
 import { FC } from "react";
 import ModalComponent from "src/components/layout/modal/Modal";
 import { useMutateLayerElementDelete } from "src/hooks/trpc/layerElement/useMutateLayerElementDelete";

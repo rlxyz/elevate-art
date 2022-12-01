@@ -1,8 +1,8 @@
-import { Collection, LayerElement, Rules, TraitElement } from "@prisma/client";
+import * as v from "@elevateart/compiler";
+import { Collection, LayerElement, Rules, TraitElement } from "@elevateart/db";
 import clsx from "clsx";
 import { FC } from "react";
-import { getImageForTrait } from "src/client/utils/image";
-import * as v from "src/shared/compiler";
+import { getImageForTrait } from "src/utils/image";
 
 interface Props {
   id: number;

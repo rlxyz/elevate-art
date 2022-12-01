@@ -1,4 +1,4 @@
-import { TraitElement } from "@prisma/client";
+import { TraitElement } from "@elevateart/db";
 import { FileWithPath } from "react-dropzone";
 import { TraitElementUploadState } from "src/components/layout/upload/upload-display";
 import { env } from "src/env/client.mjs";

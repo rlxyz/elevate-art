@@ -1,4 +1,4 @@
-import { OrganisationMember, User } from "@prisma/client";
+import { OrganisationMember, User } from "@elevateart/db";
 import clsx from "clsx";
 import { useState } from "react";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";

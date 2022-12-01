@@ -1,59 +1,44 @@
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionBranchSelectorCard.tsx
-import CollectionCreateDialog from '@components/Collection/CollectionCreateDialog'
-import Button from '@components/Layout/Button'
-import { Search, useInput } from '@elevateart/ui'
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
-import { useQueryRepositoryCollection } from '@hooks/query/useQueryRepositoryCollection'
-========
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/outline'
-import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
-import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionBranchSelectorCard.tsx
-import { Collection } from '@prisma/client'
-import clsx from 'clsx'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import Button from 'src/client/components/layout/Button'
-import SearchInput from 'src/client/components/layout/search/Search'
-import CollectionCreateDialog from './CollectionCreateDialog'
+import { Collection } from "@elevateart/db";
+import { Search, useInput } from "@elevateart/ui";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronDownIcon, PlusIcon } from "@heroicons/react/outline";
+import { useQueryCollectionFindAll } from "@hooks/trpc/collection/useQueryCollectionFindAll";
+import { useQueryLayerElementFindAll } from "@hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import clsx from "clsx";
+import { Fragment, useEffect, useRef, useState } from "react";
+import CollectionCreateDialog from "./CollectionCreateDialog";
 
 const Index = () => {
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionBranchSelectorCard.tsx
-  const { bindings: inputBindings, state: input } = useInput('')
-  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryRepositoryCollection()
-========
-  const [query, setQuery] = useState('')
-  const { all: layers } = useQueryLayerElementFindAll()
-  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryCollectionFindAll()
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionBranchSelectorCard.tsx
-  const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
-  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const { bindings: inputBindings, state: input } = useInput("");
+  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryCollectionFindAll();
+  const { all: layers } = useQueryLayerElementFindAll();
+  const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection);
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
   const filteredCollections =
-    input === ''
+    input === ""
       ? collections
       : collections?.filter((collection: Collection) => {
-          return collection.name.toLowerCase().includes(input.toLowerCase())
-        })
-  const [openState, setOpenState] = useState(false)
-  const buttonRef = useRef<null | HTMLButtonElement>(null) // useRef<HTMLButtonElement>(null)
-  const optionRef = useRef<null | HTMLDivElement>(null) // useRef<HTMLDivElement>(null)
+          return collection.name.toLowerCase().includes(input.toLowerCase());
+        });
+  const [openState, setOpenState] = useState(false);
+  const buttonRef = useRef<null | HTMLButtonElement>(null); // useRef<HTMLButtonElement>(null)
+  const optionRef = useRef<null | HTMLDivElement>(null); // useRef<HTMLDivElement>(null)
   const handleClickOutside = (event: any) => {
     if (buttonRef.current && !buttonRef.current.contains(event.target) && optionRef.current && !optionRef?.current.contains(event.target)) {
-      setOpenState(false)
+      setOpenState(false);
     } else {
-      event.stopPropagation()
+      event.stopPropagation();
     }
-  }
+  };
 
   useEffect(() => {
-    setSelectedPerson(collection)
-  }, [isLoadingCollections, collection?.name])
+    setSelectedPerson(collection);
+  }, [isLoadingCollections, collection?.name]);
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  })
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
 
   return (
     <>
@@ -62,92 +47,76 @@ const Index = () => {
           ref={buttonRef}
           onClick={() => setOpenState(true)}
           className={clsx(
-            !collection ? 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full' : 'border border-border',
-            'w-full h-full relative inline-flex items-center cursor-pointer p-3 rounded-[5px] text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10 pl-4 pr-3 py-3 text-foreground'
+            !collection ? "h-full animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50" : "border border-border",
+            "shadow-xs relative inline-flex h-full w-full cursor-pointer items-center whitespace-nowrap rounded-[5px] p-3 py-3 pl-4 pr-3 align-middle text-xs font-semibold leading-10 text-foreground",
           )}
         >
-          <div className={clsx(!collection && 'invisible', 'flex justify-between w-full items-center')}>
-            <div className='flex space-x-2 items-center justify-start'>
-              <div className='rounded-full h-4 w-4 bg-success' />
-              <span className='text-xs font-semibold text-foreground'>{selectedCollection?.name || ''}</span>
+          <div className={clsx(!collection && "invisible", "flex w-full items-center justify-between")}>
+            <div className="flex items-center justify-start space-x-2">
+              <div className="h-4 w-4 rounded-full bg-success" />
+              <span className="text-xs font-semibold text-foreground">{selectedCollection?.name || ""}</span>
             </div>
             <div>
-              <ChevronDownIcon className='w-4 h-4 text-accents_5' />
+              <ChevronDownIcon className="h-4 w-4 text-accents_5" />
             </div>
           </div>
         </Listbox.Button>
-        <div ref={optionRef} className='absolute'>
+        <div ref={optionRef} className="absolute">
           <Transition
             show={openState}
             as={Fragment}
-            enter='transition ease-out duration-200'
-            enterFrom='opacity-0 translate-y-1'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in duration-150'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-1"
           >
-            <Listbox.Options className='absolute z-10 w-56 py-2'>
-              <div className='rounded-[5px] ring-1 ring-accents_7 shadow-lg max-h-[20rem] overflow-y-scroll no-scrollbar '>
-                <div className=' bg-background divide-y divide-accents_7'>
-                  <div className='p-2 grid grid-cols-10 gap-x-1'>
-                    <div className='col-span-8'>
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionBranchSelectorCard.tsx
+            <Listbox.Options className="absolute z-10 w-56 py-2">
+              <div className="max-h-[20rem] overflow-y-scroll rounded-[5px] shadow-lg ring-1 ring-accents_7 no-scrollbar ">
+                <div className=" divide-y divide-accents_7 bg-background">
+                  <div className="grid grid-cols-10 gap-x-1 p-2">
+                    <div className="col-span-8">
                       <Search isLoading={!collections} {...inputBindings} />
-========
-                      <SearchInput
-                        isLoading={!collections}
-                        onChange={(e) => {
-                          setQuery(e.target.value)
-                        }}
-                      />
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionBranchSelectorCard.tsx
                     </div>
-                    <div className='col-span-2'>
+                    <div className="col-span-2">
                       <button
-                        className='w-full h-full px-2 border border-border rounded-[5px] flex items-center justify-center'
+                        className="flex h-full w-full items-center justify-center rounded-[5px] border border-border px-2"
                         onClick={(e: any) => {
-                          e.preventDefault()
-                          setIsOpenDialog(true)
-                          setOpenState(false)
+                          e.preventDefault();
+                          setIsOpenDialog(true);
+                          setOpenState(false);
                         }}
                       >
-                        <PlusIcon className='w-3 h-3 text-accents_5' />
+                        <PlusIcon className="h-3 w-3 text-accents_5" />
                       </button>
                     </div>
                   </div>
                   {/* <span className='text-xs text-accents_5'>Collections</span> */}
-                  <div className='overflow-y-scroll max-h-[16em] no-scrollbar'>
+                  <div className="max-h-[16em] overflow-y-scroll no-scrollbar">
                     {filteredCollections?.map((collection: Collection) => (
                       <Listbox.Option key={collection.id} value={collection}>
-                        <Button
-                          className={`cursor-pointer flex flex-row w-full justify-between`}
-                          variant='link'
-                          onClick={() => mutate({ collection })}
-                        >
-                          <div className='flex flex-row items-center justify-between px-1 w-full'>
+                        {/** @todo fix */}
+                        <button className={`flex w-full cursor-pointer flex-row justify-between`} onClick={() => mutate({ collection })}>
+                          <div className="flex w-full flex-row items-center justify-between px-1">
                             <span
                               className={clsx(
-                                'text-xs text-foreground',
-                                collection.name === selectedCollection?.name ? 'font-semibold' : 'font-normal'
+                                "text-xs text-foreground",
+                                collection.name === selectedCollection?.name ? "font-semibold" : "font-normal",
                               )}
                             >
                               {collection.name}
                             </span>
-                            <div className='flex items-center'>
-                              {collection.name === 'main' && (
-                                <span className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-foreground mr-1'>
-                                  {'master'}
+                            <div className="flex items-center">
+                              {collection.name === "main" && (
+                                <span className="mr-1 inline-flex items-center rounded-full border border-border bg-accents_8 bg-opacity-40 py-1 px-2 text-xs font-medium text-foreground">
+                                  {"master"}
                                 </span>
                               )}
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionBranchSelectorCard.tsx
-                              {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-success' />}
-========
-                              {collection.name === selectedCollection?.name && <CheckIcon className='w-4 h-4 text-blueHighlight' />}
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionBranchSelectorCard.tsx
+                              {collection.name === selectedCollection?.name && <CheckIcon className="text-blueHighlight h-4 w-4" />}
                             </div>
                           </div>
-                        </Button>
+                        </button>
                       </Listbox.Option>
                     ))}
                   </div>
@@ -159,12 +128,12 @@ const Index = () => {
       </Listbox>
       <CollectionCreateDialog
         onClose={() => {
-          setIsOpenDialog(false)
+          setIsOpenDialog(false);
         }}
         isOpen={isOpenDialog}
       />
     </>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

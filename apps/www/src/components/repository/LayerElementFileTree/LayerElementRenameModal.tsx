@@ -1,11 +1,10 @@
-import { LayerElement } from "@prisma/client";
+import ModalComponent from "@components/layout/modal/Modal";
+import { useRepositoryRoute } from "@hooks/utils/useRepositoryRoute";
 import clsx from "clsx";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useRepositoryRoute } from "src/client/hooks/utils/useRepositoryRoute";
-import ModalComponent from "src/compsrc/hooks/utils/useRepositoryRoute";
 import { useMutateLayerElementUpdateName } from "src/hooks/trpc/layerElement/useMutateLayerElementUpdateName";
-import { useQueryLayerElementFindAll } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { LayerElement, useQueryLayerElementFindAll } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
 import { FormModalProps } from "./LayerElementDeleteModal";
 
 interface LayerElementRenameProps extends FormModalProps {

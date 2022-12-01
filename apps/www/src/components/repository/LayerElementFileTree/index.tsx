@@ -1,11 +1,11 @@
+import { Repository } from "@elevateart/db";
 import { PlusIcon, SwitchVerticalIcon } from "@heroicons/react/solid";
-import { Repository } from "@prisma/client";
 import clsx from "clsx";
 import router from "next/router";
 import { FC, useState } from "react";
-import { timeAgo } from "src/client/utils/time";
 import Menu from "src/components/layout/menu";
 import { LayerElement } from "src/hooks/trpc/layerElement/useQueryLayerElementFindAll";
+import { timeAgo } from "src/utils/time";
 import LayerElementCreateModal from "./LayerElementCreateModal";
 import LayerElementFileSelector from "./LayerElementFileSelector";
 import LayerElementReorderModal from "./LayerElementReorderItem";

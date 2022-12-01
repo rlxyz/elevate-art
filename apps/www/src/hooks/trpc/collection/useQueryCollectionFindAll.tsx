@@ -1,5 +1,5 @@
 import * as v from "@elevateart/compiler";
-import { Collection } from "@prisma/client";
+import { Collection } from "@elevateart/db";
 import useRepositoryStore from "src/hooks/store/useRepositoryStore";
 import { trpc } from "src/utils/trpc";
 import { useQueryLayerElementFindAll } from "../layerElement/useQueryLayerElementFindAll";

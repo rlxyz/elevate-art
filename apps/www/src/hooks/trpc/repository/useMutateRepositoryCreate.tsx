@@ -1,4 +1,4 @@
-import { Repository } from "@prisma/client";
+import { Repository } from "@elevateart/db";
 import produce from "immer";
 import { Dispatch, SetStateAction } from "react";
 import { FileWithPath } from "react-dropzone";

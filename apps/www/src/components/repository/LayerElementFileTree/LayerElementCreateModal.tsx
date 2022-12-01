@@ -1,4 +1,4 @@
-import { Repository } from "@prisma/client";
+import { Repository } from "@elevateart/db";
 import clsx from "clsx";
 import { FC } from "react";
 import { useForm } from "react-hook-form";

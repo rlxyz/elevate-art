@@ -1,4 +1,4 @@
-import { LayerElement, TraitElement } from "@prisma/client";
+import { LayerElement, TraitElement } from "@elevateart/db";
 import create from "zustand";
 import createContext from "zustand/context";
 import { persist } from "zustand/middleware";
