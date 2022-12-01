@@ -23,7 +23,7 @@ export const getTraitElementImage = ({
     const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`, {
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
       secure: true,
-      transformation: IMAGE_QUALITY_SETTINGS,
+      transformation: [{ quality: 'auto' }, { with: 600, crop: 'scale' }],
       // version: version,
     })
     fetch(url)
