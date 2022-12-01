@@ -1,6 +1,6 @@
 /** Styles */
+import "@rainbow-me/rainbowkit/styles.css";
 import "../styles/globals.css";
-// import "@rainbow-me/rainbowkit/styles.css";
 
 /** Core Functional Components */
 import { EthereumAuthenticationLayout } from "@components/layout/core/EthereumAuthenticationLayout";
