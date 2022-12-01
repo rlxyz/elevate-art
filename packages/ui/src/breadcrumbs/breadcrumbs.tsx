@@ -48,7 +48,7 @@ const BreadcrumbsComponent: React.FC<
     <nav
       className={clsx(
         className,
-        "flex items-center text-xs w-auto h-auto text-foreground box-border"
+        "box-border flex h-auto w-auto items-center text-xs text-foreground",
       )}
     >
       {withSeparatorChildren}

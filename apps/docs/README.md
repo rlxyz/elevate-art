@@ -1,20 +1,23 @@
 ```
- ________   ______   _______    ______         _______    ______    ______    ______  
-/        | /      \ /       \  /      \       /       \  /      \  /      \  /      \ 
+ ________   ______   _______    ______         _______    ______    ______    ______
+/        | /      \ /       \  /      \       /       \  /      \  /      \  /      \
 $$$$$$$$/ /$$$$$$  |$$$$$$$  |/$$$$$$  |      $$$$$$$  |/$$$$$$  |/$$$$$$  |/$$$$$$  |
-    /$$/  $$ |  $$ |$$ |__$$ |$$ |__$$ |      $$ |  $$ |$$ |  $$ |$$ |  $$/ $$ \__$$/ 
-   /$$/   $$ |  $$ |$$    $$< $$    $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$      \ 
+    /$$/  $$ |  $$ |$$ |__$$ |$$ |__$$ |      $$ |  $$ |$$ |  $$ |$$ |  $$/ $$ \__$$/
+   /$$/   $$ |  $$ |$$    $$< $$    $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$      \
   /$$/    $$ |  $$ |$$$$$$$  |$$$$$$$$ |      $$ |  $$ |$$ |  $$ |$$ |   __  $$$$$$  |
  /$$/____ $$ \__$$ |$$ |  $$ |$$ |  $$ |      $$ |__$$ |$$ \__$$ |$$ \__/  |/  \__$$ |
-/$$      |$$    $$/ $$ |  $$ |$$ |  $$ |      $$    $$/ $$    $$/ $$    $$/ $$    $$/ 
-$$$$$$$$/  $$$$$$/  $$/   $$/ $$/   $$/       $$$$$$$/   $$$$$$/   $$$$$$/   $$$$$$/ 
+/$$      |$$    $$/ $$ |  $$ |$$ |  $$ |      $$    $$/ $$    $$/ $$    $$/ $$    $$/
+$$$$$$$$/  $$$$$$/  $$/   $$/ $$/   $$/       $$$$$$$/   $$$$$$/   $$$$$$/   $$$$$$/
 ```
+
 Hi.
+
 # Contribution Guidelines
+
 Thanks for giving a little extra love to our docs site! Below are some basic guidelines to follow to get your PR merged :)
 
-
 ### Creating a Pull Request
+
 1. Fork the repository.
 2. On your copy of the repo, create a new branch. Be sure that your branch contains the most recent changes from the main branch.
 3. Make any necessary changes, then commit and push them to your fork.
@@ -23,6 +26,7 @@ Thanks for giving a little extra love to our docs site! Below are some basic gui
 6. If there is a relevant tag like "typo", "bug", or "enhancement", include the tag in the PR.
 
 ### A standard flow to set up a fork
+
 Set up your fork with the following terminal commands, or an alteration of them to suit your enviornment:
 
 ```cd zora-docs

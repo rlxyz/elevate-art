@@ -22,7 +22,7 @@ const BreadcrumbsSeparatorComponent: React.FC<
     <div
       className={clsx(
         className,
-        "inline-flex pointer-events-none items-center w-auto h-auto mx-0.5"
+        "pointer-events-none mx-0.5 inline-flex h-auto w-auto items-center",
       )}
     >
       {children}

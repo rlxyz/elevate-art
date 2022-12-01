@@ -14,11 +14,11 @@ export const ToastContainer = ({ children, id, type }: Props) => {
       className={clsx(
         type === "error" && "bg-error",
         type === "success" && "bg-success",
-        "relative p-4 w-[350px] max-w-lg rounded-[5px] shadow-lg z-[1000]"
+        "relative z-[1000] w-[350px] max-w-lg rounded-[5px] p-4 shadow-lg",
       )}
       role="alert"
     >
-      <div className="w-full flex items-center text-background text-xs">
+      <div className="flex w-full items-center text-xs text-background">
         {children}
       </div>
     </div>

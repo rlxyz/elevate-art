@@ -1,70 +1,39 @@
-import { z } from 'zod'
-import { createRouter } from '../context'
+import Big from "big.js";
+import { z } from "zod";
+import { protectedProcedure, router } from "../trpc";
 
-export const repositoryRouter = createRouter()
-  .query('getRepositoryByName', {
-    input: z.object({
-      name: z.string(),
+/**
+ * Repository Router
+ * Any Repository functionality should implemented here.
+ *
+ * @todo protect this router by checking if the user is the owner of the repository
+ */
+export const repositoryRouter = router({
+  findByName: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { name } = input;
+      return await ctx.prisma.repository.findFirst({ where: { name } });
     }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.repository.findFirst({
-        where: { ...input },
-      })
-    },
-  })
-  .query('getRepositoryLayers', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.layerElement.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { priority: 'asc' },
-        include: {
-          traitElements: {
-            orderBy: { weight: 'asc' }, // guarantee rarest first
-            include: {
-              rulesPrimary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-              rulesSecondary: {
-                include: {
-                  primaryTraitElement: true,
-                  secondaryTraitElement: true,
-                },
-              },
-            },
-          },
-        },
-      })
-    },
-  })
-  .query('getRepositoryCollections', {
-    input: z.object({
-      id: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.collection.findMany({
-        where: {
-          repositoryId: input.id,
-        },
-        orderBy: { createdAt: 'asc' },
-      })
-    },
-  })
-  .mutation('create', {
-    input: z.object({
-      organisationId: z.string(),
-      name: z.string(),
-      layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
-    }),
-    async resolve({ ctx, input }) {
-      const { name, organisationId, layerElements } = input
+  create: protectedProcedure
+    .input(
+      z.object({
+        organisationId: z.string(),
+        name: z.string(),
+        layerElements: z.array(
+          z.object({
+            name: z.string(),
+            traitElements: z.array(z.object({ name: z.string() })),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name, organisationId, layerElements } = input;
       return await ctx.prisma.repository.create({
         data: {
           organisationId,
@@ -72,9 +41,9 @@ export const repositoryRouter = createRouter()
           tokenName: name,
           collections: {
             create: {
-              name: 'main',
+              name: "main",
               totalSupply: 10000,
-              type: 'default', // when collection created, it is default branch
+              type: "default", // when collection created, it is default branch
             },
           },
           layers: {
@@ -83,7 +52,13 @@ export const repositoryRouter = createRouter()
               priority: index,
               traitElements: {
                 createMany: {
-                  data: traitElements.map(({ name }) => ({ name, weight: 1 })),
+                  data: traitElements.map(({ name }) => ({
+                    name,
+                    weight: Big(1)
+                      .div(traitElements.length)
+                      .mul(100)
+                      .toNumber(),
+                  })),
                 },
               },
             })),
@@ -97,65 +72,6 @@ export const repositoryRouter = createRouter()
             },
           },
         },
-      })
-    },
-  })
-  .mutation('delete', {
-    input: z.object({
-      repositoryId: z.string(),
+      });
     }),
-    async resolve({ ctx, input }) {
-      await ctx.prisma.repository.delete({
-        where: {
-          id: input.repositoryId,
-        },
-      })
-    },
-  })
-  // todo: refactor to use transactions
-  .mutation('updateLayer', {
-    input: z.object({
-      layerId: z.string(),
-      repositoryId: z.string(),
-      traits: z.array(
-        z.object({
-          id: z.string(),
-          weight: z.number(),
-        })
-      ),
-    }),
-    async resolve({ ctx, input }) {
-      return Promise.all(
-        input.traits.map(async ({ id, weight }) => {
-          return await ctx.prisma.traitElement.update({
-            where: {
-              id,
-            },
-            data: {
-              weight,
-            },
-          })
-        })
-      )
-    },
-  })
-  // todo: better naming conventions?
-  .mutation('createRule', {
-    input: z.object({
-      type: z.string(),
-      primaryLayerElementId: z.string(),
-      primaryTraitElementId: z.string(),
-      secondaryLayerElementId: z.string(),
-      secondaryTraitElementId: z.string(),
-      repositoryId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      await ctx.prisma.rules.create({
-        data: {
-          condition: input.type,
-          primaryTraitElementId: input.primaryTraitElementId,
-          secondaryTraitElementId: input.secondaryTraitElementId,
-        },
-      })
-    },
-  })
+});

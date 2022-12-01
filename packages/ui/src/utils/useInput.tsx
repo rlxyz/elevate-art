@@ -6,7 +6,7 @@ export type BindingsChangeTarget =
   | string;
 
 const useInput = (
-  initialValue: string
+  initialValue: string,
 ): {
   state: string;
   setState: Dispatch<SetStateAction<string>>;

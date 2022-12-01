@@ -1,30 +1,41 @@
+<<<<<<< HEAD:apps/www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
 import { OrganisationAuthLayout } from '@components/Layout/core/AuthLayout'
 import { Layout } from '@components/Layout/core/Layout'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'
 import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
-import { Search, useInput } from '@elevateart/ui'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/query/useQueryRepository'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { Search } from '@elevateart/ui'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
+=======src/hooks/store/useRepositoryStore
+import withOrganisationStore from '@src/hooks/utils/useRepositoryRoutee'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+>>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
 import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { CollectionNavigationEnum } from 'src/types/enums'
+import { useEffect } from 'react'
+import { HeaderInternalPageRoutes } from 'src/components/layout/core/Header'
+import LayerElementFileTree from 'src/components/repository/LayerElementFileTree'
+import TraitTable from 'src/components/repository/TraitElementTable'
+import { CollectionNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   const router: NextRouter = useRouter()
-  const { bindings: inputBindings, state: input } = useInput('')
-  const layerName: string = router.query.layer as string
+<<<<<<< HEAD:apps/www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
+  const { bindings: inputBindingsrc/hooks/store/useRepositoryStore
+  const layerName: string = router.qsrc/hooks/utils/useRepositoryRoute
+=======
+>>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryRepositoryLayer()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepository()
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisation()
+  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: organisations, current: organisation, isLoading: isLoadingOrganisation } = useQueryOrganisationFindAll()
   const { mainRepositoryHref, isLoading: isRoutesLoading } = useRepositoryRoute()
+<<<<<<< HEAD:apps/www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
   const { setRepositoryId } = useRepositoryStore((state) => {
     return {
       setRepositoryId: state.setRepositoryId,
@@ -45,15 +56,15 @@ const Page = () => {
   useEffect(() => {
     layers && layerName && setCurrentLayerPriority(layers?.find((l) => l.name === layerName)?.id || '')
   }, [layerName, isLoading])
+=======
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+>>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
 
   useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
-
-  const hasLoaded = () => {
-    return !isLoading && filteredTraitElements
-  }
 
   return (
     <OrganisationAuthLayout>
@@ -63,28 +74,32 @@ const Page = () => {
             { current: organisationName, href: `/${organisationName}`, organisations },
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
-          internalNavigation={[
-            {
-              name: CollectionNavigationEnum.enum.Preview,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}`,
-              enabled: false,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rarity,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
-              enabled: true,
-            },
-            {
-              name: CollectionNavigationEnum.enum.Rules,
-              loading: mainRepositoryHref === null || isLoading,
-              href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
-              enabled: false,
-            },
-          ]}
-        />
+        >
+          <HeaderInternalPageRoutes
+            links={[
+              {
+                name: CollectionNavigationEnum.enum.Preview,
+                href: `/${mainRepositoryHref}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                enabled: true,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+            ]}
+          />
+        </Layout.Header>
         <Layout.Body border='none'>
+<<<<<<< HEAD:apps/www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
             <div className='col-span-2 py-8'>
               <div className='space-y-4'>
@@ -175,6 +190,11 @@ const Page = () => {
                 </div>
               </main>
             </div>
+=======
+          <div className='py-6 grid grid-cols-10 gap-x-6'>
+            <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
+            <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
+>>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
           </div>
         </Layout.Body>
       </Layout>
@@ -182,7 +202,4 @@ const Page = () => {
   )
 }
 
-export default Page
-function setCurrentView(arg0: string): void {
-  throw new Error('Function not implemented.')
-}
+export default withOrganisationStore(Page)

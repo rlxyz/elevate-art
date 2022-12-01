@@ -1,0 +1,8 @@
+packages:
+  - apps/www
+  - packages/api
+  - packages/auth
+  - packages/compiler
+  - packages/config/*
+  - packages/db
+  - packages/ui

@@ -61,7 +61,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
 }: React.PropsWithChildren<TabsProps> & typeof defaultProps) => {
   const [tabs, setTabs] = useState<Array<TabsHeaderItem>>([]);
   const [selfValue, setSelfValue] = useState<string | undefined>(
-    userCustomInitialValue
+    userCustomInitialValue,
   );
   const ref = useRef<HTMLDivElement | null>(null);
   const [displayHighlight, setDisplayHighlight] = useState<boolean>(false);
@@ -88,7 +88,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
       inGroup: true,
       leftSpace,
     }),
-    [selfValue, leftSpace]
+    [selfValue, leftSpace],
   );
 
   useEffect(() => {
@@ -111,7 +111,7 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
   return (
     <TabsContext.Provider value={initialValue}>
       <div
-        className={clsx(className, "text-inherit w-initial h-auto p-0 m-0")}
+        className={clsx(className, "text-inherit w-initial m-0 h-auto p-0")}
         {...props}
       >
         <header
@@ -127,8 +127,8 @@ const TabsComponent: React.FC<React.PropsWithChildren<TabsProps>> = ({
           />
           <div
             className={clsx(
-              "w-full h-full flex flex-1 flex-nowrap items-center border-b border-border",
-              hideDivider && "border-transparent"
+              "flex h-full w-full flex-1 flex-nowrap items-center border-b border-border",
+              hideDivider && "border-transparent",
             )}
             style={{ justifyContent: align, paddingLeft: leftSpace }}
           >

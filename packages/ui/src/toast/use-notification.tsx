@@ -7,7 +7,7 @@ export const useNotification = () => {
     return toast.custom(
       (t) => (
         <ToastContainer id={t.id} type="success">
-          <div className="flex justify-between w-full items-center">
+          <div className="flex w-full items-center justify-between">
             <span>{message}</span>
           </div>
         </ToastContainer>
@@ -15,7 +15,7 @@ export const useNotification = () => {
       {
         position: "bottom-right",
         duration: 2000,
-      }
+      },
     );
   };
 
@@ -23,7 +23,7 @@ export const useNotification = () => {
     return toast.custom(
       (t) => (
         <ToastContainer id={t.id} type="error">
-          <div className="flex justify-between w-full items-center">
+          <div className="flex w-full items-center justify-between">
             <span>{message}</span>
           </div>
         </ToastContainer>
@@ -31,7 +31,7 @@ export const useNotification = () => {
       {
         position: "bottom-right",
         duration: 2000,
-      }
+      },
     );
   };
 

@@ -13,7 +13,7 @@ export const General: ComponentStory<typeof Modal> = (args) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="border border-border text-xs text-accents_4 p-2 rounded-primary"
+        className="rounded-primary border border-border p-2 text-xs text-accents_4"
       >
         Show Modal
       </button>
@@ -34,7 +34,7 @@ export const withLoading: ComponentStory<typeof Modal> = (args) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="border border-border text-xs text-accents_4 p-2 rounded-primary"
+        className="rounded-primary border border-border p-2 text-xs text-accents_4"
       >
         Show Modal
       </button>

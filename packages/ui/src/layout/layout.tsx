@@ -24,7 +24,7 @@ const LayoutComponent: React.FC<React.PropsWithChildren<LayoutProps>> = ({
       {hasFooter ? (
         <LayoutContainer
           border="upper"
-          className="min-h-[3.5rem] flex items-center"
+          className="flex min-h-[3.5rem] items-center"
         >
           <LayoutFooter />
         </LayoutContainer>

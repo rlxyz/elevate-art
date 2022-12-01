@@ -28,29 +28,29 @@ const LoadingComponent: React.FC<React.PropsWithChildren<LoadingProps>> = ({
     <div
       className={clsx(
         className,
-        "relative inline-flex justify-center items-center text-xs w-full h-full min-h-4 p-0 m-0"
+        "min-h-4 relative m-0 inline-flex h-full w-full items-center justify-center p-0 text-xs",
       )}
       {...props}
     >
-      <span className="absolute flex justify-center items-center bg-transparent select-none top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2">
+      <span className="absolute top-1/2 left-1/2 flex h-full w-full -translate-x-1/2 -translate-y-1/2 select-none items-center justify-center bg-transparent">
         {children && (
-          <label className="mr-2 text-accents_5 leading-none">{children}</label>
+          <label className="mr-2 leading-none text-accents_5">{children}</label>
         )}
         <i
-          className="w-1 h-1 rounded-full inline-block bg-accents_5 animate-pulse"
+          className="inline-block h-1 w-1 animate-pulse rounded-full bg-accents_5"
           style={{
             margin: `0 calc(0.25em / 2 * ${spaceRatio})`,
           }}
         />
         <i
-          className="w-1 h-1 rounded-full inline-block bg-accents_5 animate-pulse"
+          className="inline-block h-1 w-1 animate-pulse rounded-full bg-accents_5"
           style={{
             margin: `0 calc(0.25em / 2 * ${spaceRatio})`,
             animationDelay: "0.2s",
           }}
         />
         <i
-          className="w-1 h-1 rounded-full inline-block bg-accents_5 animate-pulse"
+          className="inline-block h-1 w-1 animate-pulse rounded-full bg-accents_5"
           style={{
             margin: `0 calc(0.25em / 2 * ${spaceRatio})`,
             animationDelay: "0.4s",

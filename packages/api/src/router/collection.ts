@@ -1,26 +1,50 @@
 import { z } from "zod";
-import { createRouter } from "../context";
-
-export const collectionRouter = createRouter()
-  .mutation("create", {
-    input: z.object({
-      repositoryId: z.string(),
-      name: z.string(),
-      totalSupply: z.number(),
+import { protectedProcedure, router } from "../trpc";
+/**
+ * Collection Router
+ * Any Collection functionality should implemented here.
+ *
+ * @todo protect this router by checking if the user is the owner of the repository
+ */
+export const collectionRouter = router({
+  findAll: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryId } = input;
+      return await ctx.prisma.collection.findMany({
+        where: { repositoryId },
+        orderBy: [{ createdAt: "asc" }, { name: "asc" }],
+      });
     }),
-    async resolve({ ctx, input }) {
+  create: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        name: z.string(),
+        totalSupply: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
       const { repositoryId, name, totalSupply } = input;
       return await ctx.prisma.collection.create({
         data: { name, repositoryId, totalSupply },
       });
-    },
-  })
-  .mutation("updateGeneration", {
-    input: z.object({ id: z.string() }),
-    async resolve({ ctx, input }) {
+    }),
+  updateGeneration: protectedProcedure
+    .input(
+      z.object({
+        collectionId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { collectionId } = input;
       return await ctx.prisma.collection.update({
-        where: { id: input.id },
+        where: { id: collectionId },
         data: { generations: { increment: 1 } },
       });
-    },
-  });
+    }),
+});

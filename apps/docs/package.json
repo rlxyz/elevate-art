@@ -24,7 +24,7 @@
     "@svgr/webpack": "^5.5.0",
     "clsx": "^1.2.1",
     "docusaurus2-dotenv": "^1.4.0",
-    "ethers": "^5.7.1",
+    "ethers": "^5.7.2",
     "file-loader": "^6.2.0",
     "glslCanvas": "^0.1.7",
     "hast-util-is-element": "1.1.0",

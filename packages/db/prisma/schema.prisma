@@ -109,13 +109,17 @@ model LayerElement {
     repositoryId String
 
     traitElements TraitElement[]
+
+    @@unique([name, repositoryId])
+    @@unique([priority, repositoryId])
 }
 
 model TraitElement {
     id String @id @default(cuid())
 
-    name   String
-    weight Float  @default(1)
+    name     String
+    weight   Float   @default(1)
+    readonly Boolean @default(false)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -125,6 +129,8 @@ model TraitElement {
 
     rulesPrimary   Rules[] @relation("primaryTraitElement")
     rulesSecondary Rules[] @relation("secondaryTraitElement")
+
+    @@unique([name, layerElementId])
 }
 
 model Rules {

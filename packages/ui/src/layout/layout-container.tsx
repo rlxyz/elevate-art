@@ -31,17 +31,17 @@ const LayoutContainerComponent: React.FC<
     <article
       {...props}
       className={clsx(
-        "flex justify-center h-full w-full",
+        "flex h-full w-full justify-center",
         className,
         border === "lower" && "border-b border-border",
-        border === "upper" && "border-t border-border"
+        border === "upper" && "border-t border-border",
       )}
     >
       <div
         className={clsx(
           hasMargin
-            ? "w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full"
-            : "w-full h-full"
+            ? "h-full w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%]"
+            : "h-full w-full",
         )}
       >
         <div className="-ml-2">{children}</div>
