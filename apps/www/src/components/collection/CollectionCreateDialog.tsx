@@ -1,10 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
+import useRepositoryStore from "@hooks/store/useRepositoryStore";
+import { useMutateCollectionCreate } from "@hooks/trpc/collection/useMutateCollectionCreate";
 import { Fragment } from "react";
 import { useForm } from "react-hook-form";
-import useRepositoryStore from "src/client/hooks/store/useRepositoryStore";
-import Button from "src/componensrc/hooks/store/useRepositoryStore";
-import { useMutateCollectionCreate } from "../../hooks/trpc/collection/useMutateCollectionCreate";
 
+// @todo rework to use ModalComponent
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
     register,
@@ -100,11 +100,11 @@ const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
                         </div>
                         <div className="flex justify-between pt-6">
                           <div className="ml-[auto]">
-                            <Button>
+                            <button>
                               <span className="flex items-center justify-center space-x-2 px-4 py-4">
                                 <span className="text-xs">Confirm</span>
                               </span>
-                            </Button>
+                            </button>
                           </div>
                         </div>
                       </div>

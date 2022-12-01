@@ -1,81 +1,70 @@
-import { Popover, Transition } from '@headlessui/react'
-import { InformationCircleIcon } from '@heroicons/react/outline'
-import clsx from 'clsx'
-import { Children, Fragment, ReactNode } from 'react'
+import { Popover, Transition } from "@headlessui/react";
+import { InformationCircleIcon } from "@heroicons/react/outline";
+import clsx from "clsx";
+import { Children, Fragment, ReactNode } from "react";
 
 export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
   return (
-    <div className='flex flex-col'>
-      <div className='inline-block min-w-full align-middle'>
-        <table className='table-auto border-separate border-spacing-x-0 border-spacing-y-0 min-w-full'>{children}</table>
+    <div className="flex flex-col">
+      <div className="inline-block min-w-full align-middle">
+        <table className="min-w-full table-auto border-separate border-spacing-x-0 border-spacing-y-0">{children}</table>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const TableHead = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
-  const childrens = Children.toArray(children)
+  const childrens = Children.toArray(children);
   return (
-    <thead className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-background')}>
+    <thead className={clsx(loading ? "animate-pulse bg-accents_7 bg-opacity-50" : "bg-background")}>
       <tr>
         {childrens.map((children, index) => {
           return (
             <th
               key={index}
               className={clsx(
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Table.tsx
-                !loading && index === 0 && 'border-t border-l border-border pl-3 rounded-tl-[5px] ',
-                !loading && index === childrens.length - 1 && 'pr-3 border-t border-r border-border rounded-tr-[5px]',
-                !loading && 'text-left border-t border-border', // everything else
-========
-                !loading && index === 0 && 'border-t border-l border-b border-mediumGrey rounded-tl-[5px] pl-3',
-                !loading && index === childrens.length - 1 && 'pr-3 border-b border-t border-r border-mediumGrey rounded-tr-[5px]',
-                !loading && 'text-left border-b border-t border-mediumGrey', // everything else
->>>>>>>> staging:apps/www/src/client/components/layout/core/Table.tsx
-                'py-2'
+                !loading && index === 0 && "border-mediumGrey rounded-tl-[5px] border-t border-l border-b pl-3",
+                !loading && index === childrens.length - 1 && "border-mediumGrey rounded-tr-[5px] border-b border-t border-r pr-3",
+                !loading && "border-mediumGrey border-b border-t text-left", // everything else
+                "py-2",
               )}
             >
-              <div className={clsx(loading && 'invisible', 'text-[0.6rem] w-full font-normal text-darkGrey uppercase')}>{children}</div>
+              <div className={clsx(loading && "invisible", "text-darkGrey w-full text-[0.6rem] font-normal uppercase")}>{children}</div>
             </th>
-          )
+          );
         })}
       </tr>
     </thead>
-  )
-}
+  );
+};
 
 const TableHeadRow = ({
   title,
   description,
   children,
 }: {
-  title?: JSX.Element | string
-  description?: JSX.Element | string
-  children?: ReactNode
+  title?: JSX.Element | string;
+  description?: JSX.Element | string;
+  children?: ReactNode;
 }) => {
   return (
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Table.tsx
-    <div className='flex items-center space-x-1'>
-      <span className='text-[0.65rem] uppercase font-normal text-accents_5'>{title}</span>
-========
     <>
-      <span className='text-[0.65rem] uppercase font-normal text-darkGrey'>{title}</span>
->>>>>>>> staging:apps/www/src/client/components/layout/core/Table.tsx
+      <span className="text-darkGrey text-[0.65rem] font-normal uppercase">{title}</span>
       {description && (
         <Popover>
-          <Popover.Button as={InformationCircleIcon} className='text-accents_5 w-3 h-3 bg-accents_8' />
+          <Popover.Button as={InformationCircleIcon} className="h-3 w-3 bg-accents_8 text-accents_5" />
           <Transition
             as={Fragment}
-            enter='transition ease-out duration-200'
-            enterFrom='opacity-0 translate-y-1'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in duration-150'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className='absolute w-[200px] bg-foreground z-10 -translate-x-1/2 transform rounded-[5px]'>
-              <div className='p-2 shadow-lg'>
-                <p className='text-[0.65rem] text-accents_8 font-normal'>{description}</p>
+            <Popover.Panel className="absolute z-10 w-[200px] -translate-x-1/2 transform rounded-[5px] bg-foreground">
+              <div className="p-2 shadow-lg">
+                <p className="text-[0.65rem] font-normal text-accents_8">{description}</p>
               </div>
             </Popover.Panel>
           </Transition>
@@ -83,20 +72,16 @@ const TableHeadRow = ({
       )}
       {children}
     </>
-  )
-}
+  );
+};
 
 const TableBody = ({ children, loading = false }: { children: ReactNode | ReactNode[]; loading?: boolean }) => {
   return (
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Table.tsx
-    <tbody className={clsx(loading ? 'bg-accents_7 bg-opacity-50 animate-pulse' : 'bg-background', 'divide-y divide-accents_7')}>
-========
-    <tbody className={clsx(loading ? 'bg-mediumGrey bg-opacity-50 animate-pulse' : 'bg-white', 'divide-y divide-mediumGrey overflow-auto')}>
->>>>>>>> staging:apps/www/src/client/components/layout/core/Table.tsx
+    <tbody className={clsx(loading ? "bg-mediumGrey animate-pulse bg-opacity-50" : "bg-white", "divide-mediumGrey divide-y overflow-auto")}>
       {children}
     </tbody>
-  )
-}
+  );
+};
 
 const TableBodyRow = ({
   children,
@@ -104,12 +89,12 @@ const TableBodyRow = ({
   total,
   loading = false,
 }: {
-  children: ReactNode | ReactNode[]
-  current: number
-  total: number
-  loading?: boolean
+  children: ReactNode | ReactNode[];
+  current: number;
+  total: number;
+  loading?: boolean;
 }) => {
-  const childrens = Children.toArray(children)
+  const childrens = Children.toArray(children);
   return (
     <tr>
       {childrens.map((children, index) => {
@@ -117,40 +102,34 @@ const TableBodyRow = ({
           <td
             key={index}
             className={clsx(
-              current === total - 1 && 'border-b border-border',
-              current === total - 1 && index == 0 && 'rounded-bl-[5px]',
-              current === total - 1 && index == childrens.length - 1 && 'rounded-br-[5px]',
-              index === 0 && 'pl-3 border-l',
-              index === childrens.length - 1 && 'pr-3 border-r',
-              index === 0 && 'w-[7.5%]', // @todo this needs to be fixed!
-              index === 1 && 'w-[15%]', // @todo this needs to be fixed!
-              index === 2 && 'w-[25%]', // @todo this needs to be fixed!
-              index === 3 && 'w-[30%]',
-<<<<<<<< HEAD:apps/www/src/components/Layout/core/Table.tsx
-              index === 4 && 'w-[20%]',
-              index === 5 && 'w-[10%]',
-              'text-left border-t border-border py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
-========
-              index === 4 && 'w-[15%]',
-              current !== 0 && 'border-t',
-              'text-left border-mediumGrey py-2 text-xs whitespace-nowrap text-ellipsis' // everything else
->>>>>>>> staging:apps/www/src/client/components/layout/core/Table.tsx
+              current === total - 1 && "border-b border-border",
+              current === total - 1 && index == 0 && "rounded-bl-[5px]",
+              current === total - 1 && index == childrens.length - 1 && "rounded-br-[5px]",
+              index === 0 && "border-l pl-3",
+              index === childrens.length - 1 && "border-r pr-3",
+              index === 0 && "w-[7.5%]", // @todo this needs to be fixed!
+              index === 1 && "w-[15%]", // @todo this needs to be fixed!
+              index === 2 && "w-[25%]", // @todo this needs to be fixed!
+              index === 3 && "w-[30%]",
+              index === 4 && "w-[15%]",
+              current !== 0 && "border-t",
+              "border-mediumGrey text-ellipsis whitespace-nowrap py-2 text-left text-xs", // everything else
             )}
           >
-            <div className={clsx(loading && 'invisible')}>{children}</div>
+            <div className={clsx(loading && "invisible")}>{children}</div>
           </td>
-        )
+        );
       })}
     </tr>
-  )
-}
+  );
+};
 
 const TableBodyRowData = ({ children }: { children: ReactNode }) => {
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
 
-Table.Head = TableHead
-TableHead.Row = TableHeadRow
-Table.Body = TableBody
-TableBody.Row = TableBodyRow
-TableBodyRow.Data = TableBodyRowData
+Table.Head = TableHead;
+TableHead.Row = TableHeadRow;
+Table.Body = TableBody;
+TableBody.Row = TableBodyRow;
+TableBodyRow.Data = TableBodyRowData;

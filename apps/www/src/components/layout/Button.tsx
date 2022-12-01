@@ -1,10 +1,7 @@
-import { Loading } from '@elevateart/ui'
-import cn from 'clsx'
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from 'react'
-<<<<<<<< HEAD:apps/www/src/components/Layout/Button.tsx
-========
-import LoadingComponent from './loading/Loading'
->>>>>>>> staging:apps/www/src/client/components/layout/Button.tsx
+import { Loading } from "@elevateart/ui"
+import clsx from "clsx"
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from "react"
+
 
 /**
  * All the component types allowed by the Button component.
@@ -54,7 +51,7 @@ const Button: ButtonFC = (props) => {
     ...rest
   } = props
 
-  const rootClassName = cn(
+  const rootClassName = clsx(
     // missing transition
     'relative inline-flex items-center cursor-pointer p-3 text-accents_8 text-xs font-semibold shadow-xs align-middle whitespace-nowrap leading-10',
     'disabled:bg-disabledGray disabled:cursor-not-allowed disabled:text-accents_8',
@@ -83,11 +80,7 @@ const Button: ButtonFC = (props) => {
     >
       {loading ? (
         <i className='m-0 flex'>
-<<<<<<<< HEAD:apps/www/src/components/Layout/Button.tsx
           <Loading />
-========
-          <LoadingComponent />
->>>>>>>> staging:apps/www/src/client/components/layout/Button.tsx
         </i>
       ) : (
         children

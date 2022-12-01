@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { formatBytes } from "src/client/utils/format";
 import { env } from "src/env/client.mjs";
 import { useNotification } from "src/hooks/utils/useNotification";
+import { formatBytes } from "src/utils/format";
 import UploadDisplay, { TraitElementUploadState } from "./upload-display";
 
 export type UploadState = "idle" | "uploading" | "done" | "error";

@@ -1,6 +1,6 @@
-import clsx from 'clsx'
-import useRepositoryStore from 'src/hooks/store/useRepositoryStore'
-import { useQueryCollectionFindAll } from 'src/hooks/trpc/collection/useQueryCollectionFindAll'
+import clsx from "clsx";
+import useRepositoryStore from "src/hooks/store/useRepositoryStore";
+import { useQueryCollectionFindAll } from "src/hooks/trpc/collection/useQueryCollectionFindAll";
 
 const CollectionPreviewGridFilterLabels = () => {
   const { tokens, traitFilters, rarityFilter } = useRepositoryStore((state) => {
@@ -8,55 +8,40 @@ const CollectionPreviewGridFilterLabels = () => {
       tokens: state.tokens,
       traitFilters: state.traitFilters,
       rarityFilter: state.rarityFilter,
-    }
-  })
-  const { current: collection } = useQueryCollectionFindAll()
+    };
+  });
+  const { current: collection } = useQueryCollectionFindAll();
   return (
     <>
       <div
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionPreviewGridFilterLabels.tsx
-        className={clsx(
-          !collection && 'animate-pulse rounded-[5px] bg-accents_7 bg-opacity-50 h-full',
-          'whitespace-nowrap text-ellipsis'
-        )}
-========
-        className={clsx(!collection && 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full', 'whitespace-nowrap text-ellipsis')}
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionPreviewGridFilterLabels.tsx
+        className={clsx(!collection && "bg-mediumGrey h-full animate-pulse rounded-[5px] bg-opacity-50", "text-ellipsis whitespace-nowrap")}
       >
-        <div className={clsx(!collection && 'invisible')}>
-          {rarityFilter !== 'All' ? (
-            <span className='text-xs text-foreground'>
+        <div className={clsx(!collection && "invisible")}>
+          {rarityFilter !== "All" ? (
+            <span className="text-xs text-foreground">
               {`${tokens.length} results `}
               {traitFilters.length > 0 ? (
                 <span>
                   for
-                  <span className='text-success'> {rarityFilter}</span> with filters
+                  <span className="text-success"> {rarityFilter}</span> with filters
                 </span>
               ) : (
-                ''
+                ""
               )}
             </span>
           ) : (
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionPreviewGridFilterLabels.tsx
-            <span className='text-xs text-foreground'>{`${tokens.length} results`}</span>
-========
-            <span className='lg:text-xs text-[0.6rem] text-black'>{`${tokens.length} results`}</span>
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionPreviewGridFilterLabels.tsx
+            <span className="text-black text-[0.6rem] lg:text-xs">{`${tokens.length} results`}</span>
           )}
         </div>
       </div>
-      <div className={clsx(!collection && 'invisible', 'space-x-2 ml-2 space-y-1 max-w-full')}>
+      <div className={clsx(!collection && "invisible", "ml-2 max-w-full space-x-2 space-y-1")}>
         {traitFilters.map(({ layer, trait }, index) => (
           <span
             key={index}
-<<<<<<<< HEAD:apps/www/src/components/Collection/CollectionPreviewGridFilterLabels.tsx
-            className='inline-flex items-center rounded-full bg-accents_8 bg-opacity-40 border border-border py-1 px-2 text-xs font-medium text-foreground'
-========
-            className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'
->>>>>>>> staging:apps/www/src/client/components/collection/CollectionPreviewGridFilterLabels.tsx
+            className="bg-lightGray border-mediumGrey text-black inline-flex items-center rounded-full border bg-opacity-40 py-1 px-2 text-[0.6rem] font-medium lg:text-xs"
           >
             <div>
-              <span className='text-accents_5 mr-1 text-[0.6rem]'>{layer.name}</span> {trait.name}
+              <span className="mr-1 text-[0.6rem] text-accents_5">{layer.name}</span> {trait.name}
             </div>
             {/* <button
                   type='button'
@@ -69,6 +54,6 @@ const CollectionPreviewGridFilterLabels = () => {
         ))}
       </div>
     </>
-  )
-}
-export default CollectionPreviewGridFilterLabels
+  );
+};
+export default CollectionPreviewGridFilterLabels;

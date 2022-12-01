@@ -5,13 +5,13 @@ import {
   ChevronUpIcon,
   DocumentAddIcon,
   DocumentDuplicateIcon,
-  XCircleIcon,
+  XCircleIcon
 } from "@heroicons/react/outline";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FC, Fragment, PropsWithChildren } from "react";
-import { formatBytes, truncate } from "src/client/utils/format";
+import { formatBytes, truncate } from "src/utils/format";
 import Tooltip from "../tooltip";
 
 export type TraitElementUploadState = {

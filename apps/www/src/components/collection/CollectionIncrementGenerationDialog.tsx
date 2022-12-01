@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
+import useRepositoryStore from "@hooks/store/useRepositoryStore";
 import { Dispatch, Fragment, SetStateAction } from "react";
-import useRepositoryStore from "src/client/hooks/store/useRepositoryStore";
-import Button from "src/componensrc/hooks/store/useRepositoryStore";
 import { useMutateCollectionUpdateGeneration } from "../../hooks/trpc/collection/useMutateCollectionUpdateGeneration";
 
+// @todo rework to use modalcomponent
 const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { mutate, isLoading } = useMutateCollectionUpdateGeneration({
     onMutate: () => setIsOpen(false),
@@ -45,11 +45,11 @@ const Index = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: Dispatch<Set
                   </div>
                   <div className="flex justify-between">
                     <div className="ml-[auto]">
-                      <Button disabled={isLoading} onClick={() => mutate({ collectionId })}>
+                      <button disabled={isLoading} onClick={() => mutate({ collectionId })}>
                         <span className="flex items-center justify-center space-x-2 px-4 py-4">
                           <span className="text-xs">Confirm</span>
                         </span>
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>

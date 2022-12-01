@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import Image from "next/image";
-import Button from "src/components/layout/Button";
 import { useQueryCollectionFindAll } from "src/hooks/trpc/collection/useQueryCollectionFindAll";
 
 import { useState } from "react";
@@ -50,12 +49,12 @@ const Index = () => {
               <span className="font-semibold">Generate</span>
             </div>
             <span className="text-accents_5">You can regenerate your collection by clicking this button.</span>
-            <Button onClick={() => setIsOpen(true)}>
+            <button onClick={() => setIsOpen(true)}>
               <span className="flex items-center justify-center space-x-2">
                 <Image priority width={30} height={30} src="/images/logo-white.png" alt="Logo" />
                 <span className="text-xs">elevate.art</span>
               </span>
-            </Button>
+            </button>
           </span>
         </div>
         <CollectionIncrementGenerationDialog isOpen={isOpen} setIsOpen={setIsOpen} />
