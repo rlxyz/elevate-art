@@ -1,19 +1,19 @@
-import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { NextRouter, useRouter } from 'next/router'
+import { NextRouter, useRouter } from "next/rosrc/hooks/trpc/repository/useQueryRepositoryFindByName"
 import { useEffect } from 'react'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
-import { Layout } from 'src/client/components/layout/core/Layout'
-import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { RulesDisplay } from 'src/client/components/repository/RulesDisplay'
-import { RulesSelector } from 'src/client/components/repository/RulesSelector'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { HeaderInternalPageRoutes } from 'src/components/layout/core/Header'
+import { Layout } from 'src/components/layout/core/Layout'
+import { OrganisationAuthLayout } from 'src/components/organisation/OrganisationAuthLayout'
+import withOrganisationStore from 'src/components/withOrganisationStore'
+import { useQueryOrganisationFindAll } from 'src/hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { CollectionNavigationEnum } from 'src/shared/enums'
-import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
+import { useQueryRepositoryFindByName } from src / hooks / trpc / organisation / useQueryOrganisationFindAll
+import { useRepositoryRoute } from frsrc / hooks / store / useRepositoryStoretoryRoute
+'
+'
 
-const Page = () => {
+const Page = () => {../../../hooks/utils/useRepositoryRoute
   const router: NextRouter = useRouter()
   const organisationName: string = router.query.organisation as string
   const repositoryName: string = router.query.repository as string

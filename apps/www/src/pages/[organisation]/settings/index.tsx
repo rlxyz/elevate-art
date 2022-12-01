@@ -1,19 +1,20 @@
-import withOrganisationStore from "@components/withOrganisationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
 import type { NextPage } from "next";
 import { useEffect } from "react";
-import { HeaderInternalPageRoutes } from "src/client/components/layout/core/Header";
-import { Layout } from "src/client/components/layout/core/Layout";
-import { OrganisationAuthLayout } from "src/client/components/organisation/OrganisationAuthLayout";
-import {
-  OrganisationGeneralSettings,
-  SettingsNavigations,
-} from "src/client/components/organisation/OrganisationSettings";
 import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
+import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
+import { Layout } from "src/components/layout/core/Layout";
+import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
 import {
-  OrganisationNavigationEnum,
-  OrganisationSettingsNavigationEnum,
+    OrganisationGeneralSettings,
+    SettingsNavigations
+} from "src/components/organisation/OrganisationSettings";
+import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
+import {
+    OrganisationNavigationEnum,
+    OrganisationSettingsNavigationEnum
 } from "src/shared/enums";
+src/hooks/trpc/organisation/useQueryOrganisationFindAll
 
 const Page: NextPage = () => {
   const {

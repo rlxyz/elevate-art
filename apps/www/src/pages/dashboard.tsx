@@ -1,14 +1,14 @@
-import withOrganisationStore from "@components/withOrganisationStore";
 import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
-import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
-import type { NextPage } from "next";
-import { HeaderInternalPageRoutes } from "src/client/components/layout/core/Header";
-import { Layout } from "src/client/components/layout/core/Layout";
-import { OrganisationAuthLayout } from "src/client/components/organisation/OrganisationAuthLayout";
-import { PersonalOrganisationAccountTeam } from "src/client/components/organisation/PersonalOrganisationAccountTeam";
-import { PersonalOrganisationAccountTeamInvites } from "src/client/components/organisation/PersonalOrganisationAccountTeamInvites";
-import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
-import { OrganisationNavigationEnum } from "src/shared/enums";
+import { OrganisationNavigationEnum } from "@utils/enums";
+import { NextPage } from "next";
+import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
+import { Layout } from "src/components/layout/core/Layout";
+import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
+import { PersonalOrganisationAccountTeam } from "src/components/organisation/PersonalOrganisationAccountTeam";
+import { PersonalOrganisationAccountTeamInvites } from "src/components/organisation/PersonalOrganisationAccountTeamInvites";
+import withOrganisationStore from "src/components/withOrganisationStore";
+import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore";
+import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore(

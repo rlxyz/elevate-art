@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Layout } from "src/client/components/layout/core/Layout";
+import { Layout } from "src/components/layout/core/Layout";
 
 const Page = () => {
   const { status } = useSession();

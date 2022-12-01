@@ -1,12 +1,13 @@
-import withOrganisationStore from "@components/withOrganisationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
 import type { NextPage } from "next";
-import { HeaderInternalPageRoutes } from "src/client/components/layout/core/Header";
-import { Layout } from "src/client/components/layout/core/Layout";
-import ViewAllRepositories from "src/client/components/organisation/OrganisationViewAllRepository";
 import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
+import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
+import { Layout } from "src/components/layout/core/Layout";
+import ViewAllRepositories from "src/components/organisation/OrganisationViewAllRepository";
+import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
 import { OrganisationNavigationEnum } from "src/shared/enums";
-import { OrganisationAuthLayout } from "../../client/components/organisation/OrganisationAuthLayout";
+import { OrganisationAuthLayout } from "../../components/organisation/OrganisationAuthLayout";
+src/hooks/trpc/organisation/useQueryOrganisationFindAll
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore(

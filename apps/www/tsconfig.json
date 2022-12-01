@@ -4,10 +4,10 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": [
-        "src/client/components/*"
+        "src/components/*"
       ],
       "@hooks/*": [
-        "src/client/hooks/*"
+        "src/hooks/*"
       ],
       "@utils/*": [
         "src/shared/*"

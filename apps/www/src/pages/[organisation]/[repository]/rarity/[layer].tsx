@@ -4,36 +4,29 @@ import { Layout } from '@components/Layout/core/Layout'
 import LayerFolderSelector from '@components/Repository/RepositoryFolderSelector'
 import LayerGridView from '@components/Repository/RepositoryRarityLayer'
 import LayerRarityTable from '@components/Repository/RepositoryRarityTable'
-import { Search, useInput } from '@elevateart/ui'
-import { useQueryOrganisation } from '@hooks/query/useQueryOrganisation'
-import { useQueryRepository } from '@hooks/query/useQueryRepository'
-import { useQueryRepositoryLayer } from '@hooks/query/useQueryRepositoryLayer'
+import { Search } from '@elevateart/ui'
 import useCollectionNavigationStore from '@hooks/store/useCollectionNavigationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
-=======
-import withOrganisationStore from '@components/withOrganisationStore'
+=======src/hooks/store/useRepositoryStore
+import withOrganisationStore from '@src/hooks/utils/useRepositoryRoutee'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 >>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
-import { Layout } from 'src/client/components/layout/core/Layout'
-import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import LayerElementFileTree from 'src/client/components/repository/LayerElementFileTree'
-import TraitTable from 'src/client/components/repository/TraitElementTable'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useRepositoryRoute } from 'src/client/hooks/utils/useRepositoryRoute'
+import { HeaderInternalPageRoutes } from 'src/components/layout/core/Header'
+import LayerElementFileTree from 'src/components/repository/LayerElementFileTree'
+import TraitTable from 'src/components/repository/TraitElementTable'
 import { CollectionNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   const router: NextRouter = useRouter()
 <<<<<<< HEAD:apps/www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
-  const { bindings: inputBindings, state: input } = useInput('')
-  const layerName: string = router.query.layer as string
+  const { bindings: inputBindingsrc/hooks/store/useRepositoryStore
+  const layerName: string = router.qsrc/hooks/utils/useRepositoryRoute
 =======
 >>>>>>> staging:www/src/pages/[organisation]/[repository]/rarity/[layer].tsx
   const organisationName: string = router.query.organisation as string

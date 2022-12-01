@@ -1,19 +1,20 @@
-import withOrganisationStore from "@components/withOrganisationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
 import type { NextPage } from "next";
 import { useEffect } from "react";
-import { HeaderInternalPageRoutes } from "src/client/components/layout/core/Header";
-import { Layout } from "src/client/components/layout/core/Layout";
-import { OrganisationAuthLayout } from "src/client/components/organisation/OrganisationAuthLayout";
-import { SettingsNavigations } from "src/client/components/organisation/OrganisationSettings";
-import { OrganisationTeamAddUser } from "src/client/components/organisation/OrganisationTeamAddUser";
-import { OrganisationTeamDisplayPending } from "src/client/components/organisation/OrganisationTeamDisplayPending";
-import { OrganisationTeamDisplayUsers } from "src/client/components/organisation/OrganisationTeamDisplayUsers";
 import useOrganisationNavigationStore from "src/client/hooks/store/useOrganisationNavigationStore";
+import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
+import { Layout } from "src/components/layout/core/Layout";
+import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
+import { SettingsNavigations } from "src/components/organisation/OrganisationSettings";
+import { OrganisationTeamAddUser } from "src/components/organisation/OrganisationTeamAddUser";
+import { OrganisationTeamDisplayPending } from "src/components/organisation/OrganisationTeamDisplayPending";
+import { OrganisationTeamDisplayUsers } from "src/components/organisation/OrganisationTeamDisplayUsers";
+import withOrganisationStore from "src/composrc/hooks/store/useOrganisationNavigationStore";
 import {
-  OrganisationNavigationEnum,
-  OrganisationSettingsNavigationEnum,
+    OrganisationNavigationEnum,
+    OrganisationSettingsNavigationEnum
 } from "src/shared/enums";
+src/hooks/trpc/organisation/useQueryOrganisationFindAll
 
 const Page: NextPage = () => {
   const { setCurrentSettingsRoute, currentRoute } =

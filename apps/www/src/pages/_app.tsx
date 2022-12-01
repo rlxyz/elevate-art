@@ -3,17 +3,17 @@ import "@rainbow-me/rainbowkit/styles.css";
 import "../styles/globals.css";
 
 /** Core Functional Components */
-import { EthereumAuthenticationLayout } from "@components/layout/core/EthereumAuthenticationLayout";
 import { ErrorBoundary } from "@highlight-run/react";
-import { AnalyticsLayout } from "../client/components/layout/core/AnalyticsLayout";
+import { EthereumAuthenticationLayout } from "src/components/layout/core/EthereumAuthenticationLayout";
+import { AnalyticsLayout } from "../components/layout/core/AnalyticsLayout";
 
 /** Types */
 import { Session } from "next-auth/core/types";
 import { AppType } from "next/app";
-import "../client/utils/highlight";
+import { trpc } from "src/utils/trpc";
+import "../utils/highlight";
 
 /** Helpers */
-import { trpc } from "../client/utils/trpc";
 export { reportWebVitals } from "next-axiom";
 
 const Application: AppType<{ session: Session | null }> = ({

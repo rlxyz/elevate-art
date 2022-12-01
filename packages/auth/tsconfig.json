@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["**/*.tsx", "**/*.cjs", "**/*.mjs"]
+  "include": ["src", "index.ts", "next-auth.d.ts"]
 }
