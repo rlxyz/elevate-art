@@ -9,6 +9,13 @@ export const redis = new Redis({
   token: env.REDIS_TOKEN,
 })
 
+export const config = {
+  api: {
+    responseLimit: '20mb',
+    externalResolver: true,
+  },
+}
+
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   if (!session || !session.user) {
