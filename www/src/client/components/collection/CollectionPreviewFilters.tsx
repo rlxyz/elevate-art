@@ -25,6 +25,7 @@ export const FilterByTrait = () => {
   )
   const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryCollectionFindAll()
+
   return (
     <Formik
       initialValues={{ checked: traitFilters.map((t) => `${t.layer.id}/${t.trait.id}`) }}

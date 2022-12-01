@@ -101,7 +101,7 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
 }
 
 export const many = (layers: Layer[], seeds: string[]): [string, string][][] => {
-  const sorted = layers.map((x) => ({ ...x, traits: x.traits.sort((a, b) => a.weight - b.weight) })).sort((a, b) => a.priority - b.priority)
+  const sorted = layers.map((x) => ({ ...x, traits: x.traits.sort((a, b) => b.weight - a.weight) })).sort((a, b) => a.priority - b.priority)
   return seeds.map((x) => one(sorted, x))
 }
 

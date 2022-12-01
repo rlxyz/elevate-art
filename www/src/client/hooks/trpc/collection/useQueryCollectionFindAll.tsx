@@ -25,7 +25,6 @@ export const useQueryCollectionFindAll = () => {
   const mutate = ({ collection }: { collection: Collection }) => {
     if (!layers) return
 
-    // create tokens
     const tokens = v.many(
       v.parseLayer(
         layers.map((l) => ({
