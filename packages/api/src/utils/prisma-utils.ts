@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@elevateart/db";
+
 
 const BATCH_CHUNK_SIZE = 100;
 

@@ -1,6 +1,6 @@
-import { Result } from "@server/utils/response-result";
 import { v2 } from "cloudinary";
-import { env } from "src/env/server.mjs";
+import { env } from "../env/server.mjs";
+import { Result } from "../utils/response-result";
 
 export const IMAGE_QUALITY_SETTINGS: string[] = ["c_scale,w_600", "q_auto"];
 // export const IMAGE_QUALITY_SETTINGS: string[] = []
@@ -20,7 +20,7 @@ export const getTraitElementImage = ({
   version?: string;
 }): Promise<GetTraitElementImageReturn> => {
   return new Promise(async (resolve, reject) => {
-    const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`, {
+    const url = v2.url(`${env.NODE_ENV}/${r}/${l}/${t}.png`, {
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
       secure: true,
       transformation: [{ quality: "auto" }, { width: 600, crop: "scale" }],
@@ -52,7 +52,7 @@ export const getTraitElementInfo = ({
 }): Promise<Result<TraitElementInfoResponse>> => {
   return new Promise((resolve, reject) => {
     v2.api
-      .resource(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}`)
+      .resource(`${env.NODE_ENV}/${r}/${l}/${t}`)
       .then((result) => {
         const { version, public_id } = result as {
           version: number;

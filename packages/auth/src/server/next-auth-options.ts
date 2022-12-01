@@ -1,12 +1,12 @@
 import {
   OrganisationDatabaseEnum,
   OrganisationDatabaseRoleEnum,
-  prisma,
+  prisma
 } from "@elevateart/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
-import { env } from "../env/server.mjs";
+import { env } from "../../../api/src/env/server.mjs";
 
 export const nextAuthOptions: NextAuthOptions = {
   callbacks: {

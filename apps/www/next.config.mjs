@@ -30,7 +30,7 @@ export default defineNextConfig({
   },
   experimental: {
     // Enables hot-reload and easy integration for local packages
-    transpilePackages: ['@elevateart/ui', '@elevateart/eth-auth', '@elevateart/db', '@elevateart/api', '@elevateart/compiler'],
+    transpilePackages: ['@elevateart/ui', '@elevateart/auth', '@elevateart/db', '@elevateart/api', '@elevateart/compiler'],
   },
   i18n: {
     locales: ['en'],

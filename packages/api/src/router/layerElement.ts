@@ -1,9 +1,9 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@elevateart/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   deleteImageFolderFromCloudinary,
-  DeleteTraitElementResponse,
+  DeleteTraitElementResponse
 } from "../common/cld-delete-image";
 import { protectedProcedure, router } from "../trpc";
 import { updateManyByField } from "../utils/prisma-utils";

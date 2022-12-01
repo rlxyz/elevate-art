@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient, TraitElement } from "@prisma/client";
-import { groupBy } from "src/shared/object-utils";
+import { Prisma, PrismaClient, TraitElement } from "@elevateart/db";
+import { groupBy } from "../utils/object-utils";
 
 export type LayerElementObjectWithTraitElements = {
   [key: string]: TraitElement[];

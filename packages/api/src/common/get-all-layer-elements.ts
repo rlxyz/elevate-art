@@ -1,4 +1,4 @@
-import { LayerElement, Prisma, PrismaClient } from "@prisma/client";
+import { LayerElement, Prisma, PrismaClient } from "@elevateart/db";
 
 /**
  * This script can be used to query all the LayerElements in the database.
@@ -7,7 +7,7 @@ export const getAllLayerElements = async ({
   prisma,
 }: {
   prisma: PrismaClient<
-    Prisma.PrismaClientOptions,
+  Prisma.PrismaClientOptions,
     never,
     Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
   >;

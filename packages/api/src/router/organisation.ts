@@ -1,4 +1,4 @@
-import { OrganisationDatabaseRoleEnum } from "@elevateart/db";
+import { OrganisationDatabaseRoleEnum } from "@elevateart/db/enums";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";

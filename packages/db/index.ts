@@ -1,6 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-export * from "@prisma/client";
-export * from "./enums";
 
 declare global {
   // allow global `var` declarations
@@ -16,6 +14,8 @@ export const prisma =
         ? ["query", "error", "warn"]
         : ["error"],
   });
+
+export * from "@prisma/client";
 
 if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma;

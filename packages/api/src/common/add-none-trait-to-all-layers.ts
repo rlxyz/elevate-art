@@ -1,7 +1,6 @@
-import { LayerElement, PrismaClient } from "@prisma/client";
+import { LayerElement, prisma } from "@elevateart/db";
 import chalk from "chalk";
 
-const prisma = new PrismaClient();
 const log = console.log;
 
 /**
