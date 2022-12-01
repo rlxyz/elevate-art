@@ -1,5 +1,5 @@
 /** Styles */
-// import "@elevateart/ui/globals.css";
+import "../styles/globals.css";
 // import "@rainbow-me/rainbowkit/styles.css";
 
 /** Core Functional Components */

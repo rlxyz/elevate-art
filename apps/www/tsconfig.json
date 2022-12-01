@@ -22,7 +22,7 @@
   },
   "include": [
     "next-env.d.ts",
-    "node_modules/@acme/auth/next-auth.d.ts",
+    "node_modules/@elevateart/auth/next-auth.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
