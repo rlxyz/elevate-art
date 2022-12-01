@@ -1,8 +1,8 @@
 # rlxyz-compiler-client
 
-# Installation
+## Installation
 
-## Automatic Installation (recommended)
+### Automatic Installation (recommended)
 
 1. Run the `setup.sh` script which automatically installs Doppler CLI and sets up your environment variables
 
@@ -10,7 +10,7 @@
 yarn setup
 ```
 
-## Manual Installation
+### Manual Installation
 
 1. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
 
@@ -24,3 +24,7 @@ brew install dopplerhq/cli/doppler
 # Login to Doppler
 doppler login
 ```
+
+## Architecture
+
+1. tRPC
