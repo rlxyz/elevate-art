@@ -2,6 +2,7 @@ import { TraitElementUploadState } from '@components/layout/upload/upload-displa
 import { TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import produce from 'immer'
 import { FileWithPath } from 'react-dropzone'
+import { env } from 'src/env/client.mjs'
 
 export type ParseLayerElementFolderInput = { traitElements: TraitElement[]; files: FileWithPath[]; layerElementName?: string }
 export type ParseLayerElementFolderOutput = { [key: string]: TraitElementUploadState[] }
@@ -40,14 +41,24 @@ export const parseLayerElementFolder = (opts: ParseLayerElementFolderInput): Par
      * @note we use immer to ensure in-place mutation, its faster, i think.
      */
     return produce(acc, (draft) => {
+      const validSize = validateFileSize(file)
       const upload: TraitElementUploadState = {
         name: t,
         imageUrl: URL.createObjectURL(file),
         size: file.size,
         uploaded: false,
-        type: existing.includes(t) ? 'existing' : readonly.includes(t) ? 'readonly' : 'new',
+        type: existing.includes(t) ? 'existing' : readonly.includes(t) ? 'readonly' : validSize ? 'new' : 'invalid',
       }
       draft[l] ? draft[l]?.push(upload) : (draft[l] = [upload])
     })
   }, {} as ParseLayerElementFolderOutput)
+}
+
+export const validateFileSize = (file: FileWithPath): boolean => {
+  return file.size <= env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED
+}
+
+export const validateFolderDepth = (files: FileWithPath[], folderDepth: number): boolean => {
+  const depth = folderDepth + 1 // + 1 because we are adding the root folder
+  return files.filter((file) => file.path?.split('/').length !== depth).length === 0
 }
