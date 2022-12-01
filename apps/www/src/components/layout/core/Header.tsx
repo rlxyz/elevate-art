@@ -1,3 +1,5 @@
+import { EthereumConnectButton } from "@elevateart/auth/src/client";
+import { Organisation } from "@elevateart/db";
 import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
 import { Popover, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon, UserIcon } from "@heroicons/react/outline";
