@@ -34,28 +34,6 @@ export const LayoutContainer = ({
   )
 }
 
-export const LayoutLandingPage = ({
-  className,
-  children,
-  border = 'lower',
-}: {
-  border?: 'upper' | 'lower' | 'none'
-  className?: string
-  children: React.ReactNode
-}) => {
-  return (
-    <div
-      className={clsx(
-        ' justify-center h-full w-screen',
-        className,
-        border === 'lower' && 'border-b border-mediumGrey',
-        border === 'upper' && 'border-t border-mediumGrey'
-      )}
-    >
-      <div className='w-full h-full'>{children}</div>
-    </div>
-  )
-}
 export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   return (
     <main className='layout'>

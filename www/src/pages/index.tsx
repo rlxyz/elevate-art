@@ -136,7 +136,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.Header />
+        <Layout.Header authenticated={false} />
         <Layout.Body>
           <div className='space-y-20 h-full flex flex-col min-h-screen my-20'>
             <div className='w-full flex flex-col justify-center items-center space-y-10'>
