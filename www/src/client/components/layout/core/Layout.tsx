@@ -69,7 +69,7 @@ const LayoutBody = ({
 }) => {
   const childrens = React.Children.toArray(children)
   return (
-    <div className='min-h-[calc(100vh-9.14rem)]'>
+    <div className='xs:min-h-screen sm:min-h-[calc(100vh-9.14rem)]'>
       <div className='h-full w-screen'>
         {childrens.map((child, index) => {
           return (
