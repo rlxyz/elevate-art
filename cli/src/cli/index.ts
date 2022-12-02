@@ -1,59 +1,51 @@
-import type { AvailablePackages } from "~/installers/index.js";
-import { availablePackages } from "~/installers/index.js";
 import chalk from "chalk";
 import { Command } from "commander";
 import inquirer from "inquirer";
-import { CREATE_T3_APP, DEFAULT_APP_NAME } from "~/consts.js";
-import { getVersion } from "~/utils/getT3Version.js";
-import { getUserPkgManager } from "~/utils/getUserPkgManager.js";
+import { DEFAULT_APP_NAME, SETUP_ELEVATEART_APP } from "~/consts.js";
+import { getPackageManager } from "~/utils/getPackageManager.js";
+import { getVersion } from "~/utils/getPackageVersion.js";
+import { availableApps, AvailableApps } from "~/utils/installer.js";
 import { logger } from "~/utils/logger.js";
-import { validateAppName } from "~/utils/validateAppName.js";
 
 interface CliFlags {
-  noGit: boolean;
   noInstall: boolean;
   default: boolean;
   CI: boolean /** @internal - used in CI */;
-  tailwind: boolean /** @internal - used in CI */;
-  trpc: boolean /** @internal - used in CI */;
-  prisma: boolean /** @internal - used in CI */;
-  nextAuth: boolean /** @internal - used in CI */;
+  docs: boolean /** @internal - used in CI */;
+  www: boolean /** @internal - used in CI */;
+  rng: boolean /** @internal - used in CI */;
 }
 
 interface CliResults {
   appName: string;
-  packages: AvailablePackages[];
+  apps: AvailableApps[];
   flags: CliFlags;
 }
 
 const defaultOptions: CliResults = {
   appName: DEFAULT_APP_NAME,
-  packages: ["nextAuth", "prisma", "tailwind", "trpc"],
+  apps: ["rng", "docs", "www"],
   flags: {
-    noGit: false,
     noInstall: false,
     default: false,
     CI: false,
-    tailwind: false,
-    trpc: false,
-    prisma: false,
-    nextAuth: false,
+    docs: false,
+    www: false,
+    rng: false,
   },
 };
 
 export const runCli = async () => {
   const cliResults = defaultOptions;
 
-  const program = new Command().name(CREATE_T3_APP);
+  const program = new Command().name(SETUP_ELEVATEART_APP);
 
   // TODO: This doesn't return anything typesafe. Research other options?
   // Emulate from: https://github.com/Schniz/soundtype-commander
   program
-    .description("A CLI for creating web applications with the t3 stack")
-    .argument("[dir]", "The name of the application, as well as the name of the directory to create")
-    .option("--noGit", "Explicitly tell the CLI to not initialize a new git repo in the project", false)
+    .description(`A CLI for setting up the core development infrastructure for ${DEFAULT_APP_NAME}`)
     .option("--noInstall", "Explicitly tell the CLI to not run the package manager's install command", false)
-    .option("-y, --default", "Bypass the CLI and use all default options to bootstrap a new t3-app", false)
+    .option("-y, --default", `Bypass the CLI and use all default options to bootstrap a new ${DEFAULT_APP_NAME} app`, false)
     /** START CI-FLAGS */
     /**
      * @experimental - used for CI E2E tests
@@ -65,8 +57,8 @@ export const runCli = async () => {
      * Used in conjunction with `--CI` to skip prompting
      */
     .option(
-      "--tailwind [boolean]",
-      "Experimental: Boolean value if we should install Tailwind CSS. Must be used in conjunction with `--CI`.",
+      "--www [boolean]",
+      "Experimental: Boolean value if we should setup apps-www. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /**
@@ -74,8 +66,8 @@ export const runCli = async () => {
      * Used in conjunction with `--CI` to skip prompting
      */
     .option(
-      "--nextAuth [boolean]",
-      "Experimental: Boolean value if we should install Next-Auth.js. Must be used in conjunction with `--CI`.",
+      "--docs [boolean]",
+      "Experimental: Boolean value if we should setup apps-docs. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /**
@@ -83,28 +75,17 @@ export const runCli = async () => {
      * Used in conjunction with `--CI` to skip prompting
      */
     .option(
-      "--prisma [boolean]",
-      "Experimental: Boolean value if we should install Prisma. Must be used in conjunction with `--CI`.",
-      (value) => !!value && value !== "false",
-    )
-    /**
-     * @experimental - used for CI E2E tests
-     * Used in conjunction with `--CI` to skip prompting
-     */
-    .option(
-      "--trpc [boolean]",
-      "Experimental: Boolean value if we should install tRPC. Must be used in conjunction with `--CI`.",
+      "--rng [boolean]",
+      "Experimental: Boolean value if we should setup apps-rng. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /** END CI-FLAGS */
     .version(getVersion(), "-v, --version", "Display the version number")
     .addHelpText(
       "afterAll",
-      `\n The t3 stack was inspired by ${chalk
-        .hex("#E8DCFF")
-        .bold("@t3dotgg")} and has been used to build awesome fullstack applications like ${chalk
+      `\n This application was hacked together by ${chalk.hex("#E8DCFF").bold("@rlxyz")} to build the core infrastructure for ${chalk
         .hex("#E24A8D")
-        .underline("https://ping.gg")} \n`,
+        .underline("https://elevate.art")} \n`,
     )
     .parse(process.argv);
 
@@ -116,12 +97,6 @@ export const runCli = async () => {
   See: https://github.com/t3-oss/create-t3-app/issues/57`);
   }
 
-  // Needs to be separated outside the if statement to correctly infer the type as string | undefined
-  const cliProvidedName = program.args[0];
-  if (cliProvidedName) {
-    cliResults.appName = cliProvidedName;
-  }
-
   cliResults.flags = program.opts();
 
   /**
@@ -130,27 +105,24 @@ export const runCli = async () => {
   let CIMode = false;
   if (cliResults.flags.CI) {
     CIMode = true;
-    cliResults.packages = [];
-    if (cliResults.flags.trpc) cliResults.packages.push("trpc");
-    if (cliResults.flags.tailwind) cliResults.packages.push("tailwind");
-    if (cliResults.flags.prisma) cliResults.packages.push("prisma");
-    if (cliResults.flags.nextAuth) cliResults.packages.push("nextAuth");
+    cliResults.apps = [];
+    if (cliResults.flags.www) cliResults.apps.push("www");
+    if (cliResults.flags.docs) cliResults.apps.push("docs");
+    if (cliResults.flags.rng) cliResults.apps.push("rng");
   }
 
   // Explained below why this is in a try/catch block
   try {
+    const pkgManager = getPackageManager();
+    if (pkgManager !== "pnpm") {
+      logger.error(` WARNING: It looks like you are using ${pkgManager}. This is currently not supported.`);
+      throw new Error(`Unsupported package manager: ${pkgManager}. Please uses pnpm.`);
+    }
+
     // if --CI flag is set, we are running in CI mode and should not prompt the user
     // if --default flag is set, we should not prompt the user
     if (!cliResults.flags.default && !CIMode) {
-      if (!cliProvidedName) {
-        cliResults.appName = await promptAppName();
-      }
-
-      await promptLanguage();
-      cliResults.packages = await promptPackages();
-      if (!cliResults.flags.noGit) {
-        cliResults.flags.noGit = !(await promptGit());
-      }
+      cliResults.apps = await promptApps();
 
       if (!cliResults.flags.noInstall) {
         cliResults.flags.noInstall = !(await promptInstall());
@@ -161,7 +133,7 @@ export const runCli = async () => {
     // If this happens, we catch the error, tell the user what has happened, and then continue to run the program with a default t3 app
     // eslint-disable-next-line -- Otherwise we have to do some fancy namespace extension logic on the Error type which feels overkill for one line
     if (err instanceof Error && (err as any).isTTYError) {
-      logger.warn(`${CREATE_T3_APP} needs an interactive terminal to provide options`);
+      logger.warn(`${SETUP_ELEVATEART_APP} needs an interactive terminal to provide options`);
       logger.info(`Bootstrapping a default t3 app in ./${cliResults.appName}`);
     } else {
       throw err;
@@ -171,75 +143,21 @@ export const runCli = async () => {
   return cliResults;
 };
 
-const promptAppName = async (): Promise<string> => {
-  const { appName } = await inquirer.prompt<Pick<CliResults, "appName">>({
-    name: "appName",
-    type: "input",
-    message: "What will your project be called?",
-    default: defaultOptions.appName,
-    validate: validateAppName,
-    transformer: (input: string) => {
-      return input.trim();
-    },
-  });
-
-  return appName;
-};
-
-const promptLanguage = async (): Promise<void> => {
-  const { language } = await inquirer.prompt<{ language: string }>({
-    name: "language",
-    type: "list",
-    message: "Will you be using JavaScript or TypeScript?",
-    choices: [
-      { name: "TypeScript", value: "typescript", short: "TypeScript" },
-      { name: "JavaScript", value: "javascript", short: "JavaScript" },
-    ],
-    default: "typescript",
-  });
-
-  if (language === "javascript") {
-    logger.error("Wrong answer, using TypeScript instead...");
-  } else {
-    logger.success("Good choice! Using TypeScript!");
-  }
-};
-
-const promptPackages = async (): Promise<AvailablePackages[]> => {
-  const { packages } = await inquirer.prompt<Pick<CliResults, "packages">>({
-    name: "packages",
+const promptApps = async (): Promise<AvailableApps[]> => {
+  const { apps } = await inquirer.prompt<Pick<CliResults, "apps">>({
+    name: "apps",
     type: "checkbox",
-    message: "Which packages would you like to enable?",
-    choices: availablePackages
-      .filter((pkg) => pkg !== "envVariables") // dont prompt for env-vars
-      .map((pkgName) => ({
-        name: pkgName,
-        checked: false,
-      })),
+    message: "Which apps would you like to enable?",
+    choices: availableApps.map((pkgName) => ({
+      name: pkgName,
+      checked: false,
+    })),
   });
-
-  return packages;
-};
-
-const promptGit = async (): Promise<boolean> => {
-  const { git } = await inquirer.prompt<{ git: boolean }>({
-    name: "git",
-    type: "confirm",
-    message: "Initialize a new git repository?",
-    default: true,
-  });
-
-  if (git) {
-    logger.success("Nice one! Initializing repository!");
-  } else {
-    logger.info("Sounds good! You can come back and run git init later.");
-  }
-
-  return git;
+  return apps;
 };
 
 const promptInstall = async (): Promise<boolean> => {
-  const pkgManager = getUserPkgManager();
+  const pkgManager = getPackageManager();
 
   const { install } = await inquirer.prompt<{ install: boolean }>({
     name: "install",

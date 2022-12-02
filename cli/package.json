@@ -1,22 +1,8 @@
 {
-  "name": "create-t3-app",
-  "version": "6.11.0",
-  "description": "Create web application with the t3 stack",
+  "name": "@elevateart/cli",
+  "version": "0.1.0",
+  "description": "Initialise the settings and environments to work with the elevate.art codebase",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/t3-oss/create-t3-app.git",
-    "directory": "cli"
-  },
-  "keywords": [
-    "create-t3-app",
-    "init.tips",
-    "next.js",
-    "t3-stack",
-    "tailwind",
-    "tRPC",
-    "typescript"
-  ],
   "type": "module",
   "exports": "./dist/index.js",
   "bin": {
@@ -33,11 +19,7 @@
     "start": "node dist/index.js",
     "lint": "eslint src --cache --cache-strategy content",
     "format": "prettier --write --plugin-search-dir=. **/*.{cjs,mjs,ts,tsx,md,json} --ignore-path ../.gitignore",
-    "format:check": "prettier --check --plugin-search-dir=. **/*.{cjs,mjs,ts,tsx,md,json} --ignore-path ../.gitignore",
-    "release": "changeset version",
-    "pub:beta": "pnpm build && npm publish --tag beta",
-    "pub:next": "pnpm build && npm publish --tag next",
-    "pub:release": "pnpm build && npm publish"
+    "format:check": "prettier --check --plugin-search-dir=. **/*.{cjs,mjs,ts,tsx,md,json} --ignore-path ../.gitignore"
   },
   "dependencies": {
     "chalk": "5.0.1",

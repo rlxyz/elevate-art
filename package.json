@@ -11,8 +11,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo lint && manypkg check",
     "type-check": "turbo type-check",
-    "build:cli": "turbo --filter=create-t3-app build",
-    "start": "turbo --filter=create-t3-app start"
+    "setup": "chmod +x ./setup.sh && ./setup.sh",
+    "build:cli": "turbo --filter=cli build",
+    "start:cli": "turbo --filter=cli start"
   },
   "dependencies": {
     "@manypkg/cli": "^0.19.2",

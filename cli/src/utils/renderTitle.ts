@@ -1,6 +1,6 @@
 import gradient from "gradient-string";
 import { TITLE_TEXT } from "~/consts.js";
-import { getUserPkgManager } from "~/utils/getUserPkgManager.js";
+import { getPackageManager } from "./getPackageManager.js";
 
 // colors brought in from vscode poimandres theme
 const poimandresTheme = {
@@ -16,7 +16,7 @@ export const renderTitle = () => {
   const t3Gradient = gradient(Object.values(poimandresTheme));
 
   // resolves weird behavior where the ascii is offset
-  const pkgManager = getUserPkgManager();
+  const pkgManager = getPackageManager();
   if (pkgManager === "yarn" || pkgManager === "pnpm") {
     console.log("");
   }

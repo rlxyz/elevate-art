@@ -1,6 +1,6 @@
-import type { PackageJson } from "type-fest";
-import path from "path";
 import fs from "fs-extra";
+import path from "path";
+import type { PackageJson } from "type-fest";
 import { PKG_ROOT } from "~/consts.js";
 
 export const getVersion = () => {
@@ -8,5 +8,5 @@ export const getVersion = () => {
 
   const packageJsonContent = fs.readJSONSync(packageJsonPath) as PackageJson;
 
-  return packageJsonContent.version ?? "1.0.0";
+  return packageJsonContent.version ?? "0.1.0";
 };
