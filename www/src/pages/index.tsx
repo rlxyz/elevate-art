@@ -4,34 +4,35 @@ import NextLink from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
 import { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 const Hero = () => {
   return (
-    <div className='relative flex flex-row justify-center items-center'>
-      <div className='w-[50%] h-auto'>
-        <div className='relative mt-10'>
-          <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
-          <img className='absolute bottom-[-60px] right-[-60px] w-72' src='/images/ffc.png' alt='demo' />
+    <div className='flex justify-center items-center'>
+      <div className='grid grid-cols-2'>
+        <div className='relative w-[60%] lg:w-[70%] xl:w-[90%] 2xl:w-full'>
+          <Image width={364} height={213} className='absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
+          <Image width={423} height={300} className='w-2/4 absolute bottom-[-60px] right-[-60px]' src='/images/ffc.png' alt='ffc-image' />
           <img className='absolute bottom-[120px] right-[-100px] w-16' src='/images/squiggle.png' alt='demo' />
-          <img src='/images/journey.png' alt='demo' />
-          <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10'></div>
+          <Image width={629} height={786} src='/images/journey.png' alt='journey-by-jacob' />
+          <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10' />
         </div>
-      </div>
-      <div className='w-[50%] h-auto'>
-        <h1 className='text-5xl font-bold tracking-wide text-right mb-8'>
-          Elevate your
-          <br /> NFT Collection
-        </h1>
-        <p className='text-normal text-right mb-8'>
-          Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
-        </p>
-        <NextLink className='text-white w-fit float-right' href='#'>
-          <button className='rounded-[5px] bg-black px-4 py-1 right-0 flex items-center'>
-            <img className='w-6' src='./images/logo-white.png' />
-            <span className='text-xs'>Start Creating</span>
-          </button>
-        </NextLink>
+        <div className='flex flex-col justify-center items-end'>
+          <h1 className='text-5xl font-bold tracking-wide text-right mb-8'>
+            Elevate your
+            <br /> NFT Collection
+          </h1>
+          <p className='text-normal text-right mb-8'>
+            Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
+          </p>
+          <NextLink className='text-white w-fit' href={`/connect`}>
+            <button className='rounded-[5px] bg-black px-4 py-1 right-0 flex items-center'>
+              <img className='w-6' src='./images/logo-white.png' />
+              <span className='text-xs'>Start Creating</span>
+            </button>
+          </NextLink>
+        </div>
       </div>
     </div>
   )
@@ -137,8 +138,8 @@ const Home: NextPage = () => {
       <Layout>
         <Layout.Header />
         <Layout.Body>
-          <div className='space-y-20 h-full flex flex-col min-h-[calc(100vh+4.20rem)]'>
-            <div className='relative w-full flex flex-col justify-center items-center mt-10'>
+          <div className='space-y-20 h-full flex flex-col min-h-screen my-20'>
+            <div className='w-full flex flex-col justify-center items-center space-y-10'>
               <Hero />
               {/* <Features /> */}
               {/* <Partners /> */}
