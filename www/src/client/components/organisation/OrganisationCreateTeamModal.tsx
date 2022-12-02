@@ -6,13 +6,11 @@ import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 
-export interface OrganisationCreateTeamProps extends FormModalProps {}
-
 export type OrganisationCreateTeamForm = {
   name: string
 }
 
-const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible, onClose, onSuccess }) => {
+const OrganisationCreateTeamModal: FC<FormModalProps> = ({ visible, onClose, onSuccess }) => {
   const { mutate, isLoading } = useMutateOrganisationCreateTeam()
   const { all: organisations } = useQueryOrganisationFindAll()
   const {
@@ -42,7 +40,7 @@ const OrganisationCreateTeamModal: FC<OrganisationCreateTeamProps> = ({ visible,
       onClose={handleClose}
       onSubmit={handleSubmit((data) => mutate({ name: data.name }, { onSuccess: handleSuccess }))}
       title='Create Team'
-      description={`This will create a new team. You will be able to add members to this team later.`}
+      description={`This will create a new team.  You will be able to add members to this team later.`}
       isLoading={isLoading}
       className='w-[30rem]'
     >

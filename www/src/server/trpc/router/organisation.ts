@@ -186,4 +186,22 @@ export const organisationRouter = router({
         },
       })
     }),
+  memberDelete: protectedProcedure
+    .input(
+      z.object({
+        organisationId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { organisationId } = input
+
+      return await ctx.prisma.organisationMember.delete({
+        where: {
+          userId_organisationId: {
+            userId: ctx.session.user.id,
+            organisationId,
+          },
+        },
+      })
+    }),
 })

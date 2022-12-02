@@ -1,11 +1,12 @@
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { Organisation } from '@prisma/client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
-import OrganisationDeleteTeamModal from './OrganisationDeleteTeamModal'
+import OrganisationMemberDeleteModal from './OrganisationMemberDeleteModal'
 
 export const SettingsNavigations = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -66,7 +67,7 @@ export const OrganisationGeneralSettings = () => {
             </div>
           </div>
         </div>
-        <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+        <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey rounded-b-lg'>
           {/* <div className='flex items-center'>
             <span>{`Learn more about`}&nbsp;</span>
             <Link href='https://docs.elevate.art/team'>
@@ -87,31 +88,43 @@ export const OrganisationGeneralSettings = () => {
   )
 }
 
-export const OrganisationLeaveTeam = () => {
-  return (
-    <div className='w-full rounded-[5px] border border-redError'>
-      <div className='p-6 space-y-4'>
-        <div className='flex flex-col'>
-          <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
-            <h1 className='text-lg font-semibold text-black'>Leave Team</h1>
-            <p className='text-xs text-black'>{"Revoke your access to this Team. Any reources you've added to the Team will remain."}</p>
-          </div>
-        </div>
-      </div>
-      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
-        <div>
-          <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
-            <button type='submit' className='text-redError'>
-              Leave Team
-            </button>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
-export const OrganisationDeleteTeam = () => {
+// export const OrganisationLeaveTeam = () => {
+//   const [isLeaveTeamModalOpen, setIsLeaveTeamModalOpen] = useState(false)
+
+//   return (
+//     <div className='w-full rounded-[5px] border border-redError'>
+//       <div className='p-6 space-y-4'>
+//         <div className='flex flex-col'>
+//           <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
+//             <h1 className='text-lg font-semibold text-black'>Leave Team</h1>
+//             <p className='text-xs text-black'>{"Revoke your access to this Team. Any reources you've added to the Team will remain."}</p>
+//           </div>
+//         </div>
+//       </div>
+//       <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey rounded-b-lg'>
+//         <div>
+//           <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
+//             <button
+//               className='flex flex-row space-x-2'
+//               onClick={(e) => {
+//                 e.preventDefault()
+//                 setIsLeaveTeamModalOpen(true)
+//               }}
+//             >
+//               <span className='text-redError'>Leave Team</span>
+//             </button>
+//           </div>
+//         </div>
+//         <OrganisationLeaveTeamModal visible={isLeaveTeamModalOpen} onClose={() => setIsLeaveTeamModalOpen(false)} />
+//       </footer>
+//     </div>
+//   )
+// }
+
+export const OrganisationMemberDelete = ({ organisation }: { organisation: Organisation | undefined }) => {
   const [isDeleteTeamModalOpen, setIsDeleteTeamModalOpen] = useState(false)
+
+  if (!organisation) return null
 
   return (
     <div className='w-full rounded-[5px] border border-redError'>
@@ -127,7 +140,7 @@ export const OrganisationDeleteTeam = () => {
           </div>
         </div>
       </div>
-      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey rounded-b-lg'>
         <div>
           <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
             {/* <button type='submit' className='text-redError'>
@@ -143,7 +156,11 @@ export const OrganisationDeleteTeam = () => {
               <span className='text-redError'>Delete Team</span>
             </button>
           </div>
-          <OrganisationDeleteTeamModal visible={isDeleteTeamModalOpen} onClose={() => setIsDeleteTeamModalOpen(false)} />
+          <OrganisationMemberDeleteModal
+            visible={isDeleteTeamModalOpen}
+            onClose={() => setIsDeleteTeamModalOpen(false)}
+            organisation={organisation}
+          />
         </div>
       </footer>
     </div>

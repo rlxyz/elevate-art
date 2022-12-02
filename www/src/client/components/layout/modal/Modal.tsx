@@ -5,7 +5,7 @@ import Loading from '../loading/Loading'
 
 interface Props {
   title: string
-  description?: string
+  description?: string | React.ReactElement
   data?: { label: string; value: string }[]
   isLoading: boolean
   onClose?: () => void
