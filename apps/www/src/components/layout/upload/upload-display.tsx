@@ -5,7 +5,7 @@ import {
   ChevronUpIcon,
   DocumentAddIcon,
   DocumentDuplicateIcon,
-  XCircleIcon
+  XCircleIcon,
 } from "@heroicons/react/outline";
 import clsx from "clsx";
 import { motion } from "framer-motion";

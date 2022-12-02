@@ -7,14 +7,7 @@ import type { Installer } from "~/installers/index.js";
 export const trpcInstaller: Installer = ({ projectDir, packages }) => {
   addPackageDependency({
     projectDir,
-    dependencies: [
-      "@tanstack/react-query",
-      "superjson",
-      "@trpc/server",
-      "@trpc/client",
-      "@trpc/next",
-      "@trpc/react-query",
-    ],
+    dependencies: ["@tanstack/react-query", "superjson", "@trpc/server", "@trpc/client", "@trpc/next", "@trpc/react-query"],
     devMode: false,
   });
 
@@ -45,26 +38,15 @@ export const trpcInstaller: Installer = ({ projectDir, packages }) => {
   const contextDest = path.join(projectDir, "src/server/trpc/context.ts");
 
   const authRouterSrc = path.join(trpcAssetDir, "auth-router.ts");
-  const authRouterDest = path.join(
-    projectDir,
-    "src/server/trpc/router/auth.ts",
-  );
+  const authRouterDest = path.join(projectDir, "src/server/trpc/router/auth.ts");
 
   const indexRouterFile = usingAuth ? "auth-app-router.ts" : "app-router.ts";
   const indexRouterSrc = path.join(trpcAssetDir, indexRouterFile);
-  const indexRouterDest = path.join(
-    projectDir,
-    "src/server/trpc/router/_app.ts",
-  );
+  const indexRouterDest = path.join(projectDir, "src/server/trpc/router/_app.ts");
 
-  const exampleRouterFile = usingPrisma
-    ? "example-prisma-router.ts"
-    : "example-router.ts";
+  const exampleRouterFile = usingPrisma ? "example-prisma-router.ts" : "example-router.ts";
   const exampleRouterSrc = path.join(trpcAssetDir, exampleRouterFile);
-  const exampleRouterDest = path.join(
-    projectDir,
-    "src/server/trpc/router/example.ts",
-  );
+  const exampleRouterDest = path.join(projectDir, "src/server/trpc/router/example.ts");
 
   fs.copySync(apiHandlerSrc, apiHandlerDest);
   fs.copySync(utilsSrc, utilsDest);

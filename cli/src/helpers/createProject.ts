@@ -11,11 +11,7 @@ interface CreateProjectOptions {
   noInstall: boolean;
 }
 
-export const createProject = async ({
-  projectName,
-  packages,
-  noInstall,
-}: CreateProjectOptions) => {
+export const createProject = async ({ projectName, packages, noInstall }: CreateProjectOptions) => {
   const pkgManager = getUserPkgManager();
   const projectDir = path.resolve(process.cwd(), projectName);
 

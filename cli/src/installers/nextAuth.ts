@@ -16,35 +16,17 @@ export const nextAuthInstaller: Installer = ({ projectDir, packages }) => {
 
   const nextAuthAssetDir = path.join(PKG_ROOT, "template/addons/next-auth");
 
-  const apiHandlerSrc = path.join(
-    nextAuthAssetDir,
-    packages?.prisma.inUse ? "api-handler-prisma.ts" : "api-handler.ts",
-  );
-  const apiHandlerDest = path.join(
-    projectDir,
-    "src/pages/api/auth/[...nextauth].ts",
-  );
+  const apiHandlerSrc = path.join(nextAuthAssetDir, packages?.prisma.inUse ? "api-handler-prisma.ts" : "api-handler.ts");
+  const apiHandlerDest = path.join(projectDir, "src/pages/api/auth/[...nextauth].ts");
 
-  const getServerAuthSessionSrc = path.join(
-    nextAuthAssetDir,
-    "get-server-auth-session.ts",
-  );
-  const getServerAuthSessionDest = path.join(
-    projectDir,
-    "src/server/common/get-server-auth-session.ts",
-  );
+  const getServerAuthSessionSrc = path.join(nextAuthAssetDir, "get-server-auth-session.ts");
+  const getServerAuthSessionDest = path.join(projectDir, "src/server/common/get-server-auth-session.ts");
 
   const restrictedApiSrc = path.join(nextAuthAssetDir, "restricted.ts");
-  const restrictedApiDest = path.join(
-    projectDir,
-    "src/pages/api/restricted.ts",
-  );
+  const restrictedApiDest = path.join(projectDir, "src/pages/api/restricted.ts");
 
   const nextAuthDefinitionSrc = path.join(nextAuthAssetDir, "next-auth.d.ts");
-  const nextAuthDefinitionDest = path.join(
-    projectDir,
-    "src/types/next-auth.d.ts",
-  );
+  const nextAuthDefinitionDest = path.join(projectDir, "src/types/next-auth.d.ts");
 
   fs.copySync(apiHandlerSrc, apiHandlerDest);
   fs.copySync(getServerAuthSessionSrc, getServerAuthSessionDest);

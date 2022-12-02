@@ -1,22 +1,13 @@
 import path from "path";
 import fs from "fs-extra";
 import { type PackageJson } from "type-fest";
-import {
-  dependencyVersionMap,
-  AvailableDependencies,
-} from "~/installers/index.js";
+import { dependencyVersionMap, AvailableDependencies } from "~/installers/index.js";
 import sortPackageJson from "sort-package-json";
 
-export const addPackageDependency = (opts: {
-  dependencies: AvailableDependencies[];
-  devMode: boolean;
-  projectDir: string;
-}) => {
+export const addPackageDependency = (opts: { dependencies: AvailableDependencies[]; devMode: boolean; projectDir: string }) => {
   const { dependencies, devMode, projectDir } = opts;
 
-  const pkgJson = fs.readJSONSync(
-    path.join(projectDir, "package.json"),
-  ) as PackageJson;
+  const pkgJson = fs.readJSONSync(path.join(projectDir, "package.json")) as PackageJson;
 
   dependencies.forEach((pkgName) => {
     const version = dependencyVersionMap[pkgName];

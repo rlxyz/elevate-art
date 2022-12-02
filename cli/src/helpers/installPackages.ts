@@ -15,11 +15,7 @@ export const installPackages = (options: InstallPackagesOptions) => {
     if (pkgOpts.inUse) {
       const spinner = ora(`Boilerplating ${name}...`).start();
       pkgOpts.installer(options);
-      spinner.succeed(
-        chalk.green(
-          `Successfully setup boilerplate for ${chalk.green.bold(name)}`,
-        ),
-      );
+      spinner.succeed(chalk.green(`Successfully setup boilerplate for ${chalk.green.bold(name)}`));
     }
   }
 

@@ -10,8 +10,7 @@ export const envVariablesInstaller: Installer = ({ projectDir, packages }) => {
   const envAssetDir = path.join(PKG_ROOT, "template/addons/env");
 
   let envSchemaFile = "";
-  let envContent =
-    "# When adding additional env variables, the schema in /env/schema.mjs should be updated accordingly\n";
+  let envContent = "# When adding additional env variables, the schema in /env/schema.mjs should be updated accordingly\n";
 
   switch (true) {
     case usingAuth && usingPrisma:

@@ -46,9 +46,7 @@ const getGitVersion = () => {
 
 /** If git config value 'init.defaultBranch' is set return value else 'main' */
 const getDefaultBranch = () => {
-  const stdout = execSync("git config --global init.defaultBranch || echo main")
-    .toString()
-    .trim();
+  const stdout = execSync("git config --global init.defaultBranch || echo main").toString().trim();
 
   return stdout;
 };
@@ -120,15 +118,9 @@ export const initializeGit = async (projectDir: string) => {
         cwd: projectDir,
       });
     }
-    spinner.succeed(
-      `${chalk.green("Successfully initialized")} ${chalk.green.bold("git")}\n`,
-    );
+    spinner.succeed(`${chalk.green("Successfully initialized")} ${chalk.green.bold("git")}\n`);
   } catch (error) {
     // Safeguard, should be unreachable
-    spinner.fail(
-      `${chalk.bold.red(
-        "Failed:",
-      )} could not initialize git. Update git to the latest version!\n`,
-    );
+    spinner.fail(`${chalk.bold.red("Failed:")} could not initialize git. Update git to the latest version!\n`);
   }
 };

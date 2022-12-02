@@ -50,25 +50,10 @@ export const runCli = async () => {
   // Emulate from: https://github.com/Schniz/soundtype-commander
   program
     .description("A CLI for creating web applications with the t3 stack")
-    .argument(
-      "[dir]",
-      "The name of the application, as well as the name of the directory to create",
-    )
-    .option(
-      "--noGit",
-      "Explicitly tell the CLI to not initialize a new git repo in the project",
-      false,
-    )
-    .option(
-      "--noInstall",
-      "Explicitly tell the CLI to not run the package manager's install command",
-      false,
-    )
-    .option(
-      "-y, --default",
-      "Bypass the CLI and use all default options to bootstrap a new t3-app",
-      false,
-    )
+    .argument("[dir]", "The name of the application, as well as the name of the directory to create")
+    .option("--noGit", "Explicitly tell the CLI to not initialize a new git repo in the project", false)
+    .option("--noInstall", "Explicitly tell the CLI to not run the package manager's install command", false)
+    .option("-y, --default", "Bypass the CLI and use all default options to bootstrap a new t3-app", false)
     /** START CI-FLAGS */
     /**
      * @experimental - used for CI E2E tests
@@ -117,9 +102,7 @@ export const runCli = async () => {
       "afterAll",
       `\n The t3 stack was inspired by ${chalk
         .hex("#E8DCFF")
-        .bold(
-          "@t3dotgg",
-        )} and has been used to build awesome fullstack applications like ${chalk
+        .bold("@t3dotgg")} and has been used to build awesome fullstack applications like ${chalk
         .hex("#E24A8D")
         .underline("https://ping.gg")} \n`,
     )
@@ -178,9 +161,7 @@ export const runCli = async () => {
     // If this happens, we catch the error, tell the user what has happened, and then continue to run the program with a default t3 app
     // eslint-disable-next-line -- Otherwise we have to do some fancy namespace extension logic on the Error type which feels overkill for one line
     if (err instanceof Error && (err as any).isTTYError) {
-      logger.warn(
-        `${CREATE_T3_APP} needs an interactive terminal to provide options`,
-      );
+      logger.warn(`${CREATE_T3_APP} needs an interactive terminal to provide options`);
       logger.info(`Bootstrapping a default t3 app in ./${cliResults.appName}`);
     } else {
       throw err;
@@ -263,9 +244,7 @@ const promptInstall = async (): Promise<boolean> => {
   const { install } = await inquirer.prompt<{ install: boolean }>({
     name: "install",
     type: "confirm",
-    message:
-      `Would you like us to run '${pkgManager}` +
-      (pkgManager === "yarn" ? `'?` : ` install'?`),
+    message: `Would you like us to run '${pkgManager}` + (pkgManager === "yarn" ? `'?` : ` install'?`),
     default: true,
   });
 
@@ -273,13 +252,9 @@ const promptInstall = async (): Promise<boolean> => {
     logger.success("Alright. We'll install the dependencies for you!");
   } else {
     if (pkgManager === "yarn") {
-      logger.info(
-        `No worries. You can run '${pkgManager}' later to install the dependencies.`,
-      );
+      logger.info(`No worries. You can run '${pkgManager}' later to install the dependencies.`);
     } else {
-      logger.info(
-        `No worries. You can run '${pkgManager} install' later to install the dependencies.`,
-      );
+      logger.info(`No worries. You can run '${pkgManager} install' later to install the dependencies.`);
     }
   }
 

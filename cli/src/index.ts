@@ -10,10 +10,7 @@ import { buildPkgInstallerMap } from "~/installers/index.js";
 import { logger } from "~/utils/logger.js";
 import { parseNameAndPath } from "~/utils/parseNameAndPath.js";
 import { renderTitle } from "~/utils/renderTitle.js";
-import {
-  getNpmVersion,
-  renderVersionWarning,
-} from "./utils/renderVersionWarning.js";
+import { getNpmVersion, renderVersionWarning } from "./utils/renderVersionWarning.js";
 import { installDependencies } from "./helpers/installDependencies.js";
 import { getVersion } from "./utils/getT3Version.js";
 
@@ -56,9 +53,7 @@ const main = async () => {
   logNextSteps({ projectName: appDir, packages: usePackages, noInstall });
 
   // Write name to package.json
-  const pkgJson = fs.readJSONSync(
-    path.join(projectDir, "package.json"),
-  ) as CT3APackageJSON;
+  const pkgJson = fs.readJSONSync(path.join(projectDir, "package.json")) as CT3APackageJSON;
   pkgJson.name = scopedAppName;
   pkgJson.ct3aMetadata = { initVersion: getVersion() };
   fs.writeJSONSync(path.join(projectDir, "package.json"), pkgJson, {
@@ -73,9 +68,7 @@ main().catch((err) => {
   if (err instanceof Error) {
     logger.error(err);
   } else {
-    logger.error(
-      "An unknown error has occurred. Please open an issue on github with the below:",
-    );
+    logger.error("An unknown error has occurred. Please open an issue on github with the below:");
     console.log(err);
   }
   process.exit(1);

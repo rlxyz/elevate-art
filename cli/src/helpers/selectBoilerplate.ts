@@ -3,14 +3,9 @@ import path from "path";
 import fs from "fs-extra";
 import { PKG_ROOT } from "~/consts.js";
 
-type SelectBoilerplateProps = Required<
-  Pick<InstallerOptions, "projectDir" | "packages">
->;
+type SelectBoilerplateProps = Required<Pick<InstallerOptions, "projectDir" | "packages">>;
 // This generates the _app.tsx file that is used to render the app
-export const selectAppFile = ({
-  projectDir,
-  packages,
-}: SelectBoilerplateProps) => {
+export const selectAppFile = ({ projectDir, packages }: SelectBoilerplateProps) => {
   const appFileDir = path.join(PKG_ROOT, "template/page-studs/_app");
 
   const usingTrpc = packages.trpc.inUse;
@@ -33,10 +28,7 @@ export const selectAppFile = ({
 };
 
 // This selects the proper index.tsx to be used that showcases the chosen tech
-export const selectIndexFile = ({
-  projectDir,
-  packages,
-}: SelectBoilerplateProps) => {
+export const selectIndexFile = ({ projectDir, packages }: SelectBoilerplateProps) => {
   const indexFileDir = path.join(PKG_ROOT, "template/page-studs/index");
 
   const usingTrpc = packages.trpc.inUse;
