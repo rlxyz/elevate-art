@@ -98,7 +98,7 @@ const Footer = () => {
             Design your NFT collection seamlessly.
             <div className='flex flex-row justify-between items-center'>
               <h2 className='text-[#e7e7e7]'>
-                Let's{' '}
+                {"Let's "}
                 <span style={style} className=' text-black'>
                   elevate art
                 </span>{' '}
