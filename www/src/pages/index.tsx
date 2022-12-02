@@ -10,24 +10,36 @@ import { useRouter } from 'next/router'
 const Hero = () => {
   return (
     <div className='flex justify-center items-center'>
-      <div className='grid grid-cols-2'>
-        <div className='relative w-[60%] lg:w-[70%] xl:w-[90%] 2xl:w-full'>
+      <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
+        <div className='relative   w-[100%] md:w-full lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
           <Image width={364} height={213} className='w-[60%] absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
-          <Image width={423} height={300} className='w-2/4 absolute bottom-[-60px] right-[-60px]' src='/images/ffc.png' alt='ffc-image' />
-          <img className='absolute bottom-[120px] right-[-100px] w-16' src='/images/squiggle.png' alt='demo' />
-          <Image width={629} height={786} src='/images/journey.png' alt='journey-by-jacob' />
+          <Image
+            width={423}
+            height={300}
+            className='w-2/4 absolute xs:bottom-[-20px] sm:bottom-[-60px] xs:right-[-40px] sm:right-[-60px]'
+            src='/images/ffc.png'
+            alt='ffc-image'
+          />
+          <Image
+            width={85}
+            height={126}
+            className='md:w-[15%] w-[1/3] xs:hidden absolute md:bottom-[80px] lg:bottom-[80px] xl:bottom-[120px] lg:right-[-100px] md:right-[-80px]'
+            src='/images/squiggle.png'
+            alt='squiggle-image'
+          />
+          <Image width={629} height={786} className='' src='/images/journey.png' alt='journey-by-jacob' />
           <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10' />
         </div>
-        <div className='flex flex-col justify-center items-end'>
-          <h1 className='text-5xl font-bold tracking-wide text-right mb-8'>
+        <div className='xs:mt-5 sm:mt-0 flex flex-col justify-center xs:items-start sm:items-end 2xl:pr-12'>
+          <h1 className='xs:text-3xl sm:text-5xl  font-bold tracking-wide sm:text-right xs:mb-4 sm:mb-8'>
             Elevate your
             <br /> NFT Collection
           </h1>
-          <p className='text-normal text-right mb-8'>
+          <p className='text-normal sm:text-right xs:mb-4 sm:mb-8'>
             Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
           </p>
           <NextLink className='text-white w-fit' href={`/connect`}>
-            <button className='rounded-[5px] bg-black px-4 py-1 right-0 flex items-center'>
+            <button className='rounded-[5px] bg-black px-4 py-1 flex items-center'>
               <img className='w-6' src='./images/logo-white.png' />
               <span className='text-xs'>Start Creating</span>
             </button>
@@ -138,7 +150,7 @@ const Home: NextPage = () => {
       <Layout>
         <Layout.Header authenticated={false} />
         <Layout.Body>
-          <div className='space-y-20 h-full flex flex-col min-h-screen my-20'>
+          <div className='space-y-20 h-full flex flex-col xs:my-10 sm:my-20'>
             <div className='w-full flex flex-col justify-center items-center space-y-10'>
               <Hero />
               {/* <Features /> */}
