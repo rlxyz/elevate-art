@@ -13,6 +13,8 @@ export const serverSchema = z.object({
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
+  REDIS_URL: z.string(),
+  REDIS_TOKEN: z.string(),
 })
 
 /**
@@ -21,7 +23,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_INFURA_ID: z.string(),
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),
   NEXT_PUBLIC_ENABLE_TESTNETS: z.boolean(),
   NEXT_PUBLIC_NETWORK_ID: z.number(),
@@ -40,7 +41,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
   NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
   NEXT_PUBLIC_ENABLE_TESTNETS: Boolean(process.env.NEXT_PUBLIC_ENABLE_TESTNETS),
   NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
