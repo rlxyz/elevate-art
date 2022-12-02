@@ -4,6 +4,12 @@
     "start": {
       "cache": false
     },
+    "setup": {
+      "inputs": [
+        "setup.sh"
+      ],
+      "cache": false
+    },
     "db-generate": {
       "inputs": [
         "prisma/schema.prisma"

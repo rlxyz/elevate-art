@@ -2,17 +2,17 @@
 
 ## Installation
 
-### Automatic Installation (recommended)
+1. Install [pnpm](https://pnpm.io/) to manage dependencies. Why? When using npm, if you have 100 projects using a dependency, you will have 100 copies of that dependency saved on disk. With pnpm, the dependency will be stored in a content-addressable store.
 
-1. Run the `setup.sh` script which automatically installs Doppler CLI and sets up your environment variables
+2. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
+
+Run the `setup.sh` script which automatically installs Doppler CLI and sets up your environment variables
 
 ```zsh
-yarn setup
+pnpm run setup
 ```
 
-### Manual Installation
-
-1. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
+Alternatively, run...
 
 ```zsh
 # Prerequisite. gnupg is required for binary signature verification
