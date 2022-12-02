@@ -6,3 +6,4 @@ packages:
   - packages/config/*
   - packages/db
   - packages/ui
+  - cli
