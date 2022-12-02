@@ -1,9 +1,11 @@
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
+import OrganisationDeleteTeamModal from './OrganisationDeleteTeamModal'
 
 export const SettingsNavigations = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -82,5 +84,68 @@ export const OrganisationGeneralSettings = () => {
         </footer>
       </div>
     </form>
+  )
+}
+
+export const OrganisationLeaveTeam = () => {
+  return (
+    <div className='w-full rounded-[5px] border border-redError'>
+      <div className='p-6 space-y-4'>
+        <div className='flex flex-col'>
+          <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
+            <h1 className='text-lg font-semibold text-black'>Leave Team</h1>
+            <p className='text-xs text-black'>{"Revoke your access to this Team. Any reources you've added to the Team will remain."}</p>
+          </div>
+        </div>
+      </div>
+      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+        <div>
+          <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
+            <button type='submit' className='text-redError'>
+              Leave Team
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+export const OrganisationDeleteTeam = () => {
+  const [isDeleteTeamModalOpen, setIsDeleteTeamModalOpen] = useState(false)
+
+  return (
+    <div className='w-full rounded-[5px] border border-redError'>
+      <div className='p-6 space-y-4'>
+        <div className='flex flex-col'>
+          <div className='col-span-6 font-plus-jakarta-sans space-y-2'>
+            <h1 className='text-lg font-semibold text-black'>Delete Team</h1>
+            <p className='text-xs text-black'>
+              {
+                'Permanently remove your Team and all of its contents from the Elevate Art platform. This action is not reversible – please continue with caution.'
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+        <div>
+          <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
+            {/* <button type='submit' className='text-redError'>
+              Delete Team
+            </button> */}
+            <button
+              className='flex flex-row space-x-2'
+              onClick={(e) => {
+                e.preventDefault()
+                setIsDeleteTeamModalOpen(true)
+              }}
+            >
+              <span className='text-redError'>Delete Team</span>
+            </button>
+          </div>
+          <OrganisationDeleteTeamModal visible={isDeleteTeamModalOpen} onClose={() => setIsDeleteTeamModalOpen(false)} />
+        </div>
+      </footer>
+    </div>
   )
 }

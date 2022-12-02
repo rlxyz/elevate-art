@@ -108,8 +108,6 @@ export const HeaderInternalAppRoutes = ({ routes }: HeaderInternalAppRoutesProps
   const { currentHref } = useQueryOrganisationFindAll()
   const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false)
 
-  console.log(`isCreateTeamOpen: ${isCreateTeamOpen}`)
-
   const setOrganisationId = useOrganisationNavigationStore((state) => state.setOrganisationId)
   return (
     <>

@@ -5,7 +5,12 @@ import { useEffect } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { OrganisationGeneralSettings, SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
+import {
+  OrganisationDeleteTeam,
+  OrganisationGeneralSettings,
+  OrganisationLeaveTeam,
+  SettingsNavigations,
+} from 'src/client/components/organisation/OrganisationSettings'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
@@ -61,6 +66,8 @@ const Page: NextPage = () => {
                 <div className='col-span-8'>
                   <div className='space-y-6'>
                     <OrganisationGeneralSettings />
+                    <OrganisationLeaveTeam />
+                    <OrganisationDeleteTeam />
                   </div>
                 </div>
               </div>
