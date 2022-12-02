@@ -6,10 +6,11 @@
   "editor.formatOnSave": true,
   "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.documentSelectors": [
-    "**/*.{cjs,mjs,ts,tsx,astro,md,mdx,json,yaml,yml}"
-  ],
+  "prettier.documentSelectors": ["**/*.{cjs,mjs,ts,tsx,astro,md,mdx,json,yaml,yml}"],
   "[astro]": {
     "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   }
 }
