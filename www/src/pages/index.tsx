@@ -1,22 +1,20 @@
 // import { Header } from '@components/Layout/Header'
-import { Layout } from '@components/Layout/core/Layout'
-import { Link } from '@components/Layout/Link'
-import { useAuthenticated } from '@hooks/utils/useAuthenticated'
+import { Layout } from '@components/layout/core/Layout'
+import NextLink from '@components/layout/link/NextLink'
+import { OrganisationNavigationEnum } from '@utils/enums'
 import { NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { OrganisationNavigationEnum } from 'src/types/enums'
 
 const Hero = () => {
   return (
-    <div className=' flex flex-row justify-center items-center'>
+    <div className='relative flex flex-row justify-center items-center'>
       <div className='w-[50%] h-auto'>
         <div className='relative mt-10'>
           <img className='absolute top-0 left-[-60px] w-64' src='/images/demo.png' alt='demo' />
           <img className='absolute bottom-[-60px] right-[-60px] w-72' src='/images/ffc.png' alt='demo' />
           <img className='absolute bottom-[120px] right-[-100px] w-16' src='/images/squiggle.png' alt='demo' />
           <img src='/images/journey.png' alt='demo' />
-
           <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10'></div>
         </div>
       </div>
@@ -28,12 +26,12 @@ const Hero = () => {
         <p className='text-normal text-right mb-8'>
           Design & launch your NFT Collections for <span className='text-blue'>generative art</span>
         </p>
-        <Link className='text-white' external={true} href='#'>
-          <button className='rounded-full bg-black px-4 py-1 right-0 flex items-center float-right'>
-            <img className='w-8' src='./images/logo-white.png' />
-            Start Creating
+        <NextLink className='text-white w-fit float-right' href='#'>
+          <button className='rounded-[5px] bg-black px-4 py-1 right-0 flex items-center'>
+            <img className='w-6' src='./images/logo-white.png' />
+            <span className='text-xs'>Start Creating</span>
           </button>
-        </Link>
+        </NextLink>
       </div>
     </div>
   )
@@ -117,12 +115,12 @@ const Footer = () => {
         </div>
         <div className='w-[70%]'>
           <div className='flex flex-row justify-start'>
-            <Link className='text-white right-0' external={true} href='#'>
+            <NextLink className='text-white right-0' href='#'>
               <button className='rounded-full bg-white px-4 py-1 right-0 flex items-center float-right '>
                 <img className='w-8' src='./images/logo-black.png' />
                 <span className=' text-black'>Start Creating</span>
               </button>
-            </Link>
+            </NextLink>
           </div>
         </div>
       </div>
@@ -131,34 +129,26 @@ const Footer = () => {
 }
 
 const Home: NextPage = () => {
+  const { status } = useSession()
   const router = useRouter()
-  const { isLoggedIn } = useAuthenticated()
-
-  useEffect(() => {
-    isLoggedIn && router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
-  }, [isLoggedIn])
-
-  if (!isLoggedIn) {
-    return (
-      <>
-        <Layout>
-          <Layout.Header />
-          <Layout.BodyLanding>
-            <div className=' space-y-20 h-full flex flex-col'>
-              <div className='w-full flex flex-col justify-center items-center mt-10'>
-                <Hero />
-                <Features />
-                {/* <Partners /> */}
-                <Footer />
-              </div>
+  if (status === 'authenticated') router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
+  return (
+    <>
+      <Layout>
+        <Layout.Header />
+        <Layout.Body>
+          <div className='space-y-20 h-full flex flex-col min-h-[calc(100vh+4.20rem)]'>
+            <div className='relative w-full flex flex-col justify-center items-center mt-10'>
+              <Hero />
+              {/* <Features /> */}
+              {/* <Partners /> */}
+              {/* <Footer /> */}
             </div>
-          </Layout.BodyLanding>
-        </Layout>
-      </>
-    )
-  }
-
-  return null
+          </div>
+        </Layout.Body>
+      </Layout>
+    </>
+  )
 }
 
 export default Home
