@@ -42,3 +42,6 @@ package-json.lock
 
 # eslint
 .eslintcache
+
+# doppler
+doppler.yaml

@@ -24,14 +24,14 @@ export type PackageInstallerMap = {
 export const buildPackageInstallerMap = (packages: AvailableApps[]): PackageInstallerMap => ({
   www: {
     inUse: packages.includes("www"),
-    directory: path.resolve(process.cwd(), `apps/www`),
+    directory: path.resolve(process.cwd(), `../apps/www`),
   },
   docs: {
     inUse: packages.includes("docs"),
-    directory: path.resolve(process.cwd(), `apps/docs`),
+    directory: path.resolve(process.cwd(), `../apps/docs`),
   },
   rng: {
     inUse: packages.includes("rng"),
-    directory: path.resolve(process.cwd(), `apps/rng`),
+    directory: path.resolve(process.cwd(), `../apps/rng`),
   },
 });
