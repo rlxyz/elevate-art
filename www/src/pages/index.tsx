@@ -12,7 +12,7 @@ const Hero = () => {
     <div className='flex justify-center items-center'>
       <div className='grid grid-cols-2'>
         <div className='relative w-[60%] lg:w-[70%] xl:w-[90%] 2xl:w-full'>
-          <Image width={364} height={213} className='absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
+          <Image width={364} height={213} className='w-[60%] absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
           <Image width={423} height={300} className='w-2/4 absolute bottom-[-60px] right-[-60px]' src='/images/ffc.png' alt='ffc-image' />
           <img className='absolute bottom-[120px] right-[-100px] w-16' src='/images/squiggle.png' alt='demo' />
           <Image width={629} height={786} src='/images/journey.png' alt='journey-by-jacob' />

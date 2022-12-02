@@ -68,7 +68,7 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
   const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      <aside className='flex flex-row items-center justify-center space-x-3'>
+      <aside className='flex flex-row items-center justify-center space-x-3 h-fit'>
         {externalRoutes.map((item) => {
           return (
             <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
@@ -83,14 +83,15 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
             <item.icon className='cursor-pointer hover:text-black h-4 w-4 text-darkGrey' aria-hidden='true' />
           </LinkComponent>
         ))}
+
+        {authenticated ? (
+          <ConnectButton />
+        ) : (
+          <NextLink href='/connect'>
+            <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
+          </NextLink>
+        )}
       </aside>
-      {authenticated ? (
-        <ConnectButton />
-      ) : (
-        <NextLink href='/connect'>
-          <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
-        </NextLink>
-      )}
     </div>
   )
 }
