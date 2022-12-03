@@ -1,9 +1,8 @@
-
 // @ts-check
-import withBundleAnalyzer from '@next/bundle-analyzer'
-import { withAxiom } from 'next-axiom'
+import withBundleAnalyzer from "@next/bundle-analyzer";
+import { withAxiom } from "next-axiom";
 
-!process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
+!process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /**
  * Don't be scared of the generics here.
@@ -13,16 +12,15 @@ import { withAxiom } from 'next-axiom'
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
- const defineNextConfig = (config) => {
+const defineNextConfig = (config) => {
   if (process.env.ANALYZE) {
-    return withBundleAnalyzer()(config)
+    return withBundleAnalyzer()(config);
   }
-  if (process.env.NODE_ENV === 'production') {
-    return withAxiom(config)
+  if (process.env.NODE_ENV === "production") {
+    return withAxiom(config);
   }
-  return config
-}
-
+  return config;
+};
 
 /** @type {import("next").NextConfig} */
 export default defineNextConfig({
@@ -31,19 +29,18 @@ export default defineNextConfig({
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '*',
-        port: '',
+        protocol: "https",
+        hostname: "*",
+        port: "",
       },
     ],
   },
   experimental: {
     // Enables hot-reload and easy integration for local packages
-    transpilePackages: ['@elevateart/ui', '@elevateart/auth', '@elevateart/db', '@elevateart/api', '@elevateart/compiler'],
+    transpilePackages: ["@elevateart/ui", "@elevateart/auth", "@elevateart/db", "@elevateart/api", "@elevateart/compiler"],
   },
   i18n: {
-    locales: ['en'],
-    defaultLocale: 'en',
+    locales: ["en"],
+    defaultLocale: "en",
   },
-})
-
+});

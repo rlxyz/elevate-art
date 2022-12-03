@@ -3,30 +3,13 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@utils/*": [
-        "src/shared/*"
-      ],
-      "@server/*": [
-        "src/server/*"
-      ],
-      "@scripts/*": [
-        "src/scripts/*"
-      ]
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/shared/*"],
+      "@server/*": ["src/server/*"],
+      "@scripts/*": ["src/scripts/*"]
     }
   },
   "exclude": [],
-  "include": [
-    "next-env.d.ts",
-    "node_modules/@elevateart/auth/next-auth.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.mjs"
-  ]
+  "include": ["next-env.d.ts", "node_modules/@elevateart/auth/next-auth.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"]
 }

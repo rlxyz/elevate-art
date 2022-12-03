@@ -9,10 +9,6 @@ export const toPascalCaseWithSpace = (name: string) => {
 
 export const capitalize = (s: string) => s[0]?.toUpperCase() + s.slice(1) || "";
 
-export const clsx = (...classes: string[]) => {
-  return classes.filter(Boolean).join(" ");
-};
-
 export const formatBytes = (a: number, b = 2) => {
   if (!+a) return "0 Bytes";
   const c = 0 > b ? 0 : b,
