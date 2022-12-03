@@ -39,3 +39,9 @@ storybook-static/
 
 # yarn & npm - note: we removed this as we are now using pnpm
 package-json.lock
+
+# eslint
+.eslintcache
+
+# doppler
+doppler.yaml

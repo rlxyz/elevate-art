@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+# string formatters
+if [ -t 1 ]; then
+    tty_escape() { printf "\033[%sm" "$1"; }
+else
+    tty_escape() { :; }
+fi
+tty_mkbold() { tty_escape "1;$1"; }
+tty_blue="$(tty_mkbold 34)"
+tty_bold="$(tty_mkbold 39)"
+tty_reset="$(tty_escape 0)"
+
+logger() {
+    printf "${tty_blue}==>${tty_bold} %s${tty_reset}\n" "$1"
+}
+
 # First check OS.
 OS="$(uname)"
 if [[ "${OS}" == "Darwin" ]]; then
@@ -15,7 +30,7 @@ if [[ -n "${HOMEBREW_ON_MACOS-}" ]]; then
         echo "Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
-        echo "Homebrew already installed. Skipping..."
+        logger "Homebrew already installed. Skipping..."
     fi
 
     HOMEBREW_INSTALLED=1
@@ -29,7 +44,7 @@ if [[ -n "${HOMEBREW_INSTALLED-}" ]]; then
         echo "Installing gnupg..."
         brew install gnupg
     else
-        echo "gnupg already installed. Skipping..."
+        logger "gnupg already installed. Skipping..."
     fi
 
     # Check if Doppler Exists
@@ -37,7 +52,7 @@ if [[ -n "${HOMEBREW_INSTALLED-}" ]]; then
         echo "Installing Doppler..."
         brew install dopplerhq/cli/doppler
     else
-        echo "Doppler already installed. Skipping..."
+        logger "Doppler already installed. Skipping..."
     fi
 fi
 
