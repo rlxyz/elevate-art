@@ -1,0 +1,10 @@
+.next/
+# Ignore artifacts:
+build
+coverage
+out/
+
+# Ignore all HTML files:
+*.html
+
+.storybook
