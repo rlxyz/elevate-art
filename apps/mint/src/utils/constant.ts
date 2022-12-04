@@ -1,6 +1,6 @@
-import { config } from '@Utils/config'
+import { config } from "@Utils/config";
 
-import ContractAbi from '../contracts/Rhapsody.json'
+import ContractAbi from "./contracts/ERC721.json";
 
 export const COLLECTION_DISTRIBUTION = {
   maxPublicBatchPerAddress: 2,
@@ -8,16 +8,16 @@ export const COLLECTION_DISTRIBUTION = {
   oneMintPrice: 0.333,
   twoMintPrice: 0.666,
   gasLimit: 200000,
-}
+};
 
-export const SUPPORTED_NETWORKS = [1, 4]
+export const SUPPORTED_NETWORKS = [1, 4];
 
 export const NETWORK_NAME = {
-  1: 'Mainnet',
-  4: 'Rinkeby',
-}
+  1: "Mainnet",
+  4: "Rinkeby",
+};
 
 export const RhapsodyContractConfig = {
   addressOrName: config.contractAddress,
   contractInterface: ContractAbi,
-}
+};

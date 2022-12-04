@@ -85,7 +85,7 @@ importers:
       zustand: ^4.1.1
     dependencies:
       '@elevateart/api': link:../../packages/api
-      '@elevateart/env-config': link:../../packages/config/env
+      '@elevateart/env-config': link:../../packages/env
       '@elevateart/tailwind-config': link:../../packages/config/tailwind
       '@rainbow-me/rainbowkit': 0.8.0_l63asakzhhdxdw7c6dcgalwwwe
       '@react-hookz/web': 15.1.0_biqbaboplfbrettd7655fr4n2y
@@ -179,7 +179,7 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@elastic/elasticsearch': 8.5.0
-      '@elevateart/env-config': link:../../packages/config/env
+      '@elevateart/env-config': link:../../packages/env
       '@elevateart/ui': link:../../packages/ui
       '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
       '@react-three/drei': 9.46.1_k3elxfocw5xxlhnvmqih3vajoq
@@ -276,7 +276,7 @@ importers:
       '@elevateart/auth': link:../../packages/auth
       '@elevateart/compiler': link:../../packages/compiler
       '@elevateart/db': link:../../packages/db
-      '@elevateart/env-config': link:../../packages/config/env
+      '@elevateart/env-config': link:../../packages/env
       '@elevateart/tailwind-config': link:../../packages/config/tailwind
       '@elevateart/ui': link:../../packages/ui
       '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
@@ -459,17 +459,6 @@ importers:
       '@types/seedrandom': 3.0.2
       typescript: 4.9.3
 
-  packages/config/env:
-    specifiers:
-      eslint: ^7.32.0
-      typescript: ^4.8.3
-      zod: ^3.18.0
-    dependencies:
-      zod: 3.19.1
-    devDependencies:
-      eslint: 7.32.0
-      typescript: 4.9.3
-
   packages/config/tailwind:
     specifiers:
       autoprefixer: ^10.4.13
@@ -493,6 +482,17 @@ importers:
     devDependencies:
       dotenv-cli: 6.0.0
       prisma: 4.7.1
+      typescript: 4.9.3
+
+  packages/env:
+    specifiers:
+      eslint: ^7.32.0
+      typescript: ^4.8.3
+      zod: ^3.18.0
+    dependencies:
+      zod: 3.19.1
+    devDependencies:
+      eslint: 7.32.0
       typescript: 4.9.3
 
   packages/ui:

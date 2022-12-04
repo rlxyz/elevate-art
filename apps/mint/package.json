@@ -1,13 +1,9 @@
 {
-  "name": "@rlxyz/mint-client",
-  "common": {
-    "ethereum": "template.rhapsodylabs.eth"
-  },
+  "name": "@elevateart/mint",
   "version": "0.1.0",
-  "description": "Base template for RLXY mint client",
-  "author": "Rhapsody Labs",
+  "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development next dev",
+    "dev": "doppler run next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

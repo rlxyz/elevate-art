@@ -1,6 +1,6 @@
 // @ts-check
-import { appSchema, serverDbSchema } from "@elevateart/env-config";
 import { z } from "zod";
+import { appSchema, serverDbSchema } from "@elevateart/env-config";
 
 /**
  * Specify your server-side environment variables schema here.

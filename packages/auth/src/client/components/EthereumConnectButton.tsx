@@ -1,4 +1,3 @@
-import { Avatar } from "@elevateart/ui";
 import { ConnectButton as RbConnectButton } from "@rainbow-me/rainbowkit";
 import React, { FC } from "react";
 
@@ -56,7 +55,8 @@ export const EthereumConnectButton: FC<ConnectButtonProps> = ({ children }) => {
 
               return (
                 <button onClick={openAccountModal} type="button" className="w-full">
-                  {children || <Avatar className="text-darkGrey h-4 w-4" src="/images/avatar-blank.png" />}
+                  {/* {children || <Avatar className="text-darkGrey h-4 w-4" src="/images/avatar-blank.png" />} */}
+                  {children}
                 </button>
               );
             })()}
