@@ -3,7 +3,7 @@ import type { PackageManager } from "~/utils/getPackageManager.js";
 
 // Turning this into a const allows the list to be iterated over for programatically creating prompt options
 // Should increase extensability in the future
-export const availableApps = ["www", "docs", "rng"] as const;
+export const availableApps = ["www", "docs", "rng", "mint"] as const;
 export type AvailableApps = typeof availableApps[number];
 
 export interface InstallerOptions {
@@ -33,5 +33,9 @@ export const buildPackageInstallerMap = (packages: AvailableApps[]): PackageInst
   rng: {
     inUse: packages.includes("rng"),
     directory: path.resolve(process.cwd(), `../apps/rng`),
+  },
+  mint: {
+    inUse: packages.includes("mint"),
+    directory: path.resolve(process.cwd(), `../apps/mint`),
   },
 });

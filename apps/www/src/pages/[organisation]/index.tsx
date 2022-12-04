@@ -5,8 +5,8 @@ import ViewAllRepositories from "@components/organisation/OrganisationViewAllRep
 import withOrganisationStore from "@components/withOrganisationStore";
 import useOrganisationNavigationStore from "@hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
-import { OrganisationNavigationEnum } from "@utils/enums";
 import { NextPage } from "next";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute);

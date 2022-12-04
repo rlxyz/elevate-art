@@ -9,7 +9,7 @@ export const createDopplerEnvironment = async ({ apps }: CreateDopplerEnvironmen
       const spinner = ora(`Populating Doppler Environment ${name}...`).start();
 
       const dopplerEnvironment = `setup:
-  project: apps-www
+  project: apps-${name}
   config: localhost`;
 
       fs.writeFile(`${pkgOpts.directory}/doppler.yaml`, dopplerEnvironment);

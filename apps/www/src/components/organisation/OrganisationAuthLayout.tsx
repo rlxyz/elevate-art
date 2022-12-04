@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from "react";
 import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
 import { useAuthenticated } from "src/hooks/utils/useAuthenticated";
-import { OrganisationNavigationEnum, OrganisationNavigationType } from "src/shared/enums";
+import { OrganisationNavigationEnum, OrganisationNavigationType } from "src/utils/enums";
 
 export const OrganisationAuthLayout = ({
   children,

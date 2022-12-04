@@ -1,30 +1,19 @@
 // @ts-check
-import { appSchema, ethereumSchema, serverDbSchema } from "@elevateart/env-config";
+import { appSchema, serverDbSchema } from "@elevateart/env-config";
 import { z } from "zod";
 
 /**
  * Specify your server-side environment variables schema here.
  * This way you can ensure the app isn't built with invalid env vars.
  */
-export const serverSchema = z
-  .object({
-    ESS_CLOUD_ID: z.string(),
-    ESS_CLOUD_USERNAME: z.string(),
-    ESS_CLOUD_PASSWORD: z.string(),
-  })
-  .merge(serverDbSchema);
+export const serverSchema = z.object({}).merge(serverDbSchema);
 
 /**
  * Specify your client-side environment variables schema here.
  * This way you can ensure the app isn't built with invalid env vars.
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
-export const clientSchema = z
-  .object({
-    NEXT_PUBLIC_API_URL: z.string(),
-  })
-  .merge(appSchema)
-  .merge(ethereumSchema);
+export const clientSchema = z.object({}).merge(appSchema);
 
 /**
  * You can't destruct `process.env` as a regular object, so you have to do
@@ -33,9 +22,6 @@ export const clientSchema = z
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_APP_NAME: "apps/rng",
-  NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
-  NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_APP_NAME: "apps/mint",
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
 };

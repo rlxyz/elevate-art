@@ -5,11 +5,11 @@ import withOrganisationStore from "@components/withOrganisationStore";
 import { Repository } from "@elevateart/db";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
 import { useMutateRepositoryCreate } from "@hooks/trpc/repository/useMutateRepositoryCreate";
-import { OrganisationNavigationEnum } from "@utils/enums";
 import clsx from "clsx";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisationFindAll();

@@ -1,12 +1,12 @@
 import { PersonalOrganisationAccountNavigation } from "@components/organisation/PersonalOrganisationAccountNavigation";
 import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
-import { OrganisationNavigationEnum } from "@utils/enums";
 import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
 import { Layout } from "src/components/layout/core/Layout";
 import { OrganisationAuthLayout } from "src/components/organisation/OrganisationAuthLayout";
 import withOrganisationStore from "src/components/withOrganisationStore";
 import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 
 const Page = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute);

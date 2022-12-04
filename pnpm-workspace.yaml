@@ -1,6 +1,7 @@
 packages:
   - apps/www
   - apps/rng
+  - apps/mint
   - packages/api
   - packages/auth
   - packages/compiler

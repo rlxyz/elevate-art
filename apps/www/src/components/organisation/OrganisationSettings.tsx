@@ -3,7 +3,7 @@ import useOrganisationNavigationStore from "@hooks/store/useOrganisationNavigati
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/shared/enums";
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/utils/enums";
 import { capitalize } from "src/utils/format";
 
 export const SettingsNavigations = () => {

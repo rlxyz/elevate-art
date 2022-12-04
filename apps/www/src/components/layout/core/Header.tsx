@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Fragment } from "react";
 import useOrganisationNavigationStore from "src/hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "src/hooks/trpc/organisation/useQueryOrganisationFindAll";
-import { OrganisationNavigationEnum } from "src/shared/enums";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 import { capitalize } from "src/utils/format";
 import { Link } from "../Link";
 import LinkComponent from "../link/Link";

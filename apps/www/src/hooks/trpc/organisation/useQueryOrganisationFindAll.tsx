@@ -2,7 +2,7 @@ import { OrganisationDatabaseEnum } from "@elevateart/db/enums";
 import produce, { setAutoFreeze } from "immer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { OrganisationNavigationEnum } from "src/shared/enums";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 import { trpc } from "src/utils/trpc";
 
 setAutoFreeze(false);

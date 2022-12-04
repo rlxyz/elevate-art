@@ -1,4 +1,3 @@
-import { OrganisationNavigationEnum } from "@utils/enums";
 import { GetServerSidePropsContext, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -8,6 +7,7 @@ import { Layout } from "src/components/layout/core/Layout";
 import { ConnectButton } from "src/components/layout/eth/ConnectButton";
 import LinkComponent from "src/components/layout/link/Link";
 import NextLinkComponent from "src/components/layout/link/NextLink";
+import { OrganisationNavigationEnum } from "src/utils/enums";
 
 /**
  * Handles connection to the Ethereum wallet providers through rainbow-kit.

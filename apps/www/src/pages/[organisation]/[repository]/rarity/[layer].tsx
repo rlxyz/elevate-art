@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { HeaderInternalPageRoutes } from "src/components/layout/core/Header";
 import LayerElementFileTree from "src/components/repository/LayerElementFileTree";
 import TraitTable from "src/components/repository/TraitElementTable";
-import { CollectionNavigationEnum } from "src/shared/enums";
+import { CollectionNavigationEnum } from "src/utils/enums";
 
 const Page = () => {
   const router: NextRouter = useRouter();

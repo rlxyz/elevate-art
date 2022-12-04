@@ -3,7 +3,7 @@ import {
   OrganisationNavigationType,
   OrganisationSettingsNavigationEnum,
   OrganisationSettingsNavigationType,
-} from "src/shared/enums";
+} from "src/utils/enums";
 import create from "zustand";
 import createContext from "zustand/context";
 import { persist } from "zustand/middleware";

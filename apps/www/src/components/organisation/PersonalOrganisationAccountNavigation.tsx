@@ -1,7 +1,7 @@
 import LinkComponent from "@components/layout/link/Link";
 import useOrganisationNavigationStore from "@hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "@utils/enums";
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/utils/enums";
 import { capitalize } from "src/utils/format";
 
 export const PersonalOrganisationAccountNavigation = () => {

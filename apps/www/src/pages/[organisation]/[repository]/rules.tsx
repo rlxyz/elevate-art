@@ -9,9 +9,9 @@ import { useQueryLayerElementFindAll } from "@hooks/trpc/layerElement/useQueryLa
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
 import { useQueryRepositoryFindByName } from "@hooks/trpc/repository/useQueryRepositoryFindByName";
 import { useRepositoryRoute } from "@hooks/utils/useRepositoryRoute";
-import { CollectionNavigationEnum } from "@utils/enums";
 import { NextRouter, useRouter } from "next/router";
 import { useEffect } from "react";
+import { CollectionNavigationEnum } from "src/utils/enums";
 
 const Page = () => {
   const router: NextRouter = useRouter();

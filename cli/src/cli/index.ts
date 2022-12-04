@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import inquirer from "inquirer";
 import { DEFAULT_APP_NAME, SETUP_ELEVATEART_APP } from "~/consts.js";
+import { availableEnvironments, AvailableEnvironments } from "~/utils/environments.js";
 import { getPackageManager } from "~/utils/getPackageManager.js";
 import { getVersion } from "~/utils/getPackageVersion.js";
 import { availableApps, AvailableApps } from "~/utils/installer.js";
@@ -14,17 +15,22 @@ interface CliFlags {
   docs: boolean /** @internal - used in CI */;
   www: boolean /** @internal - used in CI */;
   rng: boolean /** @internal - used in CI */;
+  localhost: boolean /** @internal - used in CI */;
+  staging: boolean /** @internal - used in CI */;
+  production: boolean /** @internal - used in CI */;
 }
 
 interface CliResults {
   appName: string;
   apps: AvailableApps[];
+  environments: AvailableEnvironments[];
   flags: CliFlags;
 }
 
 const defaultOptions: CliResults = {
   appName: DEFAULT_APP_NAME,
-  apps: ["rng", "docs", "www"],
+  apps: ["rng", "docs", "www", "mint"],
+  environments: ["localhost", "staging", "production"],
   flags: {
     noInstall: false,
     default: false,
@@ -32,6 +38,9 @@ const defaultOptions: CliResults = {
     docs: false,
     www: false,
     rng: false,
+    localhost: false,
+    staging: false,
+    production: false,
   },
 };
 
@@ -58,7 +67,7 @@ export const runCli = async () => {
      */
     .option(
       "--www [boolean]",
-      "Experimental: Boolean value if we should setup apps-www. Must be used in conjunction with `--CI`.",
+      "Experimental: Boolean value if we should setup apps/www. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /**
@@ -67,7 +76,7 @@ export const runCli = async () => {
      */
     .option(
       "--docs [boolean]",
-      "Experimental: Boolean value if we should setup apps-docs. Must be used in conjunction with `--CI`.",
+      "Experimental: Boolean value if we should setup apps/docs. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /**
@@ -76,7 +85,16 @@ export const runCli = async () => {
      */
     .option(
       "--rng [boolean]",
-      "Experimental: Boolean value if we should setup apps-rng. Must be used in conjunction with `--CI`.",
+      "Experimental: Boolean value if we should setup apps/rng. Must be used in conjunction with `--CI`.",
+      (value) => !!value && value !== "false",
+    )
+    /**
+     * @experimental - used for CI E2E tests
+     * Used in conjunction with `--CI` to skip prompting
+     */
+    .option(
+      "--mint [boolean]",
+      "Experimental: Boolean value if we should setup apps/rng. Must be used in conjunction with `--CI`.",
       (value) => !!value && value !== "false",
     )
     /** END CI-FLAGS */
@@ -109,6 +127,9 @@ export const runCli = async () => {
     if (cliResults.flags.www) cliResults.apps.push("www");
     if (cliResults.flags.docs) cliResults.apps.push("docs");
     if (cliResults.flags.rng) cliResults.apps.push("rng");
+    if (cliResults.flags.localhost) cliResults.environments.push("localhost");
+    if (cliResults.flags.staging) cliResults.environments.push("staging");
+    if (cliResults.flags.production) cliResults.environments.push("production");
   }
 
   // Explained below why this is in a try/catch block
@@ -123,6 +144,7 @@ export const runCli = async () => {
     // if --default flag is set, we should not prompt the user
     if (!cliResults.flags.default && !CIMode) {
       cliResults.apps = await promptApps();
+      cliResults.environments = await promptEnvironments();
 
       if (!cliResults.flags.noInstall) {
         cliResults.flags.noInstall = !(await promptInstall());
@@ -154,6 +176,19 @@ const promptApps = async (): Promise<AvailableApps[]> => {
     })),
   });
   return apps;
+};
+
+const promptEnvironments = async (): Promise<any> => {
+  const { environments } = await inquirer.prompt<Pick<CliResults, "environments">>({
+    name: "environments",
+    type: "list",
+    message: "Which environment would like to use?",
+    choices: availableEnvironments.map((pkgName) => ({
+      name: pkgName,
+      checked: false,
+    })),
+  });
+  return environments;
 };
 
 const promptInstall = async (): Promise<boolean> => {

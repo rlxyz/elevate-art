@@ -8,9 +8,9 @@ import { OrganisationTeamDisplayUsers } from "@components/organisation/Organisat
 import withOrganisationStore from "@components/withOrganisationStore";
 import useOrganisationNavigationStore from "@hooks/store/useOrganisationNavigationStore";
 import { useQueryOrganisationFindAll } from "@hooks/trpc/organisation/useQueryOrganisationFindAll";
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "@utils/enums";
 import { NextPage } from "next";
 import { useEffect } from "react";
+import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from "src/utils/enums";
 
 const Page: NextPage = () => {
   const { setCurrentSettingsRoute, currentRoute } = useOrganisationNavigationStore((state) => {
