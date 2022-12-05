@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
@@ -18,23 +17,46 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  const deployment = await prisma?.repositoryDeployment.findFirst({
-    where: { repository: { name: repositoryName, organisation: { name: organisationName } }, name: seed },
+  const layerElements = await prisma?.layerElement.findMany({
+    where: { repository: { name: repositoryName, organisation: { name: organisationName } } },
+    orderBy: [{ priority: 'asc' }],
+    include: {
+      traitElements: {
+        orderBy: [{ weight: 'desc' }, { name: 'asc' }],
+        include: {
+          rulesPrimary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
+          rulesSecondary: { orderBy: [{ condition: 'asc' }, { primaryTraitElement: { name: 'asc' } }] },
+        },
+      },
+    },
   })
 
-  if (!deployment) {
+  const repository = await prisma?.repository.findFirst({
+    where: { name: repositoryName, organisation: { name: organisationName } },
+  })
+
+  if (!layerElements || !repository) {
     return res.status(404).send('Not Found')
   }
 
-  if (deployment.collectionTotalSupply <= parseInt(id)) {
-    return res.status(400).send('Bad Request')
-  }
-
-  const layerElements = deployment.attributes as Prisma.JsonArray as v.Layer[]
-
   const tokens = v.one(
-    v.parseLayer(layerElements),
-    v.seed(deployment.repositoryId, deployment.collectionName, deployment.collectionGenerations, id)
+    v.parseLayer(
+      layerElements
+        .sort((a, b) => a.priority - b.priority)
+        .map((l) => ({
+          ...l,
+          traits: l.traitElements.map((t) => ({
+            ...t,
+            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                type: condition as v.RulesType,
+                with: left === t.id ? right : left,
+              })
+            ),
+          })),
+        }))
+    ),
+    v.seed(seed, id)
   )
 
   const canvas = new Canvas(600, 600)
@@ -42,7 +64,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImage({ r: deployment.repositoryId, l, t })
+        const response = await getTraitElementImage({ r: repository.id, l, t })
         if (response.failed) return reject()
         const blob = response.getValue()
         if (!blob) return reject()

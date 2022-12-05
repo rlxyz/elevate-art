@@ -66,6 +66,19 @@ export const repositoryRouter = router({
         },
       })
     }),
+  findDeployments: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryId } = input
+      return await ctx.prisma.repositoryDeployment.findMany({
+        where: { repositoryId: repositoryId },
+        orderBy: { createdAt: 'desc' },
+      })
+    }),
   createDeployment: protectedProcedure
     .input(
       z.object({
@@ -94,7 +107,7 @@ export const repositoryRouter = router({
       })
 
       if (!repository) {
-        return new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
       const { layers: layerElements, collections } = repository
@@ -102,16 +115,17 @@ export const repositoryRouter = router({
       const collection = collections[0]
 
       if (!collection) {
-        return new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
       return await ctx.prisma.repositoryDeployment.create({
         data: {
+          userId: ctx.session.user.id,
           repositoryId,
           collectionName: collection.name,
           collectionGenerations: collection.generations,
           collectionTotalSupply: collection.totalSupply || 1,
-          name: (Math.random() + 1).toString(36).substring(8),
+          name: (Math.random() + 1).toString(36).substring(4),
           attributes: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,
             name,

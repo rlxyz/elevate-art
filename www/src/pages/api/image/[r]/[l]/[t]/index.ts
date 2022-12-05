@@ -34,8 +34,11 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   // const { version, traitElementId } = response.getValue()
 
   getTraitElementImage({ r, l, t })
-    .then((response) => {
-      return res.setHeader('Content-Type', 'image/png').status(200).send(response.getValue())
+    .then(async (response) => {
+      const blob = response.getValue()
+      if (!blob) return
+      const buffer = Buffer.from(await blob.arrayBuffer())
+      return res.setHeader('Content-Type', 'image/png').status(200).send(buffer)
     })
     .catch((err) => {
       return res.status(500).send(err)

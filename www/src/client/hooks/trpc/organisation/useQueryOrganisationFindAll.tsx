@@ -2,7 +2,7 @@ import produce, { setAutoFreeze } from 'immer'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { trpc } from 'src/client/utils/trpc'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
+import { OrganisationDatabaseEnum } from 'src/shared/enums'
 
 setAutoFreeze(false)
 
@@ -26,7 +26,7 @@ export const useQueryOrganisationFindAll = () => {
   const next = produce(organisations, (draft) => {
     const personal = draft?.find((x) => x.type === OrganisationDatabaseEnum.enum.Personal)
     if (personal) {
-      personal.name = OrganisationNavigationEnum.enum.You
+      // personal.name = OrganisationNavigationEnum.enum.You
     }
   })
 
