@@ -19,12 +19,14 @@ export const Rule = z.object({
 
 export const Trait = z.object({
   id: z.string(),
+  name: z.string(),
   weight: z.number(),
   rules: z.array(Rule),
 })
 
 export const Layer = z.object({
   id: z.string(),
+  name: z.string(),
   priority: z.number(),
   traits: z.array(Trait),
 })
@@ -50,16 +52,16 @@ export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
 }
 
 const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
-  return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
+  return traits.reduce((acc: Trait[], { rules, id, weight, name }: Trait) => {
     const exclude = rules.filter((rule) => rule.type === RulesEnum.enum['cannot mix with'] && elements.map((x) => x[1]).includes(rule.with))
-    return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight }] : [])]
+    return [...acc, ...(exclude.length === 0 ? [{ id, rules, weight, name }] : [])]
   }, [])
 }
 
 const combination = (elements: [string, string][], traits: Trait[]): Trait[] => {
-  return traits.reduce((acc: Trait[], { rules, id, weight }: Trait) => {
+  return traits.reduce((acc: Trait[], { rules, id, weight, name }: Trait) => {
     const combine = rules.filter((rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with))
-    return [...acc, ...(combine.length > 0 ? [{ id, rules, weight }] : [])]
+    return [...acc, ...(combine.length > 0 ? [{ id, rules, name, weight }] : [])]
   }, [])
 }
 

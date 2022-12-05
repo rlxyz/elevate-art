@@ -77,8 +77,24 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
+    deployments RepositoryDeployment[]
+
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
+}
+
+model RepositoryDeployment {
+    id         String @id @default(cuid())
+    name       String @db.VarChar(255)
+    attributes Json
+
+    collectionName        String     @db.VarChar(255) // used as seed
+    collectionTotalSupply Int // used as seed
+    collectionGenerations Int // used as seed
+    repositoryId          String // used as seed
+    repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
 }
 
 model Collection {

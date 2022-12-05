@@ -1,4 +1,7 @@
+import { Prisma } from '@prisma/client'
+import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
+import * as v from 'src/shared/compiler'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -60,6 +63,71 @@ export const repositoryRouter = router({
               traitElements: true,
             },
           },
+        },
+      })
+    }),
+  createDeployment: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        collectionId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, collectionId } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+        include: {
+          collections: { where: { id: collectionId } },
+          layers: {
+            include: {
+              traitElements: {
+                include: {
+                  rulesPrimary: true,
+                  rulesSecondary: true,
+                },
+              },
+            },
+          },
+        },
+      })
+
+      if (!repository) {
+        return new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const { layers: layerElements, collections } = repository
+
+      const collection = collections[0]
+
+      if (!collection) {
+        return new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repositoryDeployment.create({
+        data: {
+          repositoryId,
+          collectionName: collection.name,
+          collectionGenerations: collection.generations,
+          collectionTotalSupply: collection.totalSupply || 1,
+          name: (Math.random() + 1).toString(36).substring(8),
+          attributes: layerElements.map(({ id, name, priority, traitElements }) => ({
+            id,
+            name,
+            priority,
+            traits: traitElements.map(({ id, name, weight, rulesPrimary, rulesSecondary }) => ({
+              id,
+              name,
+              weight,
+              rules: [...rulesPrimary, ...rulesSecondary].map(
+                ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                  type: condition as v.RulesType,
+                  with: left === id ? right : left,
+                })
+              ),
+            })),
+          })) as v.Layer[] as Prisma.JsonArray,
         },
       })
     }),
