@@ -19,14 +19,14 @@ export const Rule = z.object({
 
 export const Trait = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().optional(),
   weight: z.number(),
   rules: z.array(Rule),
 })
 
 export const Layer = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().optional(),
   priority: z.number(),
   traits: z.array(Trait),
 })
