@@ -1,18 +1,19 @@
+import AvatarComponent from '@components/layout/avatar/Avatar'
+import NextLinkComponent from '@components/layout/link/NextLink'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { RepositoryDeployment } from '@prisma/client'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
-import { GenerateButton } from 'src/client/components/collection/CollectionGenerateCard'
-import CollectionPreviewFilters from 'src/client/components/collection/CollectionPreviewFilters'
-import CollectionPreviewGrid from 'src/client/components/collection/CollectionPreviewGrid'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { timeAgo } from 'src/client/utils/time'
+import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum } from 'src/shared/enums'
 import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
@@ -68,7 +69,7 @@ const Page = () => {
               {
                 name: CollectionNavigationEnum.enum.Preview,
                 href: `/${mainRepositoryHref}`,
-                enabled: true,
+                enabled: false,
                 loading: isLoadingLayers,
               },
               {
@@ -86,33 +87,98 @@ const Page = () => {
               {
                 name: CollectionNavigationEnum.enum.Deployments,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
-                enabled: false,
+                enabled: true,
                 loading: isLoadingLayers,
               },
             ]}
           />
         </Layout.Header>
-        <Layout.Body border='none'>
-          <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
-            <div className='col-span-2 py-8'>
-              <div>
-                <div className='relative flex flex-col space-y-3 justify-between'>
-                  <div className='grid grid-cols-8 gap-x-2 w-full h-full'>
-                    <div className='col-span-6'>
-                      <CollectionBranchSelectorCard />
-                    </div>
-                    <div className='col-span-2'>
-                      <GenerateButton />
-                    </div>
-                  </div>
-                  <CollectionPreviewFilters />
-                </div>
-              </div>
+        <Layout.Body border='lower'>
+          <div className='w-full h-full'>
+            <div className='h-32 flex items-center'>
+              <h1 className='text-2xl font-semibold'>Deployments</h1>
             </div>
-            <div className='col-span-8'>
-              <main className='space-y-6 py-8 pl-8'>
-                <CollectionPreviewGrid />
-              </main>
+          </div>
+          <div className='py-8'>
+            <div className='border-t border-b border-mediumGrey'>
+              {(
+                [
+                  {
+                    id: '1',
+                    name: 'g83v05uf',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    collectionName: 'main',
+                    collectionTotalSupply: 100,
+                    collectionGenerations: 64,
+                    repositoryId: '64',
+                    userId: '1',
+                  },
+                  {
+                    id: '1',
+                    name: '40g10bps',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    collectionName: 'testing-1',
+                    collectionTotalSupply: 100,
+                    collectionGenerations: 23,
+                    repositoryId: '23',
+                    userId: '1',
+                  },
+                  {
+                    id: '1',
+                    name: 'rjg949ffs',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    collectionName: 'development',
+                    collectionTotalSupply: 100,
+                    collectionGenerations: 9,
+                    repositoryId: '9',
+                    userId: '1',
+                  },
+                  {
+                    id: '1',
+                    name: 'v040gk10',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    collectionName: 'development',
+                    collectionTotalSupply: 100,
+                    collectionGenerations: 1,
+                    repositoryId: '1',
+                    userId: '1',
+                  },
+                ] as RepositoryDeployment[]
+              ).map((deployment) => (
+                <div key={deployment.id} className='p-4 border-l border-r border-mediumGrey border-b grid grid-cols-4'>
+                  <div className='flex flex-col justify-center'>
+                    <NextLinkComponent
+                      underline
+                      href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                      className='text-xs font-semibold w-fit'
+                    >
+                      {deployment.name}
+                    </NextLinkComponent>
+                    <span className='text-xs'>Preview</span>
+                  </div>
+                  <div>
+                    <span className='text-xs'>
+                      Deployed from <strong>{deployment.collectionName}</strong>
+                    </span>
+                  </div>
+                  <div className='text-xs flex flex-col'>
+                    <span>
+                      Total Supply <strong>{deployment.collectionTotalSupply}</strong>
+                    </span>
+                    <span>
+                      Generation <strong>{deployment.collectionGenerations}</strong>
+                    </span>
+                  </div>
+                  <div className='text-xs flex justify-end items-center space-x-2'>
+                    <span>{timeAgo(deployment.createdAt)} by Jeevan Pillay</span>
+                    <AvatarComponent src='/images/avatar-blank.png' />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </Layout.Body>

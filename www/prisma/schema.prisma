@@ -22,7 +22,8 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    members OrganisationMember[]
+    members              OrganisationMember[]
+    RepositoryDeployment RepositoryDeployment[]
 }
 
 model Organisation {
@@ -84,15 +85,20 @@ model Repository {
 }
 
 model RepositoryDeployment {
-    id         String @id @default(cuid())
-    name       String @db.VarChar(255)
+    id         String   @id @default(cuid())
+    name       String   @db.VarChar(255)
     attributes Json
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
     collectionName        String     @db.VarChar(255) // used as seed
     collectionTotalSupply Int // used as seed
     collectionGenerations Int // used as seed
     repositoryId          String // used as seed
     repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
 
     @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
 }
