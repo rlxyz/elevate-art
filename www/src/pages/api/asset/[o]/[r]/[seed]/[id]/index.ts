@@ -41,18 +41,20 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const tokens = v.one(
     v.parseLayer(
-      layerElements.map((l) => ({
-        ...l,
-        traits: l.traitElements.map((t) => ({
-          ...t,
-          rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-            ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-              type: condition as v.RulesType,
-              with: left === t.id ? right : left,
-            })
-          ),
-        })),
-      }))
+      layerElements
+        .sort((a, b) => a.priority - b.priority)
+        .map((l) => ({
+          ...l,
+          traits: l.traitElements.map((t) => ({
+            ...t,
+            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                type: condition as v.RulesType,
+                with: left === t.id ? right : left,
+              })
+            ),
+          })),
+        }))
     ),
     v.seed(seed, id)
   )
@@ -60,14 +62,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const canvas = new Canvas(600, 600)
 
   await Promise.all(
-    tokens.map(([l, t]) => {
-      return new Promise<void>(async (resolve, reject) => {
+    tokens.reverse().map(([l, t]) => {
+      return new Promise<Canvas>(async (resolve, reject) => {
         const response = await getTraitElementImage({ r: repository.id, l, t })
         if (response.failed) return reject()
         const blob = response.getValue()
         if (!blob) return reject()
-        canvas.printImage(await resolveImage(Buffer.from(await blob.arrayBuffer())), 0, 0, 600, 600)
-        resolve()
+        return resolve(canvas.printImage(await resolveImage(Buffer.from(await blob.arrayBuffer())), 0, 0, 600, 600))
       })
     })
   ).then(() => {
