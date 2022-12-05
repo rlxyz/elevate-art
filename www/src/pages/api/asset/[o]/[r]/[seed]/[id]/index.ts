@@ -61,7 +61,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const canvas = new Canvas(600, 600)
 
-  await Promise.all(
+  const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
         const response = await getTraitElementImage({ r: repository.id, l, t })
@@ -73,18 +73,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     })
   )
-    .then((image: Image[]) => {
-      image.forEach((i) => {
-        canvas.printImage(i, 0, 0, 600, 600)
-      })
-      const buf = canvas.toBuffer('image/png')
-      return res.setHeader('Content-Type', 'image/png').send(buf)
-    })
-    .catch(() => {
-      return res.status(500).send('Internal Server Error')
-    })
 
-  return res.status(500).send('Internal Server Error')
+  response.forEach((image, i) => {
+    canvas.printImage(image, 0, 0, 600, 600)
+  })
+
+  const buf = canvas.toBuffer('image/png')
+  return res.setHeader('Content-Type', 'image/png').send(buf)
 }
 
 export default index
