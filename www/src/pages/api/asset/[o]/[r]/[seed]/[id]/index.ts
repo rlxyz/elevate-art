@@ -1,6 +1,6 @@
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { Canvas, resolveImage } from 'canvas-constructor/skia'
+import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
@@ -63,16 +63,20 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await Promise.all(
     tokens.reverse().map(([l, t]) => {
-      return new Promise<Canvas>(async (resolve, reject) => {
+      return new Promise<Image>(async (resolve, reject) => {
         const response = await getTraitElementImage({ r: repository.id, l, t })
         if (response.failed) return reject()
         const blob = response.getValue()
         if (!blob) return reject()
-        return resolve(canvas.printImage(await resolveImage(Buffer.from(await blob.arrayBuffer())), 0, 0, 600, 600))
+        const buffer = Buffer.from(await blob.arrayBuffer())
+        return resolve(await resolveImage(buffer))
       })
     })
   )
-    .then(() => {
+    .then((image: Image[]) => {
+      image.forEach((i) => {
+        canvas.printImage(i, 0, 0, 600, 600)
+      })
       const buf = canvas.toBuffer('image/png')
       return res.setHeader('Content-Type', 'image/png').send(buf)
     })
