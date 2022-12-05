@@ -71,10 +71,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
         return resolve(canvas.printImage(await resolveImage(Buffer.from(await blob.arrayBuffer())), 0, 0, 600, 600))
       })
     })
-  ).then(() => {
-    const buf = canvas.toBuffer('image/png')
-    return res.setHeader('Content-Type', 'image/png').send(buf)
-  })
+  )
+    .then(() => {
+      const buf = canvas.toBuffer('image/png')
+      return res.setHeader('Content-Type', 'image/png').send(buf)
+    })
+    .catch(() => {
+      return res.status(500).send('Internal Server Error')
+    })
+
+  return res.status(500).send('Internal Server Error')
 }
 
 export default index
