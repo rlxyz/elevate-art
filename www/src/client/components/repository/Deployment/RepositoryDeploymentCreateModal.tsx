@@ -53,7 +53,9 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
     >
       <select {...register('collectionName', { required: true })} className='text-xs p-2 w-full rounded-[5px] border border-mediumGrey'>
         {collections?.map((collection) => (
-          <option value={collection.name}>{collection.name}</option>
+          <option key={collection.id} value={collection.name}>
+            {collection.name}
+          </option>
         ))}
       </select>
     </ModalComponent>
