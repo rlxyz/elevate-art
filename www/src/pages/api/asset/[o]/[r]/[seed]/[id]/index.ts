@@ -4,7 +4,6 @@ import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { storage } from '@server/utils/gcp-storage'
 import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 
 /**
@@ -21,16 +20,16 @@ type CacheInput = { repositoryId: string; deploymentId: string; id: string }
 const cache = {
   get: async ({ repositoryId, deploymentId, id }: CacheInput) => {
     return await storage
-      .bucket(env.GCP_BUCKET_NAME)
-      .file(`deployments/${repositoryId}/${deploymentId}/tokens/${id}.png`)
+      .bucket(`elevate-${repositoryId}-assets`)
+      .file(`deployments/${deploymentId}/tokens/${id}.png`)
       .download()
       .then((data) => data[0])
       .catch((e) => console.error(e))
   },
   put: async ({ repositoryId, deploymentId, id, buffer }: CacheInput & { buffer: Buffer }) => {
     await storage
-      .bucket(env.GCP_BUCKET_NAME)
-      .file(`deployments/${repositoryId}/${deploymentId}/tokens/${id}.png`)
+      .bucket(`elevate-${repositoryId}-assets`)
+      .file(`deployments/${deploymentId}/tokens/${id}.png`)
       .save(buffer, { contentType: 'image/png' })
   },
 }

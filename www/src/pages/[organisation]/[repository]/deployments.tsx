@@ -2,6 +2,7 @@ import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
+import RepositoryDeploymentBucketCreateModal from '@components/repository/Deployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
 import RepositoryDeploymentDeleteModal from '@components/repository/Deployment/RepositoryDeploymentDeleteModal'
 import withOrganisationStore from '@components/withOrganisationStore'
@@ -159,6 +160,7 @@ const Page = () => {
   const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!repository) return
@@ -213,16 +215,27 @@ const Page = () => {
             ]}
           />
         </Layout.Header>
-        <Layout.Body border='lower'>
+        <Layout.Body border={'lower'}>
           <div className='w-full h-full'>
             <div className='h-32 flex items-center justify-between'>
               <h1 className='text-2xl font-semibold'>Deployments</h1>
-              <button
-                onClick={() => setIsCreateDialogOpen(true)}
-                className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs'
-              >
-                Create Deployment
-              </button>
+              <div className='space-x-2'>
+                {!repository?.bucket && (
+                  <button
+                    onClick={() => setIsCreateBucketDialogOpen(true)}
+                    className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs'
+                  >
+                    Setup
+                  </button>
+                )}
+                <button
+                  disabled={!repository?.bucket}
+                  onClick={() => setIsCreateDialogOpen(true)}
+                  className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+                >
+                  Create Deployment
+                </button>
+              </div>
             </div>
             {collections && repository && (
               <RepositoryDeploymentCreateModal
@@ -232,23 +245,27 @@ const Page = () => {
                 collections={collections}
               />
             )}
+            {collections && repository && (
+              <RepositoryDeploymentBucketCreateModal
+                visible={isCreateBucketDialogOpen}
+                onClose={() => setIsCreateBucketDialogOpen(false)}
+                repository={repository}
+              />
+            )}
           </div>
+
           {deployments && deployments.length > 0 ? (
             <div className='py-8'>
               {deployments.map((deployment, index) => (
                 <div
+                  key={deployment.id}
                   className={clsx(
                     'border-l border-r border-mediumGrey border-b',
                     index === 0 && 'rounded-tl-[5px] rounded-tr-[5px] border-t',
                     index === deployments.length - 1 && 'rounded-bl-[5px] rounded-br-[5px]'
                   )}
                 >
-                  <DeploymentPreviewCard
-                    key={deployment.id}
-                    deployment={deployment}
-                    organisationName={organisationName}
-                    repositoryName={repositoryName}
-                  />
+                  <DeploymentPreviewCard deployment={deployment} organisationName={organisationName} repositoryName={repositoryName} />
                 </div>
               ))}
             </div>

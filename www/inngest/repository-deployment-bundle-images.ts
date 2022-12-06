@@ -1,9 +1,22 @@
 import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
-import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 import { storage } from '../src/server/utils/gcp-storage'
+
+const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
+  await prisma?.repositoryDeployment.update({
+    where: { id: deploymentId },
+    data: { status: RepositoryDeploymentStatus.FAILED },
+  })
+}
+
+const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
+  await prisma?.repositoryDeployment.update({
+    where: { id: deploymentId },
+    data: { status: RepositoryDeploymentStatus.DEPLOYED },
+  })
+}
 
 /**
  * This function is used in conjuction with the creation of a new RepositoryDeployment.
@@ -13,11 +26,40 @@ import { storage } from '../src/server/utils/gcp-storage'
  * make a request to Cloudinary. And also, if user then changes the image in Cloudinary,
  * we can still use the old image associated to the RepositoryDeployment.
  *
+ * Bucket Design
+ * name: `elevate-<repositoryId>-assets`
+ * image: `deployments/<deploymentId>/tokens/<tokenId>/image.png`
+ * attributes: `deployments/<deploymentId>/tokens/<tokenId>/attributes.png`
+ * layers: `layers/<layerElementId>/<traitElementId>.png`
  */
 export default createFunction('repository-deployment/bundle-images', 'repository-deployment/images.create', async ({ event }) => {
   const layerElements = event.data.attributes as Prisma.JsonArray as v.Layer[]
   const { repositoryId, deploymentId } = event.data as { repositoryId: string; deploymentId: string }
 
+  /**
+   * Ensure Deployment Exists
+   */
+  const deployment = await prisma?.repositoryDeployment.findFirst({
+    where: { id: deploymentId, repositoryId },
+    select: { id: true },
+  })
+  if (!deployment) {
+    await repositoryDeploymentFailedUpdate({ deploymentId })
+    console.log("Deployment doesn't exist")
+    throw new Error(`Deployment ${deploymentId} does not exist`)
+  }
+
+  /**
+   * Ensure Bucket Exists
+   */
+  const bucket = await storage.bucket(`elevate-${repositoryId}-assets`).exists()
+  if (!bucket[0]) {
+    await repositoryDeploymentFailedUpdate({ deploymentId })
+    console.log("Bucket doesn't exist")
+    throw new Error(`Bucket does not exist`)
+  }
+
+  /** Move all images from Cloudinary to GCP Bucket */
   await Promise.all(
     layerElements.map(
       async ({ id: l, traits: traitElements }) =>
@@ -30,9 +72,9 @@ export default createFunction('repository-deployment/bundle-images', 'repository
             console.log('blob found', repositoryId, deploymentId, l, t)
             try {
               return await storage
-                .bucket(env.GCP_BUCKET_NAME)
-                .file(`deployments/${repositoryId}/${deploymentId}/${l}/${t}.png`)
-                .save(Buffer.from(await blob.arrayBuffer()))
+                .bucket(`elevate-${repositoryId}-assets`)
+                .file(`deployments/${deploymentId}/layers/${l}/${t}.png`)
+                .save(Buffer.from(await blob.arrayBuffer()), { contentType: 'image/png' })
             } catch (e) {
               console.error(e)
               throw new Error(`Couldn't save image: ${e}`)
@@ -43,17 +85,11 @@ export default createFunction('repository-deployment/bundle-images', 'repository
   )
     .then(async () => {
       console.log('done deployment')
-      await prisma?.repositoryDeployment.update({
-        where: { id: deploymentId },
-        data: { status: RepositoryDeploymentStatus.DEPLOYED },
-      })
+      await repositoryDeploymentDeployedUpdate({ deploymentId })
     })
     .catch(async () => {
       console.log('failed deployment')
-      await prisma?.repositoryDeployment.update({
-        where: { id: deploymentId },
-        data: { status: RepositoryDeploymentStatus.FAILED },
-      })
+      await repositoryDeploymentFailedUpdate({ deploymentId })
     })
 
   return { success: true }

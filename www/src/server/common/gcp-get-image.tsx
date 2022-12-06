@@ -1,7 +1,6 @@
 import { DownloadResponse } from '@google-cloud/storage'
 import { storage } from '@server/utils/gcp-storage'
 import { Result } from '@server/utils/response-result'
-import { env } from 'src/env/server.mjs'
 
 type GetTraitElementImageReturn = Result<Buffer | null>
 
@@ -18,8 +17,8 @@ export const getTraitElementImageFromGCP = ({
 }): Promise<GetTraitElementImageReturn> => {
   return new Promise(async (resolve, reject) => {
     storage
-      .bucket(env.GCP_BUCKET_NAME)
-      .file(`deployments/${r}/${d}/${l}/${t}.png`)
+      .bucket(`elevate-${r}-assets`)
+      .file(`deployments/${d}/layers/${l}/${t}.png`)
       .download()
       .then((contents: DownloadResponse) => {
         if (contents[0]) resolve(Result.ok(contents[0]))

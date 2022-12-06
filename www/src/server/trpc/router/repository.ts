@@ -1,5 +1,6 @@
 import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
-import { inngest } from '@server/utils/inngest'
+import { storage } from '@server/utils/gcp-storage'
+import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
 import * as v from 'src/shared/compiler'
@@ -80,6 +81,17 @@ export const repositoryRouter = router({
         orderBy: { createdAt: 'desc' },
       })
     }),
+  createBucket: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId } = input
+      await storage.createBucket(`elevate-${repositoryId}-assets`)
+      await ctx.prisma.repository.update({ where: { id: repositoryId }, data: { bucket: true } })
+    }),
   createDeployment: protectedProcedure
     .input(
       z.object({
@@ -147,14 +159,23 @@ export const repositoryRouter = router({
         },
       })
 
-      await inngest.send({
-        name: 'repository-deployment/images.create',
-        data: {
-          repositoryId: deployment.repositoryId,
-          deploymentId: deployment.id,
-          attributes: deployment.attributes as Prisma.JsonArray,
-        },
-      })
+      try {
+        await createIngestInstance().send({
+          name: 'repository-deployment/images.create',
+          data: {
+            repositoryId: deployment.repositoryId,
+            deploymentId: deployment.id,
+            attributes: deployment.attributes as Prisma.JsonArray,
+          },
+        })
+      } catch (e) {
+        console.error(e)
+        await ctx.prisma.repositoryDeployment.update({
+          where: { id: deployment.id },
+          data: { status: RepositoryDeploymentStatus.FAILED },
+        })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
+      }
 
       return deployment
     }),
@@ -167,8 +188,22 @@ export const repositoryRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { deploymentId } = input
 
-      return await ctx.prisma.repositoryDeployment.delete({
+      const deployment = await ctx.prisma.repositoryDeployment.findFirst({
         where: { id: deploymentId },
       })
+
+      if (!deployment) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      await storage.bucket(`elevate-${deployment.repositoryId}-assets`).deleteFiles({
+        prefix: `${deploymentId}`,
+      })
+
+      await ctx.prisma.repositoryDeployment.delete({
+        where: { id: deploymentId },
+      })
+
+      return deployment
     }),
 })
