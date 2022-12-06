@@ -15,6 +15,7 @@ import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Head
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum } from 'src/shared/enums'
@@ -126,9 +127,9 @@ const Page = () => {
                         {deployment.name}
                       </NextLinkComponent>
                     ) : (
-                      <span className=''>{deployment.name}</span>
+                      <span>{deployment.name}</span>
                     )}
-                    <span>Preview</span>
+                    <span>{toPascalCaseWithSpace(deployment.type)}</span>
                   </div>
                   <div>
                     <span className='text-xs flex flex-col h-full space-x-2'>
