@@ -2,7 +2,7 @@ import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import * as v from 'src/shared/compiler'
-import { storage } from '../src/server/utils/gcp-storage'
+import { storage } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.repositoryDeployment.update({
@@ -31,6 +31,8 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  * image: `deployments/<deploymentId>/tokens/<tokenId>/image.png`
  * attributes: `deployments/<deploymentId>/tokens/<tokenId>/attributes.png`
  * layers: `layers/<layerElementId>/<traitElementId>.png`
+ *
+ * @todo save any failed fetches of TraitElements into a buffer to query later
  */
 export default createFunction('repository-deployment/bundle-images', 'repository-deployment/images.create', async ({ event }) => {
   const layerElements = event.data.attributes as Prisma.JsonArray as v.Layer[]
