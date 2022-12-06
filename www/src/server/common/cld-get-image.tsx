@@ -6,7 +6,7 @@ export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
 // export const IMAGE_QUALITY_SETTINGS: string[] = []
 export const IMAGE_VERSION = 'v1'
 
-type GetTraitElementImageReturn = Result<ReadableStream<Uint8Array> | null>
+type GetTraitElementImageReturn = Result<Blob | null>
 
 export const getTraitElementImage = ({
   r,
@@ -27,8 +27,8 @@ export const getTraitElementImage = ({
       // version: version,
     })
     fetch(url)
-      .then((res) => {
-        return resolve(Result.ok(res.body))
+      .then(async (res) => {
+        return resolve(Result.ok(await res.blob()))
       })
       .catch((err) => {
         return reject(Result.fail(err))
