@@ -1,12 +1,16 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
+import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
+import Menu from '@components/layout/menu'
 import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
 import withOrganisationStore from '@components/withOrganisationStore'
+import { CubeIcon, EyeIcon, LinkIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useNotification } from '@hooks/utils/useNotification'
 import { RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
@@ -45,6 +49,7 @@ const Page = () => {
   const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const { notifyInfo } = useNotification()
 
   useEffect(() => {
     if (!repository) return
@@ -60,6 +65,11 @@ const Page = () => {
     // if (tokens.length === 0) return
     mutate({ collection })
   }, [isLoadingCollection])
+
+  const onClipboardCopy = (item: string) => {
+    navigator.clipboard.writeText(item)
+    notifyInfo('Copied to clipboard')
+  }
 
   return (
     <OrganisationAuthLayout>
@@ -166,6 +176,41 @@ const Page = () => {
                       {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
                     </span>
                     <AvatarComponent src='/images/avatar-blank.png' />
+                    <div className='relative w-6'>
+                      <Menu vertical position='bottom-left'>
+                        <Menu.Items>
+                          <Menu.Item as='button' type='button'>
+                            <CubeIcon className='w-3 h-3' />
+                            <span>Promote to Production</span>
+                          </Menu.Item>
+                          <Menu.Item as='button' type='button'>
+                            <EyeIcon className='w-3 h-3' />
+                            <span>Enable Stealth Mode</span>
+                          </Menu.Item>
+                        </Menu.Items>
+                        <Menu.Items>
+                          <Menu.Item
+                            as='button'
+                            type='button'
+                            onClick={() =>
+                              onClipboardCopy(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
+                            }
+                          >
+                            <LinkIcon className='w-3 h-3' />
+                            <span>Copy URL</span>
+                          </Menu.Item>
+                          <Menu.Item
+                            as={NextLinkComponent}
+                            href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <ArrowTopRightIcon className='w-3 h-3' />
+                            <span>Vist</span>
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Menu>
+                    </div>
                   </div>
                 </div>
               ))}
