@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { getTraitElementImage } from '@server/common/cld-get-image'
+import { getTraitElementImage } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -44,11 +44,10 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImage({ r: deployment.repositoryId, l, t })
+        const response = await getTraitElementImage({ r: deployment.repositoryId, d: deployment.id, l, t })
         if (response.failed) return reject()
-        const blob = response.getValue()
-        if (!blob) return reject()
-        const buffer = Buffer.from(await blob.arrayBuffer())
+        const buffer = response.getValue()
+        if (!buffer) return reject()
         return resolve(await resolveImage(buffer))
       })
     })

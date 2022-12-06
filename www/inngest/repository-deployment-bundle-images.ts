@@ -1,17 +1,9 @@
-import { Storage } from '@google-cloud/storage'
 import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
-
-const storage = new Storage({
-  projectId: env.GCP_PROJECT_ID,
-  credentials: {
-    client_email: env.GCP_CLIENT_EMAIL,
-    private_key: env.GCP_PRIVATE_KEY,
-  },
-})
+import { storage } from '../src/server/utils/gcp-storage'
 
 export default createFunction('repository-deployment/bundle-images', 'repository-deployment/images.create', async ({ event }) => {
   const layerElements = event.data.attributes as Prisma.JsonArray as v.Layer[]
