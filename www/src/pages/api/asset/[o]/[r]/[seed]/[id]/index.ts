@@ -66,9 +66,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       return new Promise<Image>(async (resolve, reject) => {
         const response = await getTraitElementImage({ r: repository.id, l, t })
         if (response.failed) return reject()
-        const blob = response.getValue()
-        if (!blob) return reject()
-        const buffer = Buffer.from(await blob.arrayBuffer())
+        const buffer = response.getValue()
+        if (!buffer) return reject()
         return resolve(await resolveImage(buffer))
       })
     })
