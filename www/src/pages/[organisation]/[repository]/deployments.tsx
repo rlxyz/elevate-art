@@ -3,15 +3,16 @@ import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
 import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
+import RepositoryDeploymentDeleteModal from '@components/repository/Deployment/RepositoryDeploymentDeleteModal'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, EyeIcon, LinkIcon } from '@heroicons/react/outline'
+import { CubeIcon, EyeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useNotification } from '@hooks/utils/useNotification'
-import { RepositoryDeploymentStatus } from '@prisma/client'
+import { RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -24,6 +25,115 @@ import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum } from 'src/shared/enums'
 import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
+
+const DeploymentPreviewCard = ({
+  deployment,
+  organisationName,
+  repositoryName,
+}: {
+  deployment: RepositoryDeployment
+  organisationName: string
+  repositoryName: string
+}) => {
+  const { notifyInfo } = useNotification()
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
+  const onClipboardCopy = () => {
+    navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
+    notifyInfo('Copied to clipboard')
+  }
+
+  return (
+    <div key={deployment.id} className='p-4 border-l border-r border-mediumGrey border-b grid grid-cols-4'>
+      <div className='flex flex-col justify-center  text-xs'>
+        {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
+          <NextLinkComponent
+            rel='noreferrer nofollow'
+            target='_blank'
+            underline
+            href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+            className='font-semibold w-fit'
+          >
+            {deployment.name}
+          </NextLinkComponent>
+        ) : (
+          <span>{deployment.name}</span>
+        )}
+        <span>{toPascalCaseWithSpace(deployment.type)}</span>
+      </div>
+      <div>
+        <span className='text-xs flex flex-col h-full space-x-2'>
+          <div className='flex space-x-3'>
+            <div
+              className={clsx(
+                'rounded-full w-4 h-4 border border-mediumGrey',
+                deployment.status === RepositoryDeploymentStatus.FAILED && 'bg-redError',
+                deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
+                deployment.status === RepositoryDeploymentStatus.PENDING && 'bg-lightGray'
+              )}
+            />
+            <div className='flex flex-col'>
+              <span>
+                {deployment.status === RepositoryDeploymentStatus.FAILED && 'Error'}
+                {deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'Ready'}
+                {deployment.status === RepositoryDeploymentStatus.PENDING && 'Deploying'}
+              </span>
+              <span>{timeAgo(deployment.updatedAt)}</span>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div className='text-xs flex flex-col'>
+        <span>
+          Total Supply <strong>{deployment.collectionTotalSupply}</strong>
+        </span>
+        <span>
+          Generation <strong>{deployment.collectionGenerations}</strong>
+        </span>
+      </div>
+      <div className='text-xs flex justify-end items-center space-x-2'>
+        <span>
+          {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
+        </span>
+        <AvatarComponent src='/images/avatar-blank.png' />
+        <div className='relative w-6'>
+          <Menu vertical position='bottom-left'>
+            <Menu.Items>
+              <Menu.Item as='button' type='button'>
+                <CubeIcon className='w-3 h-3' />
+                <span>Promote to Production</span>
+              </Menu.Item>
+              <Menu.Item as='button' type='button'>
+                <EyeIcon className='w-3 h-3' />
+                <span>Enable Stealth Mode</span>
+              </Menu.Item>
+              <Menu.Item as='button' type='button' onClick={() => setIsDeleteDialogOpen(true)}>
+                <TrashIcon className='w-3 h-3' />
+                <span>Delete</span>
+              </Menu.Item>
+            </Menu.Items>
+            <Menu.Items>
+              <Menu.Item as='button' type='button' onClick={() => onClipboardCopy()}>
+                <LinkIcon className='w-3 h-3' />
+                <span>Copy URL</span>
+              </Menu.Item>
+              <Menu.Item
+                as={NextLinkComponent}
+                href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <ArrowTopRightIcon className='w-3 h-3' />
+                <span>Vist</span>
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
+        </div>
+      </div>
+      <RepositoryDeploymentDeleteModal visible={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} deployment={deployment} />
+    </div>
+  )
+}
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -49,7 +159,6 @@ const Page = () => {
   const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const { notifyInfo } = useNotification()
 
   useEffect(() => {
     if (!repository) return
@@ -65,11 +174,6 @@ const Page = () => {
     // if (tokens.length === 0) return
     mutate({ collection })
   }, [isLoadingCollection])
-
-  const onClipboardCopy = (item: string) => {
-    navigator.clipboard.writeText(item)
-    notifyInfo('Copied to clipboard')
-  }
 
   return (
     <OrganisationAuthLayout>
@@ -120,110 +224,29 @@ const Page = () => {
                 Create Deployment
               </button>
             </div>
+            {collections && repository && (
+              <RepositoryDeploymentCreateModal
+                visible={isCreateDialogOpen}
+                onClose={() => setIsCreateDialogOpen(false)}
+                repository={repository}
+                collections={collections}
+              />
+            )}
           </div>
-          <div className='py-8'>
-            <div className='border-t border-b border-mediumGrey'>
-              {deployments?.map((deployment) => (
-                <div key={deployment.id} className='p-4 border-l border-r border-mediumGrey border-b grid grid-cols-4'>
-                  <div className='flex flex-col justify-center  text-xs'>
-                    {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
-                      <NextLinkComponent
-                        rel='noreferrer nofollow'
-                        target='_blank'
-                        underline
-                        href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-                        className='font-semibold w-fit'
-                      >
-                        {deployment.name}
-                      </NextLinkComponent>
-                    ) : (
-                      <span>{deployment.name}</span>
-                    )}
-                    <span>{toPascalCaseWithSpace(deployment.type)}</span>
-                  </div>
-                  <div>
-                    <span className='text-xs flex flex-col h-full space-x-2'>
-                      <div className='flex space-x-3'>
-                        <div
-                          className={clsx(
-                            'rounded-full w-4 h-4 border border-mediumGrey',
-                            deployment.status === RepositoryDeploymentStatus.FAILED && 'bg-redError',
-                            deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
-                            deployment.status === RepositoryDeploymentStatus.PENDING && 'bg-lightGray'
-                          )}
-                        />
-                        <div className='flex flex-col'>
-                          <span>
-                            {deployment.status === RepositoryDeploymentStatus.FAILED && 'Error'}
-                            {deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'Ready'}
-                            {deployment.status === RepositoryDeploymentStatus.PENDING && 'Deploying'}
-                          </span>
-                          <span>{timeAgo(deployment.updatedAt)}</span>
-                        </div>
-                      </div>
-                    </span>
-                  </div>
-                  <div className='text-xs flex flex-col'>
-                    <span>
-                      Total Supply <strong>{deployment.collectionTotalSupply}</strong>
-                    </span>
-                    <span>
-                      Generation <strong>{deployment.collectionGenerations}</strong>
-                    </span>
-                  </div>
-                  <div className='text-xs flex justify-end items-center space-x-2'>
-                    <span>
-                      {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
-                    </span>
-                    <AvatarComponent src='/images/avatar-blank.png' />
-                    <div className='relative w-6'>
-                      <Menu vertical position='bottom-left'>
-                        <Menu.Items>
-                          <Menu.Item as='button' type='button'>
-                            <CubeIcon className='w-3 h-3' />
-                            <span>Promote to Production</span>
-                          </Menu.Item>
-                          <Menu.Item as='button' type='button'>
-                            <EyeIcon className='w-3 h-3' />
-                            <span>Enable Stealth Mode</span>
-                          </Menu.Item>
-                        </Menu.Items>
-                        <Menu.Items>
-                          <Menu.Item
-                            as='button'
-                            type='button'
-                            onClick={() =>
-                              onClipboardCopy(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
-                            }
-                          >
-                            <LinkIcon className='w-3 h-3' />
-                            <span>Copy URL</span>
-                          </Menu.Item>
-                          <Menu.Item
-                            as={NextLinkComponent}
-                            href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                          >
-                            <ArrowTopRightIcon className='w-3 h-3' />
-                            <span>Vist</span>
-                          </Menu.Item>
-                        </Menu.Items>
-                      </Menu>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          {deployments && deployments.length > 0 ? (
+            <div className='py-8'>
+              <div className='border-t border-b border-mediumGrey'>
+                {deployments.map((deployment) => (
+                  <DeploymentPreviewCard
+                    key={deployment.id}
+                    deployment={deployment}
+                    organisationName={organisationName}
+                    repositoryName={repositoryName}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          {collections && repository && (
-            <RepositoryDeploymentCreateModal
-              visible={isCreateDialogOpen}
-              onClose={() => setIsCreateDialogOpen(false)}
-              repository={repository}
-              collections={collections}
-            />
-          )}
+          ) : null}
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

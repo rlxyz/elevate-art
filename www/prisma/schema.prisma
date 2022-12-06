@@ -92,6 +92,7 @@ model RepositoryDeployment {
     updatedAt  DateTime                   @updatedAt
     status     RepositoryDeploymentStatus @default(PENDING)
     type       RepositoryDeploymentType   @default(PREVIEW)
+    stealth    Boolean                    @default(false)
 
     collectionName        String     @db.VarChar(255) // used as seed
     collectionTotalSupply Int // used as seed

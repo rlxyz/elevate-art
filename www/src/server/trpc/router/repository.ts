@@ -158,4 +158,17 @@ export const repositoryRouter = router({
 
       return deployment
     }),
+  deleteDeployment: protectedProcedure
+    .input(
+      z.object({
+        deploymentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { deploymentId } = input
+
+      return await ctx.prisma.repositoryDeployment.delete({
+        where: { id: deploymentId },
+      })
+    }),
 })
