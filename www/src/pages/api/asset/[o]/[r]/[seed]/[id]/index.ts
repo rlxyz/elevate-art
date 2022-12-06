@@ -1,11 +1,39 @@
 import { Prisma } from '@prisma/client'
-import { getTraitElementImage } from '@server/common/gcp-get-image'
+import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { storage } from '@server/utils/gcp-storage'
 import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 
-// http://localhost:3000/api/asset/elevate-f8cA77-2yzc16/roboghosts/gje1qczv/0
+/**
+ * Note, this is a cache built around the compiler functionality to ensure that
+ * we only need to compile a single token id once per deployment.
+ *
+ * That is, if a token has 12 LayerElements === 12 TraitElements, then we only need
+ * to fetch from the GCP bucket once per token id.
+ *
+ * And during the compilation of images using skia-constructor, we re-upload the new compiled token image
+ * to the GCP bucket.
+ */
+type CacheInput = { repositoryId: string; deploymentId: string; id: string }
+const cache = {
+  get: async ({ repositoryId, deploymentId, id }: CacheInput) => {
+    return await storage
+      .bucket(env.GCP_BUCKET_NAME)
+      .file(`deployments/${repositoryId}/${deploymentId}/tokens/${id}.png`)
+      .download()
+      .then((data) => data[0])
+      .catch((e) => console.error(e))
+  },
+  put: async ({ repositoryId, deploymentId, id, buffer }: CacheInput & { buffer: Buffer }) => {
+    await storage
+      .bucket(env.GCP_BUCKET_NAME)
+      .file(`deployments/${repositoryId}/${deploymentId}/tokens/${id}.png`)
+      .save(buffer, { contentType: 'image/png' })
+  },
+}
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
@@ -32,6 +60,10 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
+  // look into cache whether image exist
+  const image = await cache.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
+  if (image) return res.setHeader('Content-Type', 'image/png').status(200).send(image)
+
   const layerElements = deployment.attributes as Prisma.JsonArray as v.Layer[]
 
   const tokens = v.one(
@@ -44,7 +76,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImage({ r: deployment.repositoryId, d: deployment.id, l, t })
+        const response = await getTraitElementImageFromGCP({ r: deployment.repositoryId, d: deployment.id, l, t })
         if (response.failed) return reject()
         const buffer = response.getValue()
         if (!buffer) return reject()
@@ -58,6 +90,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 
   const buf = canvas.toBuffer('image/png')
+  await cache.put({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id, buffer: buf })
+
   return res.setHeader('Content-Type', 'image/png').send(buf)
 }
 

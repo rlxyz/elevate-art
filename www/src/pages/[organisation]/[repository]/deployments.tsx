@@ -5,7 +5,7 @@ import Menu from '@components/layout/menu'
 import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
 import RepositoryDeploymentDeleteModal from '@components/repository/Deployment/RepositoryDeploymentDeleteModal'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, EyeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
+import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -44,7 +44,7 @@ const DeploymentPreviewCard = ({
   }
 
   return (
-    <div key={deployment.id} className='p-4 border-l border-r border-mediumGrey border-b grid grid-cols-4'>
+    <div key={deployment.id} className='p-4 grid grid-cols-4'>
       <div className='flex flex-col justify-center  text-xs'>
         {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
           <NextLinkComponent
@@ -99,14 +99,14 @@ const DeploymentPreviewCard = ({
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
-              <Menu.Item as='button' type='button'>
+              {/* <Menu.Item as='button' type='button'>
                 <CubeIcon className='w-3 h-3' />
                 <span>Promote to Production</span>
               </Menu.Item>
               <Menu.Item as='button' type='button'>
                 <EyeIcon className='w-3 h-3' />
                 <span>Enable Stealth Mode</span>
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item as='button' type='button' onClick={() => setIsDeleteDialogOpen(true)}>
                 <TrashIcon className='w-3 h-3' />
                 <span>Delete</span>
@@ -235,16 +235,22 @@ const Page = () => {
           </div>
           {deployments && deployments.length > 0 ? (
             <div className='py-8'>
-              <div className='border-t border-b border-mediumGrey'>
-                {deployments.map((deployment) => (
+              {deployments.map((deployment, index) => (
+                <div
+                  className={clsx(
+                    'border-l border-r border-mediumGrey border-b',
+                    index === 0 && 'rounded-tl-[5px] rounded-tr-[5px] border-t',
+                    index === deployments.length - 1 && 'rounded-bl-[5px] rounded-br-[5px]'
+                  )}
+                >
                   <DeploymentPreviewCard
                     key={deployment.id}
                     deployment={deployment}
                     organisationName={organisationName}
                     repositoryName={repositoryName}
                   />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           ) : null}
         </Layout.Body>

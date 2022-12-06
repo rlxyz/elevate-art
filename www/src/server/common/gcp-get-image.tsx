@@ -5,7 +5,7 @@ import { env } from 'src/env/server.mjs'
 
 type GetTraitElementImageReturn = Result<Buffer | null>
 
-export const getTraitElementImage = ({
+export const getTraitElementImageFromGCP = ({
   r,
   l,
   d,
