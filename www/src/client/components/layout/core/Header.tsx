@@ -4,7 +4,6 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { Organisation } from '@prisma/client'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
@@ -65,10 +64,9 @@ const socialRoutes = [
 ]
 
 const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => {
-  const { status } = useSession()
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      <aside className='flex flex-row items-center justify-center space-x-3 h-fit'>
+      <aside className='flex flex-row items-center justify-center space-x-3'>
         {externalRoutes.map((item) => {
           return (
             <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
@@ -83,7 +81,6 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
             <item.icon className='cursor-pointer hover:text-black h-4 w-4 text-darkGrey' aria-hidden='true' />
           </LinkComponent>
         ))}
-
         {authenticated ? (
           <ConnectButton />
         ) : (

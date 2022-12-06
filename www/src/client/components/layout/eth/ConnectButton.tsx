@@ -12,11 +12,13 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
+        // Note: If your app doesn't use authentication, you
+        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading'
         const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated')
+
         return (
           <div
-            className='h-4'
             {...(!ready && {
               'aria-hidden': true,
               style: {
@@ -56,8 +58,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
               }
 
               return (
-                <button onClick={openAccountModal} type='button' className='w-full h-4'>
-                  {children || <AvatarComponent className='w-4 h-4 text-darkGrey' src='/images/avatar-blank.png' />}
+                <button onClick={openAccountModal} type='button' className='w-full flex items-center justify-center'>
+                  {children || <AvatarComponent className='text-darkGrey' src='/images/avatar-blank.png' />}
                 </button>
               )
             })()}
