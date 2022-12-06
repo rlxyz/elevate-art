@@ -28,7 +28,7 @@ export default createFunction('repository-deployment/bundle-images', 'repository
             if (!blob) throw new Error("Couldn't get blob")
             try {
               return await storage
-                .bucket('elevateart-development')
+                .bucket(env.GCP_BUCKET_NAME)
                 .file(`deployments/${repositoryId}/${deploymentId}/${l}/${t}.png`)
                 .save(Buffer.from(await blob.arrayBuffer()))
             } catch (e) {

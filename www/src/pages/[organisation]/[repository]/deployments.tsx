@@ -114,15 +114,19 @@ const Page = () => {
             <div className='border-t border-b border-mediumGrey'>
               {deployments?.map((deployment) => (
                 <div key={deployment.id} className='p-4 border-l border-r border-mediumGrey border-b grid grid-cols-4'>
-                  <div className='flex flex-col justify-center'>
-                    <NextLinkComponent
-                      underline
-                      href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-                      className='font-semibold w-fit text-xs'
-                    >
-                      {deployment.name}
-                    </NextLinkComponent>
-                    <span className='text-xs'>Preview</span>
+                  <div className='flex flex-col justify-center  text-xs'>
+                    {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
+                      <NextLinkComponent
+                        underline
+                        href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                        className='font-semibold w-fit'
+                      >
+                        {deployment.name}
+                      </NextLinkComponent>
+                    ) : (
+                      <span className=''>{deployment.name}</span>
+                    )}
+                    <span>Preview</span>
                   </div>
                   <div>
                     <span className='text-xs flex flex-col h-full space-x-2'>
@@ -155,7 +159,9 @@ const Page = () => {
                     </span>
                   </div>
                   <div className='text-xs flex justify-end items-center space-x-2'>
-                    <span>{timeAgo(deployment.createdAt)} by Jeevan Pillay</span>
+                    <span>
+                      {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
+                    </span>
                     <AvatarComponent src='/images/avatar-blank.png' />
                   </div>
                 </div>
