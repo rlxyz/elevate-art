@@ -18,6 +18,7 @@ export default createFunction('repository-deployment/bundle-images', 'repository
             if (response.failed) throw new Error("Couldn't get image")
             const blob = response.getValue()
             if (!blob) throw new Error("Couldn't get blob")
+            console.log('blob found', repositoryId, deploymentId, l, t)
             try {
               return await storage
                 .bucket(env.GCP_BUCKET_NAME)

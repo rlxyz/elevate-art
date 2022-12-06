@@ -117,6 +117,8 @@ const Page = () => {
                   <div className='flex flex-col justify-center  text-xs'>
                     {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
                       <NextLinkComponent
+                        rel='noreferrer nofollow'
+                        target='_blank'
                         underline
                         href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
                         className='font-semibold w-fit'
