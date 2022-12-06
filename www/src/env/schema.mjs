@@ -15,6 +15,11 @@ export const serverSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string(),
   REDIS_URL: z.string(),
   REDIS_TOKEN: z.string(),
+  GCP_PROJECT_ID: z.string(),
+  GCP_CLIENT_EMAIL: z.string(),
+  GCP_PRIVATE_KEY: z.string(),
+  INNGEST_SIGNING_KEY: z.string(),
+  INNGEST_EVENT_KEY: z.string(),
 })
 
 /**

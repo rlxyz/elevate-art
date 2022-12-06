@@ -85,11 +85,12 @@ model Repository {
 }
 
 model RepositoryDeployment {
-    id         String   @id @default(cuid())
-    name       String   @db.VarChar(255)
+    id         String                     @id @default(cuid())
+    name       String                     @db.VarChar(255)
     attributes Json
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    createdAt  DateTime                   @default(now())
+    updatedAt  DateTime                   @updatedAt
+    status     RepositoryDeploymentStatus @default(PENDING)
 
     collectionName        String     @db.VarChar(255) // used as seed
     collectionTotalSupply Int // used as seed
@@ -101,6 +102,12 @@ model RepositoryDeployment {
     userId String
 
     @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
+}
+
+enum RepositoryDeploymentStatus {
+    PENDING
+    DEPLOYED
+    FAILED
 }
 
 model Collection {

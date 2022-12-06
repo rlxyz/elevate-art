@@ -5,6 +5,8 @@ import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
+// http://localhost:3000/api/asset/elevate-f8cA77-2yzc16/roboghosts/gje1qczv/0
+
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   if (!session || !session.user) {
@@ -52,7 +54,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   )
 
-  response.forEach((image, i) => {
+  response.forEach((image) => {
     canvas.printImage(image, 0, 0, 600, 600)
   })
 

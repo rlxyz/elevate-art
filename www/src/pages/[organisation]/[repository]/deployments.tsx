@@ -7,6 +7,8 @@ import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLa
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { RepositoryDeploymentStatus } from '@prisma/client'
+import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
@@ -116,15 +118,32 @@ const Page = () => {
                     <NextLinkComponent
                       underline
                       href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-                      className='text-xs font-semibold w-fit'
+                      className='font-semibold w-fit text-xs'
                     >
                       {deployment.name}
                     </NextLinkComponent>
                     <span className='text-xs'>Preview</span>
                   </div>
                   <div>
-                    <span className='text-xs'>
-                      Deployed from <strong>{deployment.collectionName}</strong>
+                    <span className='text-xs flex flex-col h-full space-x-2'>
+                      <div className='flex space-x-3'>
+                        <div
+                          className={clsx(
+                            'rounded-full w-4 h-4 border border-mediumGrey',
+                            deployment.status === RepositoryDeploymentStatus.FAILED && 'bg-redError',
+                            deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
+                            deployment.status === RepositoryDeploymentStatus.PENDING && 'bg-lightGray'
+                          )}
+                        />
+                        <div className='flex flex-col'>
+                          <span>
+                            {deployment.status === RepositoryDeploymentStatus.FAILED && 'Error'}
+                            {deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'Ready'}
+                            {deployment.status === RepositoryDeploymentStatus.PENDING && 'Deploying'}
+                          </span>
+                          <span>{timeAgo(deployment.updatedAt)}</span>
+                        </div>
+                      </div>
                     </span>
                   </div>
                   <div className='text-xs flex flex-col'>

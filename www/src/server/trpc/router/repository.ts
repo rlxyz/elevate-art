@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
+import { inngest } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
 import * as v from 'src/shared/compiler'
@@ -118,13 +119,14 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      return await ctx.prisma.repositoryDeployment.create({
+      const deployment = await ctx.prisma.repositoryDeployment.create({
         data: {
           userId: ctx.session.user.id,
           repositoryId,
           collectionName: collection.name,
           collectionGenerations: collection.generations,
           collectionTotalSupply: collection.totalSupply || 1,
+          status: RepositoryDeploymentStatus.PENDING,
           name: (Math.random() + 1).toString(36).substring(4),
           attributes: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,
@@ -144,5 +146,16 @@ export const repositoryRouter = router({
           })) as v.Layer[] as Prisma.JsonArray,
         },
       })
+
+      await inngest.send({
+        name: 'repository-deployment/images.create',
+        data: {
+          repositoryId: deployment.repositoryId,
+          deploymentId: deployment.id,
+          attributes: deployment.attributes as Prisma.JsonArray,
+        },
+      })
+
+      return deployment
     }),
 })
