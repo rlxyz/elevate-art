@@ -16,6 +16,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
         const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated')
         return (
           <div
+            className='h-4'
             {...(!ready && {
               'aria-hidden': true,
               style: {
@@ -55,7 +56,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
               }
 
               return (
-                <button onClick={openAccountModal} type='button' className='w-full'>
+                <button onClick={openAccountModal} type='button' className='w-full h-4'>
                   {children || <AvatarComponent className='w-4 h-4 text-darkGrey' src='/images/avatar-blank.png' />}
                 </button>
               )

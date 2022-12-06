@@ -26,6 +26,11 @@ module.exports = {
       blueHighlight: '#0070F3',
       orangeWarning: '#fb923c',
       redError: '#EE0000',
+      blue: '#6484F3',
+      lightPink: '#FFB3B3',
+      lightPurple: '#D296F0',
+      lightBlue: '#A4E9FF',
+      transparent: 'transparent',
     },
     fontFamily: {
       sans: ['"Plus Jakarta Sans"', 'sans-serif'],
@@ -33,6 +38,7 @@ module.exports = {
       'plus-jakarta-sans': ['"Plus Jakarta Sans"', 'sans-serif'],
     },
     screens: {
+      xs: '390px',
       sm: '640px',
       md: '768px',
       lg: '1024px',

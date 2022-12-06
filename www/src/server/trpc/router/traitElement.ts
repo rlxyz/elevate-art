@@ -3,7 +3,8 @@ import { deleteImageFilesFromCloudinary, DeleteTraitElementResponse } from '@ser
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import { TRPCError } from '@trpc/server'
-import { sumBy } from 'src/shared/object-utils'
+import Big from 'big.js'
+import { sumByBig } from 'src/shared/object-utils'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -107,8 +108,8 @@ export const traitElementRouter = router({
       const { traitElements } = input
 
       /** @todo check this! */
-      const sum = sumBy(traitElements, (x) => x.weight)
-      if (sum > 100) {
+      const sum = sumByBig(traitElements, (x) => Big(x.weight))
+      if (sum.gt(Big(100))) {
         throw new TRPCError({
           code: `BAD_REQUEST`,
           message: `Sum of weights cannot be greater than 100`,
