@@ -86,10 +86,12 @@ const Page = () => {
         <Layout.Body border='lower'>
           <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
             <button className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'>
-              Create Contract
+              Deploy Contract
             </button>
           </Header>
-          <Body>{contractDeployment && <ContractDeploymentPhasesView deployment={contractDeployment} />}</Body>
+          <Body>
+            <ContractDeploymentPhasesView deployment={contractDeployment} />
+          </Body>
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
@@ -105,7 +107,9 @@ export const ContractDeploymentPhasesEnum = z.nativeEnum(
 
 export type ContractDeploymentPhasesType = z.infer<typeof ContractDeploymentPhasesEnum>
 
-const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeployment }> = ({ deployment: { status } }) => {
+const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeployment | null | undefined }> = ({ deployment }) => {
+  /** Infer status as PENDING. */
+  const status = deployment?.status || 'PENDING'
   return (
     <div className='space-y-6'>
       <h1 className='text-xl font-bold'>Deployment Status</h1>
@@ -129,7 +133,7 @@ const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeploymen
                   <XCircleIcon className='w-5 h-5 text-redError' />
                 ) : (
                   <>
-                    {status === 'PENDING' && phase === ContractDeploymentPhasesEnum.enum.Deploying && <></>}
+                    {status === 'PENDING' && <div className='w-5 h-5 border border-mediumGrey rounded-full' />}
                     {status === 'VERIFYING' && phase === ContractDeploymentPhasesEnum.enum.Deploying && (
                       <CheckCircleIcon className='w-5 h-5 text-blueHighlight' />
                     )}
