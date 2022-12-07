@@ -79,7 +79,8 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
-    deployments RepositoryDeployment[]
+    deployments                  RepositoryDeployment[]
+    RepositoryContractDeployment RepositoryContractDeployment[]
 
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
@@ -101,10 +102,25 @@ model RepositoryDeployment {
     repositoryId          String // used as seed
     repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+    user                         User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId                       String
+    RepositoryContractDeployment RepositoryContractDeployment[]
 
     @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
+}
+
+// If this model has a relationship with RepositoryArtDeploymnent, and someone tries to delete him, enforce that it CANNOT happen
+model RepositoryContractDeployment {
+    id      String @id @default(cuid())
+    address String @db.VarChar(42)
+
+    repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
+    repositoryDeploymentId String?
+
+    repositoryId String
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    // @@unique([repositoryDeploymentId, address])
 }
 
 enum RepositoryDeploymentStatus {
