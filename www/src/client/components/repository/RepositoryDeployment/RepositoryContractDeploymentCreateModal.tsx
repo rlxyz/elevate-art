@@ -1,5 +1,5 @@
 import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentCreate'
-import { RepositoryDeployment } from '@prisma/client'
+import { RepositoryContractDeployment } from '@prisma/client'
 import { parseEther } from 'ethers/lib/utils.js'
 import { FC, useState } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
@@ -9,14 +9,14 @@ import { useDeployContract } from '../../../hooks/utils/useDeployContract'
 import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
 export interface RepositoryContractDeploymentCreateProps extends FormModalProps {
-  deployment: RepositoryDeployment
+  contractDeployment: RepositoryContractDeployment
 }
 
 const RepositoryContractDeploymentCreateModal: FC<RepositoryContractDeploymentCreateProps> = ({
   visible,
   onClose,
   onSuccess,
-  deployment,
+  contractDeployment,
 }) => {
   const { mutate } = useMutateRepositoryCreateDeploymentCreate()
   const { deploy, address: contractAddress } = useDeployContract()
@@ -72,17 +72,15 @@ const RepositoryContractDeploymentCreateModal: FC<RepositoryContractDeploymentCr
       isLoading={isLoading}
       className='md:max-w-lg' // @todo fix this
     >
-      <input onChange={(e) => setTo(e.target.value)} placeholder='0xA0Cf…251e' value={to} />
-      <input onChange={(e) => setAmount(e.target.value)} placeholder='0.05' value={amount} />
-      <button disabled={isLoading || !sendTransaction || !to || !amount}>{isLoading ? 'Sending...' : 'Send'}</button>
-      Successfully deploy contract {contractAddress}
-      {isSuccess && (
+      {/* <button disabled={isLoading || !sendTransaction || !to || !amount}>{isLoading ? 'Sending...' : 'Send'}</button> */}
+      {/* Successfully deploy contract {contractAddress} */}
+      {/* {isSuccess && (
         <div>
           <div>
             <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
           </div>
         </div>
-      )}
+      )} */}
       {/** Write form here.... contract namee, total supply, mint info..... */}
     </ModalComponent>
   )

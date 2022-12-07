@@ -1,3 +1,4 @@
+import RepositoryContractDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryContractDeploymentCreateModal'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react/solid'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
@@ -9,7 +10,7 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -40,6 +41,7 @@ const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { all: organisations } = useQueryOrganisationFindAll()
   const { collectionName, mainRepositoryHref } = useRepositoryRoute()
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!repository) return
@@ -85,12 +87,22 @@ const Page = () => {
         </Layout.Header>
         <Layout.Body border='lower'>
           <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
-            <button className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'>
+            <button
+              onClick={() => setIsCreateDialogOpen(true)}
+              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            >
               Deploy Contract
             </button>
           </Header>
           <Body>
             <ContractDeploymentPhasesView deployment={contractDeployment} />
+            {contractDeployment && (
+              <RepositoryContractDeploymentCreateModal
+                visible={isCreateDialogOpen}
+                onClose={() => setIsCreateDialogOpen(false)}
+                contractDeployment={contractDeployment}
+              />
+            )}
           </Body>
         </Layout.Body>
       </Layout>
