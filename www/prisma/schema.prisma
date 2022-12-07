@@ -119,8 +119,9 @@ model RepositoryContractDeployment {
 
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
-
     // @@unique([repositoryDeploymentId, address])
+
+    @@unique([repositoryId, repositoryDeploymentId], name: "repositoryContractDeploymentIdentifier")
 }
 
 enum RepositoryDeploymentStatus {

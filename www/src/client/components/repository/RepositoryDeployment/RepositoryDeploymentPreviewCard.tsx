@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
-import RepositoryContractDeploymentDeleteModal from './RepositoryContractDeploymentDeleteModal'
+import RepositoryContractDeploymentCreateModal from './RepositoryContractDeploymentDeleteModal'
 
 export const RepositoryDeploymentPreviewCard = ({
   deployment,
@@ -123,7 +123,7 @@ export const RepositoryDeploymentPreviewCard = ({
         </div>
       </div>
       <RepositoryDeploymentDeleteModal visible={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} deployment={deployment} />
-      <RepositoryContractDeploymentDeleteModal
+      <RepositoryContractDeploymentCreateModal
         visible={isCreateContractDeploymentDialogOpen}
         onClose={() => setIsCreateContractDeploymentDialogOpen(false)}
         deployment={deployment}

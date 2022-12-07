@@ -1,15 +1,20 @@
-import { useMutateRepositoryDeploymentDelete } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentDelete'
+import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentCreate'
 import { RepositoryDeployment } from '@prisma/client'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
-export interface RepositoryDeploymentDeleteProps extends FormModalProps {
+export interface RepositoryContractDeploymentCreateProps extends FormModalProps {
   deployment: RepositoryDeployment
 }
 
-const RepositoryContractDeploymentDeleteModal: FC<RepositoryDeploymentDeleteProps> = ({ visible, onClose, onSuccess, deployment }) => {
-  const { mutate, isLoading } = useMutateRepositoryDeploymentDelete()
+const RepositoryContractDeploymentCreateModal: FC<RepositoryContractDeploymentCreateProps> = ({
+  visible,
+  onClose,
+  onSuccess,
+  deployment,
+}) => {
+  const { mutate, isLoading } = useMutateRepositoryCreateDeploymentCreate()
 
   const handleClose = () => {
     onClose()
@@ -32,8 +37,10 @@ const RepositoryContractDeploymentDeleteModal: FC<RepositoryDeploymentDeleteProp
       description={`You are creating a contract based on this deployment.`}
       isLoading={isLoading}
       className='md:max-w-lg' // @todo fix this
-    />
+    >
+      {/** Write form here.... contract namee, total supply, mint info..... */}
+    </ModalComponent>
   )
 }
 
-export default RepositoryContractDeploymentDeleteModal
+export default RepositoryContractDeploymentCreateModal
