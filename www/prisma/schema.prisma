@@ -102,9 +102,11 @@ model RepositoryDeployment {
     repositoryId          String // used as seed
     repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
-    user                         User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId                       String
-    RepositoryContractDeployment RepositoryContractDeployment[]
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    // @todo fix this shoudl just be one
+    contractDeployment RepositoryContractDeployment?
 
     @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
 }
@@ -114,14 +116,14 @@ model RepositoryContractDeployment {
     id      String @id @default(cuid())
     address String @db.VarChar(42)
 
-    repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
-    repositoryDeploymentId String?
-
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
-    // @@unique([repositoryDeploymentId, address])
 
-    @@unique([repositoryId, repositoryDeploymentId], name: "repositoryContractDeploymentIdentifier")
+    repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
+    repositoryDeploymentId String?               @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum RepositoryDeploymentStatus {
