@@ -206,4 +206,46 @@ export const repositoryRouter = router({
 
       return deployment
     }),
+  createContractDeployment: protectedProcedure
+    .input(
+      z.object({
+        deploymentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { deploymentId } = input
+
+      const deployment = await ctx.prisma.repositoryDeployment.findFirst({
+        where: { id: deploymentId },
+      })
+
+      if (!deployment) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      // @todo remove mock data
+      await ctx.prisma.repositoryContractDeployment.create({
+        data: {
+          repositoryDeploymentId: deploymentId,
+          address: '0x123',
+          repositoryId: deployment.repositoryId,
+        },
+      })
+
+      // try {
+      //   await createIngestInstance().send({
+      //     name: 'repository-deployment/contract.create',
+      //     data: {
+      //       repositoryId: deployment,
+      //     },
+      //   })
+      // } catch (e) {
+      //   console.error(e)
+      //   await ctx.prisma.repositoryDeployment.update({
+      //     where: { id: deployment.id },
+      //     data: { status: RepositoryDeploymentStatus.FAILED },
+      //   })
+      //   throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
+      // }
+    }),
 })
