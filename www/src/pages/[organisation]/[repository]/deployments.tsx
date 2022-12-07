@@ -1,11 +1,13 @@
-import RepositoryDeploymentBucketCreateModal from '@components/repository/Deployment/RepositoryDeploymentBucketCreateModal'
-import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
+import RepositoryDeploymentBucketCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentBucketCreateModal'
+import RepositoryDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentCreateModal'
+import { RepositoryDeploymentPreviewCard } from '@components/repository/RepositoryDeployment/RepositoryDeploymentPreviewCard'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -14,8 +16,6 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { CollectionNavigationEnum } from 'src/shared/enums'
-import { RepositoryDeploymentPreviewCard } from '../../../client/components/repository/Deployment/RepositoryDeploymentPreviewCard'
-import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -38,8 +38,7 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { all: deployments, isLoading: isLoadingOrganisations } = useQueryRepositoryDeployments()
   const { all: organisations } = useQueryOrganisationFindAll()
-  const { mainRepositoryHref } = useRepositoryRoute()
-  const { collectionName } = useRepositoryRoute()
+  const { collectionName, mainRepositoryHref } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 

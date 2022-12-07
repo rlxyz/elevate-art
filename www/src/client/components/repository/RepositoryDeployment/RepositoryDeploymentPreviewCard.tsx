@@ -2,8 +2,8 @@ import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
-import RepositoryDeploymentDeleteModal from '@components/repository/Deployment/RepositoryDeploymentDeleteModal'
-import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
+import RepositoryDeploymentDeleteModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentDeleteModal'
+import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
 import { RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
+import RepositoryContractDeploymentDeleteModal from './RepositoryContractDeploymentDeleteModal'
 
 export const RepositoryDeploymentPreviewCard = ({
   deployment,
@@ -23,6 +24,7 @@ export const RepositoryDeploymentPreviewCard = ({
 }) => {
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isCreateContractDeploymentDialogOpen, setIsCreateContractDeploymentDialogOpen] = useState(false)
 
   const onClipboardCopy = () => {
     navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
@@ -85,6 +87,10 @@ export const RepositoryDeploymentPreviewCard = ({
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
+              <Menu.Item as='button' type='button' onClick={() => setIsCreateContractDeploymentDialogOpen(true)}>
+                <CubeIcon className='w-3 h-3' />
+                <span>Deploy Contract</span>
+              </Menu.Item>
               {/* <Menu.Item as='button' type='button'>
               <CubeIcon className='w-3 h-3' />
               <span>Promote to Production</span>
@@ -117,6 +123,11 @@ export const RepositoryDeploymentPreviewCard = ({
         </div>
       </div>
       <RepositoryDeploymentDeleteModal visible={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} deployment={deployment} />
+      <RepositoryContractDeploymentDeleteModal
+        visible={isCreateContractDeploymentDialogOpen}
+        onClose={() => setIsCreateContractDeploymentDialogOpen(false)}
+        deployment={deployment}
+      />
     </div>
   )
 }

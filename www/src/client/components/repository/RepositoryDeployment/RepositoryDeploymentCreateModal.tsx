@@ -1,4 +1,4 @@
-import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repository/useMutateRepositoryDeploymentCreate'
+import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentCreate'
 import { Collection, Repository } from '@prisma/client'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
