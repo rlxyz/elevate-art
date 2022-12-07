@@ -61,6 +61,7 @@
     "siwe": "^1.1.6",
     "skia-canvas": "^1.0.1",
     "superjson": "^1.9.1",
+    "use-debounce": "^9.0.2",
     "wagmi": "^0.8.7",
     "zod": "^3.18.0",
     "zustand": "^4.1.1"

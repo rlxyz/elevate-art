@@ -82,6 +82,20 @@ export const repositoryRouter = router({
         include: { contractDeployment: true },
       })
     }),
+  findContractDeploymentByName: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        name: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryId, name } = input
+      return await ctx.prisma.repositoryContractDeployment.findFirst({
+        where: { repositoryId: repositoryId, repositoryDeployment: { name } },
+        orderBy: { createdAt: 'desc' },
+      })
+    }),
   createBucket: protectedProcedure
     .input(
       z.object({

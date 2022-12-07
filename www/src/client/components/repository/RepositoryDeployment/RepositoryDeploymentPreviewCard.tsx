@@ -5,6 +5,7 @@ import Menu from '@components/layout/menu'
 import RepositoryDeploymentDeleteModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentDeleteModal'
 import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { RepositoryContractDeployment, RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { useState } from 'react'
@@ -25,6 +26,7 @@ export const RepositoryDeploymentPreviewCard = ({
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isCreateContractDeploymentDialogOpen, setIsCreateContractDeploymentDialogOpen] = useState(false)
+  const { mainRepositoryHref } = useRepositoryRoute()
 
   const onClipboardCopy = () => {
     navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
@@ -32,16 +34,15 @@ export const RepositoryDeploymentPreviewCard = ({
   }
 
   return (
-    <div key={deployment.id} className='p-4 grid grid-cols-4'>
+    <div key={deployment.id} className='grid grid-cols-4'>
       <div className='text-xs flex flex-row items-center space-x-2'>
         <div>
           <div className='flex flex-col justify-center'>
             {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
               <NextLinkComponent
-                rel='noreferrer nofollow'
-                target='_blank'
                 underline
-                href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                // href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                href={`/${mainRepositoryHref}/deployments/${deployment.name}`}
                 className='font-semibold w-fit'
               >
                 {deployment.name}
@@ -56,7 +57,7 @@ export const RepositoryDeploymentPreviewCard = ({
           <div>
             <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
               <NextLinkComponent href='/'>
-                <span className='text-darkGrey mr-1 text-[0.6rem]'>{'Deployed'}</span>
+                <span className='text-darkGrey mr-1 text-[0.6rem]'>Deployed</span>
               </NextLinkComponent>
             </span>
           </div>

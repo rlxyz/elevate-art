@@ -112,8 +112,9 @@ model RepositoryDeployment {
 
 // If this model has a relationship with RepositoryArtDeploymnent, and someone tries to delete him, enforce that it CANNOT happen
 model RepositoryContractDeployment {
-    id      String @id @default(cuid())
-    address String @db.VarChar(42)
+    id      String                             @id @default(cuid())
+    address String                             @db.VarChar(42)
+    status  RepositoryContractDeploymentStatus @default(PENDING)
 
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
@@ -123,6 +124,13 @@ model RepositoryContractDeployment {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+enum RepositoryContractDeploymentStatus {
+    PENDING
+    VERIFYING
+    DEPLOYED
+    FAILED
 }
 
 enum RepositoryDeploymentStatus {

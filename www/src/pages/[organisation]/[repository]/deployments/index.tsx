@@ -140,7 +140,7 @@ const Page = () => {
                 <div
                   key={deployment.id}
                   className={clsx(
-                    'border-l border-r border-mediumGrey border-b',
+                    'border-l border-r border-mediumGrey border-b p-4',
                     index === 0 && 'rounded-tl-[5px] rounded-tr-[5px] border-t',
                     index === deployments.length - 1 && 'rounded-bl-[5px] rounded-br-[5px]'
                   )}
