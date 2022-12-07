@@ -2,6 +2,7 @@ import { ContractFactory, Signer } from 'ethers'
 import { useState } from 'react'
 import { useSigner } from 'wagmi'
 import contract from '../../utils/RhapsodyCreator.json'
+import { useNotification } from './useNotification'
 
 interface ERC721ContractInput {
   name: string
@@ -15,6 +16,7 @@ interface ERC721ContractInput {
 export const useDeployContract = () => {
   const { data: signer } = useSigner()
   const [address, setAddress] = useState('')
+  const { notifySuccess } = useNotification()
 
   const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
 
@@ -23,6 +25,7 @@ export const useDeployContract = () => {
     const tx = await factory.deploy(...args)
     setAddress(tx.address)
     await tx.deployed()
+    notifySuccess(`Contract deployed at ${tx.address}. We will now verify the contract.`)
   }
 
   return { deploy, address }
