@@ -12,7 +12,7 @@ import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
-import RepositoryContractDeploymentCreateModal from './RepositoryContractDeploymentDeleteModal'
+import RepositoryContractDeploymentCreateModal from './RepositoryContractDeploymentCreateModal'
 
 export const RepositoryDeploymentPreviewCard = ({
   deployment,

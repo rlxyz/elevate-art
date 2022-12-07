@@ -4,7 +4,7 @@ import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollec
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments copy'
+import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
