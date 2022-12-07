@@ -1,4 +1,4 @@
-import { useMutateRepositoryDeploymentDelete } from '@hooks/trpc/repository/useMutateRepositoryDeploymentDelete'
+import { useMutateRepositoryDeploymentDelete } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentDelete'
 import { RepositoryDeployment } from '@prisma/client'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
