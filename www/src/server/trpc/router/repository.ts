@@ -79,9 +79,7 @@ export const repositoryRouter = router({
       return await ctx.prisma.repositoryDeployment.findMany({
         where: { repositoryId: repositoryId },
         orderBy: { createdAt: 'desc' },
-        include: {
-          contracts: true,
-        },
+        include: { contractDeployment: true },
       })
     }),
   createBucket: protectedProcedure

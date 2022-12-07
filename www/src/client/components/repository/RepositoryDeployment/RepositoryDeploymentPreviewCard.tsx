@@ -5,7 +5,7 @@ import Menu from '@components/layout/menu'
 import RepositoryDeploymentDeleteModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentDeleteModal'
 import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
-import { RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
+import { RepositoryContractDeployment, RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
@@ -18,7 +18,7 @@ export const RepositoryDeploymentPreviewCard = ({
   organisationName,
   repositoryName,
 }: {
-  deployment: RepositoryDeployment
+  deployment: RepositoryDeployment & { contractDeployment: RepositoryContractDeployment | null }
   organisationName: string
   repositoryName: string
 }) => {
@@ -33,22 +33,36 @@ export const RepositoryDeploymentPreviewCard = ({
 
   return (
     <div key={deployment.id} className='p-4 grid grid-cols-4'>
-      <div className='flex flex-col justify-center  text-xs'>
-        {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
-          <NextLinkComponent
-            rel='noreferrer nofollow'
-            target='_blank'
-            underline
-            href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-            className='font-semibold w-fit'
-          >
-            {deployment.name}
-          </NextLinkComponent>
-        ) : (
-          <span>{deployment.name}</span>
+      <div className='text-xs flex flex-row items-center space-x-2'>
+        <div>
+          <div className='flex flex-col justify-center'>
+            {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
+              <NextLinkComponent
+                rel='noreferrer nofollow'
+                target='_blank'
+                underline
+                href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                className='font-semibold w-fit'
+              >
+                {deployment.name}
+              </NextLinkComponent>
+            ) : (
+              <span>{deployment.name}</span>
+            )}
+          </div>
+          <span>{toPascalCaseWithSpace(deployment.type)}</span>
+        </div>
+        {deployment.contractDeployment && (
+          <div>
+            <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
+              <NextLinkComponent href='/'>
+                <span className='text-darkGrey mr-1 text-[0.6rem]'>{'Deployed'}</span>
+              </NextLinkComponent>
+            </span>
+          </div>
         )}
-        <span>{toPascalCaseWithSpace(deployment.type)}</span>
       </div>
+
       <div>
         <span className='text-xs flex flex-col h-full space-x-2'>
           <div className='flex space-x-3'>

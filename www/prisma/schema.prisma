@@ -105,7 +105,6 @@ model RepositoryDeployment {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
-    // @todo fix this shoudl just be one
     contractDeployment RepositoryContractDeployment?
 
     @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
