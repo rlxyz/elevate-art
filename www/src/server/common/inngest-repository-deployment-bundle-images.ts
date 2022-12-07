@@ -69,14 +69,14 @@ export default createFunction('repository-deployment/bundle-images', 'repository
           traitElements.map(async ({ id: t }) => {
             const response = await getTraitElementImage({ r: repositoryId, l, t })
             if (response.failed) throw new Error("Couldn't get image")
-            const blob = response.getValue()
-            if (!blob) throw new Error("Couldn't get blob")
-            console.log('blob found', repositoryId, deploymentId, l, t)
+            const buffer = response.getValue()
+            if (!buffer) throw new Error("Couldn't get buffer")
+            console.log('buffer found', repositoryId, deploymentId, l, t)
             try {
               return await storage
                 .bucket(`elevate-${repositoryId}-assets`)
                 .file(`deployments/${deploymentId}/layers/${l}/${t}.png`)
-                .save(Buffer.from(await blob.arrayBuffer()), { contentType: 'image/png' })
+                .save(Buffer.from(buffer), { contentType: 'image/png' })
             } catch (e) {
               console.error(e)
               throw new Error(`Couldn't save image: ${e}`)
