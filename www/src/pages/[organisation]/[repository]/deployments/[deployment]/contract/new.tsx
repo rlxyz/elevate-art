@@ -7,10 +7,12 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
 import type { MotionValue } from 'framer-motion'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
-import React from 'react'
+import React, { forwardRef } from 'react'
+import type { FieldError } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { capitalize } from 'src/client/utils/format'
 import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 import create from 'zustand'
@@ -19,8 +21,10 @@ const ContractForm = ({ children }: { children: React.ReactElement[] | React.Rea
   const childrens = React.Children.toArray(children)
   return (
     <div className='w-full flex flex-col items-center justify-center space-y-9'>
-      {childrens.map((child) => (
-        <div className='w-full'>{child}</div>
+      {childrens.map((child, index) => (
+        <div key={index} className='w-full'>
+          {child}
+        </div>
       ))}
     </div>
   )
@@ -38,47 +42,90 @@ const ContractFormHeader = ({ title, description }: { title: string; description
 const ContractFormBody = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   return (
     <form>
-      <div className='border w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+      <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
     </form>
   )
 }
 
-const ContractFormBodyInput = ({ className, label }: { className: string; label: string }) => {
-  return (
-    <>
-      <div className={clsx('space-y-1 w-full', className)}>
-        <label className='text-xs font-semibold'>{label}</label>
-        <input
-          className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-          type='string'
-          // {...register('name', {
-          //   required: true,
-          //   maxLength: 20,
-          //   minLength: 3,
-          //   pattern: /^[-/a-z0-9 ]+$/gi,
-          // })}
-        />
-        <p className='text-[0.6rem] text-darkGrey'>Your contract name on websites like Etherscan</p>
-        {/* {errors.name && (
-          <span className='text-xs text-redError'>
-            {errors.name.type === 'required'
-              ? 'This field is required'
-              : errors.name.type === 'pattern'
-              ? 'We only accept - and / for special characters'
-              : errors.name.type === 'validate'
-              ? 'A layer with this name already exists'
-              : 'Must be between 3 and 20 characters long'}
-          </span>
-        )} */}
-      </div>
-    </>
-  )
-}
+const ContractFormBodyInput = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
+>(
+  ({
+    className,
+    label,
+    description,
+    error,
+    ...props
+  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+    return (
+      <>
+        <div className={clsx('space-y-1 w-full', className)}>
+          <label className='text-xs font-semibold'>{label}</label>
+          <input className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')} type='string' {...props} />
+          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          {error && (
+            <span className='text-xs text-redError'>
+              {error.type === 'required'
+                ? 'This field is required'
+                : error.type === 'pattern'
+                ? 'We only accept - and / for special characters'
+                : error.type === 'validate'
+                ? 'A layer with this name already exists'
+                : 'Must be between 3 and 20 characters long'}
+            </span>
+          )}
+        </div>
+      </>
+    )
+  }
+)
+
+const ContractFormBodySelectInput = forwardRef<
+  HTMLSelectElement,
+  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
+>(
+  ({
+    className,
+    label,
+    description,
+    error,
+    children,
+    ...props
+  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+    return (
+      <>
+        <div className={clsx('space-y-1 w-full', className)}>
+          <label className='text-xs font-semibold'>{label}</label>
+          <select className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')} {...props}>
+            {children}
+          </select>
+          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          {error && (
+            <span className='text-xs text-redError'>
+              {error.type === 'required'
+                ? 'This field is required'
+                : error.type === 'pattern'
+                ? 'We only accept - and / for special characters'
+                : error.type === 'validate'
+                ? 'A layer with this name already exists'
+                : 'Must be between 3 and 20 characters long'}
+            </span>
+          )}
+        </div>
+      </>
+    )
+  }
+)
+
+ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
+ContractFormBodyInput.displayName = 'ContractFormBodyInput'
 
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractForm.Body
 ContractFormBody.Input = ContractFormBodyInput
+ContractFormBody.Select = ContractFormBodySelectInput
 
 type MintDetailsForm = {
   collectionSize: number // inferred from deployment
@@ -96,7 +143,7 @@ const MintDetailsForm = () => {
       contractName: '',
       contractSymbol: '',
       mintType: 'off-chain',
-      blockchain: 'ethereum',
+      blockchain: 'goerli',
     },
   })
 
@@ -130,7 +177,7 @@ type SmartContactDetailsForm = {
   contractName: string
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
-  blockchain: 'ethereum'
+  blockchain: 'goerli'
 }
 
 const SmartContactDetailsForm = () => {
@@ -156,59 +203,44 @@ const SmartContactDetailsForm = () => {
           description='These are important terms for your contract that you need to finalise before continuing!'
         />
         <ContractForm.Body>
-          <ContractForm.Body.Input label={'Contract Name'} className='col-span-4'></ContractForm.Body.Input>
-          <div className='col-span-4 space-y-1 w-full'>
-            <label className='text-xs font-semibold'>Contract Name</label>
-            <input
-              className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-              type='string'
-              {...register('contractName', {
-                required: true,
-                maxLength: 20,
-                minLength: 3,
-                pattern: /^[-/a-z0-9 ]+$/gi,
-              })}
-            />
-            <p className='text-[0.6rem] text-darkGrey'>Your contract name on websites like Etherscan</p>
-            {errors.contractName && (
-              <span className='text-xs text-redError'>
-                {errors.contractName.type === 'required'
-                  ? 'This field is required'
-                  : errors.contractName.type === 'pattern'
-                  ? 'We only accept - and / for special characters'
-                  : errors.contractName.type === 'validate'
-                  ? 'A layer with this name already exists'
-                  : 'Must be between 3 and 20 characters long'}
-              </span>
-            )}
-          </div>
+          <ContractForm.Body.Input
+            {...register('contractName', {
+              required: true,
+              maxLength: 20,
+              minLength: 3,
+              pattern: /^[-/a-z0-9 ]+$/gi,
+            })}
+            label={'Contract Name'}
+            description={'Your contract name on websites like Etherscan'}
+            className='col-span-4'
+            error={errors.contractName}
+          />
+
+          <ContractForm.Body.Input
+            {...register('contractSymbol', {
+              required: true,
+              maxLength: 6,
+              minLength: 3,
+              pattern: /^[-/a-z0-9 ]+$/gi,
+            })}
+            label={'Symbol'}
+            description={'The name of the token on Etherscan'}
+            className='col-span-2'
+            error={errors.contractName}
+          />
+
+          <ContractForm.Body.Select
+            {...register('blockchain', { required: true })}
+            label={'Blockchain'}
+            description={'Select a deployment blockchain'}
+            className='col-span-6'
+            error={errors.contractName}
+          >
+            <option value={'goerli'}>{capitalize('goerli')}</option>
+          </ContractForm.Body.Select>
 
           {/* <div className='col-span-2 space-y-1 w-full'>
-            <label className='text-xs font-semibold'>Token Symbol</label>
-            <input
-              className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-              type='string'
-              {...register('symbol', {
-                required: true,
-                maxLength: 6,
-                minLength: 3,
-                pattern: /^[-/a-z]+$/gi,
-                // validate: (value) => !layers.map((x) => x.name).includes(value),
-              })}
-            />
-            <p className='text-[0.6rem] text-darkGrey'>The name of the token on Etherscan</p>
-            {errors.name && (
-              <span className='text-xs text-redError'>
-                {errors.name.type === 'required'
-                  ? 'This field is required'
-                  : errors.name.type === 'pattern'
-                  ? 'We only accept - and / for special characters'
-                  : errors.name.type === 'validate'
-                  ? 'A layer with this name already exists'
-                  : 'Must be between 3 and 20 characters long'}
-              </span>
-            )}
-          </div>
+
 
           <div className='col-span-6 space-y-1 w-full'>
             <label className='text-xs font-semibold'>Mint Type</label>
@@ -243,7 +275,7 @@ const SmartContactDetailsForm = () => {
             <select {...register('role', { required: true })} className='text-xs block w-full rounded-[5px] border border-mediumGrey'>
               <option value={'ethereum'}>{capitalize('Ethereum')}</option>
             </select>
-            <p className='text-[0.6rem] text-darkGrey'>Select a deployment blockchain</p>
+            <p className='text-[0.6rem] text-darkGrey'></p>
           </div> */}
         </ContractForm.Body>
       </ContractForm>
