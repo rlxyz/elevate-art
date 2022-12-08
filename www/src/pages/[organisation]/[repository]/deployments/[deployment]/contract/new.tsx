@@ -191,7 +191,7 @@ const SmartContactDetailsForm = () => {
       contractName: '',
       contractSymbol: '',
       mintType: 'off-chain',
-      blockchain: 'ethereum',
+      blockchain: 'goerli',
     },
   })
 
