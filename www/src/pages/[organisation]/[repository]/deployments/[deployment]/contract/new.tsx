@@ -7,6 +7,7 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
 import type { MotionValue } from 'framer-motion'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -15,9 +16,56 @@ import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/e
 import { z } from 'zod'
 import create from 'zustand'
 
-const MintDetailsForm = () => {
-  return <>Mint Details Form</>
+const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
+  const childrens = React.Children.toArray(children)
+  return (
+    <div>
+      {childrens.map((child) => (
+        <>{child}</>
+      ))}
+    </div>
+  )
 }
+
+const ContractFormHeader = ({ title, description }: { title: string; description: string }) => {
+  return (
+    <div className='flex flex-col items-center'>
+      <h1 className='font-semibold'>{title}</h1>
+      <p className='text-xs'>{description}</p>
+    </div>
+  )
+}
+
+const ContractFormBody = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {}
+
+ContractForm.Header = ContractFormHeader
+
+const MintDetailsForm = () => {
+  return (
+    <>
+      <ContractForm>
+        <ContractForm.Header
+          title='Mint Details'
+          description='These are important terms for your contract that you need to finalise before continuing!'
+        />
+      </ContractForm>
+    </>
+  )
+}
+
+const ContractCompletionForm = () => {
+  return (
+    <>
+      <ContractForm>
+        <ContractForm.Header
+          title='Deploy Contract'
+          description='Seems like everything is in check. Click the button below to deploy your contract!'
+        />
+      </ContractForm>
+    </>
+  )
+}
+
 const SmartContactDetailsForm = () => {
   const {
     register,
@@ -32,10 +80,12 @@ const SmartContactDetailsForm = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center'>
-        <h1 className='font-semibold'>Smart Contract Details</h1>
-        <p className='text-xs'>These are important terms for your contract that you need to finalise before continuing!</p>
-      </div>
+      <ContractForm>
+        <ContractForm.Header
+          title='Smart Contract Details'
+          description='These are important terms for your contract that you need to finalise before continuing!'
+        />
+      </ContractForm>
       <div className='flex flex-col h-96 w-1/2'>
         <div className='grid grid-cols-6 gap-x-3 gap-y-3'>
           <div className='col-span-4 space-y-1 w-full'>
@@ -212,6 +262,13 @@ const ContractCreationSegments: ContractCreationSegmentProps[] = [
     title: 'Mint Details',
     description: 'Enter the details of your mint',
     component: MintDetailsForm,
+    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
+  },
+  {
+    id: 'contract-completion',
+    title: 'ContractCompletionForm Details',
+    description: 'Enter the details of your mint',
+    component: ContractCompletionForm,
     icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
   },
 ]
