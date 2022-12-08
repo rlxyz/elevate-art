@@ -1,9 +1,9 @@
 import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentCreate'
-import { Collection, Repository } from '@prisma/client'
-import { FC } from 'react'
+import type { Collection, Repository } from '@prisma/client'
+import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
+import type { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
 export interface RepositoryDeploymentCreateProps extends FormModalProps {
   repository: Repository

@@ -11,35 +11,19 @@ import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { CollectionNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
-import type { NextRouter } from 'next/router'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 
 const Page = () => {
-  const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-      setCollectionId: state.setCollectionId,
-      reset: state.reset,
-    }
-  })
-
-  useEffect(() => {
-    reset()
-  }, [])
-
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll()
+  const { all: collections } = useQueryCollectionFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
-  const { all: deployments, isLoading: isLoadingOrganisations } = useQueryRepositoryDeployments()
+  const { all: deployments } = useQueryRepositoryDeployments()
   const { all: organisations } = useQueryOrganisationFindAll()
-  const { collectionName, mainRepositoryHref } = useRepositoryRoute()
+  const { organisationName, repositoryName, mainRepositoryHref } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 
@@ -47,16 +31,6 @@ const Page = () => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
-
-  useEffect(() => {
-    if (!collections) return
-    if (!collections.length) return
-    const collection = collections.find((collection) => collection.name === collectionName)
-    if (!collection) return
-    setCollectionId(collection.id)
-    // if (tokens.length === 0) return
-    mutate({ collection })
-  }, [isLoadingCollection])
 
   return (
     <OrganisationAuthLayout>

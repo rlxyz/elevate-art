@@ -2,19 +2,20 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { CubeIcon, MoonIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { AnimatePresence, useMotionValue } from 'framer-motion'
+import type { FC } from 'react'
 import React from 'react'
 import { z } from 'zod'
+import { useContractCreationStore } from '../../../hooks/utils/useContractCreationStore'
 import { CarouselSegment } from './CarouselSegment'
 import { ContactDetailsForm } from './ContactCreationForms/ContactDetailsForm'
 import { ContractCompletionForm } from './ContactCreationForms/ContractCompletionForm'
 import { MintDetailsForm } from './ContactCreationForms/MintDetailsForm'
-import { useContractCreationStore } from './useContractCreationStore.1'
 
 interface ContractCreationSegmentProps {
   id: string
   title: string
   description: string
-  component: () => React.ReactElement
+  component: FC<{ title: string; description: string }>
   icon: React.ReactNode
 }
 
@@ -29,7 +30,7 @@ export type ContractCreationType = z.infer<typeof ContractCreationEnum>
 export const ContractCreationSegments: ContractCreationSegmentProps[] = [
   {
     id: 'contract-base-details',
-    title: 'Smart Contract Details',
+    title: 'Create Contract',
     description: 'Enter the details of your smart contract',
     component: ContactDetailsForm,
     icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
@@ -43,14 +44,15 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
   },
   {
     id: 'contract-completion',
-    title: 'ContractCompletionForm Details',
+    title: 'Deploy Contract',
     description: 'Enter the details of your mint',
     component: ContractCompletionForm,
     icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
   },
 ]
+
 /** @todo modularise */
-export const ContractCreationHelperAnimation = () => {
+export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ className }) => {
   const x = useMotionValue(0.5)
   const y = useMotionValue(0.75)
   const z = useMotionValue(1)
@@ -90,7 +92,7 @@ export const ContractCreationHelperAnimation = () => {
   }
 
   return (
-    <div className='flex h-full flex-col items-center w-full space-y-9'>
+    <div className={clsx('flex h-full flex-col items-center w-full space-y-9', className)}>
       {/* <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
               <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
               <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />

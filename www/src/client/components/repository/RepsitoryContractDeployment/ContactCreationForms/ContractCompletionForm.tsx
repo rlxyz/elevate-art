@@ -1,13 +1,11 @@
+import type { FC } from 'react'
 import { ContractForm } from '../ContractForm'
 
-export const ContractCompletionForm = () => {
+export const ContractCompletionForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   return (
     <>
       <ContractForm>
-        <ContractForm.Header
-          title='Deploy Contract'
-          description='Seems like everything is in check. Click the button below to deploy your contract!'
-        />
+        <ContractForm.Header title={title} description={description} />
       </ContractForm>
     </>
   )

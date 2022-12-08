@@ -1,3 +1,4 @@
+import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { ContractForm } from '../ContractForm'
 
@@ -6,7 +7,7 @@ export type MintDetailsForm = {
   pricePerToken: number
 }
 
-export const MintDetailsForm = () => {
+export const MintDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   const {
     register,
     handleSubmit,
@@ -22,10 +23,7 @@ export const MintDetailsForm = () => {
   return (
     <>
       <ContractForm>
-        <ContractForm.Header
-          title='Mint Details'
-          description='These are important terms for your contract that you need to finalise before continuing!'
-        />
+        <ContractForm.Header title={title} description={description} />
         <ContractForm.Body>
           <ContractForm.Body.Input
             {...register('collectionSize', {

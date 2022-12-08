@@ -5,7 +5,7 @@ import type { FieldError } from 'react-hook-form'
 export const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   const childrens = React.Children.toArray(children)
   return (
-    <div className='w-full flex flex-col items-center justify-center space-y-9'>
+    <div className='w-full flex flex-col space-y-9'>
       {childrens.map((child, index) => (
         <div key={index} className='w-full'>
           {child}
@@ -14,6 +14,7 @@ export const ContractForm = ({ children }: { children: React.ReactElement[] | Re
     </div>
   )
 }
+
 const ContractFormHeader = ({ title, description }: { title: string; description: string }) => {
   return (
     <div className='flex flex-col items-center'>
@@ -22,6 +23,7 @@ const ContractFormHeader = ({ title, description }: { title: string; description
     </div>
   )
 }
+
 const ContractFormBody = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   return (
     <form>
@@ -29,6 +31,7 @@ const ContractFormBody = ({ children }: { children: React.ReactElement[] | React
     </form>
   )
 }
+
 const ContractFormBodyInput = forwardRef<
   HTMLInputElement,
   React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>

@@ -1,3 +1,4 @@
+import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
 import { ContractForm } from '../ContractForm'
@@ -9,7 +10,7 @@ export type ContactDetailsForm = {
   blockchain: 'goerli'
 }
 
-export const ContactDetailsForm = () => {
+export const ContactDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   const {
     register,
     handleSubmit,
@@ -26,10 +27,7 @@ export const ContactDetailsForm = () => {
 
   return (
     <ContractForm>
-      <ContractForm.Header
-        title='Smart Contract Details'
-        description='These are important terms for your contract that you need to finalise before continuing!'
-      />
+      <ContractForm.Header title={title} description={description} />
       <ContractForm.Body>
         <ContractForm.Body.Input
           {...register('contractName', {
