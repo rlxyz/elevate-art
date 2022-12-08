@@ -11,7 +11,7 @@ const Hero = () => {
   return (
     <div className='flex justify-center items-center'>
       <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
-        <div className='relative w-[100%] md:w-full lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
+        <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
           <Image width={364} height={213} className='w-[60%] absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
           <Image
             width={423}
@@ -27,10 +27,13 @@ const Hero = () => {
             src='/images/squiggle.png'
             alt='squiggle-image'
           />
-          <Image width={629} height={786} className='' src='/images/journey.png' alt='journey-by-jacob' />
+          <Image width={629} height={786} priority src='/images/journey.png' alt='journey-by-jacob' />
           <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10' />
         </div>
-        <div className='xs:mt-5 sm:mt-0 flex flex-col justify-center xs:items-start sm:items-end'>
+        <div className='block md:hidden'>
+          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
+        </div>
+        <div className='hidden md:flex flex-col justify-center xs:items-start sm:items-end'>
           <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-right xs:mb-4 sm:mb-8'>
             elevate your
             <br /> nft collection
@@ -40,7 +43,7 @@ const Hero = () => {
           </p>
           <NextLink className='text-white w-fit' href={`/connect`}>
             <button className='rounded-[5px] bg-black px-4 py-1 flex items-center'>
-              <img className='w-6' src='./images/logo-white.png' />
+              <Image width={32} height={32} src='/images/logo-white.png' alt='logo-white' />
               <span className='text-xs'>Start Creating</span>
             </button>
           </NextLink>
