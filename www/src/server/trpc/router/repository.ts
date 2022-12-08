@@ -1,9 +1,10 @@
-import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { RepositoryDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
-import * as v from 'src/shared/compiler'
+import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -225,10 +226,11 @@ export const repositoryRouter = router({
     .input(
       z.object({
         deploymentId: z.string(),
+        address: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { deploymentId } = input
+      const { deploymentId, address } = input
 
       const deployment = await ctx.prisma.repositoryDeployment.findFirst({
         where: { id: deploymentId },
@@ -238,29 +240,30 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      // @todo remove mock data
       await ctx.prisma.repositoryContractDeployment.create({
         data: {
           repositoryDeploymentId: deploymentId,
-          address: '0x123',
+          address,
           repositoryId: deployment.repositoryId,
         },
       })
 
-      // try {
-      //   await createIngestInstance().send({
-      //     name: 'repository-deployment/contract.create',
-      //     data: {
-      //       repositoryId: deployment,
-      //     },
-      //   })
-      // } catch (e) {
-      //   console.error(e)
-      //   await ctx.prisma.repositoryDeployment.update({
-      //     where: { id: deployment.id },
-      //     data: { status: RepositoryDeploymentStatus.FAILED },
-      //   })
-      //   throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
-      // }
+      try {
+        await createIngestInstance().send({
+          name: 'repository-contract-deployment/contract.create',
+          data: {
+            repositoryId: deployment.repositoryId,
+            deploymentId: deployment.repositoryId,
+            contractAddress: address,
+          },
+        })
+      } catch (e) {
+        console.error(e)
+        await ctx.prisma.repositoryDeployment.update({
+          where: { id: deployment.id },
+          data: { status: RepositoryDeploymentStatus.FAILED },
+        })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
+      }
     }),
 })

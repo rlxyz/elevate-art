@@ -9,7 +9,6 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { GetServerSidePropsContext } from 'next'
-import { getSession } from 'next-auth/react'
 import type { FC, ReactNode } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -161,31 +160,32 @@ export default withOrganisationStore(Page)
  * If user is authenticated, redirect the user to his dashboard.
  */
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getSession(context)
   const { organisation, repository, deployment } = context.query as { [key: string]: string }
-  console.log('failed to find', organisation, repository, deployment)
+
   if (!organisation || !repository || !deployment) {
     return { props: {} }
   }
 
-  await prisma?.repositoryDeployment.findFirst({
+  const valid = await prisma?.repositoryContractDeployment.findFirst({
     where: {
-      name: deployment,
-      repository: {
-        name: repository as string,
+      repositoryDeployment: {
+        name: deployment,
+        repository: {
+          name: repository,
+          organisation: {
+            name: organisation,
+          },
+        },
       },
     },
   })
 
-  if (session?.user?.id) {
-    context.res.setHeader('Cache-Control', 's-maxage=86400')
-    return {
-      redirect: {
-        destination: `/${organisation}/${repository}/deployments/${deployment}/contract/new`,
-        permanant: false,
-      },
-    }
-  }
+  if (valid) return { props: {} }
 
-  return { props: {} }
+  return {
+    redirect: {
+      destination: `/${organisation}/${repository}/deployments/${deployment}/contract/new`,
+      permanant: false,
+    },
+  }
 }

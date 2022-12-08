@@ -1,11 +1,34 @@
+import { useDeployContract } from '@hooks/utils/useDeployContract'
 import type { FC } from 'react'
 import { ContractForm } from '../ContractForm'
 
 export const ContractCompletionForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+  const { deploy, address: contractAddress } = useDeployContract()
   return (
     <>
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
+        <button
+          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          type='submit'
+          onClick={async (e) => {
+            e.preventDefault()
+            try {
+              await deploy({
+                name: 'test-deployment-contract',
+                symbol: 'EA-TDC',
+                collectionSize: 10000,
+                maxPublicBatchPerAddress: 5,
+                amountForPromotion: 10,
+                mintPrice: '333000000000000000',
+              })
+            } catch (error) {
+              console.error('err', error)
+            }
+          }}
+        >
+          Deploy
+        </button>
       </ContractForm>
     </>
   )

@@ -1,5 +1,5 @@
 import { RepositoryDeploymentStatus } from '@prisma/client'
-import { createStepFunction } from 'inngest'
+import { createScheduledFunction, createStepFunction } from 'inngest'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.repositoryDeployment.update({
@@ -14,6 +14,10 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
     data: { status: RepositoryDeploymentStatus.DEPLOYED },
   })
 }
+
+const contractDeploymentSuccess = createScheduledFunction('Awaiting Successful Deployment', '*/30 * * * * *', async ({ event }) => {
+  console.log('running')
+})
 
 /**
  * This function is used in conjuction with the creation of a new RepositoryDeployment.
@@ -37,17 +41,19 @@ export default createStepFunction(
   async ({ event, tools }) => {
     const contractAddress = event.data.contractAddress as string
 
-    const response = tools.waitForEvent('repository-contract-deployment/contract.verify', {
-      match: 'data.contractAddress',
-      timeout: 1000 * 60 * 5,
-    })
+    console.log('initiated', contractAddress)
 
-    if (!response) {
-      // failed update
-      // await repositoryDeploymentFailedUpdate({ deploymentId })
-      // console.log("Deployment doesn't exist")
-      // throw new Error(`Deployment ${deploymentId} does not exist`)
-    }
+    // const response = tools.waitForEvent('repository-contract-deployment/contract.deployment', {
+    //   match: 'data.contractAddress',
+    //   timeout: '10 mins',
+    // })
+
+    // if (!response) {
+    // failed update
+    // await repositoryDeploymentFailedUpdate({ deploymentId })
+    // console.log("Deployment doesn't exist")
+    // throw new Error(`Deployment ${deploymentId} does not exist`)
+    // }
 
     return { success: true }
   }
