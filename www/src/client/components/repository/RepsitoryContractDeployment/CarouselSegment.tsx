@@ -13,6 +13,7 @@ type CarouselSegmentProps = {
   opacity: MotionValue<number>
   enabled: boolean
 }
+
 export const CarouselSegment = ({
   transformOutputRange,
   transformInputRange,

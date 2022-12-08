@@ -1,55 +1,12 @@
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
-import { CubeIcon, MoonIcon } from '@heroicons/react/outline'
+import { ChevronLeftIcon, ChevronRightIcon, CubeIcon, MoonIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { AnimatePresence, useMotionValue } from 'framer-motion'
 import type { FC } from 'react'
-import React from 'react'
-import { z } from 'zod'
 import { useContractCreationStore } from '../../../hooks/utils/useContractCreationStore'
+import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
-import { ContactDetailsForm } from './ContactCreationForms/ContactDetailsForm'
-import { ContractCompletionForm } from './ContactCreationForms/ContractCompletionForm'
-import { MintDetailsForm } from './ContactCreationForms/MintDetailsForm'
-
-interface ContractCreationSegmentProps {
-  id: string
-  title: string
-  description: string
-  component: FC<{ title: string; description: string }>
-  icon: React.ReactNode
-}
-
-export const ContractCreationEnum = z.nativeEnum(
-  Object.freeze({
-    ContractDetails: 'contract-detail',
-    MintDetails: 'mint-details',
-  })
-)
-
-export type ContractCreationType = z.infer<typeof ContractCreationEnum>
-export const ContractCreationSegments: ContractCreationSegmentProps[] = [
-  {
-    id: 'contract-base-details',
-    title: 'Create Contract',
-    description: 'Enter the details of your smart contract',
-    component: ContactDetailsForm,
-    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
-  },
-  {
-    id: 'mint-details',
-    title: 'Mint Details',
-    description: 'Enter the details of your mint',
-    component: MintDetailsForm,
-    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
-  },
-  {
-    id: 'contract-completion',
-    title: 'Deploy Contract',
-    description: 'Enter the details of your mint',
-    component: ContractCompletionForm,
-    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
-  },
-]
+import { GradientWithLine } from './GradientWithLine'
 
 /** @todo modularise */
 export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ className }) => {
@@ -134,45 +91,14 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
             <MoonIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
         </AnimatePresence>
-        <button
-          onClick={() => {
-            handleClick(currentSegment - 1)
-          }}
-          className={clsx(
-            'relative z-1 rounded-full border border-mediumGrey bg-white p-sm transition hover:bg-lightGray false text-darkGrey',
-            currentSegment === 0 && 'opacity-0 pointer-events-none'
-          )}
-        >
-          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='block shrink-0'>
-            <path
-              d='M14.25 6.75L9.70711 11.2929C9.31658 11.6834 9.31658 12.3166 9.70711 12.7071L14.25 17.25'
-              stroke='currentColor'
-              stroke-width='1.5'
-              stroke-linecap='round'
-              stroke-linejoin='round'
-            ></path>
-          </svg>
-        </button>
-        <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
-        <button
-          onClick={() => {
-            handleClick(currentSegment + 1)
-          }}
-          className={clsx(
-            'relative z-1 rounded-full border border-mediumGrey bg-white p-sm transition hover:bg-lightGray false text-darkGrey',
-            currentSegment === 2 && 'opacity-0 pointer-events-none'
-          )}
-        >
-          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='block shrink-0'>
-            <path
-              d='M9.75 17.25L14.2929 12.7071C14.6834 12.3166 14.6834 11.6834 14.2929 11.2929L9.75 6.75'
-              stroke='currentColor'
-              stroke-width='1.5'
-              stroke-linecap='round'
-              stroke-linejoin='round'
-            ></path>
-          </svg>
-        </button>
+
+        <ButtonWithSelector onClick={() => handleClick(currentSegment - 1)} enabled={currentSegment === 0}>
+          <ChevronLeftIcon className='w-3 h-3 text-darkGrey' />
+        </ButtonWithSelector>
+        <GradientWithLine />
+        <ButtonWithSelector onClick={() => handleClick(currentSegment + 1)} enabled={currentSegment === 2}>
+          <ChevronRightIcon className='w-3 h-3 text-darkGrey' />
+        </ButtonWithSelector>
       </div>
     </div>
   )

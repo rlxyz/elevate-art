@@ -65,17 +65,9 @@ const ContractFormBodyInput = forwardRef<
     )
   }
 )
-const ContractFormBodyRadioInput = forwardRef<
-  HTMLInputElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
->(
-  ({
-    className,
-    label,
-    description,
-    error,
-    ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+
+const ContractFormBodyRadioInput = forwardRef<HTMLInputElement, React.PropsWithChildren<{ className: string; label: string }>>(
+  ({ className, label, ...props }: React.PropsWithChildren<{ className: string; label: string }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
@@ -92,18 +84,18 @@ const ContractFormBodyRadioInput = forwardRef<
     )
   }
 )
+
 const ContractFormBodySelectInput = forwardRef<
   HTMLSelectElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
+  React.PropsWithChildren<{ className: string; label: string; description: string }>
 >(
   ({
     className,
     label,
     description,
-    error,
     children,
     ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+  }: React.PropsWithChildren<{ className: string; label: string; description: string }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
@@ -112,22 +104,12 @@ const ContractFormBodySelectInput = forwardRef<
             {children}
           </select>
           <p className='text-[0.6rem] text-darkGrey'>{description}</p>
-          {error && (
-            <span className='text-xs text-redError'>
-              {error.type === 'required'
-                ? 'This field is required'
-                : error.type === 'pattern'
-                ? 'We only accept - and / for special characters'
-                : error.type === 'validate'
-                ? 'A layer with this name already exists'
-                : 'Must be between 3 and 20 characters long'}
-            </span>
-          )}
         </div>
       </>
     )
   }
 )
+
 ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
 ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
