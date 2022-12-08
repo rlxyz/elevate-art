@@ -1,10 +1,11 @@
+import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import LayerElementFileTree from 'src/client/components/repository/LayerElementFileTree'
@@ -38,7 +39,7 @@ const Page = () => {
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
         >
-          <HeaderInternalPageRoutes
+          <AppRoutesNavbar
             links={[
               {
                 name: CollectionNavigationEnum.enum.Preview,

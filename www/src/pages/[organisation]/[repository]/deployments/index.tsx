@@ -1,3 +1,4 @@
+import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
 import RepositoryDeploymentBucketCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/repository/RepositoryDeployment/RepositoryDeploymentPreviewCard'
@@ -9,9 +10,9 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
@@ -66,7 +67,7 @@ const Page = () => {
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
         >
-          <HeaderInternalPageRoutes
+          <AppRoutesNavbar
             links={[
               {
                 name: CollectionNavigationEnum.enum.Preview,

@@ -1,3 +1,4 @@
+import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
 import RepositoryContractDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryContractDeploymentCreateModal'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
@@ -8,11 +9,12 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { RepositoryContractDeployment } from '@prisma/client'
+import type { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
-import { FC, ReactNode, useEffect, useState } from 'react'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
+import type { FC, ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
@@ -69,7 +71,7 @@ const Page = () => {
             { current: deploymentName, href: `/${organisationName}/${repositoryName}/deployments/${deploymentName}` },
           ]}
         >
-          <HeaderInternalPageRoutes
+          <AppRoutesNavbar
             links={[
               {
                 name: DeploymentNavigationEnum.enum.Overview,

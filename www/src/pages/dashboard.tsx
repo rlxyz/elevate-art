@@ -1,7 +1,7 @@
+import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
@@ -25,7 +25,7 @@ const Page: NextPage = () => {
             },
           ]}
         >
-          <HeaderInternalPageRoutes
+          <AppRoutesNavbar
             links={[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
