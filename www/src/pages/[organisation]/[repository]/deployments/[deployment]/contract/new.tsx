@@ -24,7 +24,7 @@ const Page = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: DeploymentNavigationEnum.enum.Overview,
+                name: DeploymentNavigationEnum.enum.Deployment,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
                 enabled: false,
                 loading: false,

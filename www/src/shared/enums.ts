@@ -65,7 +65,7 @@ export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
 
 export const DeploymentNavigationEnum = z.nativeEnum(
   Object.freeze({
-    Overview: 'overview',
+    Deployment: 'deployment',
     Contract: 'contract',
   })
 )
