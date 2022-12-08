@@ -1,6 +1,7 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import { RectangleGroup } from '@components/layout/icons/RectangleGroup'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon } from '@heroicons/react/outline'
+import { CubeIcon, MoonIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
@@ -152,16 +153,16 @@ type CarouselSegmentProps = {
   index: number
   onClick: (index: number) => void
   x: MotionValue<number>
+  opacity: MotionValue<number>
 }
 
-const CarouselSegment = ({ transformOutputRange, transformInputRange, children, index, onClick, x }: CarouselSegmentProps) => {
+const CarouselSegment = ({ transformOutputRange, transformInputRange, children, index, onClick, x, opacity }: CarouselSegmentProps) => {
   const left = useTransform(x, transformInputRange, transformOutputRange)
+  const opacitySegment = useTransform(opacity, [0, 1], [0, 1])
   return (
     <motion.button
-      style={{ left }}
-      onClick={() => {
-        onClick(index)
-      }}
+      style={{ left, opacity: opacitySegment }}
+      onClick={() => onClick(index)}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
     >
       <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
@@ -209,6 +210,11 @@ const ContractCreationHelperAnimation = () => {
   const x = useMotionValue(0.5)
   const y = useMotionValue(0.75)
   const z = useMotionValue(1)
+
+  const opacityX = useMotionValue(1)
+  const opacityY = useMotionValue(0.75)
+  const opacityZ = useMotionValue(0.5)
+
   const { currentSegment, setCurrentSegment } = useContractCreationStore()
 
   const handleClick = (index: number) => {
@@ -219,14 +225,23 @@ const ContractCreationHelperAnimation = () => {
       x.set(0.5)
       y.set(0.75)
       z.set(1)
+      opacityX.set(1)
+      opacityY.set(0.75)
+      opacityZ.set(0.5)
     } else if (index === 1) {
       x.set(0.25)
       y.set(0.5)
       z.set(0.75)
+      opacityX.set(0.75)
+      opacityY.set(1)
+      opacityZ.set(0.75)
     } else if (index === 2) {
       x.set(0.0)
       y.set(0.25)
       z.set(0.5)
+      opacityX.set(0.5)
+      opacityY.set(0.75)
+      opacityZ.set(1)
     }
   }
 
@@ -245,6 +260,7 @@ const ContractCreationHelperAnimation = () => {
             index={0}
             onClick={handleClick}
             x={x}
+            opacity={opacityX}
           >
             <CubeIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
@@ -254,8 +270,9 @@ const ContractCreationHelperAnimation = () => {
             index={1}
             onClick={handleClick}
             x={y}
+            opacity={opacityY}
           >
-            <CubeIcon className='w-10 h-10 text-darkGrey' />
+            <RectangleGroup className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
           <CarouselSegment
             transformOutputRange={['50%', '75%', '100%']}
@@ -263,8 +280,9 @@ const ContractCreationHelperAnimation = () => {
             index={2}
             onClick={handleClick}
             x={z}
+            opacity={opacityZ}
           >
-            <CubeIcon className='w-10 h-10 text-darkGrey' />
+            <MoonIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
         </AnimatePresence>
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
