@@ -1,10 +1,11 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CloudIcon, CubeIcon, FingerPrintIcon } from '@heroicons/react/outline'
+import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -125,45 +126,121 @@ const SmartContactDetailsForm = () => {
   )
 }
 
+const MintDetailsForm = () => {
+  return <></>
+}
+
+const list = {
+  visible: { opacity: 1 },
+  hidden: { opacity: 0, x: 0 },
+}
+
+type CarouselSegmentProps = {
+  transformOutputRange: number[]
+  transformInputRange: number[]
+  children: React.ReactNode
+  initialState: number
+}
+
+const CarouselSegment = ({ transformOutputRange, transformInputRange, children, initialState }: CarouselSegmentProps) => {
+  const x = useMotionValue(initialState)
+  const left = useTransform(x, [0, 0.25, 0.5, 0.75, 1], ['0%', '33%', '50%', '75%', '100%'])
+
+  return (
+    <motion.button
+      style={{ left }}
+      onClick={() => {
+        x.set(0.25)
+      }}
+      className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
+    >
+      <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+        <div className='h-12 w-12 rounded-full  flex items-center justify-center'>{children}</div>
+      </div>
+    </motion.button>
+  )
+}
+
+interface ContractCreationSegmentProps {
+  id: string
+  title: string
+  description: string
+  component: () => React.ReactElement
+  icon: React.ReactNode
+}
+
+const ContractCreationSegments: ContractCreationSegmentProps[] = [
+  {
+    id: 'contract-base-details',
+    title: 'Smart Contract Details',
+    description: 'Enter the details of your smart contract',
+    component: SmartContactDetailsForm,
+    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
+  },
+  {
+    id: 'mint-details',
+    title: 'Mint Details',
+    description: 'Enter the details of your mint',
+    component: MintDetailsForm,
+    icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
+  },
+]
+
 const ContractCreationHelperAnimation = () => {
   return (
-    <>
+    <motion.div initial='hidden' animate='visible' variants={list} className='flex h-full flex-col items-center w-full space-y-9'>
       <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
       </div>
-      <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden'>
-        {/* <div className='w-full h-[2px] bg-gradient-to-r from-lightGray/25 via-blueHighlight to-lightGray/25' /> */}
-
-        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 !left-1/2 z-20'>
+      <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden border border-mediumGrey rounded-[5px]'>
+        <AnimatePresence>
+          <CarouselSegment transformOutputRange={[0, 1]} transformInputRange={[0, 0.25, 0.5, 1]} initialState={0.5}>
+            <CubeIcon className='w-10 h-10 text-darkGrey' />
+          </CarouselSegment>
+          <CarouselSegment transformOutputRange={[0, 1]} transformInputRange={[0, 0.25, 0.5, 1]} initialState={0.75}>
+            <CubeIcon className='w-10 h-10 text-darkGrey' />
+          </CarouselSegment>
+        </AnimatePresence>
+        {/* <motion.button
+          variants={item}
+          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 z-20'
+        >
           <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
             <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
               <FingerPrintIcon className='w-10 h-10 text-darkGrey' />
             </div>
           </div>
-        </button>
+        </motion.button> */}
 
-        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[64%] left-[100%]'>
+        {/* <motion.button
+          variants={item}
+          // className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[64%] left-[100%]'
+          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100'
+        >
           <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
             <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
               <CubeIcon className='w-10 h-10 text-darkGrey' />
             </div>
           </div>
-        </button>
+        </motion.button>
 
-        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[78%] left-[100%]'>
+        <motion.button
+          variants={item}
+          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100'
+        >
           <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
             <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
               <CloudIcon className='w-10 h-10 text-darkGrey' />
             </div>
           </div>
-        </button>
+        </motion.button> */}
 
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
       </div>
-    </>
+    </motion.div>
   )
 }
 
