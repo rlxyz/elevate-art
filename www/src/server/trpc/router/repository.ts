@@ -1,12 +1,16 @@
 import type { Prisma } from '@prisma/client'
-import { RepositoryDeploymentStatus } from '@prisma/client'
+import { RepositoryContractDeploymentStatus, RepositoryDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
+import { ethers } from 'ethers'
+import { env } from 'src/env/server.mjs'
 import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
+
+export const provider = new ethers.providers.AlchemyProvider('mainnet', env.NEXT_PUBLIC_ALCHEMY_ID)
 
 /**
  * Repository Router
@@ -92,10 +96,35 @@ export const repositoryRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId, name } = input
-      return await ctx.prisma.repositoryContractDeployment.findFirst({
+      const deployment = await ctx.prisma.repositoryContractDeployment.findFirst({
         where: { repositoryId: repositoryId, repositoryDeployment: { name } },
         orderBy: { createdAt: 'desc' },
       })
+      if (!deployment) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      // use etherjs to check if contract has been deployed
+      const { address, status } = deployment
+
+      if (status === 'DEPLOYED' || status === 'FAILED') {
+        return deployment
+      }
+
+      const contract = new ethers.Contract(address, [], provider)
+      const code = await contract.provider.getCode(address)
+      if (code === '0x') {
+        return deployment
+      }
+
+      // if contract has been deployed, update the deployment status
+      // set the state to verifying
+      await ctx.prisma.repositoryContractDeployment.update({
+        where: { id: deployment.id },
+        data: { status: RepositoryContractDeploymentStatus.DEPLOYED },
+      })
+
+      return deployment
     }),
   createBucket: protectedProcedure
     .input(
@@ -240,30 +269,12 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      await ctx.prisma.repositoryContractDeployment.create({
+      return await ctx.prisma.repositoryContractDeployment.create({
         data: {
           repositoryDeploymentId: deploymentId,
           address,
           repositoryId: deployment.repositoryId,
         },
       })
-
-      try {
-        await createIngestInstance().send({
-          name: 'repository-contract-deployment/contract.create',
-          data: {
-            repositoryId: deployment.repositoryId,
-            deploymentId: deployment.repositoryId,
-            contractAddress: address,
-          },
-        })
-      } catch (e) {
-        console.error(e)
-        await ctx.prisma.repositoryDeployment.update({
-          where: { id: deployment.id },
-          data: { status: RepositoryDeploymentStatus.FAILED },
-        })
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
-      }
     }),
 })

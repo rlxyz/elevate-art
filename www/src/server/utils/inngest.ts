@@ -7,10 +7,6 @@ export type InngestEvents = {
     name: 'repository-deployment/images.create'
     data: { repositoryId: string; deploymentId: string; attributes: Prisma.JsonArray }
   }
-  'repository-contract-deployment/create-deployment': {
-    name: 'repository-contract-deployment/contract.create'
-    data: { repositoryId: string; deploymentId: string; contractAddress: string }
-  }
 }
 
 export const createIngestInstance = () => {

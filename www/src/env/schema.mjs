@@ -21,6 +21,8 @@ export const serverSchema = z.object({
   GCP_BUCKET_NAME: z.string(),
   INNGEST_SIGNING_KEY: z.string(),
   INNGEST_EVENT_KEY: z.string(),
+  ETHERSCAN_API_KEY: z.string(),
+  ETHERSCAN_API_URL: z.string(),
 })
 
 /**
