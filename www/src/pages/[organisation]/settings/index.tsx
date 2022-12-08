@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
+import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
@@ -34,7 +34,7 @@ const Page: NextPage = () => {
             },
           ]}
         >
-          <AppRoutesNavbar>
+          <PageRoutesNavbar>
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
@@ -49,9 +49,9 @@ const Page: NextPage = () => {
                 loading: isLoadingOrganisations,
               },
             ].map((item) => (
-              <AppRoutesNavbar.Item key={item.name} opts={item} />
+              <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
-          </AppRoutesNavbar>
+          </PageRoutesNavbar>
         </Layout.Header>
         <Layout.Body>
           <div className='-ml-4 py-8 space-y-8'>

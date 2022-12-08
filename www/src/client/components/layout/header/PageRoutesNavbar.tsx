@@ -5,14 +5,14 @@ import React from 'react'
 import { capitalize } from 'src/client/utils/format'
 import { NextLinkWithHoverHueComponent } from '../link/NextLinkWithHoverHueComponent'
 
-export interface HeaderInternalPageRoutesProps {
+export interface PageRoutesNavbarItemProps {
   name: string
   enabled: boolean
   href: string
   loading: boolean
 }
 
-const AppRoutesItem: FC<{ opts: HeaderInternalPageRoutesProps }> = ({ opts: { name, enabled, href, loading } }) => {
+const PageRoutesNavbarItem: FC<{ opts: PageRoutesNavbarItemProps }> = ({ opts: { name, enabled, href, loading } }) => {
   return (
     <div className={clsx(enabled && 'flex space-between items-center relative')}>
       <div className={clsx(loading && 'pointer-events-none', 'mb-1')}>
@@ -25,7 +25,7 @@ const AppRoutesItem: FC<{ opts: HeaderInternalPageRoutesProps }> = ({ opts: { na
   )
 }
 
-export const AppRoutesNavbar = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
+export const PageRoutesNavbar = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   const childrens = React.Children.toArray(children)
   return (
     <aside className='-ml-5'>
@@ -38,4 +38,4 @@ export const AppRoutesNavbar = ({ children }: { children: React.ReactElement[] |
   )
 }
 
-AppRoutesNavbar.Item = AppRoutesItem
+PageRoutesNavbar.Item = PageRoutesNavbarItem

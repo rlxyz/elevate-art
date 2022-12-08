@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
+import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import RepositoryDeploymentBucketCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/repository/RepositoryDeployment/RepositoryDeploymentPreviewCard'
@@ -67,7 +67,7 @@ const Page = () => {
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
         >
-          <AppRoutesNavbar>
+          <PageRoutesNavbar>
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
@@ -94,9 +94,9 @@ const Page = () => {
                 loading: isLoadingLayers,
               },
             ].map((item) => (
-              <AppRoutesNavbar.Item key={item.name} opts={item} />
+              <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
-          </AppRoutesNavbar>
+          </PageRoutesNavbar>
         </Layout.Header>
         <Layout.Body border={'lower'}>
           <div className='w-full h-full'>

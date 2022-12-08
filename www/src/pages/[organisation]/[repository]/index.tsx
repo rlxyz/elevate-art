@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
+import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
@@ -64,7 +64,7 @@ const Page = () => {
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
         >
-          <AppRoutesNavbar>
+          <PageRoutesNavbar>
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
@@ -91,9 +91,9 @@ const Page = () => {
                 loading: isLoadingLayers,
               },
             ].map((item) => (
-              <AppRoutesNavbar.Item key={item.name} opts={item} />
+              <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
-          </AppRoutesNavbar>
+          </PageRoutesNavbar>
         </Layout.Header>
         <Layout.Body border='none'>
           <div className='w-full h-full grid grid-flow-row-dense grid-cols-10 grid-rows-1'>
