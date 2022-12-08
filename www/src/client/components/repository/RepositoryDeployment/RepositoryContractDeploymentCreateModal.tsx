@@ -1,12 +1,13 @@
 import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentCreate'
-import { RepositoryContractDeployment } from '@prisma/client'
+import type { RepositoryContractDeployment } from '@prisma/client'
 import { parseEther } from 'ethers/lib/utils.js'
-import { FC, useState } from 'react'
+import type { FC } from 'react'
+import { useState } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { useDebounce } from 'use-debounce'
 import { usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from 'wagmi'
 import { useDeployContract } from '../../../hooks/utils/useDeployContract'
-import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
+import type { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
 export interface RepositoryContractDeploymentCreateProps extends FormModalProps {
   contractDeployment: RepositoryContractDeployment

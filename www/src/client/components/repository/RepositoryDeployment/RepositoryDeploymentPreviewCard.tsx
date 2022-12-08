@@ -6,7 +6,8 @@ import RepositoryDeploymentDeleteModal from '@components/repository/RepositoryDe
 import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { RepositoryContractDeployment, RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
+import type { RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
+import { RepositoryDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
@@ -54,13 +55,11 @@ export const RepositoryDeploymentPreviewCard = ({
           <span>{toPascalCaseWithSpace(deployment.type)}</span>
         </div>
         {deployment.contractDeployment && (
-          <div>
-            <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
-              <NextLinkComponent href='/'>
-                <span className='text-darkGrey mr-1 text-[0.6rem]'>Deployed</span>
-              </NextLinkComponent>
-            </span>
-          </div>
+          <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
+            <NextLinkComponent href='/'>
+              <span className='text-darkGrey mr-1 text-[0.6rem]'>Deployed</span>
+            </NextLinkComponent>
+          </span>
         )}
       </div>
 

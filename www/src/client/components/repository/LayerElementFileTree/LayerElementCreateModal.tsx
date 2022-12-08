@@ -1,11 +1,11 @@
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { Repository } from '@prisma/client'
+import type { Repository } from '@prisma/client'
 import clsx from 'clsx'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 import { useMutateLayerElementCreate } from '../../../hooks/trpc/layerElement/useMutateLayerElementCreate'
-import { FormModalProps } from './LayerElementDeleteModal'
+import type { FormModalProps } from './LayerElementDeleteModal'
 
 export interface LayerElementCreateProps extends FormModalProps {
   repository: Repository

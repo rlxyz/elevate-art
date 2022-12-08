@@ -1,4 +1,7 @@
-import { NextRouter, useRouter } from 'next/router'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 export const useRepositoryRoute = () => {
@@ -6,7 +9,16 @@ export const useRepositoryRoute = () => {
   const organisationName: string = router.query.organisation as string
   const collectionName: string = (router.query.collection as string) || 'main'
   const repositoryName: string = router.query.repository as string
+  const deploymentName: string = router.query.deployment as string
   const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null)
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isLoadingRepository])
+
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {
       setMainRepositoryHref(`${organisationName}/${repositoryName}`)
@@ -17,5 +29,8 @@ export const useRepositoryRoute = () => {
     isLoading: mainRepositoryHref === null,
     mainRepositoryHref: mainRepositoryHref,
     collectionName,
+    organisationName,
+    repositoryName,
+    deploymentName,
   }
 }

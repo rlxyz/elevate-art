@@ -1,65 +1,25 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import RepositoryContractDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryContractDeploymentCreateModal'
+import NextLinkComponent from '@components/layout/link/NextLink'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
 import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react/solid'
-import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
-import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
-import type { NextRouter } from 'next/router'
-import { useRouter } from 'next/router'
 import type { FC, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
-  const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
-    return {
-      setRepositoryId: state.setRepositoryId,
-      setCollectionId: state.setCollectionId,
-      reset: state.reset,
-    }
-  })
-
-  useEffect(() => {
-    reset()
-  }, [])
-
-  const router: NextRouter = useRouter()
-  const organisationName: string = router.query.organisation as string
-  const repositoryName: string = router.query.repository as string
-  const deploymentName: string = router.query.deployment as string
-  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { all: organisations } = useQueryOrganisationFindAll()
-  const { collectionName, mainRepositoryHref } = useRepositoryRoute()
+  const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-
-  useEffect(() => {
-    if (!repository) return
-    setRepositoryId(repository.id)
-  }, [isLoadingRepository])
-
-  useEffect(() => {
-    if (!collections) return
-    if (!collections.length) return
-    const collection = collections.find((collection) => collection.name === collectionName)
-    if (!collection) return
-    setCollectionId(collection.id)
-    // if (tokens.length === 0) return
-    mutate({ collection })
-  }, [isLoadingCollection])
 
   return (
     <OrganisationAuthLayout>
@@ -77,13 +37,13 @@ const Page = () => {
                 name: DeploymentNavigationEnum.enum.Overview,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
                 enabled: false,
-                loading: isLoadingLayers,
+                loading: false,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
                 enabled: true,
-                loading: isLoadingLayers,
+                loading: false,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
@@ -92,22 +52,15 @@ const Page = () => {
         </Layout.Header>
         <Layout.Body border='lower'>
           <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
-            <button
-              onClick={() => setIsCreateDialogOpen(true)}
-              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            <NextLinkComponent
+              href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract/new`}
+              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey w-fit'
             >
-              Deploy Contract
-            </button>
+              New Contract
+            </NextLinkComponent>
           </Header>
           <Body>
             <ContractDeploymentPhasesView deployment={contractDeployment} />
-            {contractDeployment && (
-              <RepositoryContractDeploymentCreateModal
-                visible={isCreateDialogOpen}
-                onClose={() => setIsCreateDialogOpen(false)}
-                contractDeployment={contractDeployment}
-              />
-            )}
           </Body>
         </Layout.Body>
       </Layout>
@@ -133,7 +86,7 @@ const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeploymen
       <div>
         <div>
           {[ContractDeploymentPhasesEnum.enum.Deploying, ContractDeploymentPhasesEnum.enum.Verification].map((phase, index) => (
-            <Disclosure>
+            <Disclosure key={phase}>
               <Disclosure.Button
                 className={clsx(
                   'border-l border-r border-mediumGrey border-b p-5 w-full',
