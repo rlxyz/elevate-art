@@ -81,6 +81,34 @@ const ContractFormBodyInput = forwardRef<
   }
 )
 
+const ContractFormBodyRadioInput = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
+>(
+  ({
+    className,
+    label,
+    description,
+    error,
+    ...props
+  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+    return (
+      <>
+        <div className={clsx('space-y-1 w-full', className)}>
+          <div className='flex items-center space-x-3 py-2'>
+            <input
+              type='radio'
+              className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs disabled:cursor-not-allowed')}
+              {...props}
+            />
+            <label className='text-xs'>{label}</label>
+          </div>
+        </div>
+      </>
+    )
+  }
+)
+
 const ContractFormBodySelectInput = forwardRef<
   HTMLSelectElement,
   React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
@@ -120,12 +148,14 @@ const ContractFormBodySelectInput = forwardRef<
 
 ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
+ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
 
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractForm.Body
 ContractFormBody.Input = ContractFormBodyInput
 ContractFormBody.Select = ContractFormBodySelectInput
+ContractFormBody.Radio = ContractFormBodyRadioInput
 
 type MintDetailsForm = {
   collectionSize: number // inferred from deployment
@@ -228,6 +258,34 @@ const SmartContactDetailsForm = () => {
             className='col-span-2'
             error={errors.contractName}
           />
+
+          <div className='col-span-3 flex flex-col'>
+            <label className='text-xs font-semibold'>Mint Type</label>
+            <div className='flex space-x-3'>
+              <div className='h-full flex items-center space-x-2'>
+                <ContractForm.Body.Radio
+                  className=''
+                  description=''
+                  {...register('mintType', {})}
+                  label={'Off-Chain'}
+                  error={errors.contractName}
+                />
+              </div>
+              <div className='h-full flex items-center space-x-2'>
+                <ContractForm.Body.Radio
+                  className=''
+                  description=''
+                  {...register('mintType', {})}
+                  label={'On-Chain'}
+                  error={errors.contractName}
+                />
+                <span className='flex px-2 py-1 items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey text-[0.6rem] font-medium text-black h-fit'>
+                  <span className='text-darkGrey text-[0.6rem]'>Soon</span>
+                </span>
+              </div>
+            </div>
+            <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
+          </div>
 
           <ContractForm.Body.Select
             {...register('blockchain', { required: true })}
