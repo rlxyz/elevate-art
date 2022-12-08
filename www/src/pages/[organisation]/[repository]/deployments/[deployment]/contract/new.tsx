@@ -98,8 +98,9 @@ const SmartContactDetailsForm = () => {
               <div className='flex items-center space-x-3'>
                 <input
                   type='radio'
+                  disabled
                   value='on-chain'
-                  className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs')}
+                  className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs disabled:cursor-not-allowed')}
                   {...register('mint-type', {})}
                 />
                 <label className='text-xs'>On-Chain Mint</label>
