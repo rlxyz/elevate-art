@@ -1,5 +1,5 @@
 /** Prisma Model Types */
-import { LayerElement as PrismaLayerElement, Rules as PrismaRules, TraitElement as PrismaTraitElement } from '@prisma/client'
+import type { LayerElement as PrismaLayerElement, Rules as PrismaRules, TraitElement as PrismaTraitElement } from '@prisma/client'
 type PrismaLayerElementWithTraitElement = PrismaLayerElement & { traitElements: PrismaTraitElementWithRule[] }
 type PrismaTraitElementWithRule = PrismaTraitElement & { rulesPrimary: PrismaRules[]; rulesSecondary: PrismaRules[] }
 
@@ -7,7 +7,7 @@ type PrismaTraitElementWithRule = PrismaTraitElement & { rulesPrimary: PrismaRul
 import { useRouter } from 'next/router'
 import { getImageForTrait } from 'src/client/utils/image'
 import { trpc } from 'src/client/utils/trpc'
-import { RulesType } from 'src/shared/compiler'
+import type { RulesType } from 'src/shared/compiler'
 import { sumBy } from 'src/shared/object-utils'
 import useRepositoryStore from '../../store/useRepositoryStore'
 
