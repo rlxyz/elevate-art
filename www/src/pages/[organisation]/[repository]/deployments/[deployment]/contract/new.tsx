@@ -11,6 +11,13 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize } from 'src/client/utils/format'
 import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
+import { z } from 'zod'
+import create from 'zustand'
+
+const useContractCreationStore = create<{ currentSegment: number; setCurrentSegment: (segment: number) => void }>((set) => ({
+  currentSegment: 0,
+  setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
+}))
 
 const SmartContactDetailsForm = () => {
   const {
@@ -127,7 +134,7 @@ const SmartContactDetailsForm = () => {
 }
 
 const MintDetailsForm = () => {
-  return <></>
+  return <>Mint Details Form</>
 }
 
 const list = {
@@ -136,20 +143,23 @@ const list = {
 }
 
 type CarouselSegmentProps = {
-  transformOutputRange: number[]
+  transformOutputRange: string[]
   transformInputRange: number[]
   children: React.ReactNode
   initialState: number
+  index: number
 }
 
-const CarouselSegment = ({ transformOutputRange, transformInputRange, children, initialState }: CarouselSegmentProps) => {
+const CarouselSegment = ({ transformOutputRange, transformInputRange, children, initialState, index }: CarouselSegmentProps) => {
   const x = useMotionValue(initialState)
-  const left = useTransform(x, [0, 0.25, 0.5, 0.75, 1], ['0%', '33%', '50%', '75%', '100%'])
-
+  const left = useTransform(x, transformInputRange, transformOutputRange)
+  const { setCurrentSegment, currentSegment } = useContractCreationStore()
   return (
     <motion.button
       style={{ left }}
       onClick={() => {
+        if (currentSegment === index) return null
+        setCurrentSegment(index)
         x.set(0.25)
       }}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
@@ -168,6 +178,15 @@ interface ContractCreationSegmentProps {
   component: () => React.ReactElement
   icon: React.ReactNode
 }
+
+export const ContractCreationEnum = z.nativeEnum(
+  Object.freeze({
+    ContractDetails: 'contract-detail',
+    MintDetails: 'mint-details',
+  })
+)
+
+export type ContractCreationType = z.infer<typeof ContractCreationEnum>
 
 const ContractCreationSegments: ContractCreationSegmentProps[] = [
   {
@@ -197,10 +216,18 @@ const ContractCreationHelperAnimation = () => {
       </div>
       <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden border border-mediumGrey rounded-[5px]'>
         <AnimatePresence>
-          <CarouselSegment transformOutputRange={[0, 1]} transformInputRange={[0, 0.25, 0.5, 1]} initialState={0.5}>
+          <CarouselSegment transformOutputRange={['0%', '33%', '50%']} transformInputRange={[0, 0.25, 0.5]} initialState={0.5} index={0}>
             <CubeIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
-          <CarouselSegment transformOutputRange={[0, 1]} transformInputRange={[0, 0.25, 0.5, 1]} initialState={0.75}>
+          <CarouselSegment
+            transformOutputRange={['33%', '50%', '75%']}
+            transformInputRange={[0.25, 0.5, 0.75]}
+            initialState={0.75}
+            index={1}
+          >
+            <CubeIcon className='w-10 h-10 text-darkGrey' />
+          </CarouselSegment>
+          <CarouselSegment transformOutputRange={['50%', '75%', '100%']} transformInputRange={[0.5, 0.75, 1]} initialState={1} index={1}>
             <CubeIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
         </AnimatePresence>
@@ -248,6 +275,7 @@ const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { all: organisations } = useQueryOrganisationFindAll()
   const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
+  const { currentSegment } = useContractCreationStore()
 
   return (
     <OrganisationAuthLayout>
@@ -282,7 +310,11 @@ const Page = () => {
           <div className='min-h-[calc(100vh-9.14rem)] flex flex-col my-16'>
             <div className='flex h-full flex-col items-center w-full space-y-9'>
               <ContractCreationHelperAnimation />
-              <SmartContactDetailsForm />
+              {ContractCreationSegments.map(({ id, component }, index) => (
+                <div key={id} className={(clsx(index !== currentSegment && 'hidden'), 'w-full flex flex-col items-center space-y-9')}>
+                  {component()}
+                </div>
+              ))}
             </div>
           </div>
         </Layout.Body>
