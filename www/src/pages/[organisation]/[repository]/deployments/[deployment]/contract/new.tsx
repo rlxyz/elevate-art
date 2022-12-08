@@ -2,9 +2,9 @@ import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
+import type { MotionValue } from 'framer-motion'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -14,7 +14,10 @@ import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/e
 import { z } from 'zod'
 import create from 'zustand'
 
-const useContractCreationStore = create<{ currentSegment: number; setCurrentSegment: (segment: number) => void }>((set) => ({
+const useContractCreationStore = create<{
+  currentSegment: number
+  setCurrentSegment: (segment: number) => void
+}>((set) => ({
   currentSegment: 0,
   setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
 }))
@@ -146,21 +149,18 @@ type CarouselSegmentProps = {
   transformOutputRange: string[]
   transformInputRange: number[]
   children: React.ReactNode
-  initialState: number
   index: number
+  onClick: (index: number) => void
+  x: MotionValue<number>
 }
 
-const CarouselSegment = ({ transformOutputRange, transformInputRange, children, initialState, index }: CarouselSegmentProps) => {
-  const x = useMotionValue(initialState)
+const CarouselSegment = ({ transformOutputRange, transformInputRange, children, index, onClick, x }: CarouselSegmentProps) => {
   const left = useTransform(x, transformInputRange, transformOutputRange)
-  const { setCurrentSegment, currentSegment } = useContractCreationStore()
   return (
     <motion.button
       style={{ left }}
       onClick={() => {
-        if (currentSegment === index) return null
-        setCurrentSegment(index)
-        x.set(0.25)
+        onClick(index)
       }}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
     >
@@ -206,65 +206,67 @@ const ContractCreationSegments: ContractCreationSegmentProps[] = [
 ]
 
 const ContractCreationHelperAnimation = () => {
+  const x = useMotionValue(0.5)
+  const y = useMotionValue(0.75)
+  const z = useMotionValue(1)
+  const { currentSegment, setCurrentSegment } = useContractCreationStore()
+
+  const handleClick = (index: number) => {
+    if (currentSegment === index) return null
+    setCurrentSegment(index)
+
+    if (index === 0) {
+      x.set(0.5)
+      y.set(0.75)
+      z.set(1)
+    } else if (index === 1) {
+      x.set(0.25)
+      y.set(0.5)
+      z.set(0.75)
+    } else if (index === 2) {
+      x.set(0.0)
+      y.set(0.25)
+      z.set(0.5)
+    }
+  }
+
   return (
     <motion.div initial='hidden' animate='visible' variants={list} className='flex h-full flex-col items-center w-full space-y-9'>
       <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
-        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
       </div>
-      <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden border border-mediumGrey rounded-[5px]'>
+      <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden rounded-[5px]'>
         <AnimatePresence>
-          <CarouselSegment transformOutputRange={['0%', '33%', '50%']} transformInputRange={[0, 0.25, 0.5]} initialState={0.5} index={0}>
-            <CubeIcon className='w-10 h-10 text-darkGrey' />
-          </CarouselSegment>
           <CarouselSegment
-            transformOutputRange={['33%', '50%', '75%']}
-            transformInputRange={[0.25, 0.5, 0.75]}
-            initialState={0.75}
-            index={1}
+            transformOutputRange={['0%', '25%', '50%']}
+            transformInputRange={[0, 0.25, 0.5]}
+            index={0}
+            onClick={handleClick}
+            x={x}
           >
             <CubeIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
-          <CarouselSegment transformOutputRange={['50%', '75%', '100%']} transformInputRange={[0.5, 0.75, 1]} initialState={1} index={1}>
+          <CarouselSegment
+            transformOutputRange={['25%', '50%', '75%']}
+            transformInputRange={[0.25, 0.5, 0.75]}
+            index={1}
+            onClick={handleClick}
+            x={y}
+          >
+            <CubeIcon className='w-10 h-10 text-darkGrey' />
+          </CarouselSegment>
+          <CarouselSegment
+            transformOutputRange={['50%', '75%', '100%']}
+            transformInputRange={[0.5, 0.75, 1]}
+            index={2}
+            onClick={handleClick}
+            x={z}
+          >
             <CubeIcon className='w-10 h-10 text-darkGrey' />
           </CarouselSegment>
         </AnimatePresence>
-        {/* <motion.button
-          variants={item}
-          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 z-20'
-        >
-          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
-            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
-              <FingerPrintIcon className='w-10 h-10 text-darkGrey' />
-            </div>
-          </div>
-        </motion.button> */}
-
-        {/* <motion.button
-          variants={item}
-          // className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[64%] left-[100%]'
-          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100'
-        >
-          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
-            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
-              <CubeIcon className='w-10 h-10 text-darkGrey' />
-            </div>
-          </div>
-        </motion.button>
-
-        <motion.button
-          variants={item}
-          className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100'
-        >
-          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
-            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
-              <CloudIcon className='w-10 h-10 text-darkGrey' />
-            </div>
-          </div>
-        </motion.button> */}
-
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
       </div>
     </motion.div>
@@ -272,7 +274,7 @@ const ContractCreationHelperAnimation = () => {
 }
 
 const Page = () => {
-  const { all: contractDeployment } = useQueryRepositoryContractDeployment()
+  // const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { all: organisations } = useQueryOrganisationFindAll()
   const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
   const { currentSegment } = useContractCreationStore()
