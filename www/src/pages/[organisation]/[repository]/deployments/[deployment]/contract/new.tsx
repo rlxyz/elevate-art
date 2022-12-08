@@ -1,5 +1,6 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
+import { CloudIcon, CubeIcon, FingerPrintIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
@@ -123,7 +124,48 @@ const SmartContactDetailsForm = () => {
     </>
   )
 }
-const MintDetailsForm = () => {}
+
+const ContractCreationHelperAnimation = () => {
+  return (
+    <>
+      <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
+        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
+        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
+        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
+        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
+      </div>
+      <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden'>
+        {/* <div className='w-full h-[2px] bg-gradient-to-r from-lightGray/25 via-blueHighlight to-lightGray/25' /> */}
+
+        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 !left-1/2 z-20'>
+          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
+              <FingerPrintIcon className='w-10 h-10 text-darkGrey' />
+            </div>
+          </div>
+        </button>
+
+        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[64%] left-[100%]'>
+          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
+              <CubeIcon className='w-10 h-10 text-darkGrey' />
+            </div>
+          </div>
+        </button>
+
+        <button className='absolute -translate-x-1/2 rounded-full border-4 border-white bg-lightGray transition-all duration-300 dark:border-gray-900 pointer-events-none z-1 scale-75 opacity-0 sm:pointer-events-auto sm:opacity-100 !left-[78%] left-[100%]'>
+          <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+            <div className='h-12 w-12 rounded-full  flex items-center justify-center'>
+              <CloudIcon className='w-10 h-10 text-darkGrey' />
+            </div>
+          </div>
+        </button>
+
+        <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
+      </div>
+    </>
+  )
+}
 
 const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
@@ -160,8 +202,11 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.Header>
         <Layout.Body border='none'>
-          <div className='min-h-[calc(100vh-9.14rem)] flex flex-col justify-center items-center space-y-6'>
-            <SmartContactDetailsForm />
+          <div className='min-h-[calc(100vh-9.14rem)] flex flex-col my-16'>
+            <div className='flex h-full flex-col items-center w-full space-y-9'>
+              <ContractCreationHelperAnimation />
+              <SmartContactDetailsForm />
+            </div>
           </div>
         </Layout.Body>
       </Layout>
