@@ -9,7 +9,6 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { FC, ReactNode } from 'react'
-import { useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
@@ -19,7 +18,6 @@ const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { all: organisations } = useQueryOrganisationFindAll()
   const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   return (
     <OrganisationAuthLayout>
@@ -125,26 +123,6 @@ const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeploymen
           ))}
         </div>
       </div>
-    </div>
-  )
-}
-
-interface ContractDeploymentFormInterface {
-  children: ReactNode
-}
-
-const ContractDeploymentForm: FC<ContractDeploymentFormInterface> = ({ children }) => {
-  return (
-    <div className='border border-mediumGrey rounded-[5px] h-96 p-8'>
-      {/* <div className='border border-mediumGrey rounded-[5px] h-full border-dotted'> */}
-      <div className='flex flex-col h-full items-center justify-center space-y-3'>
-        <div className='flex flex-col items-center'>
-          <h1 className='text-xl font-bold'>Contract Setup</h1>
-          <p className='text-xs'>You have yet to setup your contract for this deployment.</p>
-        </div>
-        <div>{children}</div>
-      </div>
-      {/* </div> */}
     </div>
   )
 }
