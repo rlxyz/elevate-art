@@ -161,13 +161,13 @@ const CarouselSegment = ({ transformOutputRange, transformInputRange, children, 
   const opacitySegment = useTransform(opacity, [0, 1], [0, 1])
   return (
     <motion.button
-      style={{ left, opacity: opacitySegment }}
+      style={{ left }}
       onClick={() => onClick(index)}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
     >
-      <div className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+      <motion.div style={{ opacity: opacitySegment }} className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
         <div className='h-12 w-12 rounded-full  flex items-center justify-center'>{children}</div>
-      </div>
+      </motion.div>
     </motion.button>
   )
 }
@@ -212,8 +212,8 @@ const ContractCreationHelperAnimation = () => {
   const z = useMotionValue(1)
 
   const opacityX = useMotionValue(1)
-  const opacityY = useMotionValue(0.75)
-  const opacityZ = useMotionValue(0.5)
+  const opacityY = useMotionValue(0.5)
+  const opacityZ = useMotionValue(0.25)
 
   const { currentSegment, setCurrentSegment } = useContractCreationStore()
 
@@ -226,21 +226,21 @@ const ContractCreationHelperAnimation = () => {
       y.set(0.75)
       z.set(1)
       opacityX.set(1)
-      opacityY.set(0.75)
-      opacityZ.set(0.5)
+      opacityY.set(0.5)
+      opacityZ.set(0.25)
     } else if (index === 1) {
       x.set(0.25)
       y.set(0.5)
       z.set(0.75)
-      opacityX.set(0.75)
+      opacityX.set(0.5)
       opacityY.set(1)
-      opacityZ.set(0.75)
+      opacityZ.set(0.5)
     } else if (index === 2) {
       x.set(0.0)
       y.set(0.25)
       z.set(0.5)
-      opacityX.set(0.5)
-      opacityY.set(0.75)
+      opacityX.set(0.25)
+      opacityY.set(0.5)
       opacityZ.set(1)
     }
   }
