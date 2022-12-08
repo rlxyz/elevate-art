@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
+import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
 import RepositoryDeploymentBucketCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/repository/RepositoryDeployment/RepositoryDeploymentPreviewCard'
@@ -9,6 +9,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
+import { CollectionNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
@@ -16,7 +17,6 @@ import { useEffect, useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { CollectionNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -67,8 +67,8 @@ const Page = () => {
             { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
           ]}
         >
-          <AppRoutesNavbar
-            links={[
+          <AppRoutesNavbar>
+            {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
                 href: `/${mainRepositoryHref}`,
@@ -93,8 +93,10 @@ const Page = () => {
                 enabled: true,
                 loading: isLoadingLayers,
               },
-            ]}
-          />
+            ].map((item) => (
+              <AppRoutesNavbar.Item key={item.name} opts={item} />
+            ))}
+          </AppRoutesNavbar>
         </Layout.Header>
         <Layout.Body border={'lower'}>
           <div className='w-full h-full'>

@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
+import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
@@ -34,8 +34,8 @@ const Page: NextPage = () => {
             },
           ]}
         >
-          <AppRoutesNavbar
-            links={[
+          <AppRoutesNavbar>
+            {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
                 href: `/${organisation?.name}`,
@@ -48,8 +48,10 @@ const Page: NextPage = () => {
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },
-            ]}
-          />
+            ].map((item) => (
+              <AppRoutesNavbar.Item key={item.name} opts={item} />
+            ))}
+          </AppRoutesNavbar>
         </Layout.Header>
         <Layout.Body>
           <div className='-ml-4 py-8 space-y-8'>

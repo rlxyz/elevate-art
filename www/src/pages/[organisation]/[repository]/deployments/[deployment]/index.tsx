@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
+import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
@@ -63,8 +63,8 @@ const Page = () => {
             { current: deploymentName, href: `/${organisationName}/${repositoryName}/deployments/${deploymentName}` },
           ]}
         >
-          <AppRoutesNavbar
-            links={[
+          <AppRoutesNavbar>
+            {[
               {
                 name: DeploymentNavigationEnum.enum.Overview,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
@@ -77,8 +77,10 @@ const Page = () => {
                 enabled: false,
                 loading: isLoadingLayers,
               },
-            ]}
-          />
+            ].map((item) => (
+              <AppRoutesNavbar.Item key={item.name} opts={item} />
+            ))}
+          </AppRoutesNavbar>
         </Layout.Header>
         <Layout.Body border={'lower'}>
           <div className='h-52'>

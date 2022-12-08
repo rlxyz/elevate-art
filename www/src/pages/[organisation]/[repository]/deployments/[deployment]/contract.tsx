@@ -1,4 +1,4 @@
-import { AppRoutesNavbar } from '@components/layout/core/AppRoutesNavbar'
+import { AppRoutesNavbar } from '@components/layout/header/AppRoutesNavbar'
 import RepositoryContractDeploymentCreateModal from '@components/repository/RepositoryDeployment/RepositoryContractDeploymentCreateModal'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
@@ -71,8 +71,8 @@ const Page = () => {
             { current: deploymentName, href: `/${organisationName}/${repositoryName}/deployments/${deploymentName}` },
           ]}
         >
-          <AppRoutesNavbar
-            links={[
+          <AppRoutesNavbar>
+            {[
               {
                 name: DeploymentNavigationEnum.enum.Overview,
                 href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
@@ -85,8 +85,10 @@ const Page = () => {
                 enabled: true,
                 loading: isLoadingLayers,
               },
-            ]}
-          />
+            ].map((item) => (
+              <AppRoutesNavbar.Item key={item.name} opts={item} />
+            ))}
+          </AppRoutesNavbar>
         </Layout.Header>
         <Layout.Body border='lower'>
           <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
