@@ -52,7 +52,10 @@ const Page = () => {
             <div className='flex h-full flex-col items-center w-full space-y-9'>
               <ContractCreationHelperAnimation />
               {ContractCreationSegments.map((item, index) => (
-                <div key={item.id} className={clsx(currentSegment !== index && 'hidden', 'w-full flex flex-col items-center space-y-9')}>
+                <div
+                  key={item.id}
+                  className={clsx(currentSegment !== index && 'hidden', 'w-full flex flex-col items-center space-y-9 w-3/4')}
+                >
                   <item.component />
                 </div>
               ))}
