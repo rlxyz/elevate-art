@@ -1,5 +1,4 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import NextLinkComponent from '@components/layout/link/NextLink'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
 import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react/solid'
@@ -51,12 +50,12 @@ const Page = () => {
         </Layout.Header>
         <Layout.Body border='lower'>
           <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
-            <NextLinkComponent
+            {/* <NextLinkComponent
               href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract/new`}
               className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey w-fit'
             >
               New Contract
-            </NextLinkComponent>
+            </NextLinkComponent> */}
           </Header>
           <Body>
             <ContractDeploymentPhasesView deployment={contractDeployment} />
