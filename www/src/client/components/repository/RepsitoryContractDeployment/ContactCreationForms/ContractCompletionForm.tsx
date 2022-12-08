@@ -1,4 +1,4 @@
-import { ContractForm } from './ContractForm'
+import { ContractForm } from '../ContractForm'
 
 export const ContractCompletionForm = () => {
   return (

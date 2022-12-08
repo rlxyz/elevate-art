@@ -1,21 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
-import { ContractForm } from './ContractForm'
+import { ContractForm } from '../ContractForm'
 
-export type SmartContactDetailsForm = {
+export type ContactDetailsForm = {
   contractName: string
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
   blockchain: 'goerli'
 }
 
-export const SmartContactDetailsForm = () => {
+export const ContactDetailsForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<SmartContactDetailsForm>({
+  } = useForm<ContactDetailsForm>({
     defaultValues: {
       contractName: '',
       contractSymbol: '',

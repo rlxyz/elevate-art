@@ -5,9 +5,9 @@ import { AnimatePresence, useMotionValue } from 'framer-motion'
 import React from 'react'
 import { z } from 'zod'
 import { CarouselSegment } from './CarouselSegment'
-import { ContractCompletionForm } from './ContractCompletionForm'
-import { MintDetailsForm } from './MintDetailsForm'
-import { SmartContactDetailsForm } from './SmartContactDetailsForm'
+import { ContactDetailsForm } from './ContactCreationForms/ContactDetailsForm'
+import { ContractCompletionForm } from './ContactCreationForms/ContractCompletionForm'
+import { MintDetailsForm } from './ContactCreationForms/MintDetailsForm'
 import { useContractCreationStore } from './useContractCreationStore.1'
 
 interface ContractCreationSegmentProps {
@@ -31,7 +31,7 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
     id: 'contract-base-details',
     title: 'Smart Contract Details',
     description: 'Enter the details of your smart contract',
-    component: SmartContactDetailsForm,
+    component: ContactDetailsForm,
     icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
   },
   {

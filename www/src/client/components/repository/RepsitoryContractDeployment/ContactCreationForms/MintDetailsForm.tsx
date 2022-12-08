@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { ContractForm } from './ContractForm'
-import type { SmartContactDetailsForm } from './SmartContactDetailsForm'
+import { ContractForm } from '../ContractForm'
 
 export type MintDetailsForm = {
   collectionSize: number // inferred from deployment
@@ -12,7 +11,7 @@ export const MintDetailsForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<SmartContactDetailsForm>({
+  } = useForm<{}>({
     defaultValues: {
       contractName: '',
       contractSymbol: '',
