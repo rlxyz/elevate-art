@@ -1,5 +1,5 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import { RectangleGroup } from '@components/layout/icons/RectangleGroup'
+import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, MoonIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -154,9 +154,19 @@ type CarouselSegmentProps = {
   onClick: (index: number) => void
   x: MotionValue<number>
   opacity: MotionValue<number>
+  enabled: boolean
 }
 
-const CarouselSegment = ({ transformOutputRange, transformInputRange, children, index, onClick, x, opacity }: CarouselSegmentProps) => {
+const CarouselSegment = ({
+  transformOutputRange,
+  transformInputRange,
+  children,
+  index,
+  onClick,
+  x,
+  opacity,
+  enabled,
+}: CarouselSegmentProps) => {
   const left = useTransform(x, transformInputRange, transformOutputRange)
   const opacitySegment = useTransform(opacity, [0, 1], [0, 1])
   return (
@@ -165,7 +175,13 @@ const CarouselSegment = ({ transformOutputRange, transformInputRange, children, 
       onClick={() => onClick(index)}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
     >
-      <motion.div style={{ opacity: opacitySegment }} className='rounded-full border p-2 transition-all duration-300 border-mediumGrey'>
+      <motion.div
+        style={{ opacity: opacitySegment }}
+        className={clsx(
+          'rounded-full border-[1px] p-2 transition-all duration-300',
+          enabled ? 'border-blueHighlight bg-blueHighlight/10' : 'border-mediumGrey'
+        )}
+      >
         <div className='h-12 w-12 rounded-full  flex items-center justify-center'>{children}</div>
       </motion.div>
     </motion.button>
@@ -206,6 +222,7 @@ const ContractCreationSegments: ContractCreationSegmentProps[] = [
   },
 ]
 
+/** @todo modularise */
 const ContractCreationHelperAnimation = () => {
   const x = useMotionValue(0.5)
   const y = useMotionValue(0.75)
@@ -247,14 +264,15 @@ const ContractCreationHelperAnimation = () => {
 
   return (
     <motion.div initial='hidden' animate='visible' variants={list} className='flex h-full flex-col items-center w-full space-y-9'>
-      <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
+      {/* <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
-      </div>
+      </div> */}
       <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden rounded-[5px]'>
         <AnimatePresence>
           <CarouselSegment
+            enabled={currentSegment === 0}
             transformOutputRange={['0%', '25%', '50%']}
             transformInputRange={[0, 0.25, 0.5]}
             index={0}
@@ -262,9 +280,10 @@ const ContractCreationHelperAnimation = () => {
             x={x}
             opacity={opacityX}
           >
-            <CubeIcon className='w-10 h-10 text-darkGrey' />
+            <TriangleIcon className='w-8 h-8 -translate-y-[1.5px] text-black' />
           </CarouselSegment>
           <CarouselSegment
+            enabled={currentSegment === 1}
             transformOutputRange={['25%', '50%', '75%']}
             transformInputRange={[0.25, 0.5, 0.75]}
             index={1}
@@ -272,9 +291,10 @@ const ContractCreationHelperAnimation = () => {
             x={y}
             opacity={opacityY}
           >
-            <RectangleGroup className='w-10 h-10 text-darkGrey' />
+            <CubeIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
           <CarouselSegment
+            enabled={currentSegment === 2}
             transformOutputRange={['50%', '75%', '100%']}
             transformInputRange={[0.5, 0.75, 1]}
             index={2}
@@ -282,7 +302,7 @@ const ContractCreationHelperAnimation = () => {
             x={z}
             opacity={opacityZ}
           >
-            <MoonIcon className='w-10 h-10 text-darkGrey' />
+            <MoonIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
         </AnimatePresence>
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
@@ -330,9 +350,9 @@ const Page = () => {
           <div className='min-h-[calc(100vh-9.14rem)] flex flex-col my-16'>
             <div className='flex h-full flex-col items-center w-full space-y-9'>
               <ContractCreationHelperAnimation />
-              {ContractCreationSegments.map(({ id, component }, index) => (
-                <div key={id} className={(clsx(index !== currentSegment && 'hidden'), 'w-full flex flex-col items-center space-y-9')}>
-                  {component()}
+              {ContractCreationSegments.map((item, index) => (
+                <div key={item.id} className={clsx(currentSegment !== index && 'hidden', 'w-full flex flex-col items-center space-y-9')}>
+                  <item.component />
                 </div>
               ))}
             </div>

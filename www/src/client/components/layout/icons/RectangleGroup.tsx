@@ -1,19 +1,18 @@
 import type { FC } from 'react'
 
-export const RectangleGroup: FC<React.HTMLAttributes<any>> = ({ className, ...props }) => (
+export const TriangleIcon: FC<React.HTMLAttributes<any>> = ({ className, ...props }) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
-    viewBox='0 0 24 24'
+    viewBox='0 0 109 95'
     strokeWidth={1.5}
     stroke='currentColor'
     className={className}
     {...props}
   >
     <path
-      stroke-linecap='round'
-      stroke-linejoin='round'
-      d='M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z'
+      d='M52.7679 1C53.5378 -0.333332 55.4622 -0.333333 56.232 1L108.627 91.75C109.396 93.0833 108.434 94.75 106.895 94.75H2.10546C0.565864 94.75 -0.396388 93.0833 0.373412 91.75L52.7679 1Z'
+      fill='black'
     />
   </svg>
 )
