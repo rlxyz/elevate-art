@@ -356,8 +356,45 @@ const ContractCreationHelperAnimation = () => {
             <MoonIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
         </AnimatePresence>
-
+        <button
+          onClick={() => {
+            handleClick(currentSegment - 1)
+          }}
+          className={clsx(
+            'relative z-1 rounded-full border border-mediumGrey bg-white p-sm transition hover:bg-lightGray false text-darkGrey',
+            currentSegment === 0 && 'opacity-0 pointer-events-none'
+          )}
+        >
+          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='block shrink-0'>
+            <path
+              d='M14.25 6.75L9.70711 11.2929C9.31658 11.6834 9.31658 12.3166 9.70711 12.7071L14.25 17.25'
+              stroke='currentColor'
+              stroke-width='1.5'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+            ></path>
+          </svg>
+        </button>
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
+        <button
+          onClick={() => {
+            handleClick(currentSegment + 1)
+          }}
+          className={clsx(
+            'relative z-1 rounded-full border border-mediumGrey bg-white p-sm transition hover:bg-lightGray false text-darkGrey',
+            currentSegment === 2 && 'opacity-0 pointer-events-none'
+          )}
+        >
+          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='block shrink-0'>
+            <path
+              d='M9.75 17.25L14.2929 12.7071C14.6834 12.3166 14.6834 11.6834 14.2929 11.2929L9.75 6.75'
+              stroke='currentColor'
+              stroke-width='1.5'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+            ></path>
+          </svg>
+        </button>
       </div>
     </div>
   )
