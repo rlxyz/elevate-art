@@ -15,14 +15,9 @@ import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/e
 import { z } from 'zod'
 import create from 'zustand'
 
-const useContractCreationStore = create<{
-  currentSegment: number
-  setCurrentSegment: (segment: number) => void
-}>((set) => ({
-  currentSegment: 0,
-  setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
-}))
-
+const MintDetailsForm = () => {
+  return <>Mint Details Form</>
+}
 const SmartContactDetailsForm = () => {
   const {
     register,
@@ -137,14 +132,13 @@ const SmartContactDetailsForm = () => {
   )
 }
 
-const MintDetailsForm = () => {
-  return <>Mint Details Form</>
-}
-
-const list = {
-  visible: { opacity: 1 },
-  hidden: { opacity: 0, x: 0 },
-}
+const useContractCreationStore = create<{
+  currentSegment: number
+  setCurrentSegment: (segment: number) => void
+}>((set) => ({
+  currentSegment: 0,
+  setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
+}))
 
 type CarouselSegmentProps = {
   transformOutputRange: string[]
@@ -263,7 +257,7 @@ const ContractCreationHelperAnimation = () => {
   }
 
   return (
-    <motion.div initial='hidden' animate='visible' variants={list} className='flex h-full flex-col items-center w-full space-y-9'>
+    <div className='flex h-full flex-col items-center w-full space-y-9'>
       {/* <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
         <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
@@ -273,7 +267,7 @@ const ContractCreationHelperAnimation = () => {
         <AnimatePresence>
           <CarouselSegment
             enabled={currentSegment === 0}
-            transformOutputRange={['0%', '25%', '50%']}
+            transformOutputRange={['15%', '32.5%', '50%']}
             transformInputRange={[0, 0.25, 0.5]}
             index={0}
             onClick={handleClick}
@@ -284,7 +278,7 @@ const ContractCreationHelperAnimation = () => {
           </CarouselSegment>
           <CarouselSegment
             enabled={currentSegment === 1}
-            transformOutputRange={['25%', '50%', '75%']}
+            transformOutputRange={['32.5%', '50%', '67.5%']}
             transformInputRange={[0.25, 0.5, 0.75]}
             index={1}
             onClick={handleClick}
@@ -295,7 +289,7 @@ const ContractCreationHelperAnimation = () => {
           </CarouselSegment>
           <CarouselSegment
             enabled={currentSegment === 2}
-            transformOutputRange={['50%', '75%', '100%']}
+            transformOutputRange={['50%', '67.5%', '85%']}
             transformInputRange={[0.5, 0.75, 1]}
             index={2}
             onClick={handleClick}
@@ -305,9 +299,10 @@ const ContractCreationHelperAnimation = () => {
             <MoonIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
         </AnimatePresence>
+
         <div className='relative h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-[-1]' />
       </div>
-    </motion.div>
+    </div>
   )
 }
 
