@@ -14,7 +14,6 @@ export const HomePage = () => {
   const repositoryName = router.query.repository as string
   const { data, isLoading } = useGetProjectDetail('rlxyz')
   const account = useAccount()
-
   useEffect(() => {
     if (account?.address) {
       LogRocket.identify(account?.address)
