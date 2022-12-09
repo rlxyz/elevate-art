@@ -1,5 +1,6 @@
-import { ConnectButton } from 'src/client/hooks/contractsReadonnectButton'
-import { useMintPeriod } from 'src/hooks/contractsRead'
+import { useMintPeriod } from 'src/client/hooks/contractsRead'
+
+import { ConnectButton } from '../ConnectButton'
 
 export const Header = () => {
   const { mintPhase } = useMintPeriod()

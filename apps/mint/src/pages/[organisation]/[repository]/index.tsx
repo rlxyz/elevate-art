@@ -1,7 +1,7 @@
-import { PageContainer } from '@Components/core/Layout/PageContainer'
+import { MintLayout } from '@Components/core/Layout/PageContainer'
 import { ProjectInfo } from '@Components/core/Minter/ProjectInfo'
 import { MintSection } from '@Components/core/MintSection/MintSection'
-import { ProjectHeader } from '@Components/core/ProjectHeader'
+import { Layout } from '@Components/layout/core/Layout'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -22,30 +22,43 @@ export const HomePage = () => {
   }, [account?.address])
 
   return (
-    <>
-      <PageContainer
-        header={
-          <ProjectHeader
-            bannerImageUrl={data?.projectBanner}
-            profileImageUrl={data?.projectProfileImage}
-            projectOwner={data?.projectOwner}
-          />
-        }
-        leftContent={
-          <ProjectInfo
-            projectName={data?.projectName}
-            projectDescription={data?.projectDescription}
-            bannerImageUrl={data?.projectInfoBanner}
-            discordUrl={data?.discordUrl}
-            twitterUrl={data?.twitterUrl}
-            openseaUrl={data?.openseaUrl}
-            price={data?.ethPrice}
-            supply={data?.totalSupply}
-          />
-        }
-        rightContent={<MintSection />}
+    <Layout>
+      <Layout.Header
+        internalRoutes={[
+          {
+            current: `${organisationName}`,
+            href: `/${organisationName}`,
+          },
+          {
+            current: `${repositoryName}`,
+            href: `/${organisationName}/${repositoryName}`,
+          },
+        ]}
       />
-    </>
+      <Layout.Body margin={false}>
+        <MintLayout>
+          <MintLayout.Header
+            bannerImageUrl={'/images/moonbirds-banner.png'}
+            profileImageUrl={'/images/moonbirds-profile.avif'}
+          />
+          <div className="px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2">
+            <ProjectInfo
+              projectName={data?.projectName}
+              projectDescription={data?.projectDescription}
+              bannerImageUrl={data?.projectInfoBanner}
+              discordUrl={data?.discordUrl}
+              twitterUrl={data?.twitterUrl}
+              openseaUrl={data?.openseaUrl}
+              price={data?.ethPrice}
+              supply={data?.totalSupply}
+            />
+            <div className="ml-5">
+              <MintSection />
+            </div>
+          </div>
+        </MintLayout>
+      </Layout.Body>
+    </Layout>
   )
 }
 

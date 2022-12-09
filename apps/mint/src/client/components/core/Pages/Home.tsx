@@ -1,7 +1,7 @@
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 
 import { Layout } from '../Layout/Layout'
-import { PageContainer } from '../Layout/PageContainer'
+import { MintLayout } from '../Layout/PageContainer'
 import { ProjectInfo } from '../Minter/ProjectInfo'
 import { MintSection } from '../MintSection/MintSection'
 import { ProjectHeader } from '../ProjectHeader'
@@ -20,7 +20,7 @@ export const Home = () => {
 
   return (
     <Layout>
-      <PageContainer
+      <MintLayout
         header={
           <ProjectHeader
             bannerImageUrl={data?.projectBanner}
