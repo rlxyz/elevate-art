@@ -1,3 +1,4 @@
+import Card from '@Components/layout/card'
 import React from 'react'
 
 interface RightContentContainerProps {
@@ -12,13 +13,13 @@ export const RightContentContainer: React.FC<RightContentContainerProps> = ({
   children,
 }) => {
   return (
-    <>
+    <Card>
       <div className="font-bold text-xl font-plus-jakarta-sans mb-5">{firstHeading}</div>
       <hr className="border-lightGray" />
-      <div className="py-10">{secondHeading}</div>
+      <Card>{secondHeading}</Card>
       <div className="flex flex-col border border-lightGray rounded-lg p-5">
         {children}
       </div>
-    </>
+    </Card>
   )
 }

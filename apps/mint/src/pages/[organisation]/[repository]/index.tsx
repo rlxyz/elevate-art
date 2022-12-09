@@ -1,5 +1,5 @@
-import { MintLayout } from '@Components/core/Layout/PageContainer'
 import { ProjectInfo } from '@Components/core/Minter/ProjectInfo'
+import { MintLayout } from '@Components/core/MintLayout'
 import { MintSection } from '@Components/core/MintSection/MintSection'
 import { Layout } from '@Components/layout/core/Layout'
 import LogRocket from 'logrocket'

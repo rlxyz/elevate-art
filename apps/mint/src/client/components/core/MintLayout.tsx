@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import React from 'react'
 
-interface PageContainerProps {
+interface MintLayoutProps {
   children: React.ReactNode
 }
 
-export const MintLayout = ({ children }: PageContainerProps) => {
+export const MintLayout = ({ children }: MintLayoutProps) => {
   return <>{children}</>
 }
 

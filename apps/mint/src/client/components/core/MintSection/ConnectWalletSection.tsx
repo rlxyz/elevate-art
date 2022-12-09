@@ -1,6 +1,5 @@
+import { ConnectButton } from '@Components/layout/eth/ConnectButton'
 import { useAccount } from 'wagmi'
-
-import { ConnectButton } from '../ConnectButton'
 
 export const ConnectWalletSection = () => {
   const { isConnected } = useAccount()
