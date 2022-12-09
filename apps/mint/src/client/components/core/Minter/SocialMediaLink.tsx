@@ -1,4 +1,5 @@
 import React from 'react'
+import { EtherscanIcon } from '../EtherscanIcon'
 
 import { SocialButton } from '../SocialButton'
 
@@ -6,24 +7,30 @@ interface SocialMediaLinkProps {
   discordUrl?: string
   twitterUrl?: string
   openseaUrl?: string
+  etherscanUrl?: string
 }
 
-export const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({ discordUrl, twitterUrl, openseaUrl }) => {
+export const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({ discordUrl, twitterUrl, openseaUrl, etherscanUrl }) => {
   return (
-    <div className='flex w-[100px] items-center mb-0.5'>
+    <div className='flex w-[100px] space-x-3 items-center mb-0.5'>
       {discordUrl && (
         <SocialButton href={discordUrl}>
-          <img src='/images/discord.svg' className='w-[18px]' alt='Discord' />
+          <EtherscanIcon />
         </SocialButton>
       )}
       {twitterUrl && (
         <SocialButton href={twitterUrl}>
-          <img src='/images/twitter.svg' className='w-[18px]' alt='Twitter' />
+          <EtherscanIcon />
         </SocialButton>
       )}
       {openseaUrl && (
         <SocialButton href={openseaUrl}>
-          <img src='/images/opensea.svg' className='w-[18px]' alt='Opensea' />
+          <EtherscanIcon />
+        </SocialButton>
+      )}
+      {etherscanUrl && (
+        <SocialButton href={etherscanUrl}>
+          <EtherscanIcon />
         </SocialButton>
       )}
     </div>

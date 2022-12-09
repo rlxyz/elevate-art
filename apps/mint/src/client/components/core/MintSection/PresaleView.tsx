@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
 import { usePresaleRequirements } from 'src/client/hooks/usePresaleRequirements'
-import { config } from 'src/client/utils/config'
 import { useAccount } from 'wagmi'
 
 import { RightContentContainer } from '../Layout/RightContentContainer'
-import { MintButton } from '../Minter/MintButton'
 import { NFTAmount } from '../Minter/NFTAmount'
 import { ConnectWalletSection } from './ConnectWalletSection'
 import { PublicSaleCountdown } from './PublicSaleCountdown'
@@ -52,11 +50,11 @@ export const PresaleView = () => {
         />
         <div className='flex justify-between items-center mt-7'>
           <span className='block font-plus-jakarta-sans font-bold'>Total</span>
-          <span className='block font-plus-jakarta-sans font-bold'>{`${config.totalPriceAllocation[mintCount - 1]} ETH`}</span>
+          {/* <span className='block font-plus-jakarta-sans font-bold'>{`${config.totalPriceAllocation[mintCount - 1]} ETH`}</span> */}
         </div>
       </div>
       <div className='mt-10'>
-        <MintButton disabled={isDisconnected || isLoading || !allowToMint} onClick={() => mint(mintCount)} />
+        {/* <MintButton disabled={isDisconnected || isLoading || !allowToMint} onClick={() => mint(mintCount)} /> */}
       </div>
     </RightContentContainer>
   )

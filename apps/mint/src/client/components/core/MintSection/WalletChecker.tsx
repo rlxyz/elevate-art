@@ -1,5 +1,6 @@
 import { useDebouncedState } from '@react-hookz/web'
-import { CheckWalletResult, useWalletCheck } from 'src/client/hooks/useWalletCheck'
+import type { CheckWalletResult } from 'src/client/hooks/useWalletCheck'
+import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
 
 import { RightContentContainer } from '../Layout/RightContentContainer'
 import { Button } from '../UI/Button'

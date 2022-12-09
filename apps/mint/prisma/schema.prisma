@@ -1,0 +1,208 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
+}
+
+datasource db {
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
+}
+
+model User {
+    id            String    @id @default(cuid())
+    address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
+    name          String?   @unique
+    email         String?   @unique
+    emailVerified DateTime?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @default(now())
+    image         String?
+
+    members              OrganisationMember[]
+    RepositoryDeployment RepositoryDeployment[]
+}
+
+model Organisation {
+    id        String   @id @default(cuid())
+    name      String   @unique @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    type      String   @default("personal") @db.VarChar(255)
+
+    repositories Repository[]
+    members      OrganisationMember[]
+    pendings     OrganisationPending[]
+
+    @@map(name: "organisations")
+}
+
+model OrganisationMember {
+    id             String       @id @default(cuid())
+    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId         String
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
+    type           String       @default("admin") @db.VarChar(255)
+
+    @@unique([userId, organisationId])
+}
+
+model OrganisationPending {
+    id             String       @id @default(cuid())
+    address        String       @db.VarChar(42)
+    role           String       @db.VarChar(20) // shouldnt have default value as we can server to explicitly specific
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now())
+
+    @@unique([address, organisationId])
+}
+
+model Repository {
+    id        String   @id @default(cuid())
+    name      String   @db.VarChar(255)
+    tokenName String   @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    bucket    Boolean  @default(false) // gcp bucket setup is done or not...
+
+    layers      LayerElement[]
+    collections Collection[]
+
+    organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+    organisationId String
+
+    deployments                  RepositoryDeployment[]
+    RepositoryContractDeployment RepositoryContractDeployment[]
+
+    @@unique([organisationId, name], name: "repositoryIdentifier")
+    @@map(name: "repositories")
+}
+
+model RepositoryDeployment {
+    id         String                     @id @default(cuid())
+    name       String                     @db.VarChar(255)
+    attributes Json
+    createdAt  DateTime                   @default(now())
+    updatedAt  DateTime                   @updatedAt
+    status     RepositoryDeploymentStatus @default(PENDING)
+    type       RepositoryDeploymentType   @default(PREVIEW)
+    stealth    Boolean                    @default(false)
+
+    collectionName        String     @db.VarChar(255) // used as seed
+    collectionTotalSupply Int // used as seed
+    collectionGenerations Int // used as seed
+    repositoryId          String // used as seed
+    repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    contractDeployment RepositoryContractDeployment?
+
+    @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
+}
+
+// If this model has a relationship with RepositoryArtDeploymnent, and someone tries to delete him, enforce that it CANNOT happen
+model RepositoryContractDeployment {
+    id      String                             @id @default(cuid())
+    address String                             @db.VarChar(42)
+    status  RepositoryContractDeploymentStatus @default(PENDING)
+
+    repositoryId String
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
+    repositoryDeploymentId String?               @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum RepositoryContractDeploymentStatus {
+    PENDING
+    VERIFYING
+    DEPLOYED
+    FAILED
+}
+
+enum RepositoryDeploymentStatus {
+    PENDING
+    DEPLOYED
+    FAILED
+}
+
+enum RepositoryDeploymentType {
+    PRODUCTION
+    PREVIEW
+}
+
+model Collection {
+    id          String @id @default(cuid())
+    name        String @default("main") @db.VarChar(255)
+    type        String @default("default") @db.VarChar(255)
+    totalSupply Int    @default(10000)
+    generations Int    @default(1)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+    repositoryId String
+
+    @@unique([repositoryId, name], name: "collectionIdentifier")
+}
+
+model LayerElement {
+    id       String @id @default(cuid())
+    name     String @db.VarChar(255)
+    priority Int    @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+    repositoryId String
+
+    traitElements TraitElement[]
+
+    @@unique([name, repositoryId])
+    @@unique([priority, repositoryId])
+}
+
+model TraitElement {
+    id String @id @default(cuid())
+
+    name     String
+    weight   Float   @default(1)
+    readonly Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    layerElement   LayerElement @relation(fields: [layerElementId], references: [id], onDelete: Cascade)
+    layerElementId String
+
+    rulesPrimary   Rules[] @relation("primaryTraitElement")
+    rulesSecondary Rules[] @relation("secondaryTraitElement")
+
+    @@unique([name, layerElementId])
+}
+
+model Rules {
+    id                      String       @id @default(cuid())
+    condition               String
+    primaryTraitElementId   String
+    secondaryTraitElementId String
+    primaryTraitElement     TraitElement @relation("primaryTraitElement", fields: [primaryTraitElementId], references: [id], onDelete: Cascade)
+    secondaryTraitElement   TraitElement @relation("secondaryTraitElement", fields: [secondaryTraitElementId], references: [id], onDelete: Cascade)
+
+    @@unique([primaryTraitElementId, secondaryTraitElementId])
+}

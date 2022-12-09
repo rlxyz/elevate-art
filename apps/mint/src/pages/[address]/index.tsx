@@ -1,17 +1,17 @@
-import { ProjectInfo } from '@Components/core/Minter/ProjectInfo'
 import { MintLayout } from '@Components/core/MintLayout'
-import { MintSection } from '@Components/core/MintSection/MintSection'
 import { Layout } from '@Components/layout/core/Layout'
+import { RepositoryContractDeploymentStatus } from '@prisma/client'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
+import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
 import { useAccount } from 'wagmi'
 
 export const HomePage = () => {
   const router = useRouter()
-  const organisationName = router.query.organisation as string
-  const repositoryName = router.query.repository as string
+  const address = router.query.address as string
+  const { current } = useQueryContractDeployment()
   const { data, isLoading } = useGetProjectDetail('rlxyz')
   const account = useAccount()
   useEffect(() => {
@@ -20,24 +20,29 @@ export const HomePage = () => {
     }
   }, [account?.address])
 
+  if (!current || !(current.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
+
   return (
     <Layout>
       <Layout.Header
         internalRoutes={[
           {
-            current: `${organisationName}`,
-            href: `/${organisationName}`,
-          },
-          {
-            current: `${repositoryName}`,
-            href: `/${organisationName}/${repositoryName}`,
+            current: `${address}`,
+            href: `/${address}`,
           },
         ]}
       />
       <Layout.Body margin={false}>
         <MintLayout>
           <MintLayout.Header bannerImageUrl={'/images/moonbirds-banner.png'} profileImageUrl={'/images/moonbirds-profile.avif'} />
-          <div className='px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2'>
+          <MintLayout.Description
+            organisation={current.repository.organisation}
+            repository={current.repository}
+            deployment={current.repositoryDeployment} // @todo fix
+            contractDeployment={current}
+          />
+          <MintLayout.Body contractDeployment={current} />
+          {/* <div className='px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2'>
             <ProjectInfo
               projectName={data?.projectName}
               projectDescription={data?.projectDescription}
@@ -51,7 +56,7 @@ export const HomePage = () => {
             <div className='ml-5'>
               <MintSection />
             </div>
-          </div>
+          </div> */}
         </MintLayout>
       </Layout.Body>
     </Layout>

@@ -1,8 +1,8 @@
 import { router } from '../trpc'
-import { repositoryRouter } from './repository'
+import { contractDeploymentRouter } from './contractDeployment'
 
 export const appRouter = router({
-  repository: repositoryRouter,
+  contractDeploymentRouter: contractDeploymentRouter,
 })
 
 // export type definition of API

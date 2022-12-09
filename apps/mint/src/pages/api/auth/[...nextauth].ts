@@ -1,8 +1,10 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import type { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
 import { env } from 'src/env/server.mjs'
 import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/shared/enums'
+import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -45,7 +47,7 @@ export const authOptions: NextAuthOptions = {
             ? env.NEXTAUTH_URL
             : process.env.VERCEL
             ? `https://${process.env.VERCEL_URL}`
-            : 'http://localhost:3000'
+            : 'http://localhost:3001'
           if (!nextAuthUrl) return null
           if (siwe.domain !== new URL(nextAuthUrl).host) return null
           if (!siwe.address.length) return null

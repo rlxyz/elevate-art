@@ -1,16 +1,13 @@
 {
   "name": "@rlxyz/mint-client",
-  "common": {
-    "ethereum": "template.rhapsodylabs.eth"
-  },
   "version": "0.1.0",
-  "description": "Base template for RLXY mint client",
-  "author": "Rhapsody Labs",
+  "private": true,
   "scripts": {
     "dev": "doppler setup && doppler run next dev",
     "build": "doppler run next build",
     "start": "next start",
-    "postinstall": "prisma generate --schema=../../www/prisma/schema.prisma",
+    "postinstall": "prisma generate",
+    "push": "prisma db push",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -29,7 +26,7 @@
     "@react-hookz/web": "^15.0.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.2",
-    "@tanstack/react-query": "^4.0.10",
+    "@tanstack/react-query": "^4.16.0",
     "@trpc/client": "^10.0.0",
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
@@ -37,6 +34,7 @@
     "@vercel/analytics": "^0.1.6",
     "@zeit/next-source-maps": "^0.0.3",
     "classnames": "^2.3.1",
+    "clsx": "^1.2.1",
     "dayjs": "^1.11.3",
     "ethers": "^5.7.2",
     "framer-motion": "^7.2.1",
@@ -47,6 +45,7 @@
     "merkletreejs": "^0.2.32",
     "next": "^13.0.6",
     "next-auth": "^4.18.4",
+    "next-axiom": "^0.16.0",
     "next-seo": "^5.15.0",
     "nuka-carousel": "^5.2.0",
     "react": "18.2.0",
@@ -64,7 +63,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
-    "@next/bundle-analyzer": "^12.2.2",
+    "@next/bundle-analyzer": "^13.0.6",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",

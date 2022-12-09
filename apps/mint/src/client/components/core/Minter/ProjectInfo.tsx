@@ -2,7 +2,6 @@ import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import { Requirements } from '../MintRequirements/Requirements'
-import { SocialMediaLink } from './SocialMediaLink'
 
 interface ProjectInfoProps {
   projectName: string
@@ -28,11 +27,7 @@ export const ProjectInfo: React.FC<ProjectInfoProps> = ({
   return (
     <>
       <div className='flex flex-col mr-5'>
-        <div className='flex items-end mb-5'>
-          <h1 className='text-2xl font-bold mr-4'>{projectName}</h1>
-          <SocialMediaLink discordUrl={discordUrl} twitterUrl={twitterUrl} openseaUrl={openseaUrl} />
-        </div>
-        <div className='my-5 relative overflow-hidden h-[350px] w-full 2xl:h-[400px]'>
+        <div className='relative overflow-hidden h-[350px] w-full 2xl:h-[400px]'>
           <div className='block absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border'>
             <img
               alt={projectName}
