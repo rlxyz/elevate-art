@@ -2,7 +2,7 @@
 import { Layout } from '@components/layout/core/Layout'
 import NextLink from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
