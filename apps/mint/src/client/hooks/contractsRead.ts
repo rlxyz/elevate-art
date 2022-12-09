@@ -57,10 +57,7 @@ export const useMintPeriod = (): UseMintPeriod => {
     watch: true,
   })
 
-  const presaleTime = useMemo(
-    () => contractPresaleTime?.toNumber(),
-    [contractPresaleTime],
-  )
+  const presaleTime = useMemo(() => contractPresaleTime?.toNumber(), [contractPresaleTime])
   const publicTime = useMemo(() => contractPublicTime?.toNumber(), [contractPublicTime])
   const now = Math.floor(Date.now() / 1000)
 

@@ -15,8 +15,7 @@ export const TotalMinted: React.FC<TotalMintedProps> = ({ totalMinted, isEligibl
     <Container>
       <RequirementStatus passed={isEligible} />
       <span>
-        This collection has minted{' '}
-        <strong>{`${totalMinted}/${data?.totalSupply} NFTs`}</strong>
+        This collection has minted <strong>{`${totalMinted}/${data?.totalSupply} NFTs`}</strong>
       </span>
     </Container>
   )

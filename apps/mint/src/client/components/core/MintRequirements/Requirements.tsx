@@ -12,14 +12,14 @@ export const Requirements = () => {
 
   if (mintPhase === 'presale') {
     return (
-      <Accordion label="Presale Requirements">
+      <Accordion label='Presale Requirements'>
         <PresaleRequirements />
       </Accordion>
     )
   }
 
   return (
-    <Accordion label="Public Sale Requirements">
+    <Accordion label='Public Sale Requirements'>
       <PublicSaleRequirements />
     </Accordion>
   )

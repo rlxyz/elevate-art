@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { data } from '../../../data'
 
 const fetchProjectDetail = async () => {
-  return new Promise<ProjectDetail>(resolve => {
+  return new Promise<ProjectDetail>((resolve) => {
     setTimeout(() => resolve(data), 1000)
   })
 }
@@ -32,10 +32,7 @@ interface UseGetProjectDetail {
 }
 
 export const useGetProjectDetail = (projectSlug: string): UseGetProjectDetail => {
-  const { data, isLoading } = useQuery<ProjectDetail, Error, ProjectDetail>(
-    [projectSlug],
-    fetchProjectDetail,
-  )
+  const { data, isLoading } = useQuery<ProjectDetail, Error, ProjectDetail>([projectSlug], fetchProjectDetail)
 
   return {
     data,

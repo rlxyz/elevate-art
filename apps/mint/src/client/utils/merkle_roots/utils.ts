@@ -13,27 +13,23 @@ export const generateLeaf = (address: string, value: string): Buffer => {
   return Buffer.from(
     // Hash in appropriate Merkle format
     ethers.utils.solidityKeccak256(['address', 'uint256'], [address, value]).slice(2),
-    'hex',
+    'hex'
   )
 }
 
 // Setup merkle tree
 export const presaleMerkleTree = new MerkleTree(
   // Generate leafs
-  Object.entries(presaleConfig.whitelist).map(([address, tokens]) =>
-    generateLeaf(ethers.utils.getAddress(address), tokens.toString()),
-  ),
+  Object.entries(presaleConfig.whitelist).map(([address, tokens]) => generateLeaf(ethers.utils.getAddress(address), tokens.toString())),
   // Hashing function
   keccak256,
-  { sortPairs: true },
+  { sortPairs: true }
 )
 
 export const claimMerkleTree = new MerkleTree(
   // Generate leafs
-  Object.entries(claimConfig.whitelist).map(([address, tokens]) =>
-    generateLeaf(ethers.utils.getAddress(address), tokens.toString()),
-  ),
+  Object.entries(claimConfig.whitelist).map(([address, tokens]) => generateLeaf(ethers.utils.getAddress(address), tokens.toString())),
   // Hashing function
   keccak256,
-  { sortPairs: true },
+  { sortPairs: true }
 )

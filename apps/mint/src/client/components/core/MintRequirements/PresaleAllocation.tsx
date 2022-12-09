@@ -8,10 +8,7 @@ interface PresaleAllocationProps {
   maxAllocation: number
 }
 
-export const PresaleAllocation: React.FC<PresaleAllocationProps> = ({
-  isEligible,
-  maxAllocation,
-}) => {
+export const PresaleAllocation: React.FC<PresaleAllocationProps> = ({ isEligible, maxAllocation }) => {
   return (
     <Container bottom>
       <RequirementStatus passed={isEligible} />

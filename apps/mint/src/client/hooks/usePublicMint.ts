@@ -1,10 +1,7 @@
 import { ethers } from 'ethers'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 import { config } from 'src/client/utils/config'
-import {
-  COLLECTION_DISTRIBUTION,
-  RhapsodyContractConfig,
-} from 'src/client/utils/constant'
+import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 
 import { usePublicSaleMaxAllocation } from './contractsRead'
@@ -18,9 +15,7 @@ interface UsePublicMint {
 
 export const usePublicMint = (address: string): UsePublicMint => {
   const { data } = useGetProjectDetail('rlxyz')
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification(
-    data?.projectName,
-  )
+  const { notifyError, notifySubmitted, notifySuccess } = useNotification(data?.projectName)
   const maxInvocation = usePublicSaleMaxAllocation(address)
   const {
     write,
@@ -31,23 +26,23 @@ export const usePublicMint = (address: string): UsePublicMint => {
     mode: 'recklesslyUnprepared',
     ...RhapsodyContractConfig,
     functionName: 'publicMint',
-    onSettled: data => {
+    onSettled: (data) => {
       if (data) {
         notifySubmitted(data?.hash)
       }
     },
-    onError: error => {
+    onError: (error) => {
       // @ts-expect-error may not be needed to construct a custom type for error
       notifyError({ message: error?.data?.message ?? error?.message })
     },
   })
   const { isLoading: trxIsProcessing } = useWaitForTransaction({
     hash: trx?.hash,
-    onError: error => {
+    onError: (error) => {
       // @ts-expect-error may not be needed to construct a custom type for error
       notifyError({ message: error?.data?.message ?? error?.message })
     },
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (data) {
         notifySuccess()
       }

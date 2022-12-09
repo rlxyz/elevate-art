@@ -15,7 +15,7 @@ const nextConfig = {
     config.plugins.push(
       new webpack.ProvidePlugin({
         React: 'react',
-      }),
+      })
     )
 
     if (!dev) {
@@ -25,24 +25,21 @@ const nextConfig = {
       config.plugins.push(
         new webpack.DefinePlugin({
           'process.env.NEXT_PUBLIC_BUILD_ID': codeVersion,
-        }),
+        })
       )
       config.plugins.push(
         new RollbarSourceMapPlugin({
           accessToken: NEXT_PUBLIC_ROLLBAR_SERVER_TOKEN,
           version: codeVersion,
           publicPath: NEXT_PUBLIC_ASSET_PUBLIC_PATH,
-        }),
+        })
       )
     }
 
     return config
   },
   images: {
-    domains: [
-      'rlwxyz.nyc3.cdn.digitaloceanspaces.com',
-      'rlyxz.nyc3.cdn.digitaloceanspaces.com',
-    ],
+    domains: ['rlwxyz.nyc3.cdn.digitaloceanspaces.com', 'rlyxz.nyc3.cdn.digitaloceanspaces.com'],
   },
   i18n: {
     locales: ['en-US'],

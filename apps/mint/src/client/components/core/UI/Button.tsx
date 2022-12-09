@@ -7,7 +7,7 @@ type ButtonProps = {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { label, fullWidth, type = 'button', children, ...props },
-  ref,
+  ref
 ) {
   return (
     <button

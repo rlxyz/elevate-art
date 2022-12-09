@@ -1,8 +1,4 @@
-import {
-  useMintCount,
-  usePublicSaleMaxAllocation,
-  useTotalMinted,
-} from 'src/client/hooks/contractsRead'
+import { useMintCount, usePublicSaleMaxAllocation, useTotalMinted } from 'src/client/hooks/contractsRead'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 
 interface UsePresaleRequirements {

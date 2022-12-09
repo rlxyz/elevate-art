@@ -1,10 +1,7 @@
 import { ethers } from 'ethers'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 import { config } from 'src/client/utils/config'
-import {
-  COLLECTION_DISTRIBUTION,
-  RhapsodyContractConfig,
-} from 'src/client/utils/constant'
+import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
 import { generateLeaf, presaleMerkleTree } from 'src/client/utils/merkle_roots'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 
@@ -19,9 +16,7 @@ interface UsePresaleMint {
 
 export const usePresaleMint = (address: string): UsePresaleMint => {
   const { data } = useGetProjectDetail('rlxyz')
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification(
-    data?.projectName,
-  )
+  const { notifyError, notifySubmitted, notifySuccess } = useNotification(data?.projectName)
   const maxInvocation = usePresaleMaxAllocation(address)
   const {
     write,
@@ -32,23 +27,23 @@ export const usePresaleMint = (address: string): UsePresaleMint => {
     mode: 'recklesslyUnprepared',
     ...RhapsodyContractConfig,
     functionName: 'presaleMint',
-    onSettled: data => {
+    onSettled: (data) => {
       if (data) {
         notifySubmitted(data?.hash)
       }
     },
-    onError: error => {
+    onError: (error) => {
       // @ts-expect-error may not be needed to construct a custom type for error
       notifyError({ message: error?.data?.message ?? error?.message })
     },
   })
   const { isLoading: trxIsProcessing } = useWaitForTransaction({
     hash: trx?.hash,
-    onError: error => {
+    onError: (error) => {
       // @ts-expect-error may not be needed to construct a custom type for error
       notifyError({ message: error?.data?.message ?? error?.message })
     },
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (data) {
         notifySuccess()
       }

@@ -8,13 +8,7 @@ import { UserInAllowList } from './UserInAllowlist'
 
 export const PresaleRequirements = () => {
   const account = useAccount()
-  const {
-    inAllowlist,
-    collectionNotSoldOut,
-    maxAllocation,
-    hasMintAllocation,
-    totalMinted,
-  } = usePresaleRequirements(account?.address)
+  const { inAllowlist, collectionNotSoldOut, maxAllocation, hasMintAllocation, totalMinted } = usePresaleRequirements(account?.address)
   return (
     <>
       <UserInAllowList isEligible={inAllowlist} />

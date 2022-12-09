@@ -22,11 +22,11 @@ const Wrapper: React.FC<{ children: React.ReactElement }> = ({ children }) => {
 
 export const TransactionSubmitted = () => {
   return (
-    <Notification id="basic-notification" type="error">
-      <div className="flex justify-between w-full items-center">
+    <Notification id='basic-notification' type='error'>
+      <div className='flex justify-between w-full items-center'>
         <div>
-          <h3 className="font-bold text-lg">Transaction Submitted</h3>
-          <span className="block">View on etherscan</span>
+          <h3 className='font-bold text-lg'>Transaction Submitted</h3>
+          <span className='block'>View on etherscan</span>
         </div>
         <div>
           <Button>View</Button>

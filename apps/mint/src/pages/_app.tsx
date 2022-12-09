@@ -11,10 +11,7 @@ import { AppType } from 'next/app'
 
 const queryClient = new QueryClient()
 
-const Application: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const Application: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   // useEffect(() => {
   //   LogRocket.init(config.logrocketKey)
   // }, [])

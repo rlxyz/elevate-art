@@ -1,9 +1,4 @@
-import {
-  useMintCount,
-  useMintPeriod,
-  usePresaleMaxAllocation,
-  useTotalMinted,
-} from 'src/client/hooks/contractsRead'
+import { useMintCount, useMintPeriod, usePresaleMaxAllocation, useTotalMinted } from 'src/client/hooks/contractsRead'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 
 interface UsePresaleRequirements {
@@ -30,8 +25,7 @@ export const usePresaleRequirements = (address: string): UsePresaleRequirements 
   const collectionNotSoldOut = totalMinted < data?.totalSupply
   const presaleIsActive = mintPhase === 'presale'
   const hasMintAllocation = totalAvailableToMint > 0
-  const allowToMint =
-    inAllowlist && collectionNotSoldOut && presaleIsActive && hasMintAllocation
+  const allowToMint = inAllowlist && collectionNotSoldOut && presaleIsActive && hasMintAllocation
 
   return {
     inAllowlist,

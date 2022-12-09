@@ -7,19 +7,13 @@ interface RightContentContainerProps {
   children: React.ReactNode
 }
 
-export const RightContentContainer: React.FC<RightContentContainerProps> = ({
-  firstHeading,
-  secondHeading,
-  children,
-}) => {
+export const RightContentContainer: React.FC<RightContentContainerProps> = ({ firstHeading, secondHeading, children }) => {
   return (
     <Card>
-      <div className="font-bold text-xl font-plus-jakarta-sans mb-5">{firstHeading}</div>
-      <hr className="border-lightGray" />
+      <div className='font-bold text-xl font-plus-jakarta-sans mb-5'>{firstHeading}</div>
+      <hr className='border-lightGray' />
       <Card>{secondHeading}</Card>
-      <div className="flex flex-col border border-lightGray rounded-lg p-5">
-        {children}
-      </div>
+      <div className='flex flex-col border border-lightGray rounded-lg p-5'>{children}</div>
     </Card>
   )
 }

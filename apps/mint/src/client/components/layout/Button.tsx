@@ -1,10 +1,5 @@
 import cn from 'clsx'
-import {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  FC,
-  JSXElementConstructor,
-} from 'react'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, JSXElementConstructor } from 'react'
 
 import LoadingComponent from './loading/Loading'
 
@@ -37,15 +32,11 @@ export type ButtonHTMLType<C extends ButtonComponentType = 'button'> = C extends
   ? AnchorHTMLAttributes<HTMLAnchorElement>
   : ButtonHTMLAttributes<HTMLButtonElement>
 
-type ButtonFC<C extends ButtonComponentType = 'button'> = FC<
-  ButtonHTMLType<C> & ButtonProps<C>
->
+type ButtonFC<C extends ButtonComponentType = 'button'> = FC<ButtonHTMLType<C> & ButtonProps<C>>
 
-type ButtonType = <C extends ButtonComponentType = 'button'>(
-  ...args: Parameters<ButtonFC<C>>
-) => ReturnType<ButtonFC<C>>
+type ButtonType = <C extends ButtonComponentType = 'button'>(...args: Parameters<ButtonFC<C>>) => ReturnType<ButtonFC<C>>
 
-const Button: ButtonFC = props => {
+const Button: ButtonFC = (props) => {
   const {
     width,
     active,
@@ -69,12 +60,10 @@ const Button: ButtonFC = props => {
     size == 'lg' && 'h-11 leading-11 text-xs',
     variant === 'secondary' && 'bg-white text-black border border-mediumGrey',
     variant === 'primary' && 'rounded-[5px] bg-black justify-center',
-    variant === 'icon' &&
-      'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
+    variant === 'icon' && 'bg-white disabled:bg-white disabled:text-mediumGrey justify-center',
     variant === 'ghost' && 'text-black',
-    variant === 'link' &&
-      'cursor-pointer flex flex-row w-full justify-between hover:bg-lightGray',
-    className,
+    variant === 'link' && 'cursor-pointer flex flex-row w-full justify-between hover:bg-lightGray',
+    className
   )
 
   return (
@@ -90,7 +79,7 @@ const Button: ButtonFC = props => {
       {...rest}
     >
       {loading ? (
-        <i className="m-0 flex">
+        <i className='m-0 flex'>
           <LoadingComponent />
         </i>
       ) : (

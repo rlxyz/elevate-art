@@ -27,13 +27,12 @@ export const AccountClipboardCopy = () => {
   }, [copiedAddress])
 
   return (
-    <div className="p-4 border border-[#F3F3F3] mb-3 rounded-md flex mt-3 lg:mt-0">
+    <div className='p-4 border border-[#F3F3F3] mb-3 rounded-md flex mt-3 lg:mt-0'>
       {isConnected ? (
         <>
-          <img src="/images/ethereum.png" className="mr-2" alt="Ethereum Logo" />{' '}
-          <span className="font-bold mr-2">{chain?.name}: </span>
+          <img src='/images/ethereum.png' className='mr-2' alt='Ethereum Logo' /> <span className='font-bold mr-2'>{chain?.name}: </span>
           <span>{truncateWalletAddress(address || '')}</span>
-          <button className="ml-3" onClick={copyAddressAction}>
+          <button className='ml-3' onClick={copyAddressAction}>
             {copiedAddress ? <CheckIcon /> : <CopyIcon />}
           </button>
         </>

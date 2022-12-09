@@ -22,11 +22,11 @@ const CheckResult = ({ result }: { result?: CheckWalletResult }) => {
   )
 
   return (
-    <div className="flex justify-between items-center">
+    <div className='flex justify-between items-center'>
       {message}
       <img
         src={`/images/${result.isValid ? 'tick.svg' : 'untick.svg'}`}
-        className="w-5 h-5"
+        className='w-5 h-5'
         alt={result.isValid ? 'Wallet Valid' : 'Wallet Not Valid'}
       />
     </div>
@@ -53,21 +53,16 @@ export const WalletChecker = () => {
         </>
       }
     >
-      <form onSubmit={onSubmit} className="flex mt-2 mb-8">
-        <div className="mr-5 w-full">
-          <Textbox
-            id="walletAddress"
-            name="walletAddress"
-            placeholder="0x25...94cE"
-            onChange={e => setAddress(e.currentTarget.value)}
-          />
+      <form onSubmit={onSubmit} className='flex mt-2 mb-8'>
+        <div className='mr-5 w-full'>
+          <Textbox id='walletAddress' name='walletAddress' placeholder='0x25...94cE' onChange={(e) => setAddress(e.currentTarget.value)} />
         </div>
         <div>
-          <Button label="Check" disabled={!checkWallet} type="submit" />
+          <Button label='Check' disabled={!checkWallet} type='submit' />
         </div>
       </form>
-      <hr className="border-lightGray" />
-      <div className="mt-8 mb-5">
+      <hr className='border-lightGray' />
+      <div className='mt-8 mb-5'>
         <CheckResult result={result} />
       </div>
     </RightContentContainer>

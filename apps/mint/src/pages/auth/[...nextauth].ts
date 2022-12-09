@@ -64,9 +64,7 @@ export const authOptions: NextAuthOptions = {
                   organisation: {
                     create: {
                       type: OrganisationDatabaseEnum.enum.Personal,
-                      name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1)
-                        .toString(36)
-                        .substring(6)}`,
+                      name: `elevate-${address.substring(2, 8)}-${(Math.random() + 1).toString(36).substring(6)}`,
                     },
                   },
                 },

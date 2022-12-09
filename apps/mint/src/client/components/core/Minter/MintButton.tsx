@@ -10,7 +10,7 @@ interface MintButtonProps {
 export const MintButton: React.FC<MintButtonProps> = ({ onClick, disabled = false }) => {
   return (
     <Button fullWidth disabled={disabled} onClick={onClick}>
-      <span className="font-bold">Mint</span>{' '}
+      <span className='font-bold'>Mint</span>{' '}
     </Button>
   )
 }

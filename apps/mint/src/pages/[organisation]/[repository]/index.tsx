@@ -37,11 +37,8 @@ export const HomePage = () => {
       />
       <Layout.Body margin={false}>
         <MintLayout>
-          <MintLayout.Header
-            bannerImageUrl={'/images/moonbirds-banner.png'}
-            profileImageUrl={'/images/moonbirds-profile.avif'}
-          />
-          <div className="px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2">
+          <MintLayout.Header bannerImageUrl={'/images/moonbirds-banner.png'} profileImageUrl={'/images/moonbirds-profile.avif'} />
+          <div className='px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2'>
             <ProjectInfo
               projectName={data?.projectName}
               projectDescription={data?.projectDescription}
@@ -52,7 +49,7 @@ export const HomePage = () => {
               price={data?.ethPrice}
               supply={data?.totalSupply}
             />
-            <div className="ml-5">
+            <div className='ml-5'>
               <MintSection />
             </div>
           </div>

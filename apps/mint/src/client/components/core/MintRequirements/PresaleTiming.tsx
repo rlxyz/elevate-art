@@ -11,9 +11,7 @@ export const PresaleTiming = () => {
   const publicSaleCountDown = useCountDown(dayjs.unix(publicTime).toDate())
 
   if (mintPhase === 'none') {
-    const timer = `${formatTime(presaleCountDown[1])}:${formatTime(
-      presaleCountDown[2],
-    )}:${formatTime(presaleCountDown[3])}`
+    const timer = `${formatTime(presaleCountDown[1])}:${formatTime(presaleCountDown[2])}:${formatTime(presaleCountDown[3])}`
     return (
       <Container>
         <RequirementStatus />
@@ -24,9 +22,7 @@ export const PresaleTiming = () => {
     )
   }
 
-  const timer = `${formatTime(publicSaleCountDown[1])}:${formatTime(
-    publicSaleCountDown[2],
-  )}:${formatTime(publicSaleCountDown[3])}`
+  const timer = `${formatTime(publicSaleCountDown[1])}:${formatTime(publicSaleCountDown[2])}:${formatTime(publicSaleCountDown[3])}`
   return (
     <Container>
       <RequirementStatus passed />
