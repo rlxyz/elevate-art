@@ -31,4 +31,12 @@ export default defineNextConfig({
     locales: ['en'],
     defaultLocale: 'en',
   },
+  rewrites() {
+    return [
+      {
+        source: '/:path*/:path*/mint',
+        destination: `${process.env.MINT_CLIENT_URL}/:path*/:path*/mint`,
+      },
+    ]
+  },
 })

@@ -23,6 +23,7 @@ export const serverSchema = z.object({
   INNGEST_EVENT_KEY: z.string(),
   ETHERSCAN_API_KEY: z.string(),
   ETHERSCAN_API_URL: z.string(),
+  MINT_CLIENT_URL: z.string(),
 })
 
 /**
