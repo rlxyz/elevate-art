@@ -1,0 +1,26 @@
+import { usePublicSaleMaxAllocation } from '@Hooks/contractsRead'
+import { useAccount } from 'wagmi'
+
+import { Container } from './Container'
+import { RequirementStatus } from './RequirementStatus'
+
+export const PublicSaleAllocation = () => {
+  const account = useAccount()
+  const maxAllocation = usePublicSaleMaxAllocation(account?.address)
+
+  const userIsEligible = maxAllocation > 0
+
+  return (
+    <Container top bottom>
+      <RequirementStatus passed={userIsEligible} />
+
+      {userIsEligible ? (
+        <span>
+          You are eligible for <strong>{`${maxAllocation} mint`}</strong>
+        </span>
+      ) : (
+        <span>You are not eligible to mint</span>
+      )}
+    </Container>
+  )
+}
