@@ -15,7 +15,6 @@
     "format": "prettier --write .",
     "analyze": "cross-env ANALYZE=true next build",
     "type:checks": "tsc --noEmit",
-    "prepare": "husky install",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
