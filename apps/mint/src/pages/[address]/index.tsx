@@ -14,6 +14,8 @@ export type ContractData = {
   ethPrice: BigNumber
   maxAllocationPerAddress: BigNumber
   totalSupply: BigNumber
+  presaleStartTime: Date
+  publicStartTime: Date
 }
 
 export const HomePage = () => {
@@ -43,7 +45,7 @@ export const HomePage = () => {
       />
       <Layout.Body margin={false}>
         <MintLayout>
-          <MintLayout.Header bannerImageUrl={'/images/moonbirds-banner.png'} profileImageUrl={'/images/moonbirds-profile.avif'} />
+          <MintLayout.Header contractDeployment={deployment} />
           <MintLayout.Description
             organisation={deployment.repository.organisation}
             repository={deployment.repository}
@@ -51,22 +53,7 @@ export const HomePage = () => {
             contractDeployment={deployment}
             contractData={contractData}
           />
-          <MintLayout.Body contractDeployment={deployment} />
-          {/* <div className='px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2'>
-            <ProjectInfo
-              projectName={data?.projectName}
-              projectDescription={data?.projectDescription}
-              bannerImageUrl={data?.projectInfoBanner}
-              discordUrl={data?.discordUrl}
-              twitterUrl={data?.twitterUrl}
-              openseaUrl={data?.openseaUrl}
-              price={data?.ethPrice}
-              supply={data?.totalSupply}
-            />
-            <div className='ml-5'>
-              <MintSection />
-            </div>
-          </div> */}
+          <MintLayout.Body contractDeployment={deployment} contractData={contractData} />
         </MintLayout>
       </Layout.Body>
     </Layout>

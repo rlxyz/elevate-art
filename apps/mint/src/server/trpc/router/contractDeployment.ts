@@ -26,6 +26,8 @@ export const contractDeploymentRouter = router({
         ethPrice: (await getMintPrice(address)).getValue(),
         maxAllocationPerAddress: (await getMaxAllocationPerAddress(address)).getValue(),
         totalSupply: (await getTotalSupply(address)).getValue(),
+        presaleStartTime: new Date(-10),
+        publicStartTime: new Date(-8),
       },
     }
   }),

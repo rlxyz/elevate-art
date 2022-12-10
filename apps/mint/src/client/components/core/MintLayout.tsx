@@ -1,5 +1,8 @@
+import AvatarComponent from '@Components/layout/avatar/Avatar'
 import Card from '@Components/layout/card'
+import { LayoutContainer } from '@Components/layout/core/Layout'
 import { PageRoutesNavbar } from '@Components/layout/header/PageRoutesNavbar'
+import LinkComponent from '@Components/layout/link/Link'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
@@ -26,27 +29,41 @@ export const MintLayout = ({ children }: MintLayoutProps) => {
 }
 
 interface MintLayoutHeaderProps {
-  bannerImageUrl: string
-  profileImageUrl: string
+  contractDeployment: RepositoryContractDeployment
 }
 
-export const MintLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ bannerImageUrl, profileImageUrl }) => {
+export const MintLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ contractDeployment }) => {
   return (
     <div>
       <div className='relative overflow-hidden'>
-        <div className='h-[200px] md:h-0 pb-[20%]'>
-          <div className='block absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border border-b border-mediumGrey'>
-            <Image src={bannerImageUrl} alt='collection-banner' fill className='object-cover aspect-auto overflow-hidden' />
+        <div className='h-72 w-screen'>
+          <div className='flex items-center justify-center absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border border-b border-mediumGrey bg-lightGray'>
+            {contractDeployment?.bannerUrl && (
+              <Image
+                src={contractDeployment.bannerUrl}
+                alt='collection-banner'
+                width={2800}
+                height={800}
+                className='block object-cover m-auto overflow-hidden'
+              />
+            )}
           </div>
         </div>
       </div>
-      <div className='py-0 px-5 lg:px-16 2xl:px-32 w-full'>
-        <div className='inline-flex -mt-16 md:-mt-28 mb-4 w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-[5px] basis-44 relative z-[1] border-2 border-mediumGrey bg-white'>
+      <LayoutContainer border='none'>
+        <div className='inline-flex -mt-16 md:-mt-28 mb-4 w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-[5px] basis-44 relative z-[1] border border-mediumGrey bg-white'>
           <div className='block overflow-hidden absolute box-border m-0 inset-0'>
-            <Image src={profileImageUrl} alt='collection-profile' fill className='object-cover aspect-auto overflow-hidden rounded-[5px]' />
+            {contractDeployment?.logoUrl && (
+              <Image
+                src={contractDeployment.logoUrl}
+                alt='collection-profile'
+                fill
+                className='object-cover aspect-auto overflow-hidden rounded-[5px]'
+              />
+            )}
           </div>
         </div>
-      </div>
+      </LayoutContainer>
     </div>
   )
 }
@@ -66,16 +83,14 @@ const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({
   contractDeployment,
   contractData,
 }) => (
-  <div className='flex flex-col space-y-3'>
+  <div className='flex flex-col space-y-3 w-full md:w-1/2'>
     <div className='flex'>
       <h1 className='text-2xl font-bold'>{repository.name}</h1>
     </div>
-
     <div className='flex space-x-1'>
       <h2 className='text-xs'>By</h2>
       <h1 className='text-xs font-bold'>{organisation.name}</h1>
     </div>
-
     <div className='flex flex-row items-center space-x-2'>
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Total</h2>
@@ -97,6 +112,12 @@ const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({
         <h1 className='text-xs font-bold'>{contractDeployment.chainId === 1 ? 'Ethereum' : 'ChainNotImplemented'}</h1>
       </div>
     </div>
+    <div>
+      <p className='text-xs italic'>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel purus interdum, faucibus felis et, malesuada lacus. Pellentesque
+        enim risus, porttitor id ligula id, tincidunt ultricies urna
+      </p>
+    </div>
   </div>
 )
 
@@ -116,20 +137,22 @@ export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
   contractData,
 }) => {
   return (
-    <div className='px-5 lg:px-16 2xl:px-32 w-full flex justify-between'>
-      <ContractDeploymentDetails
-        repository={repository}
-        organisation={organisation}
-        deployment={deployment}
-        contractDeployment={contractDeployment}
-        contractData={contractData}
-      />
-      <SocialMediaLink
-        discordUrl={contractDeployment.discordUrl}
-        twitterUrl={contractDeployment.twitterUrl}
-        etherscanUrl={`https://etherscan.io/address/${contractDeployment.address}`}
-      />
-    </div>
+    <LayoutContainer border='none'>
+      <div className='w-full flex justify-between items-start'>
+        <ContractDeploymentDetails
+          repository={repository}
+          organisation={organisation}
+          deployment={deployment}
+          contractDeployment={contractDeployment}
+          contractData={contractData}
+        />
+        <SocialMediaLink
+          discordUrl={contractDeployment.discordUrl}
+          twitterUrl={contractDeployment.twitterUrl}
+          etherscanUrl={`https://etherscan.io/address/${contractDeployment.address}`}
+        />
+      </div>
+    </LayoutContainer>
   )
 }
 
@@ -235,23 +258,86 @@ const LineWithGradient: React.FC<{ className?: string }> = ({ className }) => (
   <div className={clsx('h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-1', className)} />
 )
 
-const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeployment }> = ({ contractDeployment }) => {
+const CollectorAnalytics = () => (
+  <Card>
+    <h2 className='text-xs font-bold'>Collectors</h2>
+    <div className='grid grid-cols-2 gap-3'>
+      {[
+        { address: '0xf8cA77ED09429aDe0d5C01ADB1D284C45324F608', total: 23 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 8 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 5 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 3 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 1 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 1 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 1 },
+        { address: '0x598475F7Ebe9957f9833C5Fd7B7D992FC35D0640', total: 1 },
+      ]
+        .filter((x) => ethers.utils.isAddress(x.address))
+        .sort((a, b) => b.total - a.total)
+        .splice(0, 6)
+        .map(({ address, total }) => (
+          <article key={address} className='flex flex-row items-center space-x-3 border border-mediumGrey rounded-[5px] p-2 shadow-lg'>
+            <AvatarComponent />
+            <div className='flex justify-between w-full'>
+              <LinkComponent href={`https://etherscan.io/address/${address}`} underline rel='noreferrer nofollow' target='_blank'>
+                <span className='text-[0.65rem]'>
+                  {address.slice(0, 6)}....{address.slice(address.length - 4)}
+                </span>
+              </LinkComponent>
+              <p className='text-xs font-semibold'>{total}</p>
+            </div>
+          </article>
+        ))}
+    </div>
+  </Card>
+)
+
+const CollectionAnalytics = () => (
+  <div className='flex flex-col space-y-6'>
+    <MetadataAnalytics />
+    <CollectorAnalytics />
+  </div>
+)
+
+const MetadataAnalytics = () => (
+  <Card>
+    <h2 className='text-xs font-bold'>Contract Information</h2>
+    <div className='flex flex-col space-y-3'>
+      {[
+        { key: 'Contract Address', value: 'Explore', type: 'Link' },
+        { key: 'Blockchain', value: 'Ethereum', type: 'Basic' },
+        { key: 'Token Standard', value: 'ERC721', type: 'Basic' },
+        { key: 'Base Image URI', value: 'Explore', type: 'Link' },
+      ].map(({ key, value, type }) => (
+        <article key={key} className='flex justify-between w-full'>
+          <h3 className='text-xs'>{key}</h3>
+          {type === 'Link' ? (
+            <LinkComponent icon className='w-fit' href={value} underline rel='noreferrer nofollow' target='_blank'>
+              <span className='text-xs'>Explore</span>
+            </LinkComponent>
+          ) : (
+            <span className='text-xs'>{value}</span>
+          )}
+        </article>
+      ))}
+    </div>
+  </Card>
+)
+
+const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeployment; contractData: ContractData }> = ({
+  contractDeployment,
+  contractData,
+}) => {
   const { mintPhase } = useMintPeriod()
 
   return (
     <div className='space-y-6 my-12 w-full'>
-      {/* <div className='w-full flex justify-center'>
-      <LineWithGradient className='absolute w-full z-1' />
-      <MintSaleSelector className='relative top-0 -translate-y-1/2' contractDeployment={contractDeployment} />
-    </div> */}
-      <div className='px-5 lg:px-16 2xl:px-32 w-full flex justify-between'>
-        <div className='w-full justify-center grid grid-flow-col grid-cols-2 gap-x-6'>
+      <LayoutContainer border='none'>
+        <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
           <AllowlistCheckerView />
-          {/* <MintSaleDisplay contractDeployment={contractDeployment} /> */}
+          <CollectionAnalytics />
         </div>
-      </div>
-
-      {/* <MintSaleFooter contractDeployment={contractDeployment} /> */}
+      </LayoutContainer>
     </div>
   )
 }

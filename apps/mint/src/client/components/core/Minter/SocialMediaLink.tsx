@@ -10,7 +10,7 @@ interface SocialMediaLinkProps {
 
 export const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({ discordUrl, twitterUrl, openseaUrl, etherscanUrl }) => {
   return (
-    <div className='flex w-[100px] space-x-3 items-center mb-0.5'>
+    <div className='flex space-x-3 items-center'>
       {discordUrl && (
         <LinkComponent target='_blank' rel='noopener noreferrer' href={discordUrl}>
           <svg fill='currentColor' width='16' height='16' viewBox='0 0 71 55' className='h-5 w-5'>

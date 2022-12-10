@@ -31,7 +31,7 @@ export const SaleLayout: React.FC<React.PropsWithChildren<SaleLayoutProps>> = ({
     <article
       className={clsx(
         className,
-        'bg-background transition-all rounded-[5px] box-border border border-mediumGrey divide-y divide-mediumGrey'
+        'bg-background transition-all rounded-[5px] box-border border border-mediumGrey divide-y divide-mediumGrey h-fit w-full'
       )}
       {...props}
     >
@@ -68,10 +68,9 @@ export const SaleLayoutBody = ({ children }: { children: ReactNode }) => {
 export const SaleLayoutFooter = () => {
   return (
     <Disclosure>
-      <Disclosure.Button className={clsx('border-mediumGrey border-b p-4 w-full')}>
-        <div className='flex justify-end items-center space-x-2'>
+      <Disclosure.Button className={clsx('border-mediumGrey p-4 w-full')}>
+        <div className='flex justify-end items-center space-x-1'>
           <h2 className='text-xs font-normal'>Details</h2>
-          <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
           <ChevronRightIcon className='w-3 h-3' />
         </div>
       </Disclosure.Button>
