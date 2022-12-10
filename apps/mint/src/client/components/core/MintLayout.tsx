@@ -4,9 +4,11 @@ import type { Organisation, Repository, RepositoryContractDeployment, Repository
 import clsx from 'clsx'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { useMintPeriod } from 'src/client/hooks/contractsRead'
 import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
 import { usePresaleRequirements } from 'src/client/hooks/usePresaleRequirements'
 import { useAccount } from 'wagmi'
+import { AllowlistCheckerView } from './AllowlistCheckerView'
 import { MintButton } from './Minter/MintButton'
 import { NFTAmount } from './Minter/NFTAmount'
 import { SocialMediaLink } from './Minter/SocialMediaLink'
@@ -211,19 +213,26 @@ const LineWithGradient: React.FC<{ className?: string }> = ({ className }) => (
   <div className={clsx('h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-1', className)} />
 )
 
-const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeployment }> = ({ contractDeployment }) => (
-  <div className='space-y-6 my-12 w-full'>
-    <div className='w-full flex justify-center'>
-      <LineWithGradient className='absolute w-1/2 z-1' />
-      <MintSaleSelector className='relative top-0 -translate-y-1/2' contractDeployment={contractDeployment} />
-    </div>
-    <div className='w-full flex justify-center'>
-      <MintSaleDisplay contractDeployment={contractDeployment} />
-    </div>
+const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeployment }> = ({ contractDeployment }) => {
+  const { mintPhase } = useMintPeriod()
 
-    {/* <MintSaleFooter contractDeployment={contractDeployment} /> */}
-  </div>
-)
+  return (
+    <div className='space-y-6 my-12 w-full'>
+      {/* <div className='w-full flex justify-center'>
+      <LineWithGradient className='absolute w-full z-1' />
+      <MintSaleSelector className='relative top-0 -translate-y-1/2' contractDeployment={contractDeployment} />
+    </div> */}
+      <div className='px-5 lg:px-16 2xl:px-32 w-full flex justify-between'>
+        <div className='w-full justify-center grid grid-flow-col grid-cols-2 gap-x-6'>
+          <AllowlistCheckerView />
+          {/* <MintSaleDisplay contractDeployment={contractDeployment} /> */}
+        </div>
+      </div>
+
+      {/* <MintSaleFooter contractDeployment={contractDeployment} /> */}
+    </div>
+  )
+}
 
 MintLayout.Header = MintLayoutHeader
 MintLayout.Description = MintLayoutDescription

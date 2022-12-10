@@ -1,7 +1,7 @@
 import { Button } from '@Components/core/UI/Button'
 import { LinkButton } from '@Components/core/UI/LinkButton'
+import { Notification } from '@Components/core/UI/Notification/Notification'
 import toast from 'react-hot-toast'
-import { Notification } from 'src/client/components/core/Notification/Notification'
 import { config } from 'src/client/utils/config'
 import { NETWORK_NAME } from 'src/client/utils/constant'
 

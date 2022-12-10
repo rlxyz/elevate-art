@@ -1,8 +1,8 @@
 import { useMintPeriod } from 'src/client/hooks/contractsRead'
 
+import { AllowlistCheckerView } from '../AllowlistCheckerView'
 import { PresaleView } from './PresaleView'
 import { PublicView } from './PublicView'
-import { WalletChecker } from './WalletChecker'
 
 export const MintSection = () => {
   const { mintPhase } = useMintPeriod()
@@ -15,5 +15,5 @@ export const MintSection = () => {
     return <PublicView />
   }
 
-  return <WalletChecker />
+  return <AllowlistCheckerView />
 }

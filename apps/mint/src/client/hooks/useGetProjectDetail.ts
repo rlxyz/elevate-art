@@ -3,8 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import { data } from '../../../data'
 
 const fetchProjectDetail = async () => {
-  return new Promise<ProjectDetail>((resolve) => {
-    setTimeout(() => resolve(data), 1000)
+  return new Promise<ProjectDetail>(async (resolve) => {
+    setTimeout(
+      () =>
+        resolve({
+          ...data,
+        }),
+      1000
+    )
   })
 }
 

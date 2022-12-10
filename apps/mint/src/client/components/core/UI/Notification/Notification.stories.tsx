@@ -3,7 +3,7 @@ import React from 'react'
 import { Toaster } from 'react-hot-toast'
 import { useNotification } from 'src/client/hooks/useNotification'
 
-import { Button } from '../UI/Button'
+import { Button } from '../Button'
 import { Notification } from './Notification'
 
 export default {
