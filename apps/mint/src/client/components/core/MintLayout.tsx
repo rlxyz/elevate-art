@@ -12,7 +12,6 @@ import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { useMintPeriod } from 'src/client/hooks/contractsRead'
 import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
 import { usePresaleRequirements } from 'src/client/hooks/usePresaleRequirements'
 import type { ContractData } from 'src/pages/[address]'
@@ -142,6 +141,10 @@ interface MintLayoutDescriptionProps {
   contractData: ContractData
 }
 
+const buildEtherscanLink = ({ address, chainId }: { address: string; chainId: number }) => {
+  return `https://${chainId === 1 ? '' : `${parseChainId(chainId)}.`}etherscan.io/address/${address}`
+}
+
 export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
   repository,
   organisation,
@@ -162,9 +165,10 @@ export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
         <SocialMediaLink
           discordUrl={contractDeployment.discordUrl}
           twitterUrl={contractDeployment.twitterUrl}
-          etherscanUrl={`https://${
-            contractDeployment.chainId === 1 ? '' : `${parseChainId(contractDeployment.chainId)}.`
-          }etherscan.io/address/${contractDeployment.address}`}
+          etherscanUrl={buildEtherscanLink({
+            address: contractDeployment.address,
+            chainId: contractDeployment.chainId,
+          })}
         />
       </div>
     </LayoutContainer>
@@ -273,7 +277,7 @@ const LineWithGradient: React.FC<{ className?: string }> = ({ className }) => (
   <div className={clsx('h-[1px] flex-1 bg-gradient-to-r from-mediumGrey via-blueHighlight to-mediumGrey z-1', className)} />
 )
 
-const CollectorAnalytics = () => (
+const CollectorAnalytics = ({ contractDeployment }: { contractDeployment: RepositoryContractDeployment }) => (
   <Card>
     <h2 className='text-xs font-bold'>Collectors</h2>
     <div className='grid grid-cols-2 gap-3'>
@@ -294,7 +298,15 @@ const CollectorAnalytics = () => (
           <article key={address} className='flex flex-row items-center space-x-3 border border-mediumGrey rounded-[5px] p-2 shadow-lg'>
             <AvatarComponent />
             <div className='flex justify-between w-full'>
-              <LinkComponent href={`https://etherscan.io/address/${address}`} underline rel='noreferrer nofollow' target='_blank'>
+              <LinkComponent
+                href={buildEtherscanLink({
+                  address,
+                  chainId: contractDeployment.chainId,
+                })}
+                underline
+                rel='noreferrer nofollow'
+                target='_blank'
+              >
                 <span className='text-[0.65rem]'>
                   {address.slice(0, 6)}....{address.slice(address.length - 4)}
                 </span>
@@ -307,22 +319,22 @@ const CollectorAnalytics = () => (
   </Card>
 )
 
-const CollectionAnalytics = () => (
-  <div className='flex flex-col space-y-6'>
-    <MetadataAnalytics />
-    <CollectorAnalytics />
-  </div>
-)
-
-const MetadataAnalytics = () => (
+const MetadataAnalytics = ({ contractDeployment }: { contractDeployment: RepositoryContractDeployment }) => (
   <Card>
     <h2 className='text-xs font-bold'>Contract Information</h2>
     <div className='flex flex-col space-y-3'>
       {[
-        { key: 'Contract Address', value: 'Explore', type: 'Link' },
-        { key: 'Blockchain', value: 'Ethereum', type: 'Basic' },
+        {
+          key: 'Contract Address',
+          value: buildEtherscanLink({
+            address: contractDeployment.address,
+            chainId: contractDeployment.chainId,
+          }),
+          type: 'Link',
+        },
+        { key: 'Blockchain', value: capitalize(parseChainId(contractDeployment.chainId)), type: 'Basic' },
         { key: 'Token Standard', value: 'ERC721', type: 'Basic' },
-        { key: 'Base Image URI', value: 'Explore', type: 'Link' },
+        // { key: 'Base Image URI', value: 'Explore', type: 'Link' },
       ].map(({ key, value, type }) => (
         <article key={key} className='flex justify-between w-full'>
           <h3 className='text-xs'>{key}</h3>
@@ -343,8 +355,6 @@ const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeploymen
   contractDeployment,
   contractData,
 }) => {
-  const { mintPhase } = useMintPeriod()
-
   return (
     <div className='space-y-6 my-12 w-full'>
       <LayoutContainer border='none'>
@@ -354,7 +364,10 @@ const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeploymen
             <PresalePurchaseView />
             <PublicPurchaseView />
           </div>
-          <CollectionAnalytics />
+          <div className='flex flex-col space-y-6'>
+            <MetadataAnalytics contractDeployment={contractDeployment} />
+            <CollectorAnalytics contractDeployment={contractDeployment} />
+          </div>
         </div>
       </LayoutContainer>
     </div>
