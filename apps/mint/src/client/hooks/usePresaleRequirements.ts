@@ -1,5 +1,5 @@
 import { useMintCount, useMintPeriod, usePresaleMaxAllocation, useTotalMinted } from 'src/client/hooks/contractsRead'
-import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
+import { useQueryContractDeployment } from './useQueryContractDeployment'
 
 interface UsePresaleRequirements {
   inAllowlist: boolean
@@ -13,8 +13,8 @@ interface UsePresaleRequirements {
   userMintCount: number
 }
 
-export const usePresaleRequirements = (address: string): UsePresaleRequirements => {
-  const { data } = useGetProjectDetail('rlxyz')
+export const usePresaleRequirements = ({ address }: { address: `0x${string}` | undefined }): UsePresaleRequirements => {
+  const { current } = useQueryContractDeployment()
   const mintCount = useMintCount(address)
   const allocation = usePresaleMaxAllocation(address)
   const totalMinted = useTotalMinted()
@@ -22,7 +22,7 @@ export const usePresaleRequirements = (address: string): UsePresaleRequirements 
 
   const totalAvailableToMint = allocation - mintCount
   const inAllowlist = allocation > 0
-  const collectionNotSoldOut = totalMinted < data?.totalSupply
+  const collectionNotSoldOut = totalMinted < (current?.deployment?.repositoryDeployment?.collectionTotalSupply || 0)
   const presaleIsActive = mintPhase === 'presale'
   const hasMintAllocation = totalAvailableToMint > 0
   const allowToMint = inAllowlist && collectionNotSoldOut && presaleIsActive && hasMintAllocation

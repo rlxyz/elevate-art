@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Button } from '../UI/Button'
-
 interface MintButtonProps {
   disabled?: boolean
   onClick: () => void
@@ -9,8 +7,12 @@ interface MintButtonProps {
 
 export const MintButton: React.FC<MintButtonProps> = ({ onClick, disabled = false }) => {
   return (
-    <Button fullWidth disabled={disabled} onClick={onClick}>
+    <button
+      className='w-full border border-mediumGrey bg-blueHighlight text-white rounded-[5px] py-2'
+      disabled={disabled}
+      onClick={onClick}
+    >
       <span className='font-bold'>Mint</span>{' '}
-    </Button>
+    </button>
   )
 }

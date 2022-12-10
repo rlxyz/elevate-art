@@ -3,12 +3,14 @@ import { getAddressFromEns } from '@Utils/ethers'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useForm } from 'react-hook-form'
+import { useMintPeriod } from 'src/client/hooks/contractsRead'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
 
-import { SaleLayout, SaleLayoutBody, SaleLayoutHeader } from './MintSection/PresaleCountdown'
+import { SaleLayout, SaleLayoutBody, SaleLayoutHeader } from './SaleLayout'
 
 export const AllowlistCheckerView = () => {
   const { validateAllowlist } = useWalletCheck()
+  const { presaleTime } = useMintPeriod()
   const {
     register,
     handleSubmit,
@@ -21,7 +23,7 @@ export const AllowlistCheckerView = () => {
 
   return (
     <SaleLayout>
-      <SaleLayoutHeader />
+      <SaleLayoutHeader title='Allowlist Check' endingDate={new Date(presaleTime)} />
       <SaleLayoutBody>
         <form
           onSubmit={handleSubmit((data) => {

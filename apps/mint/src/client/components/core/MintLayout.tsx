@@ -23,6 +23,8 @@ import { NFTAmount } from './Minter/NFTAmount'
 import { SocialMediaLink } from './Minter/SocialMediaLink'
 import { ConnectWalletSection } from './MintSection/ConnectWalletSection'
 import { PublicSaleCountdown as MintSaleCountdown } from './MintSection/PublicSaleCountdown'
+import { PresalePurchaseView } from './PresalePurchaseView'
+import { PublicPurchaseView } from './PublicPurchaseView'
 
 interface MintLayoutProps {
   children: React.ReactNode
@@ -345,7 +347,11 @@ const MintLayoutBody: React.FC<{ contractDeployment: RepositoryContractDeploymen
     <div className='space-y-6 my-12 w-full'>
       <LayoutContainer border='none'>
         <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
-          <AllowlistCheckerView />
+          <div className='space-y-6'>
+            <AllowlistCheckerView />
+            <PresalePurchaseView />
+            <PublicPurchaseView />
+          </div>
           <CollectionAnalytics />
         </div>
       </LayoutContainer>

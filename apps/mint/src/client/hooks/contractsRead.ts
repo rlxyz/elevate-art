@@ -6,7 +6,7 @@ import { RhapsodyContractConfig } from 'src/client/utils/constant'
 import { presaleConfig } from 'src/client/utils/merkle_roots'
 import { useContractRead } from 'wagmi'
 
-export const useMintCount = (address: string): number => {
+export const useMintCount = ({ address }: { address: `0x${string}` | undefined }): number => {
   const { data } = useContractRead({
     ...RhapsodyContractConfig,
     functionName: 'mintOf',
@@ -83,7 +83,7 @@ export const useMintPeriod = (): UseMintPeriod => {
   }
 }
 
-export const usePresaleMaxAllocation = (address: string): number => {
+export const usePresaleMaxAllocation = ({ address }: { address: `0x${string}` | undefined }): number => {
   if (!address) {
     return 0
   }
