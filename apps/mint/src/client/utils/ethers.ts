@@ -20,3 +20,14 @@ export const getAddressFromEns = async (ensName: string): Promise<string | null>
       resolve(null)
     }
   })
+
+export const parseChainId = (chainId: number): string => {
+  switch (chainId) {
+    case 1:
+      return 'mainnet'
+    case 5:
+      return 'goerli'
+    default:
+      return 'unknown'
+  }
+}

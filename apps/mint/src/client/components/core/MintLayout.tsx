@@ -3,7 +3,11 @@ import Card from '@Components/layout/card'
 import { LayoutContainer } from '@Components/layout/core/Layout'
 import { PageRoutesNavbar } from '@Components/layout/header/PageRoutesNavbar'
 import LinkComponent from '@Components/layout/link/Link'
+import { Disclosure } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/outline'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
+import { parseChainId } from '@Utils/ethers'
+import { capitalize } from '@Utils/format'
 import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
 import Image from 'next/image'
@@ -109,14 +113,19 @@ const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Chain</h2>
-        <h1 className='text-xs font-bold'>{contractDeployment.chainId === 1 ? 'Ethereum' : 'ChainNotImplemented'}</h1>
+        <h1 className='text-xs font-bold'>{capitalize(parseChainId(contractDeployment.chainId))}</h1>
       </div>
     </div>
     <div>
-      <p className='text-xs italic'>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel purus interdum, faucibus felis et, malesuada lacus. Pellentesque
-        enim risus, porttitor id ligula id, tincidunt ultricies urna
-      </p>
+      <Disclosure>
+        <Disclosure.Button className={clsx('border-mediumGrey w-full flex items-center space-x-1')}>
+          <h2 className='text-xs font-normal'>See description</h2>
+          <ChevronDownIcon className='w-3 h-3' />
+        </Disclosure.Button>
+        <Disclosure.Panel>
+          <p className='my-1 text-[0.6rem] italic'>{contractDeployment?.description}</p>
+        </Disclosure.Panel>
+      </Disclosure>
     </div>
   </div>
 )

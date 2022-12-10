@@ -123,7 +123,7 @@ model RepositoryContractDeployment {
     repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
     repositoryDeploymentId String?               @unique
 
-    description String? @db.VarChar(255)
+    description String? @db.Text
     twitterUrl  String? @db.VarChar(255)
     discordUrl  String? @db.VarChar(255)
     websiteUrl  String? @db.VarChar(255)

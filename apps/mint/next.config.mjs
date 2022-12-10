@@ -26,6 +26,12 @@ export default defineNextConfig({
   swcMinify: true,
   images: {
     domains: ['res.cloudinary.com', 'localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*',
+      },
+    ],
   },
   i18n: {
     locales: ['en'],
