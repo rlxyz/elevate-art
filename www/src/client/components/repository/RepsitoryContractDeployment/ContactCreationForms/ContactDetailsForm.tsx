@@ -1,5 +1,4 @@
 import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
-import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
@@ -25,10 +24,6 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setBlockchain,
     setCurrentSegment,
   } = useContractCreationStore()
-
-  console.log(currentSegment)
-
-  const router = useRouter()
 
   const {
     register,

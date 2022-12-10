@@ -57,6 +57,7 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
 
 export const ContractCreationFormDisplay: FC<{ className: string }> = ({ className }) => {
   const { currentSegment } = useContractCreationStore()
+  console.log(currentSegment)
 
   return (
     <div className={clsx('flex flex-col items-center', className)}>

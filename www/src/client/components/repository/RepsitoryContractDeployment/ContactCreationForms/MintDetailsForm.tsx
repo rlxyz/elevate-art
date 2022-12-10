@@ -32,6 +32,9 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     setCurrentSegment(2)
   }
 
+  console.log(collectionSize)
+  console.log(pricePerToken)
+
   return (
     <>
       <ContractForm>
@@ -40,6 +43,9 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
           <ContractForm.Body.Input
             {...register('collectionSize', {
               required: true,
+              onChange: (e) => {
+                setValue('collectionSize', e.target.value)
+              },
             })}
             label={'Total Supply'}
             description={'The size of the collection'}
@@ -50,6 +56,9 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
           <ContractForm.Body.Input
             {...register('pricePerToken', {
               required: true,
+              onChange: (e) => {
+                setValue('pricePerToken', e.target.value)
+              },
             })}
             label={'Price (ether)'}
             // defaultValue={0.05}
