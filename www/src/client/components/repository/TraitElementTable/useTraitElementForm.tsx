@@ -1,4 +1,4 @@
-import { TraitElementWithImage } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { TraitElementWithImage } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import Big from 'big.js'
 import { useForm } from 'react-hook-form'
 import { sumByBig } from 'src/shared/object-utils'
