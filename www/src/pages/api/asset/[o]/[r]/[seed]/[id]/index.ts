@@ -1,9 +1,9 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { storage } from '@server/utils/gcp-storage'
-import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { Image } from 'canvas-constructor/skia'
+import { Canvas, resolveImage } from 'canvas-constructor/skia'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 /**
@@ -35,10 +35,10 @@ const imageCacheObject = {
 }
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerAuthSession({ req, res })
-  if (!session || !session.user) {
-    return res.status(401).send('Unauthorized')
-  }
+  // const session = await getServerAuthSession({ req, res })
+  // if (!session || !session.user) {
+  //   return res.status(401).send('Unauthorized')
+  // }
 
   // r: repositoryId, l: layerElementId, t: traitElementId
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
