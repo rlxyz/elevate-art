@@ -1,5 +1,5 @@
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import type { FC } from 'react'
-import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
 import { ContractForm } from '../ContractForm'
@@ -8,10 +8,13 @@ export type ContractDetailsForm = {
   contractName: string
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
-  blockchain: 'goerli'
+  blockchain: 'goerli' | 'mainnet'
 }
 
 export const ContractDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+  const { contractName, contractSymbol, mintType, blockchain, setContractName, setContractSymbol, setMintType, setBlockchain } =
+    useContractCreationStore()
+
   const {
     register,
     setValue,
@@ -21,14 +24,19 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     reset,
   } = useForm<ContractDetailsForm>({
     defaultValues: {
-      contractName: '',
-      contractSymbol: '',
-      mintType: 'off-chain',
-      blockchain: 'goerli',
+      contractName: contractName,
+      contractSymbol: contractSymbol,
+      mintType: mintType,
+      blockchain: blockchain,
     },
   })
-  console.log(watch())
-  const onSubmit: SubmitHandler<ContractDetailsForm> = (data) => console.log('data', data)
+
+  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain }: ContractDetailsForm) => {
+    setContractName(contractName)
+    setContractSymbol(contractSymbol)
+    setMintType(mintType)
+    setBlockchain(blockchain)
+  }
 
   return (
     <ContractForm>
@@ -54,19 +62,25 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
         <ContractForm.Body.Input
           {...register('contractSymbol', {
             required: true,
-            maxLength: 6,
-            minLength: 3,
+            maxLength: {
+              value: 6,
+              message: 'Max length is 6',
+            },
+            minLength: {
+              value: 3,
+              message: 'Max length is 3',
+            },
 
             pattern: /^[-/a-z0-9 ]+$/gi,
             onChange: (e) => {
-              setValue('contractSymbol', e.target.value)
+              setValue('contractSymbol', e.target.value.toUpperCase())
             },
           })}
           label={'Symbol'}
           description={'The name of the token on Etherscan'}
           className='col-span-2'
           placeholder='cont'
-          error={errors.contractName}
+          error={errors.contractSymbol}
         />
 
         <div className='col-span-3 flex flex-col'>
@@ -95,8 +109,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
                   },
                 })}
                 label={'On-Chain'}
-
-                // error={errors.contractName}
+                error={errors.contractName}
               />
               <span className='flex px-2 py-1 items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey text-[0.6rem] font-medium text-black h-fit'>
                 <span className='text-darkGrey text-[0.6rem]'>Soon</span>
@@ -116,10 +129,10 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           label={'Blockchain'}
           description={'Select a deployment blockchain'}
           className='col-span-6'
-          // error={errors.contractName}
+          error={errors.contractName}
         >
           <option value={'goerli'}>{capitalize('goerli')}</option>
-          <option value={'eth mainnet'}>{capitalize('ethereum')}</option>
+          <option value={'mainnet'}>{capitalize('mainnet')}</option>
         </ContractForm.Body.Select>
         <input type='submit' value='Next >' className='col-span-6' />
       </ContractForm.Body>
