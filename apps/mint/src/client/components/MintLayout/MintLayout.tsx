@@ -1,5 +1,5 @@
-import { CollectorAnalytics } from '@Components/core/CollectorAnalytics'
-import { MetadataAnalytics } from '@Components/core/MetadataAnalytics'
+import { AnalyticsLayoutCollectionInformation } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectionInformation'
+import { AnalyticsLayoutCollectorData } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectorData'
 import { SaleLayoutAllowlistChecker } from '@Components/SaleLayout/SaleLayoutAllowlistChecker'
 import { SaleLayoutPresalePurchase } from '@Components/SaleLayout/SaleLayoutPresalePurchase'
 import { SaleLayoutPublicPurchase } from '@Components/SaleLayout/SaleLayoutPublicPurchase'
@@ -13,8 +13,8 @@ export const MintLayout = ({ contractDeployment }: { contractDeployment: Reposit
       <SaleLayoutPublicPurchase />
     </div>
     <div className='flex flex-col space-y-6'>
-      <MetadataAnalytics contractDeployment={contractDeployment} />
-      <CollectorAnalytics contractDeployment={contractDeployment} />
+      <AnalyticsLayoutCollectionInformation contractDeployment={contractDeployment} />
+      <AnalyticsLayoutCollectorData contractDeployment={contractDeployment} />
     </div>
   </div>
 )
