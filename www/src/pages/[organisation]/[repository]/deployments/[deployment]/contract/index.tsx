@@ -49,7 +49,8 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.Header>
         <Layout.Body border='lower'>
-          <Header title={'Contracts'} description={'You are viewing the contract information for this deployment.'}>
+          <Header title={'Contract'} description={'You are viewing the contract information for this deployment.'}>
+            <span className='text-xs font-semibold'>{contractDeployment?.address}</span>
             {/* <NextLinkComponent
               href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract/new`}
               className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey w-fit'
