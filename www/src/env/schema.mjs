@@ -23,7 +23,6 @@ export const serverSchema = z.object({
   INNGEST_EVENT_KEY: z.string(),
   ETHERSCAN_API_KEY: z.string(),
   ETHERSCAN_API_URL: z.string(),
-  MINT_CLIENT_URL: z.string(),
 })
 
 /**
@@ -41,6 +40,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: z.number(),
   NEXT_PUBLIC_API_URL: z.string(),
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
+  NEXT_PUBLIC_MINT_CLIENT_URL: z.string(),
 })
 
 /**
@@ -63,4 +63,5 @@ export const clientEnv = {
     ? `${process.env.VERCEL_URL}/api`
     : 'http://localhost:3000/api',
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  NEXT_PUBLIC_MINT_CLIENT_URL: process.env.NEXT_PUBLIC_MINT_CLIENT_URL,
 }

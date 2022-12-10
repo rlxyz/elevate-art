@@ -115,7 +115,7 @@ model RepositoryContractDeployment {
     id      String                             @id @default(cuid())
     address String                             @db.VarChar(42)
     status  RepositoryContractDeploymentStatus @default(PENDING)
-    chainId Int                                @default(1)
+    chainId Int                                @default(5)
 
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)

@@ -1,4 +1,5 @@
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import LinkComponent from '@components/layout/link/Link'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
 import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react/solid'
@@ -11,6 +12,9 @@ import type { GetServerSidePropsContext } from 'next'
 import type { FC, ReactNode } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { parseChainId } from 'src/client/utils/ethers'
+import { capitalize } from 'src/client/utils/format'
+import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
@@ -50,13 +54,21 @@ const Page = () => {
         </Layout.Header>
         <Layout.Body border='lower'>
           <Header title={'Contract'} description={'You are viewing the contract information for this deployment.'}>
-            <span className='text-xs font-semibold'>{contractDeployment?.address}</span>
-            {/* <NextLinkComponent
-              href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract/new`}
-              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey w-fit'
-            >
-              New Contract
-            </NextLinkComponent> */}
+            <div className='flex flex-row items-center space-x-2'>
+              <div className='flex space-x-1'>
+                <h2 className='text-xs'>Address</h2>
+                <h1 className='text-xs font-bold'>
+                  <LinkComponent href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${contractDeployment?.address}`} underline>
+                    {contractDeployment?.address}
+                  </LinkComponent>
+                </h1>
+              </div>
+              <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
+              <div className='flex space-x-1'>
+                <h2 className='text-xs'>Chain</h2>
+                <h1 className='text-xs font-bold'>{capitalize(parseChainId(contractDeployment?.chainId || 0))}</h1>
+              </div>
+            </div>
           </Header>
           <Body>
             <ContractDeploymentPhasesView deployment={contractDeployment} />
@@ -140,8 +152,8 @@ const Header: FC<HeaderInterface> = ({ title, description, children }) => {
       <div className='space-y-1'>
         <h1 className='text-2xl font-semibold'>{title}</h1>
         <p className='text-sm'>{description}</p>
+        {children}
       </div>
-      {children}
     </div>
   )
 }

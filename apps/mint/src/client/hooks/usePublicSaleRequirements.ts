@@ -13,7 +13,7 @@ interface UsePresaleRequirements {
 
 export const usePublicSaleRequirements = (address: string): UsePresaleRequirements => {
   const { data } = useGetProjectDetail('rlxyz')
-  const userMintCount = useMintCount(address)
+  const userMintCount = useMintCount({ address })
   const maxAllocation = usePublicSaleMaxAllocation(address)
   const totalMinted = useTotalMinted()
 

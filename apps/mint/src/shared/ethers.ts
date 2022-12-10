@@ -2,8 +2,6 @@ import type { BigNumber } from 'ethers'
 import { ethers } from 'ethers'
 import { env } from 'src/env/client.mjs'
 
-export const provider = new ethers.providers.AlchemyProvider('goerli', env.NEXT_PUBLIC_ALCHEMY_ID)
-
 export class ElevateContract extends ethers.Contract {
   readonly owner!: () => Promise<string>
   readonly mintPrice!: () => Promise<BigNumber>
@@ -11,9 +9,21 @@ export class ElevateContract extends ethers.Contract {
   readonly totalSupply!: () => Promise<BigNumber>
 }
 
-export const getContract = ({ address }: { address: string }): ElevateContract => {
-  const contract = new ethers.Contract(
-    address,
+export const parseChainId = (chainId: number): 'mainnet' | 'goerli' | 'unknown' => {
+  switch (chainId) {
+    case 1:
+      return 'mainnet'
+    case 5:
+      return 'goerli'
+    default:
+      return 'unknown'
+  }
+}
+
+export const getContract = ({ address, chainId }: { address: string; chainId: number }): ElevateContract => {
+  const provider = new ethers.providers.AlchemyProvider(parseChainId(chainId), env.NEXT_PUBLIC_ALCHEMY_ID)
+  const contract = new ElevateContract(
+    '0x91A5d4F6e691432a58d5579ae45955210eC6a2f1',
     [
       {
         inputs: [],

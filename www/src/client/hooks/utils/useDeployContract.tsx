@@ -27,7 +27,7 @@ export const useDeployContract = () => {
   const deploy = async (opts: ERC721ContractInput) => {
     const args = [opts.name, opts.symbol, opts.collectionSize, opts.maxPublicBatchPerAddress, opts.amountForPromotion, opts.mintPrice]
     const tx = await factory.deploy(...args)
-    mutate({ deploymentId, address: tx.address })
+    mutate({ deploymentId, address: tx.address, chainId: 5 }) // set to 5 for goerli, shoudl come from forom
     setAddress(tx.address)
     await tx.deployed()
     notifySuccess(`Contract deployed at ${tx.address}. We will now verify the contract.`)

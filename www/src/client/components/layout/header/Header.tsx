@@ -73,14 +73,14 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
             <item.icon className='cursor-pointer hover:text-black h-4 w-4 text-darkGrey' aria-hidden='true' />
           </LinkComponent>
         ))}
-        {authenticated ? (
-          <ConnectButton />
-        ) : (
-          <NextLink href='/connect'>
-            <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
-          </NextLink>
-        )}
       </aside>
+      {authenticated ? (
+        <ConnectButton />
+      ) : (
+        <NextLink href='/connect'>
+          <span className='w-fit cursor-pointer h-fit bg-black rounded-[5px] text-white text-xs p-2'>Connect</span>
+        </NextLink>
+      )}
     </div>
   )
 }

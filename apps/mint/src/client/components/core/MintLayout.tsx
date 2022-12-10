@@ -118,17 +118,19 @@ const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({
         <h1 className='text-xs font-bold'>{capitalize(parseChainId(contractDeployment.chainId))}</h1>
       </div>
     </div>
-    <div>
-      <Disclosure>
-        <Disclosure.Button className={clsx('border-mediumGrey w-full flex items-center space-x-1')}>
-          <h2 className='text-xs font-normal'>See description</h2>
-          <ChevronDownIcon className='w-3 h-3' />
-        </Disclosure.Button>
-        <Disclosure.Panel>
-          <p className='my-1 text-[0.6rem] italic'>{contractDeployment?.description}</p>
-        </Disclosure.Panel>
-      </Disclosure>
-    </div>
+    {contractDeployment.description && (
+      <div>
+        <Disclosure>
+          <Disclosure.Button className={clsx('border-mediumGrey w-full flex items-center space-x-1')}>
+            <h2 className='text-xs font-normal'>See description</h2>
+            <ChevronDownIcon className='w-3 h-3' />
+          </Disclosure.Button>
+          <Disclosure.Panel>
+            <p className='my-1 text-[0.6rem] italic'>{contractDeployment.description}</p>
+          </Disclosure.Panel>
+        </Disclosure>
+      </div>
+    )}
   </div>
 )
 

@@ -10,8 +10,6 @@ import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
-export const provider = new ethers.providers.AlchemyProvider('mainnet', env.NEXT_PUBLIC_ALCHEMY_ID)
-
 /**
  * Repository Router
  * Any Repository functionality should implemented here.
@@ -98,7 +96,7 @@ export const repositoryRouter = router({
       const { repositoryId, name } = input
       const deployment = await ctx.prisma.repositoryContractDeployment.findFirst({
         where: { repositoryId: repositoryId, repositoryDeployment: { name } },
-        orderBy: { createdAt: 'desc' },
+        include: { repositoryDeployment: true },
       })
       if (!deployment) {
         throw new TRPCError({ code: 'NOT_FOUND' })
@@ -111,8 +109,10 @@ export const repositoryRouter = router({
         return deployment
       }
 
+      const provider = new ethers.providers.AlchemyProvider(deployment.chainId, env.NEXT_PUBLIC_ALCHEMY_ID)
       const contract = new ethers.Contract(address, [], provider)
       const code = await contract.provider.getCode(address)
+
       if (code === '0x') {
         return deployment
       }
@@ -256,10 +256,11 @@ export const repositoryRouter = router({
       z.object({
         deploymentId: z.string(),
         address: z.string(),
+        chainId: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { deploymentId, address } = input
+      const { deploymentId, chainId, address } = input
 
       const deployment = await ctx.prisma.repositoryDeployment.findFirst({
         where: { id: deploymentId },
@@ -272,6 +273,7 @@ export const repositoryRouter = router({
       return await ctx.prisma.repositoryContractDeployment.create({
         data: {
           repositoryDeploymentId: deploymentId,
+          chainId,
           address,
           repositoryId: deployment.repositoryId,
         },

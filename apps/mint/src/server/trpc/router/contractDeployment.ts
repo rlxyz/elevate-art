@@ -18,17 +18,15 @@ export const contractDeploymentRouter = router({
       where: { address },
       include: { repository: { include: { organisation: true } }, repositoryDeployment: true },
     })
-
-    return {
-      deployment,
-      contract: {
-        projectOwner: (await getContractOwner(address)).getValue(),
-        ethPrice: (await getMintPrice(address)).getValue(),
-        maxAllocationPerAddress: (await getMaxAllocationPerAddress(address)).getValue(),
-        totalSupply: (await getTotalSupply(address)).getValue(),
-        presaleStartTime: new Date(-10),
-        publicStartTime: new Date(-8),
-      },
+    const { chainId } = deployment
+    const contract = {
+      projectOwner: (await getContractOwner(address, chainId)).getValue(),
+      ethPrice: (await getMintPrice(address, chainId)).getValue(),
+      maxAllocationPerAddress: (await getMaxAllocationPerAddress(address, chainId)).getValue(),
+      totalSupply: (await getTotalSupply(address, chainId)).getValue(),
+      presaleStartTime: new Date(-10),
+      publicStartTime: new Date(-8),
     }
+    return { deployment, contract }
   }),
 })

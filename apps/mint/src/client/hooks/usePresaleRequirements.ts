@@ -15,8 +15,8 @@ interface UsePresaleRequirements {
 
 export const usePresaleRequirements = ({ address }: { address: `0x${string}` | undefined }): UsePresaleRequirements => {
   const { current } = useQueryContractDeployment()
-  const mintCount = useMintCount(address)
-  const allocation = usePresaleMaxAllocation(address)
+  const mintCount = useMintCount({ address })
+  const allocation = usePresaleMaxAllocation({ address })
   const totalMinted = useTotalMinted()
   const { mintPhase } = useMintPeriod()
 
