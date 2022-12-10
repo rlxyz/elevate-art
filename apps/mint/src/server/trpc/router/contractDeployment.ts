@@ -3,7 +3,7 @@ import { getMintPrice } from 'src/server/common/ethers-get-contract-mint-price'
 import { getContractOwner } from 'src/server/common/ethers-get-contract-owner'
 import { getTotalSupply } from 'src/server/common/ethers-get-contract-total-supply'
 import { z } from 'zod'
-import { protectedProcedure, router } from '../trpc'
+import { publicProcedure, router } from '../trpc'
 
 /**
  * Repository Router
@@ -12,7 +12,7 @@ import { protectedProcedure, router } from '../trpc'
  * @todo protect this router by checking if the user is the owner of the repository
  */
 export const contractDeploymentRouter = router({
-  findByAddress: protectedProcedure.input(z.object({ address: z.string() })).query(async ({ ctx, input }) => {
+  findByAddress: publicProcedure.input(z.object({ address: z.string() })).query(async ({ ctx, input }) => {
     const { address } = input
     const deployment = await ctx.prisma.repositoryContractDeployment.findFirst({
       where: { address },
