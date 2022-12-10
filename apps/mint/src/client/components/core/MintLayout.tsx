@@ -158,7 +158,9 @@ export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
         <SocialMediaLink
           discordUrl={contractDeployment.discordUrl}
           twitterUrl={contractDeployment.twitterUrl}
-          etherscanUrl={`https://etherscan.io/address/${contractDeployment.address}`}
+          etherscanUrl={`https://${
+            contractDeployment.chainId === 1 ? '' : `${parseChainId(contractDeployment.chainId)}.`
+          }etherscan.io/address/${contractDeployment.address}`}
         />
       </div>
     </LayoutContainer>
