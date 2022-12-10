@@ -1,4 +1,5 @@
 import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
+import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
@@ -12,8 +13,22 @@ export type ContractDetailsForm = {
 }
 
 export const ContractDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
-  const { contractName, contractSymbol, mintType, blockchain, setContractName, setContractSymbol, setMintType, setBlockchain } =
-    useContractCreationStore()
+  const {
+    currentSegment,
+    contractName,
+    contractSymbol,
+    mintType,
+    blockchain,
+    setContractName,
+    setContractSymbol,
+    setMintType,
+    setBlockchain,
+    setCurrentSegment,
+  } = useContractCreationStore()
+
+  console.log(currentSegment)
+
+  const router = useRouter()
 
   const {
     register,
@@ -31,11 +46,14 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     },
   })
 
+  console.log()
+
   const onSubmit = ({ contractName, contractSymbol, mintType, blockchain }: ContractDetailsForm) => {
     setContractName(contractName)
     setContractSymbol(contractSymbol)
     setMintType(mintType)
     setBlockchain(blockchain)
+    setCurrentSegment(1)
   }
 
   return (
