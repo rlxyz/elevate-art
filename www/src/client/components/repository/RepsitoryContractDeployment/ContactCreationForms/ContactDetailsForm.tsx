@@ -46,8 +46,6 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     },
   })
 
-  console.log()
-
   const onSubmit = ({ contractName, contractSymbol, mintType, blockchain }: ContractDetailsForm) => {
     setContractName(contractName)
     setContractSymbol(contractSymbol)
