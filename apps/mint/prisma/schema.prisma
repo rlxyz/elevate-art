@@ -115,12 +115,20 @@ model RepositoryContractDeployment {
     id      String                             @id @default(cuid())
     address String                             @db.VarChar(42)
     status  RepositoryContractDeploymentStatus @default(PENDING)
+    chainId Int                                @default(1)
 
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
     repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
     repositoryDeploymentId String?               @unique
+
+    description String? @db.VarChar(255)
+    twitterUrl  String? @db.VarChar(255)
+    discordUrl  String? @db.VarChar(255)
+    websiteUrl  String? @db.VarChar(255)
+    bannerUrl   String? @db.VarChar(255)
+    logoUrl     String? @db.VarChar(255)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

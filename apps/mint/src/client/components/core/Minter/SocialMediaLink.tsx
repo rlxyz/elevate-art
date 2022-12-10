@@ -2,10 +2,10 @@ import LinkComponent from '@Components/layout/link/Link'
 import React from 'react'
 
 interface SocialMediaLinkProps {
-  discordUrl?: string
-  twitterUrl?: string
-  openseaUrl?: string
-  etherscanUrl?: string
+  discordUrl?: string | null
+  twitterUrl?: string | null
+  openseaUrl?: string | null
+  etherscanUrl?: string | null
 }
 
 export const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({ discordUrl, twitterUrl, openseaUrl, etherscanUrl }) => {

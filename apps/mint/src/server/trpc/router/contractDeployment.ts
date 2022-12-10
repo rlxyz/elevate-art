@@ -1,3 +1,7 @@
+import { getMaxAllocationPerAddress } from 'src/server/common/ethers-get-contract-max-allocation-per-address'
+import { getMintPrice } from 'src/server/common/ethers-get-contract-mint-price'
+import { getContractOwner } from 'src/server/common/ethers-get-contract-owner'
+import { getTotalSupply } from 'src/server/common/ethers-get-contract-total-supply'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -14,6 +18,15 @@ export const contractDeploymentRouter = router({
       where: { address },
       include: { repository: { include: { organisation: true } }, repositoryDeployment: true },
     })
-    return deployment
+
+    return {
+      deployment,
+      contract: {
+        projectOwner: (await getContractOwner(address)).getValue(),
+        ethPrice: (await getMintPrice(address)).getValue(),
+        maxAllocationPerAddress: (await getMaxAllocationPerAddress(address)).getValue(),
+        totalSupply: (await getTotalSupply(address)).getValue(),
+      },
+    }
   }),
 })

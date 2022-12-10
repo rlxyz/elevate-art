@@ -2,11 +2,13 @@ import Card from '@Components/layout/card'
 import { PageRoutesNavbar } from '@Components/layout/header/PageRoutesNavbar'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
 import clsx from 'clsx'
+import { BigNumber, ethers } from 'ethers'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { useMintPeriod } from 'src/client/hooks/contractsRead'
 import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
 import { usePresaleRequirements } from 'src/client/hooks/usePresaleRequirements'
+import type { ContractData } from 'src/pages/[address]'
 import { useAccount } from 'wagmi'
 import { AllowlistCheckerView } from './AllowlistCheckerView'
 import { MintButton } from './Minter/MintButton'
@@ -53,9 +55,17 @@ interface ContractDeploymentDetailsProps {
   repository: Repository
   organisation: Organisation
   deployment: RepositoryDeployment
+  contractDeployment: RepositoryContractDeployment
+  contractData: ContractData
 }
 
-const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({ repository, organisation, deployment }) => (
+const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({
+  repository,
+  organisation,
+  deployment,
+  contractDeployment,
+  contractData,
+}) => (
   <div className='flex flex-col space-y-3'>
     <div className='flex'>
       <h1 className='text-2xl font-bold'>{repository.name}</h1>
@@ -74,17 +84,17 @@ const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({ r
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Minted</h2>
-        <h1 className='text-xs font-bold'>{200}</h1>
+        <h1 className='text-xs font-bold'>{ethers.utils.formatUnits(contractData.totalSupply, 0)}</h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Price</h2>
-        <h1 className='text-xs font-bold'>{0.05} ether</h1>
+        <h1 className='text-xs font-bold'>{ethers.utils.formatEther(BigNumber.from(contractData.ethPrice))} ether</h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Chain</h2>
-        <h1 className='text-xs font-bold'>{'Ethereum'}</h1>
+        <h1 className='text-xs font-bold'>{contractDeployment.chainId === 1 ? 'Ethereum' : 'ChainNotImplemented'}</h1>
       </div>
     </div>
   </div>
@@ -95,6 +105,7 @@ interface MintLayoutDescriptionProps {
   organisation: Organisation
   deployment: RepositoryDeployment
   contractDeployment: RepositoryContractDeployment
+  contractData: ContractData
 }
 
 export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
@@ -102,11 +113,22 @@ export const MintLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({
   organisation,
   deployment,
   contractDeployment,
+  contractData,
 }) => {
   return (
     <div className='px-5 lg:px-16 2xl:px-32 w-full flex justify-between'>
-      <ContractDeploymentDetails repository={repository} organisation={organisation} deployment={deployment} />
-      <SocialMediaLink discordUrl='x' twitterUrl='x' openseaUrl='x' etherscanUrl='x' />
+      <ContractDeploymentDetails
+        repository={repository}
+        organisation={organisation}
+        deployment={deployment}
+        contractDeployment={contractDeployment}
+        contractData={contractData}
+      />
+      <SocialMediaLink
+        discordUrl={contractDeployment.discordUrl}
+        twitterUrl={contractDeployment.twitterUrl}
+        etherscanUrl={`https://etherscan.io/address/${contractDeployment.address}`}
+      />
     </div>
   )
 }

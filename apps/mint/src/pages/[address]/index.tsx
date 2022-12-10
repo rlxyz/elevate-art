@@ -1,18 +1,25 @@
 import { MintLayout } from '@Components/core/MintLayout'
 import { Layout } from '@Components/layout/core/Layout'
 import { RepositoryContractDeploymentStatus } from '@prisma/client'
+import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
 import { useAccount } from 'wagmi'
+
+// @todo find somewhere to put this
+export type ContractData = {
+  projectOwner: string
+  ethPrice: BigNumber
+  maxAllocationPerAddress: BigNumber
+  totalSupply: BigNumber
+}
 
 export const HomePage = () => {
   const router = useRouter()
   const address = router.query.address as string
   const { current } = useQueryContractDeployment()
-  const { data, isLoading } = useGetProjectDetail('rlxyz')
   const account = useAccount()
   useEffect(() => {
     if (account?.address) {
@@ -20,7 +27,9 @@ export const HomePage = () => {
     }
   }, [account?.address])
 
-  if (!current || !(current.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
+  if (!current || !current.deployment || !(current.deployment.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
+
+  const { deployment, contract: contractData } = current
 
   return (
     <Layout>
@@ -36,12 +45,13 @@ export const HomePage = () => {
         <MintLayout>
           <MintLayout.Header bannerImageUrl={'/images/moonbirds-banner.png'} profileImageUrl={'/images/moonbirds-profile.avif'} />
           <MintLayout.Description
-            organisation={current.repository.organisation}
-            repository={current.repository}
-            deployment={current.repositoryDeployment} // @todo fix
-            contractDeployment={current}
+            organisation={deployment.repository.organisation}
+            repository={deployment.repository}
+            deployment={deployment.repositoryDeployment} // @todo fix
+            contractDeployment={deployment}
+            contractData={contractData}
           />
-          <MintLayout.Body contractDeployment={current} />
+          <MintLayout.Body contractDeployment={deployment} />
           {/* <div className='px-5 lg:px-16 2xl:px-32 py-12 pb-20 grid gap-4 grid-cols-1 md:grid-cols-2'>
             <ProjectInfo
               projectName={data?.projectName}
