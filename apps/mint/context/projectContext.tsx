@@ -21,11 +21,7 @@ interface ProjectDetailProviderProps {
 }
 
 export function ProjectDetailProvider({ children, data }: ProjectDetailProviderProps) {
-  return (
-    <ProjectDetailContext.Provider value={{ ...data }}>
-      {children}
-    </ProjectDetailContext.Provider>
-  )
+  return <ProjectDetailContext.Provider value={{ ...data }}>{children}</ProjectDetailContext.Provider>
 }
 
 export function useProjectDetail() {

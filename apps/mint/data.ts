@@ -13,12 +13,9 @@ export const data = {
   `,
   projectOwner: 'Rhapsody Labs',
   keywords: 'nft, crypto, cryptoart, genart, photography, digital collectibles',
-  projectBanner:
-    'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg',
-  projectProfileImage:
-    'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/profile_image.gif',
-  projectInfoBanner:
-    'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg',
+  projectBanner: 'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg',
+  projectProfileImage: 'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/profile_image.gif',
+  projectInfoBanner: 'https://rhapsodylabsxyz.sgp1.cdn.digitaloceanspaces.com/rlxyz_banner_image.svg',
   totalSupply: 1111,
   ethPrice: 0.333,
   websiteUrl: 'https://mint.rlxyz.com',

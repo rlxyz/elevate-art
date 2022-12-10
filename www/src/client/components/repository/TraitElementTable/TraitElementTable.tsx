@@ -1,9 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
-import { flexRender, Table as ReactTable } from '@tanstack/react-table'
+import type { Table as ReactTable } from '@tanstack/react-table'
+import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { Table } from 'src/client/components/layout/core/Table'
-import { TraitElementFields } from './useTraitElementForm'
+import type { TraitElementFields } from './useTraitElementForm'
 
 interface Props {
   table: ReactTable<TraitElementFields>

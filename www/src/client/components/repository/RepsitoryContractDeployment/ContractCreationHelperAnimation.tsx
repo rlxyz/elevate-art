@@ -6,7 +6,7 @@ import type { FC } from 'react'
 import { useContractCreationStore } from '../../../hooks/utils/useContractCreationStore'
 import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
-import { GradientWithLine } from './GradientWithLine'
+import { LineWithGradient } from './LineWithGradient'
 
 /** @todo modularise */
 export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ className }) => {
@@ -95,7 +95,7 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
         <ButtonWithSelector onClick={() => handleClick(currentSegment - 1)} enabled={currentSegment === 0}>
           <ChevronLeftIcon className='w-3 h-3 text-darkGrey' />
         </ButtonWithSelector>
-        <GradientWithLine />
+        <LineWithGradient className='absolute' />
         <ButtonWithSelector onClick={() => handleClick(currentSegment + 1)} enabled={currentSegment === 2}>
           <ChevronRightIcon className='w-3 h-3 text-darkGrey' />
         </ButtonWithSelector>
