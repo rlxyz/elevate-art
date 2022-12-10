@@ -2,6 +2,7 @@ import { MintLayout } from '@Components/core/MintLayout'
 import { Layout, LayoutContainer } from '@Components/layout/core/Layout'
 import LinkComponent from '@Components/layout/link/Link'
 import { RepositoryContractDeploymentStatus } from '@prisma/client'
+import { ethers } from 'ethers'
 import LogRocket from 'logrocket'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -51,7 +52,7 @@ export const HomePage = () => {
   if (!current || !current.deployment || !(current.deployment.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
 
   const { deployment, contract: contractData } = current
-
+  const totalSupply = Number(ethers.utils.formatUnits(current.contract.totalSupply, 0))
   return (
     <Layout>
       <Layout.Header
@@ -72,48 +73,51 @@ export const HomePage = () => {
             contractDeployment={deployment}
             contractData={contractData}
           />
-          <LayoutContainer border='none'>
-            <InfiniteScrollComponent.default
-              dataLength={displayLength}
-              next={() => {
-                fetchMoreData()
-              }}
-              hasMore={hasMore}
-              loader={<></>}
-            >
-              <div className='grid grid-cols-4 gap-6 py-6'>
-                {/** @todo should use current.contract.totalSupply */}
-                {Array.from(Array(current.deployment.repositoryDeployment?.collectionTotalSupply).keys())
-                  .slice(0, displayLength)
-                  .map((item) => (
-                    <div key={item} className='border border-mediumGrey rounded-[5px]'>
-                      <Image
-                        src={`${'http://localhost:3000'}/api/asset/${deployment.repository.organisation.name}/${
-                          deployment.repository.name
-                        }/${deployment.repositoryDeployment?.name}/${item}`}
-                        width={300}
-                        height={300}
-                        alt='some-id'
-                        className='object-cover m-auto rounded-t-[5px]'
-                      />
-                      <div className='p-2'>
-                        <h1 className='text-xs font-semibold italic'>
-                          <LinkComponent
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            href={`${'http://localhost:3000'}/api/asset/${deployment.repository.organisation.name}/${
-                              deployment.repository.name
-                            }/${deployment.repositoryDeployment?.name}/${item}/metadata`}
-                            underline
-                          >
-                            {item}
-                          </LinkComponent>
-                        </h1>
+          <LayoutContainer border='none' className='py-3'>
+            {totalSupply === 0 ? (
+              <span className='text-xs w-full'>Nothing has been minted yet. Come back later.</span>
+            ) : (
+              <InfiniteScrollComponent.default
+                dataLength={displayLength}
+                next={() => {
+                  fetchMoreData()
+                }}
+                hasMore={hasMore}
+                loader={<></>}
+              >
+                <div className='grid grid-cols-4 gap-6'>
+                  {Array.from(Array(totalSupply).keys())
+                    .slice(0, displayLength)
+                    .map((item) => (
+                      <div key={item} className='border border-mediumGrey rounded-[5px]'>
+                        <Image
+                          src={`${'http://localhost:3000'}/api/asset/${deployment.repository.organisation.name}/${
+                            deployment.repository.name
+                          }/${deployment.repositoryDeployment?.name}/${item}`}
+                          width={300}
+                          height={300}
+                          alt='some-id'
+                          className='object-cover m-auto rounded-t-[5px]'
+                        />
+                        <div className='p-2'>
+                          <h1 className='text-xs font-semibold italic'>
+                            <LinkComponent
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              href={`${'http://localhost:3000'}/api/asset/${deployment.repository.organisation.name}/${
+                                deployment.repository.name
+                              }/${deployment.repositoryDeployment?.name}/${item}/metadata`}
+                              underline
+                            >
+                              {item}
+                            </LinkComponent>
+                          </h1>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-              </div>
-            </InfiniteScrollComponent.default>
+                    ))}
+                </div>
+              </InfiniteScrollComponent.default>
+            )}
           </LayoutContainer>
         </MintLayout>
       </Layout.Body>
