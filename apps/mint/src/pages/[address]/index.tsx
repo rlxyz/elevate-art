@@ -1,5 +1,6 @@
-import { MintLayout } from '@Components/core/MintLayout'
+import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
 import { Layout } from '@Components/layout/core/Layout'
+import { MintLayout } from '@Components/MintLayout/MintLayout'
 import { RepositoryContractDeploymentStatus } from '@prisma/client'
 import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
@@ -44,17 +45,19 @@ export const HomePage = () => {
         ]}
       />
       <Layout.Body margin={false}>
-        <MintLayout>
-          <MintLayout.Header contractDeployment={deployment} />
-          <MintLayout.Description
+        <CollectionLayout>
+          <CollectionLayout.Header contractDeployment={deployment} />
+          <CollectionLayout.Description
             organisation={deployment.repository.organisation}
             repository={deployment.repository}
             deployment={deployment.repositoryDeployment} // @todo fix
             contractDeployment={deployment}
             contractData={contractData}
           />
-          <MintLayout.Body contractDeployment={deployment} contractData={contractData} />
-        </MintLayout>
+          <CollectionLayout.Body>
+            <MintLayout contractDeployment={deployment} />
+          </CollectionLayout.Body>
+        </CollectionLayout>
       </Layout.Body>
     </Layout>
   )
