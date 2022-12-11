@@ -1,4 +1,4 @@
-import LinkComponent from '@Components/layout/link/Link'
+import LinkComponent from '@Components/ui/link/Link'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
 import { ethers } from 'ethers'
 import { current } from 'immer'

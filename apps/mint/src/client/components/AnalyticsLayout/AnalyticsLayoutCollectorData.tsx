@@ -1,5 +1,5 @@
-import AvatarComponent from '@Components/layout/avatar/Avatar'
-import LinkComponent from '@Components/layout/link/Link'
+import AvatarComponent from '@Components/ui/avatar/Avatar'
+import LinkComponent from '@Components/ui/link/Link'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import { ethers } from 'ethers'
 import { buildEtherscanLink } from '../core/Unused'

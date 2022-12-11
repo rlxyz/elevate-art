@@ -1,4 +1,4 @@
-import Card from '@Components/layout/card'
+import Card from '@Components/ui/card'
 import React from 'react'
 
 interface RightContentContainerProps {

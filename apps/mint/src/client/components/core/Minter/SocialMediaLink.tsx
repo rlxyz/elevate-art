@@ -1,4 +1,4 @@
-import LinkComponent from '@Components/layout/link/Link'
+import LinkComponent from '@Components/ui/link/Link'
 import React from 'react'
 
 interface SocialMediaLinkProps {

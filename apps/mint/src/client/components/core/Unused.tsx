@@ -1,5 +1,5 @@
-import Card from '@Components/layout/card'
-import { PageRoutesNavbar } from '@Components/layout/header/PageRoutesNavbar'
+import Card from '@Components/ui/card'
+import { PageRoutesNavbar } from '@Components/ui/header/PageRoutesNavbar'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import { parseChainId } from '@Utils/ethers'
 import clsx from 'clsx'

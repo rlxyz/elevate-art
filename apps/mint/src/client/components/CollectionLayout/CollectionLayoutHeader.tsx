@@ -1,4 +1,4 @@
-import { LayoutContainer } from '@Components/layout/core/Layout'
+import { LayoutContainer } from '@Components/ui/core/Layout'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -12,7 +12,7 @@ export const CollectionLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ contra
     <div>
       <div className='relative overflow-hidden'>
         <div className='h-72 w-screen'>
-          <div className='flex items-center justify-center absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border border-b border-mediumGrey bg-lightGray'>
+          <div className='flex items-center justify-center absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border border-b border-mediumGrey bg-lightGray h-full w-full'>
             {contractDeployment?.bannerUrl && (
               <Image
                 src={contractDeployment.bannerUrl}

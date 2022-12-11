@@ -1,4 +1,4 @@
-import Card from '@Components/layout/card'
+import Card from '@Components/ui/card'
 import type { ReactNode } from 'react'
 
 export const AnalyticsLayout = ({ children }: { children: ReactNode }) => <Card>{children}</Card>

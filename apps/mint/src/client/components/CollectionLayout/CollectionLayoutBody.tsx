@@ -1,4 +1,4 @@
-import { LayoutContainer } from '@Components/layout/core/Layout'
+import { LayoutContainer } from '@Components/ui/core/Layout'
 import type { ReactNode } from 'react'
 import React from 'react'
 

@@ -1,6 +1,8 @@
+import { AnalyticsLayoutCollectionInformation } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectionInformation'
+import { AnalyticsLayoutCollectorData } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectorData'
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
-import { Layout } from '@Components/layout/core/Layout'
 import { MintLayout } from '@Components/MintLayout/MintLayout'
+import { Layout } from '@Components/ui/core/Layout'
 import { RepositoryContractDeploymentStatus } from '@prisma/client'
 import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
@@ -55,7 +57,15 @@ export const HomePage = () => {
             contractData={contractData}
           />
           <CollectionLayout.Body>
-            <MintLayout contractDeployment={deployment} />
+            <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
+              <main>
+                <MintLayout contractDeployment={deployment} />
+              </main>
+              <article className='flex flex-col space-y-6'>
+                <AnalyticsLayoutCollectionInformation contractDeployment={deployment} />
+                <AnalyticsLayoutCollectorData contractDeployment={deployment} />
+              </article>
+            </div>
           </CollectionLayout.Body>
         </CollectionLayout>
       </Layout.Body>

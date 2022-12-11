@@ -1,5 +1,5 @@
 import { buildEtherscanLink } from '@Components/core/Unused'
-import LinkComponent from '@Components/layout/link/Link'
+import LinkComponent from '@Components/ui/link/Link'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import { parseChainId } from '@Utils/ethers'
 import { capitalize } from '@Utils/format'

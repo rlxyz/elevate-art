@@ -1,4 +1,4 @@
-import { LayoutContainer } from '@Components/layout/core/Layout'
+import { LayoutContainer } from '@Components/ui/core/Layout'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
 import React from 'react'
 import type { ContractData } from 'src/pages/[address]'

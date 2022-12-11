@@ -1,6 +1,6 @@
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
 import { GalleryLayout } from '@Components/GalleryLayout/GalleryLayout'
-import { Layout } from '@Components/layout/core/Layout'
+import { Layout } from '@Components/ui/core/Layout'
 import { RepositoryContractDeploymentStatus } from '@prisma/client'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'

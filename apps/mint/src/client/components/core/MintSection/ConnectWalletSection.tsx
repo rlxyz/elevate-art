@@ -1,4 +1,4 @@
-import { ConnectButton } from '@Components/layout/eth/ConnectButton'
+import { ConnectButton } from '@Components/ui/eth/ConnectButton'
 import { useAccount } from 'wagmi'
 
 export const ConnectWalletSection = () => {

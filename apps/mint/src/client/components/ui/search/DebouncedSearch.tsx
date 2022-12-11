@@ -1,5 +1,5 @@
+import SearchComponent from '@Components/ui/search/Search'
 import React from 'react'
-import SearchComponent from 'src/client/components/layout/search/Search'
 
 export const DebouncedSearchComponent = ({
   value: initialValue,
