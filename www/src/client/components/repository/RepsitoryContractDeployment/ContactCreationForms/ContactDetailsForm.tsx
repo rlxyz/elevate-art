@@ -46,7 +46,9 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setContractSymbol(contractSymbol)
     setMintType(mintType)
     setBlockchain(blockchain)
+
     setCurrentSegment(1)
+    console.log('currentSegment:', currentSegment)
   }
 
   return (
@@ -107,7 +109,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
                   },
                 })}
                 label={'Off-Chain'}
-                // error={errors.contractName}
+                error={errors.contractName}
               />
             </div>
             <div className='h-full flex items-center space-x-2'>
@@ -145,7 +147,12 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           <option value={'goerli'}>{capitalize('goerli')}</option>
           <option value={'mainnet'}>{capitalize('mainnet')}</option>
         </ContractForm.Body.Select>
-        <input type='submit' value='Next >' className='col-span-6' />
+        <button
+          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          type='submit'
+        >
+          Continue
+        </button>
       </ContractForm.Body>
     </ContractForm>
   )

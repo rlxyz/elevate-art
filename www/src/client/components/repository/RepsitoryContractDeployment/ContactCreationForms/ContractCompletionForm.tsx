@@ -10,8 +10,7 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
   const mintPrice = Big(pricePerToken)
     .times(10 ** 18)
     .toFixed(0)
-  console.log(mintPrice)
-  console.log(currentSegment)
+
   return (
     <>
       <ContractForm>

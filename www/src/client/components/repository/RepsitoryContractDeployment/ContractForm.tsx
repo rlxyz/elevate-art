@@ -27,7 +27,13 @@ const ContractFormHeader = ({ title, description }: { title: string; description
 const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement[]; onSubmit: React.FormEventHandler }) => {
   return (
     <form onSubmit={onSubmit}>
-      <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+      <div className='grid grid-cols-2'>
+        <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+        <div className='grid grid-cols-3'>
+          <p className='text-xs font-semibold'>Name</p>
+          <p className='text-xs font-semibold'>Token</p>
+        </div>
+      </div>
     </form>
   )
 }

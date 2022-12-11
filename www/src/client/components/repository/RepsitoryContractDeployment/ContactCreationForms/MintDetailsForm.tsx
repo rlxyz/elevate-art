@@ -30,10 +30,8 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     setCollectionSize(collectionSize)
     setPricePerToken(pricePerToken)
     setCurrentSegment(2)
+    console.log('currentSegment:', currentSegment)
   }
-
-  console.log(collectionSize)
-  console.log(pricePerToken)
 
   return (
     <>
@@ -67,7 +65,12 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
             error={errors.collectionSize}
             placeholder='0.05'
           />
-          <input type='submit' value='Continue' />
+          <button
+            className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            type='submit'
+          >
+            Continue
+          </button>
         </ContractForm.Body>
       </ContractForm>
     </>
