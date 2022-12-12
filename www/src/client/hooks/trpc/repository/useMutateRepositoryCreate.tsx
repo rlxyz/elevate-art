@@ -45,7 +45,7 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
       })
       const { id: repositoryId } = response
       setRepository(response)
-      ctx.repository.findByName.setData({ name: response.name }, response)
+      ctx.repository.findByName.setData({ repositoryName: response.name, organisationName: organisation.name }, response)
 
       notifySuccess('Project created. We are uploading the images now. Do not leave this page!')
       setUploadState('uploading')

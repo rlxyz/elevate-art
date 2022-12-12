@@ -4,6 +4,10 @@ import { trpc } from 'src/client/utils/trpc'
 export const useQueryRepositoryFindByName = () => {
   const router: NextRouter = useRouter()
   const repositoryName: string = router.query.repository as string
-  const { data, isLoading, isError } = trpc.repository.findByName.useQuery({ name: repositoryName })
+  const organisationName: string = router.query.organisation as string
+  const { data, isLoading, isError } = trpc.repository.findByName.useQuery({
+    repositoryName: repositoryName,
+    organisationName: organisationName,
+  })
   return { current: (data && data) || undefined, isLoading, isError }
 }
