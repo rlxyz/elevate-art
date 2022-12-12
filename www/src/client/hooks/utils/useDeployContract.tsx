@@ -10,10 +10,13 @@ import { useNotification } from './useNotification'
 interface ERC721ContractInput {
   name: string
   symbol: string
+  baseURI: string
   collectionSize: number
   maxPublicBatchPerAddress: number
   amountForPromotion: number
   mintPrice: string
+  presaleTime: number
+  publicTime: number
 }
 
 export const useDeployContract = () => {
@@ -25,7 +28,17 @@ export const useDeployContract = () => {
   const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
 
   const deploy = async (opts: ERC721ContractInput) => {
-    const args = [opts.name, opts.symbol, opts.collectionSize, opts.maxPublicBatchPerAddress, opts.amountForPromotion, opts.mintPrice]
+    const args = [
+      opts.name,
+      opts.symbol,
+      opts.baseURI,
+      opts.collectionSize,
+      opts.maxPublicBatchPerAddress,
+      opts.amountForPromotion,
+      opts.mintPrice,
+      opts.presaleTime,
+      opts.publicTime,
+    ]
     const tx = await factory.deploy(...args)
     mutate({ deploymentId, address: tx.address, chainId: 5 }) // set to 5 for goerli, shoudl come from forom
     setAddress(tx.address)
