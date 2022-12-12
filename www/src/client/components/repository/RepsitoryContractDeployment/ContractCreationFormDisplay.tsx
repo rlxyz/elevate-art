@@ -1,9 +1,9 @@
 import { CubeIcon } from '@heroicons/react/outline'
-import { useContractCreationStore } from '@hooks/utils/useContractCreationStore'
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import clsx from 'clsx'
 import type { FC } from 'react'
 import { z } from 'zod'
-import { ContactDetailsForm } from './ContactCreationForms/ContactDetailsForm'
+import { ContractDetailsForm } from './ContactCreationForms/ContactDetailsForm'
 import { ContractCompletionForm } from './ContactCreationForms/ContractCompletionForm'
 import { MintDetailsForm } from './ContactCreationForms/MintDetailsForm'
 
@@ -30,7 +30,7 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
     id: 'contract-base-details',
     title: 'Create Contract',
     description: 'Enter the details of your smart contract',
-    component: ContactDetailsForm,
+    component: ContractDetailsForm,
     motionX: 0.5,
     motionOpacity: 1,
     icon: <CubeIcon className='w-10 h-10 text-darkGrey' />,
@@ -57,6 +57,7 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
 
 export const ContractCreationFormDisplay: FC<{ className: string }> = ({ className }) => {
   const { currentSegment } = useContractCreationStore()
+  console.log(currentSegment)
 
   return (
     <div className={clsx('flex flex-col items-center', className)}>

@@ -1,9 +1,16 @@
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import { useDeployContract } from '@hooks/utils/useDeployContract'
+import Big from 'big.js'
 import type { FC } from 'react'
 import { ContractForm } from '../ContractForm'
 
 export const ContractCompletionForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   const { deploy, address: contractAddress } = useDeployContract()
+  const { currentSegment, contractName, contractSymbol, mintType, blockchain, collectionSize, pricePerToken } = useContractCreationStore()
+  const mintPrice = Big(pricePerToken)
+    .times(10 ** 18)
+    .toFixed(0)
+
   return (
     <>
       <ContractForm>
@@ -15,12 +22,12 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
             e.preventDefault()
             try {
               await deploy({
-                name: 'test-deployment-contract',
-                symbol: 'EA-TDC',
-                collectionSize: 10000,
+                name: contractName,
+                symbol: contractSymbol,
+                collectionSize: collectionSize,
                 maxPublicBatchPerAddress: 5,
                 amountForPromotion: 10,
-                mintPrice: '333000000000000000',
+                mintPrice: mintPrice,
               })
             } catch (error) {
               console.error('err', error)

@@ -1,3 +1,4 @@
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { ContractForm } from '../ContractForm'
@@ -8,42 +9,68 @@ export type MintDetailsForm = {
 }
 
 export const MintDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+  const { currentSegment, collectionSize, pricePerToken, setCollectionSize, setPricePerToken, setCurrentSegment } =
+    useContractCreationStore()
+
   const {
     register,
+    setValue,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<MintDetailsForm>({
     defaultValues: {
-      collectionSize: 0,
-      pricePerToken: 0,
+      collectionSize: collectionSize,
+      pricePerToken: pricePerToken,
     },
   })
+
+  const onSubmit = ({ collectionSize, pricePerToken }: MintDetailsForm) => {
+    setCollectionSize(collectionSize)
+    setPricePerToken(pricePerToken)
+    setCurrentSegment(2)
+    console.log('currentSegment:', currentSegment)
+  }
 
   return (
     <>
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
-        <ContractForm.Body>
+        <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
           <ContractForm.Body.Input
             {...register('collectionSize', {
               required: true,
+              onChange: (e) => {
+                setValue('collectionSize', e.target.value)
+              },
             })}
             label={'Total Supply'}
             description={'The size of the collection'}
             className='col-span-3'
             error={errors.collectionSize}
+            placeholder='100'
           />
           <ContractForm.Body.Input
             {...register('pricePerToken', {
               required: true,
+              onChange: (e) => {
+                setValue('pricePerToken', e.target.value)
+              },
             })}
             label={'Price (ether)'}
             // defaultValue={0.05}
             description={'The cost of each NFT in the collection'}
             className='col-span-3'
             error={errors.collectionSize}
+            placeholder='0.05'
           />
+          <button
+            className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            type='submit'
+          >
+            Continue
+          </button>
         </ContractForm.Body>
       </ContractForm>
     </>
