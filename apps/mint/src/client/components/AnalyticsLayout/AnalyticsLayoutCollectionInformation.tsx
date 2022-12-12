@@ -5,7 +5,11 @@ import { parseChainId } from '@Utils/ethers'
 import { capitalize } from '@Utils/format'
 import { AnalyticsLayout } from './AnalyticsLayout'
 
-export const AnalyticsLayoutCollectionInformation = ({ contractDeployment }: { contractDeployment: RepositoryContractDeployment }) => (
+export const AnalyticsLayoutCollectionInformation = ({
+  contractDeployment,
+}: {
+  contractDeployment: RepositoryContractDeployment | null | undefined
+}) => (
   <AnalyticsLayout>
     <AnalyticsLayout.Header title='Information' />
     <AnalyticsLayout.Body>
@@ -14,12 +18,12 @@ export const AnalyticsLayoutCollectionInformation = ({ contractDeployment }: { c
           {
             key: 'Contract Address',
             value: buildEtherscanLink({
-              address: contractDeployment.address,
-              chainId: contractDeployment.chainId,
+              address: contractDeployment?.address || '',
+              chainId: contractDeployment?.chainId || 1,
             }),
             type: 'Link',
           },
-          { key: 'Blockchain', value: capitalize(parseChainId(contractDeployment.chainId)), type: 'Basic' },
+          { key: 'Blockchain', value: capitalize(parseChainId(contractDeployment?.chainId || 99)), type: 'Basic' },
           { key: 'Token Standard', value: 'ERC721', type: 'Basic' },
           // { key: 'Base Image URI', value: 'Explore', type: 'Link' },
         ].map(({ key, value, type }) => (

@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import type { ReactNode } from 'react'
 
 // export const SaleLayoutFooter = () => {
@@ -18,6 +19,6 @@ import type { ReactNode } from 'react'
 //     </Disclosure>
 //   )
 // }
-export const SaleLayoutFooter = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>
+export const SaleLayoutFooter = ({ children, className }: { children: ReactNode; className?: string }) => {
+  return <div className={clsx(className)}>{children}</div>
 }

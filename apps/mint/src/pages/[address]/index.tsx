@@ -1,4 +1,6 @@
+import { AnalyticsLayoutCollectionInformation } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectionInformation'
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
+import { MintLayout } from '@Components/MintLayout/MintLayout'
 import { Layout } from '@Components/ui/core/Layout'
 import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
@@ -41,24 +43,24 @@ export const HomePage = () => {
       <Layout.Body margin={false}>
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={current?.deployment} />
-          {/* <CollectionLayout.Description
-            organisation={deployment.repository.organisation}
-            repository={deployment.repository}
-            deployment={deployment.repositoryDeployment} // @todo fix
-            contractDeployment={deployment}
-            contractData={contractData}
-          /> */}
-          {/* <CollectionLayout.Body>
+          <CollectionLayout.Description
+            organisation={current?.deployment?.repository.organisation}
+            repository={current?.deployment?.repository}
+            deployment={current?.deployment?.repositoryDeployment}
+            contractDeployment={current?.deployment}
+            contractData={current?.contract}
+          />
+          <CollectionLayout.Body>
             <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
               <main>
-                <MintLayout contractData={contractData} contractDeployment={deployment} />
+                <MintLayout contractData={current?.contract} contractDeployment={current?.deployment} />
               </main>
               <article className='flex flex-col space-y-6'>
-                <AnalyticsLayoutCollectionInformation contractDeployment={deployment} />
-                <AnalyticsLayoutCollectorData contractDeployment={deployment} />
+                <AnalyticsLayoutCollectionInformation contractDeployment={current?.deployment} />
+                {/* <AnalyticsLayoutCollectorData contractDeployment={deployment} /> */}
               </article>
             </div>
-          </CollectionLayout.Body> */}
+          </CollectionLayout.Body>
         </CollectionLayout>
       </Layout.Body>
     </Layout>
