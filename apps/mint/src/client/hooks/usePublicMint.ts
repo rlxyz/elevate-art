@@ -1,78 +1,110 @@
-import { ethers } from 'ethers'
-import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
-import { config } from 'src/client/utils/config'
+import type { RepositoryContractDeployment } from '@prisma/client'
+import { BigNumber } from 'ethers'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
-import { useContractWrite, useWaitForTransaction } from 'wagmi'
+import type { ContractData } from 'src/pages/[address]'
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 
-import { usePublicSaleMaxAllocation } from './contractsRead'
 import { useNotification } from './useNotification'
+// import { useNotification } from './useNotificationV1'
 
 interface UsePublicMint {
   isLoading: boolean
-  mint: (invocation: number) => void
+  write: () => void
   isError: boolean
+  isProcessing: boolean
 }
 
-export const usePublicMint = (address: string): UsePublicMint => {
-  const { data } = useGetProjectDetail('rlxyz')
-  const { notifyError, notifySubmitted, notifySuccess } = useNotification(data?.projectName)
-  const maxInvocation = usePublicSaleMaxAllocation(address)
-  const {
-    write,
-    isLoading: contractIsLoading,
-    data: trx,
-    isError,
-  } = useContractWrite({
-    mode: 'recklesslyUnprepared',
-    ...RhapsodyContractConfig,
+export const usePublicMint = ({
+  invocations,
+  contractData,
+  contractDeployment,
+}: {
+  address: string | undefined | null
+  invocations: BigNumber
+  contractData: ContractData
+  contractDeployment: RepositoryContractDeployment
+}): UsePublicMint => {
+  const { notifyError, notifyInfo, notifySuccess } = useNotification()
+
+  const { config } = usePrepareContractWrite({
+    address: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+    abi: RhapsodyContractConfig.contractInterface,
     functionName: 'publicMint',
+    args: [invocations],
+    overrides: {
+      value: BigNumber.from(contractData.mintPrice).mul(invocations),
+      gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
+    },
+  })
+
+  const {
+    data: transaction,
+    isLoading,
+    isError,
+    write,
+  } = useContractWrite({
+    ...config,
     onSettled: (data) => {
       if (data) {
-        notifySubmitted(data?.hash)
+        notifyInfo(`A transaction with hash ${data.hash} has been submitted. Please wait for confirmation.`)
       }
     },
     onError: (error) => {
-      // @ts-expect-error may not be needed to construct a custom type for error
-      notifyError({ message: error?.data?.message ?? error?.message })
+      if (error.message.startsWith('user rejected transaction')) {
+        return notifyError('You have rejected the transaction.')
+      }
+
+      notifyError(
+        "Something went wrong. Please try again later. If the problem persists, please contact us on Discord. We're sorry for the inconvenience."
+      )
     },
   })
-  const { isLoading: trxIsProcessing } = useWaitForTransaction({
-    hash: trx?.hash,
+
+  // /** @todo clean this up */
+  const { isLoading: isProcessing } = useWaitForTransaction({
+    hash: transaction?.hash,
     onError: (error) => {
-      // @ts-expect-error may not be needed to construct a custom type for error
-      notifyError({ message: error?.data?.message ?? error?.message })
+      notifyError(
+        "Something went wrong. Please try again later. If the problem persists, please contact us on Discord. We're sorry for the inconvenience."
+      )
     },
     onSuccess: (data) => {
       if (data) {
-        notifySuccess()
+        notifySuccess("You've successfully minted your NFTs!")
       }
     },
   })
 
-  const mint = (invocations: number) => {
-    if (!address) {
-      return notifyError({ message: 'Please connect to wallet first.' })
-    }
+  // const mint = (invocations: BigNumber) => {
+  //   if (!address) {
+  //     return notifyError('Please connect to wallet first.')
+  //   }
 
-    if (invocations > maxInvocation) {
-      return notifyError({ message: 'Trying to mint too many' })
-    }
+  //   if (BigNumber.from(invocations).gt(BigNumber.from(maxAllocation))) {
+  //     return notifyError('Trying to mint too many')
+  //   }
 
-    const mintValue = config.totalPriceAllocation[invocations - 1]
-    const overrides = {
-      value: ethers.utils.parseEther(mintValue.toString()),
-      gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
-    }
+  //   console.log(write)
 
-    write({
-      recklesslySetUnpreparedArgs: [invocations],
-      recklesslySetUnpreparedOverrides: overrides,
-    })
-  }
+  //   if (!write) {
+  //     return notifyError('Something wrong with the contract. Please try again...')
+  //   }
+
+  //   write?.({
+  //     recklesslySetUnpreparedArgs: [invocations],
+  //     recklesslySetUnpreparedOverrides: {
+  //       value: BigNumber.from(contractData.mintPrice).mul(invocations),
+  //       gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
+  //     },
+  //   })
+  // }
 
   return {
-    isLoading: contractIsLoading || trxIsProcessing,
-    mint,
+    // isLoading: isLoading || trxIsProcessing,
+    write: () => write?.(),
+    isLoading,
     isError,
+    isProcessing,
   }
 }

@@ -1,69 +1,77 @@
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMintPeriod } from 'src/client/hooks/contractsRead'
+import type { RepositoryContractDeployment } from '@prisma/client'
+import { formatUnits } from 'ethers/lib/utils.js'
+import type { Session } from 'next-auth'
+import { SalePhaseEnum, useFetchSaleRequirements } from 'src/client/hooks/useFetchContractData'
 import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
-import { usePresaleRequirements } from 'src/client/hooks/usePresaleRequirements'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
-import { useAccount } from 'wagmi'
+import type { ContractData } from 'src/pages/[address]'
 import { DecrementIncrementInput } from '../core/UI/DecrementIncrementInput'
 import { SaleLayout } from './SaleLayout'
+import { SalePrice } from './SalePrice'
+import { useSaleMintCountInput } from './useSaleMintCountInput'
 
-export const SaleLayoutPresalePurchase = () => {
-  const { isConnected, isDisconnected, address } = useAccount()
-  const [mintCount, setMintCount] = useState(1)
-  const { publicTime } = useMintPeriod()
-  const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } = usePresaleRequirements({ address })
-  const { mint, isLoading, isError } = usePresaleMint({ address })
-
-  useEffect(() => {
-    if (isDisconnected) {
-      setMintCount(1)
-    }
-  }, [isDisconnected])
-
-  useEffect(() => {
-    if (!isLoading && isError) {
-      setMintCount(1)
-    }
-  }, [isError, isLoading])
-
-  const { validateAllowlist } = useWalletCheck()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ address: string }>({
-    defaultValues: {
-      address: '',
-    },
+export const SaleLayoutPresalePurchase = ({
+  session,
+  contractData,
+  contractDeployment,
+}: {
+  session: Session
+  contractData: ContractData
+  contractDeployment: RepositoryContractDeployment
+}) => {
+  /** Fetch the user-mint data from Contract */
+  const { data, isLoading, isError } = useFetchSaleRequirements({
+    session,
+    contractDeployment,
+    type: SalePhaseEnum.enum.Presale,
   })
+
+  /** Fetch the public-mint functionality */
+  const { mint } = usePresaleMint({ address: session.user?.address })
+
+  /** The current mint selector (increment/decrement) */
+  const { mintCount, setMintCount } = useSaleMintCountInput({ isLoading, isError })
+
+  /** Variables */
+  const { userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+
+  /** Validation */
+  const { validateAllowlist } = useWalletCheck()
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Presale' endingDate={new Date(publicTime)} />
-      <SaleLayout.Body onSubmit={handleSubmit((data) => console.log(data))}>
+      <SaleLayout.Header title='Presale' endingDate={{ label: 'Ends in', value: contractData.publicTime }} />
+      <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <div className='space-y-1'>
-            <h3 className='text-[0.6rem] text-darkGrey uppercase'>Price</h3>
-            <div className='text-3xl text-black font-semibold space-x-3 italic'>
-              <span className='leading-1 tracking-tighter'>0.005</span>
-              <span>ETH</span>
-            </div>
-          </div>
-          <div>
-            <DecrementIncrementInput
-              maxValue={maxAllocation}
-              onChange={(value) => setMintCount(value)}
-              value={mintCount}
-              disabled={isDisconnected || !hasMintAllocation}
-            />
-          </div>
+          <SalePrice mintPrice={contractData.mintPrice} quantity={mintCount} />
+          <DecrementIncrementInput
+            maxValue={maxAllocation}
+            onChange={(value) => setMintCount(value)}
+            value={mintCount}
+            disabled={!!session?.user?.id || !hasMintAllocation}
+          />
         </div>
       </SaleLayout.Body>
       <SaleLayout.Footer>
-        <div className='flex justify-end'>
+        <div className='flex justify-between items-center'>
+          <div className='flex flex-col items-center w-fit'>
+            {userMintCount && Number(formatUnits(userMintCount, 0)) ? (
+              <span className='text-[0.6rem]'>
+                You minted <strong>{formatUnits(userMintCount, 0)} NFTs</strong> from this collection
+              </span>
+            ) : (
+              <></>
+            )}
+            {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
+              <span className='text-[0.6rem]'>
+                You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+              </span>
+            ) : (
+              <></>
+            )}
+          </div>
           <button
-            disabled={isDisconnected || isLoading || !allowToMint}
+            disabled={!!session?.user?.id || isLoading || !allowToMint}
             onClick={() => mint(mintCount)}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'

@@ -7,6 +7,9 @@ export class ElevateContract extends ethers.Contract {
   readonly mintPrice!: () => Promise<BigNumber>
   readonly maxPublicBatchPerAddress!: () => Promise<BigNumber>
   readonly totalSupply!: () => Promise<BigNumber>
+  readonly collectionSize!: () => Promise<BigNumber>
+  readonly presaleTime!: () => Promise<BigNumber>
+  readonly publicTime!: () => Promise<BigNumber>
 }
 
 export const parseChainId = (chainId: number): 'mainnet' | 'goerli' | 'unknown' => {
@@ -23,10 +26,56 @@ export const parseChainId = (chainId: number): 'mainnet' | 'goerli' | 'unknown' 
 export const getContract = ({ address, chainId }: { address: string; chainId: number }): ElevateContract => {
   const provider = new ethers.providers.AlchemyProvider(parseChainId(chainId), env.NEXT_PUBLIC_ALCHEMY_ID)
   const contract = new ElevateContract(
-    '0x91A5d4F6e691432a58d5579ae45955210eC6a2f1',
+    address,
     [
       {
-        inputs: [],
+        inputs: [
+          {
+            internalType: 'string',
+            name: '_name',
+            type: 'string',
+          },
+          {
+            internalType: 'string',
+            name: '_symbol',
+            type: 'string',
+          },
+          {
+            internalType: 'string',
+            name: '_baseURI',
+            type: 'string',
+          },
+          {
+            internalType: 'uint256',
+            name: '_collectionSize',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: '_maxPublicBatchPerAddress',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: '_amountForPromotion',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: '_mintPrice',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: '_presaleTime',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: '_publicTime',
+            type: 'uint256',
+          },
+        ],
         stateMutability: 'nonpayable',
         type: 'constructor',
       },
@@ -58,11 +107,6 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
       {
         inputs: [],
         name: 'BalanceQueryForZeroAddress',
-        type: 'error',
-      },
-      {
-        inputs: [],
-        name: 'HashQueryForNonexistentToken',
         type: 'error',
       },
       {
@@ -177,20 +221,8 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
           {
             indexed: false,
             internalType: 'uint256',
-            name: 'currentTotalSupply',
+            name: 'amount',
             type: 'uint256',
-          },
-          {
-            indexed: false,
-            internalType: 'uint256',
-            name: 'invocations',
-            type: 'uint256',
-          },
-          {
-            indexed: false,
-            internalType: 'bytes32[]',
-            name: 'identifiers',
-            type: 'bytes32[]',
           },
         ],
         name: 'Created',
@@ -305,38 +337,7 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
       },
       {
         inputs: [],
-        name: 'claimMerkleRoot',
-        outputs: [
-          {
-            internalType: 'bytes32',
-            name: '',
-            type: 'bytes32',
-          },
-        ],
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        inputs: [
-          {
-            internalType: 'uint256',
-            name: 'invocations',
-            type: 'uint256',
-          },
-          {
-            internalType: 'bytes32[]',
-            name: 'proof',
-            type: 'bytes32[]',
-          },
-        ],
-        name: 'claimMint',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-      {
-        inputs: [],
-        name: 'claimTime',
+        name: 'collectionSize',
         outputs: [
           {
             internalType: 'uint256',
@@ -430,19 +431,6 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
             internalType: 'uint256',
             name: '',
             type: 'uint256',
-          },
-        ],
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        inputs: [],
-        name: 'mintRandomizerContract',
-        outputs: [
-          {
-            internalType: 'contract IRandomizer',
-            name: '',
-            type: 'address',
           },
         ],
         stateMutability: 'view',
@@ -687,35 +675,17 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
         inputs: [
           {
             internalType: 'bytes32',
-            name: '_claimMerkleRoot',
+            name: '_presaleMerkleRoot',
             type: 'bytes32',
           },
         ],
-        name: 'setClaimMerkleRoot',
+        name: 'setMintMerkleRoot',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
       },
       {
         inputs: [
-          {
-            internalType: 'address',
-            name: '_mintRandomizerContract',
-            type: 'address',
-          },
-        ],
-        name: 'setMintRandomizerContract',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-      {
-        inputs: [
-          {
-            internalType: 'uint256',
-            name: '_claimTime',
-            type: 'uint256',
-          },
           {
             internalType: 'uint256',
             name: '_presaleTime',
@@ -748,19 +718,6 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
       {
         inputs: [
           {
-            internalType: 'bytes32',
-            name: '_presaleMerkleRoot',
-            type: 'bytes32',
-          },
-        ],
-        name: 'setPresaleMerkleRoot',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-      {
-        inputs: [
-          {
             internalType: 'bytes4',
             name: 'interfaceId',
             type: 'bytes4',
@@ -785,25 +742,6 @@ export const getContract = ({ address, chainId }: { address: string; chainId: nu
             internalType: 'string',
             name: '',
             type: 'string',
-          },
-        ],
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        inputs: [
-          {
-            internalType: 'uint256',
-            name: '_tokenId',
-            type: 'uint256',
-          },
-        ],
-        name: 'tokenHash',
-        outputs: [
-          {
-            internalType: 'bytes32',
-            name: '',
-            type: 'bytes32',
           },
         ],
         stateMutability: 'view',

@@ -2,10 +2,10 @@ import { BigNumber } from 'ethers'
 import { getContract } from 'src/shared/ethers'
 import { Result } from '../utils/response-result'
 
-export const getTotalSupply = async (address: string, chainId: number): Promise<Result<BigNumber>> => {
+export const getCollectionSize = async (address: string, chainId: number): Promise<Result<BigNumber>> => {
   return new Promise(async (resolve, reject) => {
     getContract({ address, chainId })
-      .totalSupply()
+      .collectionSize()
       .then((data) => {
         return resolve(Result.ok(data))
       })

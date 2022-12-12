@@ -1,94 +1,59 @@
-import { Button } from '@Components/core/UI/Button'
-import { LinkButton } from '@Components/core/UI/LinkButton'
-import { Notification } from '@Components/core/UI/Notification/Notification'
+import { Notification } from '@Components/ui/core/Notification'
+import * as React from 'react'
 import toast from 'react-hot-toast'
-import { config } from 'src/client/utils/config'
-import { NETWORK_NAME } from 'src/client/utils/constant'
 
-import { useStore } from './useStore'
-
-export const useNotification = (projectName: string) => {
-  const { rollbar } = useStore()
-
-  const notifyError = ({ message = '', duration = 10000, err }: { message: string; duration?: number; err?: Error }) => {
-    if (err) {
-      rollbar.error(err)
-    }
-
-    return toast.custom(
-      (t) => (
-        <Notification id={t.id} type='error'>
-          <div className='flex justify-between w-full items-center'>
-            <div>
-              <h3 className='font-bold text-base'>Error</h3>
-              <span className='block text-sm'>{message}</span>
-            </div>
-            <div>
-              <Button
-                onClick={() => {
-                  toast.dismiss(t.id)
-                }}
-                label='Close'
-              />
-            </div>
-          </div>
-        </Notification>
-      ),
-      {
-        id: 'message-notification',
-        position: 'bottom-right',
-        duration: duration,
-      }
-    )
-  }
-
-  const notifySubmitted = (trxHash: string, duration = 8000) => {
-    const transactionEtherscanUrl =
-      config.networkId === 1 ? `https://etherscan.io/tx/${trxHash}` : `https://${NETWORK_NAME[config.networkId]}.etherscan.io/tx/${trxHash}`
+export const useNotification = () => {
+  const notifySuccess = (message: React.ReactNode) => {
     return toast.custom(
       (t) => (
         <Notification id={t.id} type='success'>
           <div className='flex justify-between w-full items-center'>
-            <div className='font-gilroy-light'>
-              <div className='font-bold mb-4'>Transaction Submitted</div>
-              <span className='block'>View on Etherscan</span>
-            </div>
-            <div>
-              <LinkButton href={transactionEtherscanUrl}>View</LinkButton>
-            </div>
+            <span>{message}</span>
           </div>
         </Notification>
       ),
       {
-        id: 'message-notification',
-        position: 'bottom-right',
-        duration: duration,
-      }
-    )
-  }
-
-  const notifySuccess = () => {
-    return toast.custom(
-      (t) => (
-        <Notification id={t.id} type='success'>
-          <div className='flex justify-between w-full items-center'>
-            <div className='font-gilroy-light'>
-              <div className='font-bold mb-4'>{`You've successfully minted a ${projectName} piece`}</div>
-            </div>
-          </div>
-        </Notification>
-      ),
-      {
-        id: 'message-notification-success',
         position: 'bottom-right',
         duration: 2000,
       }
     )
   }
 
+  const notifyError = (message: string) => {
+    return toast.custom(
+      (t) => (
+        <Notification id={t.id} type='error'>
+          <div className='flex justify-between w-full items-center'>
+            <span className='pr-4'>{message}</span>
+          </div>
+        </Notification>
+      ),
+      {
+        position: 'bottom-right',
+        duration: 2000,
+      }
+    )
+  }
+
+  const notifyInfo = (message: string) => {
+    return toast.custom(
+      (t) => (
+        <Notification id={t.id} type='info'>
+          <div className='flex justify-between w-full items-center'>
+            <span className='pr-4'>{message}</span>
+          </div>
+        </Notification>
+      ),
+      {
+        position: 'bottom-center',
+        duration: 2000,
+      }
+    )
+  }
+
   return {
-    notifySubmitted,
     notifySuccess,
     notifyError,
+    notifyInfo,
   }
 }

@@ -101,10 +101,10 @@ export const usePresaleMaxAllocation = ({ address }: { address: `0x${string}` | 
   }
 }
 
-export const usePublicSaleMaxAllocation = (address: string) => {
+export const usePublicSaleMaxAllocation = ({ address }: { address: string | undefined | null }) => {
   const { data } = useGetProjectDetail('rlxyz')
   const totalMinted = useTotalMinted()
-  const mintCount = useMintCount(address)
+  const mintCount = useMintCount({ address })
   const totalMintLeft = data?.maxAllocationPerAddress - mintCount
 
   if (data?.totalSupply + data?.maxAllocationPerAddress > data?.maxAllocationPerAddress) {

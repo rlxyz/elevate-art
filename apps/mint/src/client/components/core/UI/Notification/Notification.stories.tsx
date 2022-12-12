@@ -1,7 +1,7 @@
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
 import { Toaster } from 'react-hot-toast'
-import { useNotification } from 'src/client/hooks/useNotification'
+import { useNotification } from 'src/client/hooks/useNotificationV1'
 
 import { Button } from '../Button'
 import { Notification } from './Notification'

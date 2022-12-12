@@ -43,7 +43,7 @@ export const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Price</h2>
-        <h1 className='text-xs font-bold'>{ethers.utils.formatEther(BigNumber.from(contractData.ethPrice))} ether</h1>
+        <h1 className='text-xs font-bold'>{ethers.utils.formatEther(BigNumber.from(contractData.mintPrice))} ether</h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>

@@ -14,11 +14,11 @@ import { useAccount } from 'wagmi'
 // @todo find somewhere to put this
 export type ContractData = {
   projectOwner: string
-  ethPrice: BigNumber
+  mintPrice: BigNumber
   maxAllocationPerAddress: BigNumber
   totalSupply: BigNumber
-  presaleStartTime: Date
-  publicStartTime: Date
+  publicTime: Date
+  presaleTime: Date
 }
 
 export const HomePage = () => {
@@ -59,7 +59,7 @@ export const HomePage = () => {
           <CollectionLayout.Body>
             <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
               <main>
-                <MintLayout contractDeployment={deployment} />
+                <MintLayout contractData={contractData} contractDeployment={deployment} />
               </main>
               <article className='flex flex-col space-y-6'>
                 <AnalyticsLayoutCollectionInformation contractDeployment={deployment} />

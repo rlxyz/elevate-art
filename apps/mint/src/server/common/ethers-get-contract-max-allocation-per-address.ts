@@ -10,6 +10,7 @@ export const getMaxAllocationPerAddress = async (address: string, chainId: numbe
         return resolve(Result.ok(data))
       })
       .catch((err) => {
+        console.error(err)
         return reject(Result.ok(BigNumber.from(0)))
       })
   })

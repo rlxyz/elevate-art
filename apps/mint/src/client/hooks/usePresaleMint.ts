@@ -5,7 +5,7 @@ import { generateLeaf, presaleMerkleTree } from 'src/client/utils/merkle_roots'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
 
 import { usePresaleMaxAllocation } from './contractsRead'
-import { useNotification } from './useNotification'
+import { useNotification } from './useNotificationV1'
 import { useQueryContractDeployment } from './useQueryContractDeployment'
 
 interface UsePresaleMint {
@@ -14,7 +14,7 @@ interface UsePresaleMint {
   isError: boolean
 }
 
-export const usePresaleMint = ({ address }: { address: `0x${string}` | undefined }): UsePresaleMint => {
+export const usePresaleMint = ({ address }: { address: string | undefined | null }): UsePresaleMint => {
   const { current } = useQueryContractDeployment()
   const { notifyError, notifySubmitted, notifySuccess } = useNotification(current?.deployment?.repository.name || '')
   const maxInvocation = usePresaleMaxAllocation({ address })
