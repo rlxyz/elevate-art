@@ -24,30 +24,48 @@ const ContractFormHeader = ({ title, description }: { title: string; description
   )
 }
 
-const ContractFormBody = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
+const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement[]; onSubmit: React.FormEventHandler }) => {
   return (
-    <form>
-      <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+    <form onSubmit={onSubmit}>
+      <div className='grid grid-cols-2'>
+        <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+        <div className='grid grid-cols-3'>
+          <p className='text-xs font-semibold'>Name</p>
+          <p className='text-xs font-semibold'>Token</p>
+        </div>
+      </div>
     </form>
   )
 }
 
 const ContractFormBodyInput = forwardRef<
   HTMLInputElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>
+  React.PropsWithChildren<{ className: string; label: string; description: string; placeholder: string; error: FieldError | undefined }>
 >(
   ({
     className,
     label,
     description,
     error,
+    placeholder,
     ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string; error: FieldError | undefined }>) => {
+  }: React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError | undefined
+  }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
           <label className='text-xs font-semibold'>{label}</label>
-          <input className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')} type='string' {...props} />
+          <input
+            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+            type='string'
+            placeholder={placeholder}
+            {...props}
+          />
           <p className='text-[0.6rem] text-darkGrey'>{description}</p>
           {error && (
             <span className='text-xs text-redError'>

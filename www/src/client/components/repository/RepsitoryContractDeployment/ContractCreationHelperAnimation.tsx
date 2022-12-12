@@ -1,9 +1,9 @@
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { ChevronLeftIcon, ChevronRightIcon, CubeIcon, MoonIcon } from '@heroicons/react/outline'
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import clsx from 'clsx'
 import { AnimatePresence, useMotionValue } from 'framer-motion'
 import type { FC } from 'react'
-import { useContractCreationStore } from '../../../hooks/utils/useContractCreationStore'
 import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
 import { LineWithGradient } from './LineWithGradient'
@@ -93,11 +93,11 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
         </AnimatePresence>
 
         <ButtonWithSelector onClick={() => handleClick(currentSegment - 1)} enabled={currentSegment === 0}>
-          <ChevronLeftIcon className='w-3 h-3 text-darkGrey' />
+          <ChevronLeftIcon className='w-4 h-4 text-darkGrey' />
         </ButtonWithSelector>
-        <LineWithGradient className='absolute' />
+        <LineWithGradient />
         <ButtonWithSelector onClick={() => handleClick(currentSegment + 1)} enabled={currentSegment === 2}>
-          <ChevronRightIcon className='w-3 h-3 text-darkGrey' />
+          <ChevronRightIcon className='w-4 h-4 text-darkGrey' />
         </ButtonWithSelector>
       </div>
     </div>

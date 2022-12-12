@@ -1,58 +1,99 @@
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
 import { ContractForm } from '../ContractForm'
 
-export type ContactDetailsForm = {
+export type ContractDetailsForm = {
   contractName: string
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
-  blockchain: 'goerli'
+  blockchain: 'goerli' | 'mainnet'
 }
 
-export const ContactDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+export const ContractDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+  const {
+    currentSegment,
+    contractName,
+    contractSymbol,
+    mintType,
+    blockchain,
+    setContractName,
+    setContractSymbol,
+    setMintType,
+    setBlockchain,
+    setCurrentSegment,
+  } = useContractCreationStore()
+
   const {
     register,
+    setValue,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
-  } = useForm<ContactDetailsForm>({
+  } = useForm<ContractDetailsForm>({
     defaultValues: {
-      contractName: '',
-      contractSymbol: '',
-      mintType: 'off-chain',
-      blockchain: 'goerli',
+      contractName: contractName,
+      contractSymbol: contractSymbol,
+      mintType: mintType,
+      blockchain: blockchain,
     },
   })
+
+  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain }: ContractDetailsForm) => {
+    setContractName(contractName)
+    setContractSymbol(contractSymbol)
+    setMintType(mintType)
+    setBlockchain(blockchain)
+
+    setCurrentSegment(1)
+    console.log('currentSegment:', currentSegment)
+  }
 
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
-      <ContractForm.Body>
+      <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
         <ContractForm.Body.Input
           {...register('contractName', {
             required: true,
             maxLength: 20,
             minLength: 3,
             pattern: /^[-/a-z0-9 ]+$/gi,
+            onChange: (e) => {
+              setValue('contractName', e.target.value)
+            },
           })}
           label={'Contract Name'}
           description={'Your contract name on websites like Etherscan'}
           className='col-span-4'
+          placeholder='hellow'
           error={errors.contractName}
         />
 
         <ContractForm.Body.Input
           {...register('contractSymbol', {
             required: true,
-            maxLength: 6,
-            minLength: 3,
+            maxLength: {
+              value: 6,
+              message: 'Max length is 6',
+            },
+            minLength: {
+              value: 3,
+              message: 'Max length is 3',
+            },
+
             pattern: /^[-/a-z0-9 ]+$/gi,
+            onChange: (e) => {
+              setValue('contractSymbol', e.target.value.toUpperCase())
+            },
           })}
           label={'Symbol'}
           description={'The name of the token on Etherscan'}
           className='col-span-2'
-          error={errors.contractName}
+          placeholder='cont'
+          error={errors.contractSymbol}
         />
 
         <div className='col-span-3 flex flex-col'>
@@ -62,7 +103,11 @@ export const ContactDetailsForm: FC<{ title: string; description: string }> = ({
               <ContractForm.Body.Radio
                 className=''
                 description=''
-                {...register('mintType', {})}
+                {...register('mintType', {
+                  onChange: (e) => {
+                    setValue('mintType', 'off-chain')
+                  },
+                })}
                 label={'Off-Chain'}
                 error={errors.contractName}
               />
@@ -71,7 +116,11 @@ export const ContactDetailsForm: FC<{ title: string; description: string }> = ({
               <ContractForm.Body.Radio
                 className=''
                 description=''
-                {...register('mintType', {})}
+                {...register('mintType', {
+                  onChange: (e) => {
+                    setValue('mintType', 'on-chain')
+                  },
+                })}
                 label={'On-Chain'}
                 error={errors.contractName}
               />
@@ -84,14 +133,26 @@ export const ContactDetailsForm: FC<{ title: string; description: string }> = ({
         </div>
 
         <ContractForm.Body.Select
-          {...register('blockchain', { required: true })}
+          {...register('blockchain', {
+            required: true,
+            onChange: (e) => {
+              setValue('blockchain', e.target.value)
+            },
+          })}
           label={'Blockchain'}
           description={'Select a deployment blockchain'}
           className='col-span-6'
           error={errors.contractName}
         >
           <option value={'goerli'}>{capitalize('goerli')}</option>
+          <option value={'mainnet'}>{capitalize('mainnet')}</option>
         </ContractForm.Body.Select>
+        <button
+          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          type='submit'
+        >
+          Continue
+        </button>
       </ContractForm.Body>
     </ContractForm>
   )
