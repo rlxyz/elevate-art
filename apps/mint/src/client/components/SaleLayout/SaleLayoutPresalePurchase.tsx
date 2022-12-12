@@ -1,21 +1,20 @@
+import { SalePhaseEnum, useFetchSaleRequirements } from '@Components/SaleLayout/useFetchContractData'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import { SalePhaseEnum, useFetchSaleRequirements } from 'src/client/hooks/useFetchContractData'
-import { usePresaleMint } from 'src/client/hooks/usePresaleMint'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
 import type { ContractData } from 'src/pages/[address]'
-import { DecrementIncrementInput } from '../core/UI/DecrementIncrementInput'
 import { SaleLayout } from './SaleLayout'
+import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
-import { useSaleMintCountInput } from './useSaleMintCountInput'
+import { usePresalePurchase } from './usePresalePurchase'
 
 export const SaleLayoutPresalePurchase = ({
   session,
   contractData,
   contractDeployment,
 }: {
-  session: Session
+  session: Session | null
   contractData: ContractData
   contractDeployment: RepositoryContractDeployment
 }) => {
@@ -23,17 +22,19 @@ export const SaleLayoutPresalePurchase = ({
   const { data, isLoading, isError } = useFetchSaleRequirements({
     session,
     contractDeployment,
-    type: SalePhaseEnum.enum.Presale,
+    type: SalePhaseEnum.enum.Public,
   })
 
-  /** Fetch the public-mint functionality */
-  const { mint } = usePresaleMint({ address: session.user?.address })
-
-  /** The current mint selector (increment/decrement) */
-  const { mintCount, setMintCount } = useSaleMintCountInput({ isLoading, isError })
-
   /** Variables */
-  const { userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+  const { userBalance, userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+
+  /** Fetch the public-mint functionality */
+  const { write, setMintCount, mintCount } = usePresalePurchase({
+    address: session?.user?.address,
+    contractData,
+    contractDeployment,
+    enabled: !!session?.user?.id && !isLoading && !isError,
+  })
 
   /** Validation */
   const { validateAllowlist } = useWalletCheck()
@@ -44,7 +45,7 @@ export const SaleLayoutPresalePurchase = ({
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.mintPrice} quantity={mintCount} />
-          <DecrementIncrementInput
+          <SaleMintCountInput
             maxValue={maxAllocation}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
@@ -72,7 +73,7 @@ export const SaleLayoutPresalePurchase = ({
           </div>
           <button
             disabled={!!session?.user?.id || isLoading || !allowToMint}
-            onClick={() => mint(mintCount)}
+            onClick={() => write()}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'
           >

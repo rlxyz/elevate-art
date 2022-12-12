@@ -2,7 +2,7 @@ import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
-export const useSaleMintCountInput = ({ isError, isLoading }: { isLoading: boolean; isError: boolean }) => {
+export const useSaleMintCountInput = ({ enabled }: { enabled: boolean }) => {
   const [mintCount, setMintCount] = useState<BigNumber>(BigNumber.from(1))
   const { isDisconnected } = useAccount()
 
@@ -13,10 +13,10 @@ export const useSaleMintCountInput = ({ isError, isLoading }: { isLoading: boole
   }, [isDisconnected])
 
   useEffect(() => {
-    if (!isLoading && isError) {
+    if (!enabled) {
       setMintCount(BigNumber.from(1))
     }
-  }, [isError, isLoading])
+  }, [enabled])
 
   return { mintCount, setMintCount }
 }

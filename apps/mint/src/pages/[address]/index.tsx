@@ -1,9 +1,5 @@
-import { AnalyticsLayoutCollectionInformation } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectionInformation'
-import { AnalyticsLayoutCollectorData } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectorData'
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
-import { MintLayout } from '@Components/MintLayout/MintLayout'
 import { Layout } from '@Components/ui/core/Layout'
-import { RepositoryContractDeploymentStatus } from '@prisma/client'
 import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'
@@ -32,10 +28,6 @@ export const HomePage = () => {
     }
   }, [account?.address])
 
-  if (!current || !current.deployment || !(current.deployment.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
-
-  const { deployment, contract: contractData } = current
-
   return (
     <Layout>
       <Layout.Header
@@ -48,15 +40,15 @@ export const HomePage = () => {
       />
       <Layout.Body margin={false}>
         <CollectionLayout>
-          <CollectionLayout.Header contractDeployment={deployment} />
-          <CollectionLayout.Description
+          <CollectionLayout.Header contractDeployment={current?.deployment} />
+          {/* <CollectionLayout.Description
             organisation={deployment.repository.organisation}
             repository={deployment.repository}
             deployment={deployment.repositoryDeployment} // @todo fix
             contractDeployment={deployment}
             contractData={contractData}
-          />
-          <CollectionLayout.Body>
+          /> */}
+          {/* <CollectionLayout.Body>
             <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
               <main>
                 <MintLayout contractData={contractData} contractDeployment={deployment} />
@@ -66,7 +58,7 @@ export const HomePage = () => {
                 <AnalyticsLayoutCollectorData contractDeployment={deployment} />
               </article>
             </div>
-          </CollectionLayout.Body>
+          </CollectionLayout.Body> */}
         </CollectionLayout>
       </Layout.Body>
     </Layout>

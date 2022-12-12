@@ -53,7 +53,6 @@ export const authOptions: NextAuthOptions = {
           if (!siwe.address.length) return null
           await siwe.validate(credentials?.signature || '')
           const { address } = siwe
-
           /** Create user if does not exists */
           const user = await prisma.user.upsert({
             where: { address },

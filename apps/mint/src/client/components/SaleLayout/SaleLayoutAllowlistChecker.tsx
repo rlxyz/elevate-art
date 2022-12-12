@@ -3,13 +3,12 @@ import { getAddressFromEns } from '@Utils/ethers'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useForm } from 'react-hook-form'
-import { useMintPeriod } from 'src/client/hooks/contractsRead'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
+import type { ContractData } from 'src/pages/[address]'
 import { SaleLayout } from './SaleLayout'
 
-export const SaleLayoutAllowlistChecker = () => {
+export const SaleLayoutAllowlistChecker = ({ contractData }: { contractData: ContractData }) => {
   const { validateAllowlist } = useWalletCheck()
-  const { presaleTime } = useMintPeriod()
   const {
     register,
     handleSubmit,
@@ -22,7 +21,7 @@ export const SaleLayoutAllowlistChecker = () => {
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Allowlist Check' endingDate={new Date(presaleTime)} />
+      <SaleLayout.Header title='Allowlist Check' endingDate={{ label: 'Presale Starts In', value: contractData.presaleTime }} />
       <SaleLayout.Body onSubmit={handleSubmit((data) => console.log(data))} className='flex flex-col space-y-3'>
         <span className='text-xs'>
           Check if your Wallet Address is on the <strong className='uppercase italic'>allowlist</strong>
@@ -55,11 +54,9 @@ export const SaleLayoutAllowlistChecker = () => {
 
                 return true
               },
-              // onChange: (e) => setAddress(e.currentTarget.value),
             })}
           />
           <button
-            // disabled={!checkWallet}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey p-2 rounded-[5px]'
           >

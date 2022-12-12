@@ -20,7 +20,7 @@ export const SaleLayout = ({ children, className, ...props }: SaleLayoutProps) =
   const childrens = React.Children.toArray(children)
 
   return (
-    <form
+    <article
       className={clsx(
         className,
         'bg-background transition-all rounded-[5px] box-border border border-mediumGrey divide-y divide-mediumGrey h-fit w-full'
@@ -30,7 +30,7 @@ export const SaleLayout = ({ children, className, ...props }: SaleLayoutProps) =
       {childrens.map((child, index) => {
         return <SaleLayoutContainer key={index}>{child}</SaleLayoutContainer>
       })}
-    </form>
+    </article>
   )
 }
 

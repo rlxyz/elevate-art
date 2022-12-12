@@ -4,7 +4,7 @@ import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance, useContractReads } from 'wagmi'
 import { z } from 'zod'
-import { useNotification } from './useNotification'
+import { useNotification } from '../../hooks/useNotification'
 
 export const SalePhaseEnum = z.nativeEnum(
   Object.freeze({
@@ -76,7 +76,7 @@ export const useFetchSaleRequirements = ({
   contractDeployment,
   type,
 }: {
-  session: Session
+  session: Session | null
   contractDeployment: RepositoryContractDeployment
   type: SalePhase
 }) => {
@@ -86,8 +86,8 @@ export const useFetchSaleRequirements = ({
     isLoading: isLoadingUserBalance,
     isError: isErrorUserBalance,
   } = useBalance({
-    address: session.user?.address as `0x${string}`,
-    enabled: !!session.user?.address,
+    address: session?.user?.address as `0x${string}`,
+    enabled: !!session?.user?.address,
   })
 
   /** Fetch the user-mint data from Contract */
@@ -97,10 +97,10 @@ export const useFetchSaleRequirements = ({
     isError: isErrorContractUserData,
   } = useFetchContractUserData({
     version: '0.1.0',
-    userAdress: session.user?.address,
+    userAdress: session?.user?.address,
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
-    enabled: !!session.user?.address,
+    enabled: !!session?.user?.address,
   })
 
   /** Fetch the overall mint-related data from Contract */

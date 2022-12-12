@@ -16,7 +16,7 @@ export const MintLayout = ({
   const now = new Date()
   return (
     <div className='space-y-6'>
-      {now < contractData.presaleTime && <SaleLayoutAllowlistChecker />}
+      {now < contractData.presaleTime && <SaleLayoutAllowlistChecker contractData={contractData} />}
       {now > contractData.presaleTime && now < contractData.publicTime && (
         <SaleLayoutPresalePurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
       )}

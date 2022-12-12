@@ -1,3 +1,4 @@
+import NextLinkComponent from '@Components/ui/link/NextLink'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
 import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
@@ -49,6 +50,15 @@ export const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps>
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Chain</h2>
         <h1 className='text-xs font-bold'>{capitalize(parseChainId(contractDeployment.chainId))}</h1>
+      </div>
+      <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
+      <div className='flex space-x-1'>
+        <h2 className='text-xs'>Visit </h2>
+        <h1 className='text-xs font-bold'>
+          <NextLinkComponent underline className='w-fit' href={`/${contractDeployment.address}/gallery`}>
+            Gallery
+          </NextLinkComponent>
+        </h1>
       </div>
     </div>
     {contractDeployment.description && (

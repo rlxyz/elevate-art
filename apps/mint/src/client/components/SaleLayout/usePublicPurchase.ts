@@ -1,10 +1,12 @@
+import { useSaleMintCountInput } from '@Components/SaleLayout/useSaleMintCountInput'
 import type { RepositoryContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
+import type { Dispatch, SetStateAction } from 'react'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
 import type { ContractData } from 'src/pages/[address]'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 
-import { useNotification } from './useNotification'
+import { useNotification } from '../../hooks/useNotification'
 // import { useNotification } from './useNotificationV1'
 
 interface UsePublicMint {
@@ -12,28 +14,30 @@ interface UsePublicMint {
   write: () => void
   isError: boolean
   isProcessing: boolean
+  mintCount: BigNumber
+  setMintCount: Dispatch<SetStateAction<BigNumber>>
 }
 
-export const usePublicMint = ({
-  invocations,
+export const usePublicPurchase = ({
   contractData,
   contractDeployment,
+  enabled,
 }: {
   address: string | undefined | null
-  invocations: BigNumber
+  enabled: boolean
   contractData: ContractData
   contractDeployment: RepositoryContractDeployment
 }): UsePublicMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
-
+  const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContractConfig.contractInterface,
     functionName: 'publicMint',
-    args: [invocations],
+    args: [mintCount],
     overrides: {
-      value: BigNumber.from(contractData.mintPrice).mul(invocations),
+      value: BigNumber.from(contractData.mintPrice).mul(mintCount),
       gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
     },
   })
@@ -47,7 +51,7 @@ export const usePublicMint = ({
     ...config,
     onSettled: (data) => {
       if (data) {
-        notifyInfo(`A transaction with hash ${data.hash} has been submitted. Please wait for confirmation.`)
+        notifyInfo(`A new transaction has been submitted. Please wait for confirmation.`)
       }
     },
     onError: (error) => {
@@ -61,7 +65,7 @@ export const usePublicMint = ({
     },
   })
 
-  // /** @todo clean this up */
+  // /** @todo clean this up, also not working... */
   const { isLoading: isProcessing } = useWaitForTransaction({
     hash: transaction?.hash,
     onError: (error) => {
@@ -76,32 +80,9 @@ export const usePublicMint = ({
     },
   })
 
-  // const mint = (invocations: BigNumber) => {
-  //   if (!address) {
-  //     return notifyError('Please connect to wallet first.')
-  //   }
-
-  //   if (BigNumber.from(invocations).gt(BigNumber.from(maxAllocation))) {
-  //     return notifyError('Trying to mint too many')
-  //   }
-
-  //   console.log(write)
-
-  //   if (!write) {
-  //     return notifyError('Something wrong with the contract. Please try again...')
-  //   }
-
-  //   write?.({
-  //     recklesslySetUnpreparedArgs: [invocations],
-  //     recklesslySetUnpreparedOverrides: {
-  //       value: BigNumber.from(contractData.mintPrice).mul(invocations),
-  //       gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
-  //     },
-  //   })
-  // }
-
   return {
-    // isLoading: isLoading || trxIsProcessing,
+    mintCount,
+    setMintCount,
     write: () => write?.(),
     isLoading,
     isError,

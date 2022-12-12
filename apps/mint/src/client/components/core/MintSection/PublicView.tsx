@@ -1,8 +1,8 @@
+import { usePublicSaleRequirements } from '@Components/SaleLayout/useFetchContractData'
+import { usePublicPurchase } from '@Components/SaleLayout/usePublicPurchase'
 import { useEffect, useState } from 'react'
 import { useTotalMinted } from 'src/client/hooks/contractsRead'
-import { usePublicSaleRequirements } from 'src/client/hooks/useFetchContractData'
 import { useGetProjectDetail } from 'src/client/hooks/useGetProjectDetail'
-import { usePublicMint } from 'src/client/hooks/usePublicMint'
 import { config } from 'src/client/utils/config'
 import { useAccount } from 'wagmi'
 
@@ -16,7 +16,7 @@ export const PublicView = () => {
   const { data } = useGetProjectDetail('rlxyz')
   const { isConnected, isDisconnected, address } = useAccount()
   const [mintCount, setMintCount] = useState(1)
-  const { mint, isLoading, isError } = usePublicMint(address)
+  const { mint, isLoading, isError } = usePublicPurchase(address)
   const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } = usePublicSaleRequirements(address)
 
   useEffect(() => {

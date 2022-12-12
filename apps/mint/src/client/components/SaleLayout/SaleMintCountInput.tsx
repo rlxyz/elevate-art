@@ -2,14 +2,14 @@ import { MinusIcon, PlusIcon } from '@heroicons/react/outline'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
 
-interface DecrementIncrementInputProps {
+interface SaleMintCountInputProps {
   maxValue: BigNumber | undefined
   value: BigNumber
   onChange: (value: BigNumber) => void
   disabled?: boolean
 }
 
-export const DecrementIncrementInput: React.FC<DecrementIncrementInputProps> = ({ maxValue, onChange, value, disabled }) => {
+export const SaleMintCountInput: React.FC<SaleMintCountInputProps> = ({ maxValue, onChange, value, disabled }) => {
   return (
     <div className='rounded-md border border-mediumGrey flex justify-between items-center'>
       <button

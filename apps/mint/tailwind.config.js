@@ -8,10 +8,15 @@ module.exports = {
     extend: {
       animation: {
         'pulse-bg-once': 'pulse-bg-once 2s ease-in forwards',
+        'pulse-gradient-infinite': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         'pulse-bg-once': {
           to: { backgroundColor: 'transparent' },
+        },
+        'pulse-gradient-infinite': {
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0.5 },
         },
       },
     },
