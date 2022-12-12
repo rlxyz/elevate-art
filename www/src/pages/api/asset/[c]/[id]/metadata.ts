@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { storage } from '@server/utils/gcp-storage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
@@ -34,31 +34,35 @@ const metadataCacheObject = {
 }
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerAuthSession({ req, res })
-  if (!session || !session.user) {
-    return res.status(401).send('Unauthorized')
-  }
-
-  // r: repositoryId, l: layerElementId, t: traitElementId
-  const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
-  if (!organisationName || !repositoryName || !seed || !id) {
+  // c: contractAddress
+  const { c: contractAddress, id } = req.query as { c: string; id: string }
+  if (!contractAddress || !id) {
     return res.status(400).send('Bad Request')
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.repositoryDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
-      name: seed,
+      contractDeployment: {
+        address: contractAddress,
+      },
+    },
+    include: {
+      contractDeployment: true,
     },
   })
 
-  if (!deployment) {
+  if (!deployment || !deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
   if (deployment.collectionTotalSupply <= parseInt(id)) {
+    return res.status(400).send('Bad Request')
+  }
+
+  // check contract if token exists
+  const currentTotalSupply = (await getTotalSupply(contractAddress, deployment.contractDeployment.chainId)).getValue()
+  if (currentTotalSupply.lt(id)) {
     return res.status(400).send('Bad Request')
   }
 
@@ -74,7 +78,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   )
 
   const response = {
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${seed}/${id}`,
+    image: `${env.NEXT_PUBLIC_API_URL}/asset/${contractAddress}/${id}`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
