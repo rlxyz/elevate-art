@@ -40,6 +40,7 @@ export const useDeployContract = () => {
       opts.publicTime,
     ]
     const tx = await factory.deploy(...args)
+    console.log('args', tx)
     mutate({ deploymentId, address: tx.address, chainId: 5 }) // set to 5 for goerli, shoudl come from forom
     setAddress(tx.address)
     await tx.deployed()

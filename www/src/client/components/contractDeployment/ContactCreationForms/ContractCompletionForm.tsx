@@ -30,13 +30,13 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
               await deploy({
                 name: contractName,
                 symbol: contractSymbol,
-                baseURI: `${env.NEXT_PUBLIC_API_URL}/api/asset/${organisationName}/${repositoryName}/${deployment?.name}/}`,
-                collectionSize: collectionSize,
+                baseURI: `${env.NEXT_PUBLIC_API_URL}/api/assets/${organisationName}/${repositoryName}/preview/${deployment?.name}/}`,
+                collectionSize: 10000,
                 maxPublicBatchPerAddress: 5,
                 amountForPromotion: 10,
-                mintPrice: mintPrice,
-                presaleTime: 1670830246,
-                publicTime: 1670831146,
+                mintPrice: '33000000000000000',
+                presaleTime: 1670907343,
+                publicTime: 1670907523,
               })
             } catch (error) {
               console.error('err', error)

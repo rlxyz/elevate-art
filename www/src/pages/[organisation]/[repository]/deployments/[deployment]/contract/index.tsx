@@ -58,7 +58,10 @@ const Page = () => {
               <div className='flex space-x-1'>
                 <h2 className='text-xs'>Address</h2>
                 <h1 className='text-xs font-bold'>
-                  <LinkComponent href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${contractDeployment?.address}`} underline>
+                  <LinkComponent
+                    href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${organisationName}/${repositoryName}/preview/${contractDeployment?.address}`}
+                    underline
+                  >
                     {contractDeployment?.address}
                   </LinkComponent>
                 </h1>

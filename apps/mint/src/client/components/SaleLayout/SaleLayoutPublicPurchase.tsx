@@ -5,7 +5,7 @@ import type { ContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/ContractData'
 
 import { SaleLayout } from './SaleLayout'
 import { SalePrice } from './SalePrice'

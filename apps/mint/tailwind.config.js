@@ -9,6 +9,7 @@ module.exports = {
       animation: {
         'pulse-bg-once': 'pulse-bg-once 2s ease-in forwards',
         'pulse-gradient-infinite': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-gradient-left-right': 'pulse 2s ease-in infinite',
       },
       keyframes: {
         'pulse-bg-once': {

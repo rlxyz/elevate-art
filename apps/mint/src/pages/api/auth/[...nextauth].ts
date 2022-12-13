@@ -47,12 +47,13 @@ export const authOptions: NextAuthOptions = {
             ? env.NEXTAUTH_URL
             : process.env.VERCEL
             ? `https://${process.env.VERCEL_URL}`
-            : 'http://localhost:3001'
+            : 'http://localhost:3000'
           if (!nextAuthUrl) return null
           if (siwe.domain !== new URL(nextAuthUrl).host) return null
           if (!siwe.address.length) return null
           await siwe.validate(credentials?.signature || '')
           const { address } = siwe
+
           /** Create user if does not exists */
           const user = await prisma.user.upsert({
             where: { address },

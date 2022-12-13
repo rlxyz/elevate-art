@@ -32,28 +32,24 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type='button' className='w-full'>
-                    {children || (
-                      <img
-                        src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
-                        alt='Wallet'
-                      />
-                    )}
+                  <button onClick={openConnectModal} className='mx-auto flex items-center justify-center'>
+                    <div className='rounded-[4px] bg-gradient-to-r from-[#00ffff] to-blueHighlight p-0.5'>
+                      <div className='rounded-[3px] flex h-max w-max items-center justify-center bg-white'>
+                        <h1 className='font-bold text-transparent text-xs bg-clip-text bg-gradient-to-r px-3 py-2'>Connect</h1>
+                      </div>
+                    </div>
                   </button>
                 )
               }
 
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type='button' className='w-full'>
-                    {children || (
-                      <img
-                        src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
-                        alt='Wallet'
-                      />
-                    )}
+                  <button onClick={openChainModal} className='mx-auto flex items-center justify-center'>
+                    <div className='rounded-[4px] bg-gradient-to-r from-[#00ffff] to-blueHighlight p-0.5'>
+                      <div className='rounded-[3px] flex h-max w-max items-center justify-center bg-white'>
+                        <h1 className='font-bold text-transparent text-xs bg-clip-text bg-gradient-to-r px-3 py-2'>Connect</h1>
+                      </div>
+                    </div>
                   </button>
                 )
               }

@@ -44,13 +44,15 @@ export const HomePage = () => {
             contractData={current?.contract}
           />
           <CollectionLayout.Body>
-            <GalleryLayout
-              organisation={current?.deployment?.repository?.organisation}
-              repository={current?.deployment?.repository}
-              deployment={current?.deployment?.assetDeployment}
-              contractDeployment={current?.deployment}
-              contractData={current?.contract}
-            />
+            {current && current.deployment && current.deployment.assetDeployment && (
+              <GalleryLayout
+                organisation={current?.deployment?.repository?.organisation}
+                repository={current?.deployment?.repository}
+                assetDeployment={current?.deployment?.assetDeployment}
+                contractDeployment={current?.deployment}
+                contractData={current?.contract}
+              />
+            )}
           </CollectionLayout.Body>
         </CollectionLayout>
       </Layout.Body>

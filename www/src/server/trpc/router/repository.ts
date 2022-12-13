@@ -119,7 +119,7 @@ export const repositoryRouter = router({
 
       // if contract has been deployed, update the deployment status
       // set the state to verifying
-      await ctx.prisma.assetDeployment.update({
+      await ctx.prisma.contractDeployment.update({
         where: { id: deployment.id },
         data: { status: ContractDeploymentStatus.DEPLOYED },
       })

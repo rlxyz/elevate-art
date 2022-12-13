@@ -7,7 +7,7 @@ import { capitalize } from '@Utils/format'
 import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/ContractData'
 
 interface ContractDeploymentDetailsProps {
   repository: Repository | null | undefined
@@ -34,7 +34,7 @@ export const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps>
     <div className='flex flex-row items-center space-x-2'>
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Total</h2>
-        <h1 className='text-xs font-bold'>{deployment?.collectionTotalSupply}</h1>
+        <h1 className='text-xs font-bold'>{deployment?.totalSupply}</h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
@@ -58,7 +58,11 @@ export const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps>
         <h2 className='text-xs'>Visit </h2>
         <h1 className='text-xs font-bold'>
           {contractDeployment?.address && (
-            <NextLinkComponent underline className='w-fit' href={`/${contractDeployment.address}/gallery`}>
+            <NextLinkComponent
+              underline
+              className='w-fit'
+              href={`/${organisation?.name}/${repository?.name}/preview/${contractDeployment.address}/gallery`}
+            >
               Gallery
             </NextLinkComponent>
           )}

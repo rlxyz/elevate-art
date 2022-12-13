@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useForm } from 'react-hook-form'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/ContractData'
 import { SaleLayout } from './SaleLayout'
 
 export const SaleLayoutAllowlistChecker = ({ contractData }: { contractData: ContractData }) => {

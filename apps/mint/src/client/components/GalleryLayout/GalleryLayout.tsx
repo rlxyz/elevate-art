@@ -1,3 +1,4 @@
+import type { ContractData } from '@Components/ContractData'
 import LinkComponent from '@Components/ui/link/Link'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { ethers } from 'ethers'
@@ -5,17 +6,16 @@ import { current } from 'immer'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 
 export const GalleryLayout = ({
   contractDeployment,
   contractData,
-  repositoryDeployment,
+  assetDeployment,
   repository,
   organisation,
 }: {
   contractDeployment: ContractDeployment
-  repositoryDeployment: AssetDeployment
+  assetDeployment: AssetDeployment
   repository: Repository
   organisation: Organisation
   contractData: ContractData
@@ -39,8 +39,8 @@ export const GalleryLayout = ({
 
   const fetchMoreData = () => {
     if (!current) return
-    if (!repositoryDeployment) return
-    if (displayLength + 25 > repositoryDeployment.collectionTotalSupply) {
+    if (!assetDeployment) return
+    if (displayLength + 25 > assetDeployment.totalSupply) {
       setHasMore(false)
       return
     }
@@ -68,9 +68,7 @@ export const GalleryLayout = ({
               .map((item) => (
                 <div key={item} className='border border-mediumGrey rounded-[5px]'>
                   <Image
-                    src={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${
-                      repositoryDeployment?.name
-                    }/${item}`}
+                    src={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${assetDeployment?.name}/${item}`}
                     width={300}
                     height={300}
                     alt='some-id'
@@ -82,7 +80,7 @@ export const GalleryLayout = ({
                         target='_blank'
                         rel='noopener noreferrer'
                         href={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${
-                          repositoryDeployment?.name
+                          assetDeployment?.name
                         }/${item}/metadata`}
                         underline
                       >

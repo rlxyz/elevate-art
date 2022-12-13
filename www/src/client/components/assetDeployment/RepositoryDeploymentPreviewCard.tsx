@@ -85,10 +85,10 @@ export const RepositoryDeploymentPreviewCard = ({
       </div>
       <div className='text-xs flex flex-col'>
         <span>
-          Total Supply <strong>{deployment.collectionTotalSupply}</strong>
+          Total Supply <strong>{deployment.totalSupply}</strong>
         </span>
         <span>
-          Generation <strong>{deployment.collectionGenerations}</strong>
+          Generation <strong>{deployment.generations}</strong>
         </span>
       </div>
       <div className='text-xs flex justify-end items-center space-x-2'>

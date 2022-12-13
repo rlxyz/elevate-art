@@ -148,6 +148,7 @@ model ContractDeployment {
     assetDeployment   AssetDeployment? @relation(fields: [assetDeploymentId], references: [id])
     assetDeploymentId String?          @unique
 
+    @@unique([address, chainId]) // there can be multiple deployments on different chains with same contract address
     @@index([repositoryId])
 }
 
