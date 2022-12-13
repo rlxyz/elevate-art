@@ -9,7 +9,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  // o: organisationName, r: repositoryName, id
+  // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
   if (!organisationName || !repositoryName || !id) {
     return res.status(400).send('Bad Request')
@@ -21,18 +21,18 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       repository: { name: repositoryName, organisation: { name: organisationName } },
       type: AssetDeploymentBranch.PRODUCTION,
     },
-    include: { contractDeployment: true },
+    include: { repository: true, contractDeployment: true },
   })
 
   if (!deployment || !deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
-  const { contractDeployment } = deployment
-
   if (deployment.totalSupply <= parseInt(id)) {
     return res.status(400).send('Bad Request')
   }
+
+  const { contractDeployment } = deployment
 
   // check contract if token exists
   const currentTotalSupply = (await getTotalSupply(contractDeployment.address, contractDeployment.chainId)).getValue()
