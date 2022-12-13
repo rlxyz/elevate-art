@@ -1,6 +1,6 @@
+import { ContractCreationFormDisplay } from '@components/contractDeployment/ContractCreationFormDisplay'
+import { ContractCreationHelperAnimation } from '@components/contractDeployment/ContractCreationHelperAnimation'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import { ContractCreationFormDisplay } from '@components/repository/RepsitoryContractDeployment/ContractCreationFormDisplay'
-import { ContractCreationHelperAnimation } from '@components/repository/RepsitoryContractDeployment/ContractCreationHelperAnimation'
 import withOrganisationStore from '@components/withOrganisationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -73,9 +73,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} }
   }
 
-  const valid = await prisma?.repositoryContractDeployment.findFirst({
+  const valid = await prisma?.contractDeployment.findFirst({
     where: {
-      repositoryDeployment: {
+      assetDeployment: {
         name: deployment,
         repository: {
           name: repository,

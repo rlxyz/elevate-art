@@ -1,6 +1,6 @@
 import { buildEtherscanLink } from '@Components/core/Unused'
 import LinkComponent from '@Components/ui/link/Link'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { parseChainId } from '@Utils/ethers'
 import { capitalize } from '@Utils/format'
 import { AnalyticsLayout } from './AnalyticsLayout'
@@ -8,7 +8,7 @@ import { AnalyticsLayout } from './AnalyticsLayout'
 export const AnalyticsLayoutCollectionInformation = ({
   contractDeployment,
 }: {
-  contractDeployment: RepositoryContractDeployment | null | undefined
+  contractDeployment: ContractDeployment | null | undefined
 }) => (
   <AnalyticsLayout>
     <AnalyticsLayout.Header title='Information' />

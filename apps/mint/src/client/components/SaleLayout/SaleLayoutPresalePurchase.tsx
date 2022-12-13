@@ -1,9 +1,9 @@
 import { SalePhaseEnum, useFetchSaleRequirements } from '@Components/SaleLayout/useFetchContractData'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
 import { useWalletCheck } from 'src/client/hooks/useWalletCheck'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
@@ -16,7 +16,7 @@ export const SaleLayoutPresalePurchase = ({
 }: {
   session: Session | null
   contractData: ContractData
-  contractDeployment: RepositoryContractDeployment
+  contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
   const { data, isLoading, isError } = useFetchSaleRequirements({

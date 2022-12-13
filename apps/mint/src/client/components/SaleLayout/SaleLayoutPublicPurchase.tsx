@@ -1,11 +1,11 @@
 import { SaleMintCountInput } from '@Components/SaleLayout/SaleMintCountInput'
 import { SalePhaseEnum, useFetchSaleRequirements } from '@Components/SaleLayout/useFetchContractData'
 import { usePublicPurchase } from '@Components/SaleLayout/usePublicPurchase'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 
 import { SaleLayout } from './SaleLayout'
 import { SalePrice } from './SalePrice'
@@ -17,7 +17,7 @@ export const SaleLayoutPublicPurchase = ({
 }: {
   session: Session | null
   contractData: ContractData
-  contractDeployment: RepositoryContractDeployment
+  contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
   const { data, isLoading, isError } = useFetchSaleRequirements({

@@ -2,15 +2,15 @@ import { SaleLayoutAllowlistChecker } from '@Components/SaleLayout/SaleLayoutAll
 import { SaleLayoutLoading } from '@Components/SaleLayout/SaleLayoutLoading'
 import { SaleLayoutPresalePurchase } from '@Components/SaleLayout/SaleLayoutPresalePurchase'
 import { SaleLayoutPublicPurchase } from '@Components/SaleLayout/SaleLayoutPublicPurchase'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 
 export const MintLayout = ({
   contractDeployment,
   contractData,
 }: {
-  contractDeployment: RepositoryContractDeployment | null | undefined
+  contractDeployment: ContractDeployment | null | undefined
   contractData: ContractData | null | undefined
 }) => {
   const { data } = useSession()

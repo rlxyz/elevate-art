@@ -1,19 +1,19 @@
 import NextLinkComponent from '@Components/ui/link/NextLink'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
-import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
+import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { parseChainId } from '@Utils/ethers'
 import { capitalize } from '@Utils/format'
 import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 
 interface ContractDeploymentDetailsProps {
   repository: Repository | null | undefined
   organisation: Organisation | null | undefined
-  deployment: RepositoryDeployment | null | undefined
-  contractDeployment: RepositoryContractDeployment | null | undefined
+  deployment: AssetDeployment | null | undefined
+  contractDeployment: ContractDeployment | null | undefined
   contractData: ContractData | null | undefined
 }
 export const ContractDeploymentDetails: React.FC<ContractDeploymentDetailsProps> = ({

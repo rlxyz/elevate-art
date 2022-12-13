@@ -12,6 +12,24 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
+enum ContractDeploymentStatus {
+    PENDING
+    VERIFYING
+    DEPLOYED
+    FAILED
+}
+
+enum AssetDeploymentStatus {
+    PENDING
+    DEPLOYED
+    FAILED
+}
+
+enum AssetDeploymentBranch {
+    PRODUCTION
+    PREVIEW
+}
+
 model User {
     id            String    @id @default(cuid())
     address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
@@ -22,8 +40,7 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    members              OrganisationMember[]
-    RepositoryDeployment RepositoryDeployment[]
+    members OrganisationMember[]
 }
 
 model Organisation {
@@ -79,77 +96,59 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
-    deployments                  RepositoryDeployment[]
-    RepositoryContractDeployment RepositoryContractDeployment[]
+    assets             AssetDeployment[]
+    ContractDeployment ContractDeployment[]
 
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
 }
 
-model RepositoryDeployment {
-    id         String                     @id @default(cuid())
-    name       String                     @db.VarChar(255)
-    attributes Json
-    createdAt  DateTime                   @default(now())
-    updatedAt  DateTime                   @updatedAt
-    status     RepositoryDeploymentStatus @default(PENDING)
-    type       RepositoryDeploymentType   @default(PREVIEW)
-    stealth    Boolean                    @default(false)
+model AssetDeployment {
+    id            String @id @default(cuid())
+    name          String @db.VarChar(255)
+    layerElements Json
 
-    collectionName        String     @db.VarChar(255) // used as seed
-    collectionTotalSupply Int // used as seed
-    collectionGenerations Int // used as seed
-    repositoryId          String // used as seed
-    repository            Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    stealth   Boolean  @default(false)
 
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+    status AssetDeploymentStatus @default(PENDING)
+    type   AssetDeploymentBranch @default(PREVIEW)
 
-    contractDeployment RepositoryContractDeployment?
-
-    @@unique([repositoryId, name], name: "repositoryDeploymentIdentifier")
-}
-
-// If this model has a relationship with RepositoryArtDeploymnent, and someone tries to delete him, enforce that it CANNOT happen
-model RepositoryContractDeployment {
-    id      String                             @id @default(cuid())
-    address String                             @db.VarChar(42)
-    status  RepositoryContractDeploymentStatus @default(PENDING)
-    chainId Int                                @default(1)
+    totalSupply Int // based on collection.totalSupply
+    generations Int // based on collection.generations
+    slug        String @db.VarChar(255) // based on collection.name
 
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
-    repositoryDeployment   RepositoryDeployment? @relation(fields: [repositoryDeploymentId], references: [id], onDelete: Cascade)
-    repositoryDeploymentId String?               @unique
+    contractDeployment ContractDeployment?
 
-    description String? @db.Text
-    twitterUrl  String? @db.VarChar(255)
-    discordUrl  String? @db.VarChar(255)
-    websiteUrl  String? @db.VarChar(255)
-    bannerUrl   String? @db.VarChar(255)
-    logoUrl     String? @db.VarChar(255)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    @@index([repositoryId])
 }
 
-enum RepositoryContractDeploymentStatus {
-    PENDING
-    VERIFYING
-    DEPLOYED
-    FAILED
-}
+model ContractDeployment {
+    id             String   @id @default(cuid())
+    address        String   @db.VarChar(42)
+    chainId        Int      @default(1)
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    description    String?  @db.Text
+    twitterUrl     String?  @db.VarChar(255)
+    discordUrl     String?  @db.VarChar(255)
+    websiteUrl     String?  @db.VarChar(255)
+    bannerImageUrl String?  @db.VarChar(255)
+    logoImageUrl   String?  @db.VarChar(255)
 
-enum RepositoryDeploymentStatus {
-    PENDING
-    DEPLOYED
-    FAILED
-}
+    status ContractDeploymentStatus @default(PENDING)
 
-enum RepositoryDeploymentType {
-    PRODUCTION
-    PREVIEW
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+    repositoryId String
+
+    assetDeployment   AssetDeployment? @relation(fields: [assetDeploymentId], references: [id])
+    assetDeploymentId String?          @unique
+
+    @@index([repositoryId])
 }
 
 model Collection {

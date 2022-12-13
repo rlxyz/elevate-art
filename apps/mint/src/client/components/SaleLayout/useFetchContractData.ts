@@ -1,4 +1,4 @@
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { RhapsodyContractConfig } from '@Utils/constant'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
@@ -77,7 +77,7 @@ export const useFetchSaleRequirements = ({
   type,
 }: {
   session: Session | null
-  contractDeployment: RepositoryContractDeployment
+  contractDeployment: ContractDeployment
   type: SalePhase
 }) => {
   /** Get user balance */

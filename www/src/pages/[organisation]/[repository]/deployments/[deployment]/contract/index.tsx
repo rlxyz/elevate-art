@@ -6,7 +6,7 @@ import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { GetServerSidePropsContext } from 'next'
 import type { FC, ReactNode } from 'react'
@@ -88,7 +88,7 @@ export const ContractDeploymentPhasesEnum = z.nativeEnum(
 
 export type ContractDeploymentPhasesType = z.infer<typeof ContractDeploymentPhasesEnum>
 
-const ContractDeploymentPhasesView: FC<{ deployment: RepositoryContractDeployment | null | undefined }> = ({ deployment }) => {
+const ContractDeploymentPhasesView: FC<{ deployment: ContractDeployment | null | undefined }> = ({ deployment }) => {
   /** Infer status as PENDING. */
   const status = deployment?.status || 'PENDING'
   return (
@@ -178,9 +178,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} }
   }
 
-  const valid = await prisma?.repositoryContractDeployment.findFirst({
+  const valid = await prisma?.contractDeployment.findFirst({
     where: {
-      repositoryDeployment: {
+      assetDeployment: {
         name: deployment,
         repository: {
           name: repository,

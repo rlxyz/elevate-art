@@ -1,16 +1,16 @@
 import { SocialMediaLink } from '@Components/core/Minter/SocialMediaLink'
 import { buildEtherscanLink } from '@Components/core/Unused'
 import { LayoutContainer } from '@Components/ui/core/Layout'
-import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
+import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import React from 'react'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 import { ContractDeploymentDetails } from '../core/ContractDeploymentDetails'
 
 interface MintLayoutDescriptionProps {
   repository: Repository | null | undefined
   organisation: Organisation | null | undefined
-  deployment: RepositoryDeployment | null | undefined
-  contractDeployment: RepositoryContractDeployment | null | undefined
+  deployment: AssetDeployment | null | undefined
+  contractDeployment: ContractDeployment | null | undefined
   contractData: ContractData | null | undefined
 }
 

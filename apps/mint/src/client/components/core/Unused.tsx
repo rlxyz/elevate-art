@@ -1,6 +1,6 @@
 import Card from '@Components/ui/card'
 import { PageRoutesNavbar } from '@Components/ui/header/PageRoutesNavbar'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { parseChainId } from '@Utils/ethers'
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
@@ -16,10 +16,7 @@ export const buildEtherscanLink = ({ address, chainId }: { address: string; chai
   return `https://${chainId === 1 ? '' : `${parseChainId(chainId)}.`}etherscan.io/address/${address}`
 }
 
-const MintSaleSelector: React.FC<{ contractDeployment: RepositoryContractDeployment; className?: string }> = ({
-  contractDeployment,
-  className,
-}) => {
+const MintSaleSelector: React.FC<{ contractDeployment: ContractDeployment; className?: string }> = ({ contractDeployment, className }) => {
   return (
     <div className={clsx(className)}>
       <div className='flex justify-center space-x-3'>
@@ -53,7 +50,7 @@ const MintSaleAllocation: React.FC = () => {
   )
 }
 
-const MintSaleDisplay: React.FC<{ contractDeployment: RepositoryContractDeployment }> = ({ contractDeployment }) => {
+const MintSaleDisplay: React.FC<{ contractDeployment: ContractDeployment }> = ({ contractDeployment }) => {
   const { isConnected, isDisconnected, address } = useAccount()
   const [mintCount, setMintCount] = useState(1)
   const { maxAllocation, userAllocation, hasMintAllocation, allowToMint, userMintCount } = usePresaleRequirements(address)
@@ -87,7 +84,7 @@ const MintSaleDisplay: React.FC<{ contractDeployment: RepositoryContractDeployme
   )
 }
 
-const MintSaleFooter: React.FC<{ contractDeployment: RepositoryContractDeployment }> = ({ contractDeployment }) => {
+const MintSaleFooter: React.FC<{ contractDeployment: ContractDeployment }> = ({ contractDeployment }) => {
   return (
     <div className=''>
       <div className='flex space-x-1'>

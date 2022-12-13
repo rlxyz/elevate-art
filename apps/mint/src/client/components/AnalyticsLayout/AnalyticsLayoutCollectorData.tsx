@@ -1,11 +1,11 @@
 import AvatarComponent from '@Components/ui/avatar/Avatar'
 import LinkComponent from '@Components/ui/link/Link'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { ethers } from 'ethers'
 import { buildEtherscanLink } from '../core/Unused'
 import { AnalyticsLayout } from './AnalyticsLayout'
 
-export const AnalyticsLayoutCollectorData = ({ contractDeployment }: { contractDeployment: RepositoryContractDeployment }) => (
+export const AnalyticsLayoutCollectorData = ({ contractDeployment }: { contractDeployment: ContractDeployment }) => (
   <AnalyticsLayout>
     <AnalyticsLayout.Header title='Collectors' />
     <AnalyticsLayout.Body>

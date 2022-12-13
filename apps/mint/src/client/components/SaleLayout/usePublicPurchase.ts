@@ -1,9 +1,9 @@
 import { useSaleMintCountInput } from '@Components/SaleLayout/useSaleMintCountInput'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 
 import { useNotification } from '../../hooks/useNotification'
@@ -26,7 +26,7 @@ export const usePublicPurchase = ({
   address: string | undefined | null
   enabled: boolean
   contractData: ContractData
-  contractDeployment: RepositoryContractDeployment
+  contractDeployment: ContractDeployment
 }): UsePublicMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })

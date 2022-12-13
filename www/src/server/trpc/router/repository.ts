@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { RepositoryContractDeploymentStatus, RepositoryDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentStatus, ContractDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
@@ -79,7 +79,7 @@ export const repositoryRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId } = input
-      return await ctx.prisma.repositoryDeployment.findMany({
+      return await ctx.prisma.assetDeployment.findMany({
         where: { repositoryId: repositoryId },
         orderBy: { createdAt: 'desc' },
         include: { contractDeployment: true },
@@ -94,9 +94,9 @@ export const repositoryRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId, name } = input
-      const deployment = await ctx.prisma.repositoryContractDeployment.findFirst({
-        where: { repositoryId: repositoryId, repositoryDeployment: { name } },
-        include: { repositoryDeployment: true },
+      const deployment = await ctx.prisma.contractDeployment.findFirst({
+        where: { repositoryId: repositoryId, assetDeployment: { name } },
+        include: { assetDeployment: true },
       })
       if (!deployment) {
         throw new TRPCError({ code: 'NOT_FOUND' })
@@ -119,9 +119,9 @@ export const repositoryRouter = router({
 
       // if contract has been deployed, update the deployment status
       // set the state to verifying
-      await ctx.prisma.repositoryContractDeployment.update({
+      await ctx.prisma.assetDeployment.update({
         where: { id: deployment.id },
-        data: { status: RepositoryContractDeploymentStatus.DEPLOYED },
+        data: { status: ContractDeploymentStatus.DEPLOYED },
       })
 
       return deployment
@@ -176,16 +176,15 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      const deployment = await ctx.prisma.repositoryDeployment.create({
+      const assetDeployment = await ctx.prisma.assetDeployment.create({
         data: {
-          userId: ctx.session.user.id,
           repositoryId,
-          collectionName: collection.name,
-          collectionGenerations: collection.generations,
-          collectionTotalSupply: collection.totalSupply || 1,
-          status: RepositoryDeploymentStatus.PENDING,
+          slug: collection.name,
+          generations: collection.generations,
+          totalSupply: collection.totalSupply,
+          status: AssetDeploymentStatus.PENDING,
           name: (Math.random() + 1).toString(36).substring(4),
-          attributes: layerElements.map(({ id, name, priority, traitElements }) => ({
+          layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,
             name,
             priority,
@@ -208,21 +207,21 @@ export const repositoryRouter = router({
         await createIngestInstance().send({
           name: 'repository-deployment/images.create',
           data: {
-            repositoryId: deployment.repositoryId,
-            deploymentId: deployment.id,
-            attributes: deployment.attributes as Prisma.JsonArray,
+            repositoryId: assetDeployment.repositoryId,
+            deploymentId: assetDeployment.id,
+            attributes: assetDeployment.layerElements as Prisma.JsonArray,
           },
         })
       } catch (e) {
         console.error(e)
-        await ctx.prisma.repositoryDeployment.update({
-          where: { id: deployment.id },
-          data: { status: RepositoryDeploymentStatus.FAILED },
+        await ctx.prisma.assetDeployment.update({
+          where: { id: assetDeployment.id },
+          data: { status: AssetDeploymentStatus.FAILED },
         })
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
       }
 
-      return deployment
+      return assetDeployment
     }),
   deleteDeployment: protectedProcedure
     .input(
@@ -233,7 +232,7 @@ export const repositoryRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { deploymentId } = input
 
-      const deployment = await ctx.prisma.repositoryDeployment.findFirst({
+      const deployment = await ctx.prisma.assetDeployment.findFirst({
         where: { id: deploymentId },
       })
 
@@ -245,7 +244,7 @@ export const repositoryRouter = router({
         prefix: `${deploymentId}`,
       })
 
-      await ctx.prisma.repositoryDeployment.delete({
+      await ctx.prisma.assetDeployment.delete({
         where: { id: deploymentId },
       })
 
@@ -262,7 +261,7 @@ export const repositoryRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { deploymentId, chainId, address } = input
 
-      const deployment = await ctx.prisma.repositoryDeployment.findFirst({
+      const deployment = await ctx.prisma.assetDeployment.findFirst({
         where: { id: deploymentId },
       })
 
@@ -270,9 +269,9 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      return await ctx.prisma.repositoryContractDeployment.create({
+      return await ctx.prisma.contractDeployment.create({
         data: {
-          repositoryDeploymentId: deploymentId,
+          assetDeploymentId: deploymentId,
           chainId,
           address,
           repositoryId: deployment.repositoryId,

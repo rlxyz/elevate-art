@@ -1,31 +1,31 @@
 import type { Prisma } from '@prisma/client'
-import { RepositoryDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
 import { storage } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
-  await prisma?.repositoryDeployment.update({
+  await prisma?.assetDeployment.update({
     where: { id: deploymentId },
-    data: { status: RepositoryDeploymentStatus.FAILED },
+    data: { status: AssetDeploymentStatus.FAILED },
   })
 }
 
 const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
-  await prisma?.repositoryDeployment.update({
+  await prisma?.assetDeployment.update({
     where: { id: deploymentId },
-    data: { status: RepositoryDeploymentStatus.DEPLOYED },
+    data: { status: AssetDeploymentStatus.DEPLOYED },
   })
 }
 
 /**
- * This function is used in conjuction with the creation of a new RepositoryDeployment.
+ * This function is used in conjuction with the creation of a new AssetDeployment.
  * It will fetch all TraitElement images from Cloudinary & upload to a folder in GCP Storage.
  *
- * We do this so that we can use the images in the RepositoryDeployment without having to
+ * We do this so that we can use the images in the AssetDeployment without having to
  * make a request to Cloudinary. And also, if user then changes the image in Cloudinary,
- * we can still use the old image associated to the RepositoryDeployment.
+ * we can still use the old image associated to the AssetDeployment.
  *
  * Bucket Design
  * name: `elevate-<repositoryId>-assets`
@@ -42,7 +42,7 @@ export default createFunction('repository-deployment/bundle-images', 'repository
   /**
    * Ensure Deployment Exists
    */
-  const deployment = await prisma?.repositoryDeployment.findFirst({
+  const deployment = await prisma?.assetDeployment.findFirst({
     where: { id: deploymentId, repositoryId },
     select: { id: true },
   })

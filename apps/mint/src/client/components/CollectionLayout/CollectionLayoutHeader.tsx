@@ -1,10 +1,10 @@
 import { LayoutContainer } from '@Components/ui/core/Layout'
-import type { RepositoryContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
 
 interface MintLayoutHeaderProps {
-  contractDeployment: RepositoryContractDeployment | undefined | null
+  contractDeployment: ContractDeployment | undefined | null
 }
 
 export const CollectionLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ contractDeployment }) => {

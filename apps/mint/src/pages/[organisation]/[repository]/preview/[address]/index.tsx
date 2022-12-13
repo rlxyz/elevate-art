@@ -4,6 +4,8 @@ import { MintLayout } from '@Components/MintLayout/MintLayout'
 import { Layout } from '@Components/ui/core/Layout'
 import type { BigNumber } from 'ethers'
 import LogRocket from 'logrocket'
+import type { GetServerSidePropsContext } from 'next'
+import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
@@ -44,9 +46,9 @@ export const HomePage = () => {
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={current?.deployment} />
           <CollectionLayout.Description
-            organisation={current?.deployment?.repository.organisation}
-            repository={current?.deployment?.repository}
-            deployment={current?.deployment?.repositoryDeployment}
+            organisation={current?.deployment?.assetDeployment?.repository.organisation}
+            repository={current?.deployment?.assetDeployment?.repository}
+            deployment={current?.deployment?.assetDeployment}
             contractDeployment={current?.deployment}
             contractData={current?.contract}
           />
@@ -65,6 +67,62 @@ export const HomePage = () => {
       </Layout.Body>
     </Layout>
   )
+}
+
+/**
+ * If user is authenticated, redirect the user to his dashboard.
+ */
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { address } = context.query as { [key: string]: string }
+  const session = await getSession()
+  if (!address || !session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanant: false,
+      },
+    }
+  }
+
+  const deployment = await prisma?.contractDeployment.findFirst({
+    where: {
+      address,
+      repository: {
+        organisation: {
+          members: {
+            some: {
+              user: {
+                id: session?.user?.id,
+              },
+            },
+          },
+        },
+      },
+    },
+    include: {
+      assetDeployment: true,
+    },
+  })
+
+  if (deployment?.assetDeployment?.type === 'PREVIEW') {
+    return {
+      redirect: {
+        destination: `/preview/${address}`,
+        permanant: false,
+      },
+    }
+  }
+
+  if (deployment) {
+    return { props: {} }
+  }
+
+  return {
+    redirect: {
+      destination: '/',
+      permanant: false,
+    },
+  }
 }
 
 export default HomePage

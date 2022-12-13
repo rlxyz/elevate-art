@@ -1,7 +1,7 @@
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
 import { GalleryLayout } from '@Components/GalleryLayout/GalleryLayout'
 import { Layout } from '@Components/ui/core/Layout'
-import { RepositoryContractDeploymentStatus } from '@prisma/client'
+import { ContractDeploymentStatus } from '@prisma/client'
 import LogRocket from 'logrocket'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -19,7 +19,7 @@ export const HomePage = () => {
     }
   }, [account?.address])
 
-  if (!current || !current.deployment || !(current.deployment.status === RepositoryContractDeploymentStatus.DEPLOYED)) return <></>
+  if (!current || !current.deployment || !(current.deployment.status === ContractDeploymentStatus.DEPLOYED)) return <></>
 
   const { deployment, contract: contractData } = current
 
@@ -37,19 +37,19 @@ export const HomePage = () => {
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={deployment} />
           <CollectionLayout.Description
-            organisation={deployment.repository.organisation}
-            repository={deployment.repository}
-            deployment={deployment.repositoryDeployment} // @todo fix
-            contractDeployment={deployment}
-            contractData={contractData}
+            organisation={current?.deployment?.repository?.organisation}
+            repository={current?.deployment?.repository}
+            deployment={current?.deployment?.assetDeployment}
+            contractDeployment={current?.deployment}
+            contractData={current?.contract}
           />
           <CollectionLayout.Body>
             <GalleryLayout
-              contractDeployment={deployment}
-              repositoryDeployment={deployment.repositoryDeployment}
-              repository={deployment.repository}
-              organisation={deployment.repository.organisation}
-              contractData={contractData}
+              organisation={current?.deployment?.repository?.organisation}
+              repository={current?.deployment?.repository}
+              deployment={current?.deployment?.assetDeployment}
+              contractDeployment={current?.deployment}
+              contractData={current?.contract}
             />
           </CollectionLayout.Body>
         </CollectionLayout>

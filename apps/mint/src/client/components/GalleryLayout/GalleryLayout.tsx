@@ -1,11 +1,11 @@
 import LinkComponent from '@Components/ui/link/Link'
-import type { Organisation, Repository, RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
+import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { ethers } from 'ethers'
 import { current } from 'immer'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
-import type { ContractData } from 'src/pages/[address]'
+import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/[address]'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -14,8 +14,8 @@ export const GalleryLayout = ({
   repository,
   organisation,
 }: {
-  contractDeployment: RepositoryContractDeployment
-  repositoryDeployment: RepositoryDeployment
+  contractDeployment: ContractDeployment
+  repositoryDeployment: AssetDeployment
   repository: Repository
   organisation: Organisation
   contractData: ContractData

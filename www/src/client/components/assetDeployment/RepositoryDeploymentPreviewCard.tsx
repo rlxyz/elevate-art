@@ -2,31 +2,29 @@ import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
-import RepositoryDeploymentDeleteModal from '@components/repository/RepositoryDeployment/RepositoryDeploymentDeleteModal'
-import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
+import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import type { RepositoryContractDeployment, RepositoryDeployment } from '@prisma/client'
-import { RepositoryDeploymentStatus } from '@prisma/client'
+import type { AssetDeployment, ContractDeployment } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
-import RepositoryContractDeploymentCreateModal from './RepositoryContractDeploymentCreateModal'
+import RepositoryDeploymentDeleteModal from './RepositoryDeploymentDeleteModal'
 
 export const RepositoryDeploymentPreviewCard = ({
   deployment,
   organisationName,
   repositoryName,
 }: {
-  deployment: RepositoryDeployment & { contractDeployment: RepositoryContractDeployment | null }
+  deployment: AssetDeployment & { contractDeployment: ContractDeployment | null }
   organisationName: string
   repositoryName: string
 }) => {
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isCreateContractDeploymentDialogOpen, setIsCreateContractDeploymentDialogOpen] = useState(false)
   const { mainRepositoryHref } = useRepositoryRoute()
 
   const onClipboardCopy = () => {
@@ -39,7 +37,7 @@ export const RepositoryDeploymentPreviewCard = ({
       <div className='text-xs flex flex-row items-center space-x-2'>
         <div>
           <div className='flex flex-col justify-center'>
-            {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
+            {deployment.status === AssetDeploymentStatus.DEPLOYED ? (
               <NextLinkComponent
                 underline
                 // href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
@@ -69,16 +67,16 @@ export const RepositoryDeploymentPreviewCard = ({
             <div
               className={clsx(
                 'rounded-full w-4 h-4 border border-mediumGrey',
-                deployment.status === RepositoryDeploymentStatus.FAILED && 'bg-redError',
-                deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
-                deployment.status === RepositoryDeploymentStatus.PENDING && 'bg-lightGray'
+                deployment.status === AssetDeploymentStatus.FAILED && 'bg-redError',
+                deployment.status === AssetDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
+                deployment.status === AssetDeploymentStatus.PENDING && 'bg-lightGray'
               )}
             />
             <div className='flex flex-col'>
               <span>
-                {deployment.status === RepositoryDeploymentStatus.FAILED && 'Error'}
-                {deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'Ready'}
-                {deployment.status === RepositoryDeploymentStatus.PENDING && 'Deploying'}
+                {deployment.status === AssetDeploymentStatus.FAILED && 'Error'}
+                {deployment.status === AssetDeploymentStatus.DEPLOYED && 'Ready'}
+                {deployment.status === AssetDeploymentStatus.PENDING && 'Deploying'}
               </span>
               <span>{timeAgo(deployment.updatedAt)}</span>
             </div>
@@ -101,10 +99,6 @@ export const RepositoryDeploymentPreviewCard = ({
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
-              <Menu.Item as='button' type='button' onClick={() => setIsCreateContractDeploymentDialogOpen(true)}>
-                <CubeIcon className='w-3 h-3' />
-                <span>Deploy Contract</span>
-              </Menu.Item>
               {/* <Menu.Item as='button' type='button'>
               <CubeIcon className='w-3 h-3' />
               <span>Promote to Production</span>
@@ -137,11 +131,6 @@ export const RepositoryDeploymentPreviewCard = ({
         </div>
       </div>
       <RepositoryDeploymentDeleteModal visible={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} deployment={deployment} />
-      <RepositoryContractDeploymentCreateModal
-        visible={isCreateContractDeploymentDialogOpen}
-        onClose={() => setIsCreateContractDeploymentDialogOpen(false)}
-        deployment={deployment}
-      />
     </div>
   )
 }

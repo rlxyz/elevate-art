@@ -1,8 +1,8 @@
+import type { FormModalProps } from '@components/repository/LayerElementFileTree/LayerElementDeleteModal'
 import { useMutateRepositoryCreateBucket } from '@hooks/trpc/repository/useMutateRepositoryCreateBucket'
-import { Repository } from '@prisma/client'
-import { FC } from 'react'
+import type { Repository } from '@prisma/client'
+import type { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
 export interface RepositoryDeploymentCreateProps extends FormModalProps {
   repository: Repository

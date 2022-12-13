@@ -1,37 +1,9 @@
 import type { Prisma } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { storage } from '@server/utils/gcp-storage'
+import { metadataCacheObject } from '@server/utils/gcp-bucket-actions'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
-
-/**
- * Note, this is a cache built around the compiler functionality to ensure that
- * we only need to compile a single token id once per deployment.
- *
- * That is, if a token has 12 LayerElements === 12 TraitElements, then we only need
- * to fetch from the GCP bucket once per token id.
- *
- * And during the compilation of images using skia-constructor, we re-upload the new compiled token image
- * to the GCP bucket.
- */
-type MetadataCacheInput = { repositoryId: string; deploymentId: string; id: string }
-const metadataCacheObject = {
-  get: async ({ repositoryId, deploymentId, id }: MetadataCacheInput) => {
-    return await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/metadata.json`)
-      .download()
-      .then((data) => data[0])
-      .catch((e) => console.error(e))
-  },
-  put: async ({ repositoryId, deploymentId, id, buffer }: MetadataCacheInput & { buffer: string | Buffer }) => {
-    await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/metadata.json`)
-      .save(buffer, { contentType: 'application/json' })
-  },
-}
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
@@ -39,7 +11,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).send('Unauthorized')
   }
 
-  // r: repositoryId, l: layerElementId, t: traitElementId
+  // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
   if (!organisationName || !repositoryName || !seed || !id) {
     return res.status(400).send('Bad Request')
@@ -47,18 +19,19 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
   //! only users who are members of the organisation can access the image through stealth mode
-  const deployment = await prisma?.repositoryDeployment.findFirst({
+  const deployment = await prisma?.assetDeployment.findFirst({
     where: {
       repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
       name: seed,
     },
+    include: { repository: true },
   })
 
   if (!deployment) {
     return res.status(404).send('Not Found')
   }
 
-  if (deployment.collectionTotalSupply <= parseInt(id)) {
+  if (deployment.totalSupply <= parseInt(id)) {
     return res.status(400).send('Bad Request')
   }
 
@@ -66,15 +39,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const metadata = await metadataCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
   if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
 
-  const layerElements = deployment.attributes as Prisma.JsonArray as v.Layer[]
+  const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  const tokens = v.one(
-    v.parseLayer(layerElements),
-    v.seed(deployment.repositoryId, deployment.collectionName, deployment.collectionGenerations, id)
-  )
+  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
 
   const response = {
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${seed}/${id}`,
+    name: `${deployment.repository.tokenName} #${id}`,
+    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return

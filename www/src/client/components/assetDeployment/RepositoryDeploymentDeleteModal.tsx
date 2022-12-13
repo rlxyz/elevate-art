@@ -1,11 +1,11 @@
+import type { FormModalProps } from '@components/repository/LayerElementFileTree/LayerElementDeleteModal'
 import { useMutateRepositoryDeploymentDelete } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentDelete'
-import { RepositoryDeployment } from '@prisma/client'
-import { FC } from 'react'
+import type { AssetDeployment } from '@prisma/client'
+import type { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { FormModalProps } from '../LayerElementFileTree/LayerElementDeleteModal'
 
 export interface RepositoryDeploymentDeleteProps extends FormModalProps {
-  deployment: RepositoryDeployment
+  deployment: AssetDeployment
 }
 
 const RepositoryDeploymentDeleteModal: FC<RepositoryDeploymentDeleteProps> = ({ visible, onClose, onSuccess, deployment }) => {
