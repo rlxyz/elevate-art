@@ -3,24 +3,24 @@ import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
-import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
-import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
+import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
+import { env } from 'src/env/client.mjs'
+import { OrganisationNavigationEnum } from 'src/shared/enums'
+import { OrganisationAuthLayout } from '../../../client/components/organisation/OrganisationAuthLayout'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
   const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
 
   return (
-    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Dashboard}>
+    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
       <Layout>
         <Layout.Header
           internalRoutes={[
             {
-              current: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name || ''}`,
+              current: organisation?.name || '',
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
               organisations,
             },
           ]}
@@ -29,14 +29,14 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
                 loading: isLoadingOrganisations,
               },
               {
-                name: OrganisationNavigationEnum.enum.Account,
-                href: `/${OrganisationNavigationEnum.enum.Account}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
+                name: OrganisationNavigationEnum.enum.Settings,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },
             ].map((item) => (
@@ -46,10 +46,7 @@ const Page: NextPage = () => {
         </Layout.Header>
         <Layout.Body>
           <div className='py-8 space-y-8'>
-            <div className='space-y-9'>
-              <PersonalOrganisationAccountTeam />
-              <PersonalOrganisationAccountTeamInvites />
-            </div>
+            <ViewAllRepositories />
           </div>
         </Layout.Body>
       </Layout>

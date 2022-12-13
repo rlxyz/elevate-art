@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
+import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 export const SettingsNavigations = () => {
@@ -13,11 +14,11 @@ export const SettingsNavigations = () => {
       {[
         {
           name: OrganisationSettingsNavigationEnum.enum.General,
-          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+          href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
         },
         {
           name: OrganisationSettingsNavigationEnum.enum.Team,
-          href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
+          href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
         },
       ].map(({ name, href }) => {
         return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />

@@ -1,7 +1,7 @@
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepositoryCreate'
-import { Repository } from '@prisma/client'
+import type { Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import Upload from 'src/client/components/layout/upload/upload'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -25,7 +26,7 @@ const Page: NextPage = () => {
           internalRoutes={[
             {
               current: organisation?.name || '',
-              href: `/${organisation?.name}`,
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
               organisations,
             },
           ]}

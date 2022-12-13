@@ -12,6 +12,7 @@ import LayerElementFileTree from 'src/client/components/repository/LayerElementF
 import TraitTable from 'src/client/components/repository/TraitElementTable'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useRepositoryRoute } from 'src/client/hooks/utils/useRepositoryRoute'
+import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
@@ -35,33 +36,33 @@ const Page = () => {
       <Layout>
         <Layout.Header
           internalRoutes={[
-            { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
+            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
           ]}
         >
           <PageRoutesNavbar>
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${mainRepositoryHref}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
                 enabled: true,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },

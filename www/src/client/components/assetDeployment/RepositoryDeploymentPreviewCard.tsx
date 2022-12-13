@@ -4,9 +4,9 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
 import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
-import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
+import { CollectionNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
@@ -25,10 +25,9 @@ export const RepositoryDeploymentPreviewCard = ({
 }) => {
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const { mainRepositoryHref } = useRepositoryRoute()
 
   const onClipboardCopy = () => {
-    navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
+    navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`) // @todo fix
     notifyInfo('Copied to clipboard')
   }
 
@@ -40,8 +39,7 @@ export const RepositoryDeploymentPreviewCard = ({
             {deployment.status === AssetDeploymentStatus.DEPLOYED ? (
               <NextLinkComponent
                 underline
-                // href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
-                href={`/${mainRepositoryHref}/deployments/${deployment.name}`}
+                href={`${CollectionNavigationEnum.enum.Deployments}/${deployment.name}`}
                 className='font-semibold w-fit'
               >
                 {deployment.name}
@@ -54,13 +52,10 @@ export const RepositoryDeploymentPreviewCard = ({
         </div>
         {deployment.contractDeployment && (
           <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
-            <NextLinkComponent href='/'>
-              <span className='text-darkGrey mr-1 text-[0.6rem]'>Deployed</span>
-            </NextLinkComponent>
+            <span className='text-darkGrey mr-1 text-[0.6rem]'>Deployed</span>
           </span>
         )}
       </div>
-
       <div>
         <span className='text-xs flex flex-col h-full space-x-2'>
           <div className='flex space-x-3'>

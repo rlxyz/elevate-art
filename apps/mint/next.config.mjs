@@ -2,6 +2,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
+const basePath = process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? ''
 
 /**
  * Don't be scared of the generics here.
@@ -37,4 +38,5 @@ export default defineNextConfig({
     locales: ['en'],
     defaultLocale: 'en',
   },
+  basePath: `/${basePath}`,
 })

@@ -13,9 +13,9 @@ import type { FC, ReactNode } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
+import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
@@ -28,22 +28,25 @@ const Page = () => {
       <Layout>
         <Layout.Header
           internalRoutes={[
-            { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-            { current: deploymentName, href: `/${organisationName}/${repositoryName}/deployments/${deploymentName}` },
+            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
+            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
+            {
+              current: deploymentName,
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}/deployments/${deploymentName}`,
+            },
           ]}
         >
           <PageRoutesNavbar>
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
                 enabled: false,
                 loading: false,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
                 enabled: true,
                 loading: false,
               },
@@ -61,7 +64,14 @@ const Page = () => {
                   <LinkComponent
                     target='_blank'
                     rel='noopener noreferrer'
-                    href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${organisationName}/${repositoryName}/preview/${contractDeployment?.address}/mint`}
+                    href={routeBuilder(
+                      env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH,
+                      organisationName,
+                      repositoryName,
+                      MintNavigationEnum.enum.Preview,
+                      contractDeployment?.address,
+                      MintNavigationEnum.enum.Mint
+                    )}
                     underline
                   >
                     {contractDeployment?.address}
@@ -201,7 +211,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     redirect: {
-      destination: `/${organisation}/${repository}/deployments/${deployment}/contract/new`,
+      destination: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation}/${repository}/${CollectionNavigationEnum.enum.Deployments}/${deployment}/contract/new`,
       permanant: false,
     },
   }
