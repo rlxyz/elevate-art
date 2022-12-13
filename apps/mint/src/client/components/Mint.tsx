@@ -7,10 +7,21 @@ import { Layout } from '@Components/ui/core/Layout'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { useRouter } from 'next/router'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
+import { z } from 'zod'
+import { PageRoutesNavbar } from './ui/header/PageRoutesNavbar'
+
+export const OrganisationNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+    Mint: 'mint', // only for personal accounts
+    Gallery: 'gallery', // only for personal accounts
+  })
+)
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
   const router = useRouter()
-  const { organisation, repository } = router.query as { [key: string]: string }
+  const { organisation, repository, address } = router.query as { [key: string]: string }
   const { current } = useQueryContractDeployment()
   return (
     <Layout>
@@ -25,7 +36,46 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
             href: `/${organisation}/${repository}`,
           },
         ]}
-      />
+      >
+        <PageRoutesNavbar>
+          {[
+            {
+              name: OrganisationNavigationEnum.enum.Mint,
+              href:
+                `/` +
+                [
+                  organisation,
+                  repository,
+                  type === AssetDeploymentBranch.PREVIEW && 'preview',
+                  type === AssetDeploymentBranch.PREVIEW && address,
+                  OrganisationNavigationEnum.enum.Mint,
+                ]
+                  .filter((x) => Boolean(x))
+                  .join('/'),
+              enabled: true,
+              loading: false,
+            },
+            {
+              name: OrganisationNavigationEnum.enum.Gallery,
+              href:
+                `/` +
+                [
+                  organisation,
+                  repository,
+                  type === AssetDeploymentBranch.PREVIEW && 'preview',
+                  type === AssetDeploymentBranch.PREVIEW && address,
+                  OrganisationNavigationEnum.enum.Gallery,
+                ]
+                  .filter((x) => Boolean(x))
+                  .join('/'),
+              enabled: false,
+              loading: false,
+            },
+          ].map((item) => (
+            <PageRoutesNavbar.Item key={item.name} opts={item} />
+          ))}
+        </PageRoutesNavbar>
+      </Layout.Header>
       <Layout.Body margin={false}>
         <>
           {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (

@@ -1,9 +1,9 @@
+import type { ContractData } from '@Components/ContractData'
 import { SocialMediaLink } from '@Components/core/Minter/SocialMediaLink'
 import { buildEtherscanLink } from '@Components/core/Unused'
 import { LayoutContainer } from '@Components/ui/core/Layout'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import React from 'react'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/ContractData'
 import { ContractDeploymentDetails } from '../core/ContractDeploymentDetails'
 
 interface MintLayoutDescriptionProps {
