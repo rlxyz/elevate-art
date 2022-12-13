@@ -8,15 +8,19 @@ import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDep
 
 export const Gallery = ({ type }: { type: AssetDeploymentBranch }) => {
   const router = useRouter()
-  const address = router.query.address as string
+  const { organisation, repository } = router.query as { [key: string]: string }
   const { current } = useQueryContractDeployment()
   return (
     <Layout>
       <Layout.Header
         internalRoutes={[
           {
-            current: `${address}`,
-            href: `/${address}`,
+            current: `${organisation}`,
+            href: `/${organisation}`,
+          },
+          {
+            current: `${repository}`,
+            href: `/${organisation}/${repository}`,
           },
         ]}
       />
