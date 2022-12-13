@@ -43,7 +43,7 @@ function defineNextConfig(config) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/blog',
+  basePath: '/mint',
 }
 
 export default nextConfig

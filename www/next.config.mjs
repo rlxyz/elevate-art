@@ -38,12 +38,12 @@ export default defineNextConfig({
         destination: `/:path*`,
       },
       {
-        source: '/blog',
-        destination: `${'http://localhost:3001'}/blog`,
+        source: '/mint',
+        destination: `${'http://localhost:3001'}/mint`,
       },
       {
-        source: '/blog/:path*',
-        destination: `${'http://localhost:3001'}/blog/:path*`,
+        source: '/mint/:path*',
+        destination: `${'http://localhost:3001'}/mint/:path*`,
       },
     ]
   },
