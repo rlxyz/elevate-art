@@ -19,7 +19,7 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({ statement: 'sign i
 export const EthereumAuthenticationLayout: FC<{ session: Session | null; children: ReactNode }> = ({ children, session }) => {
   return (
     <WagmiConfig client={wagmiClient}>
-      <SessionProvider refetchInterval={60} session={session}>
+      <SessionProvider refetchInterval={60} session={session} baseUrl='http://localhost:3000'>
         <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
           <RainbowKitProvider
             appInfo={appInfo}

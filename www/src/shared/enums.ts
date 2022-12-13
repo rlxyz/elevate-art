@@ -16,6 +16,16 @@ export const OrganisationDatabaseEnum = z.nativeEnum(
 )
 export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
+export const MintNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Mint: 'mint',
+    Preview: 'preview',
+    Gallery: 'gallery',
+  })
+)
+
+export type MintNavigationType = z.infer<typeof MintNavigationEnum>
+
 export const CollectionDatabaseEnum = z.nativeEnum(
   Object.freeze({
     Default: 'default',

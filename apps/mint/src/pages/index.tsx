@@ -2,6 +2,7 @@
 import { Layout } from '@Components/ui/core/Layout'
 import NextLink from '@Components/ui/link/NextLink'
 import type { NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 
 const Hero = () => {
@@ -48,6 +49,7 @@ const Hero = () => {
 }
 
 const Home: NextPage = () => {
+  const { data } = useSession()
   return (
     <>
       <Layout>

@@ -1,6 +1,7 @@
 import { httpBatchLink, loggerLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
+import { env } from 'src/env/client.mjs'
 import type { AppRouter } from 'src/server/trpc/router/_app'
 import superjson from 'superjson'
 
@@ -19,7 +20,7 @@ export const trpc = createTRPCNext<AppRouter>({
           enabled: (opts) => process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
         }),
         httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          url: `${getBaseUrl()}/${env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH}/api/trpc`, // note: basePath already has a '/' at the start
         }),
       ],
     }

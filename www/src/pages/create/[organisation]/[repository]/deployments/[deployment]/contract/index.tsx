@@ -13,9 +13,9 @@ import type { FC, ReactNode } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { CollectionNavigationEnum, DeploymentNavigationEnum } from 'src/shared/enums'
+import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
@@ -61,7 +61,14 @@ const Page = () => {
                   <LinkComponent
                     target='_blank'
                     rel='noopener noreferrer'
-                    href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${organisationName}/${repositoryName}/preview/${contractDeployment?.address}/mint`}
+                    href={routeBuilder(
+                      env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH,
+                      organisationName,
+                      repositoryName,
+                      MintNavigationEnum.enum.Preview,
+                      contractDeployment?.address,
+                      MintNavigationEnum.enum.Gallery
+                    )}
                     underline
                   >
                     {contractDeployment?.address}

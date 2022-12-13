@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, NextPage } from 'next'
+import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'

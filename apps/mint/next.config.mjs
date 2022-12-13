@@ -1,8 +1,8 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
-// const { BLOG_URL } = process.env
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
+const basePath = process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? ''
 
 /**
  * Don't be scared of the generics here.
@@ -38,5 +38,5 @@ export default defineNextConfig({
     locales: ['en'],
     defaultLocale: 'en',
   },
-  basePath: '/mint',
+  basePath: `/${basePath}`,
 })

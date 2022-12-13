@@ -2,6 +2,8 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
+const mintBasePath = process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? ''
+const mintBaseUrl = process.env.NEXT_PUBLIC_MINT_CLIENT_URL ?? ''
 
 /**
  * Don't be scared of the generics here.
@@ -38,12 +40,12 @@ export default defineNextConfig({
         destination: `/:path*`,
       },
       {
-        source: '/mint',
-        destination: `${'http://localhost:3001'}/mint`,
+        source: `/${mintBasePath}`,
+        destination: `${`${mintBaseUrl}`}/${mintBasePath}`,
       },
       {
-        source: '/mint/:path*',
-        destination: `${'http://localhost:3001'}/mint/:path*`,
+        source: `/${mintBasePath}/:path*`,
+        destination: `${mintBaseUrl}/${mintBasePath}/:path*`,
       },
     ]
   },

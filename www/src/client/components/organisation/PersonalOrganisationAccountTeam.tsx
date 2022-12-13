@@ -1,5 +1,5 @@
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { Organisation, OrganisationMember, User } from '@prisma/client'
+import type { Organisation, OrganisationMember, User } from '@prisma/client'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -57,7 +57,10 @@ export const PersonalOrganisationAccountTeam = () => {
                       </span>
                     </div>
                   </div>
-                  <Link href={`/${organisation.name}`} className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
+                  <Link
+                    href={`create/${organisation.name}`}
+                    className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'
+                  >
                     View
                   </Link>
                 </div>
