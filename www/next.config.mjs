@@ -22,15 +22,15 @@ function defineNextConfig(config) {
 }
 
 export default defineNextConfig({
-  // reactStrictMode: true,
-  // swcMinify: true,
-  // images: {
-  //   domains: ['res.cloudinary.com', 'localhost'],
-  // },
-  // i18n: {
-  //   locales: ['en'],
-  //   defaultLocale: 'en',
-  // },
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ['res.cloudinary.com', 'localhost'],
+  },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
   async rewrites() {
     return [
       {
