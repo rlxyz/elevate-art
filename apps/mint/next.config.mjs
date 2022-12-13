@@ -22,28 +22,21 @@ function defineNextConfig(config) {
   return config
 }
 
-// export default defineNextConfig({
-//   reactStrictMode: true,
-//   swcMinify: true,
-//   images: {
-//     domains: ['res.cloudinary.com', 'localhost'],
-//     remotePatterns: [
-//       {
-//         protocol: 'https',
-//         hostname: '*',
-//       },
-//     ],
-//   },
-//   i18n: {
-//     locales: ['en'],
-//     defaultLocale: 'en',
-//   },
-//   basePath: '/blog',
-// })
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+export default defineNextConfig({
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ['res.cloudinary.com', 'localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*',
+      },
+    ],
+  },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
   basePath: '/mint',
-}
-
-export default nextConfig
+})
