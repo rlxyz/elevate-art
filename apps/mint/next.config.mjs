@@ -1,5 +1,6 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
+// const { BLOG_URL } = process.env
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
 
@@ -21,20 +22,28 @@ function defineNextConfig(config) {
   return config
 }
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['res.cloudinary.com', 'localhost'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '*',
-      },
-    ],
-  },
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en',
-  },
-})
+// export default defineNextConfig({
+//   reactStrictMode: true,
+//   swcMinify: true,
+//   images: {
+//     domains: ['res.cloudinary.com', 'localhost'],
+//     remotePatterns: [
+//       {
+//         protocol: 'https',
+//         hostname: '*',
+//       },
+//     ],
+//   },
+//   i18n: {
+//     locales: ['en'],
+//     defaultLocale: 'en',
+//   },
+//   basePath: '/blog',
+// })
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  basePath: '/blog',
+}
+
+export default nextConfig

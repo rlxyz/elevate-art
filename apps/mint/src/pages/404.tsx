@@ -23,7 +23,7 @@ const Page = () => {
                   <div className='mt-2'>
                     <Link href='/'>
                       <div className='text-darkGrey text-sm'>
-                        lets go somewhere<span aria-hidden='true'> &rarr;</span>
+                        lets go somewhere else<span aria-hidden='true'> &rarr;</span>
                       </div>
                     </Link>
                   </div>

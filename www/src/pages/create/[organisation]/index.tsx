@@ -6,7 +6,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
-import { OrganisationAuthLayout } from '../../client/components/organisation/OrganisationAuthLayout'
+import { OrganisationAuthLayout } from '../../../client/components/organisation/OrganisationAuthLayout'
 
 const Page: NextPage = () => {
   const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
