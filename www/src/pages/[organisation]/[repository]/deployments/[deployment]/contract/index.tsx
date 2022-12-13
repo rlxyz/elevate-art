@@ -59,7 +59,9 @@ const Page = () => {
                 <h2 className='text-xs'>Address</h2>
                 <h1 className='text-xs font-bold'>
                   <LinkComponent
-                    href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${organisationName}/${repositoryName}/preview/${contractDeployment?.address}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    href={`${env.NEXT_PUBLIC_MINT_CLIENT_URL}/${organisationName}/${repositoryName}/preview/${contractDeployment?.address}/mint`}
                     underline
                   >
                     {contractDeployment?.address}

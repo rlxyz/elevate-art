@@ -1,10 +1,10 @@
-import { Gallery } from '@Components/Gallery'
+import { Mint } from '@Components/Mint'
 import { AssetDeploymentBranch } from '@prisma/client'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { env } from 'src/env/client.mjs'
 
-export const Page: NextPage = () => <Gallery type={AssetDeploymentBranch.PREVIEW} />
+export const Page: NextPage = () => <Mint type={AssetDeploymentBranch.PREVIEW} />
 
 /**
  * If user is authenticated, redirect the user to his contract deployment.

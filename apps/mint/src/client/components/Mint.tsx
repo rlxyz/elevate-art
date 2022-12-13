@@ -1,12 +1,14 @@
 import { AnalyticsLayoutCollectionInformation } from '@Components/AnalyticsLayout/AnalyticsLayoutCollectionInformation'
 import { CollectionLayout } from '@Components/CollectionLayout/CollectionLayout'
 import { MintLayout } from '@Components/MintLayout/MintLayout'
+import { MintPreviewWarningHeader } from '@Components/MintPreviewWarningHeader'
 import { SaleLayoutLoading } from '@Components/SaleLayout/SaleLayoutLoading'
 import { Layout } from '@Components/ui/core/Layout'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { useRouter } from 'next/router'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
 
-export const HomePage = () => {
+export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
   const router = useRouter()
   const address = router.query.address as string
   const { current } = useQueryContractDeployment()
@@ -21,6 +23,17 @@ export const HomePage = () => {
         ]}
       />
       <Layout.Body margin={false}>
+        <>
+          {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (
+            <MintPreviewWarningHeader
+              organisation={current.deployment.repository.organisation}
+              repository={current.deployment.repository}
+              assetDeployment={current.deployment.assetDeployment}
+              contractDeployment={current.deployment}
+            />
+          )}
+        </>
+
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={current?.deployment} />
           <CollectionLayout.Description
