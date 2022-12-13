@@ -10,6 +10,7 @@ import { OrganisationTeamAddUser } from 'src/client/components/organisation/Orga
 import { OrganisationTeamDisplayPending } from 'src/client/components/organisation/OrganisationTeamDisplayPending'
 import { OrganisationTeamDisplayUsers } from 'src/client/components/organisation/OrganisationTeamDisplayUsers'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -33,7 +34,7 @@ const Page: NextPage = () => {
           internalRoutes={[
             {
               current: organisation?.name || '',
-              href: `/${organisation?.name}`,
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
               organisations,
             },
           ]}
@@ -42,13 +43,13 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${organisation?.name}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Settings,
-                href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },

@@ -1,8 +1,10 @@
+import NextLinkComponent from '@components/layout/link/NextLink'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
 import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import { Link } from 'src/client/components/layout/Link'
@@ -148,10 +150,10 @@ const ViewAllRepositories = () => {
         {filteredRepositories?.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
-              <Link href={`/${organisationName}/${repository.name}`} external>
-                <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4'>
+              <NextLinkComponent href={`${organisationName}/${repository.name}`}>
+                <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4 w-full'>
                   <div className='flex items-center space-x-3'>
-                    <AvatarComponent src='images/avatar-blank.png' />
+                    <AvatarComponent src='/images/avatar-blank.png' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
                       <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>
@@ -194,10 +196,7 @@ const ViewAllRepositories = () => {
                               </div>
                               <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
                                 <p className='text-xs text-black'>{event.content}</p>
-                                <div className='whitespace-nowrap text-right text-xs text-black'>
-                                  {/* <time dateTime={event.datetime}>{event.date}</time> */}
-                                  {event.target}
-                                </div>
+                                <div className='whitespace-nowrap text-right text-xs text-black'>{event.target}</div>
                               </div>
                             </div>
                           </div>
@@ -205,18 +204,8 @@ const ViewAllRepositories = () => {
                       ))}
                     </ul>
                   </div>
-                  {/* <div className='ml-4 space-y-2'>
-                    <div className='text-sm'>{repository._count.collections} collections</div>
-                    <div className='text-sm'>{repository._count.layers} layers</div>
-                    <div className='text-sm'>
-                      {repository.layers.reduce((a, b) => {
-                        return a + b._count.traitElements
-                      }, 0)}{' '}
-                      traits
-                    </div>
-                  </div> */}
                 </div>
-              </Link>
+              </NextLinkComponent>
             </div>
           )
         })}

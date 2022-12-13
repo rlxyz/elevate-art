@@ -2,6 +2,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { Link } from 'src/client/components/layout/Link'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
+import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountNavigation = () => {
@@ -12,7 +13,7 @@ export const PersonalOrganisationAccountNavigation = () => {
       {[
         {
           name: OrganisationSettingsNavigationEnum.enum.General,
-          href: `/${OrganisationNavigationEnum.enum.Account}`,
+          href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${OrganisationNavigationEnum.enum.Account}`,
         },
       ].map(({ name, href }) => {
         return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />

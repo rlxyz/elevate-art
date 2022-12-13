@@ -11,6 +11,7 @@ import type { GetServerSidePropsContext } from 'next'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { env } from 'src/env/client.mjs'
 
 const Page = () => {
   const { all: organisations } = useQueryOrganisationFindAll()
@@ -28,22 +29,25 @@ const Page = () => {
       <Layout hasFooter={false}>
         <Layout.Header
           internalRoutes={[
-            { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
-            { current: deploymentName, href: `/${organisationName}/${repositoryName}/deployments/${deploymentName}` },
+            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
+            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
+            {
+              current: deploymentName,
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}/deployments/${deploymentName}`,
+            },
           ]}
         >
           <PageRoutesNavbar>
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
                 enabled: false,
                 loading: false,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
                 enabled: true,
                 loading: false,
               },
@@ -90,7 +94,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (valid) {
     return {
       redirect: {
-        destination: `/${organisation}/${repository}/deployments/${deployment}/contract`,
+        destination: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation}/${repository}/deployments/${deployment}/contract`,
         permanant: false,
       },
     }

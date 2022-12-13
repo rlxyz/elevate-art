@@ -5,6 +5,7 @@ import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { OrganisationAuthLayout } from '../../../client/components/organisation/OrganisationAuthLayout'
 
@@ -19,7 +20,7 @@ const Page: NextPage = () => {
           internalRoutes={[
             {
               current: organisation?.name || '',
-              href: `/${organisation?.name}`,
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
               organisations,
             },
           ]}
@@ -28,13 +29,13 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${organisation?.name}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Settings,
-                href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
                 loading: isLoadingOrganisations,
               },

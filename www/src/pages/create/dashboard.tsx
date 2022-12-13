@@ -7,6 +7,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
 import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { env } from 'src/env/client.mjs'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -20,7 +21,7 @@ const Page: NextPage = () => {
           internalRoutes={[
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
-              href: `/${organisation?.name || ''}`,
+              href: `${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name || ''}`,
               organisations,
             },
           ]}
@@ -29,13 +30,13 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${OrganisationNavigationEnum.enum.Dashboard}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Dashboard,
                 loading: isLoadingOrganisations,
               },
               {
                 name: OrganisationNavigationEnum.enum.Account,
-                href: `/${OrganisationNavigationEnum.enum.Account}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${OrganisationNavigationEnum.enum.Account}`,
                 enabled: currentRoute === OrganisationNavigationEnum.enum.Account,
                 loading: isLoadingOrganisations,
               },

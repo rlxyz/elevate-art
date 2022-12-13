@@ -2,7 +2,6 @@ import { Gallery } from '@Components/Gallery'
 import { AssetDeploymentBranch } from '@prisma/client'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
-import { env } from 'src/env/client.mjs'
 
 export const Page: NextPage = () => <Gallery type={AssetDeploymentBranch.PREVIEW} />
 
@@ -15,7 +14,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!address || !session?.user) {
     return {
       redirect: {
-        destination: `${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}`,
+        destination: `/404`,
         permanant: false,
       },
     }
@@ -41,7 +40,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!valid) {
     return {
       redirect: {
-        destination: `${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}`,
+        destination: `/404`,
         permanant: false,
       },
     }
