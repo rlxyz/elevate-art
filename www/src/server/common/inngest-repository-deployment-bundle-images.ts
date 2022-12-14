@@ -1,4 +1,5 @@
-import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { RepositoryDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import * as v from 'src/shared/compiler'

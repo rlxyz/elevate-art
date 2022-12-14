@@ -40,7 +40,7 @@ const DeploymentPreviewCard = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   const onClipboardCopy = () => {
-    navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`)
+    navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`)
     notifyInfo('Copied to clipboard')
   }
 
@@ -52,7 +52,7 @@ const DeploymentPreviewCard = ({
             rel='noreferrer nofollow'
             target='_blank'
             underline
-            href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+            href={`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`}
             className='font-semibold w-fit'
           >
             {deployment.name}
@@ -100,14 +100,6 @@ const DeploymentPreviewCard = ({
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
-              {/* <Menu.Item as='button' type='button'>
-                <CubeIcon className='w-3 h-3' />
-                <span>Promote to Production</span>
-              </Menu.Item>
-              <Menu.Item as='button' type='button'>
-                <EyeIcon className='w-3 h-3' />
-                <span>Enable Stealth Mode</span>
-              </Menu.Item> */}
               <Menu.Item as='button' type='button' onClick={() => setIsDeleteDialogOpen(true)}>
                 <TrashIcon className='w-3 h-3' />
                 <span>Delete</span>
@@ -120,7 +112,7 @@ const DeploymentPreviewCard = ({
               </Menu.Item>
               <Menu.Item
                 as={NextLinkComponent}
-                href={`${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${deployment.name}/0`}
+                href={`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`}
                 target='_blank'
                 rel='noopener noreferrer'
               >
