@@ -3,6 +3,7 @@ import { RepositoryDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import * as v from 'src/shared/compiler'
+import { prisma } from '../db/client'
 import { storage } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
