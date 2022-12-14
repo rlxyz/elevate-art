@@ -42,14 +42,21 @@ export default createFunction('repository-deployment/bundle-images', 'repository
 
   /**
    * Ensure Deployment Exists
+   * @todo better error handling here...
    */
-  const deployment = await prisma?.repositoryDeployment.findFirst({
-    where: { id: deploymentId, repositoryId },
-    select: { id: true },
-  })
-  if (!deployment) {
+  try {
+    const deployment = await prisma?.repositoryDeployment.findFirst({
+      where: { id: deploymentId, repositoryId },
+      select: { id: true },
+    })
+    if (!deployment) {
+      await repositoryDeploymentFailedUpdate({ deploymentId })
+      console.log("Deployment doesn't exist")
+      throw new Error(`Deployment ${deploymentId} does not exist`)
+    }
+  } catch (e) {
+    console.log('deployment error', e)
     await repositoryDeploymentFailedUpdate({ deploymentId })
-    console.log("Deployment doesn't exist")
     throw new Error(`Deployment ${deploymentId} does not exist`)
   }
 
