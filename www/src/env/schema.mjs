@@ -55,6 +55,6 @@ export const clientEnv = {
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || '',
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: Number(process.env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED) || 9990000,
-  NEXT_PUBLIC_API_URL: process.env.VERCEL ? `${process.env.VERCEL_URL}/api` : 'http://localhost:3000/api',
+  NEXT_PUBLIC_API_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api` : 'http://localhost:3000/api',
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
 }

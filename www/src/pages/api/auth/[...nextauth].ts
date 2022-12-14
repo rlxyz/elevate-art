@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
         try {
           /** Check SiweMessage for Ethereum Login */
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
-          const nextAuthUrl = process.env.VERCEL ? `https://${process.env.VERCEL_URL}` : env.NEXTAUTH_URL
+          const nextAuthUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : env.NEXTAUTH_URL
           if (!nextAuthUrl) return null
           if (siwe.domain !== new URL(nextAuthUrl).host) return null
           if (!siwe.address.length) return null
