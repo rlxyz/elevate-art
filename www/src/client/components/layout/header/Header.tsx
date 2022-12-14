@@ -4,7 +4,7 @@ import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { ConnectButton } from '../eth/ConnectButton'
 import LinkComponent from '../link/Link'
 import { default as NextLink, default as NextLinkComponent } from '../link/NextLink'
-import { HeaderInternalAppRoutes } from './HeaderInternalAppRoutes'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from './AppRoutesNavbarProps'
 
 const externalRoutes = [
   {
@@ -103,7 +103,17 @@ const Index = ({ internalRoutes = [], authenticated = true, children }: HeaderPr
           <NextLinkComponent className='w-fit' href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </NextLinkComponent>
-          {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>}
+          {/* {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>} */}
+          {internalRoutes.length ? (
+            <AppRoutesNavbar>
+              <AppRoutesNavbar.Item label='Create' href='/create'>
+                <ZoneRoutesNavbarPopover />
+              </AppRoutesNavbar.Item>
+              <AppRoutesNavbar.Item label='Create' href='/create' />
+            </AppRoutesNavbar>
+          ) : (
+            <></>
+          )}
         </div>
         <HeaderExternalRoutes authenticated={authenticated} />
       </div>

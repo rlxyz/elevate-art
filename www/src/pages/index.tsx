@@ -6,6 +6,7 @@ import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { env } from 'src/env/client.mjs'
 
 const Hero = () => {
   return (
@@ -144,7 +145,7 @@ const Footer = () => {
 const Home: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  if (status === 'authenticated') router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
+  if (status === 'authenticated') router.push(`${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${OrganisationNavigationEnum.enum.Dashboard}`)
   return (
     <>
       <Layout>

@@ -5,6 +5,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountNavigation } from 'src/client/components/organisation/PersonalOrganisationAccountNavigation'
 import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
+import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
@@ -16,6 +17,10 @@ const Page = () => {
       <Layout>
         <Layout.Header
           internalRoutes={[
+            {
+              current: capitalize(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH),
+              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}`,
+            },
             {
               current: OrganisationNavigationEnum.enum.Dashboard,
               href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name || ''}`,
