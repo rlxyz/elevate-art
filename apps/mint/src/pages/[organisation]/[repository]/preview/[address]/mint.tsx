@@ -2,6 +2,7 @@ import { Mint } from '@Components/Mint'
 import { AssetDeploymentBranch } from '@prisma/client'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
+import { prisma } from '../../../../../server/db/client' //! @todo check this; source: https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
 
 export const Page: NextPage = () => <Mint type={AssetDeploymentBranch.PREVIEW} />
 
@@ -20,7 +21,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  const valid = await prisma?.contractDeployment.findFirst({
+  const valid = await prisma.contractDeployment.findFirst({
     where: {
       address,
       repository: {
