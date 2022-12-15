@@ -26,13 +26,13 @@ export const authOptions: NextAuthOptions = {
   secret: env.NEXTAUTH_SECRET,
   cookies: {
     sessionToken: {
-      name: `next-auth.session-token`,
+      name: 'next-auth.session-token',
       options: {
+        domain: 'localhost',
+        path: '/',
         httpOnly: true,
         sameSite: 'lax',
-        path: '/',
         secure: false,
-        domain: 'localhost',
       },
     },
   },

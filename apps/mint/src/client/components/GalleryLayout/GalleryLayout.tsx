@@ -3,7 +3,6 @@ import LinkComponent from '@Components/ui/link/Link'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { ethers } from 'ethers'
 import { current } from 'immer'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
@@ -50,7 +49,6 @@ export const GalleryLayout = ({
   }
 
   const totalSupply = Number(ethers.utils.formatUnits(contractData.totalSupply, 0))
-  const { data } = useSession()
 
   return (
     <>
@@ -65,17 +63,19 @@ export const GalleryLayout = ({
           hasMore={hasMore}
           loader={<></>}
         >
-          {data?.user?.address}
           <div className='grid grid-cols-4 gap-6'>
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
-              .map((item) => (
-                <div key={item} className='border border-mediumGrey rounded-[5px]'>
+              .map((id) => (
+                <div
+                  key={`${contractDeployment.address}-${id}`}
+                  className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'
+                >
                   <Image
-                    src={`${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${item}/image`}
+                    src={`${env.NEXT_PUBLIC_CREATE_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}/image`}
                     width={300}
                     height={300}
-                    alt='some-id'
+                    alt={`${contractDeployment.address}-#${id}`}
                     className='object-cover m-auto rounded-t-[5px]'
                   />
                   <div className='p-2'>
@@ -83,10 +83,10 @@ export const GalleryLayout = ({
                       <LinkComponent
                         target='_blank'
                         rel='noopener noreferrer'
-                        href={`${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${item}`}
+                        href={`/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}`}
                         underline
                       >
-                        {item}
+                        {id}
                       </LinkComponent>
                     </h1>
                   </div>

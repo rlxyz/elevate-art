@@ -1,8 +1,7 @@
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { log } from 'next-axiom'
-import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/server.mjs'
+import { getServerAuthSession } from 'src/server/common/get-server-auth-session'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
@@ -12,7 +11,6 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     apiUrl: env.NEXT_PUBLIC_API_URL,
     nodeEnv: env.NODE_ENV,
     nextPublicNodeEnv: env.NEXT_PUBLIC_NODE_ENV,
-    maxImageBytesAllowed: formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED),
   })
 }
 

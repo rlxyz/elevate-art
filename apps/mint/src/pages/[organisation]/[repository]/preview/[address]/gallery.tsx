@@ -1,7 +1,8 @@
 import { Gallery } from '@Components/Gallery'
 import { AssetDeploymentBranch } from '@prisma/client'
 import type { GetServerSidePropsContext, NextPage } from 'next'
-import { getSession } from 'next-auth/react'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from 'src/pages/api/auth/[...nextauth]'
 import { prisma } from '../../../../../server/db/client' //! @todo check this; source: https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
 
 export const Page: NextPage = () => <Gallery type={AssetDeploymentBranch.PREVIEW} />
@@ -11,7 +12,7 @@ export const Page: NextPage = () => <Gallery type={AssetDeploymentBranch.PREVIEW
  */
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { address } = context.query as { [key: string]: string }
-  const session = await getSession(context)
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
   if (!address || !session?.user) {
     return {
       redirect: {

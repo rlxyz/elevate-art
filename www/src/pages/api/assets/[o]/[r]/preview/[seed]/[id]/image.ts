@@ -1,6 +1,5 @@
 import type { Prisma } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
@@ -8,10 +7,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerAuthSession({ req, res })
-  if (!session || !session.user) {
-    return res.status(401).send('Unauthorized')
-  }
+  // const session = await getServerAuthSession({ req, res })
+  // if (!session || !session.user) {
+  //   return res.status(401).send('Unauthorized')
+  // }
 
   // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
@@ -23,7 +22,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
+      // repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
+      repository: { name: repositoryName, organisation: { name: organisationName } },
       name: seed,
     },
   })
