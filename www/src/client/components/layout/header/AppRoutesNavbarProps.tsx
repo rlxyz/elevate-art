@@ -1,10 +1,9 @@
 import { Popover, Transition } from '@headlessui/react'
-import { SelectorIcon } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import Image from 'next/image'
 import type { FC, PropsWithChildren } from 'react'
 import { Children, Fragment, useState } from 'react'
-import { TriangleIcon } from '../icons/RectangleGroup'
 import { default as NextLinkComponent } from '../link/NextLink'
 import SearchComponent from '../search/Search'
 
@@ -30,13 +29,12 @@ const AppRoutesNavbar: FC<PropsWithChildren<AppRoutesNavbarProps>> = ({ children
   )
 }
 
-export const ZoneRoutesNavbarPopover: FC = () => {
+export const ZoneRoutesNavbarPopover: FC<{
+  title: string
+  routes: { label: string; href: string; selected: boolean; icon: (props: any) => JSX.Element }[]
+}> = ({ routes, title }) => {
   const [query, setQuery] = useState('')
-  const zoneRoutes = [
-    { label: 'Explore', href: '/explore', selected: false },
-    { label: 'Create', href: '/create', selected: true },
-  ]
-  const filteredZoneRoutes = zoneRoutes.filter((zoneRoute) => zoneRoute.label.toLowerCase().includes(query.toLowerCase()))
+  const filteredZoneRoutes = routes.filter((zoneRoute) => zoneRoute.label.toLowerCase().includes(query.toLowerCase()))
   return (
     <Popover className='flex space-x-1'>
       <Popover.Button className='group inline-flex items-center rounded-[5px] text-xs'>
@@ -53,7 +51,7 @@ export const ZoneRoutesNavbarPopover: FC = () => {
       >
         <Popover.Panel className='absolute z-10 w-fit -translate-x-1/4 py-6 max-w-xs'>
           <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
-            <div className='relative bg-lightGray rounded-[5px]'>
+            <div className='relative bg-lightGray rounded-[3px]'>
               <SearchComponent
                 onChange={(e) => {
                   setQuery(e.target.value)
@@ -61,19 +59,19 @@ export const ZoneRoutesNavbarPopover: FC = () => {
                 className='rounded-t-[5px] rounded-b-[0px] border-t-0 border-l-0 border-r-0 border-b focus:border-mediumGrey'
               />
               <div className='p-2 relative bg-white space-y-1'>
-                <span className='text-darkGrey text-[0.6rem]'>Apps</span>
+                <span className='text-darkGrey text-[0.6rem]'>{title}</span>
                 <div>
                   {filteredZoneRoutes.map((item) => (
                     <NextLinkComponent
                       key={item.label}
                       href={item.href}
-                      className={clsx(
-                        item.selected && 'hover:bg-mediumGrey',
-                        'flex space-x-3 items-center w-full p-2 rounded-[3px] hover:bg-mediumGrey'
-                      )}
+                      className={clsx('hover:bg-mediumGrey', 'flex justify-between p-2 rounded-[3px]')}
                     >
-                      <TriangleIcon className='w-3 h-3' />
-                      <span className='text-[0.7rem] font-normal'>{item.label}</span>
+                      <div className='flex space-x-3 items-center w-full'>
+                        <item.icon className='w-3 h-3' />
+                        <span className='text-[0.7rem] font-normal'>{item.label}</span>
+                      </div>
+                      {item.selected && <CheckIcon className='w-4 h-4 text-darkGrey' />}
                     </NextLinkComponent>
                   ))}
                 </div>

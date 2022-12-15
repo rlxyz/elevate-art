@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
-import type { HeaderProps } from '../header/Header'
 import Header from '../header/Header'
 
 const DynamicHeader = dynamic(() => import('../header/Header'))
@@ -54,11 +53,17 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   )
 }
 
-const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
+const LayoutAppHeader = ({ children, border = 'none' }: { children: React.ReactNode[] | React.ReactNode; border?: 'lower' | 'none' }) => (
+  <LayoutContainer border={border}>
     <div className='-ml-2'>
-      <Header {...props} />
+      <Header>{children}</Header>
     </div>
+  </LayoutContainer>
+)
+
+const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.ReactNode }) => (
+  <LayoutContainer className='header'>
+    <div className='-ml-2'>{children}</div>
   </LayoutContainer>
 )
 
@@ -87,6 +92,7 @@ const LayoutBody = ({
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className='title'>{children}</LayoutContainer>
 
-Layout.Header = LayoutHeader
+Layout.AppHeader = LayoutAppHeader
+Layout.PageHeader = LayoutPageHeader
 Layout.Title = LayoutTitle
 Layout.Body = LayoutBody

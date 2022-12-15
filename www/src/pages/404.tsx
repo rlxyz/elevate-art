@@ -7,7 +7,7 @@ const Page = () => {
   const { status } = useSession()
   return (
     <Layout>
-      <Layout.Header authenticated={status === 'authenticated'} />
+      <Layout.AppHeader authenticated={status === 'authenticated'} />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>

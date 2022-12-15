@@ -26,7 +26,7 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <Layout.Header
+        <Layout.AppHeader
           internalRoutes={[
             { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
             { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
@@ -54,7 +54,7 @@ const Page = () => {
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.Header>
+        </Layout.AppHeader>
         <Layout.Body border='lower'>
           <Header title={'Contract'} description={'You are viewing the contract information for this deployment.'}>
             <div className='flex flex-row items-center space-x-2'>

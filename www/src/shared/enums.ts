@@ -16,6 +16,30 @@ export const OrganisationDatabaseEnum = z.nativeEnum(
 )
 export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
+////////////////////////////////////////////////////////////////////////////////////
+
+export const ZoneNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard',
+    Create: 'create',
+    Explore: 'explore',
+  })
+)
+export type ZoneNavigationType = z.infer<typeof ZoneNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const DashboardNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+    Account: 'account',
+  })
+)
+
+export type DashboardNavigationType = z.infer<typeof DashboardNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
 export const MintNavigationEnum = z.nativeEnum(
   Object.freeze({
     Mint: 'mint',
@@ -45,6 +69,7 @@ export const OrganisationNavigationEnum = z.nativeEnum(
     Activity: 'activity',
   })
 )
+
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 export const OrganisationSettingsNavigationEnum = z.nativeEnum(

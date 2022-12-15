@@ -22,7 +22,7 @@ const Page: NextPage = () => {
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
-        <Layout.Header
+        <Layout.AppHeader
           internalRoutes={[
             {
               current: organisation?.name || '',

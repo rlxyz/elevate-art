@@ -7,7 +7,6 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { ConnectButton } from 'src/client/components/layout/eth/ConnectButton'
 import LinkComponent from 'src/client/components/layout/link/Link'
 import NextLinkComponent from 'src/client/components/layout/link/NextLink'
-import { env } from 'src/env/client.mjs'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 /**
@@ -18,7 +17,7 @@ import { OrganisationNavigationEnum } from 'src/shared/enums'
 const Connect: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  if (status === 'authenticated') router.push(`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${OrganisationNavigationEnum.enum.Dashboard}`)
+  if (status === 'authenticated') router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
   return (
     <Layout hasFooter={false}>
       <Layout.Body>

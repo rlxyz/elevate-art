@@ -26,7 +26,7 @@ const Page: NextPage = () => {
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
-        <Layout.Header
+        <Layout.AppHeader
           internalRoutes={[
             {
               current: organisation?.name || '',
@@ -53,7 +53,7 @@ const Page: NextPage = () => {
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.Header>
+        </Layout.AppHeader>
         <Layout.Body>
           <div className='-ml-4 py-8 space-y-8'>
             {

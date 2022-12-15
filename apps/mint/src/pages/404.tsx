@@ -15,7 +15,7 @@ const Page = () => {
               <div className='flex-grow mx-auto max-w-7xl w-full flex flex-col px-4 sm:px-6 lg:px-8'>
                 <div className='flex-shrink-0 my-auto py-16 sm:py-32'>
                   <p className='text-base font-semibold'>404</p>
-                  <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
+                  <h1 className='text-4xl font-bold sm:text-5xl'>epage not found.</h1>
                   <div className=' mt-4 flex flex-col'>
                     <span className='text-sm font-semibold'>“Control can sometimes be an illusion.</span>
                     <span className='text-sm font-semibold'>But sometimes you need illusion to gain control.” &#8212; Mr. Robot</span>

@@ -33,7 +33,7 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <Layout.Header
+        <Layout.AppHeader
           internalRoutes={[
             { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
             { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
@@ -69,7 +69,7 @@ const Page = () => {
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.Header>
+        </Layout.AppHeader>
         <Layout.Body border='lower'>
           <div className='w-full py-16'>
             <div className='flex justify-center'>

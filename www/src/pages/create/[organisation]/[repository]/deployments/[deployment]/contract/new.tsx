@@ -27,7 +27,7 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout hasFooter={false}>
-        <Layout.Header
+        <Layout.AppHeader
           internalRoutes={[
             { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
             { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
@@ -55,7 +55,7 @@ const Page = () => {
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.Header>
+        </Layout.AppHeader>
         <Layout.Body border={'lower'}>
           <ContractCreationHelperAnimation className='py-16' />
           <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />

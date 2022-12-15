@@ -7,7 +7,7 @@ import { useState } from 'react'
 import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import SearchInput from 'src/client/components/layout/search/Search'
 import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseEnum } from 'src/shared/enums'
+import { OrganisationDatabaseEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisationFindAll()
@@ -55,7 +55,7 @@ export const PersonalOrganisationAccountTeam = () => {
                       </span>
                     </div>
                   </div>
-                  <NextLinkComponent href={`${organisation.name}`} className='w-fit'>
+                  <NextLinkComponent href={`/${ZoneNavigationEnum.enum.Create}/${organisation.name}`} className='w-fit'>
                     <span className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs w-fit'>View</span>
                   </NextLinkComponent>
                 </div>
