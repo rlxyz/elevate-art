@@ -13,7 +13,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useNotification } from '@hooks/utils/useNotification'
-import { RepositoryDeployment, RepositoryDeploymentStatus } from '@prisma/client'
+import { AssetDeployment, AssetDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -32,7 +32,7 @@ const DeploymentPreviewCard = ({
   organisationName,
   repositoryName,
 }: {
-  deployment: RepositoryDeployment
+  deployment: AssetDeployment
   organisationName: string
   repositoryName: string
 }) => {
@@ -47,7 +47,7 @@ const DeploymentPreviewCard = ({
   return (
     <div key={deployment.id} className='p-4 grid grid-cols-4'>
       <div className='flex flex-col justify-center  text-xs'>
-        {deployment.status === RepositoryDeploymentStatus.DEPLOYED ? (
+        {deployment.status === AssetDeploymentStatus.DEPLOYED ? (
           <NextLinkComponent
             rel='noreferrer nofollow'
             target='_blank'
@@ -68,16 +68,16 @@ const DeploymentPreviewCard = ({
             <div
               className={clsx(
                 'rounded-full w-4 h-4 border border-mediumGrey',
-                deployment.status === RepositoryDeploymentStatus.FAILED && 'bg-redError',
-                deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
-                deployment.status === RepositoryDeploymentStatus.PENDING && 'bg-lightGray'
+                deployment.status === AssetDeploymentStatus.FAILED && 'bg-redError',
+                deployment.status === AssetDeploymentStatus.DEPLOYED && 'bg-blueHighlight',
+                deployment.status === AssetDeploymentStatus.PENDING && 'bg-lightGray'
               )}
             />
             <div className='flex flex-col'>
               <span>
-                {deployment.status === RepositoryDeploymentStatus.FAILED && 'Error'}
-                {deployment.status === RepositoryDeploymentStatus.DEPLOYED && 'Ready'}
-                {deployment.status === RepositoryDeploymentStatus.PENDING && 'Deploying'}
+                {deployment.status === AssetDeploymentStatus.FAILED && 'Error'}
+                {deployment.status === AssetDeploymentStatus.DEPLOYED && 'Ready'}
+                {deployment.status === AssetDeploymentStatus.PENDING && 'Deploying'}
               </span>
               <span>{timeAgo(deployment.updatedAt)}</span>
             </div>
@@ -86,10 +86,10 @@ const DeploymentPreviewCard = ({
       </div>
       <div className='text-xs flex flex-col'>
         <span>
-          Total Supply <strong>{deployment.collectionTotalSupply}</strong>
+          Total Supply <strong>{deployment.totalSupply}</strong>
         </span>
         <span>
-          Generation <strong>{deployment.collectionGenerations}</strong>
+          Generation <strong>{deployment.generations}</strong>
         </span>
       </div>
       <div className='text-xs flex justify-end items-center space-x-2'>

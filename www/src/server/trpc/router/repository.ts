@@ -1,4 +1,5 @@
-import { Prisma, RepositoryDeploymentStatus } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
@@ -76,7 +77,7 @@ export const repositoryRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { repositoryId } = input
-      return await ctx.prisma.repositoryDeployment.findMany({
+      return await ctx.prisma.assetDeployment.findMany({
         where: { repositoryId: repositoryId },
         orderBy: { createdAt: 'desc' },
       })
@@ -131,16 +132,15 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      const deployment = await ctx.prisma.repositoryDeployment.create({
+      const deployment = await ctx.prisma.assetDeployment.create({
         data: {
-          userId: ctx.session.user.id,
           repositoryId,
-          collectionName: collection.name,
-          collectionGenerations: collection.generations,
-          collectionTotalSupply: collection.totalSupply || 1,
-          status: RepositoryDeploymentStatus.PENDING,
+          slug: collection.name,
+          generations: collection.generations,
+          totalSupply: collection.totalSupply,
+          status: AssetDeploymentStatus.PENDING,
           name: (Math.random() + 1).toString(36).substring(4),
-          attributes: layerElements.map(({ id, name, priority, traitElements }) => ({
+          layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,
             name,
             priority,
@@ -165,14 +165,14 @@ export const repositoryRouter = router({
           data: {
             repositoryId: deployment.repositoryId,
             deploymentId: deployment.id,
-            attributes: deployment.attributes as Prisma.JsonArray,
+            layerElements: deployment.layerElements as Prisma.JsonArray,
           },
         })
       } catch (e) {
         console.error(e)
-        await ctx.prisma.repositoryDeployment.update({
+        await ctx.prisma.assetDeployment.update({
           where: { id: deployment.id },
-          data: { status: RepositoryDeploymentStatus.FAILED },
+          data: { status: AssetDeploymentStatus.FAILED },
         })
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Issue when creating deployment. Try again later...' })
       }
@@ -188,7 +188,7 @@ export const repositoryRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { deploymentId } = input
 
-      const deployment = await ctx.prisma.repositoryDeployment.findFirst({
+      const deployment = await ctx.prisma.assetDeployment.findFirst({
         where: { id: deploymentId },
       })
 
@@ -200,7 +200,7 @@ export const repositoryRouter = router({
         prefix: `${deploymentId}`,
       })
 
-      await ctx.prisma.repositoryDeployment.delete({
+      await ctx.prisma.assetDeployment.delete({
         where: { id: deploymentId },
       })
 

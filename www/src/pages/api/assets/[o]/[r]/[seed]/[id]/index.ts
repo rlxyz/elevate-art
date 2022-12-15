@@ -47,7 +47,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  const deployment = await prisma?.repositoryDeployment.findFirst({
+  const deployment = await prisma?.assetDeployment.findFirst({
     where: { repository: { name: repositoryName, organisation: { name: organisationName } }, name: seed },
   })
 
@@ -55,7 +55,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
 
-  if (deployment.collectionTotalSupply <= parseInt(id)) {
+  if (deployment.totalSupply <= parseInt(id)) {
     return res.status(400).send('Bad Request')
   }
 
@@ -63,12 +63,9 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const image = await imageCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
   if (image) return res.setHeader('Content-Type', 'image/png').status(200).send(image)
 
-  const layerElements = deployment.attributes as Prisma.JsonArray as v.Layer[]
+  const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  const tokens = v.one(
-    v.parseLayer(layerElements),
-    v.seed(deployment.repositoryId, deployment.collectionName, deployment.collectionGenerations, id)
-  )
+  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
 
   const canvas = new Canvas(600, 600)
 
