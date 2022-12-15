@@ -35,6 +35,7 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  * layers: `layers/<layerElementId>/<traitElementId>.png`
  *
  * @todo save any failed fetches of TraitElements into a buffer to query later
+ *! @todo when the bucket is created, auto set it to public... then we can serve content directly from bucket
  */
 export default createFunction('repository-deployment/bundle-images', 'repository-deployment/images.create', async ({ event }) => {
   const layerElements = event.data.attributes as Prisma.JsonArray as v.Layer[]

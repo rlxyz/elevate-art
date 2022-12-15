@@ -15,6 +15,8 @@ import * as v from 'src/shared/compiler'
  *
  * And during the compilation of images using skia-constructor, we re-upload the new compiled token image
  * to the GCP bucket.
+ *
+ * @todo in "put", save the metadata of the attributes names... so that we can use that to infer the metadata instead of needing a second query to metadata
  */
 type ImageCacheInput = { repositoryId: string; deploymentId: string; id: string }
 const imageCacheObject = {
