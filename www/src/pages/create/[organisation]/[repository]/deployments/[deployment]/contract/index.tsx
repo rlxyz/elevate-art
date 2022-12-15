@@ -40,13 +40,13 @@ const Page = () => {
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
                 enabled: false,
                 loading: false,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
                 enabled: true,
                 loading: false,
               },

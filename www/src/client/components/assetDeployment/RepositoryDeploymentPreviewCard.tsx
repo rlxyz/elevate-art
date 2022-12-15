@@ -4,6 +4,7 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
 import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
 import { CollectionNavigationEnum } from '@utils/enums'
@@ -25,6 +26,7 @@ export const RepositoryDeploymentPreviewCard = ({
 }) => {
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { mainRepositoryHref } = useRepositoryRoute()
 
   const onClipboardCopy = () => {
     navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`) // @todo fix
@@ -39,7 +41,7 @@ export const RepositoryDeploymentPreviewCard = ({
             {deployment.status === AssetDeploymentStatus.DEPLOYED ? (
               <NextLinkComponent
                 underline
-                href={`${CollectionNavigationEnum.enum.Deployments}/${deployment.name}`}
+                href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deployment.name}`}
                 className='font-semibold w-fit'
               >
                 {deployment.name}

@@ -3,9 +3,11 @@ import LinkComponent from '@Components/ui/link/Link'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { ethers } from 'ethers'
 import { current } from 'immer'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import { env } from 'src/env/client.mjs'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -48,6 +50,7 @@ export const GalleryLayout = ({
   }
 
   const totalSupply = Number(ethers.utils.formatUnits(contractData.totalSupply, 0))
+  const { data } = useSession()
 
   return (
     <>
@@ -62,13 +65,14 @@ export const GalleryLayout = ({
           hasMore={hasMore}
           loader={<></>}
         >
+          {data?.user?.address}
           <div className='grid grid-cols-4 gap-6'>
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
               .map((item) => (
                 <div key={item} className='border border-mediumGrey rounded-[5px]'>
                   <Image
-                    src={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${assetDeployment?.name}/${item}`}
+                    src={`${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${item}/image`}
                     width={300}
                     height={300}
                     alt='some-id'
@@ -79,9 +83,7 @@ export const GalleryLayout = ({
                       <LinkComponent
                         target='_blank'
                         rel='noopener noreferrer'
-                        href={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${
-                          assetDeployment?.name
-                        }/${item}/metadata`}
+                        href={`${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${item}`}
                         underline
                       >
                         {item}

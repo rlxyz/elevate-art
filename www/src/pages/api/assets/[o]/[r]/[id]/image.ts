@@ -3,6 +3,7 @@ import { AssetDeploymentBranch } from '@prisma/client'
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
+import { storage } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -69,7 +70,18 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const buf = canvas.toBuffer('image/png')
   await imageCacheObject.put({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id, buffer: buf })
 
-  return res.setHeader('Content-Type', 'image/png').send(buf)
+  const [url] = await storage
+    .bucket(`elevate-${deployment.repositoryId}-assets`)
+    .file(`deployments/${deployment.id}/tokens/${id}/image.png`)
+    .getSignedUrl({
+      version: 'v4',
+      action: 'read',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    })
+
+  console.log(buf)
+
+  return res.setHeader('Content-Type', 'image/png').status(200).send(buf)
 }
 
 export default index

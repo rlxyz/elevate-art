@@ -69,25 +69,25 @@ const Page = () => {
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}`,
+                href: `/${mainRepositoryHref}`,
                 enabled: true,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },

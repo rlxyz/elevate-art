@@ -39,4 +39,5 @@ export default defineNextConfig({
     defaultLocale: 'en',
   },
   basePath: `/${basePath}`,
+  assetPrefix: ``,
 })

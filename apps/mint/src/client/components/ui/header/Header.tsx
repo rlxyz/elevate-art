@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { env } from 'src/env/client.mjs'
 
 import { ConnectButton } from '../eth/ConnectButton'
 import LinkComponent from '../link/Link'
@@ -99,7 +100,7 @@ const Index = ({ internalRoutes = [], authenticated = true, children }: HeaderPr
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1'>
           <NextLinkComponent className='w-fit' href='/'>
-            <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
+            <Image priority width={50} height={50} src={`/${env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH}/images/logo-black.png`} alt='Logo' />
           </NextLinkComponent>
           {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>}
         </div>
