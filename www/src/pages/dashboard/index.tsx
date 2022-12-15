@@ -48,14 +48,14 @@ const Page: NextPage = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: DashboardNavigationEnum.enum.Overview,
-                href: `${OrganisationNavigationEnum.enum.Dashboard}`,
+                name: DashboardNavigationEnum.enum.Dashboard,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}`,
                 enabled: true,
                 loading: false,
               },
               {
                 name: DashboardNavigationEnum.enum.Account,
-                href: `/${OrganisationNavigationEnum.enum.Dashboard}/${OrganisationNavigationEnum.enum.Account}`,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}/${DashboardNavigationEnum.enum.Account}`,
                 enabled: false,
                 loading: false,
               },

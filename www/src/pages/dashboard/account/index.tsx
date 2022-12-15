@@ -7,7 +7,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountNavigation } from 'src/client/components/organisation/PersonalOrganisationAccountNavigation'
 import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { DashboardNavigationEnum, OrganisationDatabaseEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   return (
@@ -46,14 +46,14 @@ const Page = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+                name: DashboardNavigationEnum.enum.Dashboard,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}`,
                 enabled: false,
                 loading: false,
               },
               {
-                name: OrganisationNavigationEnum.enum.Account,
-                href: `/${OrganisationNavigationEnum.enum.Dashboard}/${OrganisationNavigationEnum.enum.Account}`,
+                name: DashboardNavigationEnum.enum.Account,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}/${DashboardNavigationEnum.enum.Account}`,
                 enabled: true,
                 loading: false,
               },
