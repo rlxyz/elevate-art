@@ -1,4 +1,4 @@
-import { Layout } from '@Components/ui/core/Layout'
+import { Layout } from '@components/layout/core/Layout'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -35,7 +35,7 @@ const Page = () => {
             <Image
               className='absolute inset-0 h-full object-cover'
               layout='fill'
-              src='/explore/images/protoglyph.png'
+              src='/images/protoglyph.png'
               alt='protoglyph-by-larvalabs'
             />
           </div>
