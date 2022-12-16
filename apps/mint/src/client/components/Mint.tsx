@@ -4,11 +4,16 @@ import { MintLayout } from '@Components/MintLayout/MintLayout'
 import { MintPreviewWarningHeader } from '@Components/MintPreviewWarningHeader'
 import { SaleLayoutLoading } from '@Components/SaleLayout/SaleLayoutLoading'
 import { Layout } from '@Components/ui/core/Layout'
+import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { AssetDeploymentBranch } from '@prisma/client'
+import { capitalize, routeBuilder } from '@Utils/format'
 import { useRouter } from 'next/router'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
+import { ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from './ui/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from './ui/header/PageRoutesNavbar'
+import { TriangleIcon } from './ui/icons/RectangleGroup'
 
 export const OrganisationNavigationEnum = z.nativeEnum(
   Object.freeze({
@@ -21,53 +26,82 @@ export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEn
 
 export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
   const router = useRouter()
-  const { organisation, repository, address } = router.query as { [key: string]: string }
   const { current } = useQueryContractDeployment()
   return (
     <Layout>
-      <Layout.Header
-        internalRoutes={[
-          {
-            current: `${organisation}`,
-            href: `/${organisation}`,
-          },
-          {
-            current: `${repository}`,
-            href: `/${organisation}/${repository}`,
-          },
-        ]}
-      >
+      <Layout.AppHeader>
+        <AppRoutesNavbar>
+          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`}>
+            <ZoneRoutesNavbarPopover
+              title='Apps'
+              routes={[
+                {
+                  label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                  href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                  selected: false,
+                  icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                },
+                {
+                  label: capitalize(ZoneNavigationEnum.enum.Create),
+                  href: `/${ZoneNavigationEnum.enum.Create}`,
+                  selected: true,
+                  icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                },
+                {
+                  label: capitalize(ZoneNavigationEnum.enum.Explore),
+                  href: `/${ZoneNavigationEnum.enum.Explore}`,
+                  selected: false,
+                  icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                },
+              ]}
+            />
+          </AppRoutesNavbar.Item>
+          <AppRoutesNavbar.Item
+            label={current?.deployment.repository.organisation.name || ''}
+            href={routeBuilder(
+              current?.deployment.repository.organisation.name,
+              current?.deployment.repository.organisation.name,
+              type === AssetDeploymentBranch.PREVIEW && 'preview',
+              type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+              OrganisationNavigationEnum.enum.Mint
+            )}
+          />
+          <AppRoutesNavbar.Item
+            label={current?.deployment.repository.name || ''}
+            href={routeBuilder(
+              current?.deployment.repository.organisation.name,
+              current?.deployment.repository.organisation.name,
+              type === AssetDeploymentBranch.PREVIEW && 'preview',
+              type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+              OrganisationNavigationEnum.enum.Mint
+            )}
+          />
+        </AppRoutesNavbar>
+      </Layout.AppHeader>
+      <Layout.PageHeader>
         <PageRoutesNavbar>
           {[
             {
               name: OrganisationNavigationEnum.enum.Mint,
-              href:
-                `/` +
-                [
-                  organisation,
-                  repository,
-                  type === AssetDeploymentBranch.PREVIEW && 'preview',
-                  type === AssetDeploymentBranch.PREVIEW && address,
-                  OrganisationNavigationEnum.enum.Mint,
-                ]
-                  .filter((x) => Boolean(x))
-                  .join('/'),
+              href: routeBuilder(
+                current?.deployment.repository.organisation.name,
+                current?.deployment.repository.organisation.name,
+                type === AssetDeploymentBranch.PREVIEW && 'preview',
+                type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+                OrganisationNavigationEnum.enum.Mint
+              ),
               enabled: true,
               loading: false,
             },
             {
               name: OrganisationNavigationEnum.enum.Gallery,
-              href:
-                `/` +
-                [
-                  organisation,
-                  repository,
-                  type === AssetDeploymentBranch.PREVIEW && 'preview',
-                  type === AssetDeploymentBranch.PREVIEW && address,
-                  OrganisationNavigationEnum.enum.Gallery,
-                ]
-                  .filter((x) => Boolean(x))
-                  .join('/'),
+              href: routeBuilder(
+                current?.deployment.repository.organisation.name,
+                current?.deployment.repository.organisation.name,
+                type === AssetDeploymentBranch.PREVIEW && 'preview',
+                type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+                OrganisationNavigationEnum.enum.Gallery
+              ),
               enabled: false,
               loading: false,
             },
@@ -75,7 +109,7 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
             <PageRoutesNavbar.Item key={item.name} opts={item} />
           ))}
         </PageRoutesNavbar>
-      </Layout.Header>
+      </Layout.PageHeader>
       <Layout.Body margin={false}>
         <>
           {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (

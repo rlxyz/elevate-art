@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
 import Header from '../header/Header'
 
-const DynamicHeader = dynamic(() => import('../header/Header'))
 const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {
