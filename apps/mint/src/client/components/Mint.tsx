@@ -7,7 +7,6 @@ import { Layout } from '@Components/ui/core/Layout'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { capitalize, routeBuilder } from '@Utils/format'
-import { useRouter } from 'next/router'
 import { useQueryContractDeployment } from 'src/client/hooks/useQueryContractDeployment'
 import { ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
@@ -25,7 +24,6 @@ export const OrganisationNavigationEnum = z.nativeEnum(
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
-  const router = useRouter()
   const { current } = useQueryContractDeployment()
   return (
     <Layout>
@@ -44,13 +42,13 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
                 {
                   label: capitalize(ZoneNavigationEnum.enum.Create),
                   href: `/${ZoneNavigationEnum.enum.Create}`,
-                  selected: true,
+                  selected: false,
                   icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                 },
                 {
                   label: capitalize(ZoneNavigationEnum.enum.Explore),
                   href: `/${ZoneNavigationEnum.enum.Explore}`,
-                  selected: false,
+                  selected: true,
                   icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
                 },
               ]}
