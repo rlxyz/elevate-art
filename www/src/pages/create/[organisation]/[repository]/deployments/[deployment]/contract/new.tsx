@@ -1,22 +1,27 @@
 import { ContractCreationFormDisplay } from '@components/contractDeployment/ContractCreationFormDisplay'
 import { ContractCreationHelperAnimation } from '@components/contractDeployment/ContractCreationHelperAnimation'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
+import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { CollectionNavigationEnum, DeploymentNavigationEnum } from '@utils/enums'
+import { CollectionNavigationEnum, DeploymentNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import type { GetServerSidePropsContext } from 'next'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 
 const Page = () => {
-  const { all: organisations } = useQueryOrganisationFindAll()
-  const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
-  const { current: deployment } = useQueryRepositoryDeployments()
+  const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
+  const { current: organisation } = useQueryOrganisationFindAll()
+  const { current: repository } = useQueryRepositoryFindByName()
   const { setDeploymentId } = useRepositoryStore()
 
   useEffect(() => {
@@ -27,35 +32,69 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout hasFooter={false}>
-        <Layout.AppHeader
-          internalRoutes={[
-            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
-            {
-              current: deploymentName,
-              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}/deployments/${deploymentName}`,
-            },
-          ]}
-        >
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={organisation?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+            >
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+            />
+            <AppRoutesNavbar.Item
+              label={deployment?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`}
+            />
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
+        <Layout.PageHeader>
           <PageRoutesNavbar>
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`,
                 enabled: false,
-                loading: false,
+                loading: isLoading,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Contract}`,
                 enabled: true,
-                loading: false,
+                loading: isLoading,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.AppHeader>
+        </Layout.PageHeader>
         <Layout.Body border={'lower'}>
           <ContractCreationHelperAnimation className='py-16' />
           <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />
