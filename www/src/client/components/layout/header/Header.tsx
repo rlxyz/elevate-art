@@ -1,10 +1,8 @@
-import type { Organisation } from '@prisma/client'
 import Image from 'next/image'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { ConnectButton } from '../eth/ConnectButton'
 import LinkComponent from '../link/Link'
 import { default as NextLink, default as NextLinkComponent } from '../link/NextLink'
-import { HeaderInternalAppRoutes } from './HeaderInternalAppRoutes'
 
 const externalRoutes = [
   {
@@ -86,28 +84,22 @@ const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => 
 }
 
 export interface HeaderProps {
-  internalRoutes?: {
-    current: string
-    href: string
-    organisations?: Organisation[]
-  }[]
   authenticated?: boolean
   children?: React.ReactNode
 }
 
-const Index = ({ internalRoutes = [], authenticated = true, children }: HeaderProps) => {
+const Index = ({ authenticated = true, children }: HeaderProps) => {
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
-        <div className='flex items-center text-xs font-semibold space-x-1'>
+        <div className='flex items-center text-xs font-semibold space-x-1 w-fit'>
           <NextLinkComponent className='w-fit' href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </NextLinkComponent>
-          {internalRoutes.length ? <HeaderInternalAppRoutes routes={internalRoutes} /> : <></>}
+          {children}
         </div>
         <HeaderExternalRoutes authenticated={authenticated} />
       </div>
-      {children}
     </header>
   )
 }

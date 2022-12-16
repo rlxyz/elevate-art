@@ -17,7 +17,7 @@ import { OrganisationNavigationEnum } from 'src/shared/enums'
 const Connect: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  if (status === 'authenticated') router.push('/dashboard')
+  if (status === 'authenticated') router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
   return (
     <Layout hasFooter={false}>
       <Layout.Body>

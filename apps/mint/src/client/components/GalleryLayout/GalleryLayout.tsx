@@ -6,6 +6,7 @@ import { current } from 'immer'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import * as InfiniteScrollComponent from 'react-infinite-scroll-component'
+import { env } from 'src/env/client.mjs'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -65,13 +66,16 @@ export const GalleryLayout = ({
           <div className='grid grid-cols-4 gap-6'>
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
-              .map((item) => (
-                <div key={item} className='border border-mediumGrey rounded-[5px]'>
+              .map((id) => (
+                <div
+                  key={`${contractDeployment.address}-${id}`}
+                  className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'
+                >
                   <Image
-                    src={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${assetDeployment?.name}/${item}`}
+                    src={`${env.NEXT_PUBLIC_CREATE_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}/image`}
                     width={300}
                     height={300}
-                    alt='some-id'
+                    alt={`${contractDeployment.address}-#${id}`}
                     className='object-cover m-auto rounded-t-[5px]'
                   />
                   <div className='p-2'>
@@ -79,12 +83,10 @@ export const GalleryLayout = ({
                       <LinkComponent
                         target='_blank'
                         rel='noopener noreferrer'
-                        href={`${'http://localhost:3000'}/api/asset/${organisation.name}/${repository.name}/${
-                          assetDeployment?.name
-                        }/${item}/metadata`}
+                        href={`/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}`}
                         underline
                       >
-                        {item}
+                        {id}
                       </LinkComponent>
                     </h1>
                   </div>

@@ -2,7 +2,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withAxiom } from 'next-axiom'
 
 !process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'))
-const mintBasePath = process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? ''
+const mintBasePath = process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? '' // mint
 const mintBaseUrl = process.env.NEXT_PUBLIC_MINT_CLIENT_URL ?? ''
 
 /**

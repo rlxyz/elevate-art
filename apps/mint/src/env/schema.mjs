@@ -24,7 +24,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.string(),
   NEXT_PUBLIC_API_URL: z.string(),
-  NEXT_PUBLIC_COMPILER_CLIENT_URL: z.string(),
+  NEXT_PUBLIC_CREATE_CLIENT_URL: z.string(),
   NEXT_PUBLIC_MINT_CLIENT_BASE_PATH: z.string(),
 })
 
@@ -45,6 +45,6 @@ export const clientEnv = {
     : process.env.VERCEL_URL
     ? `${process.env.VERCEL_URL}/api`
     : 'http://localhost:3001/api',
-  NEXT_PUBLIC_COMPILER_CLIENT_URL: process.env.NEXT_PUBLIC_COMPILER_CLIENT_URL,
+  NEXT_PUBLIC_CREATE_CLIENT_URL: process.env.NEXT_PUBLIC_COMPILER_CLIENT_URL,
   NEXT_PUBLIC_MINT_CLIENT_BASE_PATH: process.env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH ?? '',
 }

@@ -3,37 +3,34 @@ import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
-import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
+import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
+import { PersonalOrganisationAccountTeam } from 'src/client/components/organisation/PersonalOrganisationAccountTeam'
+import { PersonalOrganisationAccountTeamInvites } from 'src/client/components/organisation/PersonalOrganisationAccountTeamInvites'
 import { capitalize } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
-import { DashboardNavigationEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
-import { OrganisationAuthLayout } from '../../../client/components/organisation/OrganisationAuthLayout'
-import { OrganisationRoutesNavbarPopover } from '../../../client/components/organisation/OrganisationRoutesNavbar'
+import { DashboardNavigationEnum, OrganisationDatabaseEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
-  const { current: organisation } = useQueryOrganisationFindAll()
   return (
-    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
+    <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Dashboard}>
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Dashboard)} href={`/${ZoneNavigationEnum.enum.Dashboard}`}>
               <ZoneRoutesNavbarPopover
                 title='Apps'
                 routes={[
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Dashboard),
                     href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
+                    selected: true,
                     icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
                     href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: true,
+                    selected: false,
                     icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                   },
                   {
@@ -45,26 +42,20 @@ const Page: NextPage = () => {
                 ]}
               />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
-              <OrganisationRoutesNavbarPopover />
-            </AppRoutesNavbar.Item>
           </AppRoutesNavbar>
         </Layout.AppHeader>
         <Layout.PageHeader>
           <PageRoutesNavbar>
             {[
               {
-                name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
+                name: DashboardNavigationEnum.enum.Dashboard,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}`,
                 enabled: true,
                 loading: false,
               },
               {
                 name: DashboardNavigationEnum.enum.Account,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                href: `/${DashboardNavigationEnum.enum.Dashboard}/${DashboardNavigationEnum.enum.Account}`,
                 enabled: false,
                 loading: false,
               },
@@ -75,7 +66,10 @@ const Page: NextPage = () => {
         </Layout.PageHeader>
         <Layout.Body>
           <div className='py-8 space-y-8'>
-            <ViewAllRepositories />
+            <div className='space-y-9'>
+              <PersonalOrganisationAccountTeam />
+              <PersonalOrganisationAccountTeamInvites />
+            </div>
           </div>
         </Layout.Body>
       </Layout>

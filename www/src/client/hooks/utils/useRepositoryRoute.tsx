@@ -3,6 +3,7 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { env } from 'src/env/client.mjs'
 
 export const useRepositoryRoute = () => {
   const router: NextRouter = useRouter()
@@ -21,7 +22,7 @@ export const useRepositoryRoute = () => {
 
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {
-      setMainRepositoryHref(`${organisationName}/${repositoryName}`)
+      setMainRepositoryHref(`${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}`)
     }
   }, [organisationName, repositoryName])
 

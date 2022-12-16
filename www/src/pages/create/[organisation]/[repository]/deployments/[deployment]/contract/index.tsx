@@ -1,11 +1,15 @@
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import LinkComponent from '@components/layout/link/Link'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
-import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon, ChevronRightIcon, CubeIcon, GlobeAltIcon, XCircleIcon } from '@heroicons/react/solid'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
-import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
+import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import type { ContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { GetServerSidePropsContext } from 'next'
@@ -15,46 +19,80 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import { parseChainId } from 'src/client/utils/ethers'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum } from 'src/shared/enums'
+import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
-  const { all: organisations } = useQueryOrganisationFindAll()
-  const { mainRepositoryHref, repositoryName, organisationName, deploymentName } = useRepositoryRoute()
-
+  const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
+  const { current: organisation } = useQueryOrganisationFindAll()
+  const { current: repository } = useQueryRepositoryFindByName()
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <Layout.Header
-          internalRoutes={[
-            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
-            {
-              current: deploymentName,
-              href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}/deployments/${deploymentName}`,
-            },
-          ]}
-        >
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={organisation?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+            >
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+            />
+            <AppRoutesNavbar.Item
+              label={deployment?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`}
+            />
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
+        <Layout.PageHeader>
           <PageRoutesNavbar>
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`,
                 enabled: false,
-                loading: false,
+                loading: isLoading,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deploymentName}/contract`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Contract}`,
                 enabled: true,
-                loading: false,
+                loading: isLoading,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.Header>
+        </Layout.PageHeader>
         <Layout.Body border='lower'>
           <Header title={'Contract'} description={'You are viewing the contract information for this deployment.'}>
             <div className='flex flex-row items-center space-x-2'>
@@ -66,8 +104,8 @@ const Page = () => {
                     rel='noopener noreferrer'
                     href={routeBuilder(
                       env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH,
-                      organisationName,
-                      repositoryName,
+                      organisation?.name,
+                      repository?.name,
                       MintNavigationEnum.enum.Preview,
                       contractDeployment?.address,
                       MintNavigationEnum.enum.Mint

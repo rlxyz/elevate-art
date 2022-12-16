@@ -16,6 +16,46 @@ export const OrganisationDatabaseEnum = z.nativeEnum(
 )
 export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
+////////////////////////////////////////////////////////////////////////////////////
+
+export const ZoneNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard',
+    Create: 'create',
+    Explore: 'explore',
+  })
+)
+export type ZoneNavigationType = z.infer<typeof ZoneNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const DashboardNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard',
+    Account: 'account',
+  })
+)
+
+export type DashboardNavigationType = z.infer<typeof DashboardNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const OrganisationNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    You: 'you', // only for personal accounts //! @todo doesn't exist anymore. remove
+    Dashboard: 'dashboard', // only for personal accounts //! @todo doesn't exist anymore. remove.
+    Account: 'account', // only for personal accounts // !@todo doesn't exist anymore. remove.
+    Activity: 'activity', //! @todo doesn't exist anymore. remove.
+    Overview: 'overview', // only for team accounts
+    Settings: 'settings', // only for team accounts
+    New: 'new',
+  })
+)
+
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
+
+/////////////////////
+
 export const MintNavigationEnum = z.nativeEnum(
   Object.freeze({
     Mint: 'mint',
@@ -33,19 +73,6 @@ export const CollectionDatabaseEnum = z.nativeEnum(
   })
 )
 export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
-
-export const OrganisationNavigationEnum = z.nativeEnum(
-  Object.freeze({
-    You: 'you', // only for personal accounts
-    Dashboard: 'dashboard', // only for personal accounts
-    Account: 'account', // only for personal accounts
-    Overview: 'overview', // only for team accounts
-    Settings: 'settings', // only for team accounts
-    New: 'new',
-    Activity: 'activity',
-  })
-)
-export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 export const OrganisationSettingsNavigationEnum = z.nativeEnum(
   Object.freeze({

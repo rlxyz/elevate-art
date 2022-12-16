@@ -1,4 +1,4 @@
-import { Layout } from '@Components/ui/core/Layout'
+import { Layout } from '@components/layout/core/Layout'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,7 +7,7 @@ const Page = () => {
   const { status } = useSession()
   return (
     <Layout>
-      <Layout.Header authenticated={status === 'authenticated'} />
+      <Layout.AppHeader authenticated={status === 'authenticated'} />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
@@ -15,7 +15,7 @@ const Page = () => {
               <div className='flex-grow mx-auto max-w-7xl w-full flex flex-col px-4 sm:px-6 lg:px-8'>
                 <div className='flex-shrink-0 my-auto py-16 sm:py-32'>
                   <p className='text-base font-semibold'>404</p>
-                  <h1 className='text-4xl font-bold sm:text-5xl'>explore page not found.</h1>
+                  <h1 className='text-4xl font-bold sm:text-5xl'>page not found.</h1>
                   <div className=' mt-4 flex flex-col'>
                     <span className='text-sm font-semibold'>“Control can sometimes be an illusion.</span>
                     <span className='text-sm font-semibold'>But sometimes you need illusion to gain control.” &#8212; Mr. Robot</span>
@@ -35,7 +35,7 @@ const Page = () => {
             <Image
               className='absolute inset-0 h-full object-cover'
               layout='fill'
-              src='/explore/images/protoglyph.png'
+              src='/images/protoglyph.png'
               alt='protoglyph-by-larvalabs'
             />
           </div>

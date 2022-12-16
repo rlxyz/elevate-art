@@ -23,7 +23,7 @@ export const MintPreviewWarningHeader = ({
         underline
         target='_blank'
         rel='noopener noreferrer'
-        href={`${env.NEXT_PUBLIC_COMPILER_CLIENT_URL}/${organisation.name}/${repository.name}/deployments/${assetDeployment.name}/contract`}
+        href={`${env.NEXT_PUBLIC_CREATE_CLIENT_URL}/${organisation.name}/${repository.name}/deployments/${assetDeployment.name}/contract`}
         className='w-fit'
       >
         <strong className='text-blueHighlight'>{capitalize(AssetDeploymentBranch.PREVIEW)}</strong>

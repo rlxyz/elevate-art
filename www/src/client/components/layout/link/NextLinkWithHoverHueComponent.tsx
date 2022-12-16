@@ -20,7 +20,7 @@ export const NextLinkWithHoverHueComponent: FC<NextLinkWithHoverHueComponentProp
 }) => {
   return (
     <NextLinkComponent href={href}>
-      <div className={clsx(enabled && 'font-semibold', 'hover:bg-lightGray py-2')}>
+      <div className={clsx(enabled && 'font-semibold', 'hover:bg-lightGray py-2 w-full rounded-[3px]')}>
         <span className='px-5 flex flex-row items-center text-black justify-between text-xs w-full'>{children}</span>
       </div>
     </NextLinkComponent>

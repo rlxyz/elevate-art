@@ -149,7 +149,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.Header authenticated={false} />
+        <Layout.AppHeader authenticated={false} />
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='space-y-20 h-full flex flex-col xs:my-10 sm:my-20'>

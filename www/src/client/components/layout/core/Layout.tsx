@@ -2,10 +2,8 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
-import type { HeaderProps } from '../header/Header'
 import Header from '../header/Header'
 
-const DynamicHeader = dynamic(() => import('../header/Header'))
 const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {
@@ -17,8 +15,10 @@ export const LayoutContainer = ({
   className,
   children,
   border = 'lower',
+  margin = true,
 }: {
   border?: 'upper' | 'lower' | 'none'
+  margin?: boolean
   className?: string
   children: React.ReactNode
 }) => {
@@ -31,7 +31,7 @@ export const LayoutContainer = ({
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
+      <div className={clsx(margin && 'w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full')}>{children}</div>{' '}
     </div>
   )
 }
@@ -54,12 +54,14 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   )
 }
 
-const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
-    <div className='-ml-2'>
-      <Header {...props} />
-    </div>
+const LayoutAppHeader = ({ children, border = 'none' }: { children: React.ReactNode[] | React.ReactNode; border?: 'lower' | 'none' }) => (
+  <LayoutContainer border={border}>
+    <Header>{children}</Header>
   </LayoutContainer>
+)
+
+const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.ReactNode }) => (
+  <LayoutContainer className='header'>{children}</LayoutContainer>
 )
 
 const LayoutBody = ({
@@ -87,6 +89,7 @@ const LayoutBody = ({
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className='title'>{children}</LayoutContainer>
 
-Layout.Header = LayoutHeader
+Layout.AppHeader = LayoutAppHeader
+Layout.PageHeader = LayoutPageHeader
 Layout.Title = LayoutTitle
 Layout.Body = LayoutBody
