@@ -1,4 +1,3 @@
-import Big from 'big.js'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -25,11 +24,10 @@ export const repositoryRouter = router({
       z.object({
         organisationId: z.string(),
         name: z.string(),
-        layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, organisationId, layerElements } = input
+      const { name, organisationId } = input
       return await ctx.prisma.repository.create({
         data: {
           organisationId,
@@ -42,25 +40,9 @@ export const repositoryRouter = router({
               type: 'default', // when collection created, it is default branch
             },
           },
-          layers: {
-            create: layerElements.map(({ name, traitElements }, index) => ({
-              name,
-              priority: index,
-              traitElements: {
-                createMany: {
-                  data: traitElements.map(({ name }) => ({ name, weight: Big(1).div(traitElements.length).mul(100).toNumber() })),
-                },
-              },
-            })),
-          },
         },
         include: {
           collections: true,
-          layers: {
-            include: {
-              traitElements: true,
-            },
-          },
         },
       })
     }),
