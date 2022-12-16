@@ -92,7 +92,7 @@ const Index = ({ authenticated = true, children }: HeaderProps) => {
   return (
     <header className='pointer-events-auto'>
       <div className='flex justify-between items-center'>
-        <div className='flex items-center text-xs font-semibold space-x-1'>
+        <div className='flex items-center text-xs font-semibold space-x-1 w-fit'>
           <NextLinkComponent className='w-fit' href={authenticated ? `/${OrganisationNavigationEnum.enum.Dashboard}` : '/'}>
             <Image priority width={50} height={50} src='/images/logo-black.png' alt='Logo' />
           </NextLinkComponent>

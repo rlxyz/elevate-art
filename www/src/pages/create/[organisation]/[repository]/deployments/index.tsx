@@ -1,20 +1,25 @@
 import RepositoryDeploymentBucketCreateModal from '@components/assetDeployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/assetDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/assetDeployment/RepositoryDeploymentPreviewCard'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
+import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { CollectionNavigationEnum } from '@utils/enums'
+import { CollectionNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 
 const Page = () => {
@@ -23,8 +28,8 @@ const Page = () => {
   const { all: collections } = useQueryCollectionFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { all: deployments } = useQueryRepositoryDeployments()
-  const { all: organisations } = useQueryOrganisationFindAll()
-  const { organisationName, repositoryName, mainRepositoryHref } = useRepositoryRoute()
+  const { current: organisation } = useQueryOrganisationFindAll()
+  const { organisationName, repositoryName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 
@@ -36,43 +41,77 @@ const Page = () => {
   return (
     <OrganisationAuthLayout>
       <Layout>
-        <Layout.AppHeader
-          internalRoutes={[
-            { current: organisationName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}` },
-          ]}
-        >
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={organisation?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+            >
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+            />
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
+        <Layout.PageHeader>
           <PageRoutesNavbar>
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${mainRepositoryHref}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`,
                 enabled: false,
-                loading: isLoadingLayers,
+                loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rules}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rules}`,
                 enabled: false,
-                loading: isLoadingLayers,
+                loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}`,
                 enabled: true,
-                loading: isLoadingLayers,
+                loading: false,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
-        </Layout.AppHeader>
+        </Layout.PageHeader>
         <Layout.Body border={'lower'}>
           <div className='w-full h-full'>
             <div className='h-32 flex items-center justify-between'>

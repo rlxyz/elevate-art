@@ -16,8 +16,10 @@ export const LayoutContainer = ({
   className,
   children,
   border = 'lower',
+  margin = true,
 }: {
   border?: 'upper' | 'lower' | 'none'
+  margin?: boolean
   className?: string
   children: React.ReactNode
 }) => {
@@ -30,7 +32,7 @@ export const LayoutContainer = ({
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
+      <div className={clsx(margin && 'w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full')}>{children}</div>{' '}
     </div>
   )
 }
@@ -55,16 +57,12 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
 
 const LayoutAppHeader = ({ children, border = 'none' }: { children: React.ReactNode[] | React.ReactNode; border?: 'lower' | 'none' }) => (
   <LayoutContainer border={border}>
-    <div className='-ml-2'>
-      <Header>{children}</Header>
-    </div>
+    <Header>{children}</Header>
   </LayoutContainer>
 )
 
 const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.ReactNode }) => (
-  <LayoutContainer className='header'>
-    <div className='-ml-2'>{children}</div>
-  </LayoutContainer>
+  <LayoutContainer className='header'>{children}</LayoutContainer>
 )
 
 const LayoutBody = ({

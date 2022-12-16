@@ -49,7 +49,7 @@ export const ZoneRoutesNavbarPopover: FC<{
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <Popover.Panel className='absolute z-10 w-fit -translate-x-1/4 py-6 max-w-xs'>
+        <Popover.Panel className='absolute z-10 w-92 -translate-x-1/4 py-6 max-w-sm'>
           <div className='overflow-hidden rounded-[5px] shadow-lg ring-1 ring-black ring-opacity-5'>
             <div className='relative bg-lightGray rounded-[3px]'>
               <SearchComponent
@@ -65,7 +65,7 @@ export const ZoneRoutesNavbarPopover: FC<{
                     <NextLinkComponent
                       key={item.label}
                       href={item.href}
-                      className={clsx('hover:bg-mediumGrey', 'flex justify-between p-2 rounded-[3px]')}
+                      className={clsx('hover:bg-mediumGrey', 'flex justify-between p-2 rounded-[3px] items-center')}
                     >
                       <div className='flex space-x-3 items-center w-full'>
                         <item.icon className='w-3 h-3' />

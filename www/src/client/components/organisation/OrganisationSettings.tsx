@@ -1,27 +1,18 @@
+import { NextLinkWithHoverHueComponent } from '@components/layout/link/NextLinkWithHoverHueComponent'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'src/client/components/layout/Link'
-import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { capitalize } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
-import { OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
-export const SettingsNavigations = () => {
-  const { current: organisation } = useQueryOrganisationFindAll()
-  const currentSettingsRoute = useOrganisationNavigationStore((state) => state.currentSettingsRoute)
+export const SettingsNavigations: FC<{ routes: { name: string; href: string; selected: boolean }[] }> = ({ routes }) => {
   return (
     <div>
-      {[
-        {
-          name: OrganisationSettingsNavigationEnum.enum.General,
-          href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-        },
-        {
-          name: OrganisationSettingsNavigationEnum.enum.Team,
-          href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
-        },
-      ].map(({ name, href }) => {
-        return <Link key={name} href={href} title={capitalize(name)} enabled={currentSettingsRoute === name} />
+      {routes.map(({ name, href, selected }) => {
+        return (
+          <NextLinkWithHoverHueComponent key={name} href={href} enabled={selected}>
+            {capitalize(name)}
+          </NextLinkWithHoverHueComponent>
+        )
       })}
     </div>
   )
