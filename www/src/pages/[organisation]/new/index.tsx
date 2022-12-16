@@ -7,38 +7,39 @@ import { ArrowLeftIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicon
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
 import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepositoryCreate'
-import { useNotification } from '@hooks/utils/useNotification'
-import { Organisation } from '@prisma/client'
+import { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { trpc } from 'src/client/utils/trpc'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 // create native zod enums steps
-const FormStepEnum = z.nativeEnum(
+export const FormStepEnum = z.nativeEnum(
   Object.freeze({
     ConfigureProject: 'Configure Project',
     UploadLayers: 'Upload Layers',
     OrderLayer: 'Order Layer',
+    Complete: 'Complete',
   })
 )
-type FormStepEnumType = z.infer<typeof FormStepEnum>
+export type FormStepEnumType = z.infer<typeof FormStepEnum>
 
-const FormSteps = ({ className, currentStep }: { className: string; currentStep: FormStepEnumType }) => (
+export const FormSteps = ({ className, currentStep }: { className: string; currentStep: FormStepEnumType }) => (
   <div className={clsx(className)}>
     <div className='relative space-y-6'>
-      <div className='absolute h-20 top-1 left-1 -translate-x-1/2 w-0.5 bg-mediumGrey' />
-      {[FormStepEnum.enum.ConfigureProject, FormStepEnum.enum.UploadLayers, FormStepEnum.enum.OrderLayer].map((step) => (
-        <div className='flex items-center space-x-6'>
-          <div className={clsx('absolute w-2 h-2 rounded-full', currentStep === step ? 'bg-black' : 'bg-mediumGrey')} />
-          <h2 className={clsx('text-xs text-darkGrey', currentStep == step && 'font-bold text-black')}>{step}</h2>
-        </div>
-      ))}
+      <div className='absolute h-32 top-1 left-1 -translate-x-1/2 w-0.5 bg-mediumGrey' />
+      {[FormStepEnum.enum.ConfigureProject, FormStepEnum.enum.UploadLayers, FormStepEnum.enum.OrderLayer, FormStepEnum.enum.Complete].map(
+        (step) => (
+          <div className='flex items-center space-x-6'>
+            <div className={clsx('absolute w-2 h-2 rounded-full', currentStep === step ? 'bg-black' : 'bg-mediumGrey')} />
+            <h2 className={clsx('text-xs text-darkGrey', currentStep == step && 'font-bold text-black')}>{step}</h2>
+          </div>
+        )
+      )}
     </div>
   </div>
 )
@@ -52,11 +53,11 @@ const GoBackButton = ({ organisation }: { organisation: Organisation }) => (
   </NextLinkComponent>
 )
 
-const FormHeader = () => (
+export const FormHeader = ({ title, description }: { title: string; description: string }) => (
   <div className='pb-28 flex justify-between'>
     <div className='space-y-1'>
-      <span className='text-3xl font-bold'>You're are almost done.</span>
-      <p className='text-sm text-black'>Please follow the steps to configure your Project and upload your images.</p>
+      <span className='text-3xl font-bold'>{title}</span>
+      <p className='text-sm text-black'>{description}</p>
     </div>
     {/* <div>
       <NextLinkComponent>
@@ -69,29 +70,29 @@ const FormHeader = () => (
   </div>
 )
 
-const FormLayout = ({ children, className }: { children: React.ReactNode; className: string }) => {
+export const FormLayout = ({ children, className }: { children: React.ReactNode; className: string }) => {
   return <div className={className}>{children}</div>
 }
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisationFindAll()
-  const [repositoryName, setRepositoryName] = useState<null | string>(null)
+  const [repository, setRepository] = useState<null | Repository>(null)
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
-  const { mutate: createRepository } = useMutateRepositoryCreate({ repository })
-  // const { mutate, isLoading } = trpc.repository.create.useMutation()
   const { all: repositories } = useQueryOrganisationFindAllRepository()
+  const [repositoryName, setRepositoryName] = useState<string | null>(null)
   const [currentStepPhase, setCurrentStepPhase] = useState<FormStepEnumType>(FormStepEnum.enum.ConfigureProject)
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<{ name: string }>({
     defaultValues: {
       name: '',
     },
   })
-  const ctx = trpc.useContext()
-  const { notifySuccess, notifyError } = useNotification()
+
+  const { mutate: createRepository } = useMutateRepositoryCreate({ setRepository })
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
@@ -109,7 +110,10 @@ const Page: NextPage = () => {
         <Layout.Body border='none'>
           <div className='py-20'>
             <GoBackButton organisation={organisation} />
-            <FormHeader />
+            <FormHeader
+              title="Let's create something new"
+              description='Please follow the steps to configure your Project and upload your images.'
+            />
             <FormLayout className='grid grid-cols-7 gap-12'>
               <FormSteps className='col-span-2 divide-y divide-mediumGrey space-y-12' currentStep={currentStepPhase} />
               <div className='col-span-5 space-y-12'>
@@ -120,40 +124,11 @@ const Page: NextPage = () => {
                       To ensure you can easily update your layers and traits, we have to create the project for you first. Please enter a
                       name for your project. This name will be used to identify your project in the future.
                     </p>
-                    {repository ? (
-                      <CardComponent className='bg-lightGray flex justify-between'>
-                        <div className='flex space-x-3 items-center'>
-                          <TriangleIcon className='w-4 h-4' />
-                          <span className='text-xs font-semibold'>
-                            {organisation?.name}/{repository.name}
-                          </span>
-                        </div>
-                        <div className='text-xs flex space-x-1 text-blueHighlight'>
-                          <span>Created</span>
-                          <CheckCircleIcon className='w-4 h-4' />
-                        </div>
-                      </CardComponent>
-                    ) : (
+                    {currentStepPhase === FormStepEnum.enum.ConfigureProject ? (
                       <form
                         onSubmit={handleSubmit((data) => {
-                          // mutate(
-                          //   {
-                          //     name: data.name,
-                          //     organisationId: organisation?.id,
-                          //   },
-                          //   {
-                          //     onSuccess: (data) => {
-                          //       notifySuccess('We have created the project for you, now you can upload your layers and traits.')
-                          //       setRepository(data)
-                          //       ctx.repository.findByName.setData(
-                          //         { repositoryName: data.name, organisationName: organisation?.name || '' },
-                          //         data
-                          //       )
-                          //     },
-                          //   }
-                          // )
-                          setRepositoryName(data.name)
                           setCurrentStepPhase(FormStepEnum.enum.UploadLayers)
+                          setRepositoryName(data.name)
                         })}
                         className='pt-6 space-y-6'
                       >
@@ -174,7 +149,8 @@ const Page: NextPage = () => {
                               minLength: 3,
                               pattern: /^[a-zA-Z0-9-]+$/,
                               validate: (value) => {
-                                if (repositories?.find((repo) => repo.name === value)) {
+                                if (!repositories) return 'Please try resubmitting in a few seconds'
+                                if (repositories.find((repo) => repo.name === value)) {
                                   return 'There is another project with this name in your team'
                                 }
                               },
@@ -191,7 +167,7 @@ const Page: NextPage = () => {
                                       : errors.name.type === 'pattern'
                                       ? 'We only accept - for special characters'
                                       : errors.name.type === 'validate'
-                                      ? 'A project with this name already exists in your team'
+                                      ? errors.name.message
                                       : 'Must be between 3 and 20 characters long'}
                                   </span>
                                 )}
@@ -206,13 +182,29 @@ const Page: NextPage = () => {
                           Confirm
                         </button>
                       </form>
+                    ) : (
+                      <CardComponent className='bg-lightGray flex justify-between'>
+                        <div className='flex space-x-3 items-center'>
+                          <TriangleIcon className='w-4 h-4' />
+                          <span className='text-xs font-semibold'>
+                            {organisation?.name}/{getValues(`name`)}
+                          </span>
+                        </div>
+                        <div className='text-xs flex space-x-1 text-blueHighlight'>
+                          <span>Verified</span>
+                          <CheckCircleIcon className='w-4 h-4' />
+                        </div>
+                      </CardComponent>
                     )}
                   </div>
                 </CardComponent>
 
                 <CardComponent
+                  aria-disabled={currentStepPhase !== FormStepEnum.enum.UploadLayers}
                   className={clsx(
-                    currentStepPhase === FormStepEnum.enum.UploadLayers ? '' : 'cursor-not-allowed bg-lightGray/10 text-darkGrey',
+                    currentStepPhase === FormStepEnum.enum.UploadLayers || !repositoryName
+                      ? ''
+                      : 'cursor-not-allowed bg-lightGray/10 text-darkGrey',
                     'shadow-md p-6 divide-y divide-mediumGrey space-y-6'
                   )}
                 >
@@ -222,11 +214,12 @@ const Page: NextPage = () => {
                       To ensure that the layers and traits are uploaded correctly, ensure that the files are only use alphanumeral
                       characters. For special characters, we only support dashes ("-") and underscores ("_")
                     </p>
-                    {repository && (
+                    {organisation && repositoryName && (
                       <Upload
                         className='h-[40vh]'
                         depth={4}
-                        repository={repository}
+                        organisation={organisation}
+                        repository={repositoryName}
                         onDropCallback={createRepository}
                         setUploadState={setUploadState}
                         gridSize='lg'

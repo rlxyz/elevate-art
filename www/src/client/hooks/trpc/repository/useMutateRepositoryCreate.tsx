@@ -1,49 +1,51 @@
 import { UploadState } from '@components/layout/upload/upload'
 import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import { Repository } from '@prisma/client'
+import { Organisation, Repository } from '@prisma/client'
+import { OrganisationNavigationEnum } from '@utils/enums'
 import produce from 'immer'
+import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
+import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { env } from 'src/env/client.mjs'
 import { createCloudinaryFormData, getRepositoryLayerNames, getRepositoryUploadLayerObjectUrls } from '../../../utils/cloudinary'
-import { useMutationContext } from '../useMutationContext'
 
-export const useMutateRepositoryCreate = ({ repository }: { repository: Repository | null }) => {
-  const { ctx, notifyError, notifySuccess, notifyInfo } = useMutationContext()
-  const { mutateAsync: createLayerElements } = trpc.layerElement.createMany.useMutation({
-    onSuccess: (data) => {
-      if (!repository) return
-      ctx.layerElement.findAll.setData(
-        { repositoryId: repository?.id },
-        data.map((x) => ({
-          ...x,
-          traitElements: x.traitElements.map((y) => ({
-            ...y,
-            rulesPrimary: [],
-            rulesSecondary: [],
-          })),
-        }))
-      )
-    },
-  })
-
+export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
+  const ctx = trpc.useContext()
+  const { mutateAsync: createRepository } = trpc.repository.create.useMutation()
+  const { notifyError, notifySuccess } = useNotification()
+  const router = useRouter()
   const mutate = async ({
-    repository,
     files,
     setUploadedFiles,
     setUploadState,
+    organisation,
+    repository,
   }: {
-    repository: Repository
+    organisation: Organisation
+    repository: Repository | string
     files: FileWithPath[]
     setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
   }) => {
     try {
+      console.log('files', organisation, repository)
       const layers = getRepositoryUploadLayerObjectUrls(files)
-      setUploadedFiles(layers), notifyInfo('We are uploading the images now. Do not leave this page!'), setUploadState('uploading')
-      const response = await createLayerElements({ layerElements: getRepositoryLayerNames(layers), repositoryId: repository.id })
-      console.log('response', response)
+      setUploadedFiles(layers)
+      notifySuccess('Upload format is correct. We are creating the project for you.')
+      const response = await createRepository({
+        organisationId: organisation.id,
+        name: typeof repository === 'string' ? repository : repository.name, // little hack; if it's a string, it's a new repository
+        layerElements: getRepositoryLayerNames(layers),
+      })
+      const { id: repositoryId } = response
+      setRepository(response)
+      ctx.repository.findByName.setData({ repositoryName: response.name, organisationName: organisation.name }, response)
+
+      notifySuccess('Project created. We are uploading the images now. Do not leave this page!')
+      setUploadState('uploading')
+
       const filePromises = files.map(async (file) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader()
@@ -51,7 +53,7 @@ export const useMutateRepositoryCreate = ({ repository }: { repository: Reposito
           const layerName = pathArray[2]
           const traitName = pathArray[3]?.replace('.png', '')
           if (!traitName || !layerName) return
-          const traitElement = response.find((x) => x.name === layerName)?.traitElements.find((x) => x.name === traitName)
+          const traitElement = response.layers.find((x) => x.name === layerName)?.traitElements.find((x) => x.name === traitName)
           if (!traitElement) return
           reader.onabort = () => reject({ traitElementId: traitElement.id, error: 'file reading was aborted' })
           reader.onerror = () => reject({ traitElementId: traitElement.id, error: 'file reading has failed' })
@@ -59,7 +61,7 @@ export const useMutateRepositoryCreate = ({ repository }: { repository: Reposito
             try {
               const response = await fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
                 method: 'post',
-                body: createCloudinaryFormData(file, traitElement, repository?.id),
+                body: createCloudinaryFormData(file, traitElement, repositoryId),
               })
               const data = await response.json()
               const { secure_url } = data as { secure_url: string }
@@ -82,10 +84,9 @@ export const useMutateRepositoryCreate = ({ repository }: { repository: Reposito
       await Promise.all(filePromises).then((data) => {
         setUploadState('done')
         notifySuccess('Traits created and uploaded successfully')
+        router.push(`/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?repositoryId${encodeURIComponent(repositoryId)}`)
       })
-      return
     } catch (e) {
-      console.error(e)
       setUploadState('error')
       notifyError('Something went wrong. Please refresh the page to try again.')
       return

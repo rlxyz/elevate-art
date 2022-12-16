@@ -1,6 +1,7 @@
 import { CheckCircleIcon, DocumentAddIcon, DocumentDuplicateIcon, XCircleIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { FC, PropsWithChildren } from 'react'
 import { formatBytes, truncate } from 'src/client/utils/format'
 import Card from '../card/Card'
@@ -66,7 +67,13 @@ const UploadDisplay: FC<PropsWithChildren<UploadDisplayProps>> = ({
           .map((item, index) => {
             return (
               <div key={`${item}-${index}`} className='relative flex flex-col space-y-1 items-center'>
-                <img width={200} height={200} src={item.imageUrl} className='rounded-[5px] border border-mediumGrey' />
+                <Image
+                  width={200}
+                  height={200}
+                  src={item.imageUrl}
+                  className='rounded-[5px] border border-mediumGrey'
+                  alt={item.imageUrl}
+                />
                 {item.uploaded && <CheckCircleIcon className='absolute rounded-[3px] top-0 right-0 w-3 h-3 text-greenDot m-1' />}
                 {withTooltip &&
                   (item.type === 'existing' ? (

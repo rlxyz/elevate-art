@@ -1,4 +1,4 @@
-import { Repository } from '@prisma/client'
+import { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
@@ -13,15 +13,16 @@ interface Props {
   depth: number
   gridSize: 'md' | 'lg'
   withTooltip: boolean
-  repository: Repository
   setUploadState?: (state: UploadState) => void
+  organisation: Organisation
+  repository: Repository | string
   onDropCallback: ({
-    repository,
     files,
     setUploadedFiles,
     setUploadState,
   }: {
-    repository: Repository
+    organisation: Organisation
+    repository: Repository | string
     files: FileWithPath[]
     setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
@@ -40,6 +41,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   onDropCallback,
   children,
   className,
+  organisation,
   repository,
   gridSize,
   withTooltip,
@@ -70,7 +72,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       return
     }
 
-    onDropCallback({ repository, files, setUploadedFiles, setUploadState: setInternalUploadState })
+    onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState, organisation, repository })
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
