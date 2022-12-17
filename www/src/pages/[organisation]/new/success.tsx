@@ -1,15 +1,17 @@
 import NextLinkComponent from '@components/layout/link/NextLink'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { ArrowCircleRightIcon, CubeIcon, DatabaseIcon, SelectorIcon } from '@heroicons/react/outline'
+import { ArrowCircleRightIcon, CubeIcon, SelectorIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { Layout, LayoutContainer } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisationFindAll()
-
+  const router = useRouter()
+  const { name } = router.query as { name: string }
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
@@ -31,7 +33,7 @@ const Page: NextPage = () => {
                 <p className='text-sm text-black'>You have a new project to work on.</p>
               </div>
               <div>
-                <NextLinkComponent>
+                <NextLinkComponent href={`/${organisation?.name}/${name}`}>
                   <div className='py-2 px-4 bg-blueHighlight rounded-[5px] space-x-2 flex items-center'>
                     <h3 className='text-white text-sm'>Continue to Project</h3>
                     <ArrowCircleRightIcon className='w-5 h-5 text-white' />
@@ -50,21 +52,21 @@ const Page: NextPage = () => {
                           {
                             title: 'Set Rarity',
                             description: 'Set the rarity percentages of your traits',
-                            href: '/',
+                            href: `/${organisation?.name}/${name}/rarity`, // @todo fix this
                             icon: (props: any) => <CubeIcon {...props} />,
                           },
                           {
                             title: 'Create Rules',
                             description: 'Create rules for your project',
-                            href: '/',
+                            href: `/${organisation?.name}/${name}/rules`,
                             icon: (props: any) => <SelectorIcon {...props} />,
                           },
-                          {
-                            title: 'Deploy Contract',
-                            description: 'Deploy your project onto Ethereum or Goerli',
-                            href: '/',
-                            icon: (props: any) => <DatabaseIcon {...props} />,
-                          },
+                          // {
+                          //   title: 'Deploy Contract',
+                          //   description: 'Deploy your project onto Ethereum or Goerli',
+                          //   href: `/${organisation?.name}/${name}/deployments`,
+                          //   icon: (props: any) => <DatabaseIcon {...props} />,
+                          // },
                         ].map((item) => (
                           <div className='pt-6 flex justify-between items-center'>
                             <div className='space-y-2'>

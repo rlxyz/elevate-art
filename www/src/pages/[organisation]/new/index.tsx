@@ -10,7 +10,7 @@ import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepos
 import { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -53,20 +53,13 @@ const GoBackButton = ({ organisation }: { organisation: Organisation }) => (
   </NextLinkComponent>
 )
 
-export const FormHeader = ({ title, description }: { title: string; description: string }) => (
+export const FormHeader = ({ title, description, children }: { title: string; description: string; children: ReactNode }) => (
   <div className='pb-28 flex justify-between'>
     <div className='space-y-1'>
       <span className='text-3xl font-bold'>{title}</span>
       <p className='text-sm text-black'>{description}</p>
     </div>
-    {/* <div>
-      <NextLinkComponent>
-        <div className='py-2 px-4 bg-blueHighlight rounded-[5px] space-x-2 flex items-center'>
-          <h3 className='text-white text-sm'>Reorder your Layers</h3>
-          <ArrowCircleRightIcon className='w-5 h-5 text-white' />
-        </div>
-      </NextLinkComponent>
-    </div> */}
+    <div>{children}</div>
   </div>
 )
 

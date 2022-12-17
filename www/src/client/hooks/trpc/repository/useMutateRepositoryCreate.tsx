@@ -39,8 +39,7 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
         name: typeof repository === 'string' ? repository : repository.name, // little hack; if it's a string, it's a new repository
         layerElements: getRepositoryLayerNames(layers),
       })
-      const { id: repositoryId } = response
-      setRepository(response)
+      const { id: repositoryId, name: repositoryName } = response
       ctx.repository.findByName.setData({ repositoryName: response.name, organisationName: organisation.name }, response)
 
       notifySuccess('Project created. We are uploading the images now. Do not leave this page!')
@@ -84,7 +83,7 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
       await Promise.all(filePromises).then((data) => {
         setUploadState('done')
         notifySuccess('Traits created and uploaded successfully')
-        router.push(`/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?repositoryId${encodeURIComponent(repositoryId)}`)
+        router.push(`/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?name=${encodeURIComponent(repositoryName)}`)
       })
     } catch (e) {
       setUploadState('error')

@@ -1,13 +1,15 @@
 import { NextRouter, useRouter } from 'next/router'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useQueryRepositoryFindByName = ({
-  organisationName,
-  repositoryName,
-}: {
-  organisationName?: string
-  repositoryName?: string
-}) => {
+export const useQueryRepositoryFindByName = (
+  {
+    organisationName,
+    repositoryName,
+  }: {
+    organisationName?: string
+    repositoryName?: string
+  } = { organisationName: '', repositoryName: '' }
+) => {
   const router: NextRouter = useRouter()
   const r: string = repositoryName || (router.query.repository as string)
   const o: string = organisationName || (router.query.organisation as string)

@@ -20,11 +20,11 @@ export type Rules = PrismaRules & { condition: RulesType } // @todo use Prisma e
 export type LayerElement = PrismaLayerElement & { traitElements: TraitElement[] }
 export type TraitElement = TraitElementWithImage & { rulesPrimary: Rules[]; rulesSecondary: Rules[] }
 
-export const useQueryLayerElementFindAll = ({ repositoryId }: { repositoryId?: string }) => {
+export const useQueryLayerElementFindAll = (props: { repositoryId?: string | undefined | null } = { repositoryId: '' }) => {
   const router = useRouter()
   const layerName = router.query.layer
   const id = useRepositoryStore((state) => state.repositoryId)
-  const r = repositoryId || id
+  const r = props.repositoryId || id
   const { data: layers, isLoading, isError } = trpc.layerElement.findAll.useQuery({ repositoryId: r }, { enabled: !!r })
 
   if (!layers)
