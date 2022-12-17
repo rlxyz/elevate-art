@@ -56,112 +56,113 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
       <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
-        <ContractForm.Body.Input
-          {...register('contractName', {
-            required: true,
-            maxLength: {
-              value: 20,
-              message: 'Max length is 20',
-            },
-            minLength: {
-              value: 3,
-              message: 'Max length is 3',
-            },
-            pattern: /^[-/a-z0-9 ]+$/gi,
-            onChange: (e) => {
-              setValue('contractName', e.target.value)
-            },
-          })}
-          label={'Contract Name'}
-          description={'Your contract name on websites like Etherscan'}
-          className='col-span-4'
-          placeholder='Bored Ape Yacht Club'
-          error={errors.contractName}
-          maxLength={20}
-        />
+        <div className='w-full '>
+          <ContractForm.Body.Input
+            {...register('contractName', {
+              required: true,
+              maxLength: {
+                value: 20,
+                message: 'Max length is 20',
+              },
+              minLength: {
+                value: 3,
+                message: 'Max length is 3',
+              },
+              pattern: /^[-/a-z0-9 ]+$/gi,
+              onChange: (e) => {
+                setValue('contractName', e.target.value)
+              },
+            })}
+            label={'Contract Name'}
+            description={'Your contract name on websites like Etherscan'}
+            className='col-span-4'
+            placeholder={contractName}
+            error={errors.contractName}
+            maxLength={20}
+          />
 
-        <ContractForm.Body.Input
-          {...register('contractSymbol', {
-            required: true,
-            maxLength: {
-              value: 6,
-              message: 'Max length is 6',
-            },
-            minLength: {
-              value: 3,
-              message: 'Min length is 3',
-            },
+          <ContractForm.Body.Input
+            {...register('contractSymbol', {
+              required: true,
+              maxLength: {
+                value: 6,
+                message: 'Max length is 6',
+              },
+              minLength: {
+                value: 3,
+                message: 'Min length is 3',
+              },
 
-            pattern: /^[-/a-z0-9 ]+$/gi,
-            onChange: (e) => {
-              setValue('contractSymbol', e.target.value.toUpperCase())
-            },
-          })}
-          label={'Symbol'}
-          description={'The name of the token on Etherscan'}
-          className='col-span-2'
-          placeholder='BAYC'
-          error={errors.contractSymbol}
-          maxLength={6}
-        />
+              pattern: /^[-/a-z0-9 ]+$/gi,
+              onChange: (e) => {
+                setValue('contractSymbol', e.target.value.toUpperCase())
+              },
+            })}
+            label={'Symbol'}
+            description={'The name of the token on Etherscan'}
+            className='col-span-2'
+            placeholder={contractSymbol}
+            error={errors.contractSymbol}
+            maxLength={6}
+          />
 
-        <div className='col-span-3 flex flex-col'>
-          <label className='text-xs font-semibold'>Mint Type</label>
-          <div className='flex space-x-3'>
-            <div className='h-full flex items-center space-x-2'>
-              <ContractForm.Body.Radio
-                className=''
-                description=''
-                {...register('mintType', {
-                  onChange: (e) => {
-                    setValue('mintType', 'off-chain')
-                  },
-                })}
-                label={'Off-Chain'}
-                error={errors.contractName}
-              />
+          <div className='col-span-3 flex flex-col'>
+            <label className='text-xs font-semibold'>Mint Type</label>
+            <div className='flex space-x-3'>
+              <div className='h-full flex items-center space-x-2'>
+                <ContractForm.Body.Radio
+                  className=''
+                  description=''
+                  {...register('mintType', {
+                    onChange: (e) => {
+                      setValue('mintType', 'off-chain')
+                    },
+                  })}
+                  label={'Off-Chain'}
+                  error={errors.mintType}
+                  checked={true}
+                />
+              </div>
+              <div className='h-full flex items-center space-x-2'>
+                <ContractForm.Body.Radio
+                  className=''
+                  description=''
+                  {...register('mintType', {
+                    onChange: (e) => {
+                      setValue('mintType', 'on-chain')
+                    },
+                  })}
+                  label={'On-Chain'}
+                  disabled={true}
+                  error={errors.mintType}
+                />
+                <span className='flex px-2 py-1 items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey text-[0.6rem] font-medium text-black h-fit'>
+                  <span className='text-darkGrey text-[0.6rem]'>Soon</span>
+                </span>
+              </div>
             </div>
-            <div className='h-full flex items-center space-x-2'>
-              <ContractForm.Body.Radio
-                className=''
-                description=''
-                {...register('mintType', {
-                  onChange: (e) => {
-                    setValue('mintType', 'on-chain')
-                  },
-                })}
-                label={'On-Chain'}
-                error={errors.contractName}
-              />
-              <span className='flex px-2 py-1 items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey text-[0.6rem] font-medium text-black h-fit'>
-                <span className='text-darkGrey text-[0.6rem]'>Soon</span>
-              </span>
-            </div>
+            <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
           </div>
-          <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
-        </div>
 
-        <ContractForm.Body.Select
-          {...register('blockchain', {
-            required: true,
-            onChange: (e) => {
-              setValue('blockchain', e.target.value)
-            },
-          })}
-          label={'Blockchain'}
-          description={'Select a deployment blockchain'}
-          className='col-span-6'
-          error={errors.contractName}
-        >
-          <option value={'goerli'}>{capitalize('goerli')}</option>
-          <option value={'mainnet'}>{capitalize('mainnet')}</option>
-        </ContractForm.Body.Select>
-        <button
-          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-          type='submit'
-        >
-          Continue
-        </button>
+          <ContractForm.Body.Select
+            {...register('blockchain', {
+              required: true,
+              onChange: (e) => {
+                setValue('blockchain', e.target.value)
+              },
+            })}
+            label={'Blockchain'}
+            description={'Select which blockchain you’re launching your NFT collection on'}
+            className='col-span-6'
+            error={errors.blockchain}
+          >
+            <option value={'goerli'}>{capitalize('goerli')}</option>
+            <option value={'mainnet'}>{capitalize('mainnet')}</option>
+          </ContractForm.Body.Select>
+        </div>
+        <div>
+          <ContractForm.Body.Summary />
+        </div>
       </ContractForm.Body>
     </ContractForm>
   )

@@ -38,39 +38,39 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
         <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
-          <ContractForm.Body.Input
-            {...register('collectionSize', {
-              required: true,
-              onChange: (e) => {
-                setValue('collectionSize', e.target.value)
-              },
-            })}
-            label={'Total Supply'}
-            description={'The size of the collection'}
-            className='col-span-3'
-            error={errors.collectionSize}
-            placeholder='100'
-          />
-          <ContractForm.Body.Input
-            {...register('pricePerToken', {
-              required: true,
-              onChange: (e) => {
-                setValue('pricePerToken', e.target.value)
-              },
-            })}
-            label={'Price (ether)'}
-            // defaultValue={0.05}
-            description={'The cost of each NFT in the collection'}
-            className='col-span-3'
-            error={errors.collectionSize}
-            placeholder='0.05'
-          />
-          <button
-            className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-            type='submit'
-          >
-            Continue
-          </button>
+          <div>
+            <ContractForm.Body.Input
+              {...register('collectionSize', {
+                required: true,
+                onChange: (e) => {
+                  setValue('collectionSize', e.target.value)
+                },
+              })}
+              label={'Total Supply'}
+              description={'The size of the collection'}
+              className='col-span-3'
+              error={errors.collectionSize}
+              placeholder='100'
+            />
+            <ContractForm.Body.Input
+              {...register('pricePerToken', {
+                required: true,
+                onChange: (e) => {
+                  setValue('pricePerToken', e.target.value)
+                },
+              })}
+              label={'Price (ether)'}
+              // defaultValue={0.05}
+              description={'The cost of each NFT in the collection'}
+              className='col-span-3'
+              error={errors.collectionSize}
+              placeholder='0.05'
+            />
+          </div>
+
+          <div>
+            <ContractForm.Body.Summary />
+          </div>
         </ContractForm.Body>
       </ContractForm>
     </>

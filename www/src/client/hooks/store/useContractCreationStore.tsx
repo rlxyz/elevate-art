@@ -18,9 +18,9 @@ export const useContractCreationStore = create<{
 }>((set) => ({
   currentSegment: 0,
   setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
-  contractName: 'test',
+  contractName: '',
   setContractName: (name: string) => set({ contractName: name }),
-  contractSymbol: 'test',
+  contractSymbol: '',
   setContractSymbol: (symbol: string) => set({ contractSymbol: symbol }),
   mintType: 'off-chain',
   setMintType: (mintType: 'on-chain' | 'off-chain') => set({ mintType: mintType }),
