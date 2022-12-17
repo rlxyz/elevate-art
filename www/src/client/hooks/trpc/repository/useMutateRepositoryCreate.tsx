@@ -83,7 +83,9 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
       await Promise.all(filePromises).then((data) => {
         setUploadState('done')
         notifySuccess('Traits created and uploaded successfully')
-        router.push(`/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?name=${encodeURIComponent(repositoryName)}`)
+        router.push(
+          `/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?name=${encodeURIComponent(repositoryName)}&id=${repositoryId}`
+        )
       })
     } catch (e) {
       setUploadState('error')

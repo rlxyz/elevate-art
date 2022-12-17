@@ -23,7 +23,6 @@ export const FormStepEnum = z.nativeEnum(
     ConfigureProject: 'Configure Project',
     UploadLayers: 'Upload Layers',
     OrderLayer: 'Order Layer',
-    Complete: 'Complete',
   })
 )
 export type FormStepEnumType = z.infer<typeof FormStepEnum>
@@ -31,15 +30,13 @@ export type FormStepEnumType = z.infer<typeof FormStepEnum>
 export const FormSteps = ({ className, currentStep }: { className: string; currentStep: FormStepEnumType }) => (
   <div className={clsx(className)}>
     <div className='relative space-y-6'>
-      <div className='absolute h-32 top-1 left-1 -translate-x-1/2 w-0.5 bg-mediumGrey' />
-      {[FormStepEnum.enum.ConfigureProject, FormStepEnum.enum.UploadLayers, FormStepEnum.enum.OrderLayer, FormStepEnum.enum.Complete].map(
-        (step) => (
-          <div className='flex items-center space-x-6'>
-            <div className={clsx('absolute w-2 h-2 rounded-full', currentStep === step ? 'bg-black' : 'bg-mediumGrey')} />
-            <h2 className={clsx('text-xs text-darkGrey', currentStep == step && 'font-bold text-black')}>{step}</h2>
-          </div>
-        )
-      )}
+      <div className='absolute h-20 top-1 left-1 -translate-x-1/2 w-0.5 bg-mediumGrey' />
+      {[FormStepEnum.enum.ConfigureProject, FormStepEnum.enum.UploadLayers, FormStepEnum.enum.OrderLayer].map((step) => (
+        <div className='flex items-center space-x-6'>
+          <div className={clsx('absolute w-2 h-2 rounded-full', currentStep === step ? 'bg-black' : 'bg-mediumGrey')} />
+          <h2 className={clsx('text-xs text-darkGrey', currentStep == step && 'font-bold text-black')}>{step}</h2>
+        </div>
+      ))}
     </div>
   </div>
 )
@@ -53,7 +50,7 @@ const GoBackButton = ({ organisation }: { organisation: Organisation }) => (
   </NextLinkComponent>
 )
 
-export const FormHeader = ({ title, description, children }: { title: string; description: string; children: ReactNode }) => (
+export const FormHeader = ({ title, description, children }: { title: string; description: string; children?: ReactNode }) => (
   <div className='pb-28 flex justify-between'>
     <div className='space-y-1'>
       <span className='text-3xl font-bold'>{title}</span>

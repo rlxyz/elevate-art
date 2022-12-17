@@ -16,14 +16,14 @@ import { FormHeader, FormLayout, FormStepEnum, FormSteps } from '.'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { name } = router.query as { name: string }
+  const { name, id } = router.query as { name: string; id: string }
   const { all: organisations, current: organisation } = useQueryOrganisationFindAll()
   const { current: repository } = useQueryRepositoryFindByName({
     organisationName: organisation?.name || '',
     repositoryName: name,
   })
   const { all: layerElements } = useQueryLayerElementFindAll({
-    repositoryId: repository?.id || '',
+    repositoryId: id || '',
   })
   const sorted = layerElements.sort((a, b) => a.priority - b.priority)
   const [items, setItems] = useState<LayerElement[]>(sorted)
@@ -66,7 +66,7 @@ const Page: NextPage = () => {
                       },
                       {
                         onSuccess: () => {
-                          router.push(`/${organisation?.name}/new/success?name=${name}`)
+                          router.push(`/${organisation?.name}/new/success?name=${name}&id=${id}`)
                         },
                       }
                     )

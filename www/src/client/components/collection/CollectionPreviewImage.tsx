@@ -88,7 +88,7 @@ export const PreviewImageCardStandaloneNoNone: FC<PreviewImageProps> = ({
           return (
             <img
               key={`${hash}-${t}-${index}`}
-              className={clsx('absolute w-auto object-contain rounded-[5px]')}
+              className={clsx('absolute w-full object-contain rounded-[5px]')}
               // width={100}
               // className={clsx('border object-contain')}
               src={getImageForTrait({

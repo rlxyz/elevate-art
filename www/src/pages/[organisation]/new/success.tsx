@@ -1,17 +1,43 @@
+import { PreviewImageCardStandaloneNoNone } from '@components/collection/CollectionPreviewImage'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { ArrowCircleRightIcon, CubeIcon, SelectorIcon } from '@heroicons/react/outline'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Layout, LayoutContainer } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { OrganisationNavigationEnum } from 'src/shared/enums'
+import * as v from 'src/shared/compiler'
+import { CollectionNavigationEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { all: organisations, current: organisation } = useQueryOrganisationFindAll()
   const router = useRouter()
-  const { name } = router.query as { name: string }
+  const { name, id } = router.query as { name: string; id: string }
+  const { all: layers } = useQueryLayerElementFindAll({ repositoryId: id })
+
+  const elements = v.one(
+    v.parseLayer(
+      layers.map((l) => ({
+        ...l,
+        traits: l.traitElements
+          .filter((x) => !x.readonly)
+          .map((t) => ({
+            ...t,
+            weight: t.weight || 1,
+            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                type: condition as v.RulesType,
+                with: left === t.id ? right : left,
+              })
+            ),
+          })),
+      }))
+    ),
+    v.seed('', '', 1, '')
+  )
+
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
@@ -41,32 +67,32 @@ const Page: NextPage = () => {
                 </NextLinkComponent>
               </div>
             </div>
-            <div className='absolute w-screen left-0 bg-lightGray border-t border-mediumGrey h-[calc(100vh-20rem)]'>
-              <LayoutContainer className='absolute -top-10'>
+            <div className='absolute w-screen left-0 bg-lightGray border-t border-mediumGrey h-[calc(100vh-19.5rem)]'>
+              <LayoutContainer className='absolute -top-10' border='none'>
                 <div className='grid grid-cols-6 gap-12'>
-                  <div className='relative col-span-2 top-10'>
+                  <div className='relative col-span-3 top-10'>
                     <div className='py-4'>
                       <div className='divide-y divide-mediumGrey space-y-6'>
                         <h3 className='text-xs text-darkGrey'>Next Steps</h3>
                         {[
                           {
+                            title: 'Preview Project',
+                            description: 'View your project and create new collections',
+                            href: `/${organisation?.name}/${name}`, // @todo fix this
+                            icon: (props: any) => <CubeIcon {...props} />,
+                          },
+                          {
                             title: 'Set Rarity',
                             description: 'Set the rarity percentages of your traits',
-                            href: `/${organisation?.name}/${name}/rarity`, // @todo fix this
+                            href: `/${organisation?.name}/${name}/${CollectionNavigationEnum.enum.Rarity}/${layers[0]?.name}`, // @todo fix this
                             icon: (props: any) => <CubeIcon {...props} />,
                           },
                           {
                             title: 'Create Rules',
                             description: 'Create rules for your project',
-                            href: `/${organisation?.name}/${name}/rules`,
+                            href: `/${organisation?.name}/${name}/${CollectionNavigationEnum.enum.Rules}`,
                             icon: (props: any) => <SelectorIcon {...props} />,
                           },
-                          // {
-                          //   title: 'Deploy Contract',
-                          //   description: 'Deploy your project onto Ethereum or Goerli',
-                          //   href: `/${organisation?.name}/${name}/deployments`,
-                          //   icon: (props: any) => <DatabaseIcon {...props} />,
-                          // },
                         ].map((item) => (
                           <div className='pt-6 flex justify-between items-center'>
                             <div className='space-y-2'>
@@ -84,9 +110,23 @@ const Page: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className='col-span-4 '>
-                    <div className='h-96 border-mediumGrey border rounded-[5px] bg-white p-3'>
-                      <div className='border border-mediumGrey rounded-[5px] h-full w-full'>Hi</div>
+                  <div className='col-span-3'>
+                    <div className='w-full h-auto relative inline-flex items-center justify-center aspect-1 border-mediumGrey border rounded-[5px] bg-white'>
+                      <PreviewImageCardStandaloneNoNone
+                        id={0}
+                        elements={elements}
+                        collection={{
+                          id: '',
+                          name: 'reorder',
+                          type: '',
+                          totalSupply: 1,
+                          generations: 1,
+                          createdAt: new Date(),
+                          updatedAt: new Date(),
+                          repositoryId: id,
+                        }}
+                        layers={layers}
+                      />
                     </div>
                   </div>
                 </div>

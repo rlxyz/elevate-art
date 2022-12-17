@@ -44,7 +44,10 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, classN
       onPointerLeave={() => setIsHovered(false)}
       className={clsx(className, 'relative hover:font-semibold', enabled && 'font-semibold bg-lightGray')}
     >
-      <NextLinkComponent href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`} className='py-2'>
+      <NextLinkComponent
+        href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${encodeURIComponent(item.name)}`}
+        className='py-2'
+      >
         <div className='relative flex w-full items-center'>
           <span className='mx-7 w-full flex items-center text-xs whitespace-nowrap overflow-hidden' {...props}>
             {item.name}
