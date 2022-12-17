@@ -27,20 +27,23 @@ const ContractFormHeader = ({ title, description }: { title: string; description
 const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement[]; onSubmit: React.FormEventHandler }) => {
   return (
     <form onSubmit={onSubmit}>
-      <div className='grid grid-cols-2'>
-        <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
-        <div className='grid grid-cols-3'>
-          <p className='text-xs font-semibold'>Name</p>
-          <p className='text-xs font-semibold'>Token</p>
-        </div>
-      </div>
+      {/* <div className='grid grid-cols-2'> */}
+      <div className='w-full grid grid-cols-6 gap-x-3 gap-y-3'>{children}</div>
+      {/* </div> */}
     </form>
   )
 }
 
 const ContractFormBodyInput = forwardRef<
   HTMLInputElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; placeholder: string; error: FieldError | undefined }>
+  React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError
+    maxLength: number | undefined
+  }>
 >(
   ({
     className,
@@ -48,6 +51,7 @@ const ContractFormBodyInput = forwardRef<
     description,
     error,
     placeholder,
+    maxLength,
     ...props
   }: React.PropsWithChildren<{
     className: string
@@ -55,6 +59,7 @@ const ContractFormBodyInput = forwardRef<
     description: string
     placeholder: string
     error: FieldError | undefined
+    maxLength?: number | undefined
   }>) => {
     return (
       <>
@@ -75,6 +80,10 @@ const ContractFormBodyInput = forwardRef<
                 ? 'We only accept - and / for special characters'
                 : error.type === 'validate'
                 ? 'A layer with this name already exists'
+                : error.type === 'minLength'
+                ? 'Must be more than 3 characters long'
+                : error.type === 'maxLength'
+                ? `Must be less than ${maxLength} characters long`
                 : 'Must be between 3 and 20 characters long'}
             </span>
           )}

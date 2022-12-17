@@ -46,10 +46,11 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setContractSymbol(contractSymbol)
     setMintType(mintType)
     setBlockchain(blockchain)
-
     setCurrentSegment(1)
-    console.log('currentSegment:', currentSegment)
   }
+
+  console.log(watch('contractName'))
+  console.log('errors', errors)
 
   return (
     <ContractForm>
@@ -58,8 +59,14 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
         <ContractForm.Body.Input
           {...register('contractName', {
             required: true,
-            maxLength: 20,
-            minLength: 3,
+            maxLength: {
+              value: 20,
+              message: 'Max length is 20',
+            },
+            minLength: {
+              value: 3,
+              message: 'Max length is 3',
+            },
             pattern: /^[-/a-z0-9 ]+$/gi,
             onChange: (e) => {
               setValue('contractName', e.target.value)
@@ -68,8 +75,9 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           label={'Contract Name'}
           description={'Your contract name on websites like Etherscan'}
           className='col-span-4'
-          placeholder='hellow'
+          placeholder='Bored Ape Yacht Club'
           error={errors.contractName}
+          maxLength={20}
         />
 
         <ContractForm.Body.Input
@@ -81,7 +89,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             },
             minLength: {
               value: 3,
-              message: 'Max length is 3',
+              message: 'Min length is 3',
             },
 
             pattern: /^[-/a-z0-9 ]+$/gi,
@@ -92,8 +100,9 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           label={'Symbol'}
           description={'The name of the token on Etherscan'}
           className='col-span-2'
-          placeholder='cont'
+          placeholder='BAYC'
           error={errors.contractSymbol}
+          maxLength={6}
         />
 
         <div className='col-span-3 flex flex-col'>
