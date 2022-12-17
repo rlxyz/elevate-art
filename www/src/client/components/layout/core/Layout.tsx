@@ -53,8 +53,8 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   )
 }
 
-const LayoutHeader = (props: HeaderProps) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]'>
+const LayoutHeader = ({ border = 'lower', ...props }: HeaderProps & { border?: 'none' | 'lower' }) => (
+  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]' border={border}>
     <div className='-ml-2'>
       <Header {...props} />
     </div>

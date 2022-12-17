@@ -1,7 +1,11 @@
+import { Organisation, Repository } from '@prisma/client'
 import { FC, useState } from 'react'
 import { TraitElementCreateModal } from './index'
 
-export const TraitElementActionControl: FC<any> = () => {
+export const TraitElementActionControl: FC<{ repository: Repository | undefined; organisation: Organisation | undefined }> = ({
+  repository,
+  organisation,
+}) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   return (
     <>
@@ -12,7 +16,14 @@ export const TraitElementActionControl: FC<any> = () => {
       >
         New
       </button>
-      {isCreateDialogOpen && <TraitElementCreateModal visible={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />}
+      {isCreateDialogOpen && repository && organisation && (
+        <TraitElementCreateModal
+          visible={isCreateDialogOpen}
+          onClose={() => setIsCreateDialogOpen(false)}
+          repository={repository}
+          organisation={organisation}
+        />
+      )}
     </>
   )
 }

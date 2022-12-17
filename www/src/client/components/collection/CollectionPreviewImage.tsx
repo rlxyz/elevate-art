@@ -88,8 +88,8 @@ export const PreviewImageCardStandaloneNoNone: FC<PreviewImageProps> = ({
           return (
             <img
               key={`${hash}-${t}-${index}`}
-              width={100}
-              className={clsx('absolute w-full h-full object-contain rounded-[5px]')}
+              className={clsx('absolute w-full object-contain rounded-[5px]')}
+              // width={100}
               // className={clsx('border object-contain')}
               src={getImageForTrait({
                 r: collection.repositoryId,

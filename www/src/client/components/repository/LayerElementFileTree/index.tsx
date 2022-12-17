@@ -8,7 +8,7 @@ import Menu from 'src/client/components/layout/menu'
 import { timeAgo } from 'src/client/utils/time'
 import LayerElementCreateModal from './LayerElementCreateModal'
 import LayerElementFileSelector from './LayerElementFileSelector'
-import LayerElementReorderModal from './LayerElementReorderItem'
+import LayerElementReorderModal from './LayerElementReorderModal'
 
 interface Props {
   repository: Repository | undefined
