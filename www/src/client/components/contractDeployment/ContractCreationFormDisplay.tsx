@@ -28,8 +28,8 @@ export type ContractCreationType = z.infer<typeof ContractCreationEnum>
 export const ContractCreationSegments: ContractCreationSegmentProps[] = [
   {
     id: 'contract-base-details',
-    title: 'Create Contract',
-    description: 'Enter the details of your smart contract',
+    title: 'Smart Contract Details',
+    description: 'These are important terms for your contract that you need to finalise before continuing!',
     component: ContractDetailsForm,
     motionX: 0.5,
     motionOpacity: 1,
@@ -46,7 +46,7 @@ export const ContractCreationSegments: ContractCreationSegmentProps[] = [
   },
   {
     id: 'contract-completion',
-    title: 'Deploy Contract',
+    title: 'Mint Revenue Splits',
     description: 'Enter the details of your mint',
     motionX: 1,
     motionOpacity: 0.25,
