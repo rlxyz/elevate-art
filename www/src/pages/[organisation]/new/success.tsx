@@ -94,7 +94,7 @@ const Page: NextPage = () => {
                             icon: (props: any) => <SelectorIcon {...props} />,
                           },
                         ].map((item) => (
-                          <div className='pt-6 flex justify-between items-center'>
+                          <div key={item.title} className='pt-6 flex justify-between items-center'>
                             <div className='space-y-2'>
                               <div className='flex flex-row space-x-1 items-center'>
                                 <item.icon className='h-5 w-5' />

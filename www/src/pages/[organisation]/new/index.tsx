@@ -32,7 +32,7 @@ export const FormSteps = ({ className, currentStep }: { className: string; curre
     <div className='relative space-y-6'>
       <div className='absolute h-20 top-1 left-1 -translate-x-1/2 w-0.5 bg-mediumGrey' />
       {[FormStepEnum.enum.ConfigureProject, FormStepEnum.enum.UploadLayers, FormStepEnum.enum.OrderLayer].map((step) => (
-        <div className='flex items-center space-x-6'>
+        <div key={step} className='flex items-center space-x-6'>
           <div className={clsx('absolute w-2 h-2 rounded-full', currentStep === step ? 'bg-black' : 'bg-mediumGrey')} />
           <h2 className={clsx('text-xs text-darkGrey', currentStep == step && 'font-bold text-black')}>{step}</h2>
         </div>
@@ -99,7 +99,7 @@ const Page: NextPage = () => {
         />
         <Layout.Body border='none'>
           <div className='py-20'>
-            <GoBackButton organisation={organisation} />
+            {organisation && <GoBackButton organisation={organisation} />}
             <FormHeader
               title="Let's create something new"
               description='Please follow the steps to configure your Project and upload your images.'
@@ -202,7 +202,7 @@ const Page: NextPage = () => {
                   <div className='space-y-3 py-6'>
                     <p className='text-xs text-darkGrey'>
                       To ensure that the layers and traits are uploaded correctly, ensure that the files are only use alphanumeral
-                      characters. For special characters, we only support dashes ("-") and underscores ("_")
+                      characters. For special characters, we only support dashes (&quot;-&quot;) and underscores (&quot;_&quot;)
                     </p>
                     {organisation && repositoryName && (
                       <Upload

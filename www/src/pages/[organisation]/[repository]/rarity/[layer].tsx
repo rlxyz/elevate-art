@@ -64,7 +64,7 @@ const Page = () => {
         <Layout.Body border='none'>
           <div className='py-6 grid grid-cols-10 gap-x-6'>
             <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
-            <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
+            <TraitTable className='col-span-8' layerElement={layer} repository={repository} organisation={organisation} />
           </div>
         </Layout.Body>
       </Layout>
