@@ -126,6 +126,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             description={`Select which collection you're using from Elevate Art`}
             className='col-span-6'
             error={errors.artCollection}
+            defaultValue={artCollection}
           >
             <option value={'main'}>{'main'}</option>
             <option value={'development'}>{'development'}</option>
@@ -180,6 +181,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             description={'Select which blockchain you’re launching your NFT collection on'}
             className='col-span-6'
             error={errors.blockchain}
+            defaultValue={blockchain}
           >
             <option value={'goerli'}>{capitalize('goerli')}</option>
             <option value={'mainnet'}>{capitalize('mainnet')}</option>
