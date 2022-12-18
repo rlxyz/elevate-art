@@ -52,6 +52,9 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
   console.log(watch('contractName'))
   console.log('errors', errors)
 
+  const localContractName = watch('contractName')
+  const localContractSymbol = watch('contractSymbol')
+
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
@@ -161,7 +164,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           </ContractForm.Body.Select>
         </div>
         <div>
-          <ContractForm.Body.Summary />
+          <ContractForm.Body.Summary contractName={localContractName} contractSymbol={localContractSymbol} />
         </div>
       </ContractForm.Body>
     </ContractForm>

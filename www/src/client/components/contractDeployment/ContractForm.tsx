@@ -32,54 +32,30 @@ const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement
   )
 }
 
-const ContractSummary = () => {
+const ContractSummary = ({ contractName, contractSymbol }: { contractName: string; contractSymbol: string }) => {
   return (
     <div className='w-full flex flex-col space-y-3'>
       <div className='w-full flex flex-col space-y-3'>
         <h1 className='text-xs font-semibold'>Finalise the Details</h1>
         <div className='border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2'>
           <div className='grid grid-cols-3 gap-2'>
-            <div className='col-span-2'>
-              <p className='font-semibold'>Contract Name</p>
-            </div>
-            <div className='col-span-1'>
-              <p className='font-semibold'>Symbol</p>
-            </div>
-            <div className='col-span-2'>
-              <p className=''>BORED APE</p>
-            </div>
-            <div className='col-span-1'>
-              <p className=''>BAP</p>
-            </div>
-            <div className='col-span-2'>
-              <p className='font-semibold'>Mint Type</p>
-            </div>
-            <div className='col-span-1'>
-              <p className='font-semibold'>Mint Price</p>
-            </div>
-            <div className='col-span-2'>
-              <p className=''>Fixed Price</p>
-            </div>
-            <div className='col-span-1'>
-              <p className=''>0.1 ETH</p>
-            </div>
-            <div className='col-span-2'>
-              <p className='font-semibold'>Mint Limit</p>
-            </div>
-            <div className='col-span-1'>
-              <p className='font-semibold'>Mint Fee</p>
-            </div>
-            <div className='col-span-2'>
-              <p className=''>100</p>
-            </div>
-            <div className='col-span-1'>
-              <p className=''>0.1 ETH</p>
-            </div>
+            <p className='font-semibold col-span-1'>Contract Name</p>
+            <p className='font-semibold col-span-2'>Symbol</p>
+            <p className='col-span-1'>{contractName}</p>
+            <p className='col-span-2'>{contractSymbol}</p>
+            <p className='col-span-1 font-semibold'>Mint Type</p>
+            <p className='font-semibold col-span-2'>Mint Price</p>
+            <p className='col-span-1'>Fixed Price</p>
+            <p className='col-span-2'>0.1 ETH</p>
+            <p className='font-semibold col-span-1'>Mint Limit</p>
+            <p className='font-semibold col-span-2'>Mint Fee</p>
+            <p className='col-span-1'>100</p>
+            <p className='col-span-2'>0.1 ETH</p>
+            <p className='col-span-1'>hi </p>
+            <p className='col-span-1'>hi </p>
+            <p className='col-span-1'>hi </p>
+            <p className='col-span-1'>hi </p>
           </div>
-          <p className='text-xs max-w-sm text-center'>
-            Please review the details below and confirm that they are correct. You will not be able to change these details once the
-            contract is deployed.
-          </p>
         </div>
       </div>
 

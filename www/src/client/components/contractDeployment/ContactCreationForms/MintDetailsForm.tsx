@@ -9,8 +9,16 @@ export type MintDetailsForm = {
 }
 
 export const MintDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
-  const { currentSegment, collectionSize, pricePerToken, setCollectionSize, setPricePerToken, setCurrentSegment } =
-    useContractCreationStore()
+  const {
+    currentSegment,
+    collectionSize,
+    pricePerToken,
+    contractName,
+    contractSymbol,
+    setCollectionSize,
+    setPricePerToken,
+    setCurrentSegment,
+  } = useContractCreationStore()
 
   const {
     register,
@@ -69,7 +77,7 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
           </div>
 
           <div>
-            <ContractForm.Body.Summary />
+            <ContractForm.Body.Summary contractName={contractName} contractSymbol={contractSymbol} />
           </div>
         </ContractForm.Body>
       </ContractForm>
