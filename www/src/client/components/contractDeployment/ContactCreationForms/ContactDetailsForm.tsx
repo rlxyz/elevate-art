@@ -51,7 +51,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setMintType(mintType)
     setBlockchain(blockchain)
     setArtCollection(artCollection)
-    setCurrentSegment(1)
+    setCurrentSegment(currentSegment + 1)
   }
 
   console.log(watch('contractName'))
@@ -59,6 +59,8 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
 
   const localContractName = watch('contractName')
   const localContractSymbol = watch('contractSymbol')
+  const localArtCollection = watch('artCollection')
+  const localBlockchain = watch('blockchain')
 
   return (
     <ContractForm>
@@ -125,8 +127,8 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             className='col-span-6'
             error={errors.artCollection}
           >
-            <option value={'main'}>{capitalize('main')}</option>
-            <option value={'development'}>{capitalize('development')}</option>
+            <option value={'main'}>{'main'}</option>
+            <option value={'development'}>{'development'}</option>
           </ContractForm.Body.Select>
 
           <div className='col-span-3 flex flex-col'>
@@ -187,9 +189,10 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           <ContractForm.Body.Summary
             contractName={localContractName}
             contractSymbol={localContractSymbol}
-            blockchain={blockchain}
+            blockchain={localBlockchain}
             mintType={mintType}
-            artCollection={artCollection}
+            artCollection={localArtCollection}
+            currentSegment={currentSegment}
           />
         </div>
       </ContractForm.Body>

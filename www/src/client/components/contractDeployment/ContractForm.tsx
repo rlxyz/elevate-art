@@ -1,6 +1,7 @@
+import { Switch } from '@headlessui/react'
 import clsx from 'clsx'
 import Image from 'next/image'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState } from 'react'
 import type { FieldError } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
 
@@ -29,7 +30,7 @@ const ContractFormHeader = ({ title, description }: { title: string; description
 const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement[]; onSubmit: React.FormEventHandler }) => {
   return (
     <form onSubmit={onSubmit}>
-      <div className='w-full grid grid-cols-2 gap-2'>{children}</div>
+      <div className='w-full grid grid-cols-2 gap-4'>{children}</div>
     </form>
   )
 }
@@ -40,6 +41,8 @@ const ContractSummary = ({
   mintType,
   blockchain,
   artCollection,
+  currentSegment,
+
   onClick,
 }: {
   contractName: string
@@ -48,6 +51,7 @@ const ContractSummary = ({
   mintType: string
   blockchain: string
   artCollection: string
+  currentSegment: number
 }) => {
   return (
     <div className='w-full flex flex-col space-y-3'>
@@ -63,10 +67,10 @@ const ContractSummary = ({
           <p className='font-semibold col-span-1'>Blockchain</p>
           <div className='flex flex-row '>
             <Image
-              width={5}
-              height={5}
+              width={3}
+              height={3}
               alt='avatar-img'
-              className='w-5 select-none rounded-full mr-2'
+              className='h-4 w-4 select-none rounded-full mr-1'
               src='/images/avatar-blank.png'
               draggable='false'
             />
@@ -223,12 +227,98 @@ const ContractFormBodySelectInput = forwardRef<
   }
 )
 
+const ContractFormBodyToggleInput = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError
+    maxLength: number | undefined
+  }>
+>(
+  ({
+    className,
+    label,
+    description,
+    error,
+    placeholder,
+    maxLength,
+    ...props
+  }: React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError | undefined
+    maxLength?: number | undefined
+  }>) => {
+    function classNames(...classes: string[]) {
+      return classes.filter(Boolean).join(' ')
+    }
+
+    const [enabled, setEnabled] = useState(false)
+
+    return (
+      <>
+        <div className={clsx('space-y-1 w-full', className)}>
+          <div className='flex flex-row justify-between'>
+            <label className='text-xs font-semibold'>{label}</label>{' '}
+            <Switch
+              checked={enabled}
+              onChange={setEnabled}
+              className={classNames(
+                enabled ? 'bg-black' : 'bg-mediumGrey',
+                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-mediumGrey focus:ring-offset-2'
+              )}
+            >
+              <span className='sr-only'>Use setting</span>
+              <span
+                aria-hidden='true'
+                className={classNames(
+                  enabled ? 'translate-x-5' : 'translate-x-0',
+                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                )}
+              />
+            </Switch>
+          </div>
+          <input
+            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+            type='string'
+            placeholder={placeholder}
+            {...props}
+          />
+          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          {error && (
+            <span className='text-xs text-redError'>
+              {error.type === 'required'
+                ? 'This field is required'
+                : error.type === 'pattern'
+                ? 'We only accept - and / for special characters'
+                : error.type === 'validate'
+                ? 'A layer with this name already exists'
+                : error.type === 'minLength'
+                ? 'Must be more than 3 characters long'
+                : error.type === 'maxLength'
+                ? `Must be less than ${maxLength} characters long`
+                : 'Must be between 3 and 20 characters long'}
+            </span>
+          )}
+        </div>
+      </>
+    )
+  }
+)
+
 ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
 ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
+ContractFormBodyToggleInput.displayName = 'ContractFormBodyToggleInput'
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractFormBody.Input = ContractFormBodyInput
 ContractFormBody.Select = ContractFormBodySelectInput
 ContractFormBody.Radio = ContractFormBodyRadioInput
 ContractFormBody.Summary = ContractSummary
+ContractFormBody.ToggleInput = ContractFormBodyToggleInput

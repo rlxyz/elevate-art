@@ -6,6 +6,7 @@ import { ContractForm } from '../ContractForm'
 export type MintDetailsForm = {
   collectionSize: number // inferred from deployment
   pricePerToken: number
+  something: string
 }
 
 export const MintDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
@@ -16,9 +17,11 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     collectionSize,
     pricePerToken,
     contractName,
+    artCollection,
     contractSymbol,
     setCollectionSize,
     setPricePerToken,
+
     setCurrentSegment,
   } = useContractCreationStore()
 
@@ -33,10 +36,11 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     defaultValues: {
       collectionSize: collectionSize,
       pricePerToken: pricePerToken,
+      something: '',
     },
   })
 
-  const onSubmit = ({ collectionSize, pricePerToken }: MintDetailsForm) => {
+  const onSubmit = ({ collectionSize, pricePerToken, something }: MintDetailsForm) => {
     setCollectionSize(collectionSize)
     setPricePerToken(pricePerToken)
     setCurrentSegment(2)
@@ -50,6 +54,19 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
         <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
           <div>
             <ContractForm.Body.Input
+              {...register('presale', {
+                required: true,
+                onChange: (e) => {
+                  setValue('presale', e.target.value)
+                },
+              })}
+              label={'Pre-Sale (optional)'}
+              description={''}
+              className='col-span-3'
+              error={errors.presale}
+              placeholder='Supply'
+            />
+            <ContractForm.Body.Input
               {...register('collectionSize', {
                 required: true,
                 onChange: (e) => {
@@ -60,13 +77,27 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
               description={'The size of the collection'}
               className='col-span-3'
               error={errors.collectionSize}
-              placeholder='100'
+              placeholder='10000'
             />
             <ContractForm.Body.Input
               {...register('pricePerToken', {
                 required: true,
                 onChange: (e) => {
                   setValue('pricePerToken', e.target.value)
+                },
+              })}
+              label={'Price (ether)'}
+              // defaultValue={0.05}
+              description={'The cost of each NFT in the collection'}
+              className='col-span-3'
+              error={errors.collectionSize}
+              placeholder='0.05'
+            />
+            <ContractForm.Body.ToggleInput
+              {...register('something', {
+                required: true,
+                onChange: (e) => {
+                  setValue('something', e.target.value)
                 },
               })}
               label={'Price (ether)'}
@@ -84,6 +115,8 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
               contractSymbol={contractSymbol}
               blockchain={blockchain}
               mintType={mintType}
+              artCollection={artCollection}
+              currentSegment={currentSegment}
             />
           </div>
         </ContractForm.Body>
