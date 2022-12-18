@@ -1,6 +1,8 @@
 import clsx from 'clsx'
+import Image from 'next/image'
 import React, { forwardRef } from 'react'
 import type { FieldError } from 'react-hook-form'
+import { capitalize } from 'src/client/utils/format'
 
 export const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   const childrens = React.Children.toArray(children)
@@ -32,40 +34,83 @@ const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement
   )
 }
 
-const ContractSummary = ({ contractName, contractSymbol }: { contractName: string; contractSymbol: string }) => {
+const ContractSummary = ({
+  contractName,
+  contractSymbol,
+  mintType,
+  blockchain,
+  artCollection,
+  onClick,
+}: {
+  contractName: string
+  contractSymbol: string
+  onClick?: (e: any) => Promise<void>
+  mintType: string
+  blockchain: string
+  artCollection: string
+}) => {
   return (
     <div className='w-full flex flex-col space-y-3'>
-      <div className='w-full flex flex-col space-y-3'>
-        <h1 className='text-xs font-semibold'>Finalise the Details</h1>
-        <div className='border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2'>
-          <div className='grid grid-cols-3 gap-2'>
-            <p className='font-semibold col-span-1'>Contract Name</p>
-            <p className='font-semibold col-span-2'>Symbol</p>
-            <p className='col-span-1'>{contractName}</p>
-            <p className='col-span-2'>{contractSymbol}</p>
-            <p className='col-span-1 font-semibold'>Mint Type</p>
-            <p className='font-semibold col-span-2'>Mint Price</p>
-            <p className='col-span-1'>Fixed Price</p>
-            <p className='col-span-2'>0.1 ETH</p>
-            <p className='font-semibold col-span-1'>Mint Limit</p>
-            <p className='font-semibold col-span-2'>Mint Fee</p>
-            <p className='col-span-1'>100</p>
-            <p className='col-span-2'>0.1 ETH</p>
-            <p className='col-span-1'>hi </p>
-            <p className='col-span-1'>hi </p>
-            <p className='col-span-1'>hi </p>
-            <p className='col-span-1'>hi </p>
+      <h1 className='text-xs font-semibold'>Finalise the Details</h1>
+      <div className='border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2 '>
+        <div className='grid grid-cols-3 gap-2'>
+          <p className='font-semibold col-span-1'>Name</p>
+          <p className='font-semibold col-span-2'>Token</p>
+          <p className='col-span-1  text-darkGrey'>{contractName}</p>
+          <p className='col-span-2 text-darkGrey'>{contractSymbol}</p>
+          <p className='col-span-1 font-semibold'>Collection</p>
+          <p className='font-semibold col-span-1'>Mint Type</p>
+          <p className='font-semibold col-span-1'>Blockchain</p>
+          <div className='flex flex-row '>
+            <Image
+              width={5}
+              height={5}
+              alt='avatar-img'
+              className='w-5 select-none rounded-full mr-2'
+              src='/images/avatar-blank.png'
+              draggable='false'
+            />
+            <p className='col-span-1 text-darkGrey'>{`${artCollection}`}</p>
           </div>
+          <p className='col-span-1 text-darkGrey'>{capitalize(`${mintType}`)}</p>
+          <p className='col-span-1 text-darkGrey'>{capitalize(`${blockchain}`)}</p>
+          <p className='font-semibold col-span-1'>Pre-Sale Price</p>
+          <p className='font-semibold col-span-1'>Mint Cap</p>
+          <p className='font-semibold col-span-1'>Transaction Cap</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='font-semibold col-span-1'>Pre-Sale Price</p>
+          <p className='font-semibold col-span-1'>Mint Cap</p>
+          <p className='font-semibold col-span-1'>Transaction Cap</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='font-semibold col-span-2'>Mint Revenue Breakdown</p>
+          <p className='font-semibold col-span-1'>Estimated Payout</p>
+          <p className='col-span-1 text-darkGrey'>0x1b3...29 (You)</p>
+          <p className='col-span-1 text-darkGrey'>95%</p>
+          <p className='col-span-1 text-darkGrey '>95 ETH</p>
+          <p className='col-span-1 text-darkGrey'>Elevate Art</p>
+          <p className='col-span-1 text-darkGrey'>5%</p>
+          <p className='col-span-1 text-darkGrey '>5 ETH</p>
+          <p className='col-span-1 '>Total Funds Raised</p>
+          <p className='col-span-1 '>100%</p>
+          <p className='col-span-1 '>100 ETH</p>
         </div>
       </div>
 
-      <div>
-        <button className='border p-2 col-span-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'>
-          Back
+      <div className='grid grid-cols-8'>
+        <button
+          className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          type='button'
+        >
+          ᐸ
         </button>
         <button
-          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
           type='submit'
+          onClick={onClick}
         >
           Continue
         </button>

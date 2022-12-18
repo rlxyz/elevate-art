@@ -9,6 +9,7 @@ export type ContractDetailsForm = {
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
   blockchain: 'goerli' | 'mainnet'
+  artCollection: 'main' | 'development'
 }
 
 export const ContractDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
@@ -18,11 +19,13 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     contractSymbol,
     mintType,
     blockchain,
+    artCollection,
     setContractName,
     setContractSymbol,
     setMintType,
     setBlockchain,
     setCurrentSegment,
+    setArtCollection,
   } = useContractCreationStore()
 
   const {
@@ -38,14 +41,16 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
       contractSymbol: contractSymbol,
       mintType: mintType,
       blockchain: blockchain,
+      artCollection: artCollection,
     },
   })
 
-  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain }: ContractDetailsForm) => {
+  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain, artCollection }: ContractDetailsForm) => {
     setContractName(contractName)
     setContractSymbol(contractSymbol)
     setMintType(mintType)
     setBlockchain(blockchain)
+    setArtCollection(artCollection)
     setCurrentSegment(1)
   }
 
@@ -108,6 +113,21 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             error={errors.contractSymbol}
             maxLength={6}
           />
+          <ContractForm.Body.Select
+            {...register('artCollection', {
+              required: true,
+              onChange: (e) => {
+                setValue('artCollection', e.target.value)
+              },
+            })}
+            label={'Art Collection'}
+            description={`Select which collection you're using from Elevate Art`}
+            className='col-span-6'
+            error={errors.artCollection}
+          >
+            <option value={'main'}>{capitalize('main')}</option>
+            <option value={'development'}>{capitalize('development')}</option>
+          </ContractForm.Body.Select>
 
           <div className='col-span-3 flex flex-col'>
             <label className='text-xs font-semibold'>Mint Type</label>
@@ -164,7 +184,13 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           </ContractForm.Body.Select>
         </div>
         <div>
-          <ContractForm.Body.Summary contractName={localContractName} contractSymbol={localContractSymbol} />
+          <ContractForm.Body.Summary
+            contractName={localContractName}
+            contractSymbol={localContractSymbol}
+            blockchain={blockchain}
+            mintType={mintType}
+            artCollection={artCollection}
+          />
         </div>
       </ContractForm.Body>
     </ContractForm>

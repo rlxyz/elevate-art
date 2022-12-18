@@ -10,6 +10,8 @@ export type MintDetailsForm = {
 
 export const MintDetailsForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   const {
+    blockchain,
+    mintType,
     currentSegment,
     collectionSize,
     pricePerToken,
@@ -77,7 +79,12 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
           </div>
 
           <div>
-            <ContractForm.Body.Summary contractName={contractName} contractSymbol={contractSymbol} />
+            <ContractForm.Body.Summary
+              contractName={contractName}
+              contractSymbol={contractSymbol}
+              blockchain={blockchain}
+              mintType={mintType}
+            />
           </div>
         </ContractForm.Body>
       </ContractForm>

@@ -17,34 +17,50 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const repositoryName = router.query.repository as string
+
+  const handleClick = async (e) => {
+    e.preventDefault()
+    try {
+      await deploy({
+        name: contractName,
+        symbol: contractSymbol,
+        baseURI: `${env.NEXT_PUBLIC_API_URL}/api/assets/${organisationName}/${repositoryName}/preview/${deployment?.name}/}`,
+        collectionSize: 10000,
+        maxPublicBatchPerAddress: 5,
+        amountForPromotion: 10,
+        mintPrice: '33000000000000000',
+        presaleTime: 1702821681,
+        publicTime: 1702821682,
+      })
+    } catch (error) {
+      console.error('err', error)
+    }
+  }
+
   return (
     <>
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
-        <button
-          className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-          type='submit'
-          onClick={async (e) => {
-            e.preventDefault()
-            try {
-              await deploy({
-                name: contractName,
-                symbol: contractSymbol,
-                baseURI: `${env.NEXT_PUBLIC_API_URL}/api/assets/${organisationName}/${repositoryName}/preview/${deployment?.name}/}`,
-                collectionSize: 10000,
-                maxPublicBatchPerAddress: 5,
-                amountForPromotion: 10,
-                mintPrice: '33000000000000000',
-                presaleTime: 1670907343,
-                publicTime: 1670907523,
-              })
-            } catch (error) {
-              console.error('err', error)
-            }
-          }}
-        >
-          Deploy
-        </button>
+        <div className='w-full grid grid-cols-2 gap-2'>
+          <div>
+            {/* <button
+              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='submit'
+              onClick={handleClick}
+            >
+              Deploy
+            </button> */}
+          </div>
+          <div>
+            <ContractForm.Body.Summary
+              contractName={contractName}
+              contractSymbol={contractSymbol}
+              onClick={handleClick}
+              blockchain={blockchain}
+              mintType={mintType}
+            />
+          </div>
+        </div>
       </ContractForm>
     </>
   )
