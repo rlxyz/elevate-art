@@ -109,7 +109,7 @@ export const traitElementRouter = router({
 
       /** @todo check this! */
       const sum = sumByBig(traitElements, (x) => Big(x.weight))
-      if (sum.gt(Big(100))) {
+      if (sum.prec(4).gt(Big(100))) {
         throw new TRPCError({
           code: `BAD_REQUEST`,
           message: `Sum of weights cannot be greater than 100`,

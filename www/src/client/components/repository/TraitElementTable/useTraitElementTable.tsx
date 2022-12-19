@@ -386,7 +386,7 @@ export const useTraitElementTable = ({
                   ))}
               </button>
               <span className='pl-2 w-full whitespace-nowrap overflow-hidden text-ellipsis flex justify-between cursor-default'>
-                {`${Big(original.weight).toFixed(4)}`}
+                {`${Big(original.weight).abs().toFixed(4)}`}
                 <span>%</span>
               </span>
             </div>
