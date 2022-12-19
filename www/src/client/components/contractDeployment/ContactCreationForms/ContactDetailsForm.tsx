@@ -54,9 +54,6 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setCurrentSegment(currentSegment + 1)
   }
 
-  console.log(watch('contractName'))
-  console.log('errors', errors)
-
   const localContractName = watch('contractName')
   const localContractSymbol = watch('contractSymbol')
   const localArtCollection = watch('artCollection')

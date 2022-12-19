@@ -42,16 +42,33 @@ const ContractSummary = ({
   blockchain,
   artCollection,
   currentSegment,
-
+  presale,
+  presalePrice,
+  presaleSupply,
+  presaleMaxMintAmount,
+  presaleMaxTransactionAmount,
+  publicSale,
+  publicSalePrice,
+  publicSaleMaxMintAmount,
+  publicSaleMaxTransactionAmount,
   onClick,
 }: {
-  contractName: string
-  contractSymbol: string
+  contractName?: string
+  contractSymbol?: string
   onClick?: (e: any) => Promise<void>
-  mintType: string
-  blockchain: string
-  artCollection: string
-  currentSegment: number
+  mintType?: string
+  blockchain?: string
+  artCollection?: string
+  currentSegment?: number
+  presale?: boolean
+  presalePrice?: number
+  presaleSupply?: number
+  presaleMaxMintAmount?: number
+  presaleMaxTransactionAmount?: number
+  publicSale?: boolean
+  publicSalePrice?: number
+  publicSaleMaxMintAmount?: number
+  publicSaleMaxTransactionAmount?: number
 }) => {
   return (
     <div className='w-full flex flex-col space-y-3'>
@@ -81,15 +98,15 @@ const ContractSummary = ({
           <p className='font-semibold col-span-1'>Pre-Sale Price</p>
           <p className='font-semibold col-span-1'>Mint Cap</p>
           <p className='font-semibold col-span-1'>Transaction Cap</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
-          <p className='font-semibold col-span-1'>Pre-Sale Price</p>
+          <p className='col-span-1 text-darkGrey'>{presalePrice}</p>
+          <p className='col-span-1 text-darkGrey'>{presaleMaxMintAmount}</p>
+          <p className='col-span-1 text-darkGrey'>{presaleMaxTransactionAmount}</p>
+          <p className='font-semibold col-span-1'>Public Sale Price</p>
           <p className='font-semibold col-span-1'>Mint Cap</p>
           <p className='font-semibold col-span-1'>Transaction Cap</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
-          <p className='col-span-1 text-darkGrey'>-</p>
+          <p className='col-span-1 text-darkGrey'>{publicSalePrice}</p>
+          <p className='col-span-1 text-darkGrey'>{publicSaleMaxMintAmount}</p>
+          <p className='col-span-1 text-darkGrey'>{publicSaleMaxTransactionAmount}</p>
           <p className='font-semibold col-span-2'>Mint Revenue Breakdown</p>
           <p className='font-semibold col-span-1'>Estimated Payout</p>
           <p className='col-span-1 text-darkGrey'>0x1b3...29 (You)</p>
@@ -204,20 +221,25 @@ const ContractFormBodyRadioInput = forwardRef<
 
 const ContractFormBodySelectInput = forwardRef<
   HTMLSelectElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string }>
+  React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>
 >(
   ({
     className,
     label,
     description,
     children,
+    defaultValue,
     ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string }>) => {
+  }: React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
           <label className='text-xs font-semibold'>{label}</label>
-          <select className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')} {...props}>
+          <select
+            defaultValue={defaultValue}
+            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+            {...props}
+          >
             {children}
           </select>
           <p className='text-[0.6rem] text-darkGrey'>{description}</p>

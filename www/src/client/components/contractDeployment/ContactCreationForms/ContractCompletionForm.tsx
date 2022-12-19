@@ -10,8 +10,24 @@ import { ContractForm } from '../ContractForm'
 export const ContractCompletionForm: FC<{ title: string; description: string }> = ({ title, description }) => {
   const { deploy, address: contractAddress } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()
-  const { currentSegment, artCollection, contractName, contractSymbol, mintType, blockchain, collectionSize, pricePerToken } =
-    useContractCreationStore()
+  const {
+    currentSegment,
+    artCollection,
+    contractName,
+    contractSymbol,
+    mintType,
+    blockchain,
+    presale,
+    presaleMaxMintAmount,
+    presaleMaxTransactionAmount,
+    presalePrice,
+    presaleSupply,
+    publicSale,
+    publicSaleMaxMintAmount,
+    publicSaleMaxTransactionAmount,
+    publicSalePrice,
+    pricePerToken,
+  } = useContractCreationStore()
   const mintPrice = Big(pricePerToken)
     .times(10 ** 18)
     .toFixed(0)
@@ -61,6 +77,15 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
               mintType={mintType}
               artCollection={artCollection}
               currentSegment={currentSegment}
+              presale={presale}
+              presaleMaxMintAmount={presaleMaxMintAmount}
+              presaleMaxTransactionAmount={presaleMaxTransactionAmount}
+              presalePrice={presalePrice}
+              presaleSupply={presaleSupply}
+              publicSale={publicSale}
+              publicSaleMaxMintAmount={publicSaleMaxMintAmount}
+              publicSaleMaxTransactionAmount={publicSaleMaxTransactionAmount}
+              publicSalePrice={publicSalePrice}
             />
           </div>
         </div>
