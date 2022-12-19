@@ -95,12 +95,18 @@ export const useTraitElementTable = ({
 
   const incrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
-    changeTimer.current = setInterval(() => incrementRarityByIndex(index), 50)
+    changeTimer.current = setInterval(() => {
+      incrementRarityByIndex(index)
+      if (isIncreaseRarityPossible(index)) resetRarityInterval()
+    }, 50)
   }
 
   const decrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
-    changeTimer.current = setInterval(() => decrementRarityByIndex(index), 50)
+    changeTimer.current = setInterval(() => {
+      decrementRarityByIndex(index)
+      if (isDecreaseRarityPossible(index)) resetRarityInterval()
+    }, 50)
   }
 
   /**
@@ -392,7 +398,6 @@ export const useTraitElementTable = ({
             </div>
             <button
               disabled={isIncreaseRarityPossible(index)}
-              // disabled={!!Big(original.weight).eq(WEIGHT_UPPER_BOUNDARY)}
               className='border-l border-mediumGrey p-2 disabled:cursor-not-allowed'
               onMouseDown={(e) => {
                 incrementRarityInterval(index)
