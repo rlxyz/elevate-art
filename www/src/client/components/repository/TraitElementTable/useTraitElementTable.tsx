@@ -23,6 +23,8 @@ import {
   TraitElementRarityFormType,
   useTraitElementForm,
   WEIGHT_LOWER_BOUNDARY,
+  WEIGHT_STEP_COUNT,
+  WEIGHT_STEP_COUNT_RANGES,
   WEIGHT_UPPER_BOUNDARY,
 } from './useTraitElementForm'
 
@@ -54,7 +56,7 @@ export const useTraitElementTable = ({
   const [isDeleteClicked, setIsDeletedClicked] = useState<boolean>(false)
   const [isCreateClicked, setIsCreateClicked] = useState<boolean>(false)
   const changeTimer: React.MutableRefObject<NodeJS.Timer | null> = React.useRef(null)
-
+  const stepRef = React.useRef(0)
   /**
    *  Note, only rename is mutate here because of the in-place mutate nature of renaming.
    */
@@ -91,22 +93,25 @@ export const useTraitElementTable = ({
     if (!changeTimer.current) return
     clearInterval(changeTimer.current)
     changeTimer.current = null
+    stepRef.current = 0
   }
 
   const incrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
     changeTimer.current = setInterval(() => {
-      incrementRarityByIndex(index)
+      incrementRarityByIndex(index, WEIGHT_STEP_COUNT_RANGES[stepRef.current] || Big(1))
+      stepRef.current = stepRef.current + 1
       if (isIncreaseRarityPossible(index)) resetRarityInterval()
-    }, 50)
+    }, 100)
   }
 
   const decrementRarityInterval = (index: number) => {
     if (changeTimer.current) return
     changeTimer.current = setInterval(() => {
-      decrementRarityByIndex(index)
+      decrementRarityByIndex(index, WEIGHT_STEP_COUNT_RANGES[stepRef.current] || Big(1))
+      stepRef.current = stepRef.current + 1
       if (isDecreaseRarityPossible(index)) resetRarityInterval()
-    }, 50)
+    }, 100)
   }
 
   /**
@@ -360,7 +365,7 @@ export const useTraitElementTable = ({
               onMouseLeave={resetRarityInterval}
               onClick={(e) => {
                 e.preventDefault()
-                decrementRarityByIndex(index)
+                decrementRarityByIndex(index, WEIGHT_STEP_COUNT)
               }}
               type='button'
             >
@@ -406,7 +411,7 @@ export const useTraitElementTable = ({
               onMouseLeave={resetRarityInterval}
               onClick={(e) => {
                 e.preventDefault()
-                incrementRarityByIndex(index)
+                incrementRarityByIndex(index, WEIGHT_STEP_COUNT)
               }}
               type='button'
             >
