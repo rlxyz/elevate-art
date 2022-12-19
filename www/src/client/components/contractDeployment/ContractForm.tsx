@@ -285,53 +285,102 @@ const ContractFormBodyToggleInput = forwardRef<
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
-          <div className='flex flex-row justify-between'>
+          <div className='flex flex-row justify-between content-center'>
             <label className='text-xs font-semibold'>{label}</label>{' '}
             <Switch
               checked={enabled}
               onChange={setEnabled}
               className={classNames(
                 enabled ? 'bg-black' : 'bg-mediumGrey',
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-mediumGrey focus:ring-offset-2'
+                'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
               )}
             >
               <span className='sr-only'>Use setting</span>
               <span
                 aria-hidden='true'
                 className={classNames(
-                  enabled ? 'translate-x-5' : 'translate-x-0',
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                  enabled ? 'translate-x-3' : 'translate-x-0',
+                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
                 )}
               />
             </Switch>
           </div>
-          <input
-            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-            type='string'
-            placeholder={placeholder}
-            {...props}
-          />
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
-          {error && (
-            <span className='text-xs text-redError'>
-              {error.type === 'required'
-                ? 'This field is required'
-                : error.type === 'pattern'
-                ? 'We only accept - and / for special characters'
-                : error.type === 'validate'
-                ? 'A layer with this name already exists'
-                : error.type === 'minLength'
-                ? 'Must be more than 3 characters long'
-                : error.type === 'maxLength'
-                ? `Must be less than ${maxLength} characters long`
-                : 'Must be between 3 and 20 characters long'}
-            </span>
-          )}
+
+          <div>
+            <input
+              className={clsx(` border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2  `)}
+              type='string'
+              placeholder={placeholder}
+              disabled={!enabled}
+              {...props}
+            />
+            <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+            {error && (
+              <span className='text-xs text-redError'>
+                {error.type === 'required'
+                  ? 'This field is required'
+                  : error.type === 'pattern'
+                  ? 'We only accept - and / for special characters'
+                  : error.type === 'validate'
+                  ? 'A layer with this name already exists'
+                  : error.type === 'minLength'
+                  ? 'Must be more than 3 characters long'
+                  : error.type === 'maxLength'
+                  ? `Must be less than ${maxLength} characters long`
+                  : 'Must be between 3 and 20 characters long'}
+              </span>
+            )}
+          </div>
         </div>
       </>
     )
   }
 )
+
+const ContractFormBodyToggleCategory = ({
+  className,
+  label,
+  children,
+}: {
+  className: string
+  label: string
+  children: React.ReactElement[]
+}) => {
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ')
+  }
+
+  const [enabled, setEnabled] = useState(false)
+
+  return (
+    <>
+      <div className={clsx('space-y-1 w-full', className)}>
+        <div className='flex flex-row justify-between content-center'>
+          <label className='text-xs font-semibold'>{label}</label>{' '}
+          <Switch
+            checked={enabled}
+            onChange={setEnabled}
+            className={classNames(
+              enabled ? 'bg-black' : 'bg-mediumGrey',
+              'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
+            )}
+          >
+            <span className='sr-only'>Use setting</span>
+            <span
+              aria-hidden='true'
+              className={classNames(
+                enabled ? 'translate-x-3' : 'translate-x-0',
+                'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+              )}
+            />
+          </Switch>
+        </div>
+        {enabled && <div className='w-full grid grid-cols-2 gap-4'>{children}</div>}
+        {/* <div className='w-full grid grid-cols-2 gap-4'>{children}</div> */}
+      </div>
+    </>
+  )
+}
 
 ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
@@ -344,3 +393,4 @@ ContractFormBody.Select = ContractFormBodySelectInput
 ContractFormBody.Radio = ContractFormBodyRadioInput
 ContractFormBody.Summary = ContractSummary
 ContractFormBody.ToggleInput = ContractFormBodyToggleInput
+ContractFormBody.ToggleCategory = ContractFormBodyToggleCategory

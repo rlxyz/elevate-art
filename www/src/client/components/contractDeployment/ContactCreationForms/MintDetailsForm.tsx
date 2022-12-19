@@ -5,7 +5,6 @@ import { ContractForm } from '../ContractForm'
 
 export type MintDetailsForm = {
   collectionSize: number // inferred from deployment
-  pricePerToken: number
   presale: boolean
   presalePrice: number
   presaleSupply: number
@@ -27,8 +26,16 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     contractName,
     artCollection,
     contractSymbol,
-    setCollectionSize,
-    setPricePerToken,
+    setPresale,
+    setPresaleMaxMintAmount,
+    setPresaleMaxTransactionAmount,
+    setPresalePrice,
+    setPresaleSupply,
+    setPublicSale,
+    setPublicSaleMaxMintAmount,
+    setPublicSaleMaxTransactionAmount,
+    setPublicSalePrice,
+
     setCurrentSegment,
   } = useContractCreationStore()
 
@@ -42,7 +49,7 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
   } = useForm<MintDetailsForm>({
     defaultValues: {
       collectionSize: collectionSize,
-      pricePerToken: pricePerToken,
+
       presale: false,
       presalePrice: 0.05,
       presaleSupply: 1000,
@@ -56,8 +63,6 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
   })
 
   const onSubmit = ({
-    collectionSize,
-    pricePerToken,
     presale,
     presaleSupply,
     presalePrice,
@@ -68,9 +73,15 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     publicSaleMaxMintAmount,
     publicSaleMaxTransactionAmount,
   }: MintDetailsForm) => {
-    setCollectionSize(collectionSize)
-    setPricePerToken(pricePerToken)
-
+    setPublicSale(publicSale)
+    setPublicSalePrice(publicSalePrice)
+    setPublicSaleMaxMintAmount(publicSaleMaxMintAmount)
+    setPublicSaleMaxTransactionAmount(publicSaleMaxTransactionAmount)
+    setPresale(presale)
+    setPresalePrice(presalePrice)
+    setPresaleSupply(presaleSupply)
+    setPresaleMaxMintAmount(presaleMaxMintAmount)
+    setPresaleMaxTransactionAmount(presaleMaxTransactionAmount)
     setCurrentSegment(2)
   }
 
@@ -91,49 +102,60 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
         <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <ContractForm.Body.ToggleInput
-              {...register('presalePrice', {
-                required: true,
-                onChange: (e) => {
-                  setValue('presalePrice', e.target.value)
-                },
-              })}
-              label={'Presale (optional)'}
-              // defaultValue={0.05}
-              description={''}
-              className='col-span-3'
-              error={errors.presale}
-              placeholder='Supply'
-            />
-            <ContractForm.Body.ToggleInput
-              {...register('presaleMaxMintAmount', {
-                required: true,
-                onChange: (e) => {
-                  setValue('presaleMaxMintAmount', e.target.value)
-                },
-              })}
-              label={'Mints per Wallet Maximum'}
-              // defaultValue={0.05}
-              description={''}
-              className='col-span-3'
-              error={errors.presaleMaxMintAmount}
-              placeholder='Unlimited mints for all wallets'
-            />
-            <ContractForm.Body.ToggleInput
-              {...register('presaleMaxTransactionAmount', {
-                required: true,
-                onChange: (e) => {
-                  setValue('presaleMaxTransactionAmount', e.target.value)
-                },
-              })}
-              label={'Transactions per Wallet Maximum'}
-              // defaultValue={0.05}
-              description={''}
-              className='col-span-3'
-              error={errors.presaleMaxTransactionAmount}
-              placeholder='Unlimited transactions for all wallets'
-            />
+          <div className='space-y-3'>
+            <ContractForm.Body.ToggleCategory className='' label={`Presale (optional)`}>
+              <ContractForm.Body.Input
+                {...register('presalePrice', {
+                  required: true,
+                  maxLength: {
+                    value: 20,
+                    message: 'Max length is 20',
+                  },
+                  minLength: {
+                    value: 3,
+                    message: 'Max length is 3',
+                  },
+                  pattern: /^[-/a-z0-9 ]+$/gi,
+                  onChange: (e) => {
+                    setValue('presalePrice', e.target.value)
+                  },
+                })}
+                label={''}
+                // defaultValue={0.05}
+                description={''}
+                className='col-span-3'
+                error={errors.presalePrice}
+                placeholder='Supply'
+              />
+              <ContractForm.Body.ToggleInput
+                {...register('presaleMaxMintAmount', {
+                  required: true,
+                  onChange: (e) => {
+                    setValue('presaleMaxMintAmount', e.target.value)
+                  },
+                })}
+                label={'Mints per Wallet Maximum'}
+                // defaultValue={0.05}
+                description={''}
+                className='col-span-3'
+                error={errors.presaleMaxMintAmount}
+                placeholder='Unlimited mints for all wallets'
+              />
+              <ContractForm.Body.ToggleInput
+                {...register('presaleMaxTransactionAmount', {
+                  required: true,
+                  onChange: (e) => {
+                    setValue('presaleMaxTransactionAmount', e.target.value)
+                  },
+                })}
+                label={'Transactions per Wallet Maximum'}
+                // defaultValue={0.05}
+                description={''}
+                className='col-span-3'
+                error={errors.presaleMaxTransactionAmount}
+                placeholder='Unlimited transactions for all wallets'
+              />
+            </ContractForm.Body.ToggleCategory>
             <ContractForm.Body.ToggleInput
               {...register('publicSalePrice', {
                 required: true,
@@ -175,34 +197,6 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
               className='col-span-3'
               error={errors.publicSaleMaxTransactionAmount}
               placeholder='Unimited transactions for all wallets'
-            />
-
-            <ContractForm.Body.Input
-              {...register('collectionSize', {
-                required: true,
-                onChange: (e) => {
-                  setValue('collectionSize', e.target.value)
-                },
-              })}
-              label={'Total Supply'}
-              description={'The size of the collection'}
-              className='col-span-3'
-              error={errors.collectionSize}
-              placeholder='10000'
-            />
-            <ContractForm.Body.Input
-              {...register('pricePerToken', {
-                required: true,
-                onChange: (e) => {
-                  setValue('pricePerToken', e.target.value)
-                },
-              })}
-              label={'Price (ether)'}
-              // defaultValue={0.05}
-              description={'The cost of each NFT in the collection'}
-              className='col-span-3'
-              error={errors.collectionSize}
-              placeholder='0.05'
             />
           </div>
 

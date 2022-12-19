@@ -43,9 +43,9 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
         symbol: contractSymbol,
         baseURI: `${env.NEXT_PUBLIC_API_URL}/api/assets/${organisationName}/${repositoryName}/preview/${deployment?.name}/}`,
         collectionSize: 10000,
-        maxPublicBatchPerAddress: 5,
+        maxPublicBatchPerAddress: publicSaleMaxMintAmount,
         amountForPromotion: 10,
-        mintPrice: '33000000000000000',
+        mintPrice: `${Big(publicSalePrice * 10 ** 18)}`,
         presaleTime: 1702821681,
         publicTime: 1702821682,
       })
