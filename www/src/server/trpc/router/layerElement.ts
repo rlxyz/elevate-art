@@ -3,6 +3,7 @@ import { deleteImageFolderFromCloudinary, DeleteTraitElementResponse } from '@se
 import { updateManyByField } from '@server/utils/prisma-utils'
 import { Result } from '@server/utils/response-result'
 import { TRPCError } from '@trpc/server'
+import Big from 'big.js'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -86,6 +87,50 @@ export const layerElementRouter = router({
         }
         throw e
       }
+    }),
+  createMany: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        layerElements: z.array(z.object({ name: z.string(), traitElements: z.array(z.object({ name: z.string() })) })),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, layerElements } = input
+
+      /** Infer current index as priority */
+      await ctx.prisma.layerElement.createMany({
+        data: layerElements.map(({ name, traitElements }, index) => ({
+          repositoryId,
+          name,
+          priority: index,
+          traitElements: {
+            create: {
+              data: traitElements.map(({ name }) => ({ name, weight: Big(1).div(traitElements.length).mul(100).toNumber() })),
+            },
+          },
+        })),
+      })
+
+      // layers: {
+      //   create: layerElements.map(({ name, traitElements }, index) => ({
+      //     name,
+      //     priority: index,
+      //     traitElements: {
+      //       createMany: {
+      //         data: traitElements.map(({ name }) => ({ name, weight: Big(1).div(traitElements.length).mul(100).toNumber() })),
+      //       },
+      //     },
+      //   })),
+      // },
+
+      return await ctx.prisma.layerElement.findMany({
+        where: { repositoryId },
+        orderBy: [{ priority: 'asc' }],
+        include: {
+          traitElements: true,
+        },
+      })
     }),
   /**
    * Delete LayerElement with their associated repository id.

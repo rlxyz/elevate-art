@@ -35,7 +35,7 @@ const Page = () => {
         <Layout.Header
           internalRoutes={[
             { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+            { current: repositoryName, href: `/${organisationName}/${encodeURIComponent(repositoryName)}` },
           ]}
         >
           <HeaderInternalPageRoutes
@@ -48,7 +48,7 @@ const Page = () => {
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${encodeURIComponent(layer?.name || '')}`,
                 enabled: true,
                 loading: isLoadingLayers,
               },
@@ -70,7 +70,7 @@ const Page = () => {
         <Layout.Body border='none'>
           <div className='py-6 grid grid-cols-10 gap-x-6'>
             <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
-            <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
+            <TraitTable className='col-span-8' layerElement={layer} repository={repository} organisation={organisation} />
           </div>
         </Layout.Body>
       </Layout>

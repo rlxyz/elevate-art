@@ -1,20 +1,20 @@
+import CollectionBranchSelectorCard from '@components/collection/CollectionBranchSelectorCard'
+import { GenerateButton } from '@components/collection/CollectionGenerateCard'
+import CollectionPreviewFilters from '@components/collection/CollectionPreviewFilters'
+import CollectionPreviewGrid from '@components/collection/CollectionPreviewGrid'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
+import { CollectionNavigationEnum } from '@utils/enums'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
-import { GenerateButton } from 'src/client/components/collection/CollectionGenerateCard'
-import CollectionPreviewFilters from 'src/client/components/collection/CollectionPreviewFilters'
-import CollectionPreviewGrid from 'src/client/components/collection/CollectionPreviewGrid'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { CollectionNavigationEnum } from 'src/shared/enums'
-import { useRepositoryRoute } from '../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -60,7 +60,7 @@ const Page = () => {
         <Layout.Header
           internalRoutes={[
             { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+            { current: repositoryName, href: `/${organisationName}/${encodeURIComponent(repositoryName)}` },
           ]}
         >
           <HeaderInternalPageRoutes
@@ -73,7 +73,7 @@ const Page = () => {
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${encodeURIComponent(layer?.name || '')}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },
