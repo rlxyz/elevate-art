@@ -350,7 +350,7 @@ const ContractFormBodyToggleCategory = ({
     return classes.filter(Boolean).join(' ')
   }
 
-  const [enabled, setEnabled] = useState(false)
+  const [enabled, setEnabled] = useState(true)
 
   return (
     <>
@@ -375,17 +375,83 @@ const ContractFormBodyToggleCategory = ({
             />
           </Switch>
         </div>
-        {enabled && <div className='w-full grid grid-cols-2 gap-4'>{children}</div>}
-        {/* <div className='w-full grid grid-cols-2 gap-4'>{children}</div> */}
+        {enabled && <div className='w-full space-y-2'>{children}</div>}
       </div>
     </>
   )
 }
 
+const ContractFormBodyInputWithDetails = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError
+    maxLength: number | undefined
+  }>
+>(
+  ({
+    className,
+    label,
+    description,
+    error,
+    placeholder,
+    maxLength,
+    ...props
+  }: React.PropsWithChildren<{
+    className: string
+    label: string
+    description: string
+    placeholder: string
+    error: FieldError | undefined
+    maxLength?: number | undefined
+  }>) => {
+    const styles = {
+      '::after': {
+        content: 'test',
+      },
+    }
+
+    return (
+      <>
+        <div className={clsx('space-y-1 w-full', className)}>
+          <label className='text-xs font-semibold'>{label}</label>
+          <input
+            style={styles}
+            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+            type='string'
+            placeholder={placeholder}
+            {...props}
+          />
+          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          {error && (
+            <span className='text-xs text-redError'>
+              {error.type === 'required'
+                ? 'This field is required'
+                : error.type === 'pattern'
+                ? 'We only accept - and / for special characters'
+                : error.type === 'validate'
+                ? 'A layer with this name already exists'
+                : error.type === 'minLength'
+                ? 'Must be more than 3 characters long'
+                : error.type === 'maxLength'
+                ? `Must be less than ${maxLength} characters long`
+                : 'Must be between 3 and 20 characters long'}
+            </span>
+          )}
+        </div>
+      </>
+    )
+  }
+)
+
 ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
 ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
 ContractFormBodyToggleInput.displayName = 'ContractFormBodyToggleInput'
+ContractFormBodyInputWithDetails.displayName = 'ContractFormBodyToggleInputWithDetails'
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractFormBody.Input = ContractFormBodyInput
@@ -394,3 +460,4 @@ ContractFormBody.Radio = ContractFormBodyRadioInput
 ContractFormBody.Summary = ContractSummary
 ContractFormBody.ToggleInput = ContractFormBodyToggleInput
 ContractFormBody.ToggleCategory = ContractFormBodyToggleCategory
+ContractFormBody.InputWithDetails = ContractFormBodyInputWithDetails
