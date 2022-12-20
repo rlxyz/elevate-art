@@ -81,7 +81,6 @@ model Repository {
     tokenName String   @db.VarChar(255)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    bucket    Boolean  @default(false) // gcp bucket setup is done or not...
 
     layers      LayerElement[]
     collections Collection[]

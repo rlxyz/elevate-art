@@ -83,24 +83,6 @@ export const repositoryRouter = router({
         orderBy: { createdAt: 'desc' },
       })
     }),
-  createBucket: protectedProcedure
-    .input(
-      z.object({
-        repositoryId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { repositoryId } = input
-      /** Bucket storage options
-       *  i) location: US (multi-regional) - data is stored in multiple regions due to nature of NFTs being mutli-regional
-       * ii) storageClass: STANDARD (default) - access to data is fast and consistent
-       */
-      await storage.createBucket(`elevate-${repositoryId}-assets`, {
-        location: 'US',
-        storageClass: 'STANDARD',
-      })
-      await ctx.prisma.repository.update({ where: { id: repositoryId }, data: { bucket: true } })
-    }),
   createDeployment: protectedProcedure
     .input(
       z.object({
