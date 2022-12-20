@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { env } from 'src/env/server.mjs'
-import { z } from 'zod'
 
 /**
  * GCP Bucket Structure
@@ -19,17 +19,26 @@ export const storage = new Storage({
   },
 })
 
-export const BucketEnum = z.enum(['deployment'])
-export type BucketEnum = z.infer<typeof BucketEnum>
-
-const getDeploymentBucket = ({ type }: { type: BucketEnum }) => {
-  return storage.bucket(`elevate-${type}`)
+export const getAssetDeploymentBucketName = ({ type }: { type: AssetDeploymentBranch }) => {
+  return `elevate-asset-deployment-${type}`.toLowerCase()
 }
 
-export const getDeploymentBucketFile = ({ type, name }: { type: BucketEnum; name: string }) => {
-  return getDeploymentBucket({ type }).file(name)
+export const getAssetDeploymentBucket = ({ type }: { type: AssetDeploymentBranch }) => {
+  return storage.bucket(getAssetDeploymentBucketName({ type }))
 }
 
-export const setDeploymentBucketFile = async ({ type, name, buffer }: { type: BucketEnum; name: string; buffer: Buffer }) => {
-  return getDeploymentBucketFile({ type, name }).save(buffer, { contentType: 'image/png' })
+export const getAssetDeploymentBucketFile = ({ type, name }: { type: AssetDeploymentBranch; name: string }) => {
+  return getAssetDeploymentBucket({ type }).file(name)
+}
+
+export const setAssetDeploymentBucketFile = async ({
+  type,
+  name,
+  buffer,
+}: {
+  type: AssetDeploymentBranch
+  name: string
+  buffer: Buffer
+}) => {
+  return getAssetDeploymentBucket({ type }).file(name).save(buffer, { contentType: 'image/png' })
 }
