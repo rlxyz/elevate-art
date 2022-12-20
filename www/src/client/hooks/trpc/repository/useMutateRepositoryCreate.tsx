@@ -1,8 +1,9 @@
 import { UploadState } from '@components/layout/upload/upload'
 import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { Repository } from '@prisma/client'
+import { Organisation, Repository } from '@prisma/client'
+import { OrganisationNavigationEnum } from '@utils/enums'
 import produce from 'immer'
+import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction } from 'react'
 import { FileWithPath } from 'react-dropzone'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
@@ -12,40 +13,34 @@ import { createCloudinaryFormData, getRepositoryLayerNames, getRepositoryUploadL
 
 export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Dispatch<SetStateAction<null | Repository>> }) => {
   const ctx = trpc.useContext()
-  const { current: organisation, isLoading } = useQueryOrganisationFindAll()
   const { mutateAsync: createRepository } = trpc.repository.create.useMutation()
   const { notifyError, notifySuccess } = useNotification()
-
+  const router = useRouter()
   const mutate = async ({
     files,
     setUploadedFiles,
     setUploadState,
+    organisation,
+    repository,
   }: {
+    organisation: Organisation
+    repository: Repository | string
     files: FileWithPath[]
     setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
   }) => {
-    // step 0: validate organisation
-    if (isLoading || !organisation) {
-      setUploadState('error')
-      notifyError('We couldnt find your team. Please refresh the page to try again.')
-      return
-    }
-
-    const repositoryName: string = (files[0]?.path?.split('/')[1] as string) || ''
-    const layers = getRepositoryUploadLayerObjectUrls(files)
-
     try {
+      console.log('files', organisation, repository)
+      const layers = getRepositoryUploadLayerObjectUrls(files)
       setUploadedFiles(layers)
       notifySuccess('Upload format is correct. We are creating the project for you.')
       const response = await createRepository({
         organisationId: organisation.id,
-        name: repositoryName,
+        name: typeof repository === 'string' ? repository : repository.name, // little hack; if it's a string, it's a new repository
         layerElements: getRepositoryLayerNames(layers),
       })
-      const { id: repositoryId } = response
-      setRepository(response)
-      ctx.repository.findByName.setData({ name: response.name }, response)
+      const { id: repositoryId, name: repositoryName } = response
+      ctx.repository.findByName.setData({ repositoryName: response.name, organisationName: organisation.name }, response)
 
       notifySuccess('Project created. We are uploading the images now. Do not leave this page!')
       setUploadState('uploading')
@@ -88,8 +83,10 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
       await Promise.all(filePromises).then((data) => {
         setUploadState('done')
         notifySuccess('Traits created and uploaded successfully')
+        router.push(
+          `/${organisation.name}/${OrganisationNavigationEnum.enum.New}/order?name=${encodeURIComponent(repositoryName)}&id=${repositoryId}`
+        )
       })
-      return
     } catch (e) {
       setUploadState('error')
       notifyError('Something went wrong. Please refresh the page to try again.')

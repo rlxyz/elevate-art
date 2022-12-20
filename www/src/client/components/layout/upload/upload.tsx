@@ -1,10 +1,11 @@
+import { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import React, { Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { FileWithPath, useDropzone } from 'react-dropzone'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import UploadDisplay, { TraitElementUploadState } from './upload-display'
+import UploadDisplay, { TraitElementUploadState } from './upload-display-basic'
 
 export type UploadState = 'idle' | 'uploading' | 'done' | 'error'
 
@@ -13,11 +14,15 @@ interface Props {
   gridSize: 'md' | 'lg'
   withTooltip: boolean
   setUploadState?: (state: UploadState) => void
+  organisation: Organisation
+  repository: Repository | string
   onDropCallback: ({
     files,
     setUploadedFiles,
     setUploadState,
   }: {
+    organisation: Organisation
+    repository: Repository | string
     files: FileWithPath[]
     setUploadedFiles: Dispatch<SetStateAction<{ [key: string]: TraitElementUploadState[] }>>
     setUploadState: (state: UploadState) => void
@@ -36,6 +41,8 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
   onDropCallback,
   children,
   className,
+  organisation,
+  repository,
   gridSize,
   withTooltip,
   ...props
@@ -65,7 +72,7 @@ const Upload: React.FC<PropsWithChildren<UploadProps>> = ({
       return
     }
 
-    onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState })
+    onDropCallback({ files, setUploadedFiles, setUploadState: setInternalUploadState, organisation, repository })
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

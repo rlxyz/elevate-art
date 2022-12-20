@@ -5,6 +5,6 @@ import { trpc } from 'src/client/utils/trpc'
 export const useMutationContext = () => {
   const ctx = trpc.useContext()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  const { notifyError, notifySuccess } = useNotification()
-  return { ctx, repositoryId, notifyError, notifySuccess }
+  const { notifyError, notifySuccess, notifyInfo } = useNotification()
+  return { ctx, repositoryId, notifyError, notifySuccess, notifyInfo }
 }

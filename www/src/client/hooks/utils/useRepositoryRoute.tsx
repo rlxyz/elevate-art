@@ -9,7 +9,7 @@ export const useRepositoryRoute = () => {
   const [mainRepositoryHref, setMainRepositoryHref] = useState<null | string>(null)
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {
-      setMainRepositoryHref(`${organisationName}/${repositoryName}`)
+      setMainRepositoryHref(`${organisationName}/${encodeURIComponent(repositoryName)}`)
     }
   }, [organisationName, repositoryName])
 

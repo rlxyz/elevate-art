@@ -47,9 +47,7 @@ export const PersonalOrganisationAccountTeam = () => {
                   <div className='flex flex-row space-y-1 items-center space-x-3'>
                     <AvatarComponent src='images/avatar-blank.png' />
                     <div className='flex flex-col space-y-1'>
-                      <span className='text-xs font-bold'>
-                        {organisation.type === OrganisationDatabaseEnum.enum.Personal ? capitalize(organisation.name) : organisation.name}
-                      </span>
+                      <span className='text-xs font-bold'>{organisation.name}</span>
                       <span className='text-xs text-darkGrey'>
                         {organisation.type === OrganisationDatabaseEnum.enum.Personal
                           ? capitalize(OrganisationDatabaseEnum.enum.Personal)

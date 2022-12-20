@@ -20,6 +20,6 @@ export const formatBytes = (a: number, b = 2) => {
   return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]}`
 }
 
-export const truncate = (word: string) => {
-  return word.replace(/(.{18})..+/, '$1...')
+export const truncate = (word: string, variant?: 'sm' | 'lg') => {
+  return variant ? (variant === 'sm' ? word.replace(/(.{6})..+/, '$1...') : word.replace(/(.{18})..+/, '$1...')) : word
 }

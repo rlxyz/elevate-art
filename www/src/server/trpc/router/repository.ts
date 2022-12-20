@@ -18,12 +18,13 @@ export const repositoryRouter = router({
   findByName: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
+        repositoryName: z.string(),
+        organisationName: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { name } = input
-      return await ctx.prisma.repository.findFirst({ where: { name } })
+      const { repositoryName: r, organisationName: o } = input
+      return await ctx.prisma.repository.findFirst({ where: { name: r, organisation: { name: o } } })
     }),
   create: protectedProcedure
     .input(
