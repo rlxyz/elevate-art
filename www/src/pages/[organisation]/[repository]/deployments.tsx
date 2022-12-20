@@ -2,7 +2,6 @@ import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
-import RepositoryDeploymentBucketCreateModal from '@components/repository/Deployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/repository/Deployment/RepositoryDeploymentCreateModal'
 import RepositoryDeploymentDeleteModal from '@components/repository/Deployment/RepositoryDeploymentDeleteModal'
 import withOrganisationStore from '@components/withOrganisationStore'
@@ -152,7 +151,6 @@ const Page = () => {
   const { mainRepositoryHref } = useRepositoryRoute()
   const { collectionName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!repository) return
@@ -212,16 +210,7 @@ const Page = () => {
             <div className='h-32 flex items-center justify-between'>
               <h1 className='text-2xl font-semibold'>Deployments</h1>
               <div className='space-x-2'>
-                {!repository?.bucket && (
-                  <button
-                    onClick={() => setIsCreateBucketDialogOpen(true)}
-                    className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs'
-                  >
-                    Setup
-                  </button>
-                )}
                 <button
-                  disabled={!repository?.bucket}
                   onClick={() => setIsCreateDialogOpen(true)}
                   className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
                 >
@@ -235,13 +224,6 @@ const Page = () => {
                 onClose={() => setIsCreateDialogOpen(false)}
                 repository={repository}
                 collections={collections}
-              />
-            )}
-            {collections && repository && (
-              <RepositoryDeploymentBucketCreateModal
-                visible={isCreateBucketDialogOpen}
-                onClose={() => setIsCreateBucketDialogOpen(false)}
-                repository={repository}
               />
             )}
           </div>

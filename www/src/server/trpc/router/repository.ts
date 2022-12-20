@@ -83,17 +83,6 @@ export const repositoryRouter = router({
         orderBy: { createdAt: 'desc' },
       })
     }),
-  createBucket: protectedProcedure
-    .input(
-      z.object({
-        repositoryId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { repositoryId } = input
-      await storage.createBucket(`elevate-${repositoryId}-assets`)
-      await ctx.prisma.repository.update({ where: { id: repositoryId }, data: { bucket: true } })
-    }),
   createDeployment: protectedProcedure
     .input(
       z.object({

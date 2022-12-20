@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch, Prisma } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { storage } from '@server/utils/gcp-storage'
+import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
@@ -18,17 +18,15 @@ import * as v from 'src/shared/compiler'
 type MetadataCacheInput = { repositoryId: string; deploymentId: string; id: string }
 const metadataCacheObject = {
   get: async ({ repositoryId, deploymentId, id }: MetadataCacheInput) => {
-    return await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/metadata.json`)
+    return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/metadata.json`)
       .download()
       .then((data) => data[0])
       .catch((e) => console.error(e))
   },
   put: async ({ repositoryId, deploymentId, id, buffer }: MetadataCacheInput & { buffer: string | Buffer }) => {
-    await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/metadata.json`)
+    await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/metadata.json`)
       .save(buffer, { contentType: 'application/json' })
   },
 }
