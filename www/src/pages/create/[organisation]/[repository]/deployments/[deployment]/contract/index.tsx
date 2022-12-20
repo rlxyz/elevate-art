@@ -88,6 +88,12 @@ const Page = () => {
                 enabled: true,
                 loading: isLoading,
               },
+              {
+                name: DeploymentNavigationEnum.enum.Settings,
+                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
+                enabled: false,
+                loading: false,
+              },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
