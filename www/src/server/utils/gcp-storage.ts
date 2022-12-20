@@ -8,8 +8,8 @@ import { env } from 'src/env/server.mjs'
  * preview-deployments - single folder - acl-based auth - using signed urls
  * production-deployments - single folder - public folder - anyone can access - assets.elevate.art / staging.assets.elevate.art
  *
- * <branch>-deployments/<repositoryId>/<deploymentId>/tokens/<tokenId>/image.png
- * <branch>-deployments/<repositoryId>/<deploymentId>/tokens/<tokenId>/metadata.json
+ * elevate-assset-deployment-<branch>/<repositoryId>/<deploymentId>/tokens/<tokenId>/image.png
+ * elevate-assset-deployment-<branch>/<repositoryId>/<deploymentId>/tokens/<tokenId>/metadata.json
  */
 export const storage = new Storage({
   projectId: env.GCP_PROJECT_ID,

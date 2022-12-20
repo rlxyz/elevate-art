@@ -1,7 +1,7 @@
-import { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch, Prisma } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { storage } from '@server/utils/gcp-storage'
+import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
 import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
@@ -21,17 +21,15 @@ import * as v from 'src/shared/compiler'
 type ImageCacheInput = { repositoryId: string; deploymentId: string; id: string }
 const imageCacheObject = {
   get: async ({ repositoryId, deploymentId, id }: ImageCacheInput) => {
-    return await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/image.png`)
+    return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
       .download()
       .then((data) => data[0])
       .catch((e) => console.error(e))
   },
   put: async ({ repositoryId, deploymentId, id, buffer }: ImageCacheInput & { buffer: Buffer }) => {
-    await storage
-      .bucket(`elevate-${repositoryId}-assets`)
-      .file(`deployments/${deploymentId}/tokens/${id}/image.png`)
+    await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
       .save(buffer, { contentType: 'image/png' })
   },
 }

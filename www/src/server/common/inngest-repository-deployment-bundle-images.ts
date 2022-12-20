@@ -1,10 +1,9 @@
-import type { Prisma } from '@prisma/client'
-import { AssetDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentBranch, AssetDeploymentStatus, Prisma } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import * as v from 'src/shared/compiler'
 import { prisma } from '../db/client'
-import { storage } from '../utils/gcp-storage'
+import { getAssetDeploymentBucket, storage } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.assetDeployment.update({
@@ -27,12 +26,6 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  * We do this so that we can use the images in the AssetDeployment without having to
  * make a request to Cloudinary. And also, if user then changes the image in Cloudinary,
  * we can still use the old image associated to the AssetDeployment.
- *
- * Bucket Design
- * name: `elevate-<repositoryId>-assets`
- * image: `deployments/<deploymentId>/tokens/<tokenId>/image.png`
- * attributes: `deployments/<deploymentId>/tokens/<tokenId>/attributes.png`
- * layers: `layers/<layerElementId>/<traitElementId>.png`
  *
  * @todo save any failed fetches of TraitElements into a buffer to query later
  *! @todo when the bucket is created, auto set it to public... then we can serve content directly from bucket
@@ -81,11 +74,10 @@ export default createFunction('repository-deployment/bundle-images', 'repository
             if (response.failed) throw new Error("Couldn't get image")
             const buffer = response.getValue()
             if (!buffer) throw new Error("Couldn't get buffer")
-            console.log('buffer found', repositoryId, deploymentId, l, t)
             try {
-              return await storage
-                .bucket(`elevate-${repositoryId}-assets`)
-                .file(`deployments/${deploymentId}/layers/${l}/${t}.png`)
+              //! @todo abstract all this functionality into own file
+              return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+                .file(`${repositoryId}/deployments/${deploymentId}/layers/${l}/${t}.png`)
                 .save(Buffer.from(buffer), { contentType: 'image/png' })
             } catch (e) {
               console.error(e)

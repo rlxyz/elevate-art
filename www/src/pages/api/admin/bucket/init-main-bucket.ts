@@ -20,14 +20,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const isAdmin = admins.has(address)
   if (!isAdmin) return res.status(400)
 
-  // create individual bucket for AssetDeploymentBranch production and preview
+  //  create individual bucket for AssetDeploymentBranch production and preview
   const [b1] = await storage.createBucket(getAssetDeploymentBucketName({ type: AssetDeploymentBranch.PRODUCTION }), {
     location: 'US',
     storageClass: 'STANDARD',
   })
   await b1.makePublic()
 
-  const b2 = storage.createBucket(getAssetDeploymentBucketName({ type: AssetDeploymentBranch.PRODUCTION }), {
+  const b2 = storage.createBucket(getAssetDeploymentBucketName({ type: AssetDeploymentBranch.PREVIEW }), {
     location: 'US',
     storageClass: 'STANDARD',
   })
