@@ -211,7 +211,6 @@ const Page = () => {
               <h1 className='text-2xl font-semibold'>Deployments</h1>
               <div className='space-x-2'>
                 <button
-                  disabled={!repository?.bucket}
                   onClick={() => setIsCreateDialogOpen(true)}
                   className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
                 >
