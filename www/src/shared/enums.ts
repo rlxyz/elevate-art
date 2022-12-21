@@ -91,8 +91,11 @@ export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
 export const ContractSettingsNavigationEnum = z.nativeEnum(
   Object.freeze({
-    General: 'general',
-    Whitelist: 'whitelist',
+    Details: 'details',
+    Mechanics: 'mechanics',
+    Revenue: 'revenue',
+    Allowlist: 'allowlist',
+    Deploy: 'deploy',
   })
 )
 export type ContractSettingsNavigationType = z.infer<typeof ContractSettingsNavigationEnum>
