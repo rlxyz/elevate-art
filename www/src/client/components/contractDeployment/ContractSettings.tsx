@@ -1,7 +1,6 @@
 import { NextLinkWithHoverHueComponent } from '@components/layout/link/NextLinkWithHoverHueComponent'
 import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { title } from 'process'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
@@ -72,9 +71,10 @@ export const ContractGeneralSettings = () => {
   const localBlockchain = watch('blockchain')
 
   return (
-    <ContractForm>
-      <ContractForm.Header title={title} description={`description`} />
-      <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
+    <div>
+      <h1 className='font-semibold py-2'>Mint Details</h1>
+
+      <form onSubmit={handleSubmit(onSubmit)} className='w-3/4'>
         <div className='w-full '>
           <ContractForm.Body.Input
             {...register('contractName', {
@@ -196,17 +196,13 @@ export const ContractGeneralSettings = () => {
             <option value={'mainnet'}>{capitalize('mainnet')}</option>
           </ContractForm.Body.Select>
         </div>
-        <div>
-          <ContractForm.Body.Summary
-            contractName={localContractName}
-            contractSymbol={localContractSymbol}
-            blockchain={localBlockchain}
-            mintType={mintType}
-            artCollection={localArtCollection}
-            currentSegment={currentSegment}
-          />
-        </div>
-      </ContractForm.Body>
-    </ContractForm>
+        <button
+          className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+          type='submit'
+        >
+          Save
+        </button>
+      </form>
+    </div>
   )
 }

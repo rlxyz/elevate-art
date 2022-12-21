@@ -1,14 +1,18 @@
+import type { ContractDetailsForm } from '@components/contractDeployment/ContactCreationForms/ContactDetailsForm'
+import { ContractForm } from '@components/contractDeployment/ContractForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import type { NextPage } from 'next'
+import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
@@ -27,6 +31,48 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
+
+  const {
+    currentSegment,
+    contractName,
+    contractSymbol,
+    mintType,
+    blockchain,
+    artCollection,
+    setContractName,
+    setContractSymbol,
+    setMintType,
+    setBlockchain,
+    setCurrentSegment,
+    setArtCollection,
+  } = useContractCreationStore()
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm({
+    defaultValues: {
+      contractName: contractName,
+      contractSymbol: contractSymbol,
+      mintType: mintType,
+      blockchain: blockchain,
+      artCollection: artCollection,
+    },
+  })
+
+  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain, artCollection }: ContractDetailsForm) => {
+    setContractName(contractName)
+    setContractSymbol(contractSymbol)
+    setMintType(mintType)
+    setBlockchain(blockchain)
+    setArtCollection(artCollection)
+    setCurrentSegment(currentSegment + 1)
+  }
+
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
@@ -134,11 +180,42 @@ const Page: NextPage = () => {
                 />
               </div>
               <div className='col-span-8'>
-                <div className='space-y-6'>
-                  <h1>Mechanics</h1>
-                  {/* <OrganisationTeamAddUser />
-                  <OrganisationTeamDisplayUsers />
-                  <OrganisationTeamDisplayPending /> */}
+                <div className='space-y-2'>
+                  <h1 className='font-semibold py-2'>Mechanics</h1>
+                  <form onSubmit={onSubmit} className='w-3/4'>
+                    <div className='w-full '>
+                      <ContractForm.Body.Input
+                        {...register('contractSymbol', {
+                          required: true,
+                          maxLength: {
+                            value: 6,
+                            message: 'Max length is 6',
+                          },
+                          minLength: {
+                            value: 3,
+                            message: 'Min length is 3',
+                          },
+
+                          pattern: /^[-/a-z0-9 ]+$/gi,
+                          onChange: (e) => {
+                            setValue('contractSymbol', e.target.value.toUpperCase())
+                          },
+                        })}
+                        label={'Add Wallet Addresses Individually'}
+                        description={'Add wallet addresses one at a time'}
+                        className='col-span-2'
+                        placeholder={`0x1b...148e`}
+                        error={errors.contractSymbol}
+                        maxLength={6}
+                      />
+                    </div>
+                    <button
+                      className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+                      type='submit'
+                    >
+                      Save
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
