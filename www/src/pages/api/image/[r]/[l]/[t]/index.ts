@@ -1,7 +1,7 @@
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { Redis } from '@upstash/redis'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 
 export const redis = new Redis({

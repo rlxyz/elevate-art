@@ -149,18 +149,18 @@ model ContractDeployment {
     assetDeploymentId String?          @unique
 
     whitelists Whitelist[]
-    
 
     @@unique([address, chainId]) // there can be multiple deployments on different chains with same contract address
     @@index([repositoryId])
 }
 
 model Whitelist {
-    id             String       @id @default(cuid())
-    address        String       @db.VarChar(42)
-    createdAt      DateTime     @default(now())
-    updatedAt      DateTime     @updatedAt
-    contractDeployment ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
+    id                   String             @id @default(cuid())
+    address              String             @db.VarChar(42)
+    mint                 Int                @default(1)
+    createdAt            DateTime           @default(now())
+    updatedAt            DateTime           @updatedAt
+    contractDeployment   ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
     contractDeploymentId String
 
     @@unique([address, contractDeploymentId])
