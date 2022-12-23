@@ -73,6 +73,22 @@ const Page: NextPage = () => {
     setCurrentSegment(currentSegment + 1)
   }
 
+  // Types
+  type IWhitelist = {
+    whitelist: Record<string, number>
+  }
+
+  // Config from generator
+  const presaleConfig: IWhitelist = {
+    whitelist: {
+      '0xcd3B766CCDd6AE721141F452C550Ca635964ce71': 1,
+      '0x90F79bf6EB2c4f870365E785982E1f101E93b906': 1,
+      '0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199': 1,
+      '0xdD2FD4581271e230360230F9337D5c0430Bf44C0': 1,
+      '0x71bE63f3384f5fb98995898A86B02Fb2426c5788': 1,
+    },
+  }
+
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
@@ -185,27 +201,27 @@ const Page: NextPage = () => {
                   <form className='w-3/4'>
                     <div className='w-full '>
                       <ContractForm.Body.Input
-                        {...register('contractSymbol', {
-                          required: true,
+                        {...register('address', {
+                          required: false,
                           maxLength: {
-                            value: 6,
-                            message: 'Max length is 6',
+                            value: 18,
+                            message: 'Max length is 18',
                           },
                           minLength: {
-                            value: 3,
-                            message: 'Min length is 3',
+                            value: 18,
+                            message: 'Min length is 18',
                           },
 
                           pattern: /^[-/a-z0-9 ]+$/gi,
                           onChange: (e) => {
-                            setValue('contractSymbol', e.target.value.toUpperCase())
+                            setValue('address', e.target.value.toUpperCase())
                           },
                         })}
                         label={'Add Wallet Addresses Individually'}
                         description={'Add wallet addresses one at a time'}
                         className='col-span-2'
                         placeholder={`0x1b...148e`}
-                        error={errors.contractSymbol}
+                        error={errors.address}
                         maxLength={6}
                       />
                     </div>
