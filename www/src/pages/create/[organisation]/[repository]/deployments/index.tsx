@@ -1,4 +1,3 @@
-import RepositoryDeploymentBucketCreateModal from '@components/assetDeployment/RepositoryDeploymentBucketCreateModal'
 import RepositoryDeploymentCreateModal from '@components/assetDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/assetDeployment/RepositoryDeploymentPreviewCard'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
@@ -19,7 +18,7 @@ import { useEffect, useState } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 
 const Page = () => {
@@ -31,7 +30,6 @@ const Page = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
   const { organisationName, repositoryName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [isCreateBucketDialogOpen, setIsCreateBucketDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!repository) return
@@ -70,13 +68,13 @@ const Page = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
             >
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -85,25 +83,41 @@ const Page = () => {
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`,
+                href: routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rarity,
+                  layer?.name
+                ),
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rules}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rules
+                ),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments
+                ),
                 enabled: true,
                 loading: false,
               },
@@ -117,14 +131,6 @@ const Page = () => {
             <div className='h-32 flex items-center justify-between'>
               <h1 className='text-2xl font-semibold'>Deployments</h1>
               <div className='space-x-2'>
-                {!repository?.bucket && (
-                  <button
-                    onClick={() => setIsCreateBucketDialogOpen(true)}
-                    className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs'
-                  >
-                    Setup
-                  </button>
-                )}
                 <button
                   disabled={!repository?.bucket}
                   onClick={() => setIsCreateDialogOpen(true)}
@@ -140,13 +146,6 @@ const Page = () => {
                 onClose={() => setIsCreateDialogOpen(false)}
                 repository={repository}
                 collections={collections}
-              />
-            )}
-            {collections && repository && (
-              <RepositoryDeploymentBucketCreateModal
-                visible={isCreateBucketDialogOpen}
-                onClose={() => setIsCreateBucketDialogOpen(false)}
-                repository={repository}
               />
             )}
           </div>

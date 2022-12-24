@@ -150,8 +150,8 @@ const ViewAllRepositories = () => {
         {filteredRepositories?.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
-              <NextLinkComponent href={`${organisationName}/${repository.name}`}>
-                <div className='border border-mediumGrey rounded-[5px] px-6 py-5 space-y-4 w-full'>
+              <NextLinkComponent href={`${organisationName}/${encodeURIComponent(repository.name)}`}>
+                <div className='border border-mediumGrey w-full rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <AvatarComponent src='/images/avatar-blank.png' />
                     <div className='flex flex-col'>

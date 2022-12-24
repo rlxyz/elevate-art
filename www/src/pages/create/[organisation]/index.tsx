@@ -1,6 +1,8 @@
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
+import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -10,8 +12,6 @@ import ViewAllRepositories from 'src/client/components/organisation/Organisation
 import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { DashboardNavigationEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
-import { OrganisationAuthLayout } from '../../../client/components/organisation/OrganisationAuthLayout'
-import { OrganisationRoutesNavbarPopover } from '../../../client/components/organisation/OrganisationRoutesNavbar'
 
 const Page: NextPage = () => {
   const { current: organisation } = useQueryOrganisationFindAll()

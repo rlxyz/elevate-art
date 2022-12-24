@@ -4,9 +4,44 @@ import { useForm } from 'react-hook-form'
 import { sumByBig } from 'src/shared/object-utils'
 
 /** Note, we use big.js's Big to ensure precision. Javascript just sux tbh. */
-export const WEIGHT_STEP_COUNT = Big(1)
+export const WEIGHT_STEP_COUNT = Big(0.0001)
 export const WEIGHT_LOWER_BOUNDARY = Big(0)
 export const WEIGHT_UPPER_BOUNDARY = Big(100)
+
+//! super hacky way to simulate a sigmoid function. lol. unfortunately, big.js doesn't have exp() or log() functions. rip.
+//! unless I convert everything to decimal.js, but that's a lot of work. till next time.
+export const WEIGHT_STEP_COUNT_RANGES = [
+  Big(0.0001),
+  Big(0.0001),
+  Big(0.0001),
+  Big(0.0002),
+  Big(0.0005),
+  Big(0.001),
+  Big(0.002),
+  Big(0.005),
+  Big(0.01),
+  Big(0.02),
+  Big(0.05),
+  Big(0.1),
+  Big(0.15),
+  Big(0.2),
+  Big(0.25),
+  Big(0.3),
+  Big(0.35),
+  Big(0.4),
+  Big(0.45),
+  Big(0.5),
+  Big(0.55),
+  Big(0.6),
+  Big(0.65),
+  Big(0.7),
+  Big(0.75),
+  Big(0.8),
+  Big(0.85),
+  Big(0.9),
+  Big(0.95),
+  Big(1),
+]
 
 export type TraitElementFields = {
   checked: boolean
@@ -143,18 +178,18 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     return a.eq(b)
   }
 
-  const getAllowableIncrementGrowth = (weight: Big, max: Big): Big => {
+  const getAllowableIncrementGrowth = (weight: Big, max: Big, change: Big): Big => {
     /** Figure out how much to change */
-    let weightToChange = WEIGHT_STEP_COUNT
+    let weightToChange = change
     if (weight.plus(weightToChange).gt(max)) {
       weightToChange = max.minus(weight)
     }
     return weightToChange
   }
 
-  const getAllowableDecrementGrowth = (weight: Big, min: Big): Big => {
+  const getAllowableDecrementGrowth = (weight: Big, min: Big, change: Big): Big => {
     /** Figure out how much to change */
-    let weightToChange = WEIGHT_STEP_COUNT
+    let weightToChange = change
     if (weight.minus(weightToChange).lt(min)) {
       weightToChange = min.plus(weight)
     }
@@ -169,7 +204,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     return Big(a).lt(b)
   }
 
-  const decrementRarityByIndex = (index: number) => {
+  const decrementRarityByIndex = (index: number, change: Big) => {
     /** Get latest values for the form */
     const weight = Big(getValues(`traitElements.${index}.weight`))
     const locked = getValues(`traitElements.${index}.locked`)
@@ -191,7 +226,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     if (isEqual(weight, min)) return
 
     /** Figure out how much to change */
-    const growth = getAllowableDecrementGrowth(weight, min)
+    const growth = getAllowableDecrementGrowth(weight, min, change)
 
     /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.minus(growth))
@@ -250,7 +285,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     })
   }
 
-  const incrementRarityByIndex = (index: number) => {
+  const incrementRarityByIndex = (index: number, change: Big) => {
     /** Get latest values for the form */
     const weight = Big(getValues(`traitElements.${index}.weight`))
     const locked = getValues(`traitElements.${index}.locked`)
@@ -269,7 +304,7 @@ export const useTraitElementForm = ({ traitElements, onChange }: { traitElements
     if (isEqual(weight, max)) return
 
     /** Figure out how much to change */
-    const growth = getAllowableIncrementGrowth(weight, max)
+    const growth = getAllowableIncrementGrowth(weight, max, change)
 
     /** Set the primary weight */
     setValue(`traitElements.${index}.weight`, weight.plus(growth))

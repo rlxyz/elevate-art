@@ -88,7 +88,6 @@ model Repository {
     tokenName String   @db.VarChar(255)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    bucket    Boolean  @default(false) // gcp bucket setup is done or not...
 
     layers      LayerElement[]
     collections Collection[]
@@ -96,8 +95,8 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
-    assets             AssetDeployment[]
-    ContractDeployment ContractDeployment[]
+    assetDeployments    AssetDeployment[]
+    contractDeployments ContractDeployment[]
 
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
@@ -110,7 +109,6 @@ model AssetDeployment {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    stealth   Boolean  @default(false)
 
     status AssetDeploymentStatus @default(PENDING)
     type   AssetDeploymentBranch @default(PREVIEW)

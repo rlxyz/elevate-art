@@ -13,7 +13,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import LayerElementFileTree from 'src/client/components/repository/LayerElementFileTree'
 import TraitTable from 'src/client/components/repository/TraitElementTable'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
@@ -61,13 +61,13 @@ const Page = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
             >
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -76,25 +76,41 @@ const Page = () => {
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`,
+                href: routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rarity,
+                  layer?.name
+                ),
                 enabled: true,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rules}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rules
+                ),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments
+                ),
                 enabled: false,
                 loading: false,
               },
@@ -106,7 +122,7 @@ const Page = () => {
         <Layout.Body border='none'>
           <div className='py-6 grid grid-cols-10 gap-x-6'>
             <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
-            <TraitTable className='col-span-8' layerElement={layer} repositoryId={repositoryId} />
+            <TraitTable className='col-span-8' layerElement={layer} organisation={organisation} repository={repository} />
           </div>
         </Layout.Body>
       </Layout>

@@ -31,13 +31,7 @@ export const useQueryOrganisationFindAll = () => {
   })
 
   return {
-    all: next?.sort((a, b) => {
-      if (a.type === OrganisationDatabaseEnum.enum.Personal) {
-        return -1
-      } else {
-        return a.createdAt.getTime() - b.createdAt.getTime()
-      }
-    }),
+    all: next?.sort((a, b) => (a.type === OrganisationDatabaseEnum.enum.Personal ? -1 : a.createdAt.getTime() - b.createdAt.getTime())),
     pendings: pendings?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
     currentHref: organisationName,
     current: next?.find((o) => o.name === organisationName),

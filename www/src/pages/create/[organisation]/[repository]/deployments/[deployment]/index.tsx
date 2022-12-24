@@ -9,7 +9,7 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, DeploymentNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
@@ -55,11 +55,11 @@ const Page = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
             />
             <AppRoutesNavbar.Item
               label={deployment?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -68,13 +68,26 @@ const Page = () => {
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments,
+                  deployment?.name
+                ),
                 enabled: true,
                 loading: isLoading,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Contract}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  DeploymentNavigationEnum.enum.Contract
+                ),
                 enabled: false,
                 loading: isLoading,
               },

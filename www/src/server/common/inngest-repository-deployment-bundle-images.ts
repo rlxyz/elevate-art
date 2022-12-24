@@ -3,6 +3,7 @@ import { AssetDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { createFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
+import { prisma } from '../db/client'
 import { storage } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
@@ -41,14 +42,21 @@ export default createFunction('repository-deployment/bundle-images', 'repository
 
   /**
    * Ensure Deployment Exists
+   * @todo better error handling here...
    */
-  const deployment = await prisma?.assetDeployment.findFirst({
-    where: { id: deploymentId, repositoryId },
-    select: { id: true },
-  })
-  if (!deployment) {
+  try {
+    const deployment = await prisma?.assetDeployment.findFirst({
+      where: { id: deploymentId, repositoryId },
+      select: { id: true },
+    })
+    if (!deployment) {
+      await repositoryDeploymentFailedUpdate({ deploymentId })
+      console.log("Deployment doesn't exist")
+      throw new Error(`Deployment ${deploymentId} does not exist`)
+    }
+  } catch (e) {
+    console.log('deployment error', e)
     await repositoryDeploymentFailedUpdate({ deploymentId })
-    console.log("Deployment doesn't exist")
     throw new Error(`Deployment ${deploymentId} does not exist`)
   }
 
@@ -56,6 +64,7 @@ export default createFunction('repository-deployment/bundle-images', 'repository
    * Ensure Bucket Exists
    */
   const bucket = await storage.bucket(`elevate-${repositoryId}-assets`).exists()
+
   if (!bucket[0]) {
     await repositoryDeploymentFailedUpdate({ deploymentId })
     console.log("Bucket doesn't exist")
@@ -79,7 +88,7 @@ export default createFunction('repository-deployment/bundle-images', 'repository
                 .file(`deployments/${deploymentId}/layers/${l}/${t}.png`)
                 .save(Buffer.from(buffer), { contentType: 'image/png' })
             } catch (e) {
-              console.error(e)
+              console.error('some-random-error', e)
               throw new Error(`Couldn't save image: ${e}`)
             }
           })

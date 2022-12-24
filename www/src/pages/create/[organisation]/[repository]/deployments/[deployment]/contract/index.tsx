@@ -69,7 +69,13 @@ const Page = () => {
             />
             <AppRoutesNavbar.Item
               label={deployment?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`}
+              href={routeBuilder(
+                env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                organisation?.name,
+                repository?.name,
+                CollectionNavigationEnum.enum.Deployments,
+                deployment?.name
+              )}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -78,13 +84,26 @@ const Page = () => {
             {[
               {
                 name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments,
+                  deployment?.name
+                ),
                 enabled: false,
                 loading: isLoading,
               },
               {
                 name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Contract}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  DeploymentNavigationEnum.enum.Contract
+                ),
                 enabled: true,
                 loading: isLoading,
               },

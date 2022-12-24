@@ -1,3 +1,7 @@
+import CollectionBranchSelectorCard from '@components/collection/CollectionBranchSelectorCard'
+import { GenerateButton } from '@components/collection/CollectionGenerateCard'
+import CollectionPreviewFilters from '@components/collection/CollectionPreviewFilters'
+import CollectionPreviewGrid from '@components/collection/CollectionPreviewGrid'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -8,18 +12,14 @@ import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollec
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { useEffect } from 'react'
-import CollectionBranchSelectorCard from 'src/client/components/collection/CollectionBranchSelectorCard'
-import { GenerateButton } from 'src/client/components/collection/CollectionGenerateCard'
-import CollectionPreviewFilters from 'src/client/components/collection/CollectionPreviewFilters'
-import CollectionPreviewGrid from 'src/client/components/collection/CollectionPreviewGrid'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
-import { useRepositoryRoute } from '../../../../client/hooks/utils/useRepositoryRoute'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -87,13 +87,13 @@ const Page = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
             >
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -102,25 +102,41 @@ const Page = () => {
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`,
+                href: routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name),
                 enabled: true,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rarity,
+                  layer?.name
+                ),
                 enabled: false,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Rules}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Rules
+                ),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Deployments,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}`,
+                href: routeBuilder(
+                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                  organisation?.name,
+                  repository?.name,
+                  CollectionNavigationEnum.enum.Deployments
+                ),
                 enabled: false,
                 loading: false,
               },

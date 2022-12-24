@@ -33,20 +33,20 @@ export default defineNextConfig({
     locales: ['en'],
     defaultLocale: 'en',
   },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: `/:path*`,
-      },
-      {
-        source: `/${mintBasePath}`,
-        destination: `${`${mintBaseUrl}`}/${mintBasePath}`,
-      },
-      {
-        source: `/${mintBasePath}/:path*`,
-        destination: `${mintBaseUrl}/${mintBasePath}/:path*`,
-      },
-    ]
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: `/:path*`,
+  //     },
+  //     // {
+  //     //   source: `/${mintBasePath}`,
+  //     //   destination: `${`${mintBaseUrl}`}/${mintBasePath}`,
+  //     // },
+  //     // {
+  //     //   source: `/${mintBasePath}/:path*`,
+  //     //   destination: `${mintBaseUrl}/${mintBasePath}/:path*`,
+  //     // },
+  //   ]
+  // },
 })

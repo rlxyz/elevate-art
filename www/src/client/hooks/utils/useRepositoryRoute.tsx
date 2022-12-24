@@ -22,7 +22,9 @@ export const useRepositoryRoute = () => {
 
   useEffect(() => {
     if (Boolean(organisationName) && Boolean(repositoryName)) {
-      setMainRepositoryHref(`${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisationName}/${repositoryName}`)
+      setMainRepositoryHref(
+        `${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${encodeURIComponent(organisationName)}/${encodeURIComponent(repositoryName)}`
+      )
     }
   }, [organisationName, repositoryName])
 
