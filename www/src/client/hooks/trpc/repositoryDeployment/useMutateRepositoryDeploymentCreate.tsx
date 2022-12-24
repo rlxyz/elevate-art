@@ -7,9 +7,9 @@ export const useMutateRepositoryDeploymentCreate = () => {
   const ctx = trpc.useContext()
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  return trpc.repository.createDeployment.useMutation({
+  return trpc.repository.createAssetDeployment.useMutation({
     onSuccess: (data, variables) => {
-      ctx.repository.findDeployments.setData({ repositoryId }, (old) => {
+      ctx.repository.findAllAssetDeployments.setData({ repositoryId }, (old) => {
         if (!old) return old
         const next = produce(old, (draft) => {
           draft.unshift(data)

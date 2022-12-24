@@ -7,9 +7,9 @@ export const useMutateRepositoryDeploymentDelete = () => {
   const ctx = trpc.useContext()
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
-  return trpc.repository.deleteDeployment.useMutation({
+  return trpc.repository.deleteAssetDeployment.useMutation({
     onSuccess: (data, variables) => {
-      ctx.repository.findDeployments.setData({ repositoryId }, (old) => {
+      ctx.repository.findAllAssetDeployments.setData({ repositoryId }, (old) => {
         if (!old) return old
         const next = produce(old, (draft) => {
           const index = draft.findIndex((deployment) => deployment.id === data.id)

@@ -1,3 +1,4 @@
+<<<<<<< HEAD:www/src/pages/api/assets/[o]/[r]/preview/[seed]/[id]/image.ts
 import type { Prisma } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
@@ -6,6 +7,44 @@ import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
+=======
+import { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
+import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
+import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
+import { NextApiRequest, NextApiResponse } from 'next'
+import * as v from 'src/shared/compiler'
+
+/**
+ * Note, this is a cache built around the compiler functionality to ensure that
+ * we only need to compile a single token id once per deployment.
+ *
+ * That is, if a token has 12 LayerElements === 12 TraitElements, then we only need
+ * to fetch from the GCP bucket once per token id.
+ *
+ * And during the compilation of images using skia-constructor, we re-upload the new compiled token image
+ * to the GCP bucket.
+ *
+ * @todo in "put", save the metadata of the attributes names... so that we can use that to infer the metadata instead of needing a second query to metadata
+ */
+type ImageCacheInput = { repositoryId: string; deploymentId: string; id: string }
+const imageCacheObject = {
+  get: async ({ repositoryId, deploymentId, id }: ImageCacheInput) => {
+    return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
+      .download()
+      .then((data) => data[0])
+      .catch((e) => console.error(e))
+  },
+  put: async ({ repositoryId, deploymentId, id, buffer }: ImageCacheInput & { buffer: Buffer }) => {
+    await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
+      .save(buffer, { contentType: 'image/png' })
+  },
+}
+
+>>>>>>> jp/asset-query-seed-cache-layer:www/src/pages/api/assets/[o]/[r]/[seed]/[id]/index.ts
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   // const session = await getServerAuthSession({ req, res })
   // if (!session || !session.user) {

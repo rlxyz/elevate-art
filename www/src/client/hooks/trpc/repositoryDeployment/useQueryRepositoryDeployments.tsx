@@ -7,6 +7,6 @@ export const useQueryRepositoryDeployments = () => {
   const router: NextRouter = useRouter()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const deploymentName: string = router.query.deployment as string
-  const { data, isLoading, isError } = trpc.repository.findDeployments.useQuery({ repositoryId }, { enabled: !!repositoryId })
+  const { data, isLoading, isError } = trpc.repository.findAllAssetDeployments.useQuery({ repositoryId }, { enabled: !!repositoryId })
   return { current: data?.find((x) => x.name === deploymentName), all: data, isLoading, isError }
 }

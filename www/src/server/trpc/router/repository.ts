@@ -72,7 +72,7 @@ export const repositoryRouter = router({
         },
       })
     }),
-  findDeployments: protectedProcedure
+  findAllAssetDeployments: protectedProcedure
     .input(
       z.object({
         repositoryId: z.string(),
@@ -127,18 +127,7 @@ export const repositoryRouter = router({
 
       return deployment
     }),
-  createBucket: protectedProcedure
-    .input(
-      z.object({
-        repositoryId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { repositoryId } = input
-      await storage.createBucket(`elevate-${repositoryId}-assets`)
-      await ctx.prisma.repository.update({ where: { id: repositoryId }, data: { bucket: true } })
-    }),
-  createDeployment: protectedProcedure
+  createAssetDeployment: protectedProcedure
     .input(
       z.object({
         repositoryId: z.string(),
@@ -224,7 +213,7 @@ export const repositoryRouter = router({
 
       return assetDeployment
     }),
-  deleteDeployment: protectedProcedure
+  deleteAssetDeployment: protectedProcedure
     .input(
       z.object({
         deploymentId: z.string(),
