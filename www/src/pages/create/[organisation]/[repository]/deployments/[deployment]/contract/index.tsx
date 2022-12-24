@@ -6,6 +6,7 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
 import { CheckCircleIcon, ChevronRightIcon, CubeIcon, GlobeAltIcon, XCircleIcon } from '@heroicons/react/solid'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
@@ -14,6 +15,7 @@ import type { ContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { GetServerSidePropsContext } from 'next'
 import type { FC, ReactNode } from 'react'
+import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
@@ -26,7 +28,13 @@ const Page = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: organisation } = useQueryOrganisationFindAll()
-  const { current: repository } = useQueryRepositoryFindByName()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isLoadingRepository])
+
   return (
     <OrganisationAuthLayout>
       <Layout>

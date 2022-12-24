@@ -4,9 +4,11 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
+import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
@@ -16,7 +18,13 @@ import { CollectionNavigationEnum, DeploymentNavigationEnum, ZoneNavigationEnum 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: organisation } = useQueryOrganisationFindAll()
-  const { current: repository } = useQueryRepositoryFindByName()
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isLoadingRepository])
+
   return (
     <OrganisationAuthLayout>
       <Layout>

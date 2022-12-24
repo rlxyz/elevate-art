@@ -1,6 +1,8 @@
+import type { DownloadResponse } from '@google-cloud/storage'
 import { Storage } from '@google-cloud/storage'
 import type { AssetDeploymentBranch } from '@prisma/client'
 import { env } from 'src/env/server.mjs'
+import { Result } from './response-result'
 
 /**
  * GCP Bucket Structure
@@ -41,4 +43,33 @@ export const setAssetDeploymentBucketFile = async ({
   buffer: Buffer
 }) => {
   return getAssetDeploymentBucket({ type }).file(name).save(buffer, { contentType: 'image/png' })
+}
+
+type GetTraitElementImageReturn = Result<Buffer | null>
+
+export const getTraitElementImageFromGCP = ({
+  type,
+  r,
+  l,
+  d,
+  t,
+}: {
+  type: AssetDeploymentBranch
+  r: string
+  d: string
+  l: string
+  t: string
+}): Promise<GetTraitElementImageReturn> => {
+  return new Promise(async (resolve, reject) => {
+    getAssetDeploymentBucket({ type })
+      .file(`${r}/deployments/${d}/layers/${l}/${t}.png`)
+      .download()
+      .then((contents: DownloadResponse) => {
+        if (contents[0]) resolve(Result.ok(contents[0]))
+        reject(Result.fail('No image found'))
+      })
+      .catch((err) => {
+        return reject(Result.fail(err))
+      })
+  })
 }

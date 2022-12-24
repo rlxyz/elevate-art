@@ -21,8 +21,14 @@ import { env } from 'src/env/client.mjs'
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: organisation } = useQueryOrganisationFindAll()
-  const { current: repository } = useQueryRepositoryFindByName()
   const { setDeploymentId } = useRepositoryStore()
+
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  useEffect(() => {
+    if (!repository) return
+    setRepositoryId(repository.id)
+  }, [isLoadingRepository])
 
   useEffect(() => {
     if (!deployment?.id) return

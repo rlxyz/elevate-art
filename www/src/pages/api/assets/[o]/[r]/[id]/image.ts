@@ -1,9 +1,8 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
-import { storage } from '@server/utils/gcp-storage'
+import { getTraitElementImageFromGCP, storage } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -54,7 +53,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImageFromGCP({ r: deployment.repositoryId, d: deployment.id, l, t })
+        const response = await getTraitElementImageFromGCP({
+          type: AssetDeploymentBranch.PRODUCTION,
+          r: deployment.repositoryId,
+          d: deployment.id,
+          l,
+          t,
+        })
         if (response.failed) return reject()
         const buffer = response.getValue()
         if (!buffer) return reject()
