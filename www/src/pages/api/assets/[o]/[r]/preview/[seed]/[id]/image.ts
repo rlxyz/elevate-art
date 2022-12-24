@@ -1,7 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
-import { getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
+import { getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -38,7 +37,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // look into cache whether image exist
-  const image = await imageCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
+  const image = await imageCacheObject.get({
+    type: AssetDeploymentBranch.PREVIEW,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+  })
   if (image) return res.setHeader('Content-Type', 'image/png').status(200).send(image)
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
@@ -70,7 +74,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 
   const buf = canvas.toBuffer('image/png')
-  await imageCacheObject.put({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id, buffer: buf })
+  await imageCacheObject.put({
+    type: AssetDeploymentBranch.PREVIEW,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+    buffer: buf,
+  })
 
   return res.setHeader('Content-Type', 'image/png').send(buf)
 }

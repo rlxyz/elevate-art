@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { metadataCacheObject } from '@server/utils/gcp-bucket-actions'
+import { metadataCacheObject } from '@server/utils/gcp-storage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
@@ -36,7 +37,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // look into cache whether image exist
-  const metadata = await metadataCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
+  const metadata = await metadataCacheObject.get({
+    type: AssetDeploymentBranch.PREVIEW,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+  })
   if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
@@ -60,6 +66,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await metadataCacheObject.put({
+    type: AssetDeploymentBranch.PREVIEW,
     repositoryId: deployment.repositoryId,
     deploymentId: deployment.id,
     id,
