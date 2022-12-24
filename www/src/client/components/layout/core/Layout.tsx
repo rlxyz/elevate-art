@@ -54,9 +54,17 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   )
 }
 
-const LayoutAppHeader = ({ children, border = 'none' }: { children: React.ReactNode[] | React.ReactNode; border?: 'lower' | 'none' }) => (
+const LayoutAppHeader = ({
+  authenticated = true,
+  children,
+  border = 'none',
+}: {
+  children?: React.ReactNode[] | React.ReactNode
+  authenticated?: boolean
+  border?: 'lower' | 'none'
+}) => (
   <LayoutContainer border={border}>
-    <Header>{children}</Header>
+    <Header authenticated={authenticated}>{children && children}</Header>
   </LayoutContainer>
 )
 
