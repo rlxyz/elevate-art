@@ -45,7 +45,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const response = {
     name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
+    image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
