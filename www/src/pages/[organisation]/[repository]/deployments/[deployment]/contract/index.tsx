@@ -21,7 +21,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import { parseChainId } from 'src/client/utils/ethers'
 import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { AssetDeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
@@ -40,31 +40,6 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-              <ZoneRoutesNavbarPopover
-                title='Apps'
-                routes={[
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: true,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                  },
-                ]}
-              />
-            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={organisation?.name || ''}
               href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
@@ -76,14 +51,36 @@ const Page = () => {
               href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
             />
             <AppRoutesNavbar.Item
+              label={capitalize(ZoneNavigationEnum.enum.Deployments)}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
+            >
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
+                    selected: false,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Deployments),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                    selected: true,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
               label={deployment?.name || ''}
-              href={routeBuilder(
-                env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
-                organisation?.name,
-                repository?.name,
-                CollectionNavigationEnum.enum.Deployments,
-                deployment?.name
-              )}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name)}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -91,26 +88,19 @@ const Page = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: DeploymentNavigationEnum.enum.Deployment,
-                href: routeBuilder(
-                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
-                  organisation?.name,
-                  repository?.name,
-                  CollectionNavigationEnum.enum.Deployments,
-                  deployment?.name
-                ),
+                name: AssetDeploymentNavigationEnum.enum.Overview,
+                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
                 enabled: false,
                 loading: isLoading,
               },
               {
-                name: DeploymentNavigationEnum.enum.Contract,
+                name: AssetDeploymentNavigationEnum.enum.Contract,
                 href: routeBuilder(
-                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
                   organisation?.name,
                   repository?.name,
-                  CollectionNavigationEnum.enum.Deployments,
+                  ZoneNavigationEnum.enum.Deployments,
                   deployment?.name,
-                  DeploymentNavigationEnum.enum.Contract
+                  AssetDeploymentNavigationEnum.enum.Contract
                 ),
                 enabled: true,
                 loading: isLoading,
@@ -286,7 +276,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     redirect: {
-      destination: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation}/${repository}/${CollectionNavigationEnum.enum.Deployments}/${deployment}/contract/new`,
+      destination: routeBuilder(
+        organisation,
+        repository,
+        ZoneNavigationEnum.enum.Deployments,
+        deployment,
+        AssetDeploymentNavigationEnum.enum.Contract,
+        'new'
+      ),
       permanant: false,
     },
   }

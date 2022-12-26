@@ -10,8 +10,8 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { RulesDisplay } from 'src/client/components/repository/RulesDisplay'
-import { RulesSelector } from 'src/client/components/repository/RulesSelector'
+import LayerElementFileTree from 'src/client/components/repository/LayerElementFileTree'
+import TraitTable from 'src/client/components/repository/TraitElementTable'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
@@ -21,6 +21,7 @@ const Page = () => {
   const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { current: organisation } = useQueryOrganisationFindAll()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
 
   useEffect(() => {
@@ -33,31 +34,6 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-              <ZoneRoutesNavbarPopover
-                title='Apps'
-                routes={[
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: true,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                  },
-                ]}
-              />
-            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={organisation?.name || ''}
               href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
@@ -68,6 +44,34 @@ const Page = () => {
               label={repository?.name || ''}
               href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
+            <AppRoutesNavbar.Item
+              label={capitalize(ZoneNavigationEnum.enum.Create)}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}
+            >
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Deployments),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
           </AppRoutesNavbar>
         </Layout.AppHeader>
         <Layout.PageHeader>
@@ -75,40 +79,29 @@ const Page = () => {
             {[
               {
                 name: CollectionNavigationEnum.enum.Preview,
-                href: routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name),
+                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                 enabled: false,
                 loading: false,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
                 href: routeBuilder(
-                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
                   organisation?.name,
                   repository?.name,
+                  ZoneNavigationEnum.enum.Create,
                   CollectionNavigationEnum.enum.Rarity,
                   layer?.name
                 ),
-                enabled: false,
+                enabled: true,
                 loading: isLoadingLayers,
               },
               {
                 name: CollectionNavigationEnum.enum.Rules,
                 href: routeBuilder(
-                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
                   organisation?.name,
                   repository?.name,
+                  ZoneNavigationEnum.enum.Create,
                   CollectionNavigationEnum.enum.Rules
-                ),
-                enabled: true,
-                loading: false,
-              },
-              {
-                name: CollectionNavigationEnum.enum.Deployments,
-                href: routeBuilder(
-                  env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
-                  organisation?.name,
-                  repository?.name,
-                  CollectionNavigationEnum.enum.Deployments
                 ),
                 enabled: false,
                 loading: false,
@@ -118,20 +111,10 @@ const Page = () => {
             ))}
           </PageRoutesNavbar>
         </Layout.PageHeader>
-        <Layout.Body border='lower'>
-          <div className='w-full py-16'>
-            <div className='flex justify-center'>
-              <div className='space-y-1 w-full'>
-                <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                <RulesSelector layers={layers} />
-              </div>
-            </div>
-          </div>
-          <div className='w-full py-16'>
-            <div className='space-y-3 w-full flex flex-col justify-center'>
-              <span className='text-xs font-semibold uppercase'>All rules created</span>
-              <RulesDisplay traitElements={layers.flatMap((x) => x.traitElements)} />
-            </div>
+        <Layout.Body border='none'>
+          <div className='py-6 grid grid-cols-10 gap-x-6'>
+            <LayerElementFileTree className='col-span-2' layerElements={layers} repository={repository} />
+            <TraitTable className='col-span-8' layerElement={layer} organisation={organisation} repository={repository} />
           </div>
         </Layout.Body>
       </Layout>
