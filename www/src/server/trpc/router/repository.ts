@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentStatus, ContractDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentBranch, AssetDeploymentStatus, AssetDeploymentType, ContractDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
@@ -132,10 +132,11 @@ export const repositoryRouter = router({
       z.object({
         repositoryId: z.string(),
         collectionId: z.string(),
+        type: z.nativeEnum(AssetDeploymentType),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { repositoryId, collectionId } = input
+      const { repositoryId, collectionId, type } = input
 
       const repository = await ctx.prisma.repository.findFirst({
         where: { id: repositoryId },
@@ -173,6 +174,8 @@ export const repositoryRouter = router({
           generations: collection.generations,
           totalSupply: collection.totalSupply,
           status: AssetDeploymentStatus.PENDING,
+          branch: AssetDeploymentBranch.PREVIEW,
+          type, // AssetDeploymentType: Basic/Generative/etc
           name: (Math.random() + 1).toString(36).substring(4),
           layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,

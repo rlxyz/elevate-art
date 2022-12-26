@@ -50,7 +50,7 @@ export const RepositoryDeploymentPreviewCard = ({
               <span>{deployment.name}</span>
             )}
           </div>
-          <span>{toPascalCaseWithSpace(deployment.type)}</span>
+          <span>{deployment.slug}</span>
         </div>
         {deployment.contractDeployment && (
           <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
@@ -82,10 +82,10 @@ export const RepositoryDeploymentPreviewCard = ({
       </div>
       <div className='text-xs flex flex-col'>
         <span>
-          Total Supply <strong>{deployment.totalSupply}</strong>
+          Environment <strong>{toPascalCaseWithSpace(deployment.branch)}</strong>
         </span>
         <span>
-          Generation <strong>{deployment.generations}</strong>
+          Mint Type <strong>{toPascalCaseWithSpace(deployment.type)}</strong>
         </span>
       </div>
       <div className='text-xs flex justify-end items-center space-x-2'>

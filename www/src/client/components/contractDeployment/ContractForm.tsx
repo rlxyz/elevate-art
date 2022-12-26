@@ -84,8 +84,8 @@ const ContractFormBodyInput = forwardRef<
   }
 )
 
-const ContractFormBodyRadioInput = forwardRef<HTMLInputElement, React.PropsWithChildren<{ className: string; label: string }>>(
-  ({ className, label, ...props }: React.PropsWithChildren<{ className: string; label: string }>) => {
+export const ContractFormBodyRadioInput = forwardRef<HTMLInputElement, React.PropsWithChildren<{ className?: string; label: string }>>(
+  ({ className = '', label, ...props }: React.PropsWithChildren<{ className?: string; label: string }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
@@ -103,7 +103,7 @@ const ContractFormBodyRadioInput = forwardRef<HTMLInputElement, React.PropsWithC
   }
 )
 
-const ContractFormBodySelectInput = forwardRef<
+export const ContractFormBodySelectInput = forwardRef<
   HTMLSelectElement,
   React.PropsWithChildren<{ className: string; label: string; description: string }>
 >(

@@ -1,6 +1,8 @@
+import { ContractFormBodyRadioInput, ContractFormBodySelectInput } from '@components/contractDeployment/ContractForm'
 import type { FormModalProps } from '@components/repository/LayerElementFileTree/LayerElementDeleteModal'
 import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentCreate'
 import type { Collection, Repository } from '@prisma/client'
+import { AssetDeploymentType } from '@prisma/client'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
@@ -12,6 +14,7 @@ export interface RepositoryDeploymentCreateProps extends FormModalProps {
 
 export type LayerElementCreateForm = {
   collectionName: string
+  mintType: AssetDeploymentType
 }
 
 const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ visible, onClose, onSuccess, collections, repository }) => {
@@ -19,11 +22,14 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
     formState: { errors },
     reset,
   } = useForm<LayerElementCreateForm>({
     defaultValues: {
-      collectionName: collections[0]?.name || '',
+      collectionName: collections[0]?.name || 'main',
+      mintType: AssetDeploymentType.BASIC,
     },
   })
 
@@ -42,22 +48,59 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       visible={visible}
       onClose={handleClose}
       onSubmit={handleSubmit((data) => {
+        console.log('data', data)
         const collection = collections.find((x) => x.name === data.collectionName)
         if (!collection) return
-        mutate({ repositoryId: repository.id, collectionId: collection.id }, { onSuccess: handleSuccess })
+        mutate({ repositoryId: repository.id, collectionId: collection.id, type: data.mintType }, { onSuccess: handleSuccess })
       })}
       title='New Deployment'
       description={`You can create new deployments of existing collections. This will a copy of the layer, traits and rules associated to the collection selected. Select one from below.`}
       isLoading={isLoading}
       className='md:max-w-lg' // @todo fix this
     >
-      <select {...register('collectionName', { required: true })} className='text-xs p-2 w-full rounded-[5px] border border-mediumGrey'>
+      <ContractFormBodySelectInput
+        {...register('collectionName', {
+          onChange: (e) => {
+            setValue('collectionName', e.target.value)
+          },
+        })}
+        label={'Name'}
+        description={'Select a deployment collection'}
+        className='col-span-6'
+      >
         {collections?.map((collection) => (
           <option key={collection.id} value={collection.name}>
             {collection.name}
           </option>
         ))}
-      </select>
+      </ContractFormBodySelectInput>
+
+      <div className='col-span-3 flex flex-col'>
+        <label className='text-xs font-semibold'>Mint Type</label>
+        <div className='flex space-x-3'>
+          <div className='h-full flex items-center space-x-2'>
+            <ContractFormBodyRadioInput
+              {...register('mintType', {
+                onChange: (e) => {
+                  setValue('mintType', AssetDeploymentType.BASIC)
+                },
+              })}
+              label={'Off-Chain'}
+            />
+          </div>
+          <div className='h-full flex items-center space-x-2'>
+            <ContractFormBodyRadioInput
+              {...register('mintType', {
+                onChange: (e) => {
+                  setValue('mintType', AssetDeploymentType.GENERATIVE)
+                },
+              })}
+              label={'On-Chain'}
+            />
+          </div>
+        </div>
+        <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
+      </div>
     </ModalComponent>
   )
 }

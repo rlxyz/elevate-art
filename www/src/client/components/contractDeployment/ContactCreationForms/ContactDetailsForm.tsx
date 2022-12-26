@@ -96,33 +96,27 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           error={errors.contractSymbol}
         />
 
-        <div className='col-span-3 flex flex-col'>
+        {/* <div className='col-span-3 flex flex-col'>
           <label className='text-xs font-semibold'>Mint Type</label>
           <div className='flex space-x-3'>
             <div className='h-full flex items-center space-x-2'>
               <ContractForm.Body.Radio
-                className=''
-                description=''
                 {...register('mintType', {
                   onChange: (e) => {
                     setValue('mintType', 'off-chain')
                   },
                 })}
                 label={'Off-Chain'}
-                error={errors.contractName}
               />
             </div>
             <div className='h-full flex items-center space-x-2'>
               <ContractForm.Body.Radio
-                className=''
-                description=''
                 {...register('mintType', {
                   onChange: (e) => {
                     setValue('mintType', 'on-chain')
                   },
                 })}
                 label={'On-Chain'}
-                error={errors.contractName}
               />
               <span className='flex px-2 py-1 items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey text-[0.6rem] font-medium text-black h-fit'>
                 <span className='text-darkGrey text-[0.6rem]'>Soon</span>
@@ -130,7 +124,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             </div>
           </div>
           <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
-        </div>
+        </div> */}
 
         <ContractForm.Body.Select
           {...register('blockchain', {
@@ -142,7 +136,6 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
           label={'Blockchain'}
           description={'Select a deployment blockchain'}
           className='col-span-6'
-          error={errors.contractName}
         >
           <option value={'goerli'}>{capitalize('goerli')}</option>
           <option value={'mainnet'}>{capitalize('mainnet')}</option>

@@ -19,7 +19,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
-import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
@@ -139,7 +139,7 @@ const Page = () => {
                     )}
                     underline
                   >
-                    {contractDeployment?.address}
+                    Click here
                   </LinkComponent>
                 </h1>
               </div>
@@ -147,6 +147,16 @@ const Page = () => {
               <div className='flex space-x-1'>
                 <h2 className='text-xs'>Chain</h2>
                 <h1 className='text-xs font-bold'>{capitalize(parseChainId(contractDeployment?.chainId || 0))}</h1>
+              </div>
+              <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
+              <div className='flex space-x-1'>
+                <h2 className='text-xs'>Branch</h2>
+                <h1 className='text-xs font-bold'>{toPascalCaseWithSpace(contractDeployment?.assetDeployment?.branch || '')}</h1>
+              </div>
+              <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
+              <div className='flex space-x-1'>
+                <h2 className='text-xs'>Type</h2>
+                <h1 className='text-xs font-bold'>{toPascalCaseWithSpace(contractDeployment?.assetDeployment?.type || '')}</h1>
               </div>
             </div>
           </Header>
