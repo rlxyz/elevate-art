@@ -19,7 +19,6 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
 
 const Page = () => {
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
@@ -41,16 +40,10 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={repository?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
-            />
+            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}

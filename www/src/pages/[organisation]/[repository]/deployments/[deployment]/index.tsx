@@ -12,7 +12,6 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
 import { AssetDeploymentNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
@@ -30,10 +29,7 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />

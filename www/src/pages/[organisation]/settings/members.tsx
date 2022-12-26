@@ -1,9 +1,7 @@
-import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
+import AppRoutesNavbar from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -12,14 +10,8 @@ import { SettingsNavigations } from 'src/client/components/organisation/Organisa
 import { OrganisationTeamAddUser } from 'src/client/components/organisation/OrganisationTeamAddUser'
 import { OrganisationTeamDisplayPending } from 'src/client/components/organisation/OrganisationTeamDisplayPending'
 import { OrganisationTeamDisplayUsers } from 'src/client/components/organisation/OrganisationTeamDisplayUsers'
-import { capitalize } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
-import {
-  DashboardNavigationEnum,
-  OrganisationNavigationEnum,
-  OrganisationSettingsNavigationEnum,
-  ZoneNavigationEnum,
-} from 'src/shared/enums'
+import { routeBuilder } from 'src/client/utils/format'
+import { DashboardNavigationEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -28,35 +20,7 @@ const Page: NextPage = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-              <ZoneRoutesNavbarPopover
-                title='Apps'
-                routes={[
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: true,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                  },
-                ]}
-              />
-            </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
           </AppRoutesNavbar>
@@ -66,13 +30,13 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`,
+                href: routeBuilder(organisation?.name),
                 enabled: false,
                 loading: false,
               },
               {
                 name: DashboardNavigationEnum.enum.Account,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                href: routeBuilder(organisation?.name, OrganisationNavigationEnum.enum.Settings),
                 enabled: true,
                 loading: false,
               },
@@ -89,12 +53,16 @@ const Page: NextPage = () => {
                   routes={[
                     {
                       name: OrganisationSettingsNavigationEnum.enum.General,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
+                      href: routeBuilder(organisation?.name, OrganisationNavigationEnum.enum.Settings),
                       selected: false,
                     },
                     {
                       name: OrganisationSettingsNavigationEnum.enum.Team,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}/${OrganisationSettingsNavigationEnum.enum.Team}`,
+                      href: routeBuilder(
+                        organisation?.name,
+                        OrganisationNavigationEnum.enum.Settings,
+                        OrganisationSettingsNavigationEnum.enum.Team
+                      ),
                       selected: true,
                     },
                   ]}

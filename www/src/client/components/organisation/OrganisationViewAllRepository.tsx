@@ -2,6 +2,7 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
+import { ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
@@ -10,6 +11,7 @@ import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import { Link } from 'src/client/components/layout/Link'
 import SearchInput from 'src/client/components/layout/search/Search'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { routeBuilder } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 
 const NoRepositoryExistPlaceholder = () => {
@@ -150,7 +152,7 @@ const ViewAllRepositories = () => {
         {filteredRepositories?.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
-              <NextLinkComponent href={`${organisationName}/${encodeURIComponent(repository.name)}`}>
+              <NextLinkComponent href={routeBuilder(organisationName, repository.name, ZoneNavigationEnum.enum.Create)}>
                 <div className='border border-mediumGrey w-full rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
                     <AvatarComponent src='/images/avatar-blank.png' />
