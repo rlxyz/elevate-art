@@ -1,8 +1,8 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentBranch } from '@prisma/client'
+import { AssetDeploymentBranch, AssetDeploymentType } from '@prisma/client'
+import { getTokenHash } from '@server/common/ethers-get-contract-token-hash'
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { imageCacheObject } from '@server/utils/gcp-bucket-actions'
-import { getTraitElementImageFromGCP, storage } from '@server/utils/gcp-storage'
+import { getAssetDeploymentBucket, getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -19,7 +19,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
       repository: { name: repositoryName, organisation: { name: organisationName } },
-      type: AssetDeploymentBranch.PRODUCTION,
+      branch: AssetDeploymentBranch.PRODUCTION,
     },
     include: { repository: true, contractDeployment: true },
   })
@@ -41,15 +41,47 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // look into cache whether image exist
-  const image = await imageCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
-  if (image) return res.setHeader('Content-Type', 'image/png').status(200).send(image)
+  const image = await imageCacheObject.get({
+    type: AssetDeploymentBranch.PRODUCTION,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+  })
+
+  const [url] = await getAssetDeploymentBucket({
+    type: AssetDeploymentBranch.PREVIEW,
+  })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .getSignedUrl({
+      version: 'v4',
+      action: 'read',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    })
+
+  if (image) {
+    return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+  }
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+  // get the seed from the contract if generative type
+  //! @todo test this
+  const { type } = deployment
+  let seed = v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id)
+  if (type === AssetDeploymentType.GENERATIVE) {
+    const tokenHashResponse = await getTokenHash(contractDeployment.address, contractDeployment.chainId, Number(id))
+    if (tokenHashResponse.failed) {
+      return res.status(500).send('Internal Server Error')
+    }
+    const tokenHash = tokenHashResponse.getValue()
+    if (!tokenHash) {
+      return res.status(500).send('Internal Server Error')
+    }
+    seed = tokenHash
+  }
 
+  const tokens = v.one(v.parseLayer(layerElements), seed)
   const canvas = new Canvas(600, 600)
-
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
@@ -67,26 +99,20 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     })
   )
-
   response.forEach((image) => {
     canvas.printImage(image, 0, 0, 600, 600)
   })
 
   const buf = canvas.toBuffer('image/png')
-  await imageCacheObject.put({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id, buffer: buf })
+  await imageCacheObject.put({
+    type: AssetDeploymentBranch.PRODUCTION,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+    buffer: buf,
+  })
 
-  const [url] = await storage
-    .bucket(`elevate-${deployment.repositoryId}-assets`)
-    .file(`deployments/${deployment.id}/tokens/${id}/image.png`)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    })
-
-  console.log(buf)
-
-  return res.setHeader('Content-Type', 'image/png').status(200).send(buf)
+  return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
 }
 
 export default index

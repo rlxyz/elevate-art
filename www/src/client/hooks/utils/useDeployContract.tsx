@@ -5,9 +5,9 @@ import { AssetDeploymentType } from '@prisma/client'
 import type { Signer } from 'ethers'
 import { ContractFactory } from 'ethers'
 import { useState } from 'react'
+import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
+import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.json'
 import { useSigner } from 'wagmi'
-import basicContract from '../../contracts/RhapsodyCreator.json'
-import generativeContract from '../../contracts/RhapsodyCreatorGenerative.json'
 import { useNotification } from './useNotification'
 
 interface ERC721ContractInput {

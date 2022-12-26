@@ -1,17 +1,12 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
+import { getAssetDeploymentBucket, getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  // const session = await getServerAuthSession({ req, res })
-  // if (!session || !session.user) {
-  //   return res.status(401).send('Unauthorized')
-  // }
-
   // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
   if (!organisationName || !repositoryName || !seed || !id) {
@@ -19,10 +14,9 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      // repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
+      branch: AssetDeploymentBranch.PREVIEW,
       repository: { name: repositoryName, organisation: { name: organisationName } },
       name: seed,
     },
@@ -43,7 +37,20 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     deploymentId: deployment.id,
     id,
   })
-  if (image) return res.setHeader('Content-Type', 'image/png').status(200).send(image)
+
+  const [url] = await getAssetDeploymentBucket({
+    type: AssetDeploymentBranch.PREVIEW,
+  })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .getSignedUrl({
+      version: 'v4',
+      action: 'read',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    })
+
+  if (image) {
+    return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+  }
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
@@ -82,7 +89,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     buffer: buf,
   })
 
-  return res.setHeader('Content-Type', 'image/png').send(buf)
+  return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
 }
 
 export default index
