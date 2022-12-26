@@ -63,11 +63,17 @@ const Page = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
+              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
             />
             <AppRoutesNavbar.Item
               label={deployment?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
+              href={routeBuilder(
+                env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH,
+                organisation?.name,
+                repository?.name,
+                CollectionNavigationEnum.enum.Deployments,
+                deployment?.name
+              )}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
