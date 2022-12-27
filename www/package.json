@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "doppler setup && doppler run concurrently \" next dev\"",
+    "dev": "doppler setup && doppler run concurrently \"next dev\" \"npx inngest-cli@latest dev -u http://localhost:3000/api/inngest\"",
     "build": "doppler run next build",
     "build:production": "next build",
     "start": "next start",

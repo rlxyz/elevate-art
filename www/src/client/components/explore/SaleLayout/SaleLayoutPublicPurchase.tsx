@@ -6,7 +6,7 @@ import type { RhapsodyContractData } from '../../../../shared/contracts/Contract
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
-import { SalePhaseEnum, useFetchSaleRequirements } from './useFetchContractData'
+import { useFetchPublicRequirements } from './useFetchPublicRequirements'
 import { usePublicPurchase } from './usePublicPurchase'
 
 export const SaleLayoutPublicPurchase = ({
@@ -19,10 +19,9 @@ export const SaleLayoutPublicPurchase = ({
   contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
-  const { data, isLoading, isError } = useFetchSaleRequirements({
+  const { data, isLoading, isError } = useFetchPublicRequirements({
     session,
     contractDeployment,
-    type: SalePhaseEnum.enum.Public,
   })
 
   /** Variables */

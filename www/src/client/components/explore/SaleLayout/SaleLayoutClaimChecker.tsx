@@ -1,27 +1,32 @@
-import { ExclamationCircleIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getAddressFromEns } from 'src/client/utils/ethers'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
+import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const SaleLayoutClaimChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
-  //! @todo add validation walletCheck from db
-  // const { validateAllowlist } = useWalletCheck()
-
+  const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress()
   const { now } = useMintLayoutCurrentTime()
-
+  const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<{ address: string }>({
     defaultValues: {
       address: '',
     },
   })
+
+  const reset = () => {
+    setAddressCheckerDetails(null)
+  }
 
   return (
     <SaleLayout>
@@ -33,7 +38,22 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
             : { label: 'Claim Ends In', value: contractData.presalePeriod.startTimestamp }
         }
       />
-      <SaleLayout.Body onSubmit={handleSubmit((data) => console.log(data))} className='flex flex-col space-y-3'>
+      <SaleLayout.Body
+        onSubmit={handleSubmit((data) => {
+          /** Reset all existing state */
+          reset()
+          if (!all) return setError('address', { message: 'Please try again in a minute' })
+
+          /** Check if the address has a claim */
+          const claim = all.whitelists.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          if (!claim) {
+            return setError('address', { message: 'This address does not have a claim' })
+          }
+
+          setAddressCheckerDetails({ address: data.address, mint: claim.mint })
+        })}
+        className='flex flex-col space-y-3'
+      >
         <span className='text-xs'>
           Check if your Wallet Address can <strong className='uppercase'>claim</strong> an NFT
         </span>
@@ -50,6 +70,9 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
             {...register('address', {
               required: true,
               validate: async (v) => {
+                reset()
+                if (!all) return 'Please try again in a minute'
+
                 /** First we check whether it is a valid address */
                 let address = ''
                 if (String(v).endsWith('.eth')) {
@@ -60,9 +83,6 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
                   if (!ethers.utils.isAddress(v)) return 'Please enter a valid Ethereum address'
                   address = v
                 }
-
-                //! @todo reintroduce
-                // if (!validateAllowlist({ address })) return 'Address is not in the allowlist'
 
                 return true
               },
@@ -79,6 +99,12 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
           <span className='mt-2 col-span-10 text-xs w-full text-redError flex items-center space-x-1'>
             <ExclamationCircleIcon className='text-redError w-4 h-4' />
             <span>{String(errors?.address?.message) || 'Something went wrong...'}</span>
+          </span>
+        ) : null}
+        {addressCheckerDetails ? (
+          <span className='mt-2 col-span-10 text-xs w-full text-greenDot flex items-center space-x-1'>
+            <CheckCircleIcon className='text-greenDot w-4 h-4' />
+            <span>{`This address has ${addressCheckerDetails.mint} mints for this phase`}</span>
           </span>
         ) : null}
       </SaleLayout.Body>

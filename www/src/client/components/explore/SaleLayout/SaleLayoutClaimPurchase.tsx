@@ -7,7 +7,7 @@ import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
 import { useClaimPurchase } from './useClaimPurchase'
-import { SalePhaseEnum, useFetchSaleRequirements } from './useFetchContractData'
+import { useFetchClaimRequirements } from './useFetchClaimRequirements'
 
 export const SaleLayoutClaimPurchase = ({
   session,
@@ -19,10 +19,9 @@ export const SaleLayoutClaimPurchase = ({
   contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
-  const { data, isLoading, isError } = useFetchSaleRequirements({
+  const { data, isLoading, isError } = useFetchClaimRequirements({
     session,
     contractDeployment,
-    type: SalePhaseEnum.enum.Public,
   })
   const { now } = useMintLayoutCurrentTime()
   /** Variables */

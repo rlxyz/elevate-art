@@ -12,6 +12,11 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
+enum WhitelistType {
+    CLAIM
+    ALLOWLIST
+}
+
 enum ContractDeploymentStatus {
     PENDING
     VERIFYING
@@ -166,6 +171,8 @@ model Whitelist {
     updatedAt            DateTime           @updatedAt
     contractDeployment   ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
     contractDeploymentId String
+
+    type WhitelistType @default(ALLOWLIST)
 
     @@unique([address, contractDeploymentId])
     @@index([contractDeploymentId])
