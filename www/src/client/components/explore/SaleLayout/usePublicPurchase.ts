@@ -4,7 +4,7 @@ import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useSaleMintCountInput } from './useSaleMintCountInput'
 
 interface UsePublicMint {
@@ -23,7 +23,7 @@ export const usePublicPurchase = ({
 }: {
   address: string | undefined | null
   enabled: boolean
-  contractData: ContractData
+  contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
 }): UsePublicMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
@@ -35,7 +35,7 @@ export const usePublicPurchase = ({
     functionName: 'publicMint',
     args: [mintCount],
     overrides: {
-      value: BigNumber.from(contractData.mintPrice).mul(mintCount),
+      value: BigNumber.from(contractData.publicPeriod.mintPrice).mul(mintCount),
       gasLimit: BigNumber.from(200000),
     },
   })

@@ -1,7 +1,7 @@
 import { LayoutContainer } from '@components/layout/core/Layout'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { buildEtherscanLink } from '@utils/ethers'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { CollectionContractDeploymentDetails } from './CollectionContractDeploymentDetails'
 import { CollectionSocialMediaLinks } from './CollectionSocialMediaLinks'
 
@@ -10,7 +10,7 @@ interface MintLayoutDescriptionProps {
   organisation: Organisation | null | undefined
   deployment: AssetDeployment | null | undefined
   contractDeployment: ContractDeployment | null | undefined
-  contractData: ContractData | null | undefined
+  contractData: RhapsodyContractData | null | undefined
 }
 
 export const CollectionLayoutDescription: React.FC<MintLayoutDescriptionProps> = ({

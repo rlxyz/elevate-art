@@ -2,7 +2,7 @@ import type { ContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
@@ -15,7 +15,7 @@ export const SaleLayoutPublicPurchase = ({
   contractDeployment,
 }: {
   session: Session | null
-  contractData: ContractData
+  contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
@@ -41,7 +41,7 @@ export const SaleLayoutPublicPurchase = ({
       <SaleLayout.Header title='Public Sale' />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <SalePrice mintPrice={contractData.mintPrice} quantity={mintCount} />
+          <SalePrice mintPrice={contractData.publicPeriod.mintPrice} quantity={mintCount} />
           <SaleMintCountInput
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}

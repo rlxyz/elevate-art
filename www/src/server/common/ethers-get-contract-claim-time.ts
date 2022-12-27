@@ -2,10 +2,10 @@ import { Result } from '@server/utils/response-result'
 import { getElevateContract } from '@utils/ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 
-export const getPresaleTime = async (address: string, chainId: number): Promise<Result<Date>> => {
+export const getClaimTime = async (address: string, chainId: number): Promise<Result<Date>> => {
   return new Promise(async (resolve, reject) => {
     getElevateContract({ address, chainId })
-      .presaleTime()
+      .claimTime()
       .then((data) => {
         return resolve(Result.ok(new Date(Number(formatUnits(data, 0)))))
       })

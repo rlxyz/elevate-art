@@ -7,7 +7,7 @@ import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useSaleMintCountInput } from './useSaleMintCountInput'
 
-interface UsePresaleMint {
+interface UseClaimMint {
   isLoading: boolean
   write: () => void
   isError: boolean
@@ -16,7 +16,7 @@ interface UsePresaleMint {
   setMintCount: Dispatch<SetStateAction<BigNumber>>
 }
 
-export const usePresalePurchase = ({
+export const useClaimPurchase = ({
   contractData,
   contractDeployment,
   enabled,
@@ -25,17 +25,16 @@ export const usePresalePurchase = ({
   enabled: boolean
   contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
-}): UsePresaleMint => {
+}): UseClaimMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
-    functionName: 'presaleMint',
+    functionName: 'claimMint',
     args: [mintCount],
     overrides: {
-      value: BigNumber.from(contractData.presalePeriod.mintPrice).mul(mintCount),
       gasLimit: BigNumber.from(200000),
     },
   })

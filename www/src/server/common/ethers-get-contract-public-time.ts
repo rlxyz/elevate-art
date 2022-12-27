@@ -7,7 +7,7 @@ export const getPublicTime = async (address: string, chainId: number): Promise<R
     getElevateContract({ address, chainId })
       .publicTime()
       .then((data) => {
-        return resolve(Result.ok(new Date(Number(formatUnits(data, 0)) * 1000)))
+        return resolve(Result.ok(new Date(Number(formatUnits(data, 0)))))
       })
       .catch((err) => {
         console.error(err)

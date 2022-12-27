@@ -5,14 +5,14 @@ import { parseChainId } from '@utils/ethers'
 import clsx from 'clsx'
 import { BigNumber, ethers } from 'ethers'
 import { capitalize } from 'src/client/utils/format'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 
 interface CollectionContractDeploymentDetailsProps {
   repository: Repository | null | undefined
   organisation: Organisation | null | undefined
   deployment: AssetDeployment | null | undefined
   contractDeployment: ContractDeployment | null | undefined
-  contractData: ContractData | null | undefined
+  contractData: RhapsodyContractData | null | undefined
 }
 export const CollectionContractDeploymentDetails: React.FC<CollectionContractDeploymentDetailsProps> = ({
   repository,

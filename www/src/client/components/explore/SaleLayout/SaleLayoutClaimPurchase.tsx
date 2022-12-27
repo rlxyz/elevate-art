@@ -2,13 +2,14 @@ import type { ContractDeployment } from '@prisma/client'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
+import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
+import { useClaimPurchase } from './useClaimPurchase'
 import { SalePhaseEnum, useFetchSaleRequirements } from './useFetchContractData'
-import { usePresalePurchase } from './usePresalePurchase'
 
-export const SaleLayoutPresalePurchase = ({
+export const SaleLayoutClaimPurchase = ({
   session,
   contractData,
   contractDeployment,
@@ -23,12 +24,12 @@ export const SaleLayoutPresalePurchase = ({
     contractDeployment,
     type: SalePhaseEnum.enum.Public,
   })
-
+  const { now } = useMintLayoutCurrentTime()
   /** Variables */
   const { userBalance, userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
 
   /** Fetch the public-mint functionality */
-  const { write, setMintCount, mintCount } = usePresalePurchase({
+  const { write, setMintCount, mintCount } = useClaimPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
@@ -41,10 +42,17 @@ export const SaleLayoutPresalePurchase = ({
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Presale' endingDate={{ label: 'Ends in', value: contractData.publicPeriod.startTimestamp }} />
+      <SaleLayout.Header
+        title='Claim'
+        endingDate={
+          now < contractData.claimPeriod.startTimestamp
+            ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
+            : { label: 'Claim Ends In', value: contractData.presalePeriod.startTimestamp }
+        }
+      />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <SalePrice mintPrice={contractData.presalePeriod.mintPrice} quantity={mintCount} />
+          <SalePrice mintPrice={contractData.claimPeriod.mintPrice} quantity={mintCount} />
           <SaleMintCountInput
             maxValue={maxAllocation}
             onChange={(value) => setMintCount(value)}

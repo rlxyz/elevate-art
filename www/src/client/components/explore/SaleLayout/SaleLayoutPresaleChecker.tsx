@@ -3,10 +3,10 @@ import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useForm } from 'react-hook-form'
 import { getAddressFromEns } from 'src/client/utils/ethers'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { SaleLayout } from './SaleLayout'
 
-export const SaleLayoutAllowlistChecker = ({ contractData }: { contractData: ContractData }) => {
+export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
   //! @todo add validation walletCheck from db
   // const { validateAllowlist } = useWalletCheck()
 
@@ -22,7 +22,10 @@ export const SaleLayoutAllowlistChecker = ({ contractData }: { contractData: Con
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Allowlist Check' endingDate={{ label: 'Presale Starts In', value: contractData.presaleTime }} />
+      <SaleLayout.Header
+        title='Presale Check'
+        endingDate={{ label: 'Presale Starts In', value: contractData.presalePeriod.startTimestamp }}
+      />
       <SaleLayout.Body onSubmit={handleSubmit((data) => console.log(data))} className='flex flex-col space-y-3'>
         <span className='text-xs'>
           Check if your Wallet Address is on the <strong className='uppercase italic'>allowlist</strong>

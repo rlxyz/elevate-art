@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { env } from 'process'
 import { useEffect, useState } from 'react'
 import InfiniteScrollComponent from 'react-infinite-scroll-component'
-import type { ContractData } from '../ContractData'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -19,7 +19,7 @@ export const GalleryLayout = ({
   assetDeployment: AssetDeployment
   repository: Repository
   organisation: Organisation
-  contractData: ContractData
+  contractData: RhapsodyContractData
 }) => {
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [hasMore, setHasMore] = useState(true)

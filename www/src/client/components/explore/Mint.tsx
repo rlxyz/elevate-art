@@ -8,7 +8,6 @@ import { AssetDeploymentBranch } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { z } from 'zod'
-import { AnalyticsLayoutCollectionInformation } from './AnalyticsLayout/AnalyticsLayoutCollectionInformation'
 import { CollectionLayout } from './CollectionLayout/CollectionLayout'
 import { MintLayout } from './MintLayout/MintLayout'
 import { MintPreviewWarningHeader } from './MintPreviewWarningHeader'
@@ -112,13 +111,13 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
 
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={current?.deployment} />
-          <CollectionLayout.Description
+          {/* <CollectionLayout.Description
             organisation={current?.deployment?.repository.organisation}
             repository={current?.deployment?.repository}
             deployment={current?.deployment?.assetDeployment}
             contractDeployment={current?.deployment}
             contractData={current?.contract}
-          />
+          /> */}
           <CollectionLayout.Body>
             <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
               {!current?.contract || !current.deployment ? (
@@ -127,15 +126,7 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
                   <SaleLayoutLoading />
                 </>
               ) : (
-                <>
-                  <main>
-                    <MintLayout contractData={current?.contract} contractDeployment={current?.deployment} />
-                  </main>
-                  <article className='flex flex-col space-y-6'>
-                    <AnalyticsLayoutCollectionInformation contractDeployment={current?.deployment} />
-                    {/* <AnalyticsLayoutCollectorData contractDeployment={deployment} /> */}
-                  </article>
-                </>
+                <MintLayout contractData={current?.contract} contractDeployment={current?.deployment} />
               )}
             </div>
           </CollectionLayout.Body>
