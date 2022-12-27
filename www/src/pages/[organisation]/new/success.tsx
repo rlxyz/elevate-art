@@ -9,10 +9,9 @@ import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLa
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { env } from 'process'
 import { Layout, LayoutContainer } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import * as v from 'src/shared/compiler'
 import { CollectionNavigationEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
@@ -72,7 +71,7 @@ const Page: NextPage = () => {
               ]}
             />
           </AppRoutesNavbar.Item>
-          <AppRoutesNavbar.Item label={organisation?.name || ''} href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}>
+          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
             <OrganisationRoutesNavbarPopover />
           </AppRoutesNavbar.Item>
         </AppRoutesNavbar>

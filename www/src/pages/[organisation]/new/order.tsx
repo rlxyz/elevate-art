@@ -15,9 +15,8 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import { OrganisationNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { env } from 'process'
 import { useEffect, useState } from 'react'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { FormHeader, FormLayout, FormStepEnum, FormSteps } from '.'
 
 const Page: NextPage = () => {
@@ -69,7 +68,7 @@ const Page: NextPage = () => {
               ]}
             />
           </AppRoutesNavbar.Item>
-          <AppRoutesNavbar.Item label={organisation?.name || ''} href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}>
+          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
             <OrganisationRoutesNavbarPopover />
           </AppRoutesNavbar.Item>
         </AppRoutesNavbar>

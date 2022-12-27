@@ -14,7 +14,6 @@ import { RulesDisplay } from 'src/client/components/repository/RulesDisplay'
 import { RulesSelector } from 'src/client/components/repository/RulesSelector'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
@@ -33,16 +32,10 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name)}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={repository?.name || ''}
-              href={routeBuilder(env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH, organisation?.name, repository?.name)}
-            />
+            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Create)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}

@@ -2,10 +2,10 @@ import { Result } from '@server/utils/response-result'
 import { getElevateContract } from '@utils/ethers'
 import { BigNumber } from 'ethers'
 
-export const getTotalSupply = async (address: string, chainId: number): Promise<Result<BigNumber>> => {
+export const getCollectionSize = async (address: string, chainId: number): Promise<Result<BigNumber>> => {
   return new Promise(async (resolve, reject) => {
     getElevateContract({ address, chainId })
-      .totalSupply()
+      .collectionSize()
       .then((data) => {
         return resolve(Result.ok(data))
       })

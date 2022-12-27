@@ -1,5 +1,6 @@
 import { router } from '../trpc'
 import { collectionRouter } from './collection'
+import { contractDeploymentRouter } from './contractDeployment'
 import { layerElementRouter } from './layerElement'
 import { organisationRouter } from './organisation'
 import { repositoryRouter } from './repository'
@@ -7,6 +8,7 @@ import { ruleRouter } from './rule'
 import { traitElementRouter } from './traitElement'
 
 export const appRouter = router({
+  contractDeployment: contractDeploymentRouter,
   organisation: organisationRouter,
   repository: repositoryRouter,
   collection: collectionRouter,

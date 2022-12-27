@@ -24,7 +24,7 @@ export const truncate = (word: string, variant?: 'sm' | 'lg') => {
   return variant ? (variant === 'sm' ? word.replace(/(.{6})..+/, '$1...') : word.replace(/(.{18})..+/, '$1...')) : word
 }
 
-export const routeBuilder = (...routes: (string | undefined | null)[]) => {
+export const routeBuilder = (...routes: (string | boolean | undefined | null)[]) => {
   return (
     `/` +
     routes

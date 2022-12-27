@@ -49,3 +49,7 @@ export const getElevateContract = ({
   )
   return contract
 }
+
+export const buildEtherscanLink = ({ address, chainId }: { address: string; chainId: number }) => {
+  return `https://${chainId === 1 ? '' : `${parseChainId(chainId)}.`}etherscan.io/address/${address}`
+}

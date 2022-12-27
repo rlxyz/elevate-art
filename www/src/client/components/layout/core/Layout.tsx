@@ -75,9 +75,11 @@ const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.Re
 const LayoutBody = ({
   children,
   border = 'none',
+  margin = true,
 }: {
   children: React.ReactNode[] | React.ReactNode
   border?: 'upper' | 'lower' | 'none'
+  margin?: boolean
 }) => {
   const childrens = React.Children.toArray(children)
   return (
@@ -85,7 +87,7 @@ const LayoutBody = ({
       <div className='h-full w-screen'>
         {childrens.map((child, index) => {
           return (
-            <LayoutContainer border={border} key={index}>
+            <LayoutContainer margin={margin} border={border} key={index}>
               <div className='-ml-2 h-full w-full space-y-8'>{child}</div>
             </LayoutContainer>
           )

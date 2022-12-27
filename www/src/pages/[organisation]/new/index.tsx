@@ -12,13 +12,12 @@ import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepos
 import type { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
-import { env } from 'process'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
@@ -119,10 +118,7 @@ const Page: NextPage = () => {
                 ]}
               />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
           </AppRoutesNavbar>

@@ -16,7 +16,6 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -40,16 +39,10 @@ const Page = () => {
       <Layout hasFooter={false}>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
-            />
+            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
@@ -148,7 +141,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (valid) {
     return {
       redirect: {
-        destination: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation}/${repository}/deployments/${deployment}/contract`,
+        destination: routeBuilder(
+          organisation,
+          repository,
+          ZoneNavigationEnum.enum.Deployments,
+          deployment,
+          AssetDeploymentNavigationEnum.enum.Contract
+        ),
         permanant: false,
       },
     }

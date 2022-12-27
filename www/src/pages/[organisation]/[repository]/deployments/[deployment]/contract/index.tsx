@@ -20,7 +20,6 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
 import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
 import { AssetDeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
@@ -40,16 +39,10 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
-            />
+            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
@@ -120,9 +113,9 @@ const Page = () => {
                     target='_blank'
                     rel='noopener noreferrer'
                     href={routeBuilder(
-                      env.NEXT_PUBLIC_MINT_CLIENT_BASE_PATH,
                       organisation?.name,
                       repository?.name,
+                      ZoneNavigationEnum.enum.Explore,
                       MintNavigationEnum.enum.Preview,
                       contractDeployment?.address,
                       MintNavigationEnum.enum.Mint
