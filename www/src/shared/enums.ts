@@ -20,9 +20,10 @@ export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
 export const ZoneNavigationEnum = z.nativeEnum(
   Object.freeze({
-    Dashboard: 'dashboard',
+    Dashboard: 'dashboard', // @todo tbr
     Create: 'create',
     Explore: 'explore',
+    Deployments: 'deployments',
   })
 )
 export type ZoneNavigationType = z.infer<typeof ZoneNavigationEnum>
@@ -53,6 +54,14 @@ export const OrganisationNavigationEnum = z.nativeEnum(
 )
 
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
+
+/////////////////////
+
+export const DeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+  })
+)
 
 /////////////////////
 
@@ -95,19 +104,18 @@ export const CollectionNavigationEnum = z.nativeEnum(
     Rarity: 'rarity',
     Rules: 'rules',
     Settings: 'settings',
-    Deployments: 'deployments',
   })
 )
 export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
 
-export const DeploymentNavigationEnum = z.nativeEnum(
+export const AssetDeploymentNavigationEnum = z.nativeEnum(
   Object.freeze({
-    Deployment: 'deployment',
+    Overview: 'overview',
     Contract: 'contract',
   })
 )
 
-export type DeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
+export type AssetDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
 
 export const RepositorySectionEnum = z.nativeEnum(
   Object.freeze({

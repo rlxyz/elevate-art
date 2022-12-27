@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
+import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getAssetDeploymentBucket, getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
@@ -7,6 +8,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerAuthSession({ req, res })
+  if (!session || !session.user) {
+    return res.status(401).send('Unauthorized')
+  }
+
   // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
   if (!organisationName || !repositoryName || !seed || !id) {
@@ -17,7 +23,15 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
       branch: AssetDeploymentBranch.PREVIEW,
-      repository: { name: repositoryName, organisation: { name: organisationName } },
+      repository: {
+        name: repositoryName,
+        organisation: {
+          name: organisationName,
+          members: {
+            some: { userId: session.user.id },
+          },
+        },
+      },
       name: seed,
     },
   })

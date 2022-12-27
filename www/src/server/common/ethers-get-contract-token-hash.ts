@@ -1,6 +1,6 @@
 import { AssetDeploymentType } from '@prisma/client'
-import { getElevateContract } from '@server/utils/ethers'
-import { Result } from '../utils/response-result'
+import { Result } from '@server/utils/response-result'
+import { getElevateContract } from '@utils/ethers'
 
 export const getTokenHash = async (address: string, chainId: number, tokenId: number): Promise<Result<string>> => {
   return new Promise(async (resolve, reject) => {

@@ -1,7 +1,7 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { env } from 'src/env/client.mjs'
+import { routeBuilder } from 'src/client/utils/format'
 
 export const OrganisationRoutesNavbarPopover = () => {
   const { current: organisation, all: organisations } = useQueryOrganisationFindAll()
@@ -13,7 +13,7 @@ export const OrganisationRoutesNavbarPopover = () => {
       title='Your Teams'
       routes={organisations.map(({ name }) => ({
         label: name,
-        href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${name}`,
+        href: routeBuilder(name),
         selected: organisation.name === name,
         icon: (props: any) => <AvatarComponent src='/images/avatar-blank.png' />,
       }))}

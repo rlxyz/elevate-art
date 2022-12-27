@@ -7,10 +7,10 @@ import { useNotification } from '@hooks/utils/useNotification'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
-import { CollectionNavigationEnum } from '@utils/enums'
+import { ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import { useState } from 'react'
-import { toPascalCaseWithSpace } from 'src/client/utils/format'
+import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import RepositoryDeploymentDeleteModal from './RepositoryDeploymentDeleteModal'
@@ -41,7 +41,7 @@ export const RepositoryDeploymentPreviewCard = ({
             {deployment.status === AssetDeploymentStatus.DEPLOYED ? (
               <NextLinkComponent
                 underline
-                href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}/${deployment.name}`}
+                href={routeBuilder(organisationName, repositoryName, ZoneNavigationEnum.enum.Deployments, deployment.name)}
                 className='font-semibold w-fit'
               >
                 {deployment.name}

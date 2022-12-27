@@ -14,9 +14,17 @@ const CardComponent: React.FC<React.PropsWithChildren<CardProps>> = ({
   className,
   ...props
 }: CardProps & typeof defaultProps) => {
+  const childrens = React.Children.toArray(children)
+
   return (
-    <div className={clsx(className, 'bg-background transition-all rounded-[5px] box-border border border-mediumGrey p-4')} {...props}>
-      {children}
+    <div className={clsx(className, 'bg-background transition-all rounded-[5px] box-border border border-mediumGrey')} {...props}>
+      {childrens.map((child, index) => {
+        return (
+          <div key={index} className='p-4'>
+            {child}
+          </div>
+        )
+      })}
     </div>
   )
 }
