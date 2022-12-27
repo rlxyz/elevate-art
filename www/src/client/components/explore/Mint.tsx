@@ -111,13 +111,13 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
 
         <CollectionLayout>
           <CollectionLayout.Header contractDeployment={current?.deployment} />
-          {/* <CollectionLayout.Description
+          <CollectionLayout.Description
             organisation={current?.deployment?.repository.organisation}
             repository={current?.deployment?.repository}
             deployment={current?.deployment?.assetDeployment}
             contractDeployment={current?.deployment}
             contractData={current?.contract}
-          /> */}
+          />
           <CollectionLayout.Body>
             <div className='w-full justify-center flex flex-col gap-6 md:grid md:grid-flow-col md:grid-cols-2'>
               {!current?.contract || !current.deployment ? (

@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/outline'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { parseChainId } from '@utils/ethers'
 import clsx from 'clsx'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { capitalize } from 'src/client/utils/format'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 
@@ -38,13 +38,6 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Minted</h2>
         <h1 className='text-xs font-bold'>{contractData?.totalSupply && ethers.utils.formatUnits(contractData.totalSupply, 0)}</h1>
-      </div>
-      <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
-      <div className='flex space-x-1'>
-        <h2 className='text-xs'>Price</h2>
-        <h1 className='text-xs font-bold'>
-          {contractData?.totalSupply && ethers.utils.formatEther(BigNumber.from(contractData.mintPrice))} ether
-        </h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
