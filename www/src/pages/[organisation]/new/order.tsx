@@ -42,36 +42,38 @@ const Page: NextPage = () => {
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
-        <AppRoutesNavbar>
-          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-            <ZoneRoutesNavbarPopover
-              title='Apps'
-              routes={[
-                {
-                  label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                  href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                  selected: false,
-                  icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                },
-                {
-                  label: capitalize(ZoneNavigationEnum.enum.Create),
-                  href: `/${ZoneNavigationEnum.enum.Create}`,
-                  selected: true,
-                  icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                },
-                {
-                  label: capitalize(ZoneNavigationEnum.enum.Explore),
-                  href: `/${ZoneNavigationEnum.enum.Explore}`,
-                  selected: false,
-                  icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                },
-              ]}
-            />
-          </AppRoutesNavbar.Item>
-          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
-            <OrganisationRoutesNavbarPopover />
-          </AppRoutesNavbar.Item>
-        </AppRoutesNavbar>
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
         <Layout.Body border='none'>
           <div className='py-20'>
             <>
