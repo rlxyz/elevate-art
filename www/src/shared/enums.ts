@@ -60,6 +60,7 @@ export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEn
 export const DeploymentNavigationEnum = z.nativeEnum(
   Object.freeze({
     Overview: 'overview',
+    Settings: 'settings',
   })
 )
 
@@ -98,6 +99,17 @@ export const RepositoryNavigationEnum = z.nativeEnum(
 )
 export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
+export const ContractSettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Details: 'details',
+    Mechanics: 'mechanics',
+    Revenue: 'revenue',
+    Allowlist: 'allowlist',
+    Deploy: 'deploy',
+  })
+)
+export type ContractSettingsNavigationType = z.infer<typeof ContractSettingsNavigationEnum>
+
 export const CollectionNavigationEnum = z.nativeEnum(
   Object.freeze({
     Preview: 'preview',
@@ -112,6 +124,7 @@ export const AssetDeploymentNavigationEnum = z.nativeEnum(
   Object.freeze({
     Overview: 'overview',
     Contract: 'contract',
+    Settings: 'settings',
   })
 )
 
