@@ -41,7 +41,7 @@ export const SaleLayoutPublicPurchase = ({
       <SaleLayout.Header title='Public Sale' />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <SalePrice mintPrice={contractData.publicPeriod.mintPrice} quantity={mintCount} />
+          <SalePrice mintPrice={contractData.publicPeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
           <SaleMintCountInput
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}

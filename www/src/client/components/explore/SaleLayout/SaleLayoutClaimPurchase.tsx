@@ -52,7 +52,7 @@ export const SaleLayoutClaimPurchase = ({
       />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <SalePrice mintPrice={contractData.claimPeriod.mintPrice} quantity={mintCount} />
+          <SalePrice mintPrice={contractData.claimPeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
           <SaleMintCountInput
             maxValue={maxAllocation}
             onChange={(value) => setMintCount(value)}

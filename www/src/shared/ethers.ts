@@ -29,6 +29,17 @@ export const parseChainId = (chainId: number): 'mainnet' | 'goerli' | 'unknown' 
   }
 }
 
+export const parseChainIdCurrency = (chainId: number): 'ETH' | 'GoerliETH' | 'unknown' => {
+  switch (chainId) {
+    case 1:
+      return 'ETH'
+    case 5:
+      return 'GoerliETH'
+    default:
+      return 'unknown'
+  }
+}
+
 export const getElevateContract = ({
   address,
   chainId,

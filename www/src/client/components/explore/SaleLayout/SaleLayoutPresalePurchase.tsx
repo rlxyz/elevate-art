@@ -44,7 +44,7 @@ export const SaleLayoutPresalePurchase = ({
       <SaleLayout.Header title='Presale' endingDate={{ label: 'Ends in', value: contractData.publicPeriod.startTimestamp }} />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
-          <SalePrice mintPrice={contractData.presalePeriod.mintPrice} quantity={mintCount} />
+          <SalePrice mintPrice={contractData.presalePeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
           <SaleMintCountInput
             maxValue={maxAllocation}
             onChange={(value) => setMintCount(value)}
