@@ -5,7 +5,7 @@ import type { InngestEvents } from '@server/utils/inngest'
 import { createFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
 import { prisma } from '../db/client'
-import { getAssetDeploymentBucket, storage } from '../utils/gcp-storage'
+import { getAssetDeploymentBucket } from '../utils/gcp-storage'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.assetDeployment.update({
@@ -66,8 +66,9 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
 
     /**
      * Ensure Bucket Exists
+     *! @todo should also handle AssetDeploymentBranch.PRODUCTION
      */
-    const bucket = await storage.bucket(`elevate-${repositoryId}-assets`).exists()
+    const bucket = await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW }).exists()
 
     if (!bucket[0]) {
       await repositoryDeploymentFailedUpdate({ deploymentId })
