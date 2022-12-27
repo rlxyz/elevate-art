@@ -22,7 +22,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName, members: { some: { userId: session.user.id } } } },
+      branch: AssetDeploymentBranch.PREVIEW,
+      repository: {
+        name: repositoryName,
+        organisation: {
+          name: organisationName,
+          members: {
+            some: { userId: session.user.id },
+          },
+        },
+      },
       name: seed,
     },
     include: { repository: true },
