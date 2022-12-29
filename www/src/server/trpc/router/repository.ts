@@ -271,4 +271,27 @@ export const repositoryRouter = router({
         },
       })
     }),
+  updateDescription: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, description } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { description },
+      })
+    }),
 })

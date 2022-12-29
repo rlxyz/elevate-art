@@ -45,7 +45,7 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
         <h1 className='text-xs font-bold'>{contractDeployment?.chainId && capitalize(parseChainId(contractDeployment.chainId))}</h1>
       </div>
     </div>
-    {contractDeployment?.description && (
+    {repository?.description && (
       <div>
         <Disclosure>
           <Disclosure.Button className={clsx('border-mediumGrey w-full flex items-center space-x-1')}>
@@ -53,7 +53,7 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
             <ChevronDownIcon className='w-3 h-3' />
           </Disclosure.Button>
           <Disclosure.Panel>
-            <p className='my-1 text-[0.6rem] italic'>{contractDeployment.description}</p>
+            <p className='my-1 text-[0.6rem] italic'>{repository.description}</p>
           </Disclosure.Panel>
         </Disclosure>
       </div>

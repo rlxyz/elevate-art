@@ -1,36 +1,24 @@
-import AvatarComponent from '@components/layout/avatar/Avatar'
 import SettingLayout from '@components/layout/settings'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { useForm } from 'react-hook-form'
+import { formatBytes } from 'src/client/utils/format'
+import { env } from 'src/env/client.mjs'
+import { LogoImageUpload } from './LogoImageUpload'
 
 export const RepositoryLogoImageForm = () => {
   const { current: repository } = useQueryRepositoryFindByName()
-  const { organisationName } = useRepositoryRoute()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: repository?.name,
-    },
-  })
-
   return (
     <SettingLayout withSaveButton={false}>
       <SettingLayout.Header title='Logo' />
       <SettingLayout.Body>
         <div className='flex justify-between'>
           <div className='space-y-2'>
-            <p className='text-sm text-black'>Click on the circle towards the right to upload a custom one from your files.</p>
+            <span className='text-sm text-black'>Click on the circle towards the right to upload a custom logo from your files.</span>
             <p className='text-xs text-black'>
-              We recommend a square image with a <strong>minimum size of 50x50 pixels</strong>.
+              We recommend an image with dimensions of <strong>350x350 pixels</strong> and a max size of{' '}
+              <strong>{formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}</strong>.
             </p>
           </div>
-          <button onClick={(e) => e.preventDefault()}>
-            <AvatarComponent src={repository?.logoImageUrl || '/images/logo-black.png'} variant='lg' />
-          </button>
+          {repository && <LogoImageUpload repository={repository} />}
         </div>
       </SettingLayout.Body>
     </SettingLayout>

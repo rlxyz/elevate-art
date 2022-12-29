@@ -22,6 +22,7 @@ export const RepositoryNameForm = () => {
       onSubmit={handleSubmit((data) => {
         console.log(data)
       })}
+      disabled={true}
     >
       <SettingLayout.Header title='Project Name' description='Used to identify your projects name on elevate.art' />
       <SettingLayout.Body>
@@ -36,10 +37,12 @@ export const RepositoryNameForm = () => {
                   'text-xs p-2 w-full h-full rounded-r-[5px]', //! @note this input doesn't have border
                   'invalid:border-redError invalid:text-redError',
                   'focus:invalid:border-redError focus:invalid:ring-redError',
-                  'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight'
+                  'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',
+                  'disabled:cursor-not-allowed disabled:opacity-60 disabled:ring-none disabled:border-none'
                 )}
+                disabled={true}
                 aria-invalid={errors.name ? 'true' : 'false'}
-                placeholder={repository?.name}
+                defaultValue={repository?.name}
                 {...register('name', {
                   required: true,
                   maxLength: 25,

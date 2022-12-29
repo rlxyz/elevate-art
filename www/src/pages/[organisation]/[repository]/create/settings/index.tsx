@@ -1,3 +1,5 @@
+import { RepositoryBannerImageForm } from '@components/create/repository-setting/RepositoryBannerImageForm'
+import { RepositoryDescriptionForm } from '@components/create/repository-setting/RepositoryDescriptionForm'
 import { RepositoryLogoImageForm } from '@components/create/repository-setting/RepositoryLogoImageForm'
 import { RepositoryNameForm } from '@components/create/repository-setting/RepositoryNameForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
@@ -134,9 +136,9 @@ const Page: NextPage = () => {
               <div className='col-span-8'>
                 <div className='space-y-6'>
                   <RepositoryNameForm />
+                  <RepositoryDescriptionForm />
                   <RepositoryLogoImageForm />
-                  {/* <RepositoryDescriptionForm /> */}
-                  {/* <RepositoryBannerImageForm /> */}
+                  <RepositoryBannerImageForm />
                 </div>
               </div>
             </div>
