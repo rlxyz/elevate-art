@@ -120,6 +120,12 @@ export const CollectionNavigationEnum = z.nativeEnum(
 )
 export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
 
+export const CollectionSettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    General: 'general',
+  })
+)
+
 export const AssetDeploymentNavigationEnum = z.nativeEnum(
   Object.freeze({
     Overview: 'overview',

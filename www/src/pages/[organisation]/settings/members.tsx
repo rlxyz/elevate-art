@@ -1,12 +1,12 @@
 import AppRoutesNavbar from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
+import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
 import { OrganisationTeamAddUser } from 'src/client/components/organisation/OrganisationTeamAddUser'
 import { OrganisationTeamDisplayPending } from 'src/client/components/organisation/OrganisationTeamDisplayPending'
 import { OrganisationTeamDisplayUsers } from 'src/client/components/organisation/OrganisationTeamDisplayUsers'
@@ -49,7 +49,7 @@ const Page: NextPage = () => {
           <div className='py-8 space-y-8'>
             <div className='grid grid-cols-10 gap-x-6'>
               <div className='col-span-2'>
-                <SettingsNavigations
+                <SettingNavigation
                   routes={[
                     {
                       name: OrganisationSettingsNavigationEnum.enum.General,

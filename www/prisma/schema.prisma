@@ -99,6 +99,13 @@ model Repository {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    description    String? @db.Text
+    twitterUrl     String? @db.VarChar(255)
+    discordUrl     String? @db.VarChar(255)
+    websiteUrl     String? @db.VarChar(255)
+    bannerImageUrl String? @db.VarChar(255)
+    logoImageUrl   String? @db.VarChar(255)
+
     layers      LayerElement[]
     collections Collection[]
 
@@ -137,17 +144,11 @@ model AssetDeployment {
 }
 
 model ContractDeployment {
-    id             String   @id @default(cuid())
-    address        String   @db.VarChar(42)
-    chainId        Int      @default(1)
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
-    description    String?  @db.Text
-    twitterUrl     String?  @db.VarChar(255)
-    discordUrl     String?  @db.VarChar(255)
-    websiteUrl     String?  @db.VarChar(255)
-    bannerImageUrl String?  @db.VarChar(255)
-    logoImageUrl   String?  @db.VarChar(255)
+    id        String   @id @default(cuid())
+    address   String   @db.VarChar(42)
+    chainId   Int      @default(1)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     status ContractDeploymentStatus @default(PENDING)
 

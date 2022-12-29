@@ -110,7 +110,7 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
         </>
 
         <CollectionLayout>
-          <CollectionLayout.Header contractDeployment={current?.deployment} />
+          <CollectionLayout.Header contractDeployment={current?.deployment} repository={current?.deployment.repository} />
           <CollectionLayout.Description
             organisation={current?.deployment?.repository.organisation}
             repository={current?.deployment?.repository}

@@ -30,10 +30,10 @@ export const CollectionLayoutDescription: React.FC<MintLayoutDescriptionProps> =
           contractDeployment={contractDeployment}
           contractData={contractData}
         />
-        {contractDeployment && (
+        {contractDeployment && repository && (
           <CollectionSocialMediaLinks
-            discordUrl={contractDeployment.discordUrl}
-            twitterUrl={contractDeployment.twitterUrl}
+            discordUrl={repository.discordUrl}
+            twitterUrl={repository.twitterUrl}
             etherscanUrl={buildEtherscanLink({
               address: contractDeployment.address,
               chainId: contractDeployment.chainId,
