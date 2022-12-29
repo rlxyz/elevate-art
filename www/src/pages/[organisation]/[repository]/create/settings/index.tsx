@@ -1,3 +1,4 @@
+import { RepositoryNameForm } from '@components/create/repository-setting/RepositoryNameForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -10,7 +11,7 @@ import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRep
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { OrganisationGeneralSettings, SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
+import { SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import {
   CollectionNavigationEnum,
@@ -131,7 +132,7 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  <OrganisationGeneralSettings />
+                  <RepositoryNameForm />
                 </div>
               </div>
             </div>
