@@ -7,28 +7,24 @@ import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { useEffect } from 'react'
+import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { RulesDisplay } from 'src/client/components/repository/RulesDisplay'
-import { RulesSelector } from 'src/client/components/repository/RulesSelector'
-import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { OrganisationGeneralSettings, SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import {
+  CollectionNavigationEnum,
+  CollectionSettingsNavigationEnum,
+  OrganisationNavigationEnum,
+  ZoneNavigationEnum,
+} from 'src/shared/enums'
 
-const Page = () => {
-  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+const Page: NextPage = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
-  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
-
-  useEffect(() => {
-    if (!repository) return
-    setRepositoryId(repository.id)
-  }, [isLoadingRepository])
-
+  const { current: repository } = useQueryRepositoryFindByName()
+  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
   return (
-    <OrganisationAuthLayout>
+    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
@@ -95,7 +91,7 @@ const Page = () => {
                   ZoneNavigationEnum.enum.Create,
                   CollectionNavigationEnum.enum.Rules
                 ),
-                enabled: true,
+                enabled: false,
                 loading: false,
               },
               {
@@ -106,7 +102,7 @@ const Page = () => {
                   ZoneNavigationEnum.enum.Create,
                   CollectionNavigationEnum.enum.Settings
                 ),
-                enabled: false,
+                enabled: true,
                 loading: false,
               },
             ].map((item) => (
@@ -114,19 +110,30 @@ const Page = () => {
             ))}
           </PageRoutesNavbar>
         </Layout.PageHeader>
-        <Layout.Body border='lower'>
-          <div className='w-full py-16'>
-            <div className='flex justify-center'>
-              <div className='space-y-1 w-full'>
-                <span className='text-xs font-semibold uppercase'>Create a condition</span>
-                <RulesSelector layers={layers} />
+        <Layout.Body>
+          <div className='py-8 space-y-8'>
+            <div className='grid grid-cols-10 gap-x-6'>
+              <div className='col-span-2'>
+                <SettingsNavigations
+                  routes={[
+                    {
+                      name: CollectionSettingsNavigationEnum.enum.General,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Create,
+                        CollectionNavigationEnum.enum.Settings
+                      ),
+                      selected: true,
+                    },
+                  ]}
+                />
               </div>
-            </div>
-          </div>
-          <div className='w-full py-16'>
-            <div className='space-y-3 w-full flex flex-col justify-center'>
-              <span className='text-xs font-semibold uppercase'>All rules created</span>
-              <RulesDisplay traitElements={layers.flatMap((x) => x.traitElements)} />
+              <div className='col-span-8'>
+                <div className='space-y-6'>
+                  <OrganisationGeneralSettings />
+                </div>
+              </div>
             </div>
           </div>
         </Layout.Body>

@@ -99,6 +99,17 @@ const Page = () => {
                 enabled: false,
                 loading: false,
               },
+              {
+                name: CollectionNavigationEnum.enum.Settings,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Create,
+                  CollectionNavigationEnum.enum.Settings
+                ),
+                enabled: false,
+                loading: false,
+              },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
