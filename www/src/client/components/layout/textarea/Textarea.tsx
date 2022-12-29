@@ -24,7 +24,7 @@ type NativeAttrs = Omit<React.TextareaHTMLAttributes<any>, keyof Props>
 export type TextareaProps = Props & NativeAttrs
 
 const TextareaComponent = React.forwardRef<HTMLTextAreaElement, React.PropsWithChildren<TextareaProps>>(
-  ({ disabled, readOnly, onFocus, onBlur, onChange, className, initialValue, value, placeholder, ...props }, ref) => {
+  ({ disabled, readOnly, onFocus, onBlur, onChange, className, defaultValue, initialValue, value, placeholder, ...props }, ref) => {
     // const textareaRef = useRef<HTMLTextAreaElement | null>(ref)
     // useImperativeHandle(ref, () => textareaRef.current)
 
@@ -75,6 +75,7 @@ const TextareaComponent = React.forwardRef<HTMLTextAreaElement, React.PropsWithC
           onFocus={focusHandler}
           onBlur={blurHandler}
           onChange={changeHandler}
+          defaultValue={defaultValue}
           className={clsx(
             'bg-transparent shadow-none block text-xs w-full border-none outline-none p-2 rounded-[5px]',
             'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',

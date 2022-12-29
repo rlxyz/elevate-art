@@ -4,12 +4,13 @@ import React, { forwardRef } from 'react'
 export interface Props {
   className?: string
   withSaveButton?: boolean
+  disabled?: boolean
 }
 
 export type SettingLayoutProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
 
 const SettingLayout = forwardRef<HTMLFormElement, React.PropsWithChildren<SettingLayoutProps>>(
-  ({ withSaveButton = true, children, className, ...props }) => {
+  ({ withSaveButton = true, disabled = true, children, className, ...props }) => {
     const childrens = React.Children.toArray(children)
     return (
       <form {...props} className={'border border-mediumGrey rounded-[5px]'}>
@@ -29,9 +30,15 @@ const SettingLayout = forwardRef<HTMLFormElement, React.PropsWithChildren<Settin
         </div>
         <div className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
           {withSaveButton && (
-            <div className='border border-mediumGrey px-4 py-2 rounded-[5px]'>
-              <button className='text-darkGrey'>Save</button>
-            </div>
+            <button
+              disabled={disabled}
+              className={clsx(
+                'bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]',
+                disabled && 'cursor-not-allowed'
+              )}
+            >
+              Save
+            </button>
           )}
         </div>
       </form>

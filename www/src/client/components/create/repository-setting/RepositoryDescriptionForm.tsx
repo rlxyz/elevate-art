@@ -1,25 +1,32 @@
 import SettingLayout from '@components/layout/settings'
 import Textarea from '@components/layout/textarea/Textarea'
+import { useMutateRepositoryUpdateDescription } from '@hooks/trpc/repository/useMutateRepositoryUpdateDescription'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useForm } from 'react-hook-form'
 
 export const RepositoryDescriptionForm = () => {
   const { current: repository } = useQueryRepositoryFindByName()
+  const { mutate, isLoading } = useMutateRepositoryUpdateDescription()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      description: repository?.description,
+      description: repository?.description || '',
     },
   })
 
   return (
     <SettingLayout
       onSubmit={handleSubmit((data) => {
-        console.log(data)
+        if (!repository) return
+        mutate({
+          repositoryId: repository.id,
+          description: data.description,
+        })
       })}
+      disabled={isLoading}
     >
       <SettingLayout.Header
         title='Description'
@@ -31,6 +38,7 @@ export const RepositoryDescriptionForm = () => {
             required: true,
           })}
           placeholder={repository?.description || ''}
+          defaultValue={repository?.description || ''}
           rows={5}
           wrap='soft'
           aria-invalid={errors.description ? 'true' : 'false'}
