@@ -51,7 +51,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({
       {!showText && (
         <img
           alt='avatar-img'
-          className={clsx('object-cover w-full select-none', isSquare ? 'rounded-[5px]' : 'rounded-full')}
+          className={clsx('object-cover w-full select-none h-full w-full', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           src={src}
           draggable={false}
           {...props}
