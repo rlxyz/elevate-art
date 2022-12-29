@@ -1,24 +1,7 @@
-import { NextLinkWithHoverHueComponent } from '@components/layout/link/NextLinkWithHoverHueComponent'
 import SettingLayout from '@components/layout/settings'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
-import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { capitalize } from 'src/client/utils/format'
-
-export const SettingsNavigations: FC<{ routes: { name: string; href: string; selected: boolean }[] }> = ({ routes }) => {
-  return (
-    <div>
-      {routes.map(({ name, href, selected }) => {
-        return (
-          <NextLinkWithHoverHueComponent key={name} href={href} enabled={selected}>
-            {capitalize(name)}
-          </NextLinkWithHoverHueComponent>
-        )
-      })}
-    </div>
-  )
-}
 
 export const OrganisationGeneralSettings = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -40,7 +23,7 @@ export const OrganisationGeneralSettings = () => {
     >
       <SettingLayout.Header title='Team Name' description='Used to identify your teams name on elevate.art' />
       <SettingLayout.Body>
-        <div className='w-full rounded-[5px] border border-mediumGrey'>
+        <div className='w-fit rounded-[5px] border border-mediumGrey'>
           <div className='h-full grid grid-cols-10 text-sm'>
             <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
               <span className='px-4 py-2 text-xs'>{`elevate.art/`}</span>
@@ -57,7 +40,7 @@ export const OrganisationGeneralSettings = () => {
                 placeholder={organisation?.name}
                 {...register('name', {
                   required: true,
-                  maxLength: 20,
+                  maxLength: 25,
                   minLength: 3,
                   pattern: /^[a-zA-Z0-9-]+$/,
                   validate: (value) => {
@@ -76,13 +59,13 @@ export const OrganisationGeneralSettings = () => {
         {errors.name ? (
           <SettingLayout.Error
             message={
-              String(errors?.name?.message) || errors?.name.type === 'pattern'
+              String(errors?.name?.message)
+                ? String(errors.name.message)
+                : errors?.name.type === 'pattern'
                 ? `We only accept "-" (dashes) as special characters`
-                : errors?.name.type === 'maxLength'
-                ? 'Team name is too long'
-                : errors?.name.type === 'minLength'
-                ? 'Team name is too short'
-                : 'Please enter a valid team name'
+                : errors?.name.type === 'maxLength' || errors?.name.type === 'minLength'
+                ? 'Must be between 3 and 25 characters long'
+                : 'Please enter a valid project name'
             }
           />
         ) : null}

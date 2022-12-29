@@ -4,7 +4,7 @@ import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
 
-export const RepositoryNameForm = () => {
+export const RepositoryDescriptionForm = () => {
   const { current: repository } = useQueryRepositoryFindByName()
   const { organisationName } = useRepositoryRoute()
   const {
@@ -23,9 +23,12 @@ export const RepositoryNameForm = () => {
         console.log(data)
       })}
     >
-      <SettingLayout.Header title='Project Name' description='Used to identify your projects name on elevate.art' />
+      <SettingLayout.Header
+        title='Description'
+        description='A short description of your project. Note, this is also added to the metadata of the tokens in this collection'
+      />
       <SettingLayout.Body>
-        <div className='w-fit rounded-[5px] border border-mediumGrey'>
+        <div className='w-full rounded-[5px] border border-mediumGrey'>
           <div className='h-full grid grid-cols-10 text-sm'>
             <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
               <span className='px-4 py-2 text-xs'>{`${organisationName}/`}</span>
@@ -42,7 +45,7 @@ export const RepositoryNameForm = () => {
                 placeholder={repository?.name}
                 {...register('name', {
                   required: true,
-                  maxLength: 25,
+                  maxLength: 20,
                   minLength: 3,
                   pattern: /^[a-zA-Z0-9-]+$/,
                   validate: (value) => {
@@ -51,7 +54,7 @@ export const RepositoryNameForm = () => {
                     }
 
                     //! @note right now, this is disabled
-                    return 'As of right now, we are not allowing renaming of projects.'
+                    return 'As of right now, we do not not allow renaming of projects. We will soon allow this'
                   },
                 })}
               />
@@ -66,7 +69,7 @@ export const RepositoryNameForm = () => {
                 : errors?.name.type === 'pattern'
                 ? `We only accept "-" (dashes) as special characters`
                 : errors?.name.type === 'maxLength' || errors?.name.type === 'minLength'
-                ? 'Must be between 3 and 25 characters long'
+                ? 'Must be between 3 and 20 characters long'
                 : 'Please enter a valid project name'
             }
           />

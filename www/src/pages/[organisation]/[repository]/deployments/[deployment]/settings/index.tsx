@@ -2,6 +2,7 @@ import { ContractGeneralSettings } from '@components/contractDeployment/Contract
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
+import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
@@ -12,7 +13,6 @@ import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { SettingsNavigations } from 'src/client/components/organisation/OrganisationSettings'
 import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
 import {
@@ -105,7 +105,7 @@ const Page: NextPage = () => {
           <div className='py-8 space-y-8'>
             <div className='grid grid-cols-10 gap-x-6'>
               <div className='col-span-2'>
-                <SettingsNavigations
+                <SettingNavigation
                   routes={[
                     {
                       name: ContractSettingsNavigationEnum.enum.Details,
