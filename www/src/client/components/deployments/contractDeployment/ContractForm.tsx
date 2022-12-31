@@ -36,26 +36,26 @@ const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement
 }
 
 const ContractSummary = ({
-  contractName,
-  contractSymbol,
-  mintType,
-  blockchain,
-  artCollection,
+  contractName, // contract level
+  contractSymbol, // contract level
+  mintType, // from the db; to be removed because we do this when we run AssetDeployment
+  blockchain, // chainId
+  artCollection, // assetDeployment
   currentSegment,
-  presale,
-  presalePrice,
-  presaleSupply,
-  presaleMaxMintAmount,
-  presaleMaxTransactionAmount,
+  // presale,
+  presalePrice, // contract level
+  presaleSupply, // contract level
+  presaleMaxMintAmount, // contract level
+  presaleMaxTransactionAmount, // contract level
   publicSale,
-  publicSalePrice,
-  publicSaleMaxMintAmount,
-  publicSaleMaxTransactionAmount,
+  publicSalePrice, // contract level
+  publicSaleMaxMintAmount, // contract level
+  publicSaleMaxTransactionAmount, // contract level
   onClick,
 }: {
   contractName?: string
   contractSymbol?: string
-  onClick?: (e: any) => Promise<void>
+  onClick?: () => void
   mintType?: string
   blockchain?: string
   artCollection?: string
@@ -70,6 +70,8 @@ const ContractSummary = ({
   publicSaleMaxMintAmount?: number
   publicSaleMaxTransactionAmount?: number
 }) => {
+  console.log('currentSegment', currentSegment)
+
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
@@ -122,19 +124,42 @@ const ContractSummary = ({
       </div>
 
       <div className='grid grid-cols-8'>
-        <button
-          className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-          type='button'
-        >
-          ᐸ
-        </button>
-        <button
-          className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-          type='submit'
-          onClick={onClick}
-        >
-          Continue
-        </button>
+        {currentSegment === 1 || currentSegment === 2 ? (
+          <>
+            <button
+              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='button'
+              onClick={onClick}
+            >
+              ᐸ
+            </button>
+            <button
+              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='submit'
+              onClick={onClick}
+            >
+              Continue
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='button'
+              onClick={onClick}
+            >
+              ᐸ
+            </button>
+
+            <button
+              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='submit'
+              onClick={onClick}
+            >
+              Continue
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

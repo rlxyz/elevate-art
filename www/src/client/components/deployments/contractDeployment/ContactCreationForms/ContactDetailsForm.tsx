@@ -21,6 +21,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     mintType,
     blockchain,
     artCollection,
+
     setContractName,
     setContractSymbol,
     setMintType,
@@ -199,7 +200,6 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             mintType={mintType}
             artCollection={localArtCollection}
             currentSegment={currentSegment}
-            onContinue={() => {}}
           />
         </div>
       </ContractForm.Body>

@@ -16,10 +16,9 @@ import type { NextPage } from 'next'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize } from 'src/client/utils/format'
-import { env } from 'src/env/client.mjs'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import {
-  CollectionNavigationEnum,
+  AssetDeploymentNavigationEnum,
   ContractSettingsNavigationEnum,
   DeploymentNavigationEnum,
   OrganisationNavigationEnum,
@@ -103,19 +102,13 @@ const Page: NextPage = () => {
                 ]}
               />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={organisation?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}`}
-            >
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item
-              label={repository?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}`}
-            />
+            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
             <AppRoutesNavbar.Item
               label={deployment?.name || ''}
-              href={`/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`}
+              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`}
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
@@ -123,20 +116,20 @@ const Page: NextPage = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: DeploymentNavigationEnum.enum.Deployment,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}`,
+                name: AssetDeploymentNavigationEnum.enum.Overview,
+                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`,
                 enabled: false,
                 loading: isLoading,
               },
               {
-                name: DeploymentNavigationEnum.enum.Contract,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Contract}`,
+                name: AssetDeploymentNavigationEnum.enum.Contract,
+                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${AssetDeploymentNavigationEnum.enum.Contract}`,
                 enabled: false,
                 loading: isLoading,
               },
               {
-                name: DeploymentNavigationEnum.enum.Settings,
-                href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
+                name: AssetDeploymentNavigationEnum.enum.Settings,
+                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
                 enabled: true,
                 loading: false,
               },
@@ -153,27 +146,61 @@ const Page: NextPage = () => {
                   routes={[
                     {
                       name: ContractSettingsNavigationEnum.enum.Details,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings
+                      ),
                       selected: false,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.Mechanics,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}/${ContractSettingsNavigationEnum.enum.Mechanics}`,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.Mechanics
+                      ),
                       selected: false,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.Revenue,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}/${ContractSettingsNavigationEnum.enum.Revenue}`,
-                      selected: false,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.Revenue
+                      ),
+                      selected: true,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.Allowlist,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}/${ContractSettingsNavigationEnum.enum.Allowlist}`,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.Allowlist
+                      ),
                       selected: false,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.Deploy,
-                      href: `/${env.NEXT_PUBLIC_CREATE_CLIENT_BASE_PATH}/${organisation?.name}/${repository?.name}/${CollectionNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}/${ContractSettingsNavigationEnum.enum.Deploy}`,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.Deploy
+                      ),
                       selected: false,
                     },
                   ]}
