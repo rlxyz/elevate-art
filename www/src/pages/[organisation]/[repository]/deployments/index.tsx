@@ -1,5 +1,5 @@
-import RepositoryDeploymentCreateModal from '@components/assetDeployment/RepositoryDeploymentCreateModal'
-import { RepositoryDeploymentPreviewCard } from '@components/assetDeployment/RepositoryDeploymentPreviewCard'
+import RepositoryDeploymentCreateModal from '@components/deployments/assetDeployment/RepositoryDeploymentCreateModal'
+import { RepositoryDeploymentPreviewCard } from '@components/deployments/assetDeployment/RepositoryDeploymentPreviewCard'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'

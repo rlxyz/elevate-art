@@ -35,7 +35,6 @@ export const CollectionLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ contra
               <img
                 src={getLogoForRepository({ r: repository.id })}
                 alt='collection-logo'
-                fill
                 className='object-cover aspect-auto overflow-hidden rounded-[5px]'
               />
             )}

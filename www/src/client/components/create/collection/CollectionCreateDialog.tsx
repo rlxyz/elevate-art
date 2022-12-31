@@ -1,9 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { useMutateCollectionCreate } from '@hooks/trpc/collection/useMutateCollectionCreate'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from 'src/client/components/layout/Button'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { useMutateCollectionCreate } from '../../hooks/trpc/collection/useMutateCollectionCreate'
 
 const Index = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
