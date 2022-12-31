@@ -3,6 +3,7 @@ import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
 import { ContractForm } from '../ContractForm'
+import { useAnimationMotionValues } from '../useAnimationMotionValues'
 
 export type ContractDetailsForm = {
   contractName: string
@@ -51,18 +52,24 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
     setMintType(mintType)
     setBlockchain(blockchain)
     setArtCollection(artCollection)
-    setCurrentSegment(currentSegment + 1)
+    // setCurrentSegment(currentSegment + 1)
   }
 
   const localContractName = watch('contractName')
   const localContractSymbol = watch('contractSymbol')
   const localArtCollection = watch('artCollection')
   const localBlockchain = watch('blockchain')
+  const { handleClick } = useAnimationMotionValues()
 
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
-      <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
+      <ContractForm.Body
+        onSubmit={handleSubmit((data) => {
+          onSubmit(data)
+          handleClick(1)
+        })}
+      >
         <div className='w-full '>
           <ContractForm.Body.Input
             {...register('contractName', {
@@ -192,6 +199,7 @@ export const ContractDetailsForm: FC<{ title: string; description: string }> = (
             mintType={mintType}
             artCollection={localArtCollection}
             currentSegment={currentSegment}
+            onContinue={() => {}}
           />
         </div>
       </ContractForm.Body>

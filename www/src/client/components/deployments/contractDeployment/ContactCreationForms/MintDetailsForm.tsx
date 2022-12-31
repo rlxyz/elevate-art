@@ -2,6 +2,7 @@ import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { ContractForm } from '../ContractForm'
+import { useAnimationMotionValues } from '../useAnimationMotionValues'
 
 export type MintDetailsForm = {
   collectionSize: number // inferred from deployment
@@ -82,7 +83,7 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
     setPresaleSupply(presaleSupply)
     setPresaleMaxMintAmount(presaleMaxMintAmount)
     setPresaleMaxTransactionAmount(presaleMaxTransactionAmount)
-    setCurrentSegment(2)
+    // setCurrentSegment(2)
   }
 
   const localPresale = watch('presale')
@@ -94,14 +95,19 @@ export const MintDetailsForm: FC<{ title: string; description: string }> = ({ ti
   const localPublicSalePrice = watch('publicSalePrice')
   const localPublicSaleMaxMintAmount = watch('publicSaleMaxMintAmount')
   const localPublicSaleMaxTransactionAmount = watch('publicSaleMaxTransactionAmount')
-
+  const { handleClick } = useAnimationMotionValues()
   console.log(watch())
 
   return (
     <>
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
-        <ContractForm.Body onSubmit={handleSubmit(onSubmit)}>
+        <ContractForm.Body
+          onSubmit={handleSubmit((data) => {
+            onSubmit(data)
+            handleClick(2)
+          })}
+        >
           <div className='space-y-3'>
             <ContractForm.Body.ToggleCategory className='' label={`Presale (optional)`}>
               <div className='flex flex-row gap-3 mb-2'>

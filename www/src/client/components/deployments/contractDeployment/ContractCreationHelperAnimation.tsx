@@ -4,9 +4,11 @@ import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import clsx from 'clsx'
 import { AnimatePresence, useMotionValue } from 'framer-motion'
 import type { FC } from 'react'
+import { useEffect } from 'react'
 import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
 import { LineWithGradient } from './LineWithGradient'
+import { useAnimationMotionValues } from './useAnimationMotionValues'
 
 /** @todo modularise */
 export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ className }) => {
@@ -17,36 +19,19 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
   const opacityX = useMotionValue(1)
   const opacityY = useMotionValue(0.5)
   const opacityZ = useMotionValue(0.25)
+  const { handleClick } = useAnimationMotionValues()
+  const { currentSegment, setCurrentSegment, motionValues, setMotionValue } = useContractCreationStore()
 
-  const { currentSegment, setCurrentSegment } = useContractCreationStore()
+  useEffect(() => {
+    setMotionValue(0, x, 'x')
+    setMotionValue(1, y, 'x')
+    setMotionValue(2, z, 'x')
+    setMotionValue(0, opacityX, 'opacity')
+    setMotionValue(1, opacityY, 'opacity')
+    setMotionValue(2, opacityZ, 'opacity')
+  }, [])
 
-  const handleClick = (index: number) => {
-    if (currentSegment === index) return null
-    setCurrentSegment(index)
-
-    if (index === 0) {
-      x.set(0.5)
-      y.set(0.75)
-      z.set(1)
-      opacityX.set(1)
-      opacityY.set(0.5)
-      opacityZ.set(0.25)
-    } else if (index === 1) {
-      x.set(0.25)
-      y.set(0.5)
-      z.set(0.75)
-      opacityX.set(0.5)
-      opacityY.set(1)
-      opacityZ.set(0.5)
-    } else if (index === 2) {
-      x.set(0.0)
-      y.set(0.25)
-      z.set(0.5)
-      opacityX.set(0.25)
-      opacityY.set(0.5)
-      opacityZ.set(1)
-    }
-  }
+  if (motionValues['x'][0] === null) return null
 
   return (
     <div className={clsx('flex h-full flex-col items-center w-full space-y-9', className)}>
@@ -57,39 +42,47 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
             </div> */}
       <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden rounded-[5px]'>
         <AnimatePresence>
-          <CarouselSegment
-            enabled={currentSegment === 0}
-            transformOutputRange={['15%', '32.5%', '50%']}
-            transformInputRange={[0, 0.25, 0.5]}
-            index={0}
-            onClick={handleClick}
-            x={x}
-            opacity={opacityX}
-          >
-            <TriangleIcon className='w-8 h-8 -translate-y-[1.5px] text-black' />
-          </CarouselSegment>
-          <CarouselSegment
-            enabled={currentSegment === 1}
-            transformOutputRange={['32.5%', '50%', '67.5%']}
-            transformInputRange={[0.25, 0.5, 0.75]}
-            index={1}
-            onClick={handleClick}
-            x={y}
-            opacity={opacityY}
-          >
-            <CubeIcon className='w-10 h-10 text-black' />
-          </CarouselSegment>
-          <CarouselSegment
-            enabled={currentSegment === 2}
-            transformOutputRange={['50%', '67.5%', '85%']}
-            transformInputRange={[0.5, 0.75, 1]}
-            index={2}
-            onClick={handleClick}
-            x={z}
-            opacity={opacityZ}
-          >
-            <MoonIcon className='w-10 h-10 text-black' />
-          </CarouselSegment>
+          {motionValues['x'][0] && (
+            <CarouselSegment
+              enabled={currentSegment === 0}
+              transformOutputRange={['15%', '32.5%', '50%']}
+              transformInputRange={[0, 0.25, 0.5]}
+              index={0}
+              onClick={handleClick}
+              x={motionValues['x'][0]}
+              opacity={opacityX}
+            >
+              <TriangleIcon className='w-8 h-8 -translate-y-[1.5px] text-black' />
+            </CarouselSegment>
+          )}
+          {motionValues['x'][1] && (
+            <>
+              <CarouselSegment
+                enabled={currentSegment === 1}
+                transformOutputRange={['32.5%', '50%', '67.5%']}
+                transformInputRange={[0.25, 0.5, 0.75]}
+                index={1}
+                onClick={handleClick}
+                x={motionValues['x'][1]}
+                opacity={opacityY}
+              >
+                <CubeIcon className='w-10 h-10 text-black' />
+              </CarouselSegment>
+            </>
+          )}
+          {motionValues['x'][2] && (
+            <CarouselSegment
+              enabled={currentSegment === 2}
+              transformOutputRange={['50%', '67.5%', '85%']}
+              transformInputRange={[0.5, 0.75, 1]}
+              index={2}
+              onClick={handleClick}
+              x={motionValues['x'][2]}
+              opacity={opacityZ}
+            >
+              <MoonIcon className='w-10 h-10 text-black' />
+            </CarouselSegment>
+          )}
         </AnimatePresence>
 
         <ButtonWithSelector onClick={() => handleClick(currentSegment - 1)} enabled={currentSegment === 0}>

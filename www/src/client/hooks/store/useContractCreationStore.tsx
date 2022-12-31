@@ -1,6 +1,12 @@
+import type { MotionValue } from 'framer-motion'
 import create from 'zustand'
 
 export const useContractCreationStore = create<{
+  motionValues: {
+    x: (MotionValue<number> | null)[]
+    opacity: (MotionValue<number> | null)[]
+  }
+  setMotionValue: (index: number, value: MotionValue<number>, type: 'x' | 'opacity') => void
   currentSegment: number
   contractName: string
   contractSymbol: string
@@ -70,4 +76,15 @@ export const useContractCreationStore = create<{
   setCollectionSize: (size: number) => set({ collectionSize: size }),
   setPricePerToken: (price: number) => set({ pricePerToken: price }),
   setArtCollection: (artCollection: 'main' | 'development') => set({ artCollection: artCollection }),
+  motionValues: {
+    x: [null, null, null],
+    opacity: [null, null, null],
+  },
+  setMotionValue: (index: number, value: MotionValue, type: 'x' | 'opacity') => {
+    set((state) => {
+      const motionValues = state.motionValues
+      motionValues[type][index] = value
+      return { motionValues: motionValues }
+    })
+  },
 }))
