@@ -1,4 +1,4 @@
-import { ContractGeneralSettings } from '@components/contractDeployment/ContractSettings'
+import { ContractGeneralSettings } from '@components/deployments/contractDeployment/ContractSettings'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'

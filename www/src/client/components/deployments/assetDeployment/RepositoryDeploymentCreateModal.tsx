@@ -1,5 +1,5 @@
-import { ContractFormBodyRadioInput, ContractFormBodySelectInput } from '@components/contractDeployment/ContractForm'
-import type { FormModalProps } from '@components/repository/LayerElementFileTree/LayerElementDeleteModal'
+import type { FormModalProps } from '@components/create/repository/LayerElementFileTree/LayerElementDeleteModal'
+import { ContractFormBodyRadioInput, ContractFormBodySelectInput } from '@components/deployments/contractDeployment/ContractForm'
 import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentCreate'
 import type { Collection, Repository } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'

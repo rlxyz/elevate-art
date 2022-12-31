@@ -1,7 +1,7 @@
 import Big from 'big.js'
 import { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateTraitElementUpdateWeight } from '../../../hooks/trpc/traitElement/useMutateTraitElementUpdateWeight'
+import { useMutateTraitElementUpdateWeight } from '../../../../hooks/trpc/traitElement/useMutateTraitElementUpdateWeight'
 
 interface Props {
   onClose: () => void

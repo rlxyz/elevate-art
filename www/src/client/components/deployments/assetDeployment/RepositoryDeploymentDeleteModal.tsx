@@ -1,4 +1,4 @@
-import type { FormModalProps } from '@components/repository/LayerElementFileTree/LayerElementDeleteModal'
+import type { FormModalProps } from '@components/create/repository/LayerElementFileTree/LayerElementDeleteModal'
 import { useMutateRepositoryDeploymentDelete } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentDelete'
 import type { AssetDeployment } from '@prisma/client'
 import type { FC } from 'react'

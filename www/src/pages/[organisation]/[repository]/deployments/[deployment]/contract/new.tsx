@@ -1,5 +1,5 @@
-import { ContractCreationFormDisplay } from '@components/contractDeployment/ContractCreationFormDisplay'
-import { ContractCreationHelperAnimation } from '@components/contractDeployment/ContractCreationHelperAnimation'
+import { ContractCreationFormDisplay } from '@components/deployments/contractDeployment/ContractCreationFormDisplay'
+import { ContractCreationHelperAnimation } from '@components/deployments/contractDeployment/ContractCreationHelperAnimation'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
