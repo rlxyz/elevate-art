@@ -148,7 +148,6 @@ const Footer = () => {
 const Home: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  console.log('fuck you')
   if (status === 'authenticated') router.push(routeBuilder(OrganisationNavigationEnum.enum.Dashboard))
   return (
     <>
