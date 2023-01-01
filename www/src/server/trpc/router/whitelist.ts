@@ -7,7 +7,7 @@ import { protectedProcedure, router } from '../trpc'
  *
  * @todo protect this router by checking if the user is the owner of the repository
  */
-export const collectionRouter = router({
+export const whitelistRouter = router({
   create: protectedProcedure
     .input(
       z.object({

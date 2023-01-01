@@ -7,6 +7,7 @@ import { organisationRouter } from './organisation'
 import { repositoryRouter } from './repository'
 import { ruleRouter } from './rule'
 import { traitElementRouter } from './traitElement'
+import { whitelistRouter } from './whitelist'
 
 export const appRouter = router({
   contractDeploymentWhitelist: contractDeploymentWhitelistRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   layerElement: layerElementRouter,
   traitElement: traitElementRouter,
   rule: ruleRouter,
+  whitelist: whitelistRouter,
 })
 
 // export type definition of API

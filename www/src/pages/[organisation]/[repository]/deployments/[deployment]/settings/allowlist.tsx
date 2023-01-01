@@ -1,4 +1,3 @@
-import type { ContractDetailsForm } from '@components/deployments/contractDeployment/ContactCreationForms/ContactDetailsForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -6,9 +5,9 @@ import { SettingNavigation } from '@components/layout/settings/SettingNavigation
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
-import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useMutateRepositoryCreateDeploymentWhitelistCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentWhitelistCreate'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import type { NextPage } from 'next'
@@ -29,21 +28,7 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-
-  const {
-    currentSegment,
-    contractName,
-    contractSymbol,
-    mintType,
-    blockchain,
-    artCollection,
-    setContractName,
-    setContractSymbol,
-    setMintType,
-    setBlockchain,
-    setCurrentSegment,
-    setArtCollection,
-  } = useContractCreationStore()
+  const { mutate } = useMutateRepositoryCreateDeploymentWhitelistCreate()
 
   const {
     register,
@@ -52,40 +37,14 @@ const Page: NextPage = () => {
     watch,
     formState: { errors },
     reset,
-  } = useForm({
-    defaultValues: {
-      contractName: contractName,
-      contractSymbol: contractSymbol,
-      mintType: mintType,
-      blockchain: blockchain,
-      artCollection: artCollection,
-    },
-  })
+  } = useForm()
 
-  const onSubmit = ({ contractName, contractSymbol, mintType, blockchain, artCollection }: ContractDetailsForm) => {
-    setContractName(contractName)
-    setContractSymbol(contractSymbol)
-    setMintType(mintType)
-    setBlockchain(blockchain)
-    setArtCollection(artCollection)
-    setCurrentSegment(currentSegment + 1)
-  }
-
-  // Types
-  type IWhitelist = {
-    whitelist: Record<string, number>
-  }
-
-  // Config from generator
-  const presaleConfig: IWhitelist = {
-    whitelist: {
-      '0xcd3B766CCDd6AE721141F452C550Ca635964ce71': 1,
-      '0x90F79bf6EB2c4f870365E785982E1f101E93b906': 1,
-      '0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199': 1,
-      '0xdD2FD4581271e230360230F9337D5c0430Bf44C0': 1,
-      '0x71bE63f3384f5fb98995898A86B02Fb2426c5788': 1,
-      '0xf8cA77ED09429aDe0d5C01ADB1D284C45324F608': 2,
-    },
+  const onSubmit = () => {
+    mutate({
+      deploymentId: deployment?.id,
+      address: watch('address'),
+    })
+    reset()
   }
 
   return (
@@ -93,31 +52,6 @@ const Page: NextPage = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-              <ZoneRoutesNavbarPopover
-                title='Apps'
-                routes={[
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: false,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: true,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                  },
-                ]}
-              />
-            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
@@ -126,6 +60,34 @@ const Page: NextPage = () => {
               label={deployment?.name || ''}
               href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`}
             />
+            <AppRoutesNavbar.Item
+              label={capitalize(ZoneNavigationEnum.enum.Deployments)}
+              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
+            >
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Deployments),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
+                    selected: true,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
+                    selected: false,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
           </AppRoutesNavbar>
         </Layout.AppHeader>
         <Layout.PageHeader>
