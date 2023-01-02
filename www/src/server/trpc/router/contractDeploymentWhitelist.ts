@@ -1,5 +1,6 @@
 import { WhitelistType } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
+import { getAddress } from 'ethers/lib/utils.js'
 import { z } from 'zod'
 import { protectedProcedure, publicProcedure, router } from '../trpc'
 /**
@@ -63,24 +64,29 @@ export const contractDeploymentWhitelistRouter = router({
     .input(
       z.object({
         contractDeploymentId: z.string(),
+        whitelist: z.array(
+          z.object({
+            address: z.string(),
+            mint: z.number(),
+          })
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { contractDeploymentId } = input
+      const { contractDeploymentId, whitelist } = input
 
       const BATCH_CHUNK_SIZE = 1000
-      const ARRAY_SIZE = 100
-      const array = Array.from(Array(ARRAY_SIZE).keys())
-
-      for (const chunk of Array.from({ length: Math.ceil(array.length / BATCH_CHUNK_SIZE) }, (_, index) =>
-        array.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
+      console.log('creating....')
+      for (const chunk of Array.from({ length: Math.ceil(whitelist.length / BATCH_CHUNK_SIZE) }, (_, index) =>
+        whitelist.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
       )) {
         await ctx.prisma.whitelist.createMany({
-          data: chunk.map((x) => ({
-            address: `0x-some-address-${(Math.random() + 1).toString(36).substring(6)}`,
-            mint: 1,
+          data: chunk.map(({ address, mint }) => ({
+            address: getAddress(address),
+            mint,
             contractDeploymentId,
           })),
+          skipDuplicates: true,
         })
       }
 

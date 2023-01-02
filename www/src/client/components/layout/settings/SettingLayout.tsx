@@ -32,6 +32,7 @@ const SettingLayout = forwardRef<HTMLFormElement, React.PropsWithChildren<Settin
           {withSaveButton && (
             <button
               disabled={disabled}
+              type='submit'
               className={clsx(
                 'bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]',
                 disabled && 'cursor-not-allowed'
