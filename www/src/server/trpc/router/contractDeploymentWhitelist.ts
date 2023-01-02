@@ -69,7 +69,7 @@ export const contractDeploymentWhitelistRouter = router({
       const { contractDeploymentId } = input
 
       const BATCH_CHUNK_SIZE = 1000
-      const ARRAY_SIZE = 10000
+      const ARRAY_SIZE = 100
       const array = Array.from(Array(ARRAY_SIZE).keys())
 
       for (const chunk of Array.from({ length: Math.ceil(array.length / BATCH_CHUNK_SIZE) }, (_, index) =>
@@ -83,6 +83,10 @@ export const contractDeploymentWhitelistRouter = router({
           })),
         })
       }
+
+      return await ctx.prisma.whitelist.findMany({
+        where: { contractDeploymentId },
+      })
     }),
   findAllowlistByAssetDeploymentId: publicProcedure
     .input(

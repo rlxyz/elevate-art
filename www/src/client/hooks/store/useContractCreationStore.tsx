@@ -1,9 +1,9 @@
 import type { MotionValue } from 'framer-motion'
-import { createContext } from 'vm'
 import create from 'zustand'
+import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
 
-interface ContractCreationStore {
+interface ContractCreationStoreInterface {
   motionValues: {
     x: (MotionValue<number> | null)[]
     opacity: (MotionValue<number> | null)[]
@@ -48,9 +48,9 @@ interface ContractStoreFunctionInterface {
   setArtCollection: (artCollection: 'main' | 'development') => void
 }
 
-interface ContractStoreInterface extends ContractStoreFunctionInterface, ContractCreationStore {}
+interface ContractStoreInterface extends ContractStoreFunctionInterface, ContractCreationStoreInterface {}
 
-const initialState: ContractCreationStore = {
+const initialState: ContractCreationStoreInterface = {
   currentSegment: 0,
   contractName: 'Bored Ape Yacht Club',
   contractSymbol: 'BAYC',

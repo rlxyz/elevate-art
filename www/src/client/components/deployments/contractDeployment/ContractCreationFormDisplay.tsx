@@ -1,5 +1,5 @@
 import { CubeIcon } from '@heroicons/react/outline'
-import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@hooks/store/useContractCreationStore'
 import clsx from 'clsx'
 import type { FC } from 'react'
 import { z } from 'zod'

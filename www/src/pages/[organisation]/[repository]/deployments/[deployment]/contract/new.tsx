@@ -6,6 +6,7 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { ContractContext, createContractCreationStore } from '@hooks/store/useContractCreationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -104,8 +105,10 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.PageHeader>
         <Layout.Body border={'lower'}>
-          <ContractCreationHelperAnimation className='py-16' />
-          <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />
+          <ContractContext.Provider createStore={() => createContractCreationStore}>
+            <ContractCreationHelperAnimation className='py-16' />
+            <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />
+          </ContractContext.Provider>
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

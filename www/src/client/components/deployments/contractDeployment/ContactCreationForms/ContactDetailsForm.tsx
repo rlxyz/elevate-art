@@ -1,4 +1,4 @@
-import { useContractCreationStore } from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@hooks/store/useContractCreationStore'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'

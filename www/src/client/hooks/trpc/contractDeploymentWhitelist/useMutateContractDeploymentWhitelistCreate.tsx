@@ -19,15 +19,9 @@ export const useMutateContractDeploymentWhitelistCreate = () => {
           repositoryId,
           name: deploymentName,
         },
-        (old) => {
-          if (!old) return old
-          // const next = produce(old, (draft) => {
-          //   draft = [...old, ...data]
-          // })
-          notifySuccess(`You have saved ${10} new addresses to the whitelist.`)
-          return next
-        }
+        data
       )
+      notifySuccess('Allowlist updated.')
     },
     onError: (err) => {
       notifyError(err.message)
