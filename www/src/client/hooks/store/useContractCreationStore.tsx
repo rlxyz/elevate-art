@@ -1,12 +1,13 @@
 import type { MotionValue } from 'framer-motion'
+import { createContext } from 'vm'
 import create from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export const useContractCreationStore = create<{
+interface ContractCreationStore {
   motionValues: {
     x: (MotionValue<number> | null)[]
     opacity: (MotionValue<number> | null)[]
   }
-  setMotionValue: (index: number, value: MotionValue<number>, type: 'x' | 'opacity') => void
   currentSegment: number
   contractName: string
   contractSymbol: string
@@ -24,6 +25,10 @@ export const useContractCreationStore = create<{
   publicSalePrice: number
   publicSaleMaxMintAmount: number
   publicSaleMaxTransactionAmount: number
+}
+
+interface ContractStoreFunctionInterface {
+  setMotionValue: (index: number, value: MotionValue<number>, type: 'x' | 'opacity') => void
   setPresale: (presale: boolean) => void
   setPresaleSupply: (supply: number) => void
   setPresalePrice: (price: number) => void
@@ -41,7 +46,11 @@ export const useContractCreationStore = create<{
   setCollectionSize: (size: number) => void
   setPricePerToken: (price: number) => void
   setArtCollection: (artCollection: 'main' | 'development') => void
-}>((set) => ({
+}
+
+interface ContractStoreInterface extends ContractStoreFunctionInterface, ContractCreationStore {}
+
+const initialState: ContractCreationStore = {
   currentSegment: 0,
   contractName: 'Bored Ape Yacht Club',
   contractSymbol: 'BAYC',
@@ -59,32 +68,49 @@ export const useContractCreationStore = create<{
   publicSalePrice: 0.05,
   publicSaleMaxMintAmount: 1,
   publicSaleMaxTransactionAmount: 1,
-  setPresale: (presale: boolean) => set({ presale: presale }),
-  setPresaleSupply: (supply: number) => set({ presaleSupply: supply }),
-  setPresalePrice: (price: number) => set({ presalePrice: price }),
-  setPresaleMaxMintAmount: (amount: number) => set({ presaleMaxMintAmount: amount }),
-  setPresaleMaxTransactionAmount: (amount: number) => set({ presaleMaxTransactionAmount: amount }),
-  setPublicSale: (publicSale: boolean) => set({ publicSale: publicSale }),
-  setPublicSalePrice: (price: number) => set({ publicSalePrice: price }),
-  setPublicSaleMaxMintAmount: (amount: number) => set({ publicSaleMaxMintAmount: amount }),
-  setPublicSaleMaxTransactionAmount: (amount: number) => set({ publicSaleMaxTransactionAmount: amount }),
-  setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
-  setContractName: (name: string) => set({ contractName: name }),
-  setContractSymbol: (symbol: string) => set({ contractSymbol: symbol }),
-  setMintType: (mintType: 'on-chain' | 'off-chain') => set({ mintType: mintType }),
-  setBlockchain: (blockchain: 'goerli' | 'mainnet') => set({ blockchain: blockchain }),
-  setCollectionSize: (size: number) => set({ collectionSize: size }),
-  setPricePerToken: (price: number) => set({ pricePerToken: price }),
-  setArtCollection: (artCollection: 'main' | 'development') => set({ artCollection: artCollection }),
   motionValues: {
     x: [null, null, null],
     opacity: [null, null, null],
   },
-  setMotionValue: (index: number, value: MotionValue, type: 'x' | 'opacity') => {
-    set((state) => {
-      const motionValues = state.motionValues
-      motionValues[type][index] = value
-      return { motionValues: motionValues }
-    })
-  },
-}))
+}
+
+export const createContractCreationStore = create<ContractStoreInterface>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      setMotionValue: (index: number, value: MotionValue, type: 'x' | 'opacity') => {
+        set((state) => {
+          const motionValues = state.motionValues
+          if (motionValues[type][index] !== null) {
+            motionValues[type][index] = value
+            return { motionValues: motionValues }
+          }
+          return { motionValues: motionValues }
+        })
+      },
+      setPresale: (presale: boolean) => set({ presale: presale }),
+      setPresaleSupply: (supply: number) => set({ presaleSupply: supply }),
+      setPresalePrice: (price: number) => set({ presalePrice: price }),
+      setPresaleMaxMintAmount: (amount: number) => set({ presaleMaxMintAmount: amount }),
+      setPresaleMaxTransactionAmount: (amount: number) => set({ presaleMaxTransactionAmount: amount }),
+      setPublicSale: (publicSale: boolean) => set({ publicSale: publicSale }),
+      setPublicSalePrice: (price: number) => set({ publicSalePrice: price }),
+      setPublicSaleMaxMintAmount: (amount: number) => set({ publicSaleMaxMintAmount: amount }),
+      setPublicSaleMaxTransactionAmount: (amount: number) => set({ publicSaleMaxTransactionAmount: amount }),
+      setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
+      setContractName: (name: string) => set({ contractName: name }),
+      setContractSymbol: (symbol: string) => set({ contractSymbol: symbol }),
+      setMintType: (mintType: 'on-chain' | 'off-chain') => set({ mintType: mintType }),
+      setBlockchain: (blockchain: 'goerli' | 'mainnet') => set({ blockchain: blockchain }),
+      setCollectionSize: (size: number) => set({ collectionSize: size }),
+      setPricePerToken: (price: number) => set({ pricePerToken: price }),
+      setArtCollection: (artCollection: 'main' | 'development') => set({ artCollection: artCollection }),
+    }),
+    { name: 'contractCreationStore', getStorage: () => sessionStorage }
+  )
+)
+
+export const ContractContext = createContext<typeof createContractCreationStore>()
+const useContractCreationStore = ContractContext.useStore
+
+export default useContractCreationStore

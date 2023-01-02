@@ -1,9 +1,9 @@
+import { useQueryContractDeployment } from '@components/explore/SaleLayout/useQueryContractDeployment'
 import { Layout } from '@components/layout/core/Layout'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
-import { useQueryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryContractDeployment'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
@@ -24,6 +24,8 @@ export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEn
 
 export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
   const { current } = useQueryContractDeployment()
+  console.log('current', current)
+
   return (
     <Layout>
       <Layout.AppHeader>

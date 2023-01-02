@@ -5,9 +5,10 @@ import { SettingNavigation } from '@components/layout/settings/SettingNavigation
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { useMutateContractDeploymentWhitelistCreate } from '@hooks/trpc/contractDeploymentWhitelist/useMutateContractDeploymentWhitelistCreate'
+import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { useMutateRepositoryCreateDeploymentWhitelistCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentWhitelistCreate'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import type { NextPage } from 'next'
@@ -28,8 +29,8 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { mutate } = useMutateRepositoryCreateDeploymentWhitelistCreate()
-
+  const { current: whitelist } = useQueryContractDeploymentWhitelist()
+  const { mutate } = useMutateContractDeploymentWhitelistCreate()
   const {
     register,
     setValue,
@@ -39,13 +40,7 @@ const Page: NextPage = () => {
     reset,
   } = useForm()
 
-  const onSubmit = () => {
-    mutate({
-      deploymentId: deployment?.id,
-      address: watch('address'),
-    })
-    reset()
-  }
+  const contractDeploymentAddress = contractDeployment?.address
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -189,6 +184,8 @@ const Page: NextPage = () => {
                   <h1 className='font-semibold py-2'>Allowlist</h1>
                   <form className='w-3/4'>
                     <div className='w-full '>
+                      <p>Contract Address: {contractDeploymentAddress}</p>
+                      <span>{whitelist?.length}</span>
                       {/* <ContractForm.Body.Input
                         {...register('address', {
                           required: false,
@@ -216,7 +213,14 @@ const Page: NextPage = () => {
                     </div>
                     <button
                       className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-                      type='submit'
+                      type='button'
+                      onClick={(e) => {
+                        if (!contractDeployment?.id) return
+
+                        mutate({
+                          contractDeploymentId: contractDeployment?.id,
+                        })
+                      }}
                     >
                       Save
                     </button>

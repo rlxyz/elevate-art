@@ -1,0 +1,24 @@
+import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
+import { trpc } from 'src/client/utils/trpc'
+
+export const useQueryContractDeploymentWhitelist = () => {
+  const router: NextRouter = useRouter()
+  const repositoryId = useRepositoryStore((state) => state.repositoryId)
+  const deploymentName: string = router.query.deployment as string
+  const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findAllowlistByAssetDeploymentId.useQuery(
+    {
+      repositoryId,
+      name: deploymentName,
+    },
+    {
+      enabled: !!repositoryId,
+    }
+  )
+  return {
+    current: data,
+    isLoading,
+    isError,
+  }
+}
