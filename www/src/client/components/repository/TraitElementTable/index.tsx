@@ -1,5 +1,6 @@
 import { CheckCircleIcon, CubeTransparentIcon } from '@heroicons/react/outline'
 import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { FC, useState } from 'react'
@@ -28,11 +29,12 @@ export type TraitElementViewType = z.infer<typeof TraitElementView>
 
 interface Props {
   layerElement: LayerElement | undefined
-  repositoryId: string
+  repository: Repository | undefined
+  organisation: Organisation | undefined
   className: string
 }
 
-const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
+const Index: FC<Props> = ({ className, layerElement, repository, organisation }) => {
   /**
    * Data needed for this component
    * Note, during first render, the key is empty string. The table then gets repopulated with the correct key.
@@ -67,7 +69,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
   } = useTraitElementTable({
     key: id,
     traitElements,
-    repositoryId,
+    repositoryId: repository?.id || '',
     searchFilter,
   })
 
@@ -121,7 +123,7 @@ const Index: FC<Props> = ({ className, layerElement, repositoryId }) => {
                   <CheckCircleIcon className='w-4 h-4' />
                   <span>Save</span>
                 </button>
-                <TraitElementActionControl />
+                <TraitElementActionControl repository={repository} organisation={organisation} />
               </div>
             </div>
           </div>

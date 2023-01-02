@@ -34,7 +34,7 @@ const Page = () => {
         <Layout.Header
           internalRoutes={[
             { current: organisationName, href: `/${organisationName}`, organisations },
-            { current: repositoryName, href: `/${organisationName}/${repositoryName}` },
+            { current: repositoryName, href: `/${organisationName}/${encodeURIComponent(repositoryName)}` },
           ]}
         >
           <HeaderInternalPageRoutes
@@ -47,7 +47,7 @@ const Page = () => {
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
-                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${layer?.name}`,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${encodeURIComponent(layer?.name || '')}`,
                 enabled: false,
                 loading: isLoadingLayers,
               },

@@ -65,7 +65,7 @@ const LayerElementRenameModal: FC<LayerElementRenameProps> = ({ layerElement, vi
               required: true,
               maxLength: 20,
               minLength: 3,
-              pattern: /^[-/a-z0-9 ]+$/gi,
+              pattern: /^[a-zA-Z0-9-]+$/,
               validate: (value) => !layers.map((x) => x.name).includes(value),
             })}
             defaultValue={layerElement.name}
