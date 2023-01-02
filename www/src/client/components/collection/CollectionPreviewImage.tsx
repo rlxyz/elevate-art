@@ -133,7 +133,7 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
   const hash = v.hash(elements)
 
   return (
-    <>
+    <div className={clsx(className, 'rounded-[5px]')}>
       {elements
         .filter(([l, t]) => !t.startsWith('none'))
         .map(([l, t], index) => {
@@ -151,6 +151,6 @@ export const PreviewImageCardStandalone: FC<PreviewImageProps> = ({
             />
           )
         })}
-    </>
+    </div>
   )
 }
