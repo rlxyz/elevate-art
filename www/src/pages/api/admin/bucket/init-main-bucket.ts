@@ -1,6 +1,6 @@
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { getAssetDeploymentBucketName, storage } from 'src/server/utils/gcp-storage'
 
 const admins = new Map<string, boolean>([
@@ -21,13 +21,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!isAdmin) return res.status(400)
 
   //  create individual bucket for AssetDeploymentBranch production and preview
-  const [b1] = await storage.createBucket(getAssetDeploymentBucketName({ type: AssetDeploymentBranch.PRODUCTION }), {
+  const [b1] = await storage.createBucket(getAssetDeploymentBucketName({ branch: AssetDeploymentBranch.PRODUCTION }), {
     location: 'US',
     storageClass: 'STANDARD',
   })
   await b1.makePublic()
 
-  const b2 = storage.createBucket(getAssetDeploymentBucketName({ type: AssetDeploymentBranch.PREVIEW }), {
+  const b2 = storage.createBucket(getAssetDeploymentBucketName({ branch: AssetDeploymentBranch.PREVIEW }), {
     location: 'US',
     storageClass: 'STANDARD',
   })

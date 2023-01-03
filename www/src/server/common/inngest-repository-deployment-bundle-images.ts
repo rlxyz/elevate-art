@@ -68,7 +68,7 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
      * Ensure Bucket Exists
      *! @todo should also handle AssetDeploymentBranch.PRODUCTION
      */
-    const bucket = await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW }).exists()
+    const bucket = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW }).exists()
 
     if (!bucket[0]) {
       await repositoryDeploymentFailedUpdate({ deploymentId })
@@ -88,7 +88,7 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
               if (!buffer) throw new Error("Couldn't get buffer")
               try {
                 //! @todo abstract all this functionality into own file
-                return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
+                return await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
                   .file(`${repositoryId}/deployments/${deploymentId}/layers/${l}/${t}.png`)
                   .save(Buffer.from(buffer), { contentType: 'image/png' })
               } catch (e) {
