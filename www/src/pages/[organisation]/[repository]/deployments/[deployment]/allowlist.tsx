@@ -171,7 +171,7 @@ const Page: NextPage = () => {
           <div className='py-8 space-y-8'>
             <div className='space-y-2'>
               <div className='w-full space-y-6'>
-                <SettingLayout>
+                <SettingLayout onSubmit={() => {}}>
                   <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
                   <SettingLayout.Body>
                     {/* <div className='space-y-2'>
