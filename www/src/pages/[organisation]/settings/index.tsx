@@ -9,7 +9,12 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { OrganisationGeneralSettings } from 'src/client/components/organisation/OrganisationSettings'
 import { routeBuilder } from 'src/client/utils/format'
-import { DashboardNavigationEnum, OrganisationNavigationEnum, OrganisationSettingsNavigationEnum } from 'src/shared/enums'
+import {
+  DashboardNavigationEnum,
+  OrganisationNavigationEnum,
+  OrganisationSettingsNavigationEnum,
+  ZoneNavigationEnum,
+} from 'src/shared/enums'
 
 const Page: NextPage = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
@@ -28,7 +33,7 @@ const Page: NextPage = () => {
             {[
               {
                 name: OrganisationNavigationEnum.enum.Overview,
-                href: routeBuilder(organisation?.name),
+                href: routeBuilder(organisation?.name, ZoneNavigationEnum.enum.Create),
                 enabled: false,
                 loading: false,
               },
