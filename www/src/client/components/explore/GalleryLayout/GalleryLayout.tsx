@@ -1,12 +1,12 @@
 import LinkComponent from '@components/layout/link/Link'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { ethers } from 'ethers'
 import { current } from 'immer'
 import Image from 'next/image'
-import { env } from 'process'
 import { useEffect, useState } from 'react'
 import InfiniteScrollComponent from 'react-infinite-scroll-component'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
+import { getDeploymentTokenImage } from 'src/client/utils/image'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -72,7 +72,13 @@ export const GalleryLayout = ({
                   className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'
                 >
                   <Image
-                    src={`${env.NEXT_PUBLIC_CREATE_CLIENT_URL}/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}/image`}
+                    src={getDeploymentTokenImage({
+                      o: organisation.name,
+                      r: repository.name,
+                      tokenId: id,
+                      d: assetDeployment?.name,
+                      type: assetDeployment?.type,
+                    })}
                     width={300}
                     height={300}
                     alt={`${contractDeployment.address}-#${id}`}

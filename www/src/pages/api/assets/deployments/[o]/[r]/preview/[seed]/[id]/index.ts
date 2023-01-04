@@ -1,28 +1,43 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { metadataCacheObject } from '@server/utils/gcp-bucket-actions'
+import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { metadataCacheObject } from '@server/utils/gcp-storage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerAuthSession({ req, res })
+  if (!session || !session.user) {
+    return res.status(401).send('Unauthorized')
+  }
+
   // o: organisationName, r: repositoryName, seed, id
-  const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
-  if (!organisationName || !repositoryName || !id) {
+  const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
+  if (!organisationName || !repositoryName || !seed || !id) {
     return res.status(400).send('Bad Request')
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
+  //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName } },
-      type: AssetDeploymentBranch.PRODUCTION,
+      branch: AssetDeploymentBranch.PREVIEW,
+      repository: {
+        name: repositoryName,
+        organisation: {
+          name: organisationName,
+          members: {
+            some: { userId: session.user.id },
+          },
+        },
+      },
+      name: seed,
     },
-    include: { repository: true, contractDeployment: true },
+    include: { repository: true },
   })
 
-  if (!deployment || !deployment.contractDeployment) {
+  if (!deployment) {
     return res.status(404).send('Not Found')
   }
 
@@ -30,16 +45,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  const { contractDeployment } = deployment
-
-  // check contract if token exists
-  const currentTotalSupply = (await getTotalSupply(contractDeployment.address, contractDeployment.chainId)).getValue()
-  if (currentTotalSupply.lt(id)) {
-    return res.status(400).send('Bad Request')
-  }
-
   // look into cache whether image exist
-  const metadata = await metadataCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
+  const metadata = await metadataCacheObject.get({
+    branch: AssetDeploymentBranch.PREVIEW,
+    repositoryId: deployment.repositoryId,
+    deploymentId: deployment.id,
+    id,
+  })
   if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
@@ -48,7 +60,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const response = {
     name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${id}/image`,
+    image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
@@ -63,6 +75,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await metadataCacheObject.put({
+    branch: AssetDeploymentBranch.PREVIEW,
     repositoryId: deployment.repositoryId,
     deploymentId: deployment.id,
     id,

@@ -1,11 +1,9 @@
-import { Disclosure } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/outline'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import { parseChainId } from '@utils/ethers'
-import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { capitalize } from 'src/client/utils/format'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
+import { DescriptionWithDisclouser } from '../../layout/DescriptionWithDisclouser'
 
 interface CollectionContractDeploymentDetailsProps {
   repository: Repository | null | undefined
@@ -45,18 +43,6 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
         <h1 className='text-xs font-bold'>{contractDeployment?.chainId && capitalize(parseChainId(contractDeployment.chainId))}</h1>
       </div>
     </div>
-    {repository?.description && (
-      <div>
-        <Disclosure>
-          <Disclosure.Button className={clsx('border-mediumGrey w-full flex items-center space-x-1')}>
-            <h2 className='text-xs font-normal'>See description</h2>
-            <ChevronDownIcon className='w-3 h-3' />
-          </Disclosure.Button>
-          <Disclosure.Panel>
-            <p className='my-1 text-[0.6rem] italic'>{repository.description}</p>
-          </Disclosure.Panel>
-        </Disclosure>
-      </div>
-    )}
+    {repository?.description && <DescriptionWithDisclouser description={repository.description} />}
   </div>
 )
