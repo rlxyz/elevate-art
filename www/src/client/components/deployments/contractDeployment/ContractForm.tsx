@@ -224,13 +224,22 @@ const ContractFormBodyInput = forwardRef<
   }
 )
 
-export const ContractFormBodyRadioInput = forwardRef<HTMLInputElement, React.PropsWithChildren<{ className?: string; label: string }>>(
-  ({ className = '', label, ...props }: React.PropsWithChildren<{ className?: string; label: string }>) => {
+export const ContractFormBodyRadioInput = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>
+>(
+  ({
+    className = '',
+    checked = false,
+    label,
+    ...props
+  }: React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>) => {
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
           <div className='flex items-center space-x-3 py-2'>
             <input
+              checked={checked}
               type='radio'
               className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs disabled:cursor-not-allowed')}
               {...props}

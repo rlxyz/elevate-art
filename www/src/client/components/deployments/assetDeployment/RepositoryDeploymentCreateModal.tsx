@@ -28,7 +28,7 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
     reset,
   } = useForm<LayerElementCreateForm>({
     defaultValues: {
-      collectionName: collections[0]?.name || 'main',
+      collectionName: 'main',
       mintType: AssetDeploymentType.BASIC,
     },
   })
@@ -48,7 +48,6 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       visible={visible}
       onClose={handleClose}
       onSubmit={handleSubmit((data) => {
-        console.log('data', data)
         const collection = collections.find((x) => x.name === data.collectionName)
         if (!collection) return
         mutate({ repositoryId: repository.id, collectionId: collection.id, type: data.mintType }, { onSuccess: handleSuccess })
@@ -59,11 +58,8 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       className='md:max-w-lg' // @todo fix this
     >
       <ContractFormBodySelectInput
-        {...register('collectionName', {
-          onChange: (e) => {
-            setValue('collectionName', e.target.value)
-          },
-        })}
+        defaultValue={getValues('collectionName')}
+        {...register('collectionName')}
         label={'Name'}
         description={'Select a deployment collection'}
         className='col-span-6'
@@ -85,6 +81,7 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
                   setValue('mintType', AssetDeploymentType.BASIC)
                 },
               })}
+              checked={getValues('mintType') === AssetDeploymentType.BASIC}
               label={'Off-Chain'}
             />
           </div>
@@ -95,6 +92,7 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
                   setValue('mintType', AssetDeploymentType.GENERATIVE)
                 },
               })}
+              checked={getValues('mintType') === AssetDeploymentType.GENERATIVE}
               label={'On-Chain'}
             />
           </div>

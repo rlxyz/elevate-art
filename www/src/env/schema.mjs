@@ -19,7 +19,6 @@ export const serverSchema = z.object({
   GCP_PROJECT_ID: z.string(),
   GCP_CLIENT_EMAIL: z.string(),
   GCP_PRIVATE_KEY: z.string(),
-  GCP_BUCKET_NAME: z.string(),
   INNGEST_SIGNING_KEY: z.string(),
   INNGEST_EVENT_KEY: z.string(),
   ETHERSCAN_API_KEY: z.string(),
