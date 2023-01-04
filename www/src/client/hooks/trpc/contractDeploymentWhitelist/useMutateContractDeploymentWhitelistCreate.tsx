@@ -1,11 +1,10 @@
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
-import type { WhitelistType } from '@prisma/client'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useMutateContractDeploymentWhitelistCreate = ({ type }: { type: WhitelistType }) => {
+export const useMutateContractDeploymentWhitelistCreate = () => {
   const ctx = trpc.useContext()
   const { notifySuccess, notifyError } = useNotification()
   const router: NextRouter = useRouter()
@@ -17,7 +16,7 @@ export const useMutateContractDeploymentWhitelistCreate = ({ type }: { type: Whi
         {
           repositoryId,
           name: deploymentName,
-          type,
+          type: variables.type,
         },
         data
       )

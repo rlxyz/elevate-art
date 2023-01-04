@@ -1,46 +1,36 @@
+import type { InteractWithContract } from '@components/explore/SaleLayout/usePresalePurchase'
 import { useNotification } from '@hooks/utils/useNotification'
-import type { ContractDeployment } from '@prisma/client'
+import type { ContractDeployment, Whitelist } from '@prisma/client'
+import { WhitelistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
-import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
-import { useSaleMintCountInput } from './useSaleMintCountInput'
+import { useSetMerkleRoot } from './useSetMerkleRoot'
 
-export interface InteractWithContract {
-  isLoading: boolean
-  write: () => void
-  isError: boolean
-  isProcessing: boolean
+interface UseSetPresaleMerkleRoot extends InteractWithContract {
+  merkleRoot: string
+  setMerkleRoot: Dispatch<SetStateAction<string>>
 }
 
-interface UsePresaleMint extends InteractWithContract {
-  mintCount: BigNumber
-  setMintCount: Dispatch<SetStateAction<BigNumber>>
-}
-
-export const usePresalePurchase = ({
-  contractData,
+export const useSetPresaleMerkleRoot = ({
+  type,
+  whitelist,
   contractDeployment,
   enabled,
 }: {
-  address: string | undefined | null
+  type: WhitelistType
   enabled: boolean
-  contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
-}): UsePresaleMint => {
+  whitelist: Whitelist[] | undefined
+}): UseSetPresaleMerkleRoot => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
-  const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
+  const { merkleRoot, setMerkleRoot } = useSetMerkleRoot({ enabled, data: whitelist })
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
-    functionName: 'presaleMint',
-    args: [mintCount],
-    overrides: {
-      value: BigNumber.from(contractData.presalePeriod.mintPrice).mul(mintCount),
-      gasLimit: BigNumber.from(200000),
-    },
+    functionName: type === WhitelistType.ALLOWLIST ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
+    args: [merkleRoot],
   })
 
   const {
@@ -76,14 +66,14 @@ export const usePresalePurchase = ({
     },
     onSuccess: (data) => {
       if (data) {
-        notifySuccess("You've successfully minted your NFTs!")
+        notifySuccess("You've successfully change the merkle root!")
       }
     },
   })
 
   return {
-    mintCount,
-    setMintCount,
+    merkleRoot,
+    setMerkleRoot,
     write: () => write?.(),
     isLoading,
     isError,

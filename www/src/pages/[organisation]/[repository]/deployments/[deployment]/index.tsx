@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { AssetDeploymentNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -89,13 +89,14 @@ const Page = () => {
                 loading: isLoading,
               },
               {
-                name: AssetDeploymentNavigationEnum.enum.Allowlist,
+                name: AssetDeploymentNavigationEnum.enum.Settings,
                 href: routeBuilder(
                   organisation?.name,
                   repository?.name,
                   ZoneNavigationEnum.enum.Deployments,
                   deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Allowlist
+                  AssetDeploymentNavigationEnum.enum.Settings,
+                  ContractSettingsNavigationEnum.enum.Allowlist
                 ),
                 enabled: false,
                 loading: isLoading,

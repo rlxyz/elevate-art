@@ -92,7 +92,7 @@ export const contractDeploymentWhitelistRouter = router({
       }
 
       return await ctx.prisma.whitelist.findMany({
-        where: { contractDeploymentId },
+        where: { contractDeploymentId, type: type as WhitelistType },
       })
     }),
   findAllowlistByDeploymentName: publicProcedure

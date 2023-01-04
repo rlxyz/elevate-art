@@ -105,6 +105,7 @@ export const ContractSettingsNavigationEnum = z.nativeEnum(
     Mechanics: 'mechanics',
     Revenue: 'revenue',
     Allowlist: 'allowlist',
+    Claimlist: 'claimlist',
     Deploy: 'deploy',
   })
 )
@@ -131,7 +132,6 @@ export const AssetDeploymentNavigationEnum = z.nativeEnum(
     Overview: 'overview',
     Contract: 'contract',
     Settings: 'settings',
-    Allowlist: 'allowlist',
   })
 )
 
