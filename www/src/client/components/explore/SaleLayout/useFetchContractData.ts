@@ -45,7 +45,6 @@ type UseContractRead = UseContractReads
 
 export const useFetchContractData = ({ contractAddress, chainId, enabled = true, version }: UseContractRead) => {
   const { notifyError } = useNotification()
-
   return useContractReads({
     scopeKey: `erc721:${version}:${chainId}:${contractAddress}`,
     contracts: [

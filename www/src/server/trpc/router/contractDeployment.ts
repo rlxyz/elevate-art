@@ -69,4 +69,15 @@ export const contractDeploymentRouter = router({
     /** Return */
     return { deployment, contract }
   }),
+  findContractDataByAddress: publicProcedure.input(z.object({ address: z.string(), chainId: z.number() })).query(async ({ ctx, input }) => {
+    const response = await fetch(`/api/blockchain/${input.chainId}/contract/${input.address}`)
+    if (!response.ok) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: `Contract deployment with address ${input.address} not found`,
+      })
+    }
+    const contract = await response.json()
+    return contract
+  }),
 })
