@@ -16,3 +16,15 @@ export const sumByBig = <T>(array: T[], predicate: (value: T, index: number, arr
   array.reduce((acc, value, index, array) => {
     return acc.plus(predicate(value, index, array))
   }, Big(0))
+
+export const convertListToMap = <T extends { [key: string | number]: string | number }, U extends keyof T, V extends keyof T>(
+  list: T[],
+  key: U,
+  secondKey: V
+) => {
+  const map = {} as Record<T[U], T[V]>
+  for (const ele of list) {
+    map[ele[key]] = ele[secondKey]
+  }
+  return map
+}

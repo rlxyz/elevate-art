@@ -7,7 +7,7 @@ export const useQueryContractDeploymentWhitelistFindClaimByAddress = () => {
   const router: NextRouter = useRouter()
   const session = useSession()
   const { address } = router.query as { address: string }
-  const { data, isLoading, isError } = trpc.assetDeploymentWhitelist.findClaimByAddress.useQuery({ address }, { enabled: !!address })
+  const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findClaimByAddress.useQuery({ address }, { enabled: !!address })
   return {
     current: data?.whitelists.find((x) => x.address === session?.data?.user?.address) || { address: session?.data?.user?.address, mint: 0 },
     all: data,

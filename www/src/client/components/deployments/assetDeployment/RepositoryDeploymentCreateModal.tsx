@@ -81,7 +81,6 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
                   setValue('mintType', AssetDeploymentType.BASIC)
                 },
               })}
-              checked={getValues('mintType') === AssetDeploymentType.BASIC}
               label={'Off-Chain'}
             />
           </div>
@@ -92,7 +91,6 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
                   setValue('mintType', AssetDeploymentType.GENERATIVE)
                 },
               })}
-              checked={getValues('mintType') === AssetDeploymentType.GENERATIVE}
               label={'On-Chain'}
             />
           </div>

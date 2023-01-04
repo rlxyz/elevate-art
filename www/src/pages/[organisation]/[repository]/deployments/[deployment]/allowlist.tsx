@@ -1,3 +1,4 @@
+import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
 import { Table } from '@components/layout/core/Table'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -15,8 +16,11 @@ import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryCont
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { WhitelistType } from '@prisma/client'
 import { parseChainId } from '@utils/ethers'
+import { createMerkleTree } from '@utils/merkle_roots'
+import { convertListToMap } from '@utils/object-utils'
 import { getAddress } from 'ethers/lib/utils.js'
 import type { NextPage } from 'next'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -42,6 +46,29 @@ const Page: NextPage = () => {
   const { mutate } = useMutateContractDeploymentWhitelistCreate({
     type: WhitelistType.ALLOWLIST,
   })
+  const [dbPresaleMerkleRoot, setDbPresaleMerkleRoot] = useState<string | null>(null)
+  const { data } = useFetchContractData({
+    contractAddress: contractDeployment?.address || '',
+    chainId: contractDeployment?.chainId || 99,
+    enabled: !!contractDeployment?.address,
+    version: '0.1.0',
+  })
+
+  useEffect(() => {
+    if (!whitelist) return
+    setDbPresaleMerkleRoot(
+      createMerkleTree(
+        convertListToMap(
+          whitelist.map((x) => ({
+            address: x.address,
+            mint: String(x.mint),
+          })),
+          'address',
+          'mint'
+        )
+      ).getHexRoot()
+    )
+  }, [whitelist])
 
   const {
     register,
@@ -54,6 +81,10 @@ const Page: NextPage = () => {
       whitelist: '',
     },
   })
+
+  if (!data) return null
+
+  const { presaleMerkleRoot, claimMerkleRoot } = data
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -140,12 +171,10 @@ const Page: NextPage = () => {
           <div className='py-8 space-y-8'>
             <div className='space-y-2'>
               <div className='w-full space-y-6'>
-                <div className='grid grid-cols-6 gap-6'>
-                  <div className='col-span-2'>
-                    <SettingLayout>
-                      <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
-                      <SettingLayout.Body>
-                        {/* <div className='space-y-2'>
+                <SettingLayout>
+                  <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
+                  <SettingLayout.Body>
+                    {/* <div className='space-y-2'>
                           <div className='flex flex-col space-y-3'>
                             {[
                               {
@@ -160,20 +189,29 @@ const Page: NextPage = () => {
                             ))}
                           </div>
                         </div> */}
-                        <div className='text-xs '>
-                          {whitelist && whitelist?.length > 0 ? (
-                            <span>
-                              Your <strong>{toPascalCaseWithSpace(WhitelistType.ALLOWLIST)}</strong> is out of sync. You need to update the
-                              contract on <strong>{capitalize(parseChainId(contractDeployment?.chainId || 99))}</strong> to sync up your
-                              allowlist
-                            </span>
-                          ) : (
-                            <span>You do not have any items in your allowlist</span>
-                          )}
+                    <div className='text-xs space-y-2'>
+                      {presaleMerkleRoot !== dbPresaleMerkleRoot ? (
+                        <span>
+                          Your <strong>{toPascalCaseWithSpace(WhitelistType.ALLOWLIST)}</strong> is out of sync. You need to update the
+                          contract on <strong>{capitalize(parseChainId(contractDeployment?.chainId || 99))}</strong> to sync up your
+                          allowlist.
+                        </span>
+                      ) : (
+                        <span>You do not have any items in your allowlist</span>
+                      )}
+                      <span className='block flex flex-col'>
+                        <div>
+                          <strong>Presale Merkle Root in Contract</strong> {presaleMerkleRoot}
                         </div>
-                      </SettingLayout.Body>
-                    </SettingLayout>
-                  </div>
+                        <div>
+                          <strong>Presale Merkle Root in Db</strong> {dbPresaleMerkleRoot}
+                        </div>
+                      </span>
+                    </div>
+                  </SettingLayout.Body>
+                </SettingLayout>
+                <div className='grid grid-cols-6 gap-6'>
+                  <div className='col-span-2'></div>
                   <div className='col-span-4'>
                     <SettingLayout
                       disabled={false}
