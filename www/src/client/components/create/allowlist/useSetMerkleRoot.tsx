@@ -1,5 +1,5 @@
 import type { Whitelist } from '@prisma/client'
-import { createMerkleTree } from '@utils/merkle_roots'
+import { createMerkleTree } from '@utils/merkle-roots'
 import { convertListToMap } from '@utils/object-utils'
 import { useEffect, useState } from 'react'
 
