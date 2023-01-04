@@ -276,7 +276,7 @@ const Page: NextPage = () => {
                       </Table.Head>
                       <Table.Body>
                         {whitelist?.map(({ address, mint, createdAt, updatedAt }, index) => (
-                          <Table.Body.Row>
+                          <Table.Body.Row current={index} key={address} total={whitelist.length}>
                             <span>{index}</span>
                             <span>{mint}</span>
                             <span>{address}</span>
