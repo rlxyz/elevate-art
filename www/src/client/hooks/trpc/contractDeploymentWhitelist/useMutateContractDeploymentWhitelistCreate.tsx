@@ -20,7 +20,7 @@ export const useMutateContractDeploymentWhitelistCreate = () => {
         },
         data
       )
-      notifySuccess('We have updated the .')
+      notifySuccess(`We have updated the merkle root with ${variables.whitelist.length} addresses`)
     },
     onError: (err) => {
       notifyError(err.message)

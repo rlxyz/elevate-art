@@ -10,6 +10,7 @@ export type AllowlistFormInput = {
   address: `0x${string}`
   mint: number
 }[]
+
 export type AllowlistFormInputV2 = string
 
 export const AllowlistLayout = ({

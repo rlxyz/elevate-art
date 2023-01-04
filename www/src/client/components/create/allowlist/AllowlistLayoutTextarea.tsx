@@ -28,13 +28,21 @@ export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contract
         if (!contractDeployment?.id) return
         const { whitelist } = data
         // treat the value as a comma separated list and parse the address using ethers.utils.getAddress
-        const addresses: string[] = whitelist.split(',')
-        const parsedAllowlistFormInput: AllowlistFormInput = addresses.map((address) => {
-          return {
-            address: getAddress(address),
-            mint: 1,
-          }
-        })
+        const addresses: string[] = whitelist.split('\n')
+        const parsedAllowlistFormInput: AllowlistFormInput = addresses
+          .map((x) => {
+            const [address, mint] = x.split(',')
+            if (!address || !mint)
+              return {
+                address: '' as `0x${string}`,
+                mint: 0,
+              }
+            return {
+              address: getAddress(address),
+              mint: Number(mint),
+            }
+          })
+          .filter((x) => Boolean(x.address))
 
         mutate({
           contractDeploymentId: contractDeployment?.id,
@@ -43,7 +51,7 @@ export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contract
         })
       })}
     >
-      <SettingLayout.Header title='Whitelist' description='Your whitelist....' />
+      <SettingLayout.Header title='Whitelist' description='Please pass in your whitelist in csv format; <address>,<mint>' />
       <SettingLayout.Body>
         <Textarea
           {...register('whitelist', {
