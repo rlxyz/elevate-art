@@ -9,6 +9,7 @@ export const AllowlistLayoutHeader = ({
   dbMerkleRoot,
   contractMerkleRoot,
   type,
+  isLoading,
   write,
 }: {
   contractDeployment: ContractDeployment
@@ -16,6 +17,7 @@ export const AllowlistLayoutHeader = ({
   write: () => void
   dbMerkleRoot: string
   type: WhitelistType
+  isLoading: boolean
   contractMerkleRoot: string
 }) => {
   return (
@@ -24,7 +26,7 @@ export const AllowlistLayoutHeader = ({
         e.preventDefault()
         write()
       }}
-      disabled={contractMerkleRoot === dbMerkleRoot && whitelist.length === 0}
+      disabled={(contractMerkleRoot === dbMerkleRoot && whitelist.length === 0) || isLoading}
     >
       <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
       <SettingLayout.Body>

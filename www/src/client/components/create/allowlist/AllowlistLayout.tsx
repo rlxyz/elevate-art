@@ -22,7 +22,12 @@ export const AllowlistLayout = ({
   whitelist: Whitelist[]
   type: WhitelistType
 }) => {
-  const { merkleRoot: dbMerkleRoot, write } = useSetPresaleMerkleRoot({
+  const {
+    merkleRoot: dbMerkleRoot,
+    write,
+    isLoading,
+    isProcessing,
+  } = useSetPresaleMerkleRoot({
     type,
     contractDeployment: contractDeployment,
     enabled: !!contractDeployment?.address,
@@ -43,6 +48,7 @@ export const AllowlistLayout = ({
           <AllowlistLayoutHeader
             contractDeployment={contractDeployment}
             write={write}
+            isLoading={isLoading || isProcessing}
             whitelist={[]}
             dbMerkleRoot={dbMerkleRoot}
             contractMerkleRoot={type === WhitelistType.ALLOWLIST ? data?.presaleMerkleRoot || '' : data?.claimMerkleRoot || ''}

@@ -1,26 +1,18 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon, LockClosedIcon, LockOpenIcon, MinusIcon, PlusIcon, XCircleIcon } from '@heroicons/react/outline'
-import { TraitElementWithImage } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { TraitElementWithImage } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useMutateTraitElementUpdateName } from '@hooks/trpc/traitElement/useMutateTraitElementUpdateName'
-import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
-import {
-  ColumnDef,
-  FilterFn,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  SortingFn,
-  sortingFns,
-  useReactTable,
-} from '@tanstack/react-table'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import type { ColumnDef, FilterFn, SortingFn } from '@tanstack/react-table'
+import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, sortingFns, useReactTable } from '@tanstack/react-table'
 import Big from 'big.js'
 import clsx from 'clsx'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
-import { FieldArrayWithId } from 'react-hook-form'
+import type { FieldArrayWithId } from 'react-hook-form'
 import { env } from 'src/env/client.mjs'
+import type { TraitElementFields, TraitElementRarityFormType } from './useTraitElementForm'
 import {
-  TraitElementFields,
-  TraitElementRarityFormType,
   useTraitElementForm,
   WEIGHT_LOWER_BOUNDARY,
   WEIGHT_STEP_COUNT,
