@@ -178,9 +178,7 @@ const Page: NextPage = () => {
         </PageRoutesNavbar>
       </Layout.PageHeader> */}
       <Layout.Body>
-        <div className='py-8'>
-          <OrganisationDisplayLayout organisation={organisation} repositories={repositories} />
-        </div>
+        <OrganisationDisplayLayout organisation={organisation} repositories={repositories} />
       </Layout.Body>
     </Layout>
   )
