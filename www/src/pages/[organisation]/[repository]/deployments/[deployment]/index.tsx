@@ -88,6 +88,18 @@ const Page = () => {
                 enabled: false,
                 loading: isLoading,
               },
+              {
+                name: AssetDeploymentNavigationEnum.enum.Allowlist,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  AssetDeploymentNavigationEnum.enum.Allowlist
+                ),
+                enabled: false,
+                loading: isLoading,
+              },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}

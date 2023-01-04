@@ -131,6 +131,7 @@ export const AssetDeploymentNavigationEnum = z.nativeEnum(
     Overview: 'overview',
     Contract: 'contract',
     Settings: 'settings',
+    Allowlist: 'allowlist',
   })
 )
 

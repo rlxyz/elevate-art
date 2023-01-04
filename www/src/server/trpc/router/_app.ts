@@ -9,14 +9,16 @@ import { ruleRouter } from './rule'
 import { traitElementRouter } from './traitElement'
 
 export const appRouter = router({
+  // Private
   contractDeploymentWhitelist: contractDeploymentWhitelistRouter,
-  contractDeployment: contractDeploymentRouter,
   organisation: organisationRouter,
   repository: repositoryRouter,
   collection: collectionRouter,
   layerElement: layerElementRouter,
   traitElement: traitElementRouter,
   rule: ruleRouter,
+  // Public
+  contractDeployment: contractDeploymentRouter,
 })
 
 // export type definition of API

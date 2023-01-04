@@ -3,7 +3,6 @@ import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/hea
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import SettingLayout from '@components/layout/settings'
-import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import Textarea from '@components/layout/textarea/Textarea'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
@@ -14,20 +13,16 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
+import { WhitelistType } from '@prisma/client'
+import { parseChainId } from '@utils/ethers'
 import { getAddress } from 'ethers/lib/utils.js'
 import type { NextPage } from 'next'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
-import {
-  AssetDeploymentNavigationEnum,
-  ContractSettingsNavigationEnum,
-  DeploymentNavigationEnum,
-  OrganisationNavigationEnum,
-  ZoneNavigationEnum,
-} from 'src/shared/enums'
+import { AssetDeploymentNavigationEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 type AllowlistFormInput = {
   address: `0x${string}`
@@ -41,16 +36,17 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { current: whitelist } = useQueryContractDeploymentWhitelist()
-  const { mutate } = useMutateContractDeploymentWhitelistCreate()
+  const { current: whitelist } = useQueryContractDeploymentWhitelist({
+    type: WhitelistType.ALLOWLIST,
+  })
+  const { mutate } = useMutateContractDeploymentWhitelistCreate({
+    type: WhitelistType.ALLOWLIST,
+  })
 
   const {
     register,
-    setValue,
     handleSubmit,
-    watch,
     formState: { errors },
-    reset,
   } = useForm<{
     whitelist: AllowlistFormInputV2
   }>({
@@ -58,8 +54,6 @@ const Page: NextPage = () => {
       whitelist: '',
     },
   })
-
-  const contractDeploymentAddress = contractDeployment?.address
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -109,21 +103,33 @@ const Page: NextPage = () => {
             {[
               {
                 name: AssetDeploymentNavigationEnum.enum.Overview,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`,
+                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
                 enabled: false,
                 loading: isLoading,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Contract,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${AssetDeploymentNavigationEnum.enum.Contract}`,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  AssetDeploymentNavigationEnum.enum.Contract
+                ),
                 enabled: false,
                 loading: isLoading,
               },
               {
-                name: AssetDeploymentNavigationEnum.enum.Settings,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
+                name: AssetDeploymentNavigationEnum.enum.Allowlist,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  AssetDeploymentNavigationEnum.enum.Allowlist
+                ),
                 enabled: true,
-                loading: false,
+                loading: isLoading,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
@@ -132,76 +138,43 @@ const Page: NextPage = () => {
         </Layout.PageHeader>
         <Layout.Body>
           <div className='py-8 space-y-8'>
-            <div className='grid grid-cols-10 gap-x-6'>
-              <div className='col-span-2'>
-                <SettingNavigation
-                  routes={[
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Details,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings
-                      ),
-                      selected: false,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Mechanics,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Mechanics
-                      ),
-                      selected: false,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Revenue,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Revenue
-                      ),
-                      selected: false,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Allowlist,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Allowlist
-                      ),
-                      selected: true,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Deploy,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Deploy
-                      ),
-                      selected: false,
-                    },
-                  ]}
-                />
-              </div>
-              <div className='col-span-8'>
-                <div className='space-y-2'>
-                  <h1 className='font-semibold py-2'>Allowlist</h1>
-                  <div className='w-full space-y-6'>
+            <div className='space-y-2'>
+              <div className='w-full space-y-6'>
+                <div className='grid grid-cols-6 gap-6'>
+                  <div className='col-span-2'>
+                    <SettingLayout>
+                      <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
+                      <SettingLayout.Body>
+                        {/* <div className='space-y-2'>
+                          <div className='flex flex-col space-y-3'>
+                            {[
+                              {
+                                label: 'Total Addresses',
+                                value: whitelist?.length,
+                              },
+                            ].map(({ label, value }) => (
+                              <div className='' key={label}>
+                                <h3 className='font-semibold text-sm'>{label}</h3>
+                                <span className='uppercase text-xs'>{value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div> */}
+                        <div className='text-xs '>
+                          {whitelist && whitelist?.length > 0 ? (
+                            <span>
+                              Your <strong>{toPascalCaseWithSpace(WhitelistType.ALLOWLIST)}</strong> is out of sync. You need to update the
+                              contract on <strong>{capitalize(parseChainId(contractDeployment?.chainId || 99))}</strong> to sync up your
+                              allowlist
+                            </span>
+                          ) : (
+                            <span>You do not have any items in your allowlist</span>
+                          )}
+                        </div>
+                      </SettingLayout.Body>
+                    </SettingLayout>
+                  </div>
+                  <div className='col-span-4'>
                     <SettingLayout
                       disabled={false}
                       onSubmit={handleSubmit((data) => {
@@ -219,6 +192,7 @@ const Page: NextPage = () => {
                         mutate({
                           contractDeploymentId: contractDeployment?.id,
                           whitelist: parsedAllowlistFormInput,
+                          type: WhitelistType.ALLOWLIST,
                         })
                       })}
                     >
@@ -236,57 +210,30 @@ const Page: NextPage = () => {
                         />
                       </SettingLayout.Body>
                     </SettingLayout>
+                  </div>
+                </div>
 
-                    <SettingLayout>
-                      <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
-                      <SettingLayout.Body>
-                        <div className='space-y-2'>
-                          <div className='flex flex-col space-y-3'>
-                            {[
-                              {
-                                label: 'Total Addresses',
-                                value: whitelist?.length,
-                              },
-                              // {
-                              //   label: 'Total Addresses',
-                              //   value: whitelist?.length,
-                              // },
-                              // {
-                              //   label: 'Total Addresses',
-                              //   value: whitelist?.length,
-                              // },
-                            ].map(({ label, value }) => (
-                              <div className='' key={label}>
-                                <h3 className='font-semibold text-sm'>{label}</h3>
-                                <span className='uppercase text-xs'>{value}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </SettingLayout.Body>
-                    </SettingLayout>
-
-                    <Table>
-                      <Table.Head>
-                        <span>Id</span>
-                        <span>Mint Count</span>
-                        <span>Address</span>
-                        <span>Created At</span>
-                        <span>Update At</span>
-                      </Table.Head>
-                      <Table.Body>
-                        {whitelist?.map(({ address, mint, createdAt, updatedAt }, index) => (
-                          <Table.Body.Row current={index} key={address} total={whitelist.length}>
-                            <span>{index}</span>
-                            <span>{mint}</span>
-                            <span>{address}</span>
-                            <span>{timeAgo(createdAt)}</span>
-                            <span>{timeAgo(updatedAt)}</span>
-                          </Table.Body.Row>
-                        ))}
-                      </Table.Body>
-                    </Table>
-                    {/* <ContractForm.Body.Input
+                <Table>
+                  <Table.Head>
+                    <span>Id</span>
+                    <span>Mint Count</span>
+                    <span>Address</span>
+                    <span>Created At</span>
+                    <span>Update At</span>
+                  </Table.Head>
+                  <Table.Body>
+                    {whitelist?.map(({ address, mint, createdAt, updatedAt }, index) => (
+                      <Table.Body.Row current={index} key={address} total={whitelist.length}>
+                        <span>{index}</span>
+                        <span>{mint}</span>
+                        <span>{address}</span>
+                        <span>{timeAgo(createdAt)}</span>
+                        <span>{timeAgo(updatedAt)}</span>
+                      </Table.Body.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+                {/* <ContractForm.Body.Input
                         {...register('address', {
                           required: false,
                           maxLength: {
@@ -310,8 +257,6 @@ const Page: NextPage = () => {
                         error={errors.address}
                         maxLength={6}
                       /> */}
-                  </div>
-                </div>
               </div>
             </div>
           </div>

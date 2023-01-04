@@ -70,13 +70,13 @@ export const contractDeploymentWhitelistRouter = router({
             mint: z.number(),
           })
         ),
+        type: z.nativeEnum(WhitelistType),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { contractDeploymentId, whitelist } = input
+      const { contractDeploymentId, whitelist, type } = input
 
       const BATCH_CHUNK_SIZE = 1000
-      console.log('creating....')
       for (const chunk of Array.from({ length: Math.ceil(whitelist.length / BATCH_CHUNK_SIZE) }, (_, index) =>
         whitelist.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
       )) {
@@ -85,6 +85,7 @@ export const contractDeploymentWhitelistRouter = router({
             address: getAddress(address),
             mint,
             contractDeploymentId,
+            type: type as WhitelistType,
           })),
           skipDuplicates: true,
         })
@@ -94,22 +95,23 @@ export const contractDeploymentWhitelistRouter = router({
         where: { contractDeploymentId },
       })
     }),
-  findAllowlistByAssetDeploymentId: publicProcedure
+  findAllowlistByDeploymentName: publicProcedure
     .input(
       z.object({
         name: z.string(),
         repositoryId: z.string(),
+        type: z.nativeEnum(WhitelistType),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { name, repositoryId } = input
+      const { name, repositoryId, type } = input
 
       /**
        * Look for the deployment
        */
       const whitelists = await ctx.prisma.whitelist.findMany({
         where: {
-          type: WhitelistType.ALLOWLIST,
+          type: type as WhitelistType,
           contractDeployment: {
             assetDeployment: { name, repositoryId },
           },

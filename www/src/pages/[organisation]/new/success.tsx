@@ -4,7 +4,7 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { ArrowCircleRightIcon, CubeIcon, GlobeAltIcon, SelectorIcon } from '@heroicons/react/outline'
+import { ArrowCircleRightIcon, CubeIcon, GlobeAltIcon, SelectorIcon, UploadIcon } from '@heroicons/react/outline'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
@@ -85,7 +85,7 @@ const Page: NextPage = () => {
                 <p className='text-sm text-black'>You have a new project to work on.</p>
               </div>
               <div>
-                <NextLinkComponent href={`/${organisation?.name}/${name}`}>
+                <NextLinkComponent href={routeBuilder(organisation?.name, name, ZoneNavigationEnum.enum.Create)}>
                   <div className='py-2 px-4 bg-blueHighlight rounded-[5px] space-x-2 flex items-center'>
                     <h3 className='text-white text-sm'>Continue to Project</h3>
                     <ArrowCircleRightIcon className='w-5 h-5 text-white' />
@@ -104,20 +104,37 @@ const Page: NextPage = () => {
                           {
                             title: 'Preview Project',
                             description: 'View your project and create new collections',
-                            href: `/${organisation?.name}/${name}`, // @todo fix this
+                            href: routeBuilder(organisation?.name, name, ZoneNavigationEnum.enum.Create),
                             icon: (props: any) => <CubeIcon {...props} />,
                           },
                           {
                             title: 'Set Rarity',
                             description: 'Set the rarity percentages of your traits',
-                            href: `/${organisation?.name}/${name}/${CollectionNavigationEnum.enum.Rarity}/${layers[0]?.name}`, // @todo fix this
+                            href: routeBuilder(
+                              organisation?.name,
+                              name,
+                              ZoneNavigationEnum.enum.Create,
+                              CollectionNavigationEnum.enum.Rarity,
+                              layers[0]?.name
+                            ),
                             icon: (props: any) => <CubeIcon {...props} />,
                           },
                           {
                             title: 'Create Rules',
                             description: 'Create rules for your project',
-                            href: `/${organisation?.name}/${name}/${CollectionNavigationEnum.enum.Rules}`,
+                            href: routeBuilder(
+                              organisation?.name,
+                              name,
+                              ZoneNavigationEnum.enum.Create,
+                              CollectionNavigationEnum.enum.Rules
+                            ),
                             icon: (props: any) => <SelectorIcon {...props} />,
+                          },
+                          {
+                            title: 'Deployments',
+                            description: 'Create new contract deployments for your project',
+                            href: routeBuilder(organisation?.name, name, ZoneNavigationEnum.enum.Deployments),
+                            icon: (props: any) => <UploadIcon {...props} />,
                           },
                         ].map((item) => (
                           <div key={item.title} className='pt-6 flex justify-between items-center'>

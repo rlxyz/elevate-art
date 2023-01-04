@@ -170,17 +170,18 @@ model ContractDeployment {
 }
 
 model Whitelist {
-    id                   String             @id @default(cuid())
-    address              String             @db.VarChar(42)
-    mint                 Int                @default(1)
-    createdAt            DateTime           @default(now())
-    updatedAt            DateTime           @updatedAt
+    id        String   @id @default(cuid())
+    address   String   @db.VarChar(42)
+    mint      Int      @default(1)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
     contractDeployment   ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
     contractDeploymentId String
 
-    type WhitelistType @default(ALLOWLIST)
+    type WhitelistType
 
-    @@unique([address, contractDeploymentId])
+    @@unique([address, contractDeploymentId, type])
     @@index([contractDeploymentId])
 }
 

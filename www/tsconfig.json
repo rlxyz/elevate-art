@@ -26,6 +26,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
+    "src/server/trpc/router/contractDeploymentWhitelist.ts",
   ],
   "exclude": [
     "node_modules"

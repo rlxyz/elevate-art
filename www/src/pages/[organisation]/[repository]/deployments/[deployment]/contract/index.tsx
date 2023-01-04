@@ -20,7 +20,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
 import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
-import { AssetDeploymentNavigationEnum, DeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { AssetDeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
@@ -99,16 +99,16 @@ const Page = () => {
                 loading: isLoading,
               },
               {
-                name: DeploymentNavigationEnum.enum.Settings,
+                name: AssetDeploymentNavigationEnum.enum.Allowlist,
                 href: routeBuilder(
                   organisation?.name,
                   repository?.name,
                   ZoneNavigationEnum.enum.Deployments,
                   deployment?.name,
-                  DeploymentNavigationEnum.enum.Settings
+                  AssetDeploymentNavigationEnum.enum.Allowlist
                 ),
                 enabled: false,
-                loading: false,
+                loading: isLoading,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />

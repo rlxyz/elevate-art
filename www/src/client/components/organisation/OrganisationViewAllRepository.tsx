@@ -2,7 +2,7 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
-import { ZoneNavigationEnum } from '@utils/enums'
+import { OrganisationNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
@@ -28,7 +28,7 @@ const NoRepositoryExistPlaceholder = () => {
           </span>
         </div>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
+          <Link external className='px-6 space-x-1' href={routeBuilder(current?.name, OrganisationNavigationEnum.enum.New)}>
             <div className='border flex items-center justify-center border-mediumGrey rounded-[5px] p-3 bg-black'>
               <span className='text-sm text-white'>Create a Project</span>
               <ChevronRightIcon className='text-white h-4 w-4' />
