@@ -3,7 +3,7 @@ import { BigNumber } from 'ethers'
 import type { FC } from 'react'
 import type { FieldErrors, UseFormRegister } from 'react-hook-form'
 import { z } from 'zod'
-import type { ContractFormProps } from './ContractCreationForm'
+import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 

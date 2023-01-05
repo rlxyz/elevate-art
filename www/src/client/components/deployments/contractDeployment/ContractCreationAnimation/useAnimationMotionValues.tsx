@@ -1,6 +1,6 @@
 import useContractCreationStore from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
-import type { ContractCreationType } from '../ContactCreationForm/ContractCreationForm'
-import { ContractCreationEnum } from '../ContactCreationForm/ContractCreationForm'
+import type { ContractCreationType } from '../ContactCreationForm'
+import { ContractCreationEnum } from '../ContactCreationForm'
 
 export const useAnimationMotionValues = () => {
   const { motionValues } = useContractCreationStore()

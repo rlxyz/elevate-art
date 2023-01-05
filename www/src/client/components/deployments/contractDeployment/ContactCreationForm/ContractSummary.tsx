@@ -4,8 +4,8 @@ import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout
 import { ChevronLeftIcon } from '@heroicons/react/outline'
 import { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
 import { BigNumber } from 'ethers'
+import { ContractCreationType } from '.'
 import { useAnimationMotionValues } from '../ContractCreationAnimation/useAnimationMotionValues'
-import { ContractCreationType } from './ContractCreationForm'
 
 export const ContractSummary = ({
   contractInformationData,

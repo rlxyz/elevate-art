@@ -4,7 +4,7 @@ import type { MotionValue } from 'framer-motion'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
-import type { ContractCreationType } from './ContractCreationForm'
+import type { ContractCreationType } from '.'
 
 interface ContractCreationStoreInterface {
   motionValues: {

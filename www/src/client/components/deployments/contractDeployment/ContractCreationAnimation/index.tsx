@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon, CubeIcon, MoonIcon } from '@heroicon
 import clsx from 'clsx'
 import { AnimatePresence } from 'framer-motion'
 import type { FC } from 'react'
-import { ContractCreationEnum } from '../ContactCreationForm/ContractCreationForm'
+import { ContractCreationEnum } from '../ContactCreationForm'
 import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
 import { LineWithGradient } from './LineWithGradient'

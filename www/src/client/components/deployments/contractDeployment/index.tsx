@@ -1,4 +1,4 @@
-import { ContractCreationForm } from '@components/deployments/contractDeployment/ContactCreationForm/ContractCreationForm'
+import { ContractCreationForm } from '@components/deployments/contractDeployment/ContactCreationForm'
 import {
   ContractContext,
   createContractCreationStore,

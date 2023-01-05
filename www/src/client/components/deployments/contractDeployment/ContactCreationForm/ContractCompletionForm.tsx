@@ -7,7 +7,7 @@ import Big from 'big.js'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { env } from 'src/env/client.mjs'
-import type { ContractFormProps } from './ContractCreationForm'
+import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
