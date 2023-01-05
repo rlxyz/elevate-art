@@ -5,6 +5,9 @@ import { buildEtherscanLink } from '@utils/ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 export const ContractInformationAnalyticsLayout = ({ contractInformationData }: { contractInformationData: ContractInformationData }) => {
   const { name, symbol, owner, mintType, chainId, collectionSize } = contractInformationData
+
+  console.log('ContractInformationAnalyticsLayout', contractInformationData)
+
   return (
     <AnalyticsLayout>
       <AnalyticsLayout.Header title='Contract Information' />
@@ -21,6 +24,7 @@ export const ContractInformationAnalyticsLayout = ({ contractInformationData }: 
               }),
               type: 'Link',
             },
+            { key: 'Blockchain', value: chainId },
             { key: 'Mint Type', value: mintType },
             { key: 'Total Supply', value: formatUnits(collectionSize, 18), type: 'Basic' },
           ].map(({ key, value, type }) => (

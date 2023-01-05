@@ -8,7 +8,7 @@ import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { register, handleSubmit, errors, handleClick, currentSegment, setContractInformationData } =
+  const { register, handleSubmit, errors, handleClick, currentSegment, contractInformationData, setContractInformationData } =
     useContractDataFormHook<ContractInformationData>({
       defaultValues: {
         name: '',
@@ -19,6 +19,8 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
         collectionSize: BigNumber.from(0),
       },
     })
+
+  console.log(contractInformationData)
 
   return (
     <ContractForm>
@@ -88,7 +90,12 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
           </ContractForm.Body.Select>
         </div>
         <div>
-          <ContractForm.Body.Summary next={next} previous={previous} current={currentSegment} />
+          <ContractForm.Body.Summary
+            next={next}
+            previous={previous}
+            current={currentSegment}
+            contractInformationData={contractInformationData}
+          />
         </div>
       </ContractForm.Body>
     </ContractForm>
