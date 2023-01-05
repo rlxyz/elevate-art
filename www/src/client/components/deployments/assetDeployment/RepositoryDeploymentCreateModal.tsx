@@ -1,11 +1,12 @@
 import type { FormModalProps } from '@components/create/repository/LayerElementFileTree/LayerElementDeleteModal'
-import { ContractFormBodyRadioInput, ContractFormBodySelectInput } from '@components/deployments/contractDeployment/ContractForm'
+import { FormRadioInput } from '@components/layout/form/FormRadioInput'
+import { FormSelectInput } from '@components/layout/form/FormSelectInput'
+import ModalComponent from '@components/layout/modal/Modal'
 import { useMutateRepositoryDeploymentCreate } from '@hooks/trpc/repositoryDeployment/useMutateRepositoryDeploymentCreate'
 import type { Collection, Repository } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import ModalComponent from 'src/client/components/layout/modal/Modal'
 
 export interface RepositoryDeploymentCreateProps extends FormModalProps {
   repository: Repository
@@ -13,22 +14,17 @@ export interface RepositoryDeploymentCreateProps extends FormModalProps {
 }
 
 export type LayerElementCreateForm = {
-  collectionName: string
+  name: string
   mintType: AssetDeploymentType
 }
 
 const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ visible, onClose, onSuccess, collections, repository }) => {
   const { mutate, isLoading } = useMutateRepositoryDeploymentCreate()
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors },
-    reset,
-  } = useForm<LayerElementCreateForm>({
+  const { register, getValues, handleSubmit, setValue, reset } = useForm<LayerElementCreateForm>({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
-      collectionName: 'main',
+      name: collections.length > 0 ? collections[0]?.name || 'main' : 'main',
       mintType: AssetDeploymentType.BASIC,
     },
   })
@@ -48,7 +44,7 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       visible={visible}
       onClose={handleClose}
       onSubmit={handleSubmit((data) => {
-        const collection = collections.find((x) => x.name === data.collectionName)
+        const collection = collections?.find((x) => x.name === data.name)
         if (!collection) return
         mutate({ repositoryId: repository.id, collectionId: collection.id, type: data.mintType }, { onSuccess: handleSuccess })
       })}
@@ -57,11 +53,16 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       isLoading={isLoading}
       className='md:max-w-lg' // @todo fix this
     >
-      <ContractFormBodySelectInput
-        defaultValue={getValues('collectionName')}
-        {...register('collectionName')}
+      {/* <DevTool control={control} /> */}
+      <FormSelectInput
+        {...register('name', {
+          onChange: (e) => {
+            setValue('name', e.target.value)
+          },
+        })}
         label={'Name'}
         description={'Select a deployment collection'}
+        defaultValue={getValues('name')}
         className='col-span-6'
       >
         {collections?.map((collection) => (
@@ -69,33 +70,35 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
             {collection.name}
           </option>
         ))}
-      </ContractFormBodySelectInput>
+      </FormSelectInput>
 
       <div className='col-span-3 flex flex-col'>
         <label className='text-xs font-semibold'>Mint Type</label>
         <div className='flex space-x-3'>
           <div className='h-full flex items-center space-x-2'>
-            <ContractFormBodyRadioInput
+            <FormRadioInput
               {...register('mintType', {
                 onChange: (e) => {
-                  setValue('mintType', AssetDeploymentType.BASIC)
+                  setValue('mintType', e.target.value as AssetDeploymentType)
                 },
               })}
               label={'Off-Chain'}
+              value={AssetDeploymentType.BASIC}
             />
           </div>
           <div className='h-full flex items-center space-x-2'>
-            <ContractFormBodyRadioInput
+            <FormRadioInput
               {...register('mintType', {
                 onChange: (e) => {
-                  setValue('mintType', AssetDeploymentType.GENERATIVE)
+                  setValue('mintType', e.target.value as AssetDeploymentType)
                 },
               })}
               label={'On-Chain'}
+              value={AssetDeploymentType.GENERATIVE}
             />
           </div>
         </div>
-        <p className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</p>
+        <span className='text-[0.6rem] text-darkGrey'>Select the type of mint for the art generation of this collection.</span>
       </div>
     </ModalComponent>
   )

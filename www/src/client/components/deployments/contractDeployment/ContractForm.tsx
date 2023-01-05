@@ -1,3 +1,5 @@
+import { FormRadioInput } from '@components/layout/form/FormRadioInput'
+import { FormSelectInput } from '@components/layout/form/FormSelectInput'
 import { Switch } from '@headlessui/react'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -22,7 +24,7 @@ const ContractFormHeader = ({ title, description }: { title: string; description
   return (
     <div className='flex flex-col items-center'>
       <h1 className='font-semibold py-2'>{title}</h1>
-      <p className='text-xs max-w-sm text-center'>{description}</p>
+      <span className='text-xs max-w-sm text-center'>{description}</span>
     </div>
   )
 }
@@ -202,7 +204,7 @@ const ContractFormBodyInput = forwardRef<
             placeholder={placeholder}
             {...props}
           />
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
           {error && (
             <span className='text-xs text-redError'>
               {error.type === 'required'
@@ -218,56 +220,6 @@ const ContractFormBodyInput = forwardRef<
                 : 'Must be between 3 and 20 characters long'}
             </span>
           )}
-        </div>
-      </>
-    )
-  }
-)
-
-export const ContractFormBodyRadioInput = forwardRef<
-  HTMLInputElement,
-  React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>
->(({ className = '', label, ...props }: React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>) => {
-  return (
-    <>
-      <div className={clsx('space-y-1 w-full', className)}>
-        <div className='flex items-center space-x-3 py-2'>
-          <input
-            type='radio'
-            className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs disabled:cursor-not-allowed')}
-            {...props}
-          />
-          <label className='text-xs'>{label}</label>
-        </div>
-      </div>
-    </>
-  )
-})
-
-export const ContractFormBodySelectInput = forwardRef<
-  HTMLSelectElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>
->(
-  ({
-    className,
-    label,
-    description,
-    children,
-    defaultValue,
-    ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>) => {
-    return (
-      <>
-        <div className={clsx('space-y-1 w-full', className)}>
-          <label className='text-xs font-semibold'>{label}</label>
-          <select
-            defaultValue={defaultValue}
-            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-            {...props}
-          >
-            {children}
-          </select>
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
         </div>
       </>
     )
@@ -301,10 +253,6 @@ const ContractFormBodyToggleInput = forwardRef<
     error: FieldError | undefined
     maxLength?: number | undefined
   }>) => {
-    function classNames(...classes: string[]) {
-      return classes.filter(Boolean).join(' ')
-    }
-
     const [enabled, setEnabled] = useState(false)
 
     return (
@@ -315,7 +263,7 @@ const ContractFormBodyToggleInput = forwardRef<
             <Switch
               checked={enabled}
               onChange={setEnabled}
-              className={classNames(
+              className={clsx(
                 enabled ? 'bg-black' : 'bg-mediumGrey',
                 'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
               )}
@@ -323,7 +271,7 @@ const ContractFormBodyToggleInput = forwardRef<
               <span className='sr-only'>Use setting</span>
               <span
                 aria-hidden='true'
-                className={classNames(
+                className={clsx(
                   enabled ? 'translate-x-3' : 'translate-x-0',
                   'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
                 )}
@@ -450,7 +398,7 @@ const ContractFormBodyInputWithDetails = forwardRef<
             placeholder={placeholder}
             {...props}
           />
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
           {error && (
             <span className='text-xs text-redError'>
               {error.type === 'required'
@@ -472,16 +420,15 @@ const ContractFormBodyInputWithDetails = forwardRef<
   }
 )
 
-ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
-ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
 ContractFormBodyToggleInput.displayName = 'ContractFormBodyToggleInput'
 ContractFormBodyInputWithDetails.displayName = 'ContractFormBodyToggleInputWithDetails'
+
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractFormBody.Input = ContractFormBodyInput
-ContractFormBody.Select = ContractFormBodySelectInput
-ContractFormBody.Radio = ContractFormBodyRadioInput
+ContractFormBody.Select = FormSelectInput
+ContractFormBody.Radio = FormRadioInput
 ContractFormBody.Summary = ContractSummary
 ContractFormBody.ToggleInput = ContractFormBodyToggleInput
 ContractFormBody.ToggleCategory = ContractFormBodyToggleCategory

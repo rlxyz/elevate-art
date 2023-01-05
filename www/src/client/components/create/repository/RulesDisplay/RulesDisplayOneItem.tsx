@@ -1,5 +1,6 @@
 import { TrashIcon } from '@heroicons/react/outline'
-import { Rules, useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { Rules } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useState } from 'react'
 import { RulesComboboxInput } from './RulesComboboxInput'
 import { RulesDeleteModal } from './RulesDeleteModal'
