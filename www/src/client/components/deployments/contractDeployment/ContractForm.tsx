@@ -9,6 +9,7 @@ import { BigNumber } from 'ethers'
 import React, { forwardRef, useState } from 'react'
 import type { FieldError } from 'react-hook-form'
 import { ContractInformationAnalyticsLayout } from '../../explore/AnalyticsLayout/ContractInformationAnalyticsLayout'
+import { useAnimationMotionValues } from './useAnimationMotionValues'
 
 export const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   const childrens = React.Children.toArray(children)
@@ -57,6 +58,7 @@ const ContractSummary = ({
   presalePeriod?: SaleConfig
   publicPeriod?: SaleConfig
 }) => {
+  const { handleClick } = useAnimationMotionValues()
   const contractInformation: ContractInformationData = contractInformationData || {
     name: '',
     symbol: '',
@@ -72,6 +74,8 @@ const ContractSummary = ({
     paymentReceiver: '0x' as `0x${string}`,
   }
 
+  console.log(currentSegment)
+
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
@@ -82,19 +86,20 @@ const ContractSummary = ({
       <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
 
       <div className='grid grid-cols-8'>
-        {currentSegment === 1 || currentSegment === 2 ? (
+        {currentSegment === 0 ? (
           <>
             <button
-              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               type='button'
-              onClick={onClick}
+              onClick={() => handleClick(currentSegment - 1)}
             >
               ᐸ
             </button>
+
             <button
-              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='submit'
-              onClick={onClick}
+              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='button'
+              onClick={() => handleClick(currentSegment + 1)}
             >
               Continue
             </button>
@@ -102,17 +107,16 @@ const ContractSummary = ({
         ) : (
           <>
             <button
-              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               type='button'
-              onClick={onClick}
+              onClick={() => handleClick(currentSegment - 1)}
             >
               ᐸ
             </button>
-
             <button
-              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='submit'
+              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               onClick={onClick}
+              type='submit'
             >
               Continue
             </button>
