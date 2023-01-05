@@ -4,7 +4,7 @@ import { WhitelistType } from '@prisma/client'
 import { AllowlistLayoutHeader } from './AllowlistLayoutHeader'
 import { AllowlistLayoutTable } from './AllowlistLayoutTable'
 import { AllowlistLayoutTextarea } from './AllowlistLayoutTextarea'
-import { useSetPresaleMerkleRoot } from './useSetPresaleMerkleRoot'
+import { useSetMerkleRootData } from './useSetPresaleMerkleRoot'
 
 export type AllowlistFormInput = {
   address: `0x${string}`
@@ -27,7 +27,7 @@ export const AllowlistLayout = ({
     write,
     isLoading,
     isProcessing,
-  } = useSetPresaleMerkleRoot({
+  } = useSetMerkleRootData({
     type,
     contractDeployment: contractDeployment,
     enabled: !!contractDeployment?.address,

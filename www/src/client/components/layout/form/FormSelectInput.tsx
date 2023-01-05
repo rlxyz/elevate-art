@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react'
 
 export const FormSelectInput = forwardRef<
   HTMLSelectElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>
+  React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string | number }>
 >(
   (
     {
@@ -13,7 +13,7 @@ export const FormSelectInput = forwardRef<
       children,
       defaultValue,
       ...props
-    }: React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>,
+    }: React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string | number }>,
     ref
   ) => {
     return (

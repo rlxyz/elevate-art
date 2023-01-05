@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon, CubeIcon, MoonIcon } from '@heroicon
 import clsx from 'clsx'
 import { AnimatePresence } from 'framer-motion'
 import type { FC } from 'react'
+import { ContractCreationEnum } from '.'
 import { ButtonWithSelector } from './ButtonWithSelector'
 import { CarouselSegment } from './CarouselSegment'
 import { LineWithGradient } from './LineWithGradient'
@@ -15,15 +16,10 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
   const { currentSegment } = useContractCreationStore()
   return (
     <div className={clsx('flex h-full flex-col items-center w-full space-y-9', className)}>
-      {/* <div className='relative grid grid-flow-col justify-items-center gap-2 pt-2'>
-        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full transition-all duration-300 !bg-black' />
-        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
-        <button className='h-1.5 w-1.5 bg-mediumGrey rounded-full' />
-      </div> */}
       <div className='relative my-2 flex h-20 w-full items-center overflow-x-hidden rounded-[5px]'>
         <AnimatePresence>
           <CarouselSegment
-            enabled={currentSegment === 0}
+            enabled={currentSegment === ContractCreationEnum.enum.ContractDetails}
             transformOutputRange={['15%', '32.5%', '50%']}
             transformInputRange={[0, 0.25, 0.5]}
             index={0}
@@ -34,7 +30,7 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
             <TriangleIcon className='w-8 h-8 -translate-y-[1.5px] text-black' />
           </CarouselSegment>
           <CarouselSegment
-            enabled={currentSegment === 1}
+            enabled={currentSegment === ContractCreationEnum.enum.MintDetails}
             transformOutputRange={['32.5%', '50%', '67.5%']}
             transformInputRange={[0.25, 0.5, 0.75]}
             index={1}
@@ -45,7 +41,7 @@ export const ContractCreationHelperAnimation: FC<{ className: string }> = ({ cla
             <CubeIcon className='w-10 h-10 text-black' />
           </CarouselSegment>
           <CarouselSegment
-            enabled={currentSegment === 2}
+            enabled={currentSegment === ContractCreationEnum.enum.ContractCompletion}
             transformOutputRange={['50%', '67.5%', '85%']}
             transformInputRange={[0.5, 0.75, 1]}
             index={2}

@@ -5,14 +5,14 @@ import { WhitelistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { useSetMerkleRoot } from './useSetMerkleRoot'
+import { useSetMerkleRootData } from './useSetMerkleRoot'
 
 interface UseSetPresaleMerkleRoot extends InteractWithContract {
   merkleRoot: string
   setMerkleRoot: Dispatch<SetStateAction<string>>
 }
 
-export const useSetPresaleMerkleRoot = ({
+export const useSetMerkleRoot = ({
   type,
   whitelist,
   contractDeployment,
@@ -24,7 +24,7 @@ export const useSetPresaleMerkleRoot = ({
   whitelist: Whitelist[] | undefined
 }): UseSetPresaleMerkleRoot => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
-  const { merkleRoot, setMerkleRoot } = useSetMerkleRoot({ enabled, data: whitelist })
+  const { merkleRoot, setMerkleRoot } = useSetMerkleRootData({ enabled, data: whitelist })
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,

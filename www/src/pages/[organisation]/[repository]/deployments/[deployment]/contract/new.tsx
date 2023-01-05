@@ -1,4 +1,4 @@
-import { ContractCreationFormDisplay } from '@components/deployments/contractDeployment/ContractCreationFormDisplay'
+import { ContractCreationFormDisplay } from '@components/deployments/contractDeployment'
 import { ContractCreationHelperAnimation } from '@components/deployments/contractDeployment/ContractCreationHelperAnimation'
 import { ContractContext, createContractCreationStore } from '@components/deployments/contractDeployment/useContractCreationStore'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'

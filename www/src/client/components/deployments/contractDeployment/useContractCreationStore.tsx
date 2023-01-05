@@ -1,14 +1,19 @@
+import type { ContractInformationData, SaleConfig } from '@utils/contracts/ContractData'
+import { BigNumber } from 'ethers'
 import type { MotionValue } from 'framer-motion'
 import create from 'zustand'
 import createContext from 'zustand/context'
 import { persist } from 'zustand/middleware'
+import type { ContractCreationType } from '.'
 
 interface ContractCreationStoreInterface {
   motionValues: {
     x: (MotionValue<number> | null)[]
     opacity: (MotionValue<number> | null)[]
   }
-  currentSegment: number
+  currentSegment: ContractCreationType
+  contractInformationData: ContractInformationData
+  saleConfig: SaleConfig[]
   contractName: string
   contractSymbol: string
   mintType: 'on-chain' | 'off-chain'
@@ -29,6 +34,8 @@ interface ContractCreationStoreInterface {
 
 interface ContractStoreFunctionInterface {
   setMotionValue: (index: number, value: MotionValue<number>, type: 'x' | 'opacity') => void
+  setContractInformationData: (data: ContractInformationData) => void
+  setSaleConfig: (data: SaleConfig[]) => void
   setPresale: (presale: boolean) => void
   setPresaleSupply: (supply: number) => void
   setPresalePrice: (price: number) => void
@@ -38,7 +45,7 @@ interface ContractStoreFunctionInterface {
   setPublicSalePrice: (price: number) => void
   setPublicSaleMaxMintAmount: (amount: number) => void
   setPublicSaleMaxTransactionAmount: (amount: number) => void
-  setCurrentSegment: (segment: number) => void
+  setCurrentSegment: (segment: ContractCreationType) => void
   setContractName: (name: string) => void
   setContractSymbol: (symbol: string) => void
   setMintType: (mintType: 'on-chain' | 'off-chain') => void
@@ -51,7 +58,17 @@ interface ContractStoreFunctionInterface {
 interface ContractStoreInterface extends ContractStoreFunctionInterface, ContractCreationStoreInterface {}
 
 const initialState: ContractCreationStoreInterface = {
-  currentSegment: 0,
+  currentSegment: 'contract-detail',
+  contractInformationData: {
+    name: '',
+    symbol: '',
+    owner: '0x' as `0x${string}`,
+    mintType: 'off-chain',
+    chainId: 5,
+    totalSupply: BigNumber.from(0),
+    collectionSize: BigNumber.from(0),
+  },
+  saleConfig: [],
   contractName: 'Bored Ape Yacht Club',
   contractSymbol: 'BAYC',
   mintType: 'off-chain',
@@ -85,6 +102,8 @@ export const createContractCreationStore = create<ContractStoreInterface>()(
           return { motionValues: motionValues }
         })
       },
+      setSaleConfig: (data: SaleConfig[]) => set({ saleConfig: data }),
+      setContractInformationData: (data: ContractInformationData) => set({ contractInformationData: data }),
       setPresale: (presale: boolean) => set({ presale: presale }),
       setPresaleSupply: (supply: number) => set({ presaleSupply: supply }),
       setPresalePrice: (price: number) => set({ presalePrice: price }),
@@ -94,7 +113,7 @@ export const createContractCreationStore = create<ContractStoreInterface>()(
       setPublicSalePrice: (price: number) => set({ publicSalePrice: price }),
       setPublicSaleMaxMintAmount: (amount: number) => set({ publicSaleMaxMintAmount: amount }),
       setPublicSaleMaxTransactionAmount: (amount: number) => set({ publicSaleMaxTransactionAmount: amount }),
-      setCurrentSegment: (segment: number) => set({ currentSegment: segment }),
+      setCurrentSegment: (segment: ContractCreationType) => set({ currentSegment: segment }),
       setContractName: (name: string) => set({ contractName: name }),
       setContractSymbol: (symbol: string) => set({ contractSymbol: symbol }),
       setMintType: (mintType: 'on-chain' | 'off-chain') => set({ mintType: mintType }),

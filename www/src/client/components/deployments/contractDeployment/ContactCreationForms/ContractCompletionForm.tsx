@@ -8,8 +8,9 @@ import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { env } from 'src/env/client.mjs'
 import { ContractForm } from '../ContractForm'
+import type { ContractFormProps } from './ContactDetailsForm'
 
-export const ContractCompletionForm: FC<{ title: string; description: string }> = ({ title, description }) => {
+export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { deploy, address: contractAddress } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()
   const {
@@ -86,6 +87,8 @@ export const ContractCompletionForm: FC<{ title: string; description: string }> 
           </div>
           <div>
             <ContractForm.Body.Summary
+              next={next}
+              previous={previous}
               contractName={contractName}
               contractSymbol={contractSymbol}
               onClick={handleClick}

@@ -3,11 +3,13 @@ import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout
 import { FormRadioInput } from '@components/layout/form/FormRadioInput'
 import { FormSelectInput } from '@components/layout/form/FormSelectInput'
 import { Switch } from '@headlessui/react'
+import { ChevronLeftIcon } from '@heroicons/react/outline'
 import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import React, { forwardRef, useState } from 'react'
 import type { FieldError } from 'react-hook-form'
+import type { ContractCreationType } from '.'
 import { ContractInformationAnalyticsLayout } from '../../explore/AnalyticsLayout/ContractInformationAnalyticsLayout'
 import { useAnimationMotionValues } from './useAnimationMotionValues'
 
@@ -47,11 +49,15 @@ const ContractSummary = ({
   claimPeriod,
   presalePeriod,
   publicPeriod,
-  currentSegment,
   onClick,
+  current,
+  previous,
+  next,
 }: {
   onClick?: () => void
-  currentSegment: number
+  previous: ContractCreationType | null
+  current: ContractCreationType
+  next: ContractCreationType | null
   payoutData?: PayoutData
   contractInformationData?: ContractInformationData
   claimPeriod?: SaleConfig
@@ -74,8 +80,6 @@ const ContractSummary = ({
     paymentReceiver: '0x' as `0x${string}`,
   }
 
-  console.log(currentSegment)
-
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
@@ -86,41 +90,23 @@ const ContractSummary = ({
       <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
 
       <div className='grid grid-cols-8'>
-        {currentSegment === 0 ? (
-          <>
-            <button
-              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='button'
-              onClick={() => handleClick(currentSegment - 1)}
-            >
-              ᐸ
-            </button>
-
-            <button
-              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='submit'
-              onClick={() => handleClick(currentSegment + 1)}
-            >
-              Continue
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='button'
-              onClick={() => handleClick(currentSegment - 1)}
-            >
-              ᐸ
-            </button>
-            <button
-              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              onClick={onClick}
-              type='submit'
-            >
-              Continue
-            </button>
-          </>
+        {previous && (
+          <button
+            className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            type='button'
+            onClick={() => handleClick(previous)}
+          >
+            <ChevronLeftIcon className='w-4 h-4 text-darkGrey' />
+          </button>
+        )}
+        {next && (
+          <button
+            className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            type='submit'
+            onClick={() => handleClick(next)}
+          >
+            Continue
+          </button>
         )}
       </div>
     </div>
@@ -134,7 +120,7 @@ const ContractFormBodyInput = forwardRef<
     label: string
     description: string
     placeholder: string
-    error: FieldError
+    error: FieldError | undefined
     maxLength: number | undefined
   }>
 >(
@@ -275,14 +261,10 @@ const ContractFormBodyToggleCategory = ({
   label,
   children,
 }: {
-  className: string
+  className?: string
   label: string
   children: React.ReactElement[]
 }) => {
-  function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-  }
-
   const [enabled, setEnabled] = useState(true)
 
   return (
@@ -293,7 +275,7 @@ const ContractFormBodyToggleCategory = ({
           <Switch
             checked={enabled}
             onChange={setEnabled}
-            className={classNames(
+            className={clsx(
               enabled ? 'bg-black' : 'bg-mediumGrey',
               'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
             )}
@@ -301,7 +283,7 @@ const ContractFormBodyToggleCategory = ({
             <span className='sr-only'>Use setting</span>
             <span
               aria-hidden='true'
-              className={classNames(
+              className={clsx(
                 enabled ? 'translate-x-3' : 'translate-x-0',
                 'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
               )}
