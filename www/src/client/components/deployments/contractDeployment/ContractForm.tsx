@@ -98,7 +98,7 @@ const ContractSummary = ({
 
             <button
               className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='button'
+              type='submit'
               onClick={() => handleClick(currentSegment + 1)}
             >
               Continue

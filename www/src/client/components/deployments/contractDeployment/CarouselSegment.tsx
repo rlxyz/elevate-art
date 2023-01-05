@@ -1,4 +1,4 @@
-import useContractCreationStore from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/useContractCreationStore'
 import clsx from 'clsx'
 import type { MotionValue } from 'framer-motion'
 import { motion, useMotionValue, useTransform } from 'framer-motion'

@@ -1,4 +1,4 @@
-import useContractCreationStore from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/useContractCreationStore'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useDeployContract } from '@hooks/utils/useDeployContract'
 import type { AssetDeploymentType } from '@prisma/client'

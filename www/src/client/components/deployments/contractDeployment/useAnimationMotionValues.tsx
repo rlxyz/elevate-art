@@ -1,4 +1,4 @@
-import useContractCreationStore from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/useContractCreationStore'
 
 export const useAnimationMotionValues = () => {
   const { currentSegment, setCurrentSegment, motionValues, setMotionValue } = useContractCreationStore()
