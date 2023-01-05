@@ -26,14 +26,14 @@ export const SaleLayoutClaimPurchase = ({
   const { now } = useMintLayoutCurrentTime()
 
   /** Variables */
-  const { userMintCount, userMintLeft, allowToMint, hasMintAllocation } = data
+  const { userMintCount, userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
   const { write, setMintCount, mintCount } = useClaimPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
-    enabled: !session?.user?.id && !isLoading && !isError,
+    enabled: !!session?.user?.id && !isLoading && !isError,
   })
 
   return (
@@ -53,7 +53,7 @@ export const SaleLayoutClaimPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !hasMintAllocation}
+            disabled={!session?.user?.id || !allowToMint}
           />
         </div>
       </SaleLayout.Body>

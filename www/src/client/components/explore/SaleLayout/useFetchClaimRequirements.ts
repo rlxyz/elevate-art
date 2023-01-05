@@ -1,4 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
+import { WhitelistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
@@ -12,9 +13,6 @@ export const useFetchClaimRequirements = ({
   session: Session | null
   contractDeployment: ContractDeployment
 }) => {
-  /** Fetch User Claim */
-  const { current: userClaim } = useQueryContractDeploymentWhitelistFindClaimByAddress()
-
   /** Get user balance */
   const {
     data: userBalance,
@@ -53,32 +51,27 @@ export const useFetchClaimRequirements = ({
     current: currentContractDeploymentWhitelist,
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
-  } = useQueryContractDeploymentWhitelistFindClaimByAddress()
+  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+    type: WhitelistType.CLAIM,
+  })
+
+  // mint allocation
+  const claimMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)
+  const claimMintLeft = claimMintMax.sub(fetchedContractUserData?.userMintCount || 0)
+
+  // total left in collection
+  const collectionMintMax = BigNumber.from(fetchedContractData?.collectionSize || 0)
+  const collectionMintLeft = collectionMintMax.sub(fetchedContractData?.totalSupply || 0)
+
+  // user left after total left
+  const userMintLeft = claimMintLeft.gt(collectionMintLeft) ? collectionMintLeft : claimMintLeft
 
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
-      userMintLeft:
-        BigNumber.from(currentContractDeploymentWhitelist?.mint).sub(fetchedContractUserData?.userMintCount || 0) || BigNumber.from(0),
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. totalMinted less than collectionSize
-      // 3. userMintCount less than maxAllocation
-      // 4. collectionMintLeft more than 0
-      allowToMint:
-        fetchedContractData?.maxPublicBatchPerAddress?.gt(0) &&
-        fetchedContractData?.totalSupply?.lt(fetchedContractData?.collectionSize || BigNumber.from(0)) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData?.maxPublicBatchPerAddress) &&
-        fetchedContractData.collectionMintLeft.gt(0),
-
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. userMintCount less than maxAllocation
-      hasMintAllocation:
-        fetchedContractUserData?.userMintCount &&
-        fetchedContractData?.maxPublicBatchPerAddress?.gt(0) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxPublicBatchPerAddress),
+      userMintLeft,
+      allowToMint: userMintLeft.gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,

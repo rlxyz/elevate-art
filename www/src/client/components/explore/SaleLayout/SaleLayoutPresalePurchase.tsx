@@ -5,7 +5,7 @@ import type { RhapsodyContractData } from '../../../../shared/contracts/Contract
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
-import { useFetchClaimRequirements } from './useFetchClaimRequirements'
+import { useFetchPresaleRequirements } from './useFetchPresaleRequirements'
 import { usePresalePurchase } from './usePresalePurchase'
 
 export const SaleLayoutPresalePurchase = ({
@@ -18,13 +18,13 @@ export const SaleLayoutPresalePurchase = ({
   contractDeployment: ContractDeployment
 }) => {
   /** Fetch the user-mint data from Contract */
-  const { data, isLoading, isError } = useFetchClaimRequirements({
+  const { data, isLoading, isError } = useFetchPresaleRequirements({
     session,
     contractDeployment,
   })
 
   /** Variables */
-  const { userBalance, userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+  const { userMintCount, userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
   const { write, setMintCount, mintCount } = usePresalePurchase({
@@ -34,10 +34,6 @@ export const SaleLayoutPresalePurchase = ({
     enabled: !!session?.user?.id && !isLoading && !isError,
   })
 
-  /** Validation */
-  //! @todo add walletCheck validation
-  // const { validateAllowlist } = useWalletCheck()
-
   return (
     <SaleLayout>
       <SaleLayout.Header title='Presale' endingDate={{ label: 'Ends in', value: contractData.publicPeriod.startTimestamp }} />
@@ -45,10 +41,10 @@ export const SaleLayoutPresalePurchase = ({
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.presalePeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
           <SaleMintCountInput
-            maxValue={maxAllocation}
+            maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!!session?.user?.id || !hasMintAllocation}
+            disabled={!session?.user?.id || !allowToMint}
           />
         </div>
       </SaleLayout.Body>
@@ -71,7 +67,7 @@ export const SaleLayoutPresalePurchase = ({
             )}
           </div>
           <button
-            disabled={!!session?.user?.id || isLoading || !allowToMint}
+            disabled={!session?.user?.id || isLoading || !allowToMint}
             onClick={() => write()}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'

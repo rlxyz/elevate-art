@@ -25,7 +25,7 @@ export const SaleLayoutPublicPurchase = ({
   })
 
   /** Variables */
-  const { userBalance, userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+  const { userMintCount, userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
   const { write, setMintCount, mintCount } = usePublicPurchase({
@@ -45,7 +45,7 @@ export const SaleLayoutPublicPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !hasMintAllocation}
+            disabled={!session?.user?.id || !allowToMint}
           />
         </div>
       </SaleLayout.Body>

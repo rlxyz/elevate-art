@@ -71,7 +71,6 @@ export const contractDeploymentRouter = router({
     return { deployment, contract }
   }),
   findContractDataByAddress: publicProcedure.input(z.object({ address: z.string(), chainId: z.number() })).query(async ({ ctx, input }) => {
-    console.log(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}`)
     const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}`)
     if (!response.ok) {
       throw new TRPCError({
@@ -80,7 +79,6 @@ export const contractDeploymentRouter = router({
       })
     }
     const contract = await response.json()
-    console.log(contract)
     return contract as ContractInformationData
   }),
   findContractPayoutDataByAddress: publicProcedure

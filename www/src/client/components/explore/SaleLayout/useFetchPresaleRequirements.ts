@@ -1,8 +1,10 @@
 import type { ContractDeployment } from '@prisma/client'
+import { WhitelistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
 import { useFetchContractData, useFetchContractUserData } from './useFetchContractData'
+import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const useFetchPresaleRequirements = ({
   session,
@@ -45,35 +47,34 @@ export const useFetchPresaleRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
-  /** @todo presale mint list */
-  const userMintLeft = fetchedContractData?.maxAllocation.sub(fetchedContractUserData?.userMintCount || 0) || BigNumber.from(0)
+  const {
+    current: currentContractDeploymentWhitelist,
+    isLoading: isLoadingContractDeploymentWhitelist,
+    isError: isErrorContractDeploymentWhitelist,
+  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+    type: WhitelistType.ALLOWLIST,
+  })
+
+  // mint allocation
+  const presaleMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)
+  const presaleMintLeft = presaleMintMax.sub(fetchedContractUserData?.userMintCount || 0)
+
+  // total left in collection
+  const collectionMintMax = BigNumber.from(fetchedContractData?.collectionSize || 0)
+  const collectionMintLeft = collectionMintMax.sub(fetchedContractData?.totalSupply || 0)
+
+  // user left after total left
+  const userMintLeft = presaleMintLeft.gt(collectionMintLeft) ? collectionMintLeft : presaleMintLeft
 
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
       userMintLeft,
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. totalMinted less than collectionSize
-      // 3. userMintCount less than maxAllocation
-      // 4. collectionMintLeft more than 0
-      allowToMint:
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractData?.totalMinted.lt(fetchedContractData?.collectionSize) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation) &&
-        fetchedContractData.collectionMintLeft.gt(0),
-
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. userMintCount less than maxAllocation
-      hasMintAllocation:
-        fetchedContractUserData?.userMintCount &&
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation),
+      allowToMint: userMintLeft.gt(0),
       userBalance: userBalance,
     },
-    isError: isErrorContractData || isErrorContractUserData,
-    isLoading: isLoadingContractData || isLoadingContractUserData,
+    isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
+    isLoading: isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist,
   }
 }

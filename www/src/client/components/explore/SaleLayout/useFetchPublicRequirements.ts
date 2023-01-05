@@ -45,32 +45,23 @@ export const useFetchPublicRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
-  /** @todo presale mint list */
-  const userMintLeft = fetchedContractData?.maxAllocation.sub(fetchedContractUserData?.userMintCount || 0) || BigNumber.from(0)
+  // mint allocation
+  const publicMintMx = BigNumber.from(fetchedContractData?.maxPublicBatchPerAddress || 0)
+  const publicMintLeft = publicMintMx.sub(fetchedContractUserData?.userMintCount || 0)
+
+  // total left in collection
+  const collectionMintMax = BigNumber.from(fetchedContractData?.collectionSize || 0)
+  const collectionMintLeft = collectionMintMax.sub(fetchedContractData?.totalSupply || 0)
+
+  // user left after total left
+  const userMintLeft = publicMintLeft.gt(collectionMintLeft) ? collectionMintLeft : publicMintLeft
 
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
       userMintLeft,
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. totalMinted less than collectionSize
-      // 3. userMintCount less than maxAllocation
-      // 4. collectionMintLeft more than 0
-      allowToMint:
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractData?.totalMinted.lt(fetchedContractData?.collectionSize) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation) &&
-        fetchedContractData.collectionMintLeft.gt(0),
-
-      // cases handled:
-      // 1. maxAllocation more than 0
-      // 2. userMintCount less than maxAllocation
-      hasMintAllocation:
-        fetchedContractUserData?.userMintCount &&
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation),
+      allowToMint: userMintLeft.gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData,

@@ -1,4 +1,5 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
+import { WhitelistType } from '@prisma/client'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useState } from 'react'
@@ -10,7 +11,9 @@ import { SaleLayout } from './SaleLayout'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const SaleLayoutClaimChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
-  const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress()
+  const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+    type: WhitelistType.CLAIM,
+  })
   const { now } = useMintLayoutCurrentTime()
   const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)
   const {
