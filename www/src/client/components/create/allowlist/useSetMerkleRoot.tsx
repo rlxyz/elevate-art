@@ -3,7 +3,7 @@ import { createMerkleTree } from '@utils/merkle-roots'
 import { convertListToMap } from '@utils/object-utils'
 import { useEffect, useState } from 'react'
 
-export const useSetMerkleRoot = ({ enabled, data }: { enabled: boolean; data: Whitelist[] | undefined }) => {
+export const useSetMerkleRootData = ({ enabled, data }: { enabled: boolean; data: Whitelist[] | undefined }) => {
   const [merkleRoot, setMerkleRoot] = useState<string>('0x0000000000000000000000000000000000000000000000000000000000000000')
 
   useEffect(() => {

@@ -1,12 +1,9 @@
-import { ContractCreationFormDisplay } from '@components/deployments/contractDeployment/ContractCreationFormDisplay'
-import { ContractCreationHelperAnimation } from '@components/deployments/contractDeployment/ContractCreationHelperAnimation'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
-import { ContractContext, createContractCreationStore } from '@hooks/store/useContractCreationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -17,6 +14,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { ContractCreation } from '../../../../../../client/components/deployments/contractDeployment'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -105,10 +103,7 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.PageHeader>
         <Layout.Body border={'lower'}>
-          <ContractContext.Provider createStore={() => createContractCreationStore}>
-            <ContractCreationHelperAnimation className='py-16' />
-            <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />
-          </ContractContext.Provider>
+          <ContractCreation />
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

@@ -1,8 +1,9 @@
-import useContractCreationStore from '@hooks/store/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import clsx from 'clsx'
 import type { MotionValue } from 'framer-motion'
 import { motion, useMotionValue, useTransform } from 'framer-motion'
 import React, { useEffect } from 'react'
+import type { ContractCreationType } from '../ContactCreationForm'
 
 interface CarouselSegmentMotionProps extends CarouselSegmentProps {
   x: MotionValue<number>
@@ -14,8 +15,9 @@ interface CarouselSegmentProps {
   transformInputRange: number[]
   children: React.ReactNode
   index: number
-  onClick: (index: number) => void
+  onClick: (index: ContractCreationType) => void
   enabled: boolean
+  id: ContractCreationType
 }
 
 export const CarouselSegment = ({
@@ -26,6 +28,7 @@ export const CarouselSegment = ({
   opacity,
   index,
   onClick,
+  id,
   enabled,
 }: CarouselSegmentProps & { x: number; opacity: number }) => {
   const [hasHydrated, setHasHydrated] = React.useState(false)
@@ -49,6 +52,7 @@ export const CarouselSegment = ({
       index={index}
       onClick={onClick}
       enabled={enabled}
+      id={id}
       x={motionValues.x[index] as MotionValue<number>}
       opacity={motionValues.opacity[index] as MotionValue<number>}
     >
@@ -61,9 +65,9 @@ export const CarouselSegmentMotion = ({
   transformOutputRange,
   transformInputRange,
   children,
-  index,
   onClick,
   enabled,
+  id,
   x,
   opacity,
 }: CarouselSegmentMotionProps) => {
@@ -72,7 +76,7 @@ export const CarouselSegmentMotion = ({
   return (
     <motion.button
       style={{ left }}
-      onClick={() => onClick(index)}
+      onClick={() => onClick(id)}
       className={clsx('absolute rounded-full -translate-x-1/2 border-4 border-white bg-lightGray transition-all duration-300 z-1 scale-75')}
     >
       <motion.div
