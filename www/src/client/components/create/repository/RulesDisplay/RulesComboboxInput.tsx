@@ -1,6 +1,7 @@
-import { TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { TraitElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
-import { forwardRef, HTMLProps } from 'react'
+import type { HTMLProps } from 'react'
+import { forwardRef } from 'react'
 
 type RulesComboboxInputProps = { highlight?: boolean; layerName: string; traitElement: TraitElement | null | undefined }
 export const RulesComboboxInput = forwardRef<HTMLInputElement, RulesComboboxInputProps & HTMLProps<RulesComboboxInputProps>>(

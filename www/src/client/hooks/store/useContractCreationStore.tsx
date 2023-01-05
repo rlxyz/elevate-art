@@ -81,10 +81,7 @@ export const createContractCreationStore = create<ContractStoreInterface>()(
       setMotionValue: (index: number, value: MotionValue, type: 'x' | 'opacity') => {
         set((state) => {
           const motionValues = state.motionValues
-          if (motionValues[type][index] !== null) {
-            motionValues[type][index] = value
-            return { motionValues: motionValues }
-          }
+          motionValues[type][index] = value
           return { motionValues: motionValues }
         })
       },

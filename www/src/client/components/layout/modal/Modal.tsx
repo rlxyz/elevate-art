@@ -89,7 +89,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                 >
                   {title}
                 </Dialog.Title>
-                <Dialog.Description>
+                <Dialog.Description as='div'>
                   <form onSubmit={onSubmit}>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>{description}</span>

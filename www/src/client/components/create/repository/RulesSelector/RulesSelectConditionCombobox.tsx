@@ -1,8 +1,10 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import clsx from 'clsx'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { RulesEnum, RulesType } from 'src/shared/compiler'
+import type { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
+import type { RulesType } from 'src/shared/compiler'
+import { RulesEnum } from 'src/shared/compiler'
 
 export const RulesSelectConditionCombobox = ({
   selected,

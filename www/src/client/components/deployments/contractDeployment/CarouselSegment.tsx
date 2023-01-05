@@ -1,16 +1,20 @@
+import useContractCreationStore from '@hooks/store/useContractCreationStore'
 import clsx from 'clsx'
 import type { MotionValue } from 'framer-motion'
-import { motion, useTransform } from 'framer-motion'
-import React from 'react'
+import { motion, useMotionValue, useTransform } from 'framer-motion'
+import React, { useEffect } from 'react'
 
-type CarouselSegmentProps = {
+interface CarouselSegmentMotionProps extends CarouselSegmentProps {
+  x: MotionValue<number>
+  opacity: MotionValue<number>
+}
+
+interface CarouselSegmentProps {
   transformOutputRange: string[]
   transformInputRange: number[]
   children: React.ReactNode
   index: number
   onClick: (index: number) => void
-  x: MotionValue<number>
-  opacity: MotionValue<number>
   enabled: boolean
 }
 
@@ -18,12 +22,51 @@ export const CarouselSegment = ({
   transformOutputRange,
   transformInputRange,
   children,
-  index,
-  onClick,
   x,
   opacity,
+  index,
+  onClick,
   enabled,
-}: CarouselSegmentProps) => {
+}: CarouselSegmentProps & { x: number; opacity: number }) => {
+  const [hasHydrated, setHasHydrated] = React.useState(false)
+  const { motionValues, setMotionValue } = useContractCreationStore()
+
+  const mX = useMotionValue(x)
+  const mOpacity = useMotionValue(opacity)
+
+  useEffect(() => {
+    setMotionValue(index, mX, 'x')
+    setMotionValue(index, mOpacity, 'opacity')
+    setHasHydrated(true)
+  }, [])
+
+  if (!hasHydrated) return null
+
+  return (
+    <CarouselSegmentMotion
+      transformOutputRange={transformOutputRange}
+      transformInputRange={transformInputRange}
+      index={index}
+      onClick={onClick}
+      enabled={enabled}
+      x={motionValues.x[index] as MotionValue<number>}
+      opacity={motionValues.opacity[index] as MotionValue<number>}
+    >
+      {children}
+    </CarouselSegmentMotion>
+  )
+}
+
+export const CarouselSegmentMotion = ({
+  transformOutputRange,
+  transformInputRange,
+  children,
+  index,
+  onClick,
+  enabled,
+  x,
+  opacity,
+}: CarouselSegmentMotionProps) => {
   const left = useTransform(x, transformInputRange, transformOutputRange)
   const opacitySegment = useTransform(opacity, [0, 1], [0, 1])
   return (

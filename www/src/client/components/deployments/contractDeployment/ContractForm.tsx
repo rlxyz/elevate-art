@@ -1,9 +1,15 @@
+import { ContractPayoutAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractPayoutAnalyticsLayout'
+import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractSaleAnalyticsLayout'
+import { FormRadioInput } from '@components/layout/form/FormRadioInput'
+import { FormSelectInput } from '@components/layout/form/FormSelectInput'
 import { Switch } from '@headlessui/react'
+import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
-import Image from 'next/image'
+import { BigNumber } from 'ethers'
 import React, { forwardRef, useState } from 'react'
 import type { FieldError } from 'react-hook-form'
-import { capitalize } from 'src/client/utils/format'
+import { ContractInformationAnalyticsLayout } from '../../explore/AnalyticsLayout/ContractInformationAnalyticsLayout'
+import { useAnimationMotionValues } from './useAnimationMotionValues'
 
 export const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
   const childrens = React.Children.toArray(children)
@@ -22,7 +28,7 @@ const ContractFormHeader = ({ title, description }: { title: string; description
   return (
     <div className='flex flex-col items-center'>
       <h1 className='font-semibold py-2'>{title}</h1>
-      <p className='text-xs max-w-sm text-center'>{description}</p>
+      <span className='text-xs max-w-sm text-center'>{description}</span>
     </div>
   )
 }
@@ -30,113 +36,70 @@ const ContractFormHeader = ({ title, description }: { title: string; description
 const ContractFormBody = ({ children, onSubmit }: { children: React.ReactElement[]; onSubmit: React.FormEventHandler }) => {
   return (
     <form onSubmit={onSubmit}>
-      <div className='w-full grid grid-cols-2 gap-4'>{children}</div>
+      <div className='w-full grid grid-cols-2 gap-9'>{children}</div>
     </form>
   )
 }
 
 const ContractSummary = ({
-  contractName, // contract level
-  contractSymbol, // contract level
-  mintType, // from the db; to be removed because we do this when we run AssetDeployment
-  blockchain, // chainId
-  artCollection, // assetDeployment
+  contractInformationData,
+  payoutData,
+  claimPeriod,
+  presalePeriod,
+  publicPeriod,
   currentSegment,
-  // presale,
-  presalePrice, // contract level
-  presaleSupply, // contract level
-  presaleMaxMintAmount, // contract level
-  presaleMaxTransactionAmount, // contract level
-  publicSale,
-  publicSalePrice, // contract level
-  publicSaleMaxMintAmount, // contract level
-  publicSaleMaxTransactionAmount, // contract level
   onClick,
 }: {
-  contractName?: string
-  contractSymbol?: string
   onClick?: () => void
-  mintType?: string
-  blockchain?: string
-  artCollection?: string
-  currentSegment?: number
-  presale?: boolean
-  presalePrice?: number
-  presaleSupply?: number
-  presaleMaxMintAmount?: number
-  presaleMaxTransactionAmount?: number
-  publicSale?: boolean
-  publicSalePrice?: number
-  publicSaleMaxMintAmount?: number
-  publicSaleMaxTransactionAmount?: number
+  currentSegment: number
+  payoutData?: PayoutData
+  contractInformationData?: ContractInformationData
+  claimPeriod?: SaleConfig
+  presalePeriod?: SaleConfig
+  publicPeriod?: SaleConfig
 }) => {
-  console.log('currentSegment', currentSegment)
+  const { handleClick } = useAnimationMotionValues()
+  const contractInformation: ContractInformationData = contractInformationData || {
+    name: '',
+    symbol: '',
+    owner: '0x' as `0x${string}`,
+    mintType: '',
+    chainId: 99,
+    totalSupply: BigNumber.from(0),
+    collectionSize: BigNumber.from(0),
+  }
+
+  const payout: PayoutData = payoutData || {
+    estimatedPayout: BigNumber.from(0),
+    paymentReceiver: '0x' as `0x${string}`,
+  }
+
+  console.log(currentSegment)
 
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
-      <div className='border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2 '>
-        <div className='grid grid-cols-3 gap-2'>
-          <p className='font-semibold col-span-1'>Name</p>
-          <p className='font-semibold col-span-2'>Token</p>
-          <p className='col-span-1  text-darkGrey'>{contractName}</p>
-          <p className='col-span-2 text-darkGrey'>{contractSymbol}</p>
-          <p className='col-span-1 font-semibold'>Collection</p>
-          <p className='font-semibold col-span-1'>Mint Type</p>
-          <p className='font-semibold col-span-1'>Blockchain</p>
-          <div className='flex flex-row '>
-            <Image
-              width={3}
-              height={3}
-              alt='avatar-img'
-              className='h-4 w-4 select-none rounded-full mr-1'
-              src='/images/avatar-blank.png'
-              draggable='false'
-            />
-            <p className='col-span-1 text-darkGrey'>{`${artCollection}`}</p>
-          </div>
-          <p className='col-span-1 text-darkGrey'>{capitalize(`${mintType}`)}</p>
-          <p className='col-span-1 text-darkGrey'>{capitalize(`${blockchain}`)}</p>
-          <p className='font-semibold col-span-1'>Pre-Sale Price</p>
-          <p className='font-semibold col-span-1'>Mint Cap</p>
-          <p className='font-semibold col-span-1'>Transaction Cap</p>
-          <p className='col-span-1 text-darkGrey'>{presalePrice}</p>
-          <p className='col-span-1 text-darkGrey'>{presaleMaxMintAmount}</p>
-          <p className='col-span-1 text-darkGrey'>{presaleMaxTransactionAmount}</p>
-          <p className='font-semibold col-span-1'>Public Sale Price</p>
-          <p className='font-semibold col-span-1'>Mint Cap</p>
-          <p className='font-semibold col-span-1'>Transaction Cap</p>
-          <p className='col-span-1 text-darkGrey'>{publicSalePrice}</p>
-          <p className='col-span-1 text-darkGrey'>{publicSaleMaxMintAmount}</p>
-          <p className='col-span-1 text-darkGrey'>{publicSaleMaxTransactionAmount}</p>
-          <p className='font-semibold col-span-2'>Mint Revenue Breakdown</p>
-          <p className='font-semibold col-span-1'>Estimated Payout</p>
-          <p className='col-span-1 text-darkGrey'>0x1b3...29 (You)</p>
-          <p className='col-span-1 text-darkGrey'>95%</p>
-          <p className='col-span-1 text-darkGrey '>95 ETH</p>
-          <p className='col-span-1 text-darkGrey'>Elevate Art</p>
-          <p className='col-span-1 text-darkGrey'>5%</p>
-          <p className='col-span-1 text-darkGrey '>5 ETH</p>
-          <p className='col-span-1 '>Total Funds Raised</p>
-          <p className='col-span-1 '>100%</p>
-          <p className='col-span-1 '>100 ETH</p>
-        </div>
-      </div>
+      <ContractInformationAnalyticsLayout contractInformationData={contractInformation} />
+      <ContractSaleAnalyticsLayout saleConfig={claimPeriod} title={'Claim Period'} />
+      <ContractSaleAnalyticsLayout saleConfig={presalePeriod} title={'Presale Period'} />
+      <ContractSaleAnalyticsLayout saleConfig={publicPeriod} title={'Public Sale Period'} />
+      <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
 
       <div className='grid grid-cols-8'>
-        {currentSegment === 1 || currentSegment === 2 ? (
+        {currentSegment === 0 ? (
           <>
             <button
-              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               type='button'
-              onClick={onClick}
+              onClick={() => handleClick(currentSegment - 1)}
             >
               ᐸ
             </button>
+
             <button
-              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='submit'
-              onClick={onClick}
+              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              type='button'
+              onClick={() => handleClick(currentSegment + 1)}
             >
               Continue
             </button>
@@ -144,17 +107,16 @@ const ContractSummary = ({
         ) : (
           <>
             <button
-              className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+              className='col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               type='button'
-              onClick={onClick}
+              onClick={() => handleClick(currentSegment - 1)}
             >
               ᐸ
             </button>
-
             <button
-              className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-              type='submit'
+              className='col-span-7 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
               onClick={onClick}
+              type='submit'
             >
               Continue
             </button>
@@ -202,7 +164,7 @@ const ContractFormBodyInput = forwardRef<
             placeholder={placeholder}
             {...props}
           />
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
           {error && (
             <span className='text-xs text-redError'>
               {error.type === 'required'
@@ -218,56 +180,6 @@ const ContractFormBodyInput = forwardRef<
                 : 'Must be between 3 and 20 characters long'}
             </span>
           )}
-        </div>
-      </>
-    )
-  }
-)
-
-export const ContractFormBodyRadioInput = forwardRef<
-  HTMLInputElement,
-  React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>
->(({ className = '', label, ...props }: React.PropsWithChildren<{ className?: string; label: string; checked?: boolean }>) => {
-  return (
-    <>
-      <div className={clsx('space-y-1 w-full', className)}>
-        <div className='flex items-center space-x-3 py-2'>
-          <input
-            type='radio'
-            className={clsx('border border-mediumGrey w-4 h-4 flex items-center text-xs disabled:cursor-not-allowed')}
-            {...props}
-          />
-          <label className='text-xs'>{label}</label>
-        </div>
-      </div>
-    </>
-  )
-})
-
-export const ContractFormBodySelectInput = forwardRef<
-  HTMLSelectElement,
-  React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>
->(
-  ({
-    className,
-    label,
-    description,
-    children,
-    defaultValue,
-    ...props
-  }: React.PropsWithChildren<{ className: string; label: string; description: string; defaultValue: string }>) => {
-    return (
-      <>
-        <div className={clsx('space-y-1 w-full', className)}>
-          <label className='text-xs font-semibold'>{label}</label>
-          <select
-            defaultValue={defaultValue}
-            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-            {...props}
-          >
-            {children}
-          </select>
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
         </div>
       </>
     )
@@ -301,10 +213,6 @@ const ContractFormBodyToggleInput = forwardRef<
     error: FieldError | undefined
     maxLength?: number | undefined
   }>) => {
-    function classNames(...classes: string[]) {
-      return classes.filter(Boolean).join(' ')
-    }
-
     const [enabled, setEnabled] = useState(false)
 
     return (
@@ -315,7 +223,7 @@ const ContractFormBodyToggleInput = forwardRef<
             <Switch
               checked={enabled}
               onChange={setEnabled}
-              className={classNames(
+              className={clsx(
                 enabled ? 'bg-black' : 'bg-mediumGrey',
                 'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
               )}
@@ -323,7 +231,7 @@ const ContractFormBodyToggleInput = forwardRef<
               <span className='sr-only'>Use setting</span>
               <span
                 aria-hidden='true'
-                className={classNames(
+                className={clsx(
                   enabled ? 'translate-x-3' : 'translate-x-0',
                   'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
                 )}
@@ -450,7 +358,7 @@ const ContractFormBodyInputWithDetails = forwardRef<
             placeholder={placeholder}
             {...props}
           />
-          <p className='text-[0.6rem] text-darkGrey'>{description}</p>
+          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
           {error && (
             <span className='text-xs text-redError'>
               {error.type === 'required'
@@ -472,16 +380,15 @@ const ContractFormBodyInputWithDetails = forwardRef<
   }
 )
 
-ContractFormBodySelectInput.displayName = 'ContractFormBodySelectInput'
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
-ContractFormBodyRadioInput.displayName = 'ContractFormBodyRadioInput'
 ContractFormBodyToggleInput.displayName = 'ContractFormBodyToggleInput'
 ContractFormBodyInputWithDetails.displayName = 'ContractFormBodyToggleInputWithDetails'
+
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractFormBody.Input = ContractFormBodyInput
-ContractFormBody.Select = ContractFormBodySelectInput
-ContractFormBody.Radio = ContractFormBodyRadioInput
+ContractFormBody.Select = FormSelectInput
+ContractFormBody.Radio = FormRadioInput
 ContractFormBody.Summary = ContractSummary
 ContractFormBody.ToggleInput = ContractFormBodyToggleInput
 ContractFormBody.ToggleCategory = ContractFormBodyToggleCategory
