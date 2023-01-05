@@ -5,7 +5,6 @@ import { env } from 'src/env/client.mjs'
 import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
 import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.json'
 
-//! @todo add claimTime
 export class ElevateContract extends ethers.Contract {
   readonly name!: () => Promise<string>
   readonly symbol!: () => Promise<string>
@@ -51,7 +50,7 @@ export const getElevateContract = ({
   chainId: number
   type?: AssetDeploymentType
 }): ElevateContract => {
-  const provider = new ethers.providers.AlchemyProvider(parseChainId(chainId), env.NEXT_PUBLIC_ALCHEMY_ID)
+  const provider = new ethers.providers.AlchemyProvider(parseChainId(Number(chainId)), env.NEXT_PUBLIC_ALCHEMY_ID)
   const contract = new ElevateContract(
     address,
     type === AssetDeploymentType.BASIC
@@ -65,5 +64,5 @@ export const getElevateContract = ({
 }
 
 export const buildEtherscanLink = ({ address, chainId }: { address: string; chainId: number }) => {
-  return `https://${chainId === 1 ? '' : `${parseChainId(chainId)}.`}etherscan.io/address/${address}`
+  return `https://${chainId === 1 ? '' : `${parseChainId(Number(chainId))}.`}etherscan.io/address/${address}`
 }
