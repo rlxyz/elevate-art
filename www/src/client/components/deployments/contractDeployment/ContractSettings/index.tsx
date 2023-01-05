@@ -1,11 +1,10 @@
-import useContractCreationStore from '@components/deployments/contractDeployment/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import { NextLinkWithHoverHueComponent } from '@components/layout/link/NextLinkWithHoverHueComponent'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
-import type { ContractDetailsForm } from './ContactCreationForms/ContactDetailsForm'
-import { ContractForm } from './ContractForm'
+import { ContractForm } from '../ContractForm'
 
 export const SettingsNavigations: FC<{ routes: { name: string; href: string; selected: boolean }[] }> = ({ routes }) => {
   return (

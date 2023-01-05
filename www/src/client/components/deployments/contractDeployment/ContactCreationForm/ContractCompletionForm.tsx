@@ -1,4 +1,4 @@
-import useContractCreationStore from '@components/deployments/contractDeployment/useContractCreationStore'
+import useContractCreationStore from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useDeployContract } from '@hooks/utils/useDeployContract'
 import type { AssetDeploymentType } from '@prisma/client'
@@ -7,8 +7,8 @@ import Big from 'big.js'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { env } from 'src/env/client.mjs'
-import { ContractForm } from '../ContractForm'
-import type { ContractFormProps } from './ContactDetailsForm'
+import type { ContractFormProps } from './ContractCreationForm'
+import { ContractForm } from './ContractForm'
 
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { deploy, address: contractAddress } = useDeployContract()

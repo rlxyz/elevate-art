@@ -1,6 +1,3 @@
-import { ContractCreationFormDisplay } from '@components/deployments/contractDeployment'
-import { ContractCreationHelperAnimation } from '@components/deployments/contractDeployment/ContractCreationHelperAnimation'
-import { ContractContext, createContractCreationStore } from '@components/deployments/contractDeployment/useContractCreationStore'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -17,6 +14,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { ContractCreation } from '../../../../../../client/components/deployments/contractDeployment'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -105,10 +103,7 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.PageHeader>
         <Layout.Body border={'lower'}>
-          <ContractContext.Provider createStore={() => createContractCreationStore}>
-            <ContractCreationHelperAnimation className='py-16' />
-            <ContractCreationFormDisplay className='h-[calc(100vh-17.75rem)] py-8' />
-          </ContractContext.Provider>
+          <ContractCreation />
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

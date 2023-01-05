@@ -1,6 +1,5 @@
-import type { ContractDetailsForm } from '@components/deployments/contractDeployment/ContactCreationForms/ContactDetailsForm'
+import { useContractCreationStore } from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import { ContractForm } from '@components/deployments/contractDeployment/ContractForm'
-import { useContractCreationStore } from '@components/deployments/contractDeployment/useContractCreationStore'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'

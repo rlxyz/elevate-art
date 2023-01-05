@@ -3,8 +3,8 @@ import { parseChainId } from '@utils/ethers'
 import { BigNumber } from 'ethers'
 import type { FC } from 'react'
 import { capitalize } from 'src/client/utils/format'
-import type { ContractFormProps } from '..'
-import { ContractForm } from '../ContractForm'
+import type { ContractFormProps } from './ContractCreationForm'
+import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
