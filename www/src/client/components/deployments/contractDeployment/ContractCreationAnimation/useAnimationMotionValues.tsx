@@ -3,7 +3,7 @@ import type { ContractCreationType } from '../ContactCreationForm'
 import { ContractCreationEnum } from '../ContactCreationForm'
 
 export const useAnimationMotionValues = () => {
-  const { motionValues } = useContractCreationStore()
+  const { motionValues, setCurrentSegment } = useContractCreationStore()
 
   const handleClick = (segment: ContractCreationType) => {
     switch (segment) {
@@ -34,6 +34,8 @@ export const useAnimationMotionValues = () => {
       default:
         break
     }
+
+    setCurrentSegment(segment)
   }
 
   return {

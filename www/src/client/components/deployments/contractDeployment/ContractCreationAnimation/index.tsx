@@ -9,7 +9,6 @@ import { CarouselSegment } from './CarouselSegment'
 import { LineWithGradient } from './LineWithGradient'
 import { useAnimationMotionValues } from './useAnimationMotionValues'
 
-/** @todo modularise */
 export const ContractCreationHelperAnimation: FC<{
   className: string
   contractCreationAnimation: ContractCreationAnimationProps[]
@@ -40,11 +39,12 @@ export const ContractCreationHelperAnimation: FC<{
         <ButtonWithSelector
           onClick={() => {
             const segment = contractCreationAnimation.find((item) => item.id === currentSegment)
+            console.log(segment)
             if (!segment) return
             if (!segment.previous) return
             handleClick(segment.previous)
           }}
-          enabled={contractCreationAnimation.find((item) => item.id === currentSegment)?.previous !== undefined}
+          disabled={contractCreationAnimation.find((item) => item.id === currentSegment)?.previous === null}
         >
           <ChevronLeftIcon className='w-4 h-4 text-darkGrey' />
         </ButtonWithSelector>
@@ -56,7 +56,7 @@ export const ContractCreationHelperAnimation: FC<{
             if (!segment.next) return
             handleClick(segment.next)
           }}
-          enabled={contractCreationAnimation.find((item) => item.id === currentSegment)?.next !== undefined}
+          disabled={contractCreationAnimation.find((item) => item.id === currentSegment)?.next === null}
         >
           <ChevronRightIcon className='w-4 h-4 text-darkGrey' />
         </ButtonWithSelector>
