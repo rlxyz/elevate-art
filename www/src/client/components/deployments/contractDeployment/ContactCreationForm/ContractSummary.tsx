@@ -2,9 +2,10 @@ import { ContractInformationAnalyticsLayout } from '@components/explore/Analytic
 import { ContractPayoutAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractPayoutAnalyticsLayout'
 import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractSaleAnalyticsLayout'
 import { ChevronLeftIcon } from '@heroicons/react/outline'
-import { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
+import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
+import clsx from 'clsx'
 import { BigNumber } from 'ethers'
-import { ContractCreationType } from '.'
+import type { ContractCreationType } from '.'
 import { useAnimationMotionValues } from '../ContractCreationAnimation/useAnimationMotionValues'
 
 export const ContractSummary = ({
@@ -53,10 +54,10 @@ export const ContractSummary = ({
       <ContractSaleAnalyticsLayout saleConfig={publicPeriod} title={'Public Sale Period'} />
       <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
 
-      <div className='grid grid-cols-8'>
+      <div className='grid grid-cols-8 gap-6'>
         {previous && (
           <button
-            className='hidden col-span-1 border mr-2 p-2 border-black rounded-[5px] bg-white text-black text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            className='col-span-1 border rounded-[5px] border-mediumGrey p-2 flex'
             type='button'
             onClick={() => handleClick(previous)}
           >
@@ -65,7 +66,10 @@ export const ContractSummary = ({
         )}
         {next && (
           <button
-            className='col-span-8 border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            className={clsx(
+              previous ? 'col-span-7' : 'col-span-8',
+              'border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+            )}
             type='submit'
             onClick={() => handleClick(next)}
           >

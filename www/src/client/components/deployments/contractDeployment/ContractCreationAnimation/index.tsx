@@ -39,7 +39,6 @@ export const ContractCreationHelperAnimation: FC<{
         <ButtonWithSelector
           onClick={() => {
             const segment = contractCreationAnimation.find((item) => item.id === currentSegment)
-            console.log(segment)
             if (!segment) return
             if (!segment.previous) return
             handleClick(segment.previous)

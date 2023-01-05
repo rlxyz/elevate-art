@@ -1,9 +1,11 @@
 import useContractCreationStore from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
+import Card from '@components/layout/card/Card'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useDeployContract } from '@hooks/utils/useDeployContract'
 import type { AssetDeploymentType } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import Big from 'big.js'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { env } from 'src/env/client.mjs'
@@ -75,16 +77,17 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
     <>
       <ContractForm>
         <ContractForm.Header title={title} description={description} />
-        <div className='w-full grid grid-cols-2 gap-2'>
-          <div>
-            {/* <button
-              className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
+        <div className='w-full grid grid-cols-2 gap-6'>
+          <Card>
+            <button
+              className='border px-2 py-1 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey flex items-center space-x-1'
               type='submit'
               onClick={handleClick}
             >
-              Deploy
-            </button> */}
-          </div>
+              <Image width={32} height={32} src='/images/logo-white.png' alt='logo-white' />
+              <span className='uppercase font-semibold text-xs'>Deploy</span>
+            </button>
+          </Card>
           <div>
             <ContractForm.Body.Summary
               next={next}
