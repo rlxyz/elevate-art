@@ -24,7 +24,6 @@ export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEn
 
 export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
   const { current } = useQueryContractDeployment()
-  console.log('current', current)
 
   return (
     <Layout>

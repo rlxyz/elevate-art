@@ -1,11 +1,13 @@
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
+import { WhitelistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useSaleMintCountInput } from './useSaleMintCountInput'
+import { useUserMerkleProof } from './useUserMerkleProof'
 
 interface UseClaimMint {
   isLoading: boolean
@@ -28,12 +30,16 @@ export const useClaimPurchase = ({
 }): UseClaimMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
+  const { proof } = useUserMerkleProof({
+    type: WhitelistType.CLAIM,
+  })
+
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
     functionName: 'claimMint',
-    args: [mintCount],
+    args: [mintCount, proof],
     overrides: {
       gasLimit: BigNumber.from(200000),
     },

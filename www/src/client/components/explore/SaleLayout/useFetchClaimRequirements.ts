@@ -1,4 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
+import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
 import { useFetchContractData, useFetchContractUserData } from './useFetchContractData'
@@ -11,6 +12,9 @@ export const useFetchClaimRequirements = ({
   session: Session | null
   contractDeployment: ContractDeployment
 }) => {
+  /** Fetch User Claim */
+  const { current: userClaim } = useQueryContractDeploymentWhitelistFindClaimByAddress()
+
   /** Get user balance */
   const {
     data: userBalance,
@@ -51,23 +55,21 @@ export const useFetchClaimRequirements = ({
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress()
 
-  /** @todo presale mint list */
-  const userMintLeft = currentContractDeploymentWhitelist?.mint || 0
-
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
-      userMintLeft,
+      userMintLeft:
+        BigNumber.from(currentContractDeploymentWhitelist?.mint).sub(fetchedContractUserData?.userMintCount || 0) || BigNumber.from(0),
       // cases handled:
       // 1. maxAllocation more than 0
       // 2. totalMinted less than collectionSize
       // 3. userMintCount less than maxAllocation
       // 4. collectionMintLeft more than 0
       allowToMint:
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractData?.totalMinted.lt(fetchedContractData?.collectionSize) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation) &&
+        fetchedContractData?.maxPublicBatchPerAddress?.gt(0) &&
+        fetchedContractData?.totalSupply?.lt(fetchedContractData?.collectionSize || BigNumber.from(0)) &&
+        fetchedContractUserData?.userMintCount.lt(fetchedContractData?.maxPublicBatchPerAddress) &&
         fetchedContractData.collectionMintLeft.gt(0),
 
       // cases handled:
@@ -75,11 +77,11 @@ export const useFetchClaimRequirements = ({
       // 2. userMintCount less than maxAllocation
       hasMintAllocation:
         fetchedContractUserData?.userMintCount &&
-        fetchedContractData?.maxAllocation.gt(0) &&
-        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxAllocation),
+        fetchedContractData?.maxPublicBatchPerAddress?.gt(0) &&
+        fetchedContractUserData?.userMintCount.lt(fetchedContractData.maxPublicBatchPerAddress),
       userBalance: userBalance,
     },
-    isError: isErrorContractData || isErrorContractUserData,
-    isLoading: isLoadingContractData || isLoadingContractUserData,
+    isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
+    isLoading: isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist,
   }
 }

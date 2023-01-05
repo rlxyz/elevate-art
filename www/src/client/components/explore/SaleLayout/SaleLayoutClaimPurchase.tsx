@@ -24,20 +24,17 @@ export const SaleLayoutClaimPurchase = ({
     contractDeployment,
   })
   const { now } = useMintLayoutCurrentTime()
+
   /** Variables */
-  const { userBalance, userMintCount, totalMinted, userMintLeft, maxAllocation, allowToMint, hasMintAllocation } = data
+  const { userMintCount, userMintLeft, allowToMint, hasMintAllocation } = data
 
   /** Fetch the public-mint functionality */
   const { write, setMintCount, mintCount } = useClaimPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
-    enabled: !!session?.user?.id && !isLoading && !isError,
+    enabled: !session?.user?.id && !isLoading && !isError,
   })
-
-  /** Validation */
-  //! @todo add walletCheck validation
-  // const { validateAllowlist } = useWalletCheck()
 
   return (
     <SaleLayout>
@@ -53,10 +50,10 @@ export const SaleLayoutClaimPurchase = ({
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.claimPeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
           <SaleMintCountInput
-            maxValue={maxAllocation}
+            maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!!session?.user?.id || !hasMintAllocation}
+            disabled={!session?.user?.id || !hasMintAllocation}
           />
         </div>
       </SaleLayout.Body>
@@ -79,7 +76,7 @@ export const SaleLayoutClaimPurchase = ({
             )}
           </div>
           <button
-            disabled={!!session?.user?.id || isLoading || !allowToMint}
+            disabled={!session?.user?.id || isLoading || !allowToMint}
             onClick={() => write()}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'

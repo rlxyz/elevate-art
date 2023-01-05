@@ -35,31 +35,53 @@ export const contractDeploymentWhitelistRouter = router({
     /** Return */
     return { whitelists }
   }),
-  findClaimByAddress: publicProcedure.input(z.object({ address: z.string() })).query(async ({ ctx, input }) => {
-    const { address } = input
+  findWhitelistByAddressAndType: publicProcedure
+    .input(z.object({ address: z.string(), type: z.nativeEnum(WhitelistType) }))
+    .query(async ({ ctx, input }) => {
+      const { address, type } = input
 
-    /**
-     * Look for the deployment
-     */
-    const whitelists = await ctx.prisma.whitelist.findMany({
-      where: { type: WhitelistType.CLAIM, contractDeployment: { address } },
-      select: { address: true, mint: true },
-    })
-
-    /**
-     * If deployment does not exists, return not found
-     */
-    if (!whitelists) {
-      // new trpc error
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: `Contract deployment with address ${address} not found`,
+      /**
+       * Look for the deployment
+       */
+      const whitelists = await ctx.prisma.whitelist.findMany({
+        where: { type, contractDeployment: { address } },
       })
-    }
 
-    /** Return */
-    return { whitelists }
-  }),
+      /**
+       * If deployment does not exists, return not found
+       */
+      if (!whitelists) {
+        // new trpc error
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `Contract deployment with address ${address} not found`,
+        })
+      }
+
+      /** Return */
+      return { whitelists }
+    }),
+  findClaimByUserAndContract: publicProcedure
+    .input(
+      z.object({
+        address: z.string(),
+        contractAddress: z.string(),
+        type: z.nativeEnum(WhitelistType),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { address, contractAddress, type } = input
+
+      return await ctx.prisma.whitelist.findUnique({
+        where: {
+          address,
+          contractDeployment: {
+            address: contractAddress,
+          },
+          type,
+        },
+      })
+    }),
   create: protectedProcedure
     .input(
       z.object({
