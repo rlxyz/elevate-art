@@ -1,5 +1,5 @@
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/repositoryContractDeployment/useMutateRepositoryContractDeploymentCreate'
+import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/contractDeployment/useMutateRepositoryContractDeploymentCreate'
 import type { AssetDeploymentBranch } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
 import type { Signer } from 'ethers'

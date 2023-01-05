@@ -17,7 +17,6 @@ export type ContractInformationData = {
   owner: `0x${string}`
   mintType: string
   chainId: number
-  totalSupply: BigNumber // is current total mints in contract
   collectionSize: BigNumber // is total mint possible in contract
 }
 

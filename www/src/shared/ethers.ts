@@ -7,6 +7,8 @@ import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.j
 
 //! @todo add claimTime
 export class ElevateContract extends ethers.Contract {
+  readonly name!: () => Promise<string>
+  readonly symbol!: () => Promise<string>
   readonly owner!: () => Promise<string>
   readonly mintPrice!: () => Promise<BigNumber>
   readonly maxPublicBatchPerAddress!: () => Promise<BigNumber>

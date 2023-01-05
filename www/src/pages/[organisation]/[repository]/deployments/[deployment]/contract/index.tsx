@@ -7,9 +7,12 @@ import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
 import { CheckCircleIcon, ChevronRightIcon, CubeIcon, GlobeAltIcon, XCircleIcon } from '@heroicons/react/solid'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useQueryContractDeploymentContractInformationData } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentContractInformationData'
+import { useQueryContractDeploymentPayoutData } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentPayoutData'
+import { useQueryContractDeploymentSaleConfig } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentSaleConfig'
+import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { useQueryRepositoryContractDeployment } from '@hooks/trpc/repositoryContractDeployment/useQueryRepositoryDeployments'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import type { ContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
@@ -20,7 +23,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { parseChainId } from 'src/client/utils/ethers'
 import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
-import { AssetDeploymentNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, MintNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 const Page = () => {
@@ -28,7 +31,21 @@ const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: organisation } = useQueryOrganisationFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: contractData } = useQueryContractDeploymentContractInformationData({
+    address: contractDeployment?.address,
+    chainId: contractDeployment?.chainId,
+  })
+  const { all: payoutData } = useQueryContractDeploymentPayoutData({
+    address: contractDeployment?.contractAddress,
+    chainId: contractDeployment?.chainId,
+  })
+  const { all: saleConfigs } = useQueryContractDeploymentSaleConfig({
+    address: contractDeployment?.contractAddress,
+    chainId: contractDeployment?.chainId,
+  })
+
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+
   useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
@@ -99,13 +116,14 @@ const Page = () => {
                 loading: isLoading,
               },
               {
-                name: AssetDeploymentNavigationEnum.enum.Allowlist,
+                name: AssetDeploymentNavigationEnum.enum.Settings,
                 href: routeBuilder(
                   organisation?.name,
                   repository?.name,
                   ZoneNavigationEnum.enum.Deployments,
                   deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Allowlist
+                  AssetDeploymentNavigationEnum.enum.Settings,
+                  ContractSettingsNavigationEnum.enum.Allowlist
                 ),
                 enabled: false,
                 loading: isLoading,
@@ -157,6 +175,11 @@ const Page = () => {
           </Header>
           <Body>
             <ContractDeploymentPhasesView deployment={contractDeployment} />
+            {/* <ContractInformationAnalyticsLayout contractInformationData={contractData} /> */}
+            {/* {saleConfigs.map((config) => (
+              <ContractSaleAnalyticsLayout saleConfig={config} title={'Claim Period'} />
+            ))} */}
+            {/* <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payoutData} /> */}
           </Body>
         </Layout.Body>
       </Layout>

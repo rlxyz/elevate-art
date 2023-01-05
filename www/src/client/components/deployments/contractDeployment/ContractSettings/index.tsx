@@ -4,7 +4,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import type { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { capitalize } from 'src/client/utils/format'
-import { ContractForm } from '../ContractForm'
+import { ContractForm } from '../ContactCreationForm/ContractForm'
 
 export const SettingsNavigations: FC<{ routes: { name: string; href: string; selected: boolean }[] }> = ({ routes }) => {
   return (
