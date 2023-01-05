@@ -17,10 +17,10 @@ const CardComponent: React.FC<React.PropsWithChildren<CardProps>> = ({
   const childrens = React.Children.toArray(children)
 
   return (
-    <div className={clsx(className, 'bg-background transition-all rounded-[5px] box-border border border-mediumGrey')} {...props}>
+    <div className={clsx(className, 'bg-background transition-all rounded-[5px] box-border border border-mediumGrey py-2')} {...props}>
       {childrens.map((child, index) => {
         return (
-          <div key={index} className='p-4'>
+          <div key={index} className='px-4 py-2'>
             {child}
           </div>
         )

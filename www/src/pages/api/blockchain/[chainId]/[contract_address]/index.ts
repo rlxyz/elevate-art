@@ -21,7 +21,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const contract = {
-    projectOwner: (await getContractOwner(address, chainId)).getValue(),
+    owner: (await getContractOwner(address, chainId)).getValue(),
     totalSupply: (await getTotalSupply(address, chainId)).getValue(), // @todo remove this
     collectionSize: (await getCollectionSize(address, chainId)).getValue(),
     claimPeriod: {
