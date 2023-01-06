@@ -113,51 +113,34 @@ const SaleConfigInput = ({
             required: true,
           })}
           label={''}
-          // defaultValue={0.05}
           description={''}
           className='col-span-3'
           error={errors.presaleSupply}
-          placeholder='Supply'
+          type='datetime-local'
+          placeholder={`Set ${title} Time`}
         />
         <ContractForm.Body.Input
           {...register(`saleConfigs.${index}.mintPrice`, {
             required: true,
-            maxLength: {
-              value: 20,
-              message: 'Max length is 20',
-            },
-            minLength: {
-              value: 3,
-              message: 'Max length is 3',
-            },
-            pattern: /^[-/a-z0-9 ]+$/gi,
-            onChange: (e) => {
-              setValue('presalePrice', e.target.value)
-            },
           })}
           label={''}
-          // defaultValue={0.05}
           description={''}
           className='col-span-3'
           error={errors.presalePrice}
-          placeholder='Price'
+          placeholder={`Set ${title} Price`}
         />
       </div>
-      <ContractForm.Body.ToggleInput
-        {...register('presaleMaxMintAmount', {
+      <ContractForm.Body.Input
+        {...register(`saleConfigs.${index}.maxAllocationPerAddress`, {
           required: true,
-          onChange: (e) => {
-            setValue('presaleMaxMintAmount', e.target.value)
-          },
         })}
         label={'Mints per Wallet Maximum'}
-        // defaultValue={0.05}
         description={''}
         className='col-span-3'
         error={errors.presaleMaxMintAmount}
-        placeholder='Unlimited mints for all wallets'
+        placeholder='Maximum amount of mints per wallet'
       />
-      <ContractForm.Body.ToggleInput
+      {/* <ContractForm.Body.ToggleInput
         {...register('presaleMaxTransactionAmount', {
           required: true,
           onChange: (e) => {
@@ -170,7 +153,7 @@ const SaleConfigInput = ({
         className='col-span-3'
         error={errors.presaleMaxTransactionAmount}
         placeholder='Unlimited transactions for all wallets'
-      />
+      /> */}
     </ContractForm.Body.ToggleCategory>
   )
 }

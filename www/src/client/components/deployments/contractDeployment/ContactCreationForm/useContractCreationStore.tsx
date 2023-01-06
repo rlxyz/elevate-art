@@ -1,3 +1,4 @@
+import { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData, SaleConfig } from '@utils/contracts/ContractData'
 import { BigNumber } from 'ethers'
 import type { MotionValue } from 'framer-motion'
@@ -38,7 +39,7 @@ const initialState: ContractCreationStoreInterface = {
     name: '',
     symbol: '',
     owner: '0x' as `0x${string}`,
-    mintType: 'off-chain',
+    mintType: AssetDeploymentType.BASIC,
     chainId: 5,
     totalSupply: BigNumber.from(0),
     collectionSize: BigNumber.from(0),
