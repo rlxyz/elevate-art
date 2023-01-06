@@ -66,3 +66,7 @@ export const getElevateContract = ({
 export const buildEtherscanLink = ({ address, chainId }: { address: string; chainId: number }) => {
   return `https://${chainId === 1 ? '' : `${parseChainId(Number(chainId))}.`}etherscan.io/address/${address}`
 }
+
+export const formatEthereumHash = (hash: string) => {
+  return `${hash.slice(0, 6)}...${hash.slice(-4)}`
+}

@@ -48,17 +48,17 @@ export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: Rhaps
           if (!all) return setError('address', { message: 'Please try again in a minute' })
 
           /** Check if the address has a claim */
-          const claim = all.whitelists.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
-          if (!claim) {
-            return setError('address', { message: 'This address does not have a claim' })
+          const presale = all.whitelists.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          if (!presale) {
+            return setError('address', { message: 'This address is not part of the presale' })
           }
 
-          setAddressCheckerDetails({ address: data.address, mint: claim.mint })
+          setAddressCheckerDetails({ address: data.address, mint: presale.mint })
         })}
         className='flex flex-col space-y-3'
       >
         <span className='text-xs'>
-          Check if your Wallet Address can <strong className='uppercase'>claim</strong> an NFT
+          Check if your Wallet Address is in the <strong className='uppercase'>presale</strong>
         </span>
         <div className='w-full flex flex-row space-x-3'>
           <input

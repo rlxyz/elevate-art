@@ -1,9 +1,9 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { metadataCacheObject } from '@server/utils/gcp-storage'
+import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { env } from 'src/env/server.mjs'
+import { getDeploymentTokenImage } from 'src/client/utils/image'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -34,10 +34,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       name: seed,
     },
-    include: { repository: true },
+    include: { repository: true, contractDeployment: true },
   })
 
   if (!deployment) {
+    return res.status(404).send('Not Found')
+  }
+
+  if (!deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
@@ -45,23 +49,26 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  // look into cache whether image exist
-  const metadata = await metadataCacheObject.get({
-    branch: AssetDeploymentBranch.PREVIEW,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-  })
-
-  if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
-
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+  const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
+  if (seedResponse.failed) {
+    return res.status(404).send('Not Found')
+  }
+
+  const vseed = seedResponse.getValue()
+  const tokens = v.one(v.parseLayer(layerElements), vseed)
 
   const response = {
-    name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/assets/deployments/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
+    name: `${deployment.repository.tokenName || ''} #${id}`,
+    description: deployment.repository.description,
+    image: getDeploymentTokenImage({
+      o: organisationName,
+      r: repositoryName,
+      tokenId: id,
+      d: deployment.name,
+      branch: deployment.branch,
+    }),
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
@@ -73,17 +80,15 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
         value: traitElement.name,
       }
     }),
+    // add artist
+    // add license
+    // add script
+    // add external_url
   }
 
-  await metadataCacheObject.put({
-    branch: AssetDeploymentBranch.PREVIEW,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: JSON.stringify(response),
-  })
-
-  return res.setHeader('Content-Type', 'application/json').send(JSON.stringify(response, null, 2))
+  return res
+    .setHeader('Content-Type', 'application/json')
+    .send(JSON.stringify(Object.fromEntries(Object.entries(response).filter(([_, v]) => v != null)), null, 2))
 }
 
 export default index

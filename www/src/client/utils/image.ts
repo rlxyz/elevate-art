@@ -18,12 +18,12 @@ export const getDeploymentTokenImage = ({
   o,
   r,
   d,
-  type,
+  branch,
   tokenId,
 }: {
   r: string
   o: string
-  type: AssetDeploymentBranch
+  branch: AssetDeploymentBranch
   tokenId: string | number
   d?: string
 }): string => {
@@ -32,7 +32,7 @@ export const getDeploymentTokenImage = ({
     ZoneNavigationEnum.enum.Deployments,
     o,
     r,
-    type === AssetDeploymentBranch.PREVIEW && `preview/${d}`,
+    branch === AssetDeploymentBranch.PREVIEW && `preview/${d}`,
     tokenId,
     'image',
   ]

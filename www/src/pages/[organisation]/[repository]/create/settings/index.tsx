@@ -2,6 +2,7 @@ import { RepositoryBannerImageForm } from '@components/create/repository-setting
 import { RepositoryDescriptionForm } from '@components/create/repository-setting/RepositoryDescriptionForm'
 import { RepositoryLogoImageForm } from '@components/create/repository-setting/RepositoryLogoImageForm'
 import { RepositoryNameForm } from '@components/create/repository-setting/RepositoryNameForm'
+import { RepositoryTokenNameForm } from '@components/create/repository-setting/RepositoryTokenNameForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -136,6 +137,7 @@ const Page: NextPage = () => {
               <div className='col-span-8'>
                 <div className='space-y-6'>
                   <RepositoryNameForm />
+                  <RepositoryTokenNameForm />
                   <RepositoryDescriptionForm />
                   <RepositoryLogoImageForm />
                   <RepositoryBannerImageForm />

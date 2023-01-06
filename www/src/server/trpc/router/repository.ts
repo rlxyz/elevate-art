@@ -5,6 +5,7 @@ import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
 import { ethers } from 'ethers'
+import { capitalize } from 'src/client/utils/format'
 import { env } from 'src/env/server.mjs'
 import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
@@ -42,7 +43,7 @@ export const repositoryRouter = router({
         data: {
           organisationId,
           name,
-          tokenName: name,
+          tokenName: capitalize(name),
           collections: {
             create: {
               name: 'main',
@@ -200,6 +201,8 @@ export const repositoryRouter = router({
         await createIngestInstance().send({
           name: 'repository-deployment/images.create',
           data: {
+            branch: assetDeployment.branch,
+            type: assetDeployment.type,
             repositoryId: assetDeployment.repositoryId,
             deploymentId: assetDeployment.id,
             layerElements: assetDeployment.layerElements as Prisma.JsonArray,
@@ -292,6 +295,29 @@ export const repositoryRouter = router({
       return await ctx.prisma.repository.update({
         where: { id: repositoryId },
         data: { description },
+      })
+    }),
+  updateTokenName: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        tokenName: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, tokenName } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { tokenName },
       })
     }),
 })

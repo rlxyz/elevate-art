@@ -1,7 +1,8 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { getAssetDeploymentBucket, getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
+import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
+import { getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -34,9 +35,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       name: seed,
     },
+    include: { repository: true, contractDeployment: true },
   })
 
   if (!deployment) {
+    return res.status(404).send('Not Found')
+  }
+
+  if (!deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
@@ -44,31 +50,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  // look into cache whether image exist
-  const image = await imageCacheObject.get({
-    branch: AssetDeploymentBranch.PREVIEW,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-  })
-
-  const [url] = await getAssetDeploymentBucket({
-    branch: AssetDeploymentBranch.PREVIEW,
-  })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    })
-
-  if (image) {
-    return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
-  }
-
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+  const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
+  if (seedResponse.failed) {
+    return res.status(404).send('Not Found')
+  }
+  const vseed = seedResponse.getValue()
+  const tokens = v.one(v.parseLayer(layerElements), vseed)
 
   const canvas = new Canvas(600, 600)
 
@@ -94,16 +83,9 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     canvas.printImage(image, 0, 0, 600, 600)
   })
 
-  const buf = canvas.toBuffer('image/png')
-  await imageCacheObject.put({
-    branch: AssetDeploymentBranch.PREVIEW,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: buf,
-  })
+  const buf = await canvas.toBufferAsync('image/png')
 
-  return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+  return res.setHeader('Content-Type', 'image/png').status(200).send(buf)
 }
 
 export default index

@@ -77,7 +77,7 @@ export const GalleryLayout = ({
                       r: repository.name,
                       tokenId: id,
                       d: assetDeployment?.name,
-                      type: assetDeployment?.type,
+                      branch: assetDeployment?.branch,
                     })}
                     width={300}
                     height={300}
@@ -85,14 +85,14 @@ export const GalleryLayout = ({
                     className='object-cover m-auto rounded-t-[5px]'
                   />
                   <div className='p-2'>
-                    <h1 className='text-xs font-semibold italic'>
+                    <h1 className='text-xs font-semibold'>
                       <LinkComponent
                         target='_blank'
                         rel='noopener noreferrer'
                         href={`/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}`}
                         underline
                       >
-                        {id}
+                        {repository.tokenName} #{id}
                       </LinkComponent>
                     </h1>
                   </div>

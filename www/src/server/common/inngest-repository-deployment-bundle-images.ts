@@ -1,5 +1,5 @@
-import type { Prisma } from '@prisma/client'
-import { AssetDeploymentBranch, AssetDeploymentStatus } from '@prisma/client'
+import type { AssetDeploymentBranch, AssetDeploymentType, Prisma } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import type { InngestEvents } from '@server/utils/inngest'
 import { createFunction } from 'inngest'
@@ -37,7 +37,12 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
   'repository-deployment/images.create',
   async ({ event }) => {
     const layerElements = event.data.layerElements as Prisma.JsonArray as v.Layer[]
-    const { repositoryId, deploymentId } = event.data as { repositoryId: string; deploymentId: string }
+    const { repositoryId, deploymentId, branch, type } = event.data as {
+      repositoryId: string
+      deploymentId: string
+      branch: AssetDeploymentBranch
+      type: AssetDeploymentType
+    }
 
     if (!repositoryId || !deploymentId || !layerElements) {
       await repositoryDeploymentFailedUpdate({ deploymentId })
@@ -68,7 +73,7 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
      * Ensure Bucket Exists
      *! @todo should also handle AssetDeploymentBranch.PRODUCTION
      */
-    const bucket = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW }).exists()
+    const bucket = await getAssetDeploymentBucket({ branch }).exists()
 
     if (!bucket[0]) {
       await repositoryDeploymentFailedUpdate({ deploymentId })
@@ -77,26 +82,26 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
     }
 
     /** Move all images from Cloudinary to GCP Bucket */
-    await Promise.all(
-      layerElements.map(
-        async ({ id: l, traits: traitElements }) =>
-          await Promise.all(
-            traitElements.map(async ({ id: t }) => {
-              const response = await getTraitElementImage({ r: repositoryId, l, t })
-              if (response.failed) throw new Error("Couldn't get image")
-              const buffer = response.getValue()
-              if (!buffer) throw new Error("Couldn't get buffer")
-              try {
-                //! @todo abstract all this functionality into own file
-                return await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
-                  .file(`${repositoryId}/deployments/${deploymentId}/layers/${l}/${t}.png`)
-                  .save(Buffer.from(buffer), { contentType: 'image/png' })
-              } catch (e) {
-                console.error('some-random-error', e)
-                throw new Error(`Couldn't save image: ${e}`)
-              }
-            })
-          )
+    Promise.allSettled(
+      layerElements.map(async ({ id: l, traits: traitElements }) =>
+        Promise.allSettled(
+          traitElements.map(async ({ id: t }) => {
+            const response = await getTraitElementImage({ r: repositoryId, l, t })
+            if (response.failed) throw new Error("Couldn't get image")
+            const buffer = response.getValue()
+            if (!buffer) throw new Error("Couldn't get buffer")
+            try {
+              //! @todo abstract all this functionality into own file
+              console.log('saving', { r: repositoryId, l, t })
+              return await getAssetDeploymentBucket({ branch })
+                .file(`${repositoryId}/deployments/${deploymentId}/layers/${l}/${t}.png`)
+                .save(Buffer.from(buffer), { contentType: 'image/png' })
+            } catch (e) {
+              console.error('some-random-error', e)
+              throw new Error(`Couldn't save image: ${e}`)
+            }
+          })
+        )
       )
     )
       .then(async () => {
