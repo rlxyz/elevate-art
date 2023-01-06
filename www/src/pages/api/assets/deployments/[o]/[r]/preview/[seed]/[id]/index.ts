@@ -52,6 +52,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     deploymentId: deployment.id,
     id,
   })
+
   if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
@@ -60,7 +61,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const response = {
     name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
+    image: `${env.NEXT_PUBLIC_API_URL}/assets/deployments/${organisationName}/${repositoryName}/preview/${seed}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return

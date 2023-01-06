@@ -82,7 +82,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const tokens = v.one(v.parseLayer(layerElements), seed)
   const response = {
     name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${id}/image`,
+    image: `${env.NEXT_PUBLIC_API_URL}/assets/deployments/${organisationName}/${repositoryName}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
