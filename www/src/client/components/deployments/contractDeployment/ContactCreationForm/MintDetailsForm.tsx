@@ -1,5 +1,4 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
-import { BigNumber } from 'ethers'
 import type { FC } from 'react'
 import type { FieldErrors, UseFormRegister } from 'react-hook-form'
 import { z } from 'zod'
@@ -7,13 +6,15 @@ import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
-export const SaleConfigType = z.nativeEnum(
+export const SaleConfigEnum = z.nativeEnum(
   Object.freeze({
     CLAIM: 'Claim',
     PRESALE: 'Presale',
     PUBLIC: 'Public',
   })
 )
+
+export type SaleConfigType = z.infer<typeof SaleConfigEnum>
 
 export type MintDetailsForm = {
   collectionSize: number // inferred from deployment
@@ -29,49 +30,65 @@ export type MintDetailsForm = {
 }
 
 export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { register, handleSubmit, errors, handleClick, setSaleConfig, currentSegment } = useContractDataFormHook<{
-    saleConfigs: SaleConfig[]
-  }>({
-    defaultValues: {
-      saleConfigs: [
-        {
-          startTimestamp: new Date(),
-          mintPrice: BigNumber.from(0),
-          maxAllocationPerAddress: BigNumber.from(0),
-        },
-      ],
-    },
-  })
+  const { register, handleSubmit, errors, handleClick, saleConfig, setSaleConfig, currentSegment, contractInformationData } =
+    useContractDataFormHook<{
+      saleConfigs: SaleConfig[]
+    }>({
+      defaultValues: {
+        saleConfigs: [],
+      },
+    })
 
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
       <ContractForm.Body
         onSubmit={handleSubmit((data) => {
-          setSaleConfig(data.saleConfigs)
-          if (!next) return
-          handleClick(next)
+          // infer that index 0 is claim, 1 is presale, 2 is public
+          data.saleConfigs.forEach((saleConfig, index) => {
+            //! @todo make this more typesafe and modular
+            if (index === 0) {
+              setSaleConfig(SaleConfigEnum.enum.CLAIM, saleConfig)
+            }
+
+            if (index === 1) {
+              setSaleConfig(SaleConfigEnum.enum.PRESALE, saleConfig)
+            }
+
+            if (index === 2) {
+              setSaleConfig(SaleConfigEnum.enum.PUBLIC, saleConfig)
+            }
+
+            if (!next) return
+            handleClick(next)
+          })
         })}
       >
         <div className='space-y-3'>
           {[
             {
-              type: SaleConfigType.enum.CLAIM,
+              type: SaleConfigEnum.enum.CLAIM,
               title: 'Claim',
             },
             {
-              type: SaleConfigType.enum.PRESALE,
+              type: SaleConfigEnum.enum.PRESALE,
               title: 'Presale',
             },
             {
-              type: SaleConfigType.enum.PUBLIC,
+              type: SaleConfigEnum.enum.PUBLIC,
               title: 'Public Sale',
             },
           ].map(({ type, title }, index) => {
             return <SaleConfigInput key={index} index={index} title={title} register={register} errors={errors} />
           })}
         </div>
-        <ContractForm.Body.Summary next={next} previous={previous} current={currentSegment} />
+        <ContractForm.Body.Summary
+          next={next}
+          previous={previous}
+          current={currentSegment}
+          saleConfig={saleConfig}
+          contractInformationData={contractInformationData}
+        />
       </ContractForm.Body>
     </ContractForm>
   )
@@ -89,7 +106,7 @@ const SaleConfigInput = ({
   errors: FieldErrors | undefined
 }) => {
   return (
-    <ContractForm.Body.ToggleCategory label={title}>
+    <ContractForm.Body.ToggleCategory label={title} disabled>
       <div className='flex flex-row gap-3 mb-2'>
         <ContractForm.Body.Input
           {...register(`saleConfigs.${index}.startTimestamp`, {

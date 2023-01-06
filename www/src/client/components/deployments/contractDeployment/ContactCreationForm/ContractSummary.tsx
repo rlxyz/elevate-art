@@ -2,18 +2,20 @@ import { ContractInformationAnalyticsLayout } from '@components/explore/Analytic
 import { ContractPayoutAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractPayoutAnalyticsLayout'
 import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractSaleAnalyticsLayout'
 import { ChevronLeftIcon } from '@heroicons/react/outline'
+import { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import type { ContractCreationType } from '.'
 import { useAnimationMotionValues } from '../ContractCreationAnimation/useAnimationMotionValues'
+import type { SaleConfigMap } from './useContractCreationStore'
 
 export const ContractSummary = ({
   contractInformationData,
-  payoutData,
-  claimPeriod,
+  saleConfig,
   presalePeriod,
   publicPeriod,
+  payout,
   onClick,
   current,
   previous,
@@ -23,7 +25,8 @@ export const ContractSummary = ({
   previous: ContractCreationType | null
   current: ContractCreationType
   next: ContractCreationType | null
-  payoutData?: PayoutData
+  payout?: PayoutData
+  saleConfig?: SaleConfigMap
   contractInformationData?: ContractInformationData
   claimPeriod?: SaleConfig
   presalePeriod?: SaleConfig
@@ -34,24 +37,41 @@ export const ContractSummary = ({
     name: '',
     symbol: '',
     owner: '0x' as `0x${string}`,
-    mintType: '',
+    mintType: AssetDeploymentType.BASIC,
     chainId: 99,
     totalSupply: BigNumber.from(0),
     collectionSize: BigNumber.from(0),
   }
 
-  const payout: PayoutData = payoutData || {
-    estimatedPayout: BigNumber.from(0),
-    paymentReceiver: '0x' as `0x${string}`,
-  }
+  // const payout: PayoutData = payoutData || {
+  //   estimatedPayout: BigNumber.from(0),
+  //   paymentReceiver: '0x' as `0x${string}`,
+  // }
+
+  // const claimPeriod: SaleConfig = claimPeriodData || {
+  //   startTimestamp: new Date(),
+  //   mintPrice: BigNumber.from(0),
+  //   maxAllocationPerAddress: BigNumber.from(0),
+  // }
+
+  // const presalePeriod: SaleConfig = presalePeriodData || {
+  //   startTimestamp: new Date(),
+  //   mintPrice: BigNumber.from(0),
+  //   maxAllocationPerAddress: BigNumber.from(0),
+  // }
+
+  // const publicPeriod: SaleConfig = publicPeriodData || {
+  //   startTimestamp: new Date(),
+  //   mintPrice: BigNumber.from(0),
+  //   maxAllocationPerAddress: BigNumber.from(0),
+  // }
 
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
       <ContractInformationAnalyticsLayout contractInformationData={contractInformation} />
-      <ContractSaleAnalyticsLayout saleConfig={claimPeriod} title={'Claim Period'} />
-      <ContractSaleAnalyticsLayout saleConfig={presalePeriod} title={'Presale Period'} />
-      <ContractSaleAnalyticsLayout saleConfig={publicPeriod} title={'Public Sale Period'} />
+      {saleConfig &&
+        Object.entries(saleConfig).map(([key, value]) => <ContractSaleAnalyticsLayout key={key} saleConfig={value} title={key} />)}
       <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
 
       <div className='grid grid-cols-8 gap-6'>
@@ -70,8 +90,6 @@ export const ContractSummary = ({
               previous ? 'col-span-7' : 'col-span-8',
               'border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
             )}
-            type='submit'
-            onClick={() => handleClick(next)}
           >
             Continue
           </button>

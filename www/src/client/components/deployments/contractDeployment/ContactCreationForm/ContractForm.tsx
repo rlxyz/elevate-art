@@ -64,33 +64,31 @@ const ContractFormBodyInput = forwardRef<
     maxLength?: number | undefined
   }>) => {
     return (
-      <>
-        <div className={clsx('space-y-1 w-full', className)}>
-          <label className='text-xs font-semibold'>{label}</label>
-          <input
-            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-            type='string'
-            placeholder={placeholder}
-            {...props}
-          />
-          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
-          {error && (
-            <span className='text-xs text-redError'>
-              {error.type === 'required'
-                ? 'This field is required'
-                : error.type === 'pattern'
-                ? 'We only accept - and / for special characters'
-                : error.type === 'validate'
-                ? 'A layer with this name already exists'
-                : error.type === 'minLength'
-                ? 'Must be more than 3 characters long'
-                : error.type === 'maxLength'
-                ? `Must be less than ${maxLength} characters long`
-                : 'Must be between 3 and 20 characters long'}
-            </span>
-          )}
-        </div>
-      </>
+      <div className={clsx('flex flex-col space-y-1 w-full', className)}>
+        <label className='text-xs font-semibold'>{label}</label>
+        <input
+          className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+          type='string'
+          placeholder={placeholder}
+          {...props}
+        />
+        <span className='text-[0.6rem] text-darkGrey'>{description}</span>
+        {error && (
+          <span className='text-xs text-redError'>
+            {error.type === 'required'
+              ? 'This field is required'
+              : error.type === 'pattern'
+              ? 'We only accept - and / for special characters'
+              : error.type === 'validate'
+              ? 'A layer with this name already exists'
+              : error.type === 'minLength'
+              ? 'Must be more than 3 characters long'
+              : error.type === 'maxLength'
+              ? `Must be less than ${maxLength} characters long`
+              : 'Must be between 3 and 20 characters long'}
+          </span>
+        )}
+      </div>
     )
   }
 )
@@ -183,10 +181,12 @@ const ContractFormBodyToggleCategory = ({
   className,
   label,
   children,
+  disabled = false,
 }: {
   className?: string
   label: string
   children: React.ReactElement[]
+  disabled?: boolean
 }) => {
   const [enabled, setEnabled] = useState(true)
 
@@ -196,11 +196,13 @@ const ContractFormBodyToggleCategory = ({
         <div className='flex flex-row justify-between content-center'>
           <label className='text-xs font-semibold'>{label}</label>{' '}
           <Switch
+            disabled={disabled}
             checked={enabled}
             onChange={setEnabled}
             className={clsx(
               enabled ? 'bg-black' : 'bg-mediumGrey',
-              'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
+              'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1',
+              disabled && 'cursor-not-allowed opacity-25'
             )}
           >
             <span className='sr-only'>Use setting</span>

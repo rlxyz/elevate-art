@@ -1,6 +1,9 @@
+import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
+import type { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData } from '@utils/contracts/ContractData'
 import { parseChainId } from '@utils/ethers'
 import { BigNumber } from 'ethers'
+import { useSession } from 'next-auth/react'
 import type { FC } from 'react'
 import { capitalize } from 'src/client/utils/format'
 import type { ContractFormProps } from '.'
@@ -8,31 +11,42 @@ import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { register, handleSubmit, errors, handleClick, currentSegment, contractInformationData, setContractInformationData } =
+  const { current: deployment } = useQueryRepositoryDeployments()
+  const { data: session } = useSession()
+  const { register, handleSubmit, setValue, errors, handleClick, currentSegment, contractInformationData, setContractInformationData } =
     useContractDataFormHook<ContractInformationData>({
       defaultValues: {
         name: '',
         symbol: '',
-        mintType: 'on-chain',
+        mintType: deployment?.type as AssetDeploymentType,
         chainId: 5,
         totalSupply: BigNumber.from(0),
         collectionSize: BigNumber.from(0),
       },
     })
 
-  console.log(contractInformationData)
-
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
       <ContractForm.Body
         onSubmit={handleSubmit((data) => {
-          setContractInformationData(data)
+          if (!deployment) return
+          const { name, symbol, chainId } = data
+          const { totalSupply, type } = deployment
+          setContractInformationData({
+            name,
+            symbol,
+            chainId: Number(chainId),
+            owner: session?.user?.address,
+            mintType: type as AssetDeploymentType,
+            totalSupply: BigNumber.from(totalSupply),
+            collectionSize: BigNumber.from(totalSupply),
+          } as ContractInformationData)
           if (!next) return
           handleClick(next)
         })}
       >
-        <div className='w-full '>
+        <div className='w-full space-y-3'>
           <ContractForm.Body.Input
             {...register('name', {
               required: true,
@@ -45,6 +59,9 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
                 message: 'Max length is 3',
               },
               pattern: /^[-/a-z0-9 ]+$/gi,
+              onChange: (e) => {
+                setValue('name', e.target.value)
+              },
             })}
             label={'Contract Name'}
             description={'Your contract name on websites like Etherscan'}
@@ -65,8 +82,10 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
                 value: 3,
                 message: 'Min length is 3',
               },
-
               pattern: /^[-/a-z0-9 ]+$/gi,
+              onChange: (e) => {
+                setValue('symbol', e.target.value)
+              },
             })}
             label={'Symbol'}
             description={'The name of the token on Etherscan'}
@@ -89,14 +108,13 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
             <option value={1}>{capitalize(parseChainId(1))}</option>
           </ContractForm.Body.Select>
         </div>
-        <div>
-          <ContractForm.Body.Summary
-            next={next}
-            previous={previous}
-            current={currentSegment}
-            contractInformationData={contractInformationData}
-          />
-        </div>
+        <ContractForm.Body.Summary
+          next={next}
+          previous={previous}
+          current={currentSegment}
+          contractInformationData={contractInformationData}
+          // claimPeriod={saleConfig}
+        />
       </ContractForm.Body>
     </ContractForm>
   )

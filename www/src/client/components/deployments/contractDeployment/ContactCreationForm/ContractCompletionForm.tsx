@@ -4,7 +4,6 @@ import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/
 import { useDeployContract } from '@hooks/utils/useDeployContract'
 import type { AssetDeploymentType } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
-import Big from 'big.js'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
@@ -17,25 +16,25 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
   const { current: deployment } = useQueryRepositoryDeployments()
   const {
     currentSegment,
-    artCollection,
+    // artCollection,
     contractName,
     contractSymbol,
-    mintType,
-    blockchain,
-    presale,
-    presaleMaxMintAmount,
-    presaleMaxTransactionAmount,
-    presalePrice,
-    presaleSupply,
-    publicSale,
-    publicSaleMaxMintAmount,
-    publicSaleMaxTransactionAmount,
-    publicSalePrice,
+    // mintType,
+    // blockchain,
+    // presale,
+    // presaleMaxMintAmount,
+    // presaleMaxTransactionAmount,
+    // presalePrice,
+    // presaleSupply,
+    // publicSale,
+    // publicSaleMaxMintAmount,
+    // publicSaleMaxTransactionAmount,
+    // publicSalePrice,
     pricePerToken,
   } = useContractCreationStore()
-  const mintPrice = Big(pricePerToken)
-    .times(10 ** 18)
-    .toFixed(0)
+  // const mintPrice = Big(pricePerToken)
+  //   .times(10 ** 18)
+  //   .toFixed(0)
 
   const router = useRouter()
   const organisationName = router.query.organisation as string
@@ -92,22 +91,22 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
             <ContractForm.Body.Summary
               next={next}
               previous={previous}
-              contractName={contractName}
-              contractSymbol={contractSymbol}
+              // contractName={contractName}
+              // contractSymbol={contractSymbol}
               onClick={handleClick}
-              blockchain={blockchain}
-              mintType={mintType}
-              artCollection={artCollection}
+              // blockchain={blockchain}
+              // mintType={mintType}
+              // artCollection={artCollection}
               currentSegment={currentSegment}
-              presale={presale}
-              presaleMaxMintAmount={presaleMaxMintAmount}
-              presaleMaxTransactionAmount={presaleMaxTransactionAmount}
-              presalePrice={presalePrice}
-              presaleSupply={presaleSupply}
-              publicSale={publicSale}
-              publicSaleMaxMintAmount={publicSaleMaxMintAmount}
-              publicSaleMaxTransactionAmount={publicSaleMaxTransactionAmount}
-              publicSalePrice={publicSalePrice}
+              // presale={presale}
+              // presaleMaxMintAmount={presaleMaxMintAmount}
+              // presaleMaxTransactionAmount={presaleMaxTransactionAmount}
+              // presalePrice={presalePrice}
+              // presaleSupply={presaleSupply}
+              // publicSale={publicSale}
+              // publicSaleMaxMintAmount={publicSaleMaxMintAmount}
+              // publicSaleMaxTransactionAmount={publicSaleMaxTransactionAmount}
+              // publicSalePrice={publicSalePrice}
             />
           </div>
         </div>
