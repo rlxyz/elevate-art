@@ -58,8 +58,10 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const vseed = seedResponse.getValue()
   const tokens = v.one(v.parseLayer(layerElements), vseed)
+  const width = deployment.repository.width
+  const height = deployment.repository.height
 
-  const canvas = new Canvas(600, 600)
+  const canvas = new Canvas(width, height)
 
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
@@ -80,7 +82,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   )
 
   response.forEach((image) => {
-    canvas.printImage(image, 0, 0, 600, 600)
+    canvas.printImage(image, 0, 0, width, height)
   })
 
   const buf = await canvas.toBufferAsync('image/png')
