@@ -1,6 +1,6 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
 import type { FC } from 'react'
-import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import type { FieldErrorsImpl, UseFormRegister } from 'react-hook-form'
 import { z } from 'zod'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
@@ -16,21 +16,10 @@ export const SaleConfigEnum = z.nativeEnum(
 
 export type SaleConfigType = z.infer<typeof SaleConfigEnum>
 
-export type MintDetailsForm = {
-  collectionSize: number // inferred from deployment
-  presale: boolean
-  presalePrice: number
-  presaleSupply: number
-  presaleMaxMintAmount: number
-  presaleMaxTransactionAmount: number
-  publicSale: boolean
-  publicSalePrice: number
-  publicSaleMaxMintAmount: number
-  publicSaleMaxTransactionAmount: number
-}
+export type MintDetailsForm = {}
 
 export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { register, handleSubmit, errors, handleClick, saleConfig, setSaleConfig, currentSegment, contractInformationData } =
+  const { register, handleSubmit, errors, setValue, handleClick, saleConfig, setSaleConfig, currentSegment, contractInformationData } =
     useContractDataFormHook<{
       saleConfigs: SaleConfig[]
     }>({
@@ -38,6 +27,8 @@ export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, nex
         saleConfigs: [],
       },
     })
+
+  console.log(saleConfig)
 
   return (
     <ContractForm>
@@ -99,61 +90,59 @@ const SaleConfigInput = ({
   register,
   errors,
   index,
+  setValues,
 }: {
   title: string
   register: UseFormRegister<{ saleConfigs: SaleConfig[] }>
   index: number
-  errors: FieldErrors | undefined
+  errors:
+    | Partial<
+        FieldErrorsImpl<{
+          [x: string]: any
+        }>
+      >
+    | undefined
+  setValues?: (values: SaleConfig[]) => void
 }) => {
   return (
     <ContractForm.Body.ToggleCategory label={title} disabled>
       <div className='flex flex-row gap-3 mb-2'>
-        <ContractForm.Body.Input
+        <ContractForm.Body.Calendar
           {...register(`saleConfigs.${index}.startTimestamp`, {
             required: true,
+            min: new Date().setHours(new Date().getHours() + 1),
           })}
-          label={''}
-          description={''}
+          label={'Start Time'}
           className='col-span-3'
-          error={errors.presaleSupply}
-          type='datetime-local'
-          placeholder={`Set ${title} Time`}
         />
         <ContractForm.Body.Input
           {...register(`saleConfigs.${index}.mintPrice`, {
             required: true,
+            valueAsNumber: true,
+            onChange: (e) => {
+              if (Number(e.target.value) < 0) {
+                e.target.value = '0'
+              }
+            },
           })}
-          label={''}
-          description={''}
+          label={'Mint Price'}
           className='col-span-3'
-          error={errors.presalePrice}
+          error={errors && errors[`saleConfigs.${index}.mintPrice`]}
           placeholder={`Set ${title} Price`}
         />
       </div>
       <ContractForm.Body.Input
         {...register(`saleConfigs.${index}.maxAllocationPerAddress`, {
           required: true,
+          max: 20,
+          min: 1,
         })}
         label={'Mints per Wallet Maximum'}
         description={''}
-        className='col-span-3'
-        error={errors.presaleMaxMintAmount}
+        className='col-span-3 '
+        error={errors && errors[`saleConfigs.${index}.maxAllocationPerAddress`]}
         placeholder='Maximum amount of mints per wallet'
       />
-      {/* <ContractForm.Body.ToggleInput
-        {...register('presaleMaxTransactionAmount', {
-          required: true,
-          onChange: (e) => {
-            setValue('presaleMaxTransactionAmount', e.target.value)
-          },
-        })}
-        label={'Transactions per Wallet Maximum'}
-        // defaultValue={0.05}
-        description={''}
-        className='col-span-3'
-        error={errors.presaleMaxTransactionAmount}
-        placeholder='Unlimited transactions for all wallets'
-      /> */}
     </ContractForm.Body.ToggleCategory>
   )
 }

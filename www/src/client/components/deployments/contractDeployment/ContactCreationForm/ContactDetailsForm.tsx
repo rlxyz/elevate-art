@@ -8,6 +8,7 @@ import type { FC } from 'react'
 import { capitalize } from 'src/client/utils/format'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
+import { createInputStringValidation } from './InputValidation'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
@@ -49,16 +50,10 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
         <div className='w-full space-y-3'>
           <ContractForm.Body.Input
             {...register('name', {
-              required: true,
-              maxLength: {
-                value: 20,
-                message: 'Max length is 20',
-              },
-              minLength: {
-                value: 3,
-                message: 'Max length is 3',
-              },
-              pattern: /^[-/a-z0-9 ]+$/gi,
+              ...createInputStringValidation({
+                maxLength: 20,
+                minLength: 3,
+              }),
               onChange: (e) => {
                 setValue('name', e.target.value)
               },
@@ -68,21 +63,14 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
             className='col-span-4'
             placeholder={"e.g 'Bored Ape Yacht Club'"}
             error={errors.name}
-            maxLength={20}
           />
 
           <ContractForm.Body.Input
             {...register('symbol', {
-              required: true,
-              maxLength: {
-                value: 6,
-                message: 'Max length is 6',
-              },
-              minLength: {
-                value: 3,
-                message: 'Min length is 3',
-              },
-              pattern: /^[-/a-z0-9 ]+$/gi,
+              ...createInputStringValidation({
+                maxLength: 6,
+                minLength: 3,
+              }),
               onChange: (e) => {
                 setValue('symbol', e.target.value)
               },
@@ -92,13 +80,10 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
             className='col-span-2'
             placeholder={"e.g. 'BAYC'"}
             error={errors.symbol}
-            maxLength={6}
           />
 
           <ContractForm.Body.Select
-            {...register('chainId', {
-              required: true,
-            })}
+            {...register('chainId')}
             label={'Chain'}
             description={'Select which blockchain you’re launching your NFT collection on'}
             className='col-span-6'
@@ -113,7 +98,6 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
           previous={previous}
           current={currentSegment}
           contractInformationData={contractInformationData}
-          // claimPeriod={saleConfig}
         />
       </ContractForm.Body>
     </ContractForm>

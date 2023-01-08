@@ -3,7 +3,7 @@ import { ContractPayoutAnalyticsLayout } from '@components/explore/AnalyticsLayo
 import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractSaleAnalyticsLayout'
 import { ChevronLeftIcon } from '@heroicons/react/outline'
 import { AssetDeploymentType } from '@prisma/client'
-import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
+import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import type { ContractCreationType } from '.'
@@ -13,8 +13,6 @@ import type { SaleConfigMap } from './useContractCreationStore'
 export const ContractSummary = ({
   contractInformationData,
   saleConfig,
-  presalePeriod,
-  publicPeriod,
   payout,
   onClick,
   current,
@@ -28,9 +26,6 @@ export const ContractSummary = ({
   payout?: PayoutData
   saleConfig?: SaleConfigMap
   contractInformationData?: ContractInformationData
-  claimPeriod?: SaleConfig
-  presalePeriod?: SaleConfig
-  publicPeriod?: SaleConfig
 }) => {
   const { handleClick } = useAnimationMotionValues()
   const contractInformation: ContractInformationData = contractInformationData || {
@@ -43,28 +38,7 @@ export const ContractSummary = ({
     collectionSize: BigNumber.from(0),
   }
 
-  // const payout: PayoutData = payoutData || {
-  //   estimatedPayout: BigNumber.from(0),
-  //   paymentReceiver: '0x' as `0x${string}`,
-  // }
-
-  // const claimPeriod: SaleConfig = claimPeriodData || {
-  //   startTimestamp: new Date(),
-  //   mintPrice: BigNumber.from(0),
-  //   maxAllocationPerAddress: BigNumber.from(0),
-  // }
-
-  // const presalePeriod: SaleConfig = presalePeriodData || {
-  //   startTimestamp: new Date(),
-  //   mintPrice: BigNumber.from(0),
-  //   maxAllocationPerAddress: BigNumber.from(0),
-  // }
-
-  // const publicPeriod: SaleConfig = publicPeriodData || {
-  //   startTimestamp: new Date(),
-  //   mintPrice: BigNumber.from(0),
-  //   maxAllocationPerAddress: BigNumber.from(0),
-  // }
+  console.log(saleConfig)
 
   return (
     <div className='w-full flex flex-col space-y-3'>
