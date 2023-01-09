@@ -20,6 +20,7 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
     contractName,
     contractSymbol,
     // mintType,
+    saleConfig,
     // blockchain,
     // presale,
     // presaleMaxMintAmount,
@@ -35,7 +36,7 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
   // const mintPrice = Big(pricePerToken)
   //   .times(10 ** 18)
   //   .toFixed(0)
-
+  console.log(saleConfig)
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const repositoryName = router.query.repository as string

@@ -99,20 +99,34 @@ const ContractFormBodyCalendar = forwardRef<
     description?: string
   }>
 >(
-  ({
-    className,
-    label,
-    description,
-    ...props
-  }: React.PropsWithChildren<{
-    className: string
-    label: string
-    description?: string
-  }>) => {
+  (
+    {
+      className,
+      label,
+      description,
+      ...props
+    }: React.PropsWithChildren<{
+      className: string
+      label: string
+      description?: string
+    }>,
+    ref
+  ) => {
+    const minDateAll = new Date().toISOString()
+    const minDate = minDateAll.split('T')[0]
+    const minTime = minDateAll.split('T')[1]?.split(':')[0] + ':00'
+    const maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]
     return (
       <div className={clsx('flex flex-col space-y-1 w-full', className)}>
         <label className='text-xs font-semibold'>{label}</label>
-        <input className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')} type='datetime-local' {...props} />
+        <input
+          ref={ref}
+          className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+          type='datetime-local'
+          {...props}
+          min={`${minDate}T${minTime}`}
+          max={`${maxDate}T23:59`}
+        />
         {description && <span className='text-[0.6rem] text-darkGrey'>{description}</span>}
       </div>
     )

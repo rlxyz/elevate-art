@@ -1,6 +1,7 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
+import { BigNumber } from 'ethers/lib/ethers'
 import type { FC } from 'react'
-import type { FieldErrorsImpl, UseFormRegister } from 'react-hook-form'
+import type { FieldErrorsImpl, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
@@ -16,15 +17,29 @@ export const SaleConfigEnum = z.nativeEnum(
 
 export type SaleConfigType = z.infer<typeof SaleConfigEnum>
 
-export type MintDetailsForm = {}
-
 export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { register, handleSubmit, errors, setValue, handleClick, saleConfig, setSaleConfig, currentSegment, contractInformationData } =
     useContractDataFormHook<{
       saleConfigs: SaleConfig[]
     }>({
       defaultValues: {
-        saleConfigs: [],
+        saleConfigs: [
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+        ],
       },
     })
 
@@ -68,7 +83,7 @@ export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, nex
               title: 'Public Sale',
             },
           ].map(({ type, title }, index) => {
-            return <SaleConfigInput key={index} index={index} title={title} register={register} errors={errors} />
+            return <SaleConfigInput key={index} index={index} title={title} register={register} errors={errors} setValue={setValue} />
           })}
         </div>
         <ContractForm.Body.Summary
@@ -88,7 +103,7 @@ const SaleConfigInput = ({
   register,
   errors,
   index,
-  setValues,
+  setValue,
 }: {
   title: string
   register: UseFormRegister<{ saleConfigs: SaleConfig[] }>
@@ -100,7 +115,9 @@ const SaleConfigInput = ({
         }>
       >
     | undefined
-  setValues?: (values: SaleConfig[]) => void
+  setValue: UseFormSetValue<{
+    saleConfigs: SaleConfig[]
+  }>
 }) => {
   return (
     <ContractForm.Body.ToggleCategory label={title} disabled>
@@ -108,7 +125,14 @@ const SaleConfigInput = ({
         <ContractForm.Body.Calendar
           {...register(`saleConfigs.${index}.startTimestamp`, {
             required: true,
-            min: new Date().setHours(new Date().getHours() + 1),
+            valueAsDate: true,
+            onChange: (e) => {
+              if (e.target.value) {
+                const date = new Date(`${e.target.value}`)
+                console.log(date, `${e.target.value}`, new Date().toISOString())
+                setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
+              }
+            },
           })}
           label={'Start Time'}
           className='col-span-3'
@@ -118,12 +142,13 @@ const SaleConfigInput = ({
             required: true,
             valueAsNumber: true,
             onChange: (e) => {
-              if (Number(e.target.value) < 0) {
-                e.target.value = '0'
+              if (e.target.value) {
+                const price = Number(e.target.value)
+                setValue(`saleConfigs.${index}.mintPrice`, BigNumber.from(price))
               }
             },
           })}
-          label={'Mint Price'}
+          label={'Mint Price (in ETH)'}
           className='col-span-3'
           error={errors && errors[`saleConfigs.${index}.mintPrice`]}
           placeholder={`Set ${title} Price`}
@@ -134,6 +159,12 @@ const SaleConfigInput = ({
           required: true,
           max: 20,
           min: 1,
+          onChange: (e) => {
+            if (e.target.value) {
+              const maxAllocationPerAddress = Number(e.target.value)
+              setValue(`saleConfigs.${index}.maxAllocationPerAddress`, BigNumber.from(maxAllocationPerAddress))
+            }
+          },
         })}
         label={'Mints per Wallet Maximum'}
         description={''}
@@ -143,7 +174,4 @@ const SaleConfigInput = ({
       />
     </ContractForm.Body.ToggleCategory>
   )
-}
-function setSaleConsaleConfig(CLAIM: string, arg1: any) {
-  throw new Error('Function not implemented.')
 }
