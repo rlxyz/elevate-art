@@ -3,7 +3,7 @@ import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { CubeIcon, GlobeAltIcon, UploadIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -12,6 +12,8 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { getDeploymentTokenImage } from 'src/client/utils/image'
+import { timeAgo } from 'src/client/utils/time'
 import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
@@ -107,9 +109,69 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.PageHeader>
         <Layout.Body border={'lower'}>
-          <div className='h-52'>
-            <div>Information about art work goes here....</div>
-          </div>
+          {deployment && (
+            <div className='grid grid-cols-6 gap-9 py-16'>
+              <div className='col-span-2'>
+                <div className='border w-full h-52 border-blueHighlight rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'>
+                  <img
+                    src={getDeploymentTokenImage({
+                      o: organisation?.name,
+                      r: repository?.name,
+                      tokenId: 0,
+                      d: deployment?.name,
+                      branch: deployment?.branch,
+                    })}
+                    width={1000}
+                    alt={`${deployment?.address}-#${0}`}
+                    className='object-cover aspect-1 m-auto rounded-[5px]'
+                  />
+                </div>
+              </div>
+              <div className='col-span-3'>
+                <div className='grid grid-cols-3 gap-6'>
+                  {[
+                    {
+                      label: 'Status',
+                      value: deployment.status,
+                    },
+                    {
+                      label: 'Environment',
+                      value: deployment.branch,
+                    },
+                    {
+                      label: 'Type',
+                      value: deployment.type,
+                    },
+                    {
+                      label: 'Total Supply',
+                      value: deployment.totalSupply,
+                    },
+                    {
+                      label: 'Created',
+                      value: timeAgo(deployment.createdAt),
+                    },
+                  ].map((x) => (
+                    <div key={x.label} className='flex flex-col space-y-1'>
+                      <div className='text-xs uppercase text-darkGrey font-semibold'>{x.label}</div>
+                      <div className='text-sm text-black font-semibold'>{x.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className='col-span-1'>
+                <div className='flex space-x-3'>
+                  <button
+                    className='border border-mediumGrey bg-lightGray py-2 px-4 rounded-[5px] text-sm text-darkGrey flex justify-center items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50'
+                    disabled
+                  >
+                    <span>Share</span>
+                    <UploadIcon className='w-4 h-4' />
+                  </button>
+                  <button className='border border-mediumGrey bg-redError py-2 px-4 rounded-[5px] text-sm text-white'>Delete</button>
+                </div>
+              </div>
+            </div>
+          )}
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>

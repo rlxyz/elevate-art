@@ -36,11 +36,11 @@ const Page = () => {
     chainId: contractDeployment?.chainId,
   })
   const { all: payoutData } = useQueryContractDeploymentPayoutData({
-    address: contractDeployment?.contractAddress,
+    address: contractDeployment?.address,
     chainId: contractDeployment?.chainId,
   })
   const { all: saleConfigs } = useQueryContractDeploymentSaleConfig({
-    address: contractDeployment?.contractAddress,
+    address: contractDeployment?.address,
     chainId: contractDeployment?.chainId,
   })
 
