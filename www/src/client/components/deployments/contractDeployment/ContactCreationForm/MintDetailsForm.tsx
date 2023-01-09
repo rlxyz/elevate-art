@@ -28,8 +28,6 @@ export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, nex
       },
     })
 
-  console.log(saleConfig)
-
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
@@ -145,4 +143,7 @@ const SaleConfigInput = ({
       />
     </ContractForm.Body.ToggleCategory>
   )
+}
+function setSaleConsaleConfig(CLAIM: string, arg1: any) {
+  throw new Error('Function not implemented.')
 }

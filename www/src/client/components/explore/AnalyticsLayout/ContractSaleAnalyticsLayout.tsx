@@ -3,7 +3,6 @@ import LinkComponent from '@components/layout/link/Link'
 import type { SaleConfig } from '@utils/contracts/ContractData'
 
 export const ContractSaleAnalyticsLayout = ({ title, saleConfig }: { title: string; saleConfig: SaleConfig | undefined | null }) => {
-  if (!saleConfig) return null
   return (
     <AnalyticsLayout>
       <AnalyticsLayout.Header title={title} />

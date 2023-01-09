@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import type { ContractCreationType } from '.'
 import { useAnimationMotionValues } from '../ContractCreationAnimation/useAnimationMotionValues'
+import { SaleConfigEnum } from './MintDetailsForm'
 import type { SaleConfigMap } from './useContractCreationStore'
 
 export const ContractSummary = ({
@@ -38,15 +39,23 @@ export const ContractSummary = ({
     collectionSize: BigNumber.from(0),
   }
 
-  console.log(saleConfig)
+  const payoutData: PayoutData = payout || {
+    estimatedPayout: BigNumber.from(0),
+    paymentReceiver: '0x' as `0x${string}`,
+  }
 
   return (
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
       <ContractInformationAnalyticsLayout contractInformationData={contractInformation} />
-      {saleConfig &&
-        Object.entries(saleConfig).map(([key, value]) => <ContractSaleAnalyticsLayout key={key} saleConfig={value} title={key} />)}
-      <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
+      {saleConfig && current === 'mint-details' && (
+        <>
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.CLAIM)} title={SaleConfigEnum.enum.CLAIM} />
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PRESALE)} title={SaleConfigEnum.enum.PRESALE} />
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PUBLIC)} title={SaleConfigEnum.enum.PUBLIC} />
+        </>
+      )}
+      {payout && <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payoutData} />}
 
       <div className='grid grid-cols-8 gap-6'>
         {previous && (

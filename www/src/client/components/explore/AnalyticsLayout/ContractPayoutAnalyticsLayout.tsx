@@ -11,7 +11,7 @@ export const ContractPayoutAnalyticsLayout = ({ title, payoutData }: { title: st
       <AnalyticsLayout.Body>
         <div className='flex flex-col space-y-3'>
           {[
-            { key: 'Esimated Payout', value: formatUnits(payoutData?.estimatedPayout), type: 'Basic' },
+            { key: 'Estimated Payout', value: formatUnits(payoutData?.estimatedPayout), type: 'Basic' },
             { key: 'Payment Receiver', value: payoutData?.paymentReceiver, type: 'Link' },
           ].map(({ key, value, type }) => (
             <article key={key} className='flex justify-between w-full'>

@@ -8,7 +8,7 @@ import type { ContractCreationType } from '.'
 import type { SaleConfigType } from './MintDetailsForm'
 import { SaleConfigEnum } from './MintDetailsForm'
 
-export type SaleConfigMap = Map<SaleConfigType, SaleConfig>
+export type SaleConfigMap = Map<SaleConfigType, SaleConfig> //key: SaleConfigType, value: SaleConfig
 
 interface ContractCreationStoreInterface {
   motionValues: {

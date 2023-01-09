@@ -14,17 +14,26 @@ import { useContractDataFormHook } from './useContractInformationDataForm'
 export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { current: deployment } = useQueryRepositoryDeployments()
   const { data: session } = useSession()
-  const { register, handleSubmit, setValue, errors, handleClick, currentSegment, contractInformationData, setContractInformationData } =
-    useContractDataFormHook<ContractInformationData>({
-      defaultValues: {
-        name: '',
-        symbol: '',
-        mintType: deployment?.type as AssetDeploymentType,
-        chainId: 5,
-        totalSupply: BigNumber.from(0),
-        collectionSize: BigNumber.from(0),
-      },
-    })
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    errors,
+    handleClick,
+    saleConfig,
+    currentSegment,
+    contractInformationData,
+    setContractInformationData,
+  } = useContractDataFormHook<ContractInformationData>({
+    defaultValues: {
+      name: '',
+      symbol: '',
+      mintType: deployment?.type as AssetDeploymentType,
+      chainId: 5,
+      totalSupply: BigNumber.from(0),
+      collectionSize: BigNumber.from(0),
+    },
+  })
 
   return (
     <ContractForm>
@@ -43,6 +52,7 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
             totalSupply: BigNumber.from(totalSupply),
             collectionSize: BigNumber.from(totalSupply),
           } as ContractInformationData)
+          saleConfig
           if (!next) return
           handleClick(next)
         })}
@@ -98,6 +108,7 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
           previous={previous}
           current={currentSegment}
           contractInformationData={contractInformationData}
+          saleConfig={saleConfig}
         />
       </ContractForm.Body>
     </ContractForm>
