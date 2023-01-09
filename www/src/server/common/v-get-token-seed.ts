@@ -11,16 +11,11 @@ export const generateSeedBasedOnAssetDeploymentType = async (
 ): Promise<Result<string>> => {
   if (deployment.type === AssetDeploymentType.GENERATIVE) {
     const { address, chainId } = contractDeployment
-    getTokenHash(address, chainId, tokenId)
-      .then((response) => {
-        if (response.failed) {
-          return Result.fail("Couldn't get token hash")
-        }
-        return Result.ok(response.getValue())
-      })
-      .catch((err) => {
-        return Result.fail("Couldn't get token hash")
-      })
+    const response = await getTokenHash(address, chainId, tokenId)
+    if (response.failed) {
+      return Result.fail(response.error || 'Failed to get token hash')
+    }
+    return Result.ok(response.getValue())
   } else if (deployment.type === AssetDeploymentType.BASIC) {
     return Result.ok(v.seed(deployment.repositoryId, deployment.slug, deployment.generations, tokenId))
   }

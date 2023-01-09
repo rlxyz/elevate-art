@@ -1,15 +1,17 @@
 import { LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline'
-import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import clsx from 'clsx'
 import router from 'next/router'
-import { FC, useState } from 'react'
+import type { FC } from 'react'
+import { useState } from 'react'
 import { ArrowTopRightIcon } from 'src/client/components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from 'src/client/components/layout/link/NextLink'
 import Menu from 'src/client/components/layout/menu'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { useRepositoryRoute } from 'src/client/hooks/utils/useRepositoryRoute'
+import { routeBuilder } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
-import { CollectionNavigationEnum } from 'src/shared/enums'
+import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import LayerElementDeleteModal from './LayerElementDeleteModal'
 import LayerElementRenameModal from './LayerElementRenameModal'
 
@@ -30,11 +32,13 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, classN
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const { notifyInfo } = useNotification()
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
-  const { mainRepositoryHref } = useRepositoryRoute()
+  const { organisationName, repositoryName } = useRepositoryRoute()
 
   const onClipboardCopy = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : ''
-    navigator.clipboard.writeText(`${origin}/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`)
+    navigator.clipboard.writeText(
+      `${origin}/${organisationName}/${repositoryName}/${ZoneNavigationEnum.enum.Create}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`
+    )
     notifyInfo('Copied to clipboard')
   }
 
@@ -45,7 +49,13 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, classN
       className={clsx(className, 'relative hover:font-semibold', enabled && 'font-semibold bg-lightGray')}
     >
       <NextLinkComponent
-        href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${encodeURIComponent(item.name)}`}
+        href={routeBuilder(
+          organisationName,
+          repositoryName,
+          ZoneNavigationEnum.enum.Create,
+          CollectionNavigationEnum.enum.Rarity,
+          item.name
+        )}
         className='py-2'
       >
         <div className='relative flex w-full items-center'>
@@ -75,7 +85,13 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, classN
 
             <Menu.Item
               as={NextLinkComponent}
-              href={`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}/${item.name}`}
+              href={routeBuilder(
+                organisationName,
+                repositoryName,
+                ZoneNavigationEnum.enum.Create,
+                CollectionNavigationEnum.enum.Rarity,
+                item.name
+              )}
               target='_blank'
               rel='noopener noreferrer'
             >
@@ -107,7 +123,7 @@ export const LayerElementFileTreeItem: FC<ModalProps> = ({ item, enabled, classN
         layerElement={item}
         onSuccess={() => {
           if (!enabled) return
-          router.push(`/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Rarity}`)
+          router.push(routeBuilder(organisationName, repositoryName, ZoneNavigationEnum.enum.Create, CollectionNavigationEnum.enum.Rarity))
         }}
       />
       <LayerElementRenameModal onClose={() => setIsRenameDialogOpen(false)} visible={isRenameDialogOpen} layerElement={item} />

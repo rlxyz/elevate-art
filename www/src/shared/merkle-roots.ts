@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { getAddress, solidityKeccak256 } from 'ethers/lib/utils.js'
 import keccak256 from 'keccak256'
 import MerkleTree from 'merkletreejs'
 
@@ -11,7 +11,7 @@ import MerkleTree from 'merkletreejs'
 export const generateLeaf = (address: string, value: string): Buffer => {
   return Buffer.from(
     // Hash in appropriate Merkle format
-    ethers.utils.solidityKeccak256(['address', 'uint256'], [address, value]).slice(2),
+    solidityKeccak256(['address', 'uint256'], [address, value]).slice(2),
     'hex'
   )
 }
@@ -19,7 +19,7 @@ export const generateLeaf = (address: string, value: string): Buffer => {
 export const createMerkleTree = (whitelist: Record<string, string>): MerkleTree => {
   return new MerkleTree(
     // Generate leafs
-    Object.entries(whitelist).map(([address, tokens]) => generateLeaf(ethers.utils.getAddress(address), tokens.toString())),
+    Object.entries(whitelist).map(([address, value]) => generateLeaf(getAddress(address), value.toString())),
     // Hashing function
     keccak256,
     { sortPairs: true }

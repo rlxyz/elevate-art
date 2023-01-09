@@ -62,6 +62,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = {
     name: `${deployment.repository.tokenName || ''} #${id}`,
     description: deployment.repository.description,
+    tokenHash: vseed,
     image: getDeploymentTokenImage({
       o: organisationName,
       r: repositoryName,
@@ -80,10 +81,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
         value: traitElement.name,
       }
     }),
-    // add artist
-    // add license
-    // add script
-    // add external_url
+    logoImage: deployment.repository.logoImageUrl,
+    bannerImage: deployment.repository.bannerImageUrl,
+    artist: 'Jacob Riglin <https://twitter.com/jacobriglin>',
+    license: 'CC BY-NC 4.0',
+    script: 'js',
+    external_url: 'https://journey.dreamlab.art',
   }
 
   return res

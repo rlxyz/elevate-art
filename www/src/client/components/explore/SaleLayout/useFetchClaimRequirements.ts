@@ -1,3 +1,4 @@
+import { useGetMerkleTree } from '@components/create/allowlist/useGetMerkleTree'
 import type { ContractDeployment } from '@prisma/client'
 import { WhitelistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
@@ -49,10 +50,16 @@ export const useFetchClaimRequirements = ({
 
   const {
     current: currentContractDeploymentWhitelist,
+    all: allContractDeploymentWhitelist,
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress({
     type: WhitelistType.CLAIM,
+  })
+
+  const { merkleTree } = useGetMerkleTree({
+    data: allContractDeploymentWhitelist?.whitelists,
+    enabled: true,
   })
 
   // mint allocation
@@ -71,7 +78,7 @@ export const useFetchClaimRequirements = ({
       ...fetchedContractData,
       ...fetchedContractUserData,
       userMintLeft,
-      allowToMint: userMintLeft.gt(0),
+      allowToMint: userMintLeft.gt(0) && merkleTree?.getHexRoot() === fetchedContractData?.claimMerkleRoot,
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,

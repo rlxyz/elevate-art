@@ -32,10 +32,31 @@ export const getDeploymentTokenImage = ({
     ZoneNavigationEnum.enum.Deployments,
     o,
     r,
-    branch === AssetDeploymentBranch.PREVIEW && `preview/${d}`,
+    branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
     tokenId,
     'image',
-  ]
-    .filter((x) => Boolean(x))
-    .join('/')
+  ].join('/')
+}
+
+export const getDeploymentTokenMetadata = ({
+  o,
+  r,
+  d,
+  branch,
+  tokenId,
+}: {
+  r: string
+  o: string
+  branch: AssetDeploymentBranch
+  tokenId: string | number
+  d?: string
+}): string => {
+  return [
+    env.NEXT_PUBLIC_ASSET_URL,
+    ZoneNavigationEnum.enum.Deployments,
+    o,
+    r,
+    branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
+    tokenId,
+  ].join('/')
 }

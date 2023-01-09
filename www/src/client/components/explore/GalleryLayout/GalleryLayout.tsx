@@ -3,10 +3,9 @@ import type { AssetDeployment, ContractDeployment, Organisation, Repository } fr
 import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { ethers } from 'ethers'
 import { current } from 'immer'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { getDeploymentTokenImage } from 'src/client/utils/image'
+import { getDeploymentTokenImage, getDeploymentTokenMetadata } from 'src/client/utils/image'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -71,7 +70,7 @@ export const GalleryLayout = ({
                   key={`${contractDeployment.address}-${id}`}
                   className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'
                 >
-                  <Image
+                  <img
                     src={getDeploymentTokenImage({
                       o: organisation.name,
                       r: repository.name,
@@ -79,8 +78,7 @@ export const GalleryLayout = ({
                       d: assetDeployment?.name,
                       branch: assetDeployment?.branch,
                     })}
-                    width={300}
-                    height={300}
+                    width={1000}
                     alt={`${contractDeployment.address}-#${id}`}
                     className='object-cover m-auto rounded-t-[5px]'
                   />
@@ -89,7 +87,13 @@ export const GalleryLayout = ({
                       <LinkComponent
                         target='_blank'
                         rel='noopener noreferrer'
-                        href={`/api/assets/${organisation.name}/${repository.name}/preview/${assetDeployment?.name}/${id}`}
+                        href={getDeploymentTokenMetadata({
+                          o: organisation.name,
+                          r: repository.name,
+                          tokenId: id,
+                          d: assetDeployment?.name,
+                          branch: assetDeployment?.branch,
+                        })}
                         underline
                       >
                         {repository.tokenName} #{id}

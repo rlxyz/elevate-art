@@ -57,14 +57,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
   const vseed = seedResponse.getValue()
-  const tokens = v.one(v.parseLayer(layerElements), vseed)
+  const tokens = v.one(v.parseLayer(layerElements.sort((a, b) => a.priority - b.priority)), vseed)
   const width = deployment.repository.width
   const height = deployment.repository.height
 
   const canvas = new Canvas(width, height)
 
   const response = await Promise.all(
-    tokens.reverse().map(([l, t]) => {
+    tokens.map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
         const response = await getTraitElementImageFromGCP({
           branch: AssetDeploymentBranch.PREVIEW,

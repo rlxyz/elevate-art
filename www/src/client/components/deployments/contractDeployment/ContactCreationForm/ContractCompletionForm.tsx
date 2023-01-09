@@ -62,9 +62,9 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
         maxPublicBatchPerAddress: 5,
         amountForPromotion: 10,
         mintPrice: '3300000000000000',
-        claimTime: 1672994105, // @todo remove little hack, this does +1 hours
-        presaleTime: 1672994705, // @todo remove little hack, this does +2 hours
-        publicTime: 1672995305, // @todo remove little hack, this does +3 hours
+        claimTime: 1673229616, // @todo remove little hack, this does +1 hours
+        presaleTime: 1673231400, // @todo remove little hack, this does +2 hours
+        publicTime: 1673233200, // @todo remove little hack, this does +3 hours
         branch: deployment.branch as AssetDeploymentBranch,
         type: deployment.type as AssetDeploymentType,
       })

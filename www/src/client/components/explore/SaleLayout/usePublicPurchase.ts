@@ -1,6 +1,7 @@
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
+import { formatEthereumHash } from '@utils/ethers'
 import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -49,7 +50,7 @@ export const usePublicPurchase = ({
     ...config,
     onSettled: (data) => {
       if (data) {
-        notifyInfo(`A new transaction has been submitted. Please wait for confirmation.`)
+        notifyInfo(`A transaction with hash ${formatEthereumHash(data.hash)} has been submitted. Please wait for confirmation.`)
       }
     },
     onError: (error) => {

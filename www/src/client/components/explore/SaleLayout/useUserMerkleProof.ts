@@ -9,7 +9,6 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
     type,
   })
 
-  // Generate Tree
   const { merkleTree } = useGetMerkleTree({
     enabled: true,
     data: all?.whitelists,
@@ -21,11 +20,15 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
     }
   }
 
-  // Generate hashed leaf from address
   const leaf: Buffer = generateLeaf(current.address, current.mint.toString())
 
-  // Generate proof
-  const proof: string[] = merkleTree?.getHexProof(leaf)
+  const proof: string[] = merkleTree.getHexProof(leaf)
+
+  if (!proof || proof.length === 0) {
+    return {
+      proof: undefined,
+    }
+  }
 
   return {
     proof,

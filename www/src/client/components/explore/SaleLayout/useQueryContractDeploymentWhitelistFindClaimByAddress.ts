@@ -12,6 +12,7 @@ export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: 
     { address, type },
     { enabled: !!address }
   )
+
   return {
     current: data?.whitelists.find((x) => x.address === session?.data?.user?.address) || { address: session?.data?.user?.address, mint: 0 },
     all: data,
