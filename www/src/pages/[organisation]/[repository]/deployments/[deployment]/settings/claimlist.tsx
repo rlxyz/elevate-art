@@ -145,6 +145,18 @@ const Page: NextPage = () => {
                       ),
                       selected: true,
                     },
+                    {
+                      name: ContractSettingsNavigationEnum.enum.MintTime,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.MintTime
+                      ),
+                      selected: false,
+                    },
                   ]}
                 />
               </div>
