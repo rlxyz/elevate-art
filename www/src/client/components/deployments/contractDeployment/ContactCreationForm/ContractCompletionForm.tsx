@@ -14,37 +14,18 @@ import { ContractForm } from './ContractForm'
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { deploy, address: contractAddress } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()
-  const {
-    currentSegment,
-    // artCollection,
-    contractName,
-    contractSymbol,
-    // mintType,
-    saleConfig,
-    // blockchain,
-    // presale,
-    // presaleMaxMintAmount,
-    // presaleMaxTransactionAmount,
-    // presalePrice,
-    // presaleSupply,
-    // publicSale,
-    // publicSaleMaxMintAmount,
-    // publicSaleMaxTransactionAmount,
-    // publicSalePrice,
-    pricePerToken,
-  } = useContractCreationStore()
-  // const mintPrice = Big(pricePerToken)
-  //   .times(10 ** 18)
-  //   .toFixed(0)
-  console.log(saleConfig)
+  const { currentSegment, contractInformationData, saleConfig, payoutData } = useContractCreationStore()
+
   const router = useRouter()
   const organisationName = router.query.organisation as string
   const repositoryName = router.query.repository as string
 
-  const handleClick = async (e) => {
-    e.preventDefault()
-
+  const handleClick = async () => {
     if (!deployment) {
+      return
+    }
+
+    if (!contractInformationData) {
       return
     }
 
@@ -55,16 +36,10 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
 
     try {
       await deploy({
-        name: contractName,
-        symbol: contractSymbol,
+        payoutData,
+        contractInformationData,
         baseURI,
-        collectionSize: 10000,
-        maxPublicBatchPerAddress: 5,
-        amountForPromotion: 10,
-        mintPrice: '33000000000000000',
-        claimTime: new Date().getTime() + 1 * 60 * 60 * 1000, // @todo remove little hack, this does +4 hours
-        presaleTime: new Date().getTime() + 2 * 60 * 60 * 1000, // @todo remove little hack, this does +2 hours
-        publicTime: new Date().getTime() + 3 * 60 * 60 * 1000, // @todo remove little hack, this does +3 hours
+        saleConfig,
         branch: deployment.branch as AssetDeploymentBranch,
         type: deployment.type as AssetDeploymentType,
       })
@@ -82,7 +57,10 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
             <button
               className='border px-2 py-1 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey flex items-center space-x-1'
               type='submit'
-              onClick={handleClick}
+              onClick={(e) => {
+                e.preventDefault()
+                handleClick()
+              }}
             >
               <Image width={32} height={32} src='/images/logo-white.png' alt='logo-white' />
               <span className='uppercase font-semibold text-xs'>Deploy</span>
@@ -92,22 +70,10 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
             <ContractForm.Body.Summary
               next={next}
               previous={previous}
-              // contractName={contractName}
-              // contractSymbol={contractSymbol}
               onClick={handleClick}
-              // blockchain={blockchain}
-              // mintType={mintType}
-              // artCollection={artCollection}
               currentSegment={currentSegment}
-              // presale={presale}
-              // presaleMaxMintAmount={presaleMaxMintAmount}
-              // presaleMaxTransactionAmount={presaleMaxTransactionAmount}
-              // presalePrice={presalePrice}
-              // presaleSupply={presaleSupply}
-              // publicSale={publicSale}
-              // publicSaleMaxMintAmount={publicSaleMaxMintAmount}
-              // publicSaleMaxTransactionAmount={publicSaleMaxTransactionAmount}
-              // publicSalePrice={publicSalePrice}
+              contractInformationData={contractInformationData}
+              saleConfig={saleConfig}
             />
           </div>
         </div>

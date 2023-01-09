@@ -1,4 +1,3 @@
-import { ContractGeneralSettings } from '@components/deployments/contractDeployment/ContractSettings'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -163,9 +162,7 @@ const Page: NextPage = () => {
                 />
               </div>
               <div className='col-span-8'>
-                <div className='space-y-6'>
-                  <ContractGeneralSettings />
-                </div>
+                <div className='space-y-6'>{/* <ContractGeneralSettings /> */}</div>
               </div>
             </div>
           </div>
