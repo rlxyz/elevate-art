@@ -10,7 +10,13 @@ export const useContractDataFormHook = <T extends FieldValues>({ defaultValues }
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<T>({ defaultValues: defaultValues, mode: 'onChange', reValidateMode: 'onChange' })
+    watch,
+    setValue,
+  } = useForm<T>({
+    defaultValues: defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  })
 
   const { handleClick } = useAnimationMotionValues()
 
@@ -18,11 +24,13 @@ export const useContractDataFormHook = <T extends FieldValues>({ defaultValues }
     register,
     handleSubmit,
     errors,
+    setValue,
     handleClick,
     currentSegment,
     contractInformationData,
     setContractInformationData,
     saleConfig,
     setSaleConfig,
+    watch,
   }
 }

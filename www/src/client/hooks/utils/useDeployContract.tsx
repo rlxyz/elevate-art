@@ -1,7 +1,9 @@
+import type { SaleConfigMap } from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/contractDeployment/useMutateRepositoryContractDeploymentCreate'
 import type { AssetDeploymentBranch } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
+import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
 import type { Signer } from 'ethers'
 import { ContractFactory } from 'ethers'
 import { useState } from 'react'
@@ -11,16 +13,10 @@ import { useSigner } from 'wagmi'
 import { useNotification } from './useNotification'
 
 interface ERC721ContractInput {
-  name: string
-  symbol: string
+  contractInformationData: ContractInformationData
   baseURI: string
-  collectionSize: number
-  maxPublicBatchPerAddress: number
-  amountForPromotion: number
-  mintPrice: string
-  claimTime: number
-  presaleTime: number
-  publicTime: number
+  saleConfig: SaleConfigMap
+  payoutData: PayoutData
   type: AssetDeploymentType
   branch: AssetDeploymentBranch
 }
@@ -28,7 +24,7 @@ interface ERC721ContractInput {
 export const useDeployContract = () => {
   const { data: signer } = useSigner()
   const [address, setAddress] = useState('')
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
   const { mutate } = useMutateRepositoryCreateDeploymentCreate()
   const deploymentId = useRepositoryStore((state) => state.deploymentId)
 
@@ -41,24 +37,99 @@ export const useDeployContract = () => {
     return basicContract
   }
 
+  // const validate = (opts: ERC721ContractInput): boolean => {
+  //   // validation phase
+  //   if (!opts.name) {
+  //     notifyError('Issue with the contract form. Name is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.symbol) {
+  //     notifyError('Issue with the contract form. Symbol is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.baseURI) {
+  //     notifyError('Issue with the contract form. Base URI is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.collectionSize) {
+  //     notifyError('Issue with the contract form. Collection size is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.maxPublicBatchPerAddress) {
+  //     notifyError('Issue with the contract form. Max public batch per address is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.amountForPromotion) {
+  //     notifyError('Issue with the contract form. Amount for promotion is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.mintPrice) {
+  //     notifyError('Issue with the contract form. Mint price is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.claimTime) {
+  //     notifyError('Issue with the contract form. Claim time is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.presaleTime) {
+  //     notifyError('Issue with the contract form. Presale time is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.publicTime) {
+  //     notifyError('Issue with the contract form. Public time is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.type) {
+  //     notifyError('Issue with the contract form. Type is required.')
+  //     return false
+  //   }
+
+  //   if (!opts.branch) {
+  //     notifyError('Issue with the contract form. Branch is required.')
+  //     return false
+  //   }
+
+  //   return true
+  // }
+
   const deploy = async (opts: ERC721ContractInput) => {
+    const { baseURI, saleConfig, contractInformationData } = opts
     const contract = getContractDeploymentType(opts.type)
     const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
+
+    const { name, symbol, collectionSize, chainId } = contractInformationData
+    const claimTime = saleConfig.get('Claim')?.startTimestamp.getTime()
+    const presaleTime = saleConfig.get('Presale')?.startTimestamp.getTime()
+    const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
+    const mintPrice = saleConfig.get('Public')?.mintPrice
+    const maxPublicBatchPerAddress = saleConfig.get('Public')?.maxAllocationPerAddress
+    const amountForPromotion = 0
+
     const args = [
-      opts.name,
-      opts.symbol,
-      opts.baseURI,
-      opts.collectionSize,
-      opts.maxPublicBatchPerAddress,
-      opts.amountForPromotion,
-      opts.mintPrice,
-      opts.claimTime,
-      opts.presaleTime,
-      opts.publicTime,
+      name,
+      symbol,
+      baseURI,
+      collectionSize,
+      maxPublicBatchPerAddress,
+      amountForPromotion,
+      mintPrice,
+      claimTime,
+      presaleTime,
+      publicTime,
     ]
 
     const tx = await factory.deploy(...args)
-    mutate({ deploymentId, address: tx.address, chainId: 5 }) // set to 5 for goerli, shoudl come from forom
+    mutate({ deploymentId, address: tx.address, chainId }) // set to 5 for goerli, shoudl come from forom
     setAddress(tx.address)
     await tx.deployed()
     notifySuccess(`Contract deployed at ${tx.address}. We will now verify the contract.`)

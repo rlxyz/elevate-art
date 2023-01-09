@@ -53,7 +53,6 @@ const RepositoryDeploymentCreateModal: FC<RepositoryDeploymentCreateProps> = ({ 
       isLoading={isLoading}
       className='md:max-w-lg' // @todo fix this
     >
-      {/* <DevTool control={control} /> */}
       <FormSelectInput
         {...register('name', {
           onChange: (e) => {

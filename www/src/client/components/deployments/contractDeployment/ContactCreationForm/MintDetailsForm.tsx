@@ -1,13 +1,13 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
-import { BigNumber } from 'ethers'
+import { BigNumber } from 'ethers/lib/ethers'
 import type { FC } from 'react'
-import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import type { FieldErrorsImpl, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
-export const SaleConfigType = z.nativeEnum(
+export const SaleConfigEnum = z.nativeEnum(
   Object.freeze({
     CLAIM: 'Claim',
     PRESALE: 'Presale',
@@ -15,63 +15,84 @@ export const SaleConfigType = z.nativeEnum(
   })
 )
 
-export type MintDetailsForm = {
-  collectionSize: number // inferred from deployment
-  presale: boolean
-  presalePrice: number
-  presaleSupply: number
-  presaleMaxMintAmount: number
-  presaleMaxTransactionAmount: number
-  publicSale: boolean
-  publicSalePrice: number
-  publicSaleMaxMintAmount: number
-  publicSaleMaxTransactionAmount: number
-}
+export type SaleConfigType = z.infer<typeof SaleConfigEnum>
 
 export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { register, handleSubmit, errors, handleClick, setSaleConfig, currentSegment } = useContractDataFormHook<{
-    saleConfigs: SaleConfig[]
-  }>({
-    defaultValues: {
-      saleConfigs: [
-        {
-          startTimestamp: new Date(),
-          mintPrice: BigNumber.from(0),
-          maxAllocationPerAddress: BigNumber.from(0),
-        },
-      ],
-    },
-  })
+  const { register, handleSubmit, errors, setValue, handleClick, saleConfig, setSaleConfig, currentSegment, contractInformationData } =
+    useContractDataFormHook<{
+      saleConfigs: SaleConfig[]
+    }>({
+      defaultValues: {
+        saleConfigs: [
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+          {
+            startTimestamp: new Date(),
+            mintPrice: BigNumber.from(0),
+            maxAllocationPerAddress: BigNumber.from(0),
+          },
+        ],
+      },
+    })
 
   return (
     <ContractForm>
       <ContractForm.Header title={title} description={description} />
       <ContractForm.Body
         onSubmit={handleSubmit((data) => {
-          setSaleConfig(data.saleConfigs)
-          if (!next) return
-          handleClick(next)
+          // infer that index 0 is claim, 1 is presale, 2 is public
+          data.saleConfigs.forEach((saleConfig, index) => {
+            //! @todo make this more typesafe and modular
+            if (index === 0) {
+              setSaleConfig(SaleConfigEnum.enum.CLAIM, saleConfig)
+            }
+
+            if (index === 1) {
+              setSaleConfig(SaleConfigEnum.enum.PRESALE, saleConfig)
+            }
+
+            if (index === 2) {
+              setSaleConfig(SaleConfigEnum.enum.PUBLIC, saleConfig)
+            }
+
+            if (!next) return
+            handleClick(next)
+          })
         })}
       >
         <div className='space-y-3'>
           {[
             {
-              type: SaleConfigType.enum.CLAIM,
+              type: SaleConfigEnum.enum.CLAIM,
               title: 'Claim',
             },
             {
-              type: SaleConfigType.enum.PRESALE,
+              type: SaleConfigEnum.enum.PRESALE,
               title: 'Presale',
             },
             {
-              type: SaleConfigType.enum.PUBLIC,
+              type: SaleConfigEnum.enum.PUBLIC,
               title: 'Public Sale',
             },
           ].map(({ type, title }, index) => {
-            return <SaleConfigInput key={index} index={index} title={title} register={register} errors={errors} />
+            return <SaleConfigInput key={index} index={index} title={title} register={register} errors={errors} setValue={setValue} />
           })}
         </div>
-        <ContractForm.Body.Summary next={next} previous={previous} current={currentSegment} />
+        <ContractForm.Body.Summary
+          next={next}
+          previous={previous}
+          current={currentSegment}
+          saleConfig={saleConfig}
+          contractInformationData={contractInformationData}
+        />
       </ContractForm.Body>
     </ContractForm>
   )
@@ -82,77 +103,74 @@ const SaleConfigInput = ({
   register,
   errors,
   index,
+  setValue,
 }: {
   title: string
   register: UseFormRegister<{ saleConfigs: SaleConfig[] }>
   index: number
-  errors: FieldErrors | undefined
+  errors:
+    | Partial<
+        FieldErrorsImpl<{
+          [x: string]: any
+        }>
+      >
+    | undefined
+  setValue: UseFormSetValue<{
+    saleConfigs: SaleConfig[]
+  }>
 }) => {
   return (
-    <ContractForm.Body.ToggleCategory label={title}>
+    <ContractForm.Body.ToggleCategory label={title} disabled>
       <div className='flex flex-row gap-3 mb-2'>
-        <ContractForm.Body.Input
+        <ContractForm.Body.Calendar
           {...register(`saleConfigs.${index}.startTimestamp`, {
             required: true,
+            valueAsDate: true,
+            onChange: (e) => {
+              if (e.target.value) {
+                const date = new Date(`${e.target.value}`)
+                console.log(date, `${e.target.value}`, new Date().toISOString())
+                setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
+              }
+            },
           })}
-          label={''}
-          // defaultValue={0.05}
-          description={''}
+          label={'Start Time'}
           className='col-span-3'
-          error={errors.presaleSupply}
-          placeholder='Supply'
         />
         <ContractForm.Body.Input
           {...register(`saleConfigs.${index}.mintPrice`, {
             required: true,
-            maxLength: {
-              value: 20,
-              message: 'Max length is 20',
-            },
-            minLength: {
-              value: 3,
-              message: 'Max length is 3',
-            },
-            pattern: /^[-/a-z0-9 ]+$/gi,
+            valueAsNumber: true,
             onChange: (e) => {
-              setValue('presalePrice', e.target.value)
+              if (e.target.value) {
+                const price = Number(e.target.value)
+                setValue(`saleConfigs.${index}.mintPrice`, BigNumber.from(price))
+              }
             },
           })}
-          label={''}
-          // defaultValue={0.05}
-          description={''}
+          label={'Mint Price (in ETH)'}
           className='col-span-3'
-          error={errors.presalePrice}
-          placeholder='Price'
+          error={errors && errors[`saleConfigs.${index}.mintPrice`]}
+          placeholder={`Set ${title} Price`}
         />
       </div>
-      <ContractForm.Body.ToggleInput
-        {...register('presaleMaxMintAmount', {
+      <ContractForm.Body.Input
+        {...register(`saleConfigs.${index}.maxAllocationPerAddress`, {
           required: true,
+          max: 20,
+          min: 1,
           onChange: (e) => {
-            setValue('presaleMaxMintAmount', e.target.value)
+            if (e.target.value) {
+              const maxAllocationPerAddress = Number(e.target.value)
+              setValue(`saleConfigs.${index}.maxAllocationPerAddress`, BigNumber.from(maxAllocationPerAddress))
+            }
           },
         })}
         label={'Mints per Wallet Maximum'}
-        // defaultValue={0.05}
         description={''}
-        className='col-span-3'
-        error={errors.presaleMaxMintAmount}
-        placeholder='Unlimited mints for all wallets'
-      />
-      <ContractForm.Body.ToggleInput
-        {...register('presaleMaxTransactionAmount', {
-          required: true,
-          onChange: (e) => {
-            setValue('presaleMaxTransactionAmount', e.target.value)
-          },
-        })}
-        label={'Transactions per Wallet Maximum'}
-        // defaultValue={0.05}
-        description={''}
-        className='col-span-3'
-        error={errors.presaleMaxTransactionAmount}
-        placeholder='Unlimited transactions for all wallets'
+        className='col-span-3 '
+        error={errors && errors[`saleConfigs.${index}.maxAllocationPerAddress`]}
+        placeholder='Maximum amount of mints per wallet'
       />
     </ContractForm.Body.ToggleCategory>
   )

@@ -1,3 +1,4 @@
+import type { AssetDeploymentType } from '@prisma/client'
 import type { BigNumber } from 'ethers'
 
 export type SaleConfig = {
@@ -15,7 +16,7 @@ export type ContractInformationData = {
   name: string
   symbol: string
   owner: `0x${string}`
-  mintType: string
+  mintType: AssetDeploymentType
   chainId: number
   collectionSize: BigNumber // is total mint possible in contract
 }

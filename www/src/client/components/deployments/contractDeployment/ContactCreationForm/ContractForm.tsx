@@ -3,7 +3,7 @@ import { FormSelectInput } from '@components/layout/form/FormSelectInput'
 import { Switch } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { forwardRef, useState } from 'react'
-import type { FieldError } from 'react-hook-form'
+import type { FieldError, FieldErrorsImpl } from 'react-hook-form'
 import { ContractSummary } from './ContractSummary'
 
 export const ContractForm = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
@@ -41,10 +41,16 @@ const ContractFormBodyInput = forwardRef<
   React.PropsWithChildren<{
     className: string
     label: string
-    description: string
+    description?: string
     placeholder: string
-    error: FieldError | undefined
-    maxLength: number | undefined
+    error:
+      | FieldError
+      | undefined
+      | Partial<
+          FieldErrorsImpl<{
+            [x: string]: any
+          }>
+        >
   }>
 >(
   ({
@@ -53,44 +59,76 @@ const ContractFormBodyInput = forwardRef<
     description,
     error,
     placeholder,
-    maxLength,
     ...props
   }: React.PropsWithChildren<{
     className: string
     label: string
-    description: string
+    description?: string
     placeholder: string
-    error: FieldError | undefined
+    error:
+      | FieldError
+      | undefined
+      | Partial<
+          FieldErrorsImpl<{
+            [x: string]: any
+          }>
+        >
     maxLength?: number | undefined
   }>) => {
     return (
-      <>
-        <div className={clsx('space-y-1 w-full', className)}>
-          <label className='text-xs font-semibold'>{label}</label>
-          <input
-            className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-            type='string'
-            placeholder={placeholder}
-            {...props}
-          />
-          <span className='text-[0.6rem] text-darkGrey'>{description}</span>
-          {error && (
-            <span className='text-xs text-redError'>
-              {error.type === 'required'
-                ? 'This field is required'
-                : error.type === 'pattern'
-                ? 'We only accept - and / for special characters'
-                : error.type === 'validate'
-                ? 'A layer with this name already exists'
-                : error.type === 'minLength'
-                ? 'Must be more than 3 characters long'
-                : error.type === 'maxLength'
-                ? `Must be less than ${maxLength} characters long`
-                : 'Must be between 3 and 20 characters long'}
-            </span>
-          )}
-        </div>
-      </>
+      <div className={clsx('flex flex-col space-y-1 w-full', className)}>
+        <label className='text-xs font-semibold'>{label}</label>
+        <input
+          className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+          type='string'
+          placeholder={placeholder || ''}
+          {...props}
+        />
+        <span className='text-[0.6rem] text-darkGrey'>{description}</span>
+        {error && <span className='text-xs text-redError'>{error?.message?.toString() || 'Something went wrong...'}</span>}
+      </div>
+    )
+  }
+)
+
+const ContractFormBodyCalendar = forwardRef<
+  HTMLInputElement,
+  React.PropsWithChildren<{
+    className: string
+    label: string
+    description?: string
+  }>
+>(
+  (
+    {
+      className,
+      label,
+      description,
+      ...props
+    }: React.PropsWithChildren<{
+      className: string
+      label: string
+      description?: string
+    }>,
+    ref
+  ) => {
+    const minDateAll = new Date().toISOString()
+    const minDate = minDateAll.split('T')[0]
+    const minTime = minDateAll.split('T')[1]?.split(':')[0] + ':00'
+    const maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]
+    return (
+      <div className={clsx('flex flex-col space-y-1 w-full', className)}>
+        <label className='text-xs font-semibold'>{label}</label>
+        <input
+          ref={ref}
+          className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+          type='datetime-local'
+          {...props}
+          min={`${minDate}T${minTime}`}
+          max={`${maxDate}T23:59`}
+        />
+        {description && <span className='text-[0.6rem] text-darkGrey'>{description}</span>}
+      </div>
     )
   }
 )
@@ -183,10 +221,12 @@ const ContractFormBodyToggleCategory = ({
   className,
   label,
   children,
+  disabled = false,
 }: {
   className?: string
   label: string
   children: React.ReactElement[]
+  disabled?: boolean
 }) => {
   const [enabled, setEnabled] = useState(true)
 
@@ -196,11 +236,13 @@ const ContractFormBodyToggleCategory = ({
         <div className='flex flex-row justify-between content-center'>
           <label className='text-xs font-semibold'>{label}</label>{' '}
           <Switch
+            disabled={disabled}
             checked={enabled}
             onChange={setEnabled}
             className={clsx(
               enabled ? 'bg-black' : 'bg-mediumGrey',
-              'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1'
+              'relative inline-flex h-5 w-8 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-mediumGrey focus:ring-offset-1',
+              disabled && 'cursor-not-allowed opacity-25'
             )}
           >
             <span className='sr-only'>Use setting</span>
@@ -246,18 +288,11 @@ const ContractFormBodyInputWithDetails = forwardRef<
     error: FieldError | undefined
     maxLength?: number | undefined
   }>) => {
-    const styles = {
-      '::after': {
-        content: 'test',
-      },
-    }
-
     return (
       <>
         <div className={clsx('space-y-1 w-full', className)}>
           <label className='text-xs font-semibold'>{label}</label>
           <input
-            style={styles}
             className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
             type='string'
             placeholder={placeholder}
@@ -288,10 +323,12 @@ const ContractFormBodyInputWithDetails = forwardRef<
 ContractFormBodyInput.displayName = 'ContractFormBodyInput'
 ContractFormBodyToggleInput.displayName = 'ContractFormBodyToggleInput'
 ContractFormBodyInputWithDetails.displayName = 'ContractFormBodyToggleInputWithDetails'
+ContractFormBodyCalendar.displayName = 'ContractFormBodyCalendar'
 
 ContractForm.Header = ContractFormHeader
 ContractForm.Body = ContractFormBody
 ContractFormBody.Input = ContractFormBodyInput
+ContractFormBody.Calendar = ContractFormBodyCalendar
 ContractFormBody.Select = FormSelectInput
 ContractFormBody.Radio = FormRadioInput
 ContractFormBody.Summary = ContractSummary

@@ -1,4 +1,4 @@
-import { ContractGeneralSettings } from '@components/deployments/contractDeployment/ContractSettings'
+import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -7,9 +7,11 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
+import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
+import { WhitelistType } from '@prisma/client'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -27,37 +29,15 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
+  const { current: whitelist } = useQueryContractDeploymentWhitelist({
+    type: WhitelistType.CLAIM,
+  })
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
-              <ZoneRoutesNavbarPopover
-                title='Apps'
-                routes={[
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
-                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
-                    selected: false,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${ZoneNavigationEnum.enum.Create}`,
-                    selected: false,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: true,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
-                  },
-                ]}
-              />
-            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
@@ -66,6 +46,34 @@ const Page: NextPage = () => {
               label={deployment?.name || ''}
               href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`}
             />
+            <AppRoutesNavbar.Item
+              label={capitalize(ZoneNavigationEnum.enum.Deployments)}
+              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
+            >
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Deployments),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
+                    selected: true,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
+                    selected: false,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
           </AppRoutesNavbar>
         </Layout.AppHeader>
         <Layout.PageHeader>
@@ -73,21 +81,34 @@ const Page: NextPage = () => {
             {[
               {
                 name: AssetDeploymentNavigationEnum.enum.Overview,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`,
+                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
                 enabled: false,
                 loading: isLoading,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Contract,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${AssetDeploymentNavigationEnum.enum.Contract}`,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  AssetDeploymentNavigationEnum.enum.Contract
+                ),
                 enabled: false,
                 loading: isLoading,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Settings,
-                href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${DeploymentNavigationEnum.enum.Settings}`,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Deployments,
+                  deployment?.name,
+                  AssetDeploymentNavigationEnum.enum.Settings,
+                  ContractSettingsNavigationEnum.enum.Allowlist
+                ),
                 enabled: true,
-                loading: false,
+                loading: isLoading,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
@@ -101,41 +122,6 @@ const Page: NextPage = () => {
                 <SettingNavigation
                   routes={[
                     {
-                      name: ContractSettingsNavigationEnum.enum.Details,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings
-                      ),
-                      selected: true,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Mechanics,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Mechanics
-                      ),
-                      selected: false,
-                    },
-                    {
-                      name: ContractSettingsNavigationEnum.enum.Revenue,
-                      href: routeBuilder(
-                        organisation?.name,
-                        repository?.name,
-                        ZoneNavigationEnum.enum.Deployments,
-                        deployment?.name,
-                        DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Revenue
-                      ),
-                      selected: false,
-                    },
-                    {
                       name: ContractSettingsNavigationEnum.enum.Allowlist,
                       href: routeBuilder(
                         organisation?.name,
@@ -148,23 +134,37 @@ const Page: NextPage = () => {
                       selected: false,
                     },
                     {
-                      name: ContractSettingsNavigationEnum.enum.Deploy,
+                      name: ContractSettingsNavigationEnum.enum.Claimlist,
                       href: routeBuilder(
                         organisation?.name,
                         repository?.name,
                         ZoneNavigationEnum.enum.Deployments,
                         deployment?.name,
                         DeploymentNavigationEnum.enum.Settings,
-                        ContractSettingsNavigationEnum.enum.Deploy
+                        ContractSettingsNavigationEnum.enum.Claimlist
                       ),
                       selected: false,
+                    },
+                    {
+                      name: ContractSettingsNavigationEnum.enum.MintTime,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Deployments,
+                        deployment?.name,
+                        DeploymentNavigationEnum.enum.Settings,
+                        ContractSettingsNavigationEnum.enum.MintTime
+                      ),
+                      selected: true,
                     },
                   ]}
                 />
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  <ContractGeneralSettings />
+                  {contractDeployment && whitelist && (
+                    <AllowlistLayout contractDeployment={contractDeployment} whitelist={whitelist} type={WhitelistType.CLAIM} />
+                  )}
                 </div>
               </div>
             </div>

@@ -4,7 +4,11 @@ import { WhitelistType } from '@prisma/client'
 import { AllowlistLayoutHeader } from './AllowlistLayoutHeader'
 import { AllowlistLayoutTable } from './AllowlistLayoutTable'
 import { AllowlistLayoutTextarea } from './AllowlistLayoutTextarea'
+<<<<<<< HEAD
 import { useSetMerkleRoot } from './useSetPresaleMerkleRoot'
+=======
+import { useSetMerkleRootData } from './useSetMerkleRoot'
+>>>>>>> 7e03caa5f97051f89396f24034090738f242deb8
 
 export type AllowlistFormInput = {
   address: `0x${string}`

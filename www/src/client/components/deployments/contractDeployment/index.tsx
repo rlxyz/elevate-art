@@ -38,7 +38,7 @@ export const ContractCreationSegments: (ContractCreationAnimationProps & Contrac
     index: 0,
     id: ContractCreationEnum.enum.ContractDetails,
     title: 'Smart Contract Details',
-    description: 'These are important terms for your contract that you need to finalise before continuing!',
+    description: 'Awesome! Lets deploy your contract',
     component: ContractDetailsForm,
     motionX: 0.5,
     motionOpacity: 1,

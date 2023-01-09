@@ -2,18 +2,19 @@ import { ContractInformationAnalyticsLayout } from '@components/explore/Analytic
 import { ContractPayoutAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractPayoutAnalyticsLayout'
 import { ContractSaleAnalyticsLayout } from '@components/explore/AnalyticsLayout/ContractSaleAnalyticsLayout'
 import { ChevronLeftIcon } from '@heroicons/react/outline'
-import type { ContractInformationData, PayoutData, SaleConfig } from '@utils/contracts/ContractData'
+import { AssetDeploymentType } from '@prisma/client'
+import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import type { ContractCreationType } from '.'
 import { useAnimationMotionValues } from '../ContractCreationAnimation/useAnimationMotionValues'
+import { SaleConfigEnum } from './MintDetailsForm'
+import type { SaleConfigMap } from './useContractCreationStore'
 
 export const ContractSummary = ({
   contractInformationData,
-  payoutData,
-  claimPeriod,
-  presalePeriod,
-  publicPeriod,
+  saleConfig,
+  payout,
   onClick,
   current,
   previous,
@@ -23,24 +24,22 @@ export const ContractSummary = ({
   previous: ContractCreationType | null
   current: ContractCreationType
   next: ContractCreationType | null
-  payoutData?: PayoutData
+  payout?: PayoutData
+  saleConfig?: SaleConfigMap
   contractInformationData?: ContractInformationData
-  claimPeriod?: SaleConfig
-  presalePeriod?: SaleConfig
-  publicPeriod?: SaleConfig
 }) => {
   const { handleClick } = useAnimationMotionValues()
   const contractInformation: ContractInformationData = contractInformationData || {
     name: '',
     symbol: '',
     owner: '0x' as `0x${string}`,
-    mintType: '',
+    mintType: AssetDeploymentType.BASIC,
     chainId: 99,
     totalSupply: BigNumber.from(0),
     collectionSize: BigNumber.from(0),
   }
 
-  const payout: PayoutData = payoutData || {
+  const payoutData: PayoutData = payout || {
     estimatedPayout: BigNumber.from(0),
     paymentReceiver: '0x' as `0x${string}`,
   }
@@ -49,10 +48,14 @@ export const ContractSummary = ({
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
       <ContractInformationAnalyticsLayout contractInformationData={contractInformation} />
-      <ContractSaleAnalyticsLayout saleConfig={claimPeriod} title={'Claim Period'} />
-      <ContractSaleAnalyticsLayout saleConfig={presalePeriod} title={'Presale Period'} />
-      <ContractSaleAnalyticsLayout saleConfig={publicPeriod} title={'Public Sale Period'} />
-      <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payout} />
+      {saleConfig && current === 'mint-details' && (
+        <>
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.CLAIM)} title={SaleConfigEnum.enum.CLAIM} />
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PRESALE)} title={SaleConfigEnum.enum.PRESALE} />
+          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PUBLIC)} title={SaleConfigEnum.enum.PUBLIC} />
+        </>
+      )}
+      {payout && <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payoutData} />}
 
       <div className='grid grid-cols-8 gap-6'>
         {previous && (
@@ -70,8 +73,6 @@ export const ContractSummary = ({
               previous ? 'col-span-7' : 'col-span-8',
               'border p-2 border-mediumGrey rounded-[5px] bg-black text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
             )}
-            type='submit'
-            onClick={() => handleClick(next)}
           >
             Continue
           </button>
