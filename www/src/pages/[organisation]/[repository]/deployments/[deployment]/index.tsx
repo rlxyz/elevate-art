@@ -3,7 +3,7 @@ import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon, UploadIcon } from '@heroicons/react/outline'
+import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -156,18 +156,6 @@ const Page = () => {
                       <div className='text-sm text-black font-semibold'>{x.value}</div>
                     </div>
                   ))}
-                </div>
-              </div>
-              <div className='col-span-1'>
-                <div className='flex space-x-3'>
-                  <button
-                    className='border border-mediumGrey bg-lightGray py-2 px-4 rounded-[5px] text-sm text-darkGrey flex justify-center items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50'
-                    disabled
-                  >
-                    <span>Share</span>
-                    <UploadIcon className='w-4 h-4' />
-                  </button>
-                  <button className='border border-mediumGrey bg-redError py-2 px-4 rounded-[5px] text-sm text-white'>Delete</button>
                 </div>
               </div>
             </div>

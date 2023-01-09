@@ -176,4 +176,3 @@ const Page: NextPage = () => {
 }
 
 export default withOrganisationStore(Page)
-ƒ
