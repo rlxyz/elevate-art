@@ -79,8 +79,9 @@ export const GalleryLayout = ({
                       branch: assetDeployment?.branch,
                     })}
                     width={1000}
+                    height={1000}
                     alt={`${contractDeployment.address}-#${id}`}
-                    className='object-cover m-auto rounded-t-[5px]'
+                    className='object-cover m-auto'
                   />
                   <div className='p-2'>
                     <h1 className='text-xs font-semibold'>

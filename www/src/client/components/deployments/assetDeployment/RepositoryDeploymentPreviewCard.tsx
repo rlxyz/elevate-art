@@ -2,11 +2,10 @@ import AvatarComponent from '@components/layout/avatar/Avatar'
 import { ArrowTopRightIcon } from '@components/layout/icons/ArrowTopRightIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Menu from '@components/layout/menu'
-import { LinkIcon, TrashIcon } from '@heroicons/react/outline'
+import { CubeIcon, LinkIcon, TrashIcon } from '@heroicons/react/outline'
 import { useNotification } from '@hooks/utils/useNotification'
-import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
-import { AssetDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentBranch, AssetDeploymentStatus } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
 import { useState } from 'react'
@@ -14,6 +13,7 @@ import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import RepositoryDeploymentDeleteModal from './RepositoryDeploymentDeleteModal'
+import RepositoryDeploymentPromoteModal from './RepositoryDeploymentPromoteModal'
 
 export const RepositoryDeploymentPreviewCard = ({
   deployment,
@@ -26,7 +26,7 @@ export const RepositoryDeploymentPreviewCard = ({
 }) => {
   const { notifyInfo } = useNotification()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const { mainRepositoryHref } = useRepositoryRoute()
+  const [isPromoteDialogOpen, setIsPromoteDialogOpen] = useState(false)
 
   const onClipboardCopy = () => {
     navigator.clipboard.writeText(`${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${deployment.name}/0`) // @todo fix
@@ -96,11 +96,21 @@ export const RepositoryDeploymentPreviewCard = ({
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
+              <Menu.Item as='span'>
+                <button
+                  className={clsx('flex space-x-2 items-center h-full w-full', 'disabled:cursor-not-allowed disabled:opacity-40')}
+                  onClick={() => setIsPromoteDialogOpen(true)}
+                  disabled={
+                    deployment.status !== AssetDeploymentStatus.DEPLOYED ||
+                    deployment.branch === AssetDeploymentBranch.PRODUCTION ||
+                    deployment.contractDeployment === null
+                  }
+                >
+                  <CubeIcon className='w-3 h-3' />
+                  <span>Promote to Production</span>
+                </button>
+              </Menu.Item>
               {/* <Menu.Item as='button' type='button'>
-              <CubeIcon className='w-3 h-3' />
-              <span>Promote to Production</span>
-            </Menu.Item>
-            <Menu.Item as='button' type='button'>
               <EyeIcon className='w-3 h-3' />
               <span>Enable Stealth Mode</span>
             </Menu.Item> */}
@@ -128,6 +138,11 @@ export const RepositoryDeploymentPreviewCard = ({
         </div>
       </div>
       <RepositoryDeploymentDeleteModal visible={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} deployment={deployment} />
+      <RepositoryDeploymentPromoteModal
+        visible={isPromoteDialogOpen}
+        onClose={() => setIsPromoteDialogOpen(false)}
+        deployment={deployment}
+      />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { Popover, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
 import Image from 'next/image'
-import type { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren, ReactNode } from 'react'
 import { Children, Fragment, useState } from 'react'
 import { default as NextLinkComponent } from '../link/NextLink'
 import SearchComponent from '../search/Search'
@@ -84,7 +84,7 @@ export const ZoneRoutesNavbarPopover: FC<{
   )
 }
 
-const AppRoutesNavbarItem: FC<PropsWithChildren<{ children?: React.ReactNode; label: string; href: string }>> = ({
+const AppRoutesNavbarItem: FC<PropsWithChildren<{ children?: ReactNode; label: string | ReactNode; href: string }>> = ({
   children,
   label,
   href,

@@ -41,16 +41,16 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
               title='Apps'
               routes={[
                 {
-                  label: capitalize(ZoneNavigationEnum.enum.Deployments),
-                  href: `/${ZoneNavigationEnum.enum.Deployments}`,
-                  selected: false,
-                  icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                },
-                {
                   label: capitalize(ZoneNavigationEnum.enum.Create),
                   href: `/${ZoneNavigationEnum.enum.Create}`,
                   selected: false,
                   icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                },
+                {
+                  label: capitalize(ZoneNavigationEnum.enum.Deployments),
+                  href: `/${ZoneNavigationEnum.enum.Deployments}`,
+                  selected: false,
+                  icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                 },
                 {
                   label: capitalize(ZoneNavigationEnum.enum.Explore),

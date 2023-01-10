@@ -3,6 +3,7 @@ import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/hea
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
+import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
@@ -42,10 +43,7 @@ const Page: NextPage = () => {
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
-            <AppRoutesNavbar.Item
-              label={deployment?.name || ''}
-              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`}
-            />
+
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
@@ -74,6 +72,10 @@ const Page: NextPage = () => {
                 ]}
               />
             </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item
+              label={<TextWithStatus name={deployment?.name} />}
+              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}`}
+            />
           </AppRoutesNavbar>
         </Layout.AppHeader>
         <Layout.PageHeader>

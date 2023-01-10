@@ -2,6 +2,7 @@ import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/hea
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import LinkComponent from '@components/layout/link/Link'
+import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
@@ -89,7 +90,7 @@ const Page = () => {
               />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
-              label={deployment?.name || ''}
+              label={<TextWithStatus name={deployment?.name} />}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name)}
             />
           </AppRoutesNavbar>

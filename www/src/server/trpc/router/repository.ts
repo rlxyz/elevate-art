@@ -391,4 +391,46 @@ export const repositoryRouter = router({
         data: { license },
       })
     }),
+  promoteAssetDeployment: protectedProcedure
+    .input(
+      z.object({
+        deploymentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // change branch to AssetDeploymentBranch.PRODUCTION
+      const { deploymentId } = input
+
+      const deployment = await ctx.prisma.assetDeployment.findFirst({
+        where: { id: deploymentId },
+      })
+
+      if (!deployment) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      // find if there is a production deployment
+      const productionDeployment = await ctx.prisma.assetDeployment.findFirst({
+        where: {
+          repositoryId: deployment.repositoryId,
+          branch: AssetDeploymentBranch.PRODUCTION,
+        },
+      })
+
+      if (productionDeployment) {
+        await ctx.prisma.assetDeployment.update({
+          where: { id: productionDeployment.id },
+          data: { branch: AssetDeploymentBranch.PREVIEW },
+        })
+      }
+
+      await ctx.prisma.assetDeployment.update({
+        where: { id: deploymentId },
+        data: { branch: AssetDeploymentBranch.PRODUCTION },
+      })
+
+      return {
+        oldProductionDeployment: productionDeployment,
+      }
+    }),
 })

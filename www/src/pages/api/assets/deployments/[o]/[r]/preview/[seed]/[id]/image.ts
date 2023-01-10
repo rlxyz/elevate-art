@@ -2,7 +2,7 @@ import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
-import { getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
+import { getAssetDeploymentBucket, getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -50,6 +50,21 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
+  const [exists] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .exists()
+
+  if (exists) {
+    const [url] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+      .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+      .getSignedUrl({
+        version: 'v4',
+        action: 'read',
+        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+      })
+    return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
+  }
+
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
   const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
@@ -85,9 +100,26 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     canvas.printImage(image, 0, 0, width, height)
   })
 
+  // const buf = await sharp(await canvas.toBufferAsync('image/png'))
+  //   .png({ quality: 70 })
+  //   .toBuffer()
+
+  // only ever runs once...
   const buf = await canvas.toBufferAsync('image/png')
 
-  return res.setHeader('Content-Type', 'image/png').status(200).send(buf)
+  await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .save(buf)
+
+  const [url] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .getSignedUrl({
+      version: 'v4',
+      action: 'read',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    })
+
+  return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
 }
 
 export default index
