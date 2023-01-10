@@ -115,6 +115,10 @@ export const useDeployContract = () => {
     const maxPublicBatchPerAddress = saleConfig.get('Public')?.maxAllocationPerAddress
     const amountForPromotion = 0
 
+    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxPublicBatchPerAddress) {
+      return notifyError('Issue with the contract form. Please check the sale config.')
+    }
+
     const args = [
       name,
       symbol,
@@ -123,9 +127,9 @@ export const useDeployContract = () => {
       maxPublicBatchPerAddress,
       amountForPromotion,
       mintPrice,
-      claimTime,
-      presaleTime,
-      publicTime,
+      Math.floor(claimTime / 1000),
+      Math.floor(presaleTime / 1000),
+      Math.floor(publicTime / 1000),
     ]
 
     const tx = await factory.deploy(...args)

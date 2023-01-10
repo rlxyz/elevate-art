@@ -6,15 +6,14 @@ import { trpc } from 'src/client/utils/trpc'
 
 export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: { type: WhitelistType }) => {
   const router: NextRouter = useRouter()
-  const session = useSession()
+  const { data: session } = useSession()
   const { address } = router.query as { address: string }
   const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findWhitelistByAddressAndType.useQuery(
     { address, type },
     { enabled: !!address }
   )
-
   return {
-    current: data?.whitelists.find((x) => x.address === session?.data?.user?.address) || { address: session?.data?.user?.address, mint: 0 },
+    current: data?.whitelists.find((x) => x.address === session?.user?.address),
     all: data,
     isLoading,
     isError,

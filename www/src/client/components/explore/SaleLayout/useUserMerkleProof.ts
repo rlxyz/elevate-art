@@ -10,11 +10,10 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
   })
 
   const { merkleTree } = useGetMerkleTree({
-    enabled: true,
     data: all?.whitelists,
   })
 
-  if (!current.address || !merkleTree) {
+  if (!current?.address || current.mint === 0 || !merkleTree) {
     return {
       proof: undefined,
     }

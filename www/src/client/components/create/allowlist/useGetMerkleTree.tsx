@@ -4,17 +4,18 @@ import { convertListToMap } from '@utils/object-utils'
 import type MerkleTree from 'merkletreejs'
 import { useEffect, useState } from 'react'
 
-export const useGetMerkleTree = ({ enabled, data }: { enabled: boolean; data: Whitelist[] | undefined }) => {
+export const useGetMerkleTree = ({ data }: { data: Whitelist[] | undefined }) => {
   const [merkleTree, setMerkleTree] = useState<MerkleTree>()
 
   useEffect(() => {
     if (!data) return
+
     setMerkleTree(
       createMerkleTree(
         convertListToMap(
-          data.map((x) => ({
-            address: x.address,
-            mint: String(x.mint),
+          data.map(({ address, mint }) => ({
+            address,
+            mint: mint.toString(),
           })),
           'address',
           'mint'

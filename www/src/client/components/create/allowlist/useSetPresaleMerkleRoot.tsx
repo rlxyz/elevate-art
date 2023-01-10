@@ -3,6 +3,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment, Whitelist } from '@prisma/client'
 import { WhitelistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
+import { formatEthereumHash } from '@utils/ethers'
 import type { Dispatch, SetStateAction } from 'react'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { useSetMerkleRootData } from './useSetMerkleRoot'
@@ -42,7 +43,7 @@ export const useSetMerkleRoot = ({
     ...config,
     onSettled: (data) => {
       if (data) {
-        notifyInfo(`A transaction with hash ${data.hash} has been submitted. Please wait for confirmation.`)
+        notifyInfo(`A transaction with hash ${formatEthereumHash(data.hash)} has been submitted. Please wait for confirmation.`)
       }
     },
     onError: (error) => {
