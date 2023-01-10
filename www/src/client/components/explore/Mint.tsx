@@ -22,8 +22,8 @@ export const OrganisationNavigationEnum = z.nativeEnum(
 )
 export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
-export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
-  const { current } = useQueryContractDeployment()
+export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; address?: string | undefined | null }) => {
+  const { current } = useQueryContractDeployment({ address })
   return (
     <Layout>
       <Layout.AppHeader>
@@ -31,12 +31,14 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
           <AppRoutesNavbar.Item
             label={current?.deployment.repository.organisation.name || ''}
             href={routeBuilder(current?.deployment.repository.organisation.name)}
+            loading={!current?.deployment.repository.name || !current?.deployment.repository.organisation.name}
           />
           <AppRoutesNavbar.Item
             label={current?.deployment.repository.name || ''}
             href={routeBuilder(current?.deployment.repository.organisation.name, current?.deployment.repository.name)}
+            loading={!current?.deployment.repository.name || !current?.deployment.repository.organisation.name}
           />
-          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`}>
+          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`} disabled>
             <ZoneRoutesNavbarPopover
               title='Apps'
               routes={[
@@ -71,26 +73,26 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
-                ZoneNavigationEnum.enum.Explore,
-                type === AssetDeploymentBranch.PREVIEW && 'preview',
-                type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
-                OrganisationNavigationEnum.enum.Mint
+                branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
+                branch === AssetDeploymentBranch.PREVIEW && 'preview',
+                branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+                branch === AssetDeploymentBranch.PREVIEW && OrganisationNavigationEnum.enum.Mint
               ),
               enabled: true,
-              loading: false,
+              loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,
             },
             {
               name: OrganisationNavigationEnum.enum.Gallery,
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
-                ZoneNavigationEnum.enum.Explore,
-                type === AssetDeploymentBranch.PREVIEW && 'preview',
-                type === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
+                branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
+                branch === AssetDeploymentBranch.PREVIEW && 'preview',
+                branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
                 OrganisationNavigationEnum.enum.Gallery
               ),
               enabled: false,
-              loading: false,
+              loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,
             },
           ].map((item) => (
             <PageRoutesNavbar.Item key={item.name} opts={item} />
@@ -98,7 +100,7 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
         </PageRoutesNavbar>
       </Layout.PageHeader>
       <Layout.Body margin={false}>
-        {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (
+        {branch === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (
           <MintPreviewWarningHeader
             organisation={current.deployment.repository.organisation}
             repository={current.deployment.repository}

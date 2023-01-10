@@ -1,3 +1,4 @@
+import { AssetDeploymentBranch } from '@prisma/client'
 import { getClaimTime } from '@server/common/ethers-get-contract-claim-time'
 import { getCollectionSize } from '@server/common/ethers-get-contract-collection-size'
 import { getMaxAllocationPerAddress } from '@server/common/ethers-get-contract-max-allocation-per-address'
@@ -70,6 +71,38 @@ export const contractDeploymentRouter = router({
     /** Return */
     return { deployment, contract }
   }),
+  findProductionContract: publicProcedure
+    .input(
+      z.object({
+        repositoryName: z.string(),
+        organisationName: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryName, organisationName } = input
+      const deployment = await ctx.prisma.contractDeployment.findFirst({
+        where: {
+          repository: {
+            name: repositoryName,
+            organisation: {
+              name: organisationName,
+            },
+          },
+          assetDeployment: {
+            branch: AssetDeploymentBranch.PRODUCTION,
+          },
+        },
+      })
+
+      if (!deployment) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No production contract found`,
+        })
+      }
+
+      return deployment
+    }),
   findContractDataByAddress: publicProcedure.input(z.object({ address: z.string(), chainId: z.number() })).query(async ({ ctx, input }) => {
     const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}`)
     if (!response.ok) {

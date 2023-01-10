@@ -4,7 +4,7 @@ import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from 'src/server/db/client'
 
-export const Page: NextPage = () => <Mint type={AssetDeploymentBranch.PREVIEW} />
+export const Page: NextPage = () => <Mint branch={AssetDeploymentBranch.PREVIEW} />
 
 /**
  * If user is authenticated, redirect the user to his contract deployment.

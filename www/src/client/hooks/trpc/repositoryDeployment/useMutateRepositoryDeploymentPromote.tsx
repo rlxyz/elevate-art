@@ -1,11 +1,14 @@
+import { useQueryContractDeploymentProduction } from '@components/explore/SaleLayout/useQueryContractDeploymentProduction'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
 import { AssetDeploymentBranch } from '@prisma/client'
 import produce from 'immer'
+import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateRepositoryDeploymentPromote = () => {
   const ctx = trpc.useContext()
+  const { refetch } = useQueryContractDeploymentProduction()
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.repository.promoteAssetDeployment.useMutation({
@@ -21,9 +24,11 @@ export const useMutateRepositoryDeploymentPromote = () => {
           if (!old) return
           old.branch = AssetDeploymentBranch.PREVIEW
         })
-        notifySuccess(`You have delete an existing deployment.`)
+        notifySuccess(`You have promoted a deployment to ${toPascalCaseWithSpace(AssetDeploymentBranch.PRODUCTION)}`)
         return next
       })
+      // refetch the production deployment
+      refetch()
     },
     onError: (err) => {
       notifyError(err.message)

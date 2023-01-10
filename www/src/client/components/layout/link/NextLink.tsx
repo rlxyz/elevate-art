@@ -1,6 +1,8 @@
+import clsx from 'clsx'
 import { default as NextLink } from 'next/link'
 import React from 'react'
-import Link, { LinkProps } from './Link'
+import type { LinkProps } from './Link'
+import LinkIcon from './LinkIcon'
 
 const defaultProps: LinkProps = {
   href: '/',
@@ -19,15 +21,27 @@ const NextLinkComponent = React.forwardRef<HTMLAnchorElement, React.PropsWithChi
     ref: React.Ref<HTMLAnchorElement>
   ) => {
     return (
-      <NextLink href={href || '/404'} legacyBehavior>
-        <Link href={href} className={className} ref={ref} color={color} underline={underline} block={block} icon={icon} {...props}>
-          {children}
-        </Link>
+      <NextLink
+        href={href || '/404'}
+        className={clsx(
+          'inline-flex items-baseline no-underline',
+          'text-inherit w-full h-auto',
+          underline && 'hover:underline hover:text-blueHighlight',
+          color && 'text-blueHighlight',
+          block && 'rounded-[5px] hover:bg-accents_8 px-3 py-2',
+          block && color && 'hover:bg-lightGray',
+          className
+        )}
+        ref={ref}
+        {...props}
+      >
+        {children}
+        {icon && <LinkIcon />}
       </NextLink>
     )
   }
 )
 
 NextLinkComponent.defaultProps = defaultProps
-NextLinkComponent.displayName = 'Link'
+NextLinkComponent.displayName = 'NextLink'
 export default NextLinkComponent

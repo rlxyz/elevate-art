@@ -5,6 +5,7 @@ import Image from 'next/image'
 import type { FC, PropsWithChildren, ReactNode } from 'react'
 import { Children, Fragment, useState } from 'react'
 import { default as NextLinkComponent } from '../link/NextLink'
+import { LoadingBar } from '../loading/LoadingBar'
 import SearchComponent from '../search/Search'
 
 type Props = {
@@ -84,16 +85,20 @@ export const ZoneRoutesNavbarPopover: FC<{
   )
 }
 
-const AppRoutesNavbarItem: FC<PropsWithChildren<{ children?: ReactNode; label: string | ReactNode; href: string }>> = ({
-  children,
-  label,
-  href,
-}) => (
+const AppRoutesNavbarItem: FC<
+  PropsWithChildren<{ children?: ReactNode; label: string | ReactNode; href: string; loading?: boolean; disabled?: boolean }>
+> = ({ children, label, href, loading = false, disabled = false }) => (
   <div className='flex space-x-1'>
-    <NextLinkComponent href={href} className='w-fit'>
-      <span className='text-xs'>{label}</span>
-    </NextLinkComponent>
-    {children}
+    {loading ? (
+      <LoadingBar />
+    ) : (
+      <>
+        <NextLinkComponent aria-disabled={disabled} href={href} className='w-fit'>
+          <span className='text-xs'>{label}</span>
+        </NextLinkComponent>
+        {children}
+      </>
+    )}
   </div>
 )
 
