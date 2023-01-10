@@ -129,7 +129,6 @@ const SaleConfigInput = ({
             onChange: (e) => {
               if (e.target.value) {
                 const date = new Date(`${e.target.value}`)
-                console.log(date, `${e.target.value}`, new Date().toISOString())
                 setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
               }
             },
@@ -143,8 +142,10 @@ const SaleConfigInput = ({
             valueAsNumber: true,
             onChange: (e) => {
               if (e.target.value) {
-                const price = Number(e.target.value)
-                setValue(`saleConfigs.${index}.mintPrice`, BigNumber.from(price))
+                const value = e.target.value.split('.')
+                const decimal = value[1] ? value[1].slice(0, 18) : '0'
+                const price = BigNumber.from(`${value[0]}${decimal.padEnd(18, '0')}`)
+                setValue(`saleConfigs.${index}.mintPrice`, price)
               }
             },
           })}
