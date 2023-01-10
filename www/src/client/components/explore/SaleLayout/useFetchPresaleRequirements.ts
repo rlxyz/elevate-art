@@ -1,4 +1,3 @@
-import { useGetMerkleTree } from '@components/create/allowlist/useGetMerkleTree'
 import type { ContractDeployment } from '@prisma/client'
 import { WhitelistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
@@ -6,6 +5,7 @@ import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
 import { useFetchContractData, useFetchContractUserData } from './useFetchContractData'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
+import { useUserMerkleProof } from './useUserMerkleProof'
 
 export const useFetchPresaleRequirements = ({
   session,
@@ -57,10 +57,7 @@ export const useFetchPresaleRequirements = ({
     type: WhitelistType.ALLOWLIST,
   })
 
-  const { merkleTree } = useGetMerkleTree({
-    data: allContractDeploymentWhitelist?.whitelists,
-    enabled: true,
-  })
+  const { root, proof } = useUserMerkleProof({ type: WhitelistType.ALLOWLIST })
 
   // mint allocation
   const presaleMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)
@@ -78,7 +75,7 @@ export const useFetchPresaleRequirements = ({
       ...fetchedContractData,
       ...fetchedContractUserData,
       userMintLeft,
-      allowToMint: userMintLeft.gt(0) && merkleTree?.getHexRoot() === fetchedContractData.presaleMerkleRoot,
+      allowToMint: root && proof && userMintLeft.gt(0) && root === fetchedContractData?.claimMerkleRoot,
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
