@@ -1,7 +1,7 @@
-import { RepositoryBannerImageForm } from '@components/create/repository-setting/RepositoryBannerImageForm'
-import { RepositoryDescriptionForm } from '@components/create/repository-setting/RepositoryDescriptionForm'
-import { RepositoryLogoImageForm } from '@components/create/repository-setting/RepositoryLogoImageForm'
-import { RepositoryNameForm } from '@components/create/repository-setting/RepositoryNameForm'
+import { RepositoryArtistForm } from '@components/create/repository-setting/RepositoryArtistForm'
+import { RepositoryExternalUrlForm } from '@components/create/repository-setting/RepositoryExternalUrlForm'
+import { RepositoryLicenseForm } from '@components/create/repository-setting/RepositoryLicenseForm'
+import { RepositoryTokenNameForm } from '@components/create/repository-setting/RepositoryTokenNameForm'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -128,7 +128,7 @@ const Page: NextPage = () => {
                         ZoneNavigationEnum.enum.Create,
                         CollectionNavigationEnum.enum.Settings
                       ),
-                      selected: true,
+                      selected: false,
                     },
                     {
                       name: RepositorySettingsNavigationEnum.enum.Metadata,
@@ -139,17 +139,17 @@ const Page: NextPage = () => {
                         CollectionNavigationEnum.enum.Settings,
                         RepositorySettingsNavigationEnum.enum.Metadata
                       ),
-                      selected: false,
+                      selected: true,
                     },
                   ]}
                 />
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  <RepositoryNameForm />
-                  <RepositoryDescriptionForm />
-                  <RepositoryLogoImageForm />
-                  <RepositoryBannerImageForm />
+                  <RepositoryTokenNameForm />
+                  <RepositoryArtistForm />
+                  <RepositoryExternalUrlForm />
+                  <RepositoryLicenseForm />
                 </div>
               </div>
             </div>

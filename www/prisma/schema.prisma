@@ -113,6 +113,9 @@ model Repository {
     description    String? @db.Text
     bannerImageUrl String? @db.VarChar(255)
     logoImageUrl   String? @db.VarChar(255)
+    artist         String? @db.VarChar(255)
+    license        String? @db.VarChar(255)
+    externalUrl    String? @db.VarChar(255)
 
     layers      LayerElement[]
     collections Collection[]

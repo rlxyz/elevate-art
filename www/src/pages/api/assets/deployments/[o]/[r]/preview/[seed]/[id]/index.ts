@@ -3,7 +3,7 @@ import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getDeploymentTokenImage } from 'src/client/utils/image'
+import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -60,7 +60,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const tokens = v.one(v.parseLayer(layerElements), vseed)
 
   const response = {
-    name: `${deployment.repository.tokenName || ''} #${id}`,
+    name: [deployment.repository.tokenName || '', `#${id}`].join(' '),
     description: deployment.repository.description,
     tokenHash: vseed,
     image: getDeploymentTokenImage({
@@ -75,18 +75,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!layerElement) return
       const traitElement = layerElement.traits.find((x) => x.id === t)
       if (!traitElement) return
-
       return {
         trait_type: layerElement.name,
         value: traitElement.name,
       }
     }),
-    logoImage: deployment.repository.logoImageUrl,
-    bannerImage: deployment.repository.bannerImageUrl,
-    artist: 'Jacob Riglin <https://twitter.com/jacobriglin>',
-    license: 'CC BY-NC 4.0',
-    script: 'js',
-    external_url: 'https://journey.dreamlab.art',
+    logoImage: getBannerForRepository({ r: deployment.repository.id }),
+    bannerImage: getLogoForRepository({ r: deployment.repository.id }),
+    artist: deployment.repository.artist,
+    license: deployment.repository.license,
+    external_url: deployment.repository.externalUrl,
   }
 
   return res

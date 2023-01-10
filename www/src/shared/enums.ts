@@ -99,6 +99,14 @@ export const RepositoryNavigationEnum = z.nativeEnum(
 )
 export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
+export const RepositorySettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    General: 'general',
+    Metadata: 'metadata',
+  })
+)
+export type RepositorySettingsNavigationType = z.infer<typeof RepositorySettingsNavigationEnum>
+
 export const ContractSettingsNavigationEnum = z.nativeEnum(
   Object.freeze({
     MintTime: 'mintTime',
@@ -114,13 +122,6 @@ export const CollectionNavigationEnum = z.nativeEnum(
     Rarity: 'rarity',
     Rules: 'rules',
     Settings: 'settings',
-  })
-)
-export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
-
-export const CollectionSettingsNavigationEnum = z.nativeEnum(
-  Object.freeze({
-    General: 'general',
   })
 )
 

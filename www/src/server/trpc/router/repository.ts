@@ -320,4 +320,75 @@ export const repositoryRouter = router({
         data: { tokenName },
       })
     }),
+
+  updateArtistName: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        artist: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, artist } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { artist },
+      })
+    }),
+
+  updateExternalUrl: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        externalUrl: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, externalUrl } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { externalUrl },
+      })
+    }),
+  updateLicense: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        license: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, license } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { license },
+      })
+    }),
 })

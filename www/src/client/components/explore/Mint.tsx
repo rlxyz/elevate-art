@@ -98,19 +98,17 @@ export const Mint = ({ type }: { type: AssetDeploymentBranch }) => {
         </PageRoutesNavbar>
       </Layout.PageHeader>
       <Layout.Body margin={false}>
-        <>
-          {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (
-            <MintPreviewWarningHeader
-              organisation={current.deployment.repository.organisation}
-              repository={current.deployment.repository}
-              assetDeployment={current.deployment.assetDeployment}
-              contractDeployment={current.deployment}
-            />
-          )}
-        </>
+        {type === AssetDeploymentBranch.PREVIEW && current && current.deployment && current.deployment.assetDeployment && (
+          <MintPreviewWarningHeader
+            organisation={current.deployment.repository.organisation}
+            repository={current.deployment.repository}
+            assetDeployment={current.deployment.assetDeployment}
+            contractDeployment={current.deployment}
+          />
+        )}
 
         <CollectionLayout>
-          <CollectionLayout.Header contractDeployment={current?.deployment} repository={current?.deployment.repository} />
+          <CollectionLayout.Header repository={current?.deployment.repository} />
           <CollectionLayout.Description
             organisation={current?.deployment?.repository.organisation}
             repository={current?.deployment?.repository}

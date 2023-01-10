@@ -47,9 +47,7 @@ export const getRepositoryBannerImage = ({
   return new Promise(async (resolve, reject) => {
     const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/assets/banner`, {
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
-      // secure: true,
-      transformation: IMAGE_QUALITY_SETTINGS,
-      // version: version,
+      transformation: [{ quality: 'auto' }, { width: 1400, height: 350, crop: 'scale' }],
     })
     fetch(url)
       .then(async (res) => {
@@ -73,9 +71,7 @@ export const getRepositoryLogoImage = ({
   return new Promise(async (resolve, reject) => {
     const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/assets/logo`, {
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
-      // secure: true,
-      transformation: IMAGE_QUALITY_SETTINGS,
-      // version: version,
+      transformation: [{ quality: 'auto' }, { width: 350, height: 350, crop: 'scale' }],
     })
     fetch(url)
       .then(async (res) => {

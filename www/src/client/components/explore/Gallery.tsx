@@ -100,7 +100,7 @@ export const Gallery = ({ type }: { type: AssetDeploymentBranch }) => {
         </>
 
         <CollectionLayout>
-          <CollectionLayout.Header contractDeployment={current?.deployment} repository={current?.deployment.repository} />
+          <CollectionLayout.Header repository={current?.deployment.repository} />
           <CollectionLayout.Description
             organisation={current?.deployment?.repository?.organisation}
             repository={current?.deployment?.repository}
