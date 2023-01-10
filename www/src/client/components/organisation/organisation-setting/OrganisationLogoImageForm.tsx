@@ -1,11 +1,11 @@
+import { LogoImageUpload } from '@components/create/repository-setting/LogoImageUpload'
 import SettingLayout from '@components/layout/settings'
-import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { LogoImageUpload } from './LogoImageUpload'
 
-export const RepositoryLogoImageForm = () => {
-  const { current: repository } = useQueryRepositoryFindByName()
+export const OrganisationLogoImageForm = () => {
+  const { current: organisation } = useQueryOrganisationFindAll()
   return (
     <SettingLayout withSaveButton={false}>
       <SettingLayout.Header title='Logo' />
@@ -18,7 +18,7 @@ export const RepositoryLogoImageForm = () => {
               <strong>{formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}</strong>.
             </p>
           </div>
-          {repository && <LogoImageUpload id={repository.id} />}
+          {organisation && <LogoImageUpload id={organisation.id} />}
         </div>
       </SettingLayout.Body>
     </SettingLayout>

@@ -187,4 +187,29 @@ export const organisationRouter = router({
         },
       })
     }),
+  updateDescription: protectedProcedure
+    .input(
+      z.object({
+        organisationId: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { organisationId, description } = input
+
+      const organisation = await ctx.prisma.organisation.findFirst({
+        where: { id: organisationId },
+      })
+
+      if (!organisation) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.organisation.update({
+        where: { id: organisationId },
+        data: {
+          description,
+        },
+      })
+    }),
 })

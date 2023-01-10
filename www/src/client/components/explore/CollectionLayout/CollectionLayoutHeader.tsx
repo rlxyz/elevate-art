@@ -12,7 +12,7 @@ export const CollectionLayoutHeader: React.FC<MintLayoutHeaderProps> = ({ reposi
   return (
     <div>
       <div className='relative overflow-hidden'>
-        <BannerDisplay repositoryId={repository?.id} />
+        <BannerDisplay id={repository?.id} />
       </div>
       <LayoutContainer border='none'>
         <LogoDisplay repositoryId={repository?.id} />

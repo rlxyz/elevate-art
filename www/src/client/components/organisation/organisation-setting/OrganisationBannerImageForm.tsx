@@ -1,11 +1,11 @@
+import { BannerImageUpload } from '@components/create/repository-setting/BannerImageUpload'
 import SettingLayout from '@components/layout/settings'
-import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/client.mjs'
-import { BannerImageUpload } from './BannerImageUpload'
 
-export const RepositoryBannerImageForm = () => {
-  const { current: repository } = useQueryRepositoryFindByName()
+export const OrganisationBannerImageForm = () => {
+  const { current: organisation } = useQueryOrganisationFindAll()
   return (
     <SettingLayout withSaveButton={false}>
       <SettingLayout.Header title='Banner' />
@@ -18,7 +18,7 @@ export const RepositoryBannerImageForm = () => {
               <strong>{formatBytes(env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED)}</strong>.
             </p>
           </div>
-          {repository && <BannerImageUpload id={repository.id} />}
+          {organisation && <BannerImageUpload id={organisation.id} />}
         </div>
       </SettingLayout.Body>
     </SettingLayout>

@@ -20,6 +20,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.setHeader('Content-Type', 'image/png').status(200).send(buffer)
     })
     .catch((err) => {
+      console.log('doesnt exist', err)
       return res.status(500).send(err)
     })
 

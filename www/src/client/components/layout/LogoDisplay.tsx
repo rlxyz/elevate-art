@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { env } from 'src/env/client.mjs'
 
-export const createLogoUrl = ({ r }: { r: string }) => {
-  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${env.NEXT_PUBLIC_NODE_ENV}/${r}/assets/logo`
+export const createLogoUrl = ({ id }: { id: string }) => {
+  return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets/logo`
 }
 
 export const LogoDisplay = ({ repositoryId }: { repositoryId?: string | null }) => {
@@ -13,9 +13,12 @@ export const LogoDisplay = ({ repositoryId }: { repositoryId?: string | null }) 
           <Image
             width={400}
             height={400}
-            src={createLogoUrl({ r: repositoryId })}
+            src={createLogoUrl({ id: repositoryId })}
             alt='collection-logo'
             className='object-cover aspect-auto overflow-hidden rounded-[5px]'
+            onError={(e) => {
+              e.currentTarget.src = '/images/avatar-blank.png'
+            }}
           />
         )}
       </div>

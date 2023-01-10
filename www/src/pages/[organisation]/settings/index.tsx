@@ -1,13 +1,16 @@
 import AppRoutesNavbar from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
+import { OrganisationBannerImageForm } from '@components/organisation/organisation-setting/OrganisationBannerImageForm'
+import { OrganisationDescriptionForm } from '@components/organisation/organisation-setting/OrganisationDescriptionForm'
+import { OrganisationLogoImageForm } from '@components/organisation/organisation-setting/OrganisationLogoImageForm'
+import { OrganisationNameForm } from '@components/organisation/organisation-setting/OrganisationNameForm'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { OrganisationGeneralSettings } from 'src/client/components/organisation/OrganisationSettings'
 import { routeBuilder } from 'src/client/utils/format'
 import {
   DashboardNavigationEnum,
@@ -73,7 +76,10 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  <OrganisationGeneralSettings />
+                  <OrganisationNameForm />
+                  <OrganisationDescriptionForm />
+                  <OrganisationLogoImageForm />
+                  <OrganisationBannerImageForm />
                 </div>
               </div>
             </div>

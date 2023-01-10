@@ -1,24 +1,21 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
+import { createBannerUrl } from '@components/layout/BannerDisplay'
 import { useNotification } from '@hooks/utils/useNotification'
-import type { Repository } from '@prisma/client'
 import { useCallback, useEffect } from 'react'
 import type { FileWithPath } from 'react-dropzone'
 import { useDropzone } from 'react-dropzone'
 import { createCloudinaryFormDataForBanner } from 'src/client/utils/cloudinary'
 import { formatBytes } from 'src/client/utils/format'
-import { getBannerForRepository } from 'src/client/utils/image'
 import { env } from 'src/env/client.mjs'
 
-export const BannerImageUpload = ({ repository }: { repository: Repository }) => {
+export const BannerImageUpload = ({ id }: { id: string }) => {
   const { notifyError, notifySuccess } = useNotification()
   const onDrop = useCallback(async (files: FileWithPath[]) => {
     if (files.length === 0) return
 
-    if (!repository?.id) {
+    if (!id) {
       return notifyError('Something went wrong. Please try again.')
     }
-
-    console.log('files', files)
 
     const filePromises = files.map(async (file) => {
       return new Promise(async (resolve, reject) => {
@@ -29,17 +26,17 @@ export const BannerImageUpload = ({ repository }: { repository: Repository }) =>
           try {
             const response = await fetch(`https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
               method: 'POST',
-              body: createCloudinaryFormDataForBanner(file, repository.id),
+              body: createCloudinaryFormDataForBanner(file, id),
             })
             const data = await response.json()
             const { secure_url } = data as { secure_url: string }
             if (secure_url) {
-              return resolve({ repositoryId: repository.id, imageUrl: secure_url })
+              return resolve({ repositoryId: id, imageUrl: secure_url })
             }
-            return reject({ repositoryId: repository.id, error: 'Something went wrong. Please try again.' })
+            return reject({ repositoryId: id, error: 'Something went wrong. Please try again.' })
           } catch (error) {
             console.error(error)
-            return reject({ repositoryId: repository.id, error: 'Something went wrong. Please try again.' })
+            return reject({ repositoryId: id, error: 'Something went wrong. Please try again.' })
           }
         }
         reader.readAsArrayBuffer(file)
@@ -76,11 +73,12 @@ export const BannerImageUpload = ({ repository }: { repository: Repository }) =>
       <button type='button' onClick={open}>
         <AvatarComponent
           isSquare
-          src={
-            getBannerForRepository({
-              r: repository?.id,
-            }) || '/images/avatar-blank.png'
-          }
+          src={createBannerUrl({
+            id: id,
+          })}
+          onError={(e) => {
+            e.currentTarget.src = '/images/avatar-blank.png'
+          }}
           variant='lg'
         />
       </button>

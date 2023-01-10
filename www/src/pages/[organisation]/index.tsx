@@ -5,6 +5,7 @@ import Card from '@components/layout/card/Card'
 import { DescriptionWithDisclouser } from '@components/layout/DescriptionWithDisclouser'
 import AppRoutesNavbar from '@components/layout/header/AppRoutesNavbarProps'
 import NextLinkComponent from '@components/layout/link/NextLink'
+import { createLogoUrl } from '@components/layout/LogoDisplay'
 import SearchComponent from '@components/layout/search/Search'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import { CollectionIcon, CubeIcon, CurrencyDollarIcon } from '@heroicons/react/outline'
@@ -23,7 +24,16 @@ const OrganisationDisplayProfile = ({ organisation }: { organisation: Organisati
   return (
     <div className='flex flex-row space-x-6'>
       <div>
-        <AvatarComponent src={organisation?.logoImageUrl || '/images/avatar-blank.png'} alt='team-logo' variant='lg' />
+        {organisation && (
+          <AvatarComponent
+            src={createLogoUrl({ id: organisation.id })}
+            alt='team-logo'
+            variant='lg'
+            onError={(e) => {
+              e.currentTarget.src = '/images/avatar-blank.png'
+            }}
+          />
+        )}
       </div>
       <div className='flex flex-col justify-center space-y-1'>
         <h1 className='text-sm font-bold'>{organisation?.name}</h1>
@@ -51,7 +61,7 @@ const OrganisationDisplayHeader = ({ organisation }: { organisation: Organisatio
           </NextLinkComponent>
         </div>
       </div>
-      <BannerDisplay src={organisation?.bannerImageUrl} />
+      <BannerDisplay id={organisation?.id} />
     </div>
   )
 }
@@ -154,7 +164,7 @@ const OrganisationDisplayLayout = ({
 const Page: NextPage = () => {
   const router = useRouter()
   const { organisation: o } = router.query as { organisation: string }
-  const { current: organisation } = useQueryOrganisationFindByName({ name: o })
+  const { current: organisation } = useQueryOrganisationFindByName({ organisationName: o })
   const { all: repositories } = useQueryOrganisationFindAllRepositoryProduction({ organisationName: o })
   return (
     <Layout>
@@ -165,26 +175,6 @@ const Page: NextPage = () => {
           </AppRoutesNavbar.Item>
         </AppRoutesNavbar>
       </Layout.AppHeader>
-      {/* <Layout.PageHeader>
-        <PageRoutesNavbar>
-          {[
-            {
-              name: OrganisationNavigationEnum.enum.Overview,
-              href: routeBuilder(organisation?.name),
-              enabled: true,
-              loading: false,
-            },
-            {
-              name: DashboardNavigationEnum.enum.Account,
-              href: routeBuilder(organisation?.name, OrganisationNavigationEnum.enum.Settings),
-              enabled: false,
-              loading: false,
-            },
-          ].map((item) => (
-            <PageRoutesNavbar.Item key={item.name} opts={item} />
-          ))}
-        </PageRoutesNavbar>
-      </Layout.PageHeader> */}
       <Layout.Body>
         <OrganisationDisplayLayout organisation={organisation} repositories={repositories} />
       </Layout.Body>

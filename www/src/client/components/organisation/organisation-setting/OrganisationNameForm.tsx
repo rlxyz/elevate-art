@@ -3,7 +3,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
 
-export const OrganisationGeneralSettings = () => {
+export const OrganisationNameForm = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
   const {
     register,
@@ -20,13 +20,14 @@ export const OrganisationGeneralSettings = () => {
       onSubmit={handleSubmit((data) => {
         console.log(data)
       })}
+      disabled={true}
     >
-      <SettingLayout.Header title='Team Name' description='Used to identify your teams name on elevate.art' />
+      <SettingLayout.Header title='Team Name' description='Used to identify your Teams name on elevate.art' />
       <SettingLayout.Body>
         <div className='w-fit rounded-[5px] border border-mediumGrey'>
           <div className='h-full grid grid-cols-10 text-sm'>
             <div className='col-span-4 border-r border-r-mediumGrey rounded-l-[5px] bg-lightGray text-darkGrey flex items-center'>
-              <span className='px-4 py-2 text-xs'>{`elevate.art/`}</span>
+              <span className='px-4 py-2 text-xs'>{`${'elevate.art'}/`}</span>
             </div>
             <div className='col-span-6 flex items-center'>
               <input
@@ -34,10 +35,12 @@ export const OrganisationGeneralSettings = () => {
                   'text-xs p-2 w-full h-full rounded-r-[5px]', //! @note this input doesn't have border
                   'invalid:border-redError invalid:text-redError',
                   'focus:invalid:border-redError focus:invalid:ring-redError',
-                  'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight'
+                  'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',
+                  'disabled:cursor-not-allowed disabled:opacity-60 disabled:ring-none disabled:border-none'
                 )}
+                disabled={true}
                 aria-invalid={errors.name ? 'true' : 'false'}
-                placeholder={organisation?.name}
+                defaultValue={organisation?.name}
                 {...register('name', {
                   required: true,
                   maxLength: 25,
@@ -45,11 +48,11 @@ export const OrganisationGeneralSettings = () => {
                   pattern: /^[a-zA-Z0-9-]+$/,
                   validate: (value) => {
                     if (value === organisation?.name) {
-                      return 'You supplied the same team name'
+                      return 'You supplied the same Team name'
                     }
 
                     //! @note right now, this is disabled
-                    return 'As of right now, we are not allowing renaming of teams.'
+                    return 'As of right now, we are not allowing renaming of Teams.'
                   },
                 })}
               />

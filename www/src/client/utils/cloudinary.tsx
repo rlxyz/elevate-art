@@ -53,24 +53,24 @@ export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement
   return data
 }
 
-export const createCloudinaryFormDataForBanner = (file: FileWithPath, repositoryId: string) => {
+export const createCloudinaryFormDataForBanner = (file: FileWithPath, id: string) => {
   const data = new FormData()
   data.append('file', file)
   data.append('public_id', 'banner')
   data.append('original_filename', 'banner')
   data.append('upload_preset', 'collection-upload')
   data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
-  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/assets`)
+  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets`)
   return data
 }
 
-export const createCloudinaryFormDataForLogo = (file: FileWithPath, repositoryId: string) => {
+export const createCloudinaryFormDataForLogo = (file: FileWithPath, id: string) => {
   const data = new FormData()
   data.append('file', file)
   data.append('public_id', 'logo')
   data.append('original_filename', 'logo')
   data.append('upload_preset', 'collection-upload')
   data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
-  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/assets`)
+  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets`)
   return data
 }
