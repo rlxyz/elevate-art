@@ -128,8 +128,7 @@ const SaleConfigInput = ({
             valueAsDate: true,
             onChange: (e) => {
               if (e.target.value) {
-                const date = new Date(`${e.target.value}`)
-                setValue(`saleConfigs.${index}.startTimestamp`, date)
+                setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
               }
             },
           })}

@@ -1,6 +1,5 @@
 import type { Whitelist } from '@prisma/client'
 import { createMerkleTree } from '@utils/merkle-roots'
-import { convertListToMap } from '@utils/object-utils'
 import { useEffect, useState } from 'react'
 
 export const useSetMerkleRootData = ({ enabled, data }: { enabled: boolean; data: Whitelist[] | undefined }) => {
@@ -8,18 +7,7 @@ export const useSetMerkleRootData = ({ enabled, data }: { enabled: boolean; data
 
   useEffect(() => {
     if (!data) return
-    setMerkleRoot(
-      createMerkleTree(
-        convertListToMap(
-          data.map((x) => ({
-            address: x.address,
-            mint: String(x.mint),
-          })),
-          'address',
-          'mint'
-        )
-      ).getHexRoot()
-    )
+    setMerkleRoot(createMerkleTree(data).getHexRoot())
   }, [data])
 
   return { merkleRoot, setMerkleRoot }

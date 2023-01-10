@@ -1,6 +1,5 @@
 import { useGetMerkleTree } from '@components/create/allowlist/useGetMerkleTree'
 import type { WhitelistType } from '@prisma/client'
-import { generateLeaf } from '@utils/merkle-roots'
 import { BigNumber } from 'ethers'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
@@ -9,7 +8,7 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
     type,
   })
 
-  const { merkleTree } = useGetMerkleTree({
+  const { merkleTree, getHexProof, root } = useGetMerkleTree({
     data: all?.whitelists,
   })
 
@@ -19,9 +18,7 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
     }
   }
 
-  const leaf: Buffer = generateLeaf(current.address, current.mint.toString())
-
-  const proof: string[] = merkleTree.getHexProof(leaf)
+  const proof = getHexProof({ current })
 
   if (!proof || proof.length === 0) {
     return {
@@ -30,6 +27,7 @@ export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
   }
 
   return {
+    root,
     proof,
     mint: BigNumber.from(current.mint),
   }
