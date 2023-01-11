@@ -8,7 +8,7 @@ import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateRepositoryDeploymentPromote = () => {
   const ctx = trpc.useContext()
-  const { refetch } = useQueryContractDeploymentProduction()
+  const { refetch } = useQueryContractDeploymentProduction({})
   const { notifySuccess, notifyError } = useNotification()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.repository.promoteAssetDeployment.useMutation({

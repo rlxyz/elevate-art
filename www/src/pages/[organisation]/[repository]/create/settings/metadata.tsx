@@ -32,10 +32,14 @@ const Page: NextPage = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)} loading={!organisation?.name}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={routeBuilder(organisation?.name, repository?.name)}
+              loading={!organisation?.name}
+            />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Create)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}
@@ -129,6 +133,7 @@ const Page: NextPage = () => {
                         CollectionNavigationEnum.enum.Settings
                       ),
                       selected: false,
+                      disabled: !organisation?.name || !repository?.name,
                     },
                     {
                       name: RepositorySettingsNavigationEnum.enum.Metadata,
@@ -140,6 +145,7 @@ const Page: NextPage = () => {
                         RepositorySettingsNavigationEnum.enum.Metadata
                       ),
                       selected: true,
+                      disabled: !organisation?.name || !repository?.name,
                     },
                   ]}
                 />

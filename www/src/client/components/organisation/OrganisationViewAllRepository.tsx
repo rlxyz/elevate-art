@@ -75,7 +75,7 @@ const ViewAllRepositories = () => {
               className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black')}
               onClick={(e: any) => {
                 e.preventDefault()
-                router.push(`${organisationName}/new`)
+                router.push(routeBuilder(organisationName, 'new'))
               }}
             >
               Add New
