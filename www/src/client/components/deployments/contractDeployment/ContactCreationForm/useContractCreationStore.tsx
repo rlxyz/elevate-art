@@ -41,7 +41,7 @@ const initialState: ContractCreationStoreInterface = {
     owner: '0x' as `0x${string}`,
     mintType: AssetDeploymentType.BASIC,
     chainId: 5,
-    totalSupply: BigNumber.from(0),
+    // totalSupply: BigNumber.from(0),
     collectionSize: BigNumber.from(0),
   },
   saleConfig: new Map<SaleConfigType, SaleConfig>([

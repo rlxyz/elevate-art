@@ -114,18 +114,20 @@ const Page = () => {
             <div className='grid grid-cols-6 gap-9 py-16'>
               <div className='col-span-2'>
                 <div className='border w-full h-52 border-blueHighlight rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'>
-                  <img
-                    src={getDeploymentTokenImage({
-                      o: organisation?.name,
-                      r: repository?.name,
-                      tokenId: 0,
-                      d: deployment?.name,
-                      branch: deployment?.branch,
-                    })}
-                    width={1000}
-                    alt={`${deployment?.address}-#${0}`}
-                    className='object-cover aspect-1 m-auto rounded-[5px]'
-                  />
+                  {organisation && repository && (
+                    <img
+                      src={getDeploymentTokenImage({
+                        o: organisation?.name,
+                        r: repository?.name,
+                        tokenId: 0,
+                        d: deployment?.name,
+                        branch: deployment?.branch,
+                      })}
+                      width={1000}
+                      alt={`${deployment?.contractDeployment?.address}-#${0}`}
+                      className='object-cover aspect-1 m-auto rounded-[5px]'
+                    />
+                  )}
                 </div>
               </div>
               <div className='col-span-3'>

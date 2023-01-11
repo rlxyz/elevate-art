@@ -12,7 +12,10 @@ export const useMutateRepositoryDeploymentCreate = () => {
       ctx.repository.findAllAssetDeployments.setData({ repositoryId }, (old) => {
         if (!old) return old
         const next = produce(old, (draft) => {
-          draft.unshift(data)
+          draft.unshift({
+            ...data,
+            contractDeployment: null,
+          })
         })
         notifySuccess(`You have created a new deployment.`)
         return next

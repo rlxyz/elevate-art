@@ -9,9 +9,9 @@ export const ContractSaleAnalyticsLayout = ({ title, saleConfig }: { title: stri
       <AnalyticsLayout.Body>
         <div className='flex flex-col space-y-3'>
           {[
-            { key: 'Start Timestamp', value: saleConfig.startTimestamp.toLocaleString(), type: 'Basic' },
-            { key: 'Mint Price', value: saleConfig.mintPrice.toString(), type: 'Basic' },
-            { key: 'Max Mint Per Address', value: saleConfig.maxAllocationPerAddress.toString(), type: 'Basic' },
+            { key: 'Start Timestamp', value: saleConfig?.startTimestamp.toLocaleString(), type: 'Basic' },
+            { key: 'Mint Price', value: saleConfig?.mintPrice.toString(), type: 'Basic' },
+            { key: 'Max Mint Per Address', value: saleConfig?.maxAllocationPerAddress.toString(), type: 'Basic' },
           ].map(({ key, value, type }) => (
             <article key={key} className='flex justify-between w-full'>
               <h3 className='text-xs'>{key}</h3>

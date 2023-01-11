@@ -35,7 +35,7 @@ export const ContractSummary = ({
     owner: '0x' as `0x${string}`,
     mintType: AssetDeploymentType.BASIC,
     chainId: 99,
-    totalSupply: BigNumber.from(0),
+    // totalSupply: BigNumber.from(0),
     collectionSize: BigNumber.from(0),
   }
 

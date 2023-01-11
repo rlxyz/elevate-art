@@ -272,6 +272,9 @@ export const repositoryRouter = router({
           address,
           repositoryId: deployment.repositoryId,
         },
+        include: {
+          assetDeployment: true,
+        },
       })
     }),
   updateDescription: protectedProcedure
