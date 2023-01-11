@@ -1,12 +1,13 @@
 import { LayoutContainer } from '@components/layout/core/Layout'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import { ArrowCircleRightIcon, CubeIcon } from '@heroicons/react/outline'
+import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { CollectionNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
-import next from 'next'
 import { routeBuilder } from 'src/client/utils/format'
-import { ContractForm } from './ContractForm'
 
 const PostSuccessDeploy = () => {
+  const { current: organisation } = useQueryOrganisationFindAll()
+
   return (
     <div className='absolute w-screen left-0 bg-lightGray border-t border-mediumGrey h-full'>
       <LayoutContainer className='absolute -top-10' border='none'>
@@ -19,20 +20,20 @@ const PostSuccessDeploy = () => {
                   {
                     title: 'Go to Mint',
                     description: 'View your project and create new collections',
-                    href: routeBuilder(name, ZoneNavigationEnum.enum.Create),
-                    icon: (props: any) => <CubeIcon {...props} />,
+                    href: routeBuilder(organisation?.name, ZoneNavigationEnum.enum.Create),
+                    icon: (props: React.ComponentProps<'svg'>) => <CubeIcon {...props} />,
                   },
                   {
                     title: 'Add addresses into the whitelist',
                     description: 'Set the rarity percentages of your traits',
-                    href: routeBuilder(name, ZoneNavigationEnum.enum.Create, CollectionNavigationEnum.enum.Rarity),
-                    icon: (props: any) => <CubeIcon {...props} />,
+                    href: routeBuilder(organisation?.name, ZoneNavigationEnum.enum.Create, CollectionNavigationEnum.enum.Rarity),
+                    icon: (props: React.ComponentProps<'svg'>) => <CubeIcon {...props} />,
                   },
                   {
                     title: 'View your Contract on Etherscan',
                     description: 'Set the rarity percentages of your traits',
-                    href: routeBuilder(name, ZoneNavigationEnum.enum.Create, CollectionNavigationEnum.enum.Rarity),
-                    icon: (props: unknown) => <CubeIcon {...props} />,
+                    href: routeBuilder(organisation?.name, ZoneNavigationEnum.enum.Create, CollectionNavigationEnum.enum.Rarity),
+                    icon: (props: React.ComponentProps<'svg'>) => <CubeIcon {...props} />,
                   },
                 ].map((item) => (
                   <div key={item.title} className='pt-6 flex justify-between items-center'>
@@ -50,28 +51,6 @@ const PostSuccessDeploy = () => {
                 ))}
               </div>
             </div>
-          </div>
-          <div className='col-span-3'>
-            <ContractForm.Body.Summary
-              next={next}
-              previous={previous}
-              contractName={contractName}
-              contractSymbol={contractSymbol}
-              onClick={handleClick}
-              blockchain={blockchain}
-              mintType={mintType}
-              artCollection={artCollection}
-              currentSegment={currentSegment}
-              presale={presale}
-              presaleMaxMintAmount={presaleMaxMintAmount}
-              presaleMaxTransactionAmount={presaleMaxTransactionAmount}
-              presalePrice={presalePrice}
-              presaleSupply={presaleSupply}
-              publicSale={publicSale}
-              publicSaleMaxMintAmount={publicSaleMaxMintAmount}
-              publicSaleMaxTransactionAmount={publicSaleMaxTransactionAmount}
-              publicSalePrice={publicSalePrice}
-            />
           </div>
         </div>
       </LayoutContainer>

@@ -30,7 +30,7 @@ export const ContractDetailsForm: FC<ContractFormProps> = ({ title, description,
       symbol: '',
       mintType: deployment?.type as AssetDeploymentType,
       chainId: 5,
-      totalSupply: BigNumber.from(0),
+      // totalSupply: BigNumber.from(0),
       collectionSize: BigNumber.from(0),
     },
   })

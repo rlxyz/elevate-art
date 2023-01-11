@@ -71,7 +71,7 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
               next={next}
               previous={previous}
               onClick={handleClick}
-              currentSegment={currentSegment}
+              current={currentSegment}
               contractInformationData={contractInformationData}
               saleConfig={saleConfig}
             />

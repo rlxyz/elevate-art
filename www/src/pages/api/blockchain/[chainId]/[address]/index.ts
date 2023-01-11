@@ -1,3 +1,4 @@
+import { AssetDeploymentType } from '@prisma/client'
 import { getCollectionSize } from '@server/common/ethers-get-contract-collection-size'
 import { getContractName } from '@server/common/ethers-get-contract-name'
 import { getContractOwner } from '@server/common/ethers-get-contract-owner'
@@ -20,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     name,
     symbol,
     owner,
-    mintType: 'on-chain', //! @todo fix
+    mintType: AssetDeploymentType.BASIC,
     chainId,
     collectionSize,
   }

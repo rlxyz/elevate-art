@@ -8,14 +8,9 @@ export const useMutateRepositoryCreateDeploymentCreate = () => {
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.repository.createContractDeployment.useMutation({
     onSuccess: (data, variables) => {
-      // ctx.repository.findDeployments.setData({ repositoryId }, (old) => {
-      //   if (!old) return old
-      //   const next = produce(old, (draft) => {
-      //     draft.unshift(data)
-      //   })
-      //   notifySuccess(`You have created a new deployment.`)
-      //   return next
-      // })
+      if (!data.assetDeployment) return
+      ctx.repository.findContractDeploymentByName.setData({ repositoryId, name: data.assetDeployment.name }, data)
+      notifySuccess(`You have created a new deployment.`)
     },
     onError: (err) => {
       notifyError(err.message)

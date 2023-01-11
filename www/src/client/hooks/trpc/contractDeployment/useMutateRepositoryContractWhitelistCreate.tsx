@@ -1,12 +1,11 @@
-import { useSaleMintCountInput } from '@Components/SaleLayout/useSaleMintCountInput'
+import { useSaleMintCountInput } from '@components/explore/SaleLayout/useSaleMintCountInput'
+import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
+import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import type { Dispatch, SetStateAction } from 'react'
-import { COLLECTION_DISTRIBUTION, RhapsodyContractConfig } from 'src/client/utils/constant'
-import type { ContractData } from 'src/pages/[organisation]/[repository]/preview/ContractData'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-
-import { useNotification } from '../../hooks/useNotification'
+import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 // import { useNotification } from './useNotificationV1'
 
 interface UsePublicMint {
@@ -25,7 +24,7 @@ export const usePublicPurchase = ({
 }: {
   address: string | undefined | null
   enabled: boolean
-  contractData: ContractData
+  contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
 }): UsePublicMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
@@ -33,12 +32,12 @@ export const usePublicPurchase = ({
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
-    abi: RhapsodyContractConfig.contractInterface,
+    abi: RhapsodyContract.abi,
     functionName: 'publicMint',
     args: [mintCount],
     overrides: {
-      value: BigNumber.from(contractData.mintPrice).mul(mintCount),
-      gasLimit: COLLECTION_DISTRIBUTION.gasLimit,
+      value: BigNumber.from(contractData.publicPeriod.mintPrice).mul(mintCount),
+      gasLimit: BigNumber.from(200000),
     },
   })
 
