@@ -1,110 +1,85 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentBranch, AssetDeploymentType } from '@prisma/client'
-import { getTokenHash } from '@server/common/ethers-get-contract-token-hash'
-import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { getAssetDeploymentBucket, metadataCacheObject } from '@server/utils/gcp-storage'
+import { AssetDeploymentBranch } from '@prisma/client'
+import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { env } from 'src/env/server.mjs'
+import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
   if (!organisationName || !repositoryName || !id) {
-    return res.status(404).send('Not Found')
+    return res.status(400).send('Bad Request')
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
+  //! only users who are members of the organisation can access the image through stealth mode
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName } },
       branch: AssetDeploymentBranch.PRODUCTION,
+      repository: {
+        name: repositoryName,
+        organisation: {
+          name: organisationName,
+        },
+      },
     },
     include: { repository: true, contractDeployment: true },
   })
 
-  if (!deployment || !deployment.contractDeployment) {
+  if (!deployment) {
+    return res.status(404).send('Not Found')
+  }
+
+  if (!deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
   if (deployment.totalSupply <= parseInt(id)) {
-    return res.status(404).send('Not Found')
-  }
-
-  const { contractDeployment } = deployment
-
-  // check contract if token exists
-  const currentTotalSupply = (await getTotalSupply(contractDeployment.address, contractDeployment.chainId)).getValue()
-  if (currentTotalSupply.lt(id)) {
-    return res.status(404).send('Not Found')
-  }
-
-  // look into cache whether image exist
-  const metadata = await metadataCacheObject.get({
-    branch: AssetDeploymentBranch.PRODUCTION,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-  })
-
-  const [url] = await getAssetDeploymentBucket({
-    branch: AssetDeploymentBranch.PREVIEW,
-  })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/metadata.json`)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    })
-
-  if (metadata) {
-    return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+    return res.status(400).send('Bad Request')
   }
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  // get the seed from the contract if generative type
-  //! @todo test t
-  const { type } = deployment
-  let seed = v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id)
-  if (type === AssetDeploymentType.GENERATIVE) {
-    const tokenHashResponse = await getTokenHash(contractDeployment.address, contractDeployment.chainId, Number(id))
-    if (tokenHashResponse.failed) {
-      return res.status(404).send('Not Found')
-    }
-    const tokenHash = tokenHashResponse.getValue()
-    if (!tokenHash) {
-      return res.status(404).send('Not Found')
-    }
-    seed = tokenHash
+  const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
+  if (seedResponse.failed) {
+    return res.status(404).send('Not Found')
   }
 
-  const tokens = v.one(v.parseLayer(layerElements), seed)
+  const vseed = seedResponse.getValue()
+  const tokens = v.one(v.parseLayer(layerElements), vseed)
+
   const response = {
-    name: `${deployment.repository.tokenName} #${id}`,
-    image: `${env.NEXT_PUBLIC_API_URL}/assets/deployments/${organisationName}/${repositoryName}/${id}/image`,
+    name: [deployment.repository.tokenName || '', `#${id}`].join(' '),
+    description: deployment.repository.description,
+    tokenHash: vseed,
+    image: getDeploymentTokenImage({
+      o: organisationName,
+      r: repositoryName,
+      tokenId: id,
+      d: deployment.name,
+      branch: deployment.branch,
+    }),
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
       const traitElement = layerElement.traits.find((x) => x.id === t)
       if (!traitElement) return
-
       return {
         trait_type: layerElement.name,
         value: traitElement.name,
       }
     }),
+    logoImage: getBannerForRepository({ r: deployment.repository.id }),
+    bannerImage: getLogoForRepository({ r: deployment.repository.id }),
+    artist: deployment.repository.artist,
+    license: deployment.repository.license,
+    external_url: deployment.repository.externalUrl,
   }
 
-  await metadataCacheObject.put({
-    branch: AssetDeploymentBranch.PRODUCTION,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: JSON.stringify(response),
-  })
-
-  return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').send(JSON.stringify(response, null, 2))
+  return res
+    .setHeader('Content-Type', 'application/json')
+    .send(JSON.stringify(Object.fromEntries(Object.entries(response).filter(([_, v]) => v != null)), null, 2))
 }
 
 export default index

@@ -17,7 +17,7 @@ const Page: NextPage = () => {
     <Layout>
       <Layout.AppHeader border='lower'>
         <AppRoutesNavbar>
-          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)} loading={!organisation?.name}>
             <OrganisationRoutesNavbarPopover />
           </AppRoutesNavbar.Item>
         </AppRoutesNavbar>

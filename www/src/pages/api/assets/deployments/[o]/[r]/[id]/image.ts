@@ -1,8 +1,7 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentBranch, AssetDeploymentType } from '@prisma/client'
-import { getTokenHash } from '@server/common/ethers-get-contract-token-hash'
-import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { getAssetDeploymentBucket, getTraitElementImageFromGCP, imageCacheObject } from '@server/utils/gcp-storage'
+import { AssetDeploymentBranch } from '@prisma/client'
+import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
+import { getAssetDeploymentBucket, getAssetDeploymentBucketName, getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
 import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -12,82 +11,65 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   // o: organisationName, r: repositoryName, seed, id
   const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
   if (!organisationName || !repositoryName || !id) {
-    return res.status(404).send('Not Found')
+    return res.status(400).send('Bad Request')
   }
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
   const deployment = await prisma?.assetDeployment.findFirst({
     where: {
-      repository: { name: repositoryName, organisation: { name: organisationName } },
       branch: AssetDeploymentBranch.PRODUCTION,
+      repository: {
+        name: repositoryName,
+        organisation: {
+          name: organisationName,
+        },
+      },
     },
     include: { repository: true, contractDeployment: true },
   })
 
-  if (!deployment || !deployment.contractDeployment) {
+  if (!deployment) {
+    return res.status(404).send('Not Found')
+  }
+
+  if (!deployment.contractDeployment) {
     return res.status(404).send('Not Found')
   }
 
   if (deployment.totalSupply <= parseInt(id)) {
-    return res.status(404).send('Not Found')
+    return res.status(400).send('Bad Request')
   }
 
-  const { contractDeployment } = deployment
-
-  // check contract if token exists
-  const currentTotalSupply = (await getTotalSupply(contractDeployment.address, contractDeployment.chainId)).getValue()
-  if (currentTotalSupply.lt(id)) {
-    return res.status(404).send('Not Found')
-  }
-
-  // look into cache whether image exist
-  const image = await imageCacheObject.get({
-    branch: AssetDeploymentBranch.PRODUCTION,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-  })
-
-  const [url] = await getAssetDeploymentBucket({
-    branch: AssetDeploymentBranch.PREVIEW,
-  })
+  const [exists] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PRODUCTION })
     .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    })
+    .exists()
 
-  if (image) {
-    return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+  if (exists) {
+    const url = `https://storage.googleapis.com/${getAssetDeploymentBucketName({ branch: AssetDeploymentBranch.PRODUCTION })}/${
+      deployment.repositoryId
+    }/deployments/${deployment.id}/tokens/${id}/image.png`
+    return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
   }
 
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-  // get the seed from the contract if generative type
-  //! @todo test this
-  const { type } = deployment
-  let seed = v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id)
-  if (type === AssetDeploymentType.GENERATIVE) {
-    const tokenHashResponse = await getTokenHash(contractDeployment.address, contractDeployment.chainId, Number(id))
-    if (tokenHashResponse.failed) {
-      return res.status(404).send('Not Found')
-    }
-    const tokenHash = tokenHashResponse.getValue()
-    if (!tokenHash) {
-      // return not found
-      return res.status(404).send('Not Found')
-    }
-    seed = tokenHash
+  const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
+  if (seedResponse.failed) {
+    return res.status(404).send('Not Found')
   }
+  console.log(seedResponse.getValue())
+  const vseed = seedResponse.getValue()
+  const tokens = v.one(v.parseLayer(layerElements.sort((a, b) => a.priority - b.priority)), vseed)
+  const width = deployment.repository.width
+  const height = deployment.repository.height
 
-  const tokens = v.one(v.parseLayer(layerElements), seed)
-  const canvas = new Canvas(600, 600)
+  const canvas = new Canvas(width, height)
+
   const response = await Promise.all(
-    tokens.reverse().map(([l, t]) => {
+    tokens.map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
         const response = await getTraitElementImageFromGCP({
-          branch: AssetDeploymentBranch.PRODUCTION,
+          branch: AssetDeploymentBranch.PREVIEW,
           r: deployment.repositoryId,
           d: deployment.id,
           l,
@@ -102,19 +84,25 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   )
 
   response.forEach((image) => {
-    canvas.printImage(image, 0, 0, 600, 600)
+    canvas.printImage(image, 0, 0, width, height)
   })
 
-  const buf = canvas.toBuffer('image/png')
-  await imageCacheObject.put({
-    branch: AssetDeploymentBranch.PRODUCTION,
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: buf,
-  })
+  // const buf = await sharp(await canvas.toBufferAsync('image/png'))
+  //   .png({ quality: 70 })
+  //   .toBuffer()
 
-  return res.setHeader('Cache-Control', 'public, max-age=31536000, immutable').redirect(308, url)
+  // only ever runs once...
+  const buf = await canvas.toBufferAsync('image/png')
+
+  await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PRODUCTION })
+    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
+    .save(buf)
+
+  const url = `https://storage.googleapis.com/${getAssetDeploymentBucketName({ branch: AssetDeploymentBranch.PRODUCTION })}/${
+    deployment.repositoryId
+  }/deployments/${deployment.id}/tokens/${id}/image.png`
+
+  return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
 }
 
 export default index

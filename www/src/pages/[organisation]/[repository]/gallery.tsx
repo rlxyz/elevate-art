@@ -4,7 +4,7 @@ import { AssetDeploymentBranch } from '@prisma/client'
 import type { NextPage } from 'next'
 
 const Page: NextPage = () => {
-  const { current } = useQueryContractDeploymentProduction()
+  const { current } = useQueryContractDeploymentProduction({})
 
   return <Gallery branch={AssetDeploymentBranch.PRODUCTION} address={current?.address} />
 }

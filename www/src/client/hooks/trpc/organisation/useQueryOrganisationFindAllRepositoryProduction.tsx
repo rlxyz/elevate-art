@@ -7,9 +7,7 @@ export const useQueryOrganisationFindAllRepositoryProduction = ({ organisationNa
     isError,
   } = trpc.organisation.findAllRepositoryInProduction.useQuery(
     { organisationName: organisationName || '' },
-    {
-      enabled: !!organisationName,
-    }
+    { enabled: !!organisationName }
   )
   return { all: repositories, isLoading, isError }
 }

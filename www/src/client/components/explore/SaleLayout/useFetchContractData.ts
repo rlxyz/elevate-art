@@ -1,7 +1,7 @@
 import { useNotification } from '@hooks/utils/useNotification'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
-import { useContractReads } from 'wagmi'
+import { useContractRead, useContractReads } from 'wagmi'
 import { z } from 'zod'
 
 export const SalePhaseEnum = z.nativeEnum(
@@ -63,6 +63,32 @@ export const useFetchContractDataMutatableOnly = ({ contractAddress, chainId, en
       claimMerkleRoot: data[2] as string,
     }),
     onError: () => notifyError('Something wrong fetching contract data. Please refresh the page.'),
+  })
+}
+
+export const useFetchContractTokenData = ({
+  contractAddress,
+  tokenId,
+  chainId,
+  enabled = true,
+  version,
+}: UseContractRead & { tokenId: number }) => {
+  const { notifyError } = useNotification()
+  return useContractRead({
+    scopeKey: `erc721:${version}:${chainId}:${contractAddress}`,
+    address: contractAddress,
+    chainId,
+    abi: RhapsodyContract.abi,
+    functionName: 'ownerOf',
+    args: [tokenId.toString()],
+    watch: false,
+    cacheTime: 10_000,
+    staleTime: 10_000,
+    enabled,
+    select: (data) => ({
+      owner: data as string,
+    }),
+    onError: () => notifyError('Something wrong fetching contract user data.'),
   })
 }
 

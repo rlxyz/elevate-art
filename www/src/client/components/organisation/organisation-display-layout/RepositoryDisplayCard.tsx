@@ -1,9 +1,23 @@
+import { useQueryContractDeploymentProduction } from '@components/explore/SaleLayout/useQueryContractDeploymentProduction'
 import Card from '@components/layout/card/Card'
+import NextLinkComponent from '@components/layout/link/NextLink'
+import { createLogoUrl } from '@components/layout/LogoDisplay'
 import { CollectionIcon, CubeIcon, CurrencyDollarIcon } from '@heroicons/react/outline'
 import type { Repository } from '@prisma/client'
-import Image from 'next/image'
+import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 
-export const RepositoryDisplayCard = ({ repository, state }: { repository: Repository; state?: 'LIVE' }) => {
+export const RepositoryDisplayCard = ({
+  organisationName,
+  repository,
+  state,
+}: {
+  organisationName: string
+  repository: Repository
+  state?: 'LIVE'
+}) => {
+  const { current } = useQueryContractDeploymentProduction({
+    repositoryName: repository.name,
+  })
   return (
     <Card>
       <div className='space-y-0.5'>
@@ -21,9 +35,13 @@ export const RepositoryDisplayCard = ({ repository, state }: { repository: Repos
         </div>
       </div>
       <div className='relative h-72 w-full border-mediumGrey border rounded-[5px] overflow-hidden bg-lightGray'>
-        {repository.logoImageUrl && (
-          <Image fill className='absolute w-full object-cover rounded-[5px]' alt='' src={repository.logoImageUrl} />
-        )}
+        <img
+          className='absolute w-full object-cover aspect-1 rounded-[5px]'
+          alt={`logo-${repository.id}`}
+          src={createLogoUrl({
+            id: repository.id,
+          })}
+        />
       </div>
       <div className='space-y-1'>
         {[
@@ -33,13 +51,13 @@ export const RepositoryDisplayCard = ({ repository, state }: { repository: Repos
             icon: (props: any) => <CurrencyDollarIcon {...props} />,
           },
           {
-            label: 'Collection',
-            value: '1',
+            label: 'Total Supply',
+            value: current?.assetDeployment?.totalSupply,
             icon: (props: any) => <CollectionIcon {...props} />,
           },
           {
-            label: 'Editions',
-            value: 'ERC721',
+            label: 'Type',
+            value: toPascalCaseWithSpace(current?.assetDeployment?.type || ''),
             icon: (props: any) => <CubeIcon {...props} />,
           },
         ].map(({ label, value, icon: Icon }) => (
@@ -52,7 +70,12 @@ export const RepositoryDisplayCard = ({ repository, state }: { repository: Repos
           </div>
         ))}
       </div>
-      <button className='w-full bg-black p-2 text-white rounded-[5px]'>Mint</button>
+      <NextLinkComponent
+        className='flex w-full bg-black p-2 text-white rounded-[5px] justify-center'
+        href={routeBuilder(organisationName, repository.name)}
+      >
+        Mint
+      </NextLinkComponent>
     </Card>
   )
 }

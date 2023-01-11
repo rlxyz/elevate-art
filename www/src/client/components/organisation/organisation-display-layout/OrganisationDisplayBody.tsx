@@ -21,9 +21,8 @@ export const OrganisationDisplayBody = ({
         }}
       />
       <div className='grid grid-cols-3 gap-6'>
-        {filteredRepositories?.map((r) => (
-          <RepositoryDisplayCard key={r.name} repository={r} />
-        ))}
+        {organisation &&
+          filteredRepositories?.map((r) => <RepositoryDisplayCard key={r.name} repository={r} organisationName={organisation?.name} />)}
       </div>
     </div>
   )

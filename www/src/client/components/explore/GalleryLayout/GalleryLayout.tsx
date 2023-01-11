@@ -1,11 +1,10 @@
-import LinkComponent from '@components/layout/link/Link'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
 import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { ethers } from 'ethers'
 import { current } from 'immer'
 import { useEffect, useState } from 'react'
 import InfiniteScrollComponent from 'react-infinite-scroll-component'
-import { getDeploymentTokenImage, getDeploymentTokenMetadata } from 'src/client/utils/image'
+import { GalleryLayoutCard } from './GalleryLayoutCard'
 
 export const GalleryLayout = ({
   contractDeployment,
@@ -66,42 +65,17 @@ export const GalleryLayout = ({
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
               .map((id) => (
-                <div
+                <GalleryLayoutCard
+                  chainId={contractDeployment.chainId}
                   key={`${contractDeployment.address}-${id}`}
-                  className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'
-                >
-                  <img
-                    src={getDeploymentTokenImage({
-                      o: organisation.name,
-                      r: repository.name,
-                      tokenId: id,
-                      d: assetDeployment?.name,
-                      branch: assetDeployment?.branch,
-                    })}
-                    width={1000}
-                    height={1000}
-                    alt={`${contractDeployment.address}-#${id}`}
-                    className='object-cover m-auto'
-                  />
-                  <div className='p-2'>
-                    <h1 className='text-xs font-semibold'>
-                      <LinkComponent
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href={getDeploymentTokenMetadata({
-                          o: organisation.name,
-                          r: repository.name,
-                          tokenId: id,
-                          d: assetDeployment?.name,
-                          branch: assetDeployment?.branch,
-                        })}
-                        underline
-                      >
-                        {repository.tokenName} #{id}
-                      </LinkComponent>
-                    </h1>
-                  </div>
-                </div>
+                  address={contractDeployment.address}
+                  deploymentName={assetDeployment.name}
+                  branch={assetDeployment.branch}
+                  repositoryName={repository.name}
+                  organisationName={organisation.name}
+                  tokenName={repository.tokenName}
+                  tokenId={id}
+                />
               ))}
           </div>
         </InfiniteScrollComponent>

@@ -1,3 +1,4 @@
+import { AssetDeploymentBranch } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { OrganisationDatabaseRoleEnum } from 'src/shared/enums'
 import { z } from 'zod'
@@ -171,19 +172,7 @@ export const organisationRouter = router({
       return await ctx.prisma.repository.findMany({
         where: {
           organisation: { name: organisationName },
-          // assetDeployments: { some: { branch: AssetDeploymentBranch.PRODUCTION } },
-        },
-        include: {
-          _count: {
-            select: { layers: true, collections: true },
-          },
-          layers: {
-            include: {
-              _count: {
-                select: { traitElements: true },
-              },
-            },
-          },
+          assetDeployments: { some: { branch: AssetDeploymentBranch.PRODUCTION } },
         },
       })
     }),

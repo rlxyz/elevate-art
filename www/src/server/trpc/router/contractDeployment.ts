@@ -80,6 +80,7 @@ export const contractDeploymentRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { repositoryName, organisationName } = input
+
       const deployment = await ctx.prisma.contractDeployment.findFirst({
         where: {
           repository: {
@@ -91,6 +92,9 @@ export const contractDeploymentRouter = router({
           assetDeployment: {
             branch: AssetDeploymentBranch.PRODUCTION,
           },
+        },
+        include: {
+          assetDeployment: true,
         },
       })
 

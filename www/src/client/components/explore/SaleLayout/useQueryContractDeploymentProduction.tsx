@@ -2,12 +2,13 @@ import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 import { trpc } from 'src/client/utils/trpc'
 
-export const useQueryContractDeploymentProduction = () => {
+export const useQueryContractDeploymentProduction = ({ repositoryName }: { repositoryName?: string | null | undefined }) => {
   const router: NextRouter = useRouter()
-  const { organisation, repository } = router.query as { organisation: string; repository: string }
+  const r: string = repositoryName || (router.query.repository as string)
+  const o: string = router.query.organisation as string
   const { data, isLoading, isError, refetch } = trpc.contractDeployment.findProductionContract.useQuery(
-    { organisationName: organisation, repositoryName: repository },
-    { enabled: !!organisation || !!repository }
+    { organisationName: o, repositoryName: r },
+    { enabled: !!o || !!r }
   )
   return {
     current: data,

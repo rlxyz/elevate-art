@@ -35,7 +35,9 @@ export const getDeploymentTokenImage = ({
     branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
     tokenId,
     'image',
-  ].join('/')
+  ]
+    .filter((x) => x !== '')
+    .join('/')
 }
 
 export const getDeploymentTokenMetadata = ({
@@ -58,5 +60,7 @@ export const getDeploymentTokenMetadata = ({
     r,
     branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
     tokenId,
-  ].join('/')
+  ]
+    .filter((x) => x !== '')
+    .join('/')
 }
