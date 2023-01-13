@@ -1,5 +1,5 @@
 import { Storage } from '@google-cloud/storage'
-import { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeploymentBranch } from '@prisma/client'
 import { env } from 'src/env/server.mjs'
 
 /**
@@ -19,26 +19,26 @@ export const storage = new Storage({
   },
 })
 
-export const getAssetDeploymentBucketName = ({ type }: { type: AssetDeploymentBranch }) => {
-  return `elevate-asset-deployment-${type}`.toLowerCase()
+export const getAssetDeploymentBucketName = ({ branch }: { branch: AssetDeploymentBranch }) => {
+  return `elevate-asset-deployment-${branch}`.toLowerCase()
 }
 
-export const getAssetDeploymentBucket = ({ type }: { type: AssetDeploymentBranch }) => {
-  return storage.bucket(getAssetDeploymentBucketName({ type }))
+export const getAssetDeploymentBucket = ({ branch }: { branch: AssetDeploymentBranch }) => {
+  return storage.bucket(getAssetDeploymentBucketName({ branch }))
 }
 
-export const getAssetDeploymentBucketFile = ({ type, name }: { type: AssetDeploymentBranch; name: string }) => {
-  return getAssetDeploymentBucket({ type }).file(name)
+export const getAssetDeploymentBucketFile = ({ branch, name }: { branch: AssetDeploymentBranch; name: string }) => {
+  return getAssetDeploymentBucket({ branch }).file(name)
 }
 
 export const setAssetDeploymentBucketFile = async ({
-  type,
+  branch,
   name,
   buffer,
 }: {
-  type: AssetDeploymentBranch
+  branch: AssetDeploymentBranch
   name: string
   buffer: Buffer
 }) => {
-  return getAssetDeploymentBucket({ type }).file(name).save(buffer, { contentType: 'image/png' })
+  return getAssetDeploymentBucket({ branch }).file(name).save(buffer, { contentType: 'image/png' })
 }

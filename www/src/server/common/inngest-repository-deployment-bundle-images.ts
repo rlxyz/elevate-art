@@ -1,9 +1,11 @@
-import { AssetDeploymentBranch, AssetDeploymentStatus, Prisma } from '@prisma/client'
-import { getTraitElementImage } from '@server/common/cld-get-image'
+import type { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
+import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
+import type { InngestEvents } from '@server/utils/inngest'
 import { createFunction } from 'inngest'
-import * as v from 'src/shared/compiler'
+import type * as v from 'src/shared/compiler'
 import { prisma } from '../db/client'
-import { getAssetDeploymentBucket, storage } from '../utils/gcp-storage'
+import { fetchAndSaveAllTraitElementsToGCP } from './cld-to-gcp-save-trait-element'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.assetDeployment.update({
@@ -30,71 +32,62 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  * @todo save any failed fetches of TraitElements into a buffer to query later
  *! @todo when the bucket is created, auto set it to public... then we can serve content directly from bucket
  */
-export default createFunction('repository-deployment/bundle-images', 'repository-deployment/images.create', async ({ event }) => {
-  const layerElements = event.data.attributes as Prisma.JsonArray as v.Layer[]
-  const { repositoryId, deploymentId } = event.data as { repositoryId: string; deploymentId: string }
-
-  /**
-   * Ensure Deployment Exists
-   * @todo better error handling here...
-   */
-  try {
-    const deployment = await prisma?.assetDeployment.findFirst({
-      where: { id: deploymentId, repositoryId },
-      select: { id: true },
-    })
-    if (!deployment) {
-      await repositoryDeploymentFailedUpdate({ deploymentId })
-      console.log("Deployment doesn't exist")
-      throw new Error(`Deployment ${deploymentId} does not exist`)
+export default createFunction<InngestEvents['repository-deployment/bundle-images']>(
+  'repository-deployment/bundle-images',
+  'repository-deployment/images.create',
+  async ({ event }) => {
+    const layerElements = event.data.layerElements as Prisma.JsonArray as v.Layer[]
+    const { repositoryId, deploymentId, branch } = event.data as {
+      repositoryId: string
+      deploymentId: string
+      branch: AssetDeploymentBranch
     }
-  } catch (e) {
-    console.log('deployment error', e)
-    await repositoryDeploymentFailedUpdate({ deploymentId })
-    throw new Error(`Deployment ${deploymentId} does not exist`)
-  }
 
-  /**
-   * Ensure Bucket Exists
-   */
-  const bucket = await storage.bucket(`elevate-${repositoryId}-assets`).exists()
-  if (!bucket[0]) {
-    await repositoryDeploymentFailedUpdate({ deploymentId })
-    console.log("Bucket doesn't exist")
-    throw new Error(`Bucket does not exist`)
-  }
+    if (!layerElements || !repositoryId || !deploymentId || !branch) {
+      return { status: 400 }
+    }
 
-  /** Move all images from Cloudinary to GCP Bucket */
-  await Promise.all(
-    layerElements.map(
-      async ({ id: l, traits: traitElements }) =>
-        await Promise.all(
-          traitElements.map(async ({ id: t }) => {
-            const response = await getTraitElementImage({ r: repositoryId, l, t })
-            if (response.failed) throw new Error("Couldn't get image")
-            const buffer = response.getValue()
-            if (!buffer) throw new Error("Couldn't get buffer")
-            try {
-              //! @todo abstract all this functionality into own file
-              return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
-                .file(`${repositoryId}/deployments/${deploymentId}/layers/${l}/${t}.png`)
-                .save(Buffer.from(buffer), { contentType: 'image/png' })
-            } catch (e) {
-              console.error(e)
-              throw new Error(`Couldn't save image: ${e}`)
-            }
-          })
-        )
-    )
-  )
-    .then(async () => {
-      console.log('done deployment')
-      await repositoryDeploymentDeployedUpdate({ deploymentId })
-    })
-    .catch(async () => {
-      console.log('failed deployment')
+    /**
+     * Ensure Deployment Exists
+     * @todo better error handling here...
+     */
+    try {
+      const deployment = await prisma?.assetDeployment.findFirst({
+        where: { id: deploymentId, repositoryId },
+        select: { id: true },
+      })
+      if (!deployment) {
+        await repositoryDeploymentFailedUpdate({ deploymentId })
+        return { status: 400 }
+      }
+
+      /**
+       * Ensure Bucket Exists
+       */
+      const [bucket] = await getAssetDeploymentBucket({ branch }).exists()
+      if (!bucket) {
+        await repositoryDeploymentFailedUpdate({ deploymentId })
+        return { status: 400 }
+      }
+
+      /**
+       * Create Promises
+       */
+      const all = fetchAndSaveAllTraitElementsToGCP({ layerElements, repositoryId, deploymentId, branch })
+
+      /** Move all images from Cloudinary to GCP Bucket */
+      Promise.allSettled(all)
+        .then(async () => {
+          await repositoryDeploymentDeployedUpdate({ deploymentId })
+          return { status: 200 }
+        })
+        .catch(async () => {
+          await repositoryDeploymentFailedUpdate({ deploymentId })
+          return { status: 400 }
+        })
+    } catch (e) {
       await repositoryDeploymentFailedUpdate({ deploymentId })
-    })
-
-  return { success: true }
-})
+      return { status: 400 }
+    }
+  }
+)

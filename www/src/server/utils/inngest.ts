@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client'
+import type { AssetDeploymentBranch, Prisma } from '@prisma/client'
 import { Inngest } from 'inngest'
 import { env } from 'src/env/server.mjs'
 
 export type InngestEvents = {
   'repository-deployment/bundle-images': {
     name: 'repository-deployment/images.create'
-    data: { repositoryId: string; deploymentId: string; layerElements: Prisma.JsonArray }
+    data: { repositoryId: string; deploymentId: string; layerElements: Prisma.JsonArray; branch: AssetDeploymentBranch }
   }
 }
 

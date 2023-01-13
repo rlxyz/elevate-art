@@ -1,8 +1,9 @@
 import { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
+import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 
 /**
@@ -14,20 +15,22 @@ import * as v from 'src/shared/compiler'
  *
  * And during the compilation of images using skia-constructor, we re-upload the new compiled token image
  * to the GCP bucket.
+ *
+ * @todo in "put", save the metadata of the attributes names... so that we can use that to infer the metadata instead of needing a second query to metadata
  */
-type MetadataCacheInput = { repositoryId: string; deploymentId: string; id: string }
-const metadataCacheObject = {
-  get: async ({ repositoryId, deploymentId, id }: MetadataCacheInput) => {
-    return await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
-      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/metadata.json`)
+type ImageCacheInput = { repositoryId: string; deploymentId: string; id: string }
+const imageCacheObject = {
+  get: async ({ repositoryId, deploymentId, id }: ImageCacheInput) => {
+    return await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
       .download()
       .then((data) => data[0])
       .catch((e) => console.error(e))
   },
-  put: async ({ repositoryId, deploymentId, id, buffer }: MetadataCacheInput & { buffer: string | Buffer }) => {
-    await getAssetDeploymentBucket({ type: AssetDeploymentBranch.PREVIEW })
-      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/metadata.json`)
-      .save(buffer, { contentType: 'application/json' })
+  put: async ({ repositoryId, deploymentId, id, buffer }: ImageCacheInput & { buffer: Buffer }) => {
+    await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
+      .file(`${repositoryId}/deployments/${deploymentId}/tokens/${id}/image.png`)
+      .save(buffer, { contentType: 'image/png' })
   },
 }
 
@@ -56,37 +59,31 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  // look into cache whether image exist
-  const metadata = await metadataCacheObject.get({ repositoryId: deployment.repositoryId, deploymentId: deployment.id, id })
-  if (metadata) return res.setHeader('Content-Type', 'application/json').status(200).send(metadata)
-
   const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
   const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
 
-  const response = {
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${seed}/${id}`,
-    attributes: tokens.reverse().map(([l, t]) => {
-      const layerElement = layerElements.find((x) => x.id === l)
-      if (!layerElement) return
-      const traitElement = layerElement.traits.find((x) => x.id === t)
-      if (!traitElement) return
+  const canvas = new Canvas(600, 600)
 
-      return {
-        trait_type: layerElement.name,
-        value: traitElement.name,
-      }
-    }),
-  }
+  const response = await Promise.all(
+    tokens.reverse().map(([l, t]) => {
+      return new Promise<Image>(async (resolve, reject) => {
+        const response = await getTraitElementImageFromGCP({ r: deployment.repositoryId, d: deployment.id, l, t })
+        if (response.failed) return reject()
+        const buffer = response.getValue()
+        if (!buffer) return reject()
+        return resolve(await resolveImage(buffer))
+      })
+    })
+  )
 
-  await metadataCacheObject.put({
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: JSON.stringify(response),
+  response.forEach((image) => {
+    canvas.printImage(image, 0, 0, 600, 600)
   })
 
-  return res.setHeader('Content-Type', 'application/json').send(JSON.stringify(response, null, 2))
+  const buf = canvas.toBuffer('image/png')
+
+  return res.setHeader('Content-Type', 'image/png').send(buf)
 }
 
 export default index

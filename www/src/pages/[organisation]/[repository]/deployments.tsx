@@ -59,7 +59,7 @@ const DeploymentPreviewCard = ({
         ) : (
           <span>{deployment.name}</span>
         )}
-        <span>{toPascalCaseWithSpace(deployment.type)}</span>
+        <span>{toPascalCaseWithSpace(deployment.branch)}</span>
       </div>
       <div>
         <span className='text-xs flex flex-col h-full space-x-2'>

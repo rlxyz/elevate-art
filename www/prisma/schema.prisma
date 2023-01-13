@@ -103,7 +103,7 @@ model AssetDeployment {
     updatedAt DateTime @updatedAt
 
     status AssetDeploymentStatus @default(PENDING)
-    type   AssetDeploymentBranch @default(PREVIEW)
+    branch AssetDeploymentBranch @default(PREVIEW)
 
     totalSupply Int // based on collection.totalSupply
     generations Int // based on collection.generations

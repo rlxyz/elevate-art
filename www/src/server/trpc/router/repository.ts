@@ -1,10 +1,10 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentStatus } from '@prisma/client'
+import { AssetDeploymentBranch, AssetDeploymentStatus } from '@prisma/client'
 import { storage } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
-import * as v from 'src/shared/compiler'
+import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 
@@ -128,6 +128,7 @@ export const repositoryRouter = router({
           slug: collection.name,
           generations: collection.generations,
           totalSupply: collection.totalSupply,
+          branch: AssetDeploymentBranch.PREVIEW,
           status: AssetDeploymentStatus.PENDING,
           name: (Math.random() + 1).toString(36).substring(4),
           layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
@@ -153,13 +154,13 @@ export const repositoryRouter = router({
         await createIngestInstance().send({
           name: 'repository-deployment/images.create',
           data: {
+            branch: deployment.branch,
             repositoryId: deployment.repositoryId,
             deploymentId: deployment.id,
             layerElements: deployment.layerElements as Prisma.JsonArray,
           },
         })
       } catch (e) {
-        console.error(e)
         await ctx.prisma.assetDeployment.update({
           where: { id: deployment.id },
           data: { status: AssetDeploymentStatus.FAILED },
