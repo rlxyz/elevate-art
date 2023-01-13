@@ -51,7 +51,6 @@ export const getTraitElementInfo = ({ r, l, t }: { r: string; l: string; t: stri
         return resolve(Result.ok({ traitElementId: public_id, version: `${version}` }))
       })
       .catch((error) => {
-        console.log('error', error)
         reject(Result.fail(error))
       })
   })

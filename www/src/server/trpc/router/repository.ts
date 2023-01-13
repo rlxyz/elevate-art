@@ -174,8 +174,8 @@ export const repositoryRouter = router({
           slug: collection.name,
           generations: collection.generations,
           totalSupply: collection.totalSupply,
-          status: AssetDeploymentStatus.PENDING,
           branch: AssetDeploymentBranch.PREVIEW,
+          status: AssetDeploymentStatus.PENDING,
           type, // AssetDeploymentType: Basic/Generative/etc
           name: (Math.random() + 1).toString(36).substring(4),
           layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
@@ -209,7 +209,6 @@ export const repositoryRouter = router({
           },
         })
       } catch (e) {
-        console.error(e)
         await ctx.prisma.assetDeployment.update({
           where: { id: assetDeployment.id },
           data: { status: AssetDeploymentStatus.FAILED },
