@@ -1,4 +1,5 @@
-import { LayerElement, PrismaClient } from '@prisma/client'
+import type { LayerElement } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import chalk from 'chalk'
 
 const prisma = new PrismaClient()
