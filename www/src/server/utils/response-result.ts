@@ -6,10 +6,10 @@
 export class Result<T> {
   public ok: boolean
   public failed: boolean
-  public error?: string | string[]
+  public error?: string
   private _value?: T
 
-  private constructor(ok: boolean, error?: string | string[], value?: T) {
+  private constructor(ok: boolean, error?: string, value?: T) {
     if (ok && error) {
       throw new Error(`InvalidOperation: A result cannot be
           successful and contain an error`)
@@ -39,8 +39,8 @@ export class Result<T> {
     return new Result<U>(true, undefined, value)
   }
 
-  public static fail<U>(...errors: string[]): Result<U> {
-    return new Result<U>(false, errors)
+  public static fail<U>(error: string): Result<U> {
+    return new Result<U>(false, error)
   }
 
   public static combine(results: Result<any>[]): Result<any> {
