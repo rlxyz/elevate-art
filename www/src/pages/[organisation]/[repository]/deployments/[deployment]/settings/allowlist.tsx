@@ -56,19 +56,19 @@ const Page: NextPage = () => {
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
                     // `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
                     selected: true,
-                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                    icon: () => <CubeIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                     selected: false,
-                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                    icon: () => <TriangleIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Explore),
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
                     selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                    icon: () => <GlobeAltIcon className='w-4 h-4' />,
                   },
                 ]}
               />
