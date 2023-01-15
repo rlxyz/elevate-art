@@ -168,6 +168,7 @@ const Page: NextPage = () => {
                   {contractDeployment && whitelist && (
                     <AllowlistLayout contractDeployment={contractDeployment} whitelist={whitelist} type={WhitelistType.ALLOWLIST} />
                   )}
+                  {!contractDeployment && <span>You must deploy your Contract before your are able to create an Allowlist</span>}
                 </div>
               </div>
             </div>
