@@ -2,8 +2,10 @@ import SettingLayout from '@components/layout/settings'
 import Textarea from '@components/layout/textarea/Textarea'
 import { useMutateContractDeploymentWhitelistCreate } from '@hooks/trpc/contractDeploymentWhitelist/useMutateContractDeploymentWhitelistCreate'
 import type { ContractDeployment, WhitelistType } from '@prisma/client'
+import { ethers } from 'ethers'
 import { getAddress } from 'ethers/lib/utils.js'
 import { useForm } from 'react-hook-form'
+import { getAddressFromEns } from 'src/client/utils/ethers'
 import type { AllowlistFormInput, AllowlistFormInputV2 } from './AllowlistLayout'
 
 export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contractDeployment: ContractDeployment; type: WhitelistType }) => {
@@ -56,6 +58,14 @@ export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contract
         <Textarea
           {...register('whitelist', {
             required: true,
+            validate: async (v) => {
+              if (String(v).endsWith('.eth')) {
+                const address = await getAddressFromEns(v)
+                if (!address) return false
+                return ethers.utils.isAddress(address)
+              }
+              return ethers.utils.isAddress(v)
+            },
           })}
           rows={5}
           wrap='soft'

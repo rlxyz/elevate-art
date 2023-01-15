@@ -46,28 +46,29 @@ const Page: NextPage = () => {
 
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
-              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
             >
               <ZoneRoutesNavbarPopover
                 title='Apps'
                 routes={[
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Deployments),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                    // `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
                     selected: true,
-                    icon: () => <CubeIcon className='w-4 h-4' />,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                     selected: false,
-                    icon: () => <TriangleIcon className='w-4 h-4' />,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Explore}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
                     selected: false,
-                    icon: () => <GlobeAltIcon className='w-4 h-4' />,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
                   },
                 ]}
               />
