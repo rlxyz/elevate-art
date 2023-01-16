@@ -4,18 +4,6 @@ import { Redis } from '@upstash/redis'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 
-export const redis = new Redis({
-  url: env.REDIS_URL,
-  token: env.REDIS_TOKEN,
-})
-
-export const config = {
-  api: {
-    responseLimit: '8mb',
-    externalResolver: true,
-  },
-}
-
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   if (!session || !session.user) {
