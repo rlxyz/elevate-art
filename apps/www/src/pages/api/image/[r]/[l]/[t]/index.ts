@@ -1,8 +1,6 @@
 import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { Redis } from '@upstash/redis'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { env } from 'src/env/server.mjs'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
