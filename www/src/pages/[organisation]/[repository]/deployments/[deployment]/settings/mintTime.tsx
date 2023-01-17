@@ -1,17 +1,17 @@
-import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
+import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
+import SettingLayout from '@components/layout/settings'
 import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
-import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { WhitelistType } from '@prisma/client'
+import { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -30,9 +30,26 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { current: whitelist } = useQueryContractDeploymentWhitelist({
-    type: WhitelistType.CLAIM,
+  const { data } = useFetchContractData({
+    contractAddress: contractDeployment?.address || '',
+    chainId: contractDeployment?.chainId || 99,
+    enabled: !!contractDeployment?.address,
+    version: '0.1.0',
   })
+
+  let claimTime = null
+  let presaleTime = null
+  let publicTime = null
+
+  if (data.claimTime !== undefined) {
+    claimTime = new Date(BigNumber.from(data.claimTime.toString()).toNumber())
+  }
+  if (data.presaleTime !== undefined) {
+    presaleTime = new Date(BigNumber.from(data.presaleTime.toString()).toNumber())
+  }
+  if (data.publicTime !== undefined) {
+    publicTime = new Date(BigNumber.from(data.publicTime.toString()).toNumber())
+  }
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -165,10 +182,51 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  {contractDeployment && whitelist && (
-                    <AllowlistLayout contractDeployment={contractDeployment} whitelist={whitelist} type={WhitelistType.CLAIM} />
-                  )}
-                  {!contractDeployment && <span>You must deploy your Contract before your are able to adjust your Mint Times</span>}
+                  <SettingLayout>
+                    <SettingLayout.Header title='Mint Time' />
+                    <SettingLayout.Body>
+                      <div className='space-y-6'>
+                        <div className='space-y-2'>
+                          <div className='text-sm text-gray-500'>
+                            The mint time is the time that the NFT will be minted at. This is useful for NFTs that have a specific time in
+                            their story.
+                          </div>
+                          <div className='text-sm text-gray-500'>
+                            If you do not set a mint time, the NFT will be minted at the time of the transaction.
+                          </div>
+                        </div>
+                        <div className='space-y-2'>
+                          <div className='text-sm text-gray-500'>
+                            <>
+                              <div>Claim Mint Time: {claimTime?.toString()}</div>
+                              <div>Presale Mint Time: {presaleTime?.toString()}</div>
+                              <div>Public Mint Time: {publicTime?.toString()}</div>
+                            </>
+                          </div>
+                          <div className='flex items-center space-x-2'>
+                            {/* <input
+                              {...register(`saleConfigs.${index}.startTimestamp`, {
+                                required: true,
+                                valueAsDate: true,
+                                onChange: (e) => {
+                                  if (e.target.value) {
+                                    setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
+                                  }
+                                },
+                              })}
+                              label={'Start Time'}
+                              className='col-span-3'
+                            /> */}
+                          </div>
+                        </div>
+                      </div>
+                    </SettingLayout.Body>
+                    {/* <SettingLayout.Footer>
+                      <Button variant='primary' size='small' onClick={() => {}}>
+                        Save
+                      </Button>
+                    </SettingLayout.Footer> */}
+                  </SettingLayout>
                 </div>
               </div>
             </div>
