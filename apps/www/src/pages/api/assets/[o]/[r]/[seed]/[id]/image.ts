@@ -1,10 +1,10 @@
+import type { Image } from '@napi-rs/canvas'
+import { createCanvas, loadImage } from '@napi-rs/canvas'
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
-import type { Image } from 'canvas-constructor/skia'
-import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 import { prisma } from '../../../../../../../server/db/client'
@@ -67,7 +67,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
 
-    const canvas = new Canvas(600, 600)
+    const canvas = createCanvas(600, 600)
+    const ctx = canvas.getContext('2d')
 
     const response = await Promise.all(
       tokens.reverse().map(([l, t]) => {
@@ -82,13 +83,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
           if (response.failed) return reject()
           const buffer = response.getValue()
           if (!buffer) return reject()
-          return resolve(await resolveImage(buffer))
+          return resolve(await loadImage(buffer))
         })
       })
     )
 
     response.forEach((image) => {
-      canvas.printImage(image, 0, 0, 600, 600)
+      ctx.drawImage(image, 0, 0, 600, 600)
     })
 
     const buf = canvas.toBuffer('image/png')
