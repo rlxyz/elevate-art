@@ -87,7 +87,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.setHeader('Content-Type', 'application/json').send(JSON.stringify(response, null, 2))
   } catch (err) {
     console.error(err)
-    return res.status(503).send('Internal Server Error')
+    return res.status(500).send('Internal Server Error')
   }
 }
 

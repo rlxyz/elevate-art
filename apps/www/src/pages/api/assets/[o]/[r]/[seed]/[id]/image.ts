@@ -7,6 +7,7 @@ import type { Image } from 'canvas-constructor/skia'
 import { Canvas, resolveImage } from 'canvas-constructor/skia'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
+import { prisma } from '../../../../../../../server/db/client'
 
 /**
  * Note, this is a cache built around the compiler functionality to ensure that
@@ -48,50 +49,55 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  const deployment = await prisma?.assetDeployment.findFirst({
-    where: { repository: { name: repositoryName, organisation: { name: organisationName } }, name: seed },
-  })
-
-  if (!deployment) {
-    return res.status(404).send('Not Found')
-  }
-
-  if (deployment.totalSupply <= parseInt(id)) {
-    return res.status(400).send('Bad Request')
-  }
-
-  const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
-
-  const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
-
-  const canvas = new Canvas(600, 600)
-
-  const response = await Promise.all(
-    tokens.reverse().map(([l, t]) => {
-      return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImageFromGCP({
-          r: deployment.repositoryId,
-          d: deployment.id,
-          l,
-          t,
-          branch: deployment.branch,
-        })
-        if (response.failed) return reject()
-        const buffer = response.getValue()
-        if (!buffer) return reject()
-        return resolve(await resolveImage(buffer))
-      })
+  try {
+    // get the repository with repositoryId's layerElement, traitElements & rules with prisma
+    const deployment = await prisma.assetDeployment.findFirst({
+      where: { repository: { name: repositoryName, organisation: { name: organisationName } }, name: seed },
     })
-  )
 
-  response.forEach((image) => {
-    canvas.printImage(image, 0, 0, 600, 600)
-  })
+    if (!deployment) {
+      return res.status(404).send('Not Found')
+    }
 
-  const buf = canvas.toBuffer('image/png')
+    if (deployment.totalSupply <= parseInt(id)) {
+      return res.status(400).send('Bad Request')
+    }
 
-  return res.setHeader('Content-Type', 'image/png').send(buf)
+    const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
+
+    const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+
+    const canvas = new Canvas(600, 600)
+
+    const response = await Promise.all(
+      tokens.reverse().map(([l, t]) => {
+        return new Promise<Image>(async (resolve, reject) => {
+          const response = await getTraitElementImageFromGCP({
+            r: deployment.repositoryId,
+            d: deployment.id,
+            l,
+            t,
+            branch: deployment.branch,
+          })
+          if (response.failed) return reject()
+          const buffer = response.getValue()
+          if (!buffer) return reject()
+          return resolve(await resolveImage(buffer))
+        })
+      })
+    )
+
+    response.forEach((image) => {
+      canvas.printImage(image, 0, 0, 600, 600)
+    })
+
+    const buf = canvas.toBuffer('image/png')
+
+    return res.setHeader('Content-Type', 'image/png').send(buf)
+  } catch (e) {
+    console.error(e)
+    return res.status(500).send('Internal Server Error')
+  }
 }
 
 export default index
