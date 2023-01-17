@@ -60,7 +60,10 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-    const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+    const tokens = v.one(
+      v.parseLayer(layerElements.sort((a, b) => a.priority - b.priority)),
+      v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id)
+    )
 
     const response = {
       image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${seed}/${id}/image`,

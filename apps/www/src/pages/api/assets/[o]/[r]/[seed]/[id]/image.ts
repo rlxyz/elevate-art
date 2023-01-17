@@ -65,7 +65,10 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
 
-    const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
+    const tokens = v.one(
+      v.parseLayer(layerElements.sort((a, b) => a.priority - b.priority)),
+      v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id)
+    )
 
     const canvas = createCanvas(600, 600)
     const ctx = canvas.getContext('2d')
@@ -96,7 +99,6 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.setHeader('Content-Type', 'image/png').send(buf)
   } catch (e) {
-    console.error(e)
     return res.status(500).send('Internal Server Error')
   }
 }
