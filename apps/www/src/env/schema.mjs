@@ -15,7 +15,6 @@ export const serverSchema = z.object({
   GCP_PROJECT_ID: z.string(),
   GCP_CLIENT_EMAIL: z.string(),
   GCP_PRIVATE_KEY: z.string(),
-  GCP_BUCKET_NAME: z.string(),
   /** Specify Cld environments */
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
@@ -34,7 +33,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_ALCHEMY_ID: z.string(),
   NEXT_PUBLIC_NETWORK_ID: z.number(),
   NEXT_PUBLIC_APP_NAME: z.string(),
-  NEXT_PUBLIC_NODE_ENV: z.string(),
+  NEXT_PUBLIC_NODE_ENV: z.enum(['localhost', 'staging', 'production']),
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string(),
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: z.number(),
   NEXT_PUBLIC_API_URL: z.string(),
@@ -51,7 +50,14 @@ export const clientEnv = {
   NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
   NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
   NEXT_PUBLIC_APP_NAME: 'elevate.art',
-  NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
+  NEXT_PUBLIC_NODE_ENV:
+    process.env.NEXT_PUBLIC_NODE_ENV === 'localhost'
+      ? 'localhost'
+      : process.env.NEXT_PUBLIC_NODE_ENV === 'staging'
+      ? 'staging'
+      : process.env.NEXT_PUBLIC_NODE_ENV === 'production'
+      ? 'production'
+      : 'localhost',
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || '',
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: Number(process.env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED) || 9990000,
   NEXT_PUBLIC_API_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api` : 'http://localhost:3000/api',

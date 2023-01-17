@@ -1,9 +1,11 @@
-import { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { getTraitElementImageFromGCP } from '@server/common/gcp-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
-import { Canvas, Image, resolveImage } from 'canvas-constructor/skia'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { Image } from 'canvas-constructor/skia'
+import { Canvas, resolveImage } from 'canvas-constructor/skia'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as v from 'src/shared/compiler'
 
 /**
@@ -68,7 +70,13 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await Promise.all(
     tokens.reverse().map(([l, t]) => {
       return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImageFromGCP({ r: deployment.repositoryId, d: deployment.id, l, t })
+        const response = await getTraitElementImageFromGCP({
+          r: deployment.repositoryId,
+          d: deployment.id,
+          l,
+          t,
+          branch: deployment.branch,
+        })
         if (response.failed) return reject()
         const buffer = response.getValue()
         if (!buffer) return reject()

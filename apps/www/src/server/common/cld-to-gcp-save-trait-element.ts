@@ -51,6 +51,8 @@ export const fetchAndSaveTraitElementToGCP = async ({
     return Result.fail('Could not get image from Cloudinary')
   }
 
+  console.log('saving', { r, l, t })
+
   /* Get Buffer */
   const buffer = response.getValue()
   if (!buffer) {

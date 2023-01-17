@@ -1,6 +1,5 @@
 import type { AssetDeploymentBranch, Prisma } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
-import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
 import type { InngestEvents } from '@server/utils/inngest'
 import { createFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
@@ -61,14 +60,12 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
         return { status: 400 }
       }
 
-      /**
-       * Ensure Bucket Exists
-       */
-      const [bucket] = await getAssetDeploymentBucket({ branch }).exists()
-      if (!bucket) {
-        await repositoryDeploymentFailedUpdate({ deploymentId })
-        return { status: 400 }
-      }
+      //! Ensure Bucket Exists; removed due to GCP service account not having permission to list buckets
+      // const [bucket] = await getAssetDeploymentBucket({ branch }).exists()
+      // if (!bucket) {
+      //   await repositoryDeploymentFailedUpdate({ deploymentId })
+      //   return { status: 400 }
+      // }
 
       /**
        * Create Promises
@@ -86,6 +83,7 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
           return { status: 400 }
         })
     } catch (e) {
+      console.error(e)
       await repositoryDeploymentFailedUpdate({ deploymentId })
       return { status: 400 }
     }

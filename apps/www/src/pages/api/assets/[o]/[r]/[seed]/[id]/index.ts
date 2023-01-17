@@ -1,7 +1,8 @@
-import { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
 
@@ -61,7 +62,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const tokens = v.one(v.parseLayer(layerElements), v.seed(deployment.repositoryId, deployment.slug, deployment.generations, id))
 
   const response = {
-    image: `${env.NEXT_PUBLIC_API_URL}/asset/${organisationName}/${repositoryName}/${seed}/${id}`,
+    image: `${env.NEXT_PUBLIC_API_URL}/assets/${organisationName}/${repositoryName}/${seed}/${id}/image`,
     attributes: tokens.reverse().map(([l, t]) => {
       const layerElement = layerElements.find((x) => x.id === l)
       if (!layerElement) return
@@ -75,12 +76,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   }
 
-  await metadataCacheObject.put({
-    repositoryId: deployment.repositoryId,
-    deploymentId: deployment.id,
-    id,
-    buffer: JSON.stringify(response),
-  })
+  // await metadataCacheObject.put({
+  //   repositoryId: deployment.repositoryId,
+  //   deploymentId: deployment.id,
+  //   id,
+  //   buffer: JSON.stringify(response),
+  // })
 
   return res.setHeader('Content-Type', 'application/json').send(JSON.stringify(response, null, 2))
 }

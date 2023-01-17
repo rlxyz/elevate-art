@@ -1,3 +1,3 @@
 setup:
   project: apps-www
-  config: localhost_asset-query-seed
+  config: staging_localhost
