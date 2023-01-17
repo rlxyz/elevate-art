@@ -33,7 +33,7 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  */
 export default createFunction<InngestEvents['repository-deployment/bundle-images']>(
   'repository-deployment/bundle-images',
-  'repository-deployment/images.create',
+  'repository-deployment/images.bundle.create',
   async ({ event }) => {
     const layerElements = event.data.layerElements as Prisma.JsonArray as v.Layer[]
     const { repositoryId, deploymentId, branch } = event.data as {
