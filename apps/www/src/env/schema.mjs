@@ -11,13 +11,16 @@ export const serverSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: process.env.NODE_ENV === 'production' ? z.string().min(1) : z.string().min(1).optional(),
   NEXTAUTH_URL: z.string().url().optional(),
-  CLOUDINARY_API_KEY: z.string(),
-  CLOUDINARY_API_SECRET: z.string(),
-  CLOUDINARY_CLOUD_NAME: z.string(),
+  /** Specify GCP environments */
   GCP_PROJECT_ID: z.string(),
   GCP_CLIENT_EMAIL: z.string(),
   GCP_PRIVATE_KEY: z.string(),
   GCP_BUCKET_NAME: z.string(),
+  /** Specify Cld environments */
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  /** Specify Inngest environments */
   INNGEST_SIGNING_KEY: z.string(),
   INNGEST_EVENT_KEY: z.string(),
 })

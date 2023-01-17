@@ -1,8 +1,8 @@
-import { LayerElement, PrismaClient } from '@prisma/client'
+import type { LayerElement } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import chalk from 'chalk'
 
 const prisma = new PrismaClient()
-const log = console.log
 
 /**
  * This script adds a new None trait to every existing LayerElement
@@ -15,14 +15,14 @@ export const main = async () => {
   try {
     /* Start an transaction to ensure all runs at once. */
     await prisma.$transaction(async (tx) => {
-      log(chalk.blue('Starting transaction!'))
+      console.log(chalk.blue('Starting transaction!'))
 
       /** Fetch all LayerElements */
       const layerElements: LayerElement[] = await tx.layerElement.findMany()
-      log(chalk.green('Found') + ' ' + chalk.underline.yellow(layerElements.length) + ' ' + chalk.green('LayerElements'))
+      console.log(chalk.green('Found') + ' ' + chalk.underline.yellow(layerElements.length) + ' ' + chalk.green('LayerElements'))
 
       /** Create many TraitElements in one go. */
-      log(chalk.blue('Creating None layers'))
+      console.log(chalk.blue('Creating None layers'))
       await tx.traitElement.createMany({
         data: layerElements.map((layerElement) => ({
           layerElementId: layerElement.id,
@@ -31,7 +31,7 @@ export const main = async () => {
           // readonly: true,
         })),
       })
-      log(chalk.green('Successfuly added the TraitElements!'))
+      console.log(chalk.green('Successfuly added the TraitElements!'))
     })
   } catch (e) {
     console.error(e)

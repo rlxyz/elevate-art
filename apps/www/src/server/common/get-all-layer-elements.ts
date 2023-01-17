@@ -1,4 +1,4 @@
-import { LayerElement, Prisma, PrismaClient } from '@prisma/client'
+import type { LayerElement, Prisma, PrismaClient } from '@prisma/client'
 
 /**
  * This script can be used to query all the LayerElements in the database.

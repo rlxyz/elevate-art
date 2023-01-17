@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, TraitElement } from '@prisma/client'
+import type { Prisma, PrismaClient, TraitElement } from '@prisma/client'
 import { groupBy } from 'src/shared/object-utils'
 
 export type LayerElementObjectWithTraitElements = { [key: string]: TraitElement[] }

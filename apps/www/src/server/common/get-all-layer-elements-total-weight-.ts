@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import type { Prisma, PrismaClient } from '@prisma/client'
 
 /**
  * This function returns total weightage of the TraitElements based on weight

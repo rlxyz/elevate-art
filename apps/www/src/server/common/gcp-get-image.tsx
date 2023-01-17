@@ -1,4 +1,4 @@
-import { DownloadResponse } from '@google-cloud/storage'
+import type { DownloadResponse } from '@google-cloud/storage'
 import { storage } from '@server/utils/gcp-storage'
 import { Result } from '@server/utils/response-result'
 
