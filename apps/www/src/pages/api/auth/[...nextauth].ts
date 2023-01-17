@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import type { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
 import { env } from 'src/env/server.mjs'
@@ -42,11 +43,7 @@ export const authOptions: NextAuthOptions = {
         try {
           /** Check SiweMessage for Ethereum Login */
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
-          const nextAuthUrl = env.NEXTAUTH_URL
-            ? env.NEXTAUTH_URL
-            : process.env.VERCEL
-            ? `https://${process.env.VERCEL_URL}`
-            : 'http://localhost:3000'
+          const nextAuthUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : env.NEXTAUTH_URL
           if (!nextAuthUrl) return null
           if (siwe.domain !== new URL(nextAuthUrl).host) return null
           if (!siwe.address.length) return null

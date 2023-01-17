@@ -12,6 +12,17 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
+enum AssetDeploymentStatus {
+    PENDING
+    DEPLOYED
+    FAILED
+}
+
+enum AssetDeploymentBranch {
+    PRODUCTION
+    PREVIEW
+}
+
 model User {
     id            String    @id @default(cuid())
     address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
@@ -77,8 +88,31 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
+    assetDeployments AssetDeployment[]
+
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
+}
+
+model AssetDeployment {
+    id            String @id @default(cuid())
+    name          String @db.VarChar(255)
+    layerElements Json
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status AssetDeploymentStatus @default(PENDING)
+    branch AssetDeploymentBranch @default(PREVIEW)
+
+    totalSupply Int // based on collection.totalSupply
+    generations Int // based on collection.generations
+    slug        String @db.VarChar(255) // based on collection.name
+
+    repositoryId String
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    @@index([repositoryId, name], name: "assetDeploymentIdentifier")
 }
 
 model Collection {

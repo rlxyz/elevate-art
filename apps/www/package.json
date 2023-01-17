@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "doppler setup && doppler run next dev",
+    "dev": "doppler setup && doppler run concurrently \" next dev\" \"yarn inngest\"",
+    "inngest": "npx inngest-cli@latest dev -u http://localhost:3000/api/inngest",
     "build": "doppler run next build",
     "build:production": "next build",
     "start": "next start",
@@ -15,6 +16,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@google-cloud/storage": "^6.7.0",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "v1",
     "@highlight-run/react": "^1.2.1",
@@ -42,6 +44,7 @@
     "framer-motion": "^7.2.1",
     "highlight.run": "^4.4.1",
     "immer": "^9.0.15",
+    "inngest": "^0.8.5",
     "isomorphic-fetch": "^3.0.0",
     "next": "13.0.2",
     "next-auth": "^4.15.1",
@@ -75,6 +78,7 @@
     "@typescript-eslint/parser": "^5.33.0",
     "autoprefixer": "^10.4.8",
     "chalk": "^5.1.2",
+    "concurrently": "^7.6.0",
     "eslint": "^8.26.0",
     "eslint-config-next": "13.0.2",
     "postcss": "^8.4.16",

@@ -58,6 +58,7 @@ export const CollectionNavigationEnum = z.nativeEnum(
     Rarity: 'rarity',
     Rules: 'rules',
     Settings: 'settings',
+    Deployments: 'deployments',
   })
 )
 export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>

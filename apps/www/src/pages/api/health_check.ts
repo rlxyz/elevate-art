@@ -1,7 +1,7 @@
 // Example of a restricted endpoint that only authenticated users can access from https://next-auth.js.org/getting-started/example
 
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { log } from 'next-axiom'
 import { formatBytes } from 'src/client/utils/format'
 import { env } from 'src/env/server.mjs'
@@ -10,7 +10,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   log.debug(`new health check request`, { user: session?.user?.id || 'anonymous' })
   return res.status(200).send({
-    nextAuthUrl: env.NEXTAUTH_URL ? env.NEXTAUTH_URL : process.env.VERCEL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000',
+    nextAuthUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : env.NEXTAUTH_URL,
     apiUrl: env.NEXT_PUBLIC_API_URL,
     nodeEnv: env.NODE_ENV,
     nextPublicNodeEnv: env.NEXT_PUBLIC_NODE_ENV,

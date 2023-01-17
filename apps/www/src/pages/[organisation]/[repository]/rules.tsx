@@ -57,6 +57,12 @@ const Page = () => {
                 enabled: true,
                 loading: isLoadingLayers,
               },
+              {
+                name: CollectionNavigationEnum.enum.Deployments,
+                href: `/${mainRepositoryHref}/${CollectionNavigationEnum.enum.Deployments}`,
+                enabled: false,
+                loading: isLoadingLayers,
+              },
             ]}
           />
         </Layout.Header>
