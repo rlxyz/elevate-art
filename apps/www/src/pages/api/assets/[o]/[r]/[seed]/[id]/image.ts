@@ -71,7 +71,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     const ctx = canvas.getContext('2d')
 
     const response = await Promise.all(
-      tokens.reverse().map(([l, t]) => {
+      tokens.map(([l, t]) => {
         return new Promise<Image>(async (resolve, reject) => {
           const response = await getTraitElementImageFromGCP({
             r: deployment.repositoryId,
