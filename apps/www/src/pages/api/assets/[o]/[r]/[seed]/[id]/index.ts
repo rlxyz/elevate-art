@@ -5,7 +5,7 @@ import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
 import * as v from 'src/shared/compiler'
-
+import { prisma } from '../../../../../../../server/db/client'
 /**
  * Note, this is a cache built around the compiler functionality to ensure that
  * we only need to compile a single token id once per deployment.
@@ -46,7 +46,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-    const deployment = await prisma?.assetDeployment.findFirst({
+    const deployment = await prisma.assetDeployment.findFirst({
       where: { repository: { name: repositoryName, organisation: { name: organisationName } }, name: seed },
     })
 
