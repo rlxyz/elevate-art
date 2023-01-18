@@ -23,7 +23,7 @@ export const serverSchema = z.object({
   INNGEST_SIGNING_KEY: z.string(),
   INNGEST_EVENT_KEY: z.string(),
   /** GitHub API Keys */
-  GITHUB_API_SECRET_KEY: z.string(),
+  GH_API_SECRET_KEY: z.string(),
 })
 
 /**

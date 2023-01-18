@@ -1,6 +1,7 @@
 import { AssetDeploymentStatus } from '@prisma/client'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { env } from 'src/env/server.mjs'
 import { prisma } from '../../../server/db/client'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -8,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { authorization } = req.headers
 
-      if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+      if (authorization === `Bearer ${env.GH_API_SECRET_KEY}`) {
         const deployments = await prisma.assetDeployment.findMany({
           where: {
             OR: [
