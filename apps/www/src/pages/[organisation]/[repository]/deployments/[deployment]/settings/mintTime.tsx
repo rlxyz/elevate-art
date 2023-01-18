@@ -5,7 +5,7 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
 import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
@@ -62,12 +62,6 @@ const Page: NextPage = () => {
                     href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
                     selected: false,
                     icon: () => <TriangleIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Explore}`,
-                    selected: false,
-                    icon: () => <GlobeAltIcon className='w-4 h-4' />,
                   },
                 ]}
               />

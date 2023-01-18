@@ -3,7 +3,7 @@ import { Layout } from '@components/layout/core/Layout'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { CubeIcon } from '@heroicons/react/outline'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
@@ -24,8 +24,6 @@ export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEn
 
 export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; address?: string | undefined | null }) => {
   const { current } = useQueryContractDeployment({ address })
-  const { current: organisation } = useQueryContractDeployment({ address })
-  const { current: repository } = useQueryContractDeployment({ address })
   return (
     <Layout>
       <Layout.AppHeader>
@@ -55,12 +53,6 @@ export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; 
                   href: `/${ZoneNavigationEnum.enum.Deployments}`,
                   selected: false,
                   icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                },
-                {
-                  label: capitalize(ZoneNavigationEnum.enum.Explore),
-                  href: `/${ZoneNavigationEnum.enum.Explore}`,
-                  selected: true,
-                  icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
                 },
               ]}
             />

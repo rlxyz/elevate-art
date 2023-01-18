@@ -4,7 +4,7 @@ import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
+import { CubeIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -61,12 +61,6 @@ const Page = () => {
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
                     selected: true,
                     icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
-                    selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
                   },
                 ]}
               />

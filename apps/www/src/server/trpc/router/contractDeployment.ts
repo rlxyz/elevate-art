@@ -8,9 +8,8 @@ import { getPresaleTime } from '@server/common/ethers-get-contract-presale-time'
 import { getPublicTime } from '@server/common/ethers-get-contract-public-time'
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { TRPCError } from '@trpc/server'
-import type { ContractInformationData, PayoutData, RhapsodyContractData, SaleConfig } from '@utils/contracts/ContractData'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { BigNumber } from 'ethers'
-import { env } from 'src/env/server.mjs'
 import { z } from 'zod'
 import { publicProcedure, router } from '../trpc'
 
@@ -106,42 +105,5 @@ export const contractDeploymentRouter = router({
       }
 
       return deployment
-    }),
-  findContractDataByAddress: publicProcedure.input(z.object({ address: z.string(), chainId: z.number() })).query(async ({ ctx, input }) => {
-    const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}`)
-    if (!response.ok) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: `Something went wrong while fetching contract information data for ${input.address}`,
-      })
-    }
-    const contract = await response.json()
-    return contract as ContractInformationData
-  }),
-  findContractPayoutDataByAddress: publicProcedure
-    .input(z.object({ address: z.string(), chainId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}/payout`)
-      if (!response.ok) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: `Something went wrong while fetching contract payout data for ${input.address}`,
-        })
-      }
-      const contract = await response.json()
-      return contract as PayoutData
-    }),
-  findContractSaleConfigsByAddress: publicProcedure
-    .input(z.object({ address: z.string(), chainId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/blockchain/${input.chainId}/${input.address}/sale-configs`)
-      if (!response.ok) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: `Something went wrong while fetching contract sale config data for ${input.address}`,
-        })
-      }
-      const contract = await response.json()
-      return contract as SaleConfig[]
     }),
 })

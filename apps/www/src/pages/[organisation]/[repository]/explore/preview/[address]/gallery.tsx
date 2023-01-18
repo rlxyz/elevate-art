@@ -3,6 +3,7 @@ import { AssetDeploymentBranch } from '@prisma/client'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from 'src/server/db/client'
+
 export const Page: NextPage = () => <Gallery branch={AssetDeploymentBranch.PREVIEW} />
 
 /**

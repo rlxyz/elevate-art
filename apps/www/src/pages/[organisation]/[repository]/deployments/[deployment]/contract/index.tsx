@@ -6,11 +6,8 @@ import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
 import { Disclosure } from '@headlessui/react'
-import { CheckCircleIcon, ChevronRightIcon, CubeIcon, GlobeAltIcon, XCircleIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon, ChevronRightIcon, CubeIcon, XCircleIcon } from '@heroicons/react/solid'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
-import { useQueryContractDeploymentContractInformationData } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentContractInformationData'
-import { useQueryContractDeploymentPayoutData } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentPayoutData'
-import { useQueryContractDeploymentSaleConfig } from '@hooks/trpc/contractDeployment/useQueryContractDeploymentSaleConfig'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
@@ -32,18 +29,6 @@ const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: organisation } = useQueryOrganisationFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
-  const { all: contractData } = useQueryContractDeploymentContractInformationData({
-    address: contractDeployment?.address,
-    chainId: contractDeployment?.chainId,
-  })
-  const { all: payoutData } = useQueryContractDeploymentPayoutData({
-    address: contractDeployment?.address,
-    chainId: contractDeployment?.chainId,
-  })
-  const { all: saleConfigs } = useQueryContractDeploymentSaleConfig({
-    address: contractDeployment?.address,
-    chainId: contractDeployment?.chainId,
-  })
 
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
 
@@ -79,12 +64,6 @@ const Page = () => {
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
                     selected: true,
                     icon: (props: any) => <CubeIcon className='w-4 h-4' />,
-                  },
-                  {
-                    label: capitalize(ZoneNavigationEnum.enum.Explore),
-                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Explore),
-                    selected: false,
-                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
                   },
                 ]}
               />
