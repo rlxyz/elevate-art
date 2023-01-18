@@ -7,6 +7,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
 import { AssetDeploymentBranch, AssetDeploymentStatus } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
+import { formatEthereumHash } from '@utils/ethers'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
@@ -20,7 +21,12 @@ export const RepositoryDeploymentPreviewCard = ({
   organisationName,
   repositoryName,
 }: {
-  deployment: AssetDeployment & { contractDeployment: ContractDeployment | null }
+  deployment: AssetDeployment & {
+    contractDeployment: ContractDeployment | null
+    creator: {
+      address: string
+    } | null
+  }
   organisationName: string
   repositoryName: string
 }) => {
@@ -89,10 +95,14 @@ export const RepositoryDeploymentPreviewCard = ({
         </span>
       </div>
       <div className='text-xs flex justify-end items-center space-x-2'>
-        <span>
-          {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
-        </span>
-        <AvatarComponent src='/images/avatar-blank.png' />
+        {deployment.creator && (
+          <>
+            <span>
+              {timeAgo(deployment.createdAt)} by <strong>{formatEthereumHash(deployment.creator.address)}</strong>
+            </span>
+            <AvatarComponent src='/images/avatar-blank.png' />
+          </>
+        )}
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
