@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         if (deployments.length === 0) {
-          return { status: 200 }
+          return res.status(200).json({ success: false, message: 'No deployments to cancel' })
         }
 
         await updateManyByField(prisma, 'AssetDeployment', 'status', deployments, (x) => [x.id, AssetDeploymentStatus.FAILED])
