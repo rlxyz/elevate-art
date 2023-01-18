@@ -80,6 +80,13 @@ export const repositoryRouter = router({
       const { repositoryId } = input
       return await ctx.prisma.assetDeployment.findMany({
         where: { repositoryId: repositoryId },
+        include: {
+          creator: {
+            select: {
+              address: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       })
     }),
@@ -92,6 +99,7 @@ export const repositoryRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { repositoryId, collectionId } = input
+      const { user } = ctx.session
 
       const repository = await ctx.prisma.repository.findFirst({
         where: { id: repositoryId },
@@ -130,6 +138,7 @@ export const repositoryRouter = router({
           totalSupply: collection.totalSupply,
           branch: AssetDeploymentBranch.PREVIEW,
           status: AssetDeploymentStatus.PENDING,
+          creatorId: user.id,
           name: (Math.random() + 1).toString(36).substring(4),
           layerElements: layerElements.map(({ id, name, priority, traitElements }) => ({
             id,
@@ -147,6 +156,13 @@ export const repositoryRouter = router({
               ),
             })),
           })) as v.Layer[] as Prisma.JsonArray,
+        },
+        include: {
+          creator: {
+            select: {
+              address: true,
+            },
+          },
         },
       })
 

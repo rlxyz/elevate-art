@@ -33,7 +33,8 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    members OrganisationMember[]
+    members     OrganisationMember[]
+    deployments AssetDeployment[]
 }
 
 model Organisation {
@@ -109,10 +110,14 @@ model AssetDeployment {
     generations Int // based on collection.generations
     slug        String @db.VarChar(255) // based on collection.name
 
+    creator   User?   @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+    creatorId String?
+
     repositoryId String
     repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
     @@index([repositoryId, name], name: "assetDeploymentIdentifier")
+    @@index([creatorId])
 }
 
 model Collection {

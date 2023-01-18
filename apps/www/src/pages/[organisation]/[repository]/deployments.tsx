@@ -12,15 +12,17 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repository/useQueryRepositoryDeployments'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useNotification } from '@hooks/utils/useNotification'
-import { AssetDeployment, AssetDeploymentStatus } from '@prisma/client'
+import type { AssetDeployment } from '@prisma/client'
+import { AssetDeploymentStatus } from '@prisma/client'
 import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
-import { toPascalCaseWithSpace } from 'src/client/utils/format'
+import { formatEthereumHash, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import { CollectionNavigationEnum } from 'src/shared/enums'
@@ -31,7 +33,11 @@ const DeploymentPreviewCard = ({
   organisationName,
   repositoryName,
 }: {
-  deployment: AssetDeployment
+  deployment: AssetDeployment & {
+    creator: {
+      address: string
+    } | null
+  }
   organisationName: string
   repositoryName: string
 }) => {
@@ -92,10 +98,14 @@ const DeploymentPreviewCard = ({
         </span>
       </div>
       <div className='text-xs flex justify-end items-center space-x-2'>
-        <span>
-          {timeAgo(deployment.createdAt)} by <strong>Jeevan Pillay</strong>
-        </span>
-        <AvatarComponent src='/images/avatar-blank.png' />
+        {deployment.creator?.address && (
+          <>
+            <span>
+              {timeAgo(deployment.createdAt)} by <strong>{formatEthereumHash(deployment.creator?.address)}</strong>
+            </span>
+            <AvatarComponent src='/images/avatar-blank.png' />
+          </>
+        )}
         <div className='relative w-6'>
           <Menu vertical position='bottom-left'>
             <Menu.Items>
