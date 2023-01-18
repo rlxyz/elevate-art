@@ -10,11 +10,11 @@ export const useQueryContractDeploymentProduction = ({ repositoryName }: { repos
     { organisationName: o, repositoryName: r },
     {
       enabled: !!o || !!r,
-      onError: (err) => {
-        if (err.message === 'No production contract found') {
-          router.push('/404')
-        }
-      },
+      // onError: (err) => {
+      //   if (err.message === 'No production contract found') {
+      //     router.push('/404')
+      //   }
+      // },
     }
   )
   return {

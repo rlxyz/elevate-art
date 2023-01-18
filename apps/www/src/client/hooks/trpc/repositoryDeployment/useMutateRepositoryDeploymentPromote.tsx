@@ -1,6 +1,6 @@
-import { useQueryContractDeploymentProduction } from '@components/explore/SaleLayout/useQueryContractDeploymentProduction'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useNotification } from '@hooks/utils/useNotification'
+import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { AssetDeploymentBranch } from '@prisma/client'
 import produce from 'immer'
 import { toPascalCaseWithSpace } from 'src/client/utils/format'
@@ -8,8 +8,8 @@ import { trpc } from 'src/client/utils/trpc'
 
 export const useMutateRepositoryDeploymentPromote = () => {
   const ctx = trpc.useContext()
-  const { refetch } = useQueryContractDeploymentProduction({})
   const { notifySuccess, notifyError } = useNotification()
+  const { organisationName, repositoryName } = useRepositoryRoute()
   const repositoryId = useRepositoryStore((state) => state.repositoryId)
   return trpc.repository.promoteAssetDeployment.useMutation({
     onSuccess: (data, variables) => {
@@ -28,7 +28,10 @@ export const useMutateRepositoryDeploymentPromote = () => {
         return next
       })
       // refetch the production deployment
-      refetch()
+      ctx.contractDeployment.findProductionContract.invalidate({
+        organisationName,
+        repositoryName,
+      })
     },
     onError: (err) => {
       notifyError(err.message)

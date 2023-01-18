@@ -17,11 +17,8 @@ export const RepositoryDisplayCard = ({
   repository: Repository
   state?: 'LIVE'
 }) => {
-  const { current } = useQueryContractDeploymentProduction({
-    repositoryName: repository.name,
-  })
+  const { current } = useQueryContractDeploymentProduction({ repositoryName: repository.name })
   const [imgSrc, setImgSrc] = useState<string | null>(repository.id ? createLogoUrl({ id: repository.id }) : null)
-
   const fetchImage = async () => {
     if (!repository.id) return
     const response = await fetch(createLogoUrl({ id: repository.id }))

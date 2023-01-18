@@ -2,6 +2,13 @@ import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+export const config = {
+  api: {
+    responseLimit: '20mb',
+    externalResolver: true,
+  },
+}
+
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   if (!session || !session.user) {

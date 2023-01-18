@@ -41,7 +41,7 @@ const Page: NextPage = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)} loading={!organisation?.name}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
@@ -88,7 +88,8 @@ const Page: NextPage = () => {
                 name: AssetDeploymentNavigationEnum.enum.Overview,
                 href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
                 enabled: false,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
+                disabled: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Contract,
@@ -100,7 +101,8 @@ const Page: NextPage = () => {
                   AssetDeploymentNavigationEnum.enum.Contract
                 ),
                 enabled: false,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
+                disabled: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Settings,
@@ -113,7 +115,8 @@ const Page: NextPage = () => {
                   ContractSettingsNavigationEnum.enum.Allowlist
                 ),
                 enabled: true,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
+                disabled: !organisation?.name || !repository?.name || !deployment?.name,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />

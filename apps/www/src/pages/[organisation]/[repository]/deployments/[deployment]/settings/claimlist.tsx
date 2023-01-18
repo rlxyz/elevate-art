@@ -88,7 +88,7 @@ const Page: NextPage = () => {
                 name: AssetDeploymentNavigationEnum.enum.Overview,
                 href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
                 enabled: false,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Contract,
@@ -100,7 +100,7 @@ const Page: NextPage = () => {
                   AssetDeploymentNavigationEnum.enum.Contract
                 ),
                 enabled: false,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
                 name: AssetDeploymentNavigationEnum.enum.Settings,
@@ -113,7 +113,7 @@ const Page: NextPage = () => {
                   ContractSettingsNavigationEnum.enum.Allowlist
                 ),
                 enabled: true,
-                loading: isLoading,
+                loading: !organisation?.name || !repository?.name || !deployment?.name,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
@@ -137,6 +137,7 @@ const Page: NextPage = () => {
                         ContractSettingsNavigationEnum.enum.Allowlist
                       ),
                       selected: false,
+                      disabled: !organisation?.name || !repository?.name || !deployment?.name,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.Claimlist,
@@ -149,6 +150,7 @@ const Page: NextPage = () => {
                         ContractSettingsNavigationEnum.enum.Claimlist
                       ),
                       selected: true,
+                      disabled: !organisation?.name || !repository?.name || !deployment?.name,
                     },
                     {
                       name: ContractSettingsNavigationEnum.enum.MintTime,
@@ -161,6 +163,7 @@ const Page: NextPage = () => {
                         ContractSettingsNavigationEnum.enum.MintTime
                       ),
                       selected: false,
+                      disabled: !organisation?.name || !repository?.name || !deployment?.name,
                     },
                   ]}
                 />
