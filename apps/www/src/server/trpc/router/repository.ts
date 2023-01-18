@@ -152,7 +152,7 @@ export const repositoryRouter = router({
 
       try {
         await createIngestInstance().send({
-          name: 'repository-deployment/images.create',
+          name: 'repository-deployment/images.bundle.create',
           data: {
             branch: deployment.branch,
             repositoryId: deployment.repositoryId,
