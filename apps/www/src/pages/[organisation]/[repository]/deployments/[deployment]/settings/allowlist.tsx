@@ -1,4 +1,5 @@
 import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -11,6 +12,7 @@ import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeploy
 import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { WhitelistType } from '@prisma/client'
 import type { NextPage } from 'next'
@@ -33,7 +35,7 @@ const Page: NextPage = () => {
   const { current: whitelist } = useQueryContractDeploymentWhitelist({
     type: WhitelistType.ALLOWLIST,
   })
-
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
       <Layout>
@@ -42,7 +44,14 @@ const Page: NextPage = () => {
             <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={routeBuilder(organisation?.name, repository?.name)}
+              loading={!organisation?.name || !repository?.name}
+              disabled={!hasProductionDeployment}
+            >
+              <FilterWithTextLive />
+            </AppRoutesNavbar.Item>
 
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}

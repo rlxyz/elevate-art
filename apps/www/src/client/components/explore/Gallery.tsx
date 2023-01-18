@@ -1,19 +1,21 @@
 import { useQueryContractDeployment } from '@components/explore/SaleLayout/useQueryContractDeployment'
 import { Layout } from '@components/layout/core/Layout'
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { CubeIcon } from '@heroicons/react/outline'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { ZoneNavigationEnum } from '@utils/enums'
+import { ExploreNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { CollectionLayout } from './CollectionLayout/CollectionLayout'
 import { GalleryLayout } from './GalleryLayout/GalleryLayout'
-import { OrganisationNavigationEnum } from './Mint'
 import { MintPreviewWarningHeader } from './MintPreviewWarningHeader'
 
 export const Gallery = ({ branch, address = '' }: { branch: AssetDeploymentBranch; address?: string | undefined | null }) => {
   const { current } = useQueryContractDeployment({ address })
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
   return (
     <Layout>
       <Layout.AppHeader>
@@ -27,8 +29,11 @@ export const Gallery = ({ branch, address = '' }: { branch: AssetDeploymentBranc
             label={current?.deployment.repository.name || ''}
             href={routeBuilder(current?.deployment.repository.organisation.name, current?.deployment.repository.name)}
             loading={!current?.deployment.repository.name || !current?.deployment.repository.organisation.name}
-          />
-          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`}>
+            disabled={!hasProductionDeployment}
+          >
+            <FilterWithTextLive />
+          </AppRoutesNavbar.Item>
+          <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`} disabled>
             <ZoneRoutesNavbarPopover
               title='Apps'
               routes={[
@@ -53,27 +58,27 @@ export const Gallery = ({ branch, address = '' }: { branch: AssetDeploymentBranc
         <PageRoutesNavbar>
           {[
             {
-              name: OrganisationNavigationEnum.enum.Mint,
+              name: ExploreNavigationEnum.enum.Mint,
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
                 branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
                 branch === AssetDeploymentBranch.PREVIEW && 'preview',
                 branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
-                branch === AssetDeploymentBranch.PREVIEW && OrganisationNavigationEnum.enum.Mint
+                branch === AssetDeploymentBranch.PREVIEW && ExploreNavigationEnum.enum.Mint
               ),
               enabled: false,
               loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,
             },
             {
-              name: OrganisationNavigationEnum.enum.Gallery,
+              name: ExploreNavigationEnum.enum.Gallery,
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
                 branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
                 branch === AssetDeploymentBranch.PREVIEW && 'preview',
                 branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
-                OrganisationNavigationEnum.enum.Gallery
+                ExploreNavigationEnum.enum.Gallery
               ),
               enabled: true,
               loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,

@@ -12,6 +12,7 @@ import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollec
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -19,6 +20,7 @@ import { OrganisationAuthLayout } from 'src/client/components/organisation/Organ
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { FilterWithTextLive } from '../../../../client/components/layout/FilterWithTextLive'
 
 const Page = () => {
   const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
@@ -38,6 +40,7 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
   const { collectionName } = useRepositoryRoute()
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
 
   useEffect(() => {
     if (!repository) return
@@ -66,7 +69,10 @@ const Page = () => {
               label={repository?.name || ''}
               href={routeBuilder(organisation?.name, repository?.name)}
               loading={!organisation?.name || !repository?.name}
-            />
+              disabled={!hasProductionDeployment}
+            >
+              <FilterWithTextLive />
+            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Create)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}

@@ -2,8 +2,10 @@ import { useQueryContractDeploymentProduction } from '@components/explore/SaleLa
 import Card from '@components/layout/card/Card'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import { createLogoUrl } from '@components/layout/LogoDisplay'
-import { CollectionIcon, CubeIcon, CurrencyDollarIcon } from '@heroicons/react/outline'
+import { CollectionIcon, CubeIcon } from '@heroicons/react/outline'
 import type { Repository } from '@prisma/client'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 
 export const RepositoryDisplayCard = ({
@@ -18,6 +20,24 @@ export const RepositoryDisplayCard = ({
   const { current } = useQueryContractDeploymentProduction({
     repositoryName: repository.name,
   })
+  const [imgSrc, setImgSrc] = useState<string | null>(repository.id ? createLogoUrl({ id: repository.id }) : null)
+
+  const fetchImage = async () => {
+    if (!repository.id) return
+    const response = await fetch(createLogoUrl({ id: repository.id }))
+    if (!response.ok) {
+      setImgSrc(null)
+      return
+    }
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    setImgSrc(url)
+  }
+
+  useEffect(() => {
+    fetchImage()
+  }, [repository.id])
+
   return (
     <Card>
       <div className='space-y-0.5'>
@@ -35,21 +55,17 @@ export const RepositoryDisplayCard = ({
         </div>
       </div>
       <div className='relative h-72 w-full border-mediumGrey border rounded-[5px] overflow-hidden bg-lightGray'>
-        <img
-          className='absolute w-full object-cover aspect-1 rounded-[5px]'
-          alt={`logo-${repository.id}`}
-          src={createLogoUrl({
-            id: repository.id,
-          })}
-        />
+        {imgSrc && (
+          <Image className='absolute w-full object-cover aspect-1 rounded-[5px]' alt={`logo-${repository.id}`} src={imgSrc} fill />
+        )}
       </div>
       <div className='space-y-1'>
         {[
-          {
-            label: 'Price',
-            value: '0.01 ETH',
-            icon: (props: any) => <CurrencyDollarIcon {...props} />,
-          },
+          // {
+          //   label: 'Price',
+          //   value: '0.01 ETH',
+          //   icon: (props: any) => <CurrencyDollarIcon {...props} />,
+          // },
           {
             label: 'Total Supply',
             value: current?.assetDeployment?.totalSupply,

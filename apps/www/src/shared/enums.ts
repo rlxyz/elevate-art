@@ -149,3 +149,14 @@ export const RulesEnum = z.nativeEnum(
   })
 )
 export type RulesType = z.infer<typeof RulesEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const ExploreNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Mint: 'mint', // only for personal accounts
+    Gallery: 'gallery', // only for personal accounts
+  })
+)
+
+export type ExploreNavigationType = z.infer<typeof ExploreNavigationEnum>

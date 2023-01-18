@@ -1,5 +1,6 @@
 import RepositoryDeploymentCreateModal from '@components/deployments/assetDeployment/RepositoryDeploymentCreateModal'
 import { RepositoryDeploymentPreviewCard } from '@components/deployments/assetDeployment/RepositoryDeploymentPreviewCard'
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -10,6 +11,7 @@ import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollec
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
 import { DeploymentNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
@@ -29,6 +31,7 @@ const Page = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
   const { organisationName, repositoryName } = useRepositoryRoute()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
 
   useEffect(() => {
     if (!repository) return
@@ -40,10 +43,17 @@ const Page = () => {
       <Layout>
         <Layout.AppHeader>
           <AppRoutesNavbar>
-            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)} loading={!organisation?.name}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={routeBuilder(organisation?.name, repository?.name)}
+              loading={!organisation?.name || !repository?.name}
+              disabled={!hasProductionDeployment}
+            >
+              <FilterWithTextLive />
+            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}

@@ -9,7 +9,7 @@ import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { env } from 'src/env/server.mjs'
 import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
-import { protectedProcedure, router } from '../trpc'
+import { protectedProcedure, publicProcedure, router } from '../trpc'
 
 /**
  * Repository Router
@@ -28,6 +28,23 @@ export const repositoryRouter = router({
     .query(async ({ ctx, input }) => {
       const { repositoryName: r, organisationName: o } = input
       return await ctx.prisma.repository.findFirst({ where: { name: r, organisation: { name: o } } })
+    }),
+  hasProductionDeployment: publicProcedure
+    .input(
+      z.object({
+        repositoryName: z.string(),
+        organisationName: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { repositoryName: r, organisationName: o } = input
+      const repository = await ctx.prisma.repository.findFirst({ where: { name: r, organisation: { name: o } } })
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+      return !!(await ctx.prisma.assetDeployment.findFirst({
+        where: { repositoryId: repository.id, branch: AssetDeploymentBranch.PRODUCTION },
+      }))
     }),
   create: protectedProcedure
     .input(

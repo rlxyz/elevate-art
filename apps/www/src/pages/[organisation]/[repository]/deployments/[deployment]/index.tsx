@@ -1,3 +1,4 @@
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -8,6 +9,7 @@ import { CubeIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
@@ -22,6 +24,8 @@ const Page = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
+
   useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
@@ -35,7 +39,14 @@ const Page = () => {
             <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
               <OrganisationRoutesNavbarPopover />
             </AppRoutesNavbar.Item>
-            <AppRoutesNavbar.Item label={repository?.name || ''} href={routeBuilder(organisation?.name, repository?.name)} />
+            <AppRoutesNavbar.Item
+              label={repository?.name || ''}
+              href={routeBuilder(organisation?.name, repository?.name)}
+              loading={!organisation?.name || !repository?.name}
+              disabled={!hasProductionDeployment}
+            >
+              <FilterWithTextLive />
+            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}

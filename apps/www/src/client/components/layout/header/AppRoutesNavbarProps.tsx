@@ -93,10 +93,16 @@ const AppRoutesNavbarItem: FC<
       <LoadingBar />
     ) : (
       <>
-        <NextLinkComponent aria-disabled={disabled} href={href} className='w-fit'>
-          <span className='text-xs'>{label}</span>
-        </NextLinkComponent>
-        {children}
+        {disabled ? (
+          <span className='text-darkGrey'>{label}</span>
+        ) : (
+          <div className='flex space-x-1 items-center'>
+            <NextLinkComponent aria-disabled={disabled} href={href} className='w-fit'>
+              <span className='text-xs'>{label}</span>
+            </NextLinkComponent>
+            {children}
+          </div>
+        )}
       </>
     )}
   </div>

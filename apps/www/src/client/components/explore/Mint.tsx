@@ -1,29 +1,22 @@
 import { useQueryContractDeployment } from '@components/explore/SaleLayout/useQueryContractDeployment'
 import { Layout } from '@components/layout/core/Layout'
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { CubeIcon } from '@heroicons/react/outline'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { ZoneNavigationEnum } from '@utils/enums'
+import { ExploreNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { z } from 'zod'
 import { CollectionLayout } from './CollectionLayout/CollectionLayout'
 import { MintLayout } from './MintLayout/MintLayout'
 import { MintPreviewWarningHeader } from './MintPreviewWarningHeader'
 import { SaleLayoutLoading } from './SaleLayout/SaleLayoutLoading'
 
-export const OrganisationNavigationEnum = z.nativeEnum(
-  Object.freeze({
-    Overview: 'overview',
-    Mint: 'mint', // only for personal accounts
-    Gallery: 'gallery', // only for personal accounts
-  })
-)
-export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
-
 export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; address?: string | undefined | null }) => {
   const { current } = useQueryContractDeployment({ address })
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
   return (
     <Layout>
       <Layout.AppHeader>
@@ -37,7 +30,10 @@ export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; 
             label={current?.deployment.repository.name || ''}
             href={routeBuilder(current?.deployment.repository.organisation.name, current?.deployment.repository.name)}
             loading={!current?.deployment.repository.name || !current?.deployment.repository.organisation.name}
-          />
+            disabled={!hasProductionDeployment}
+          >
+            <FilterWithTextLive />
+          </AppRoutesNavbar.Item>
           <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Explore)} href={`/${ZoneNavigationEnum.enum.Explore}`} disabled>
             <ZoneRoutesNavbarPopover
               title='Apps'
@@ -63,27 +59,27 @@ export const Mint = ({ branch, address = '' }: { branch: AssetDeploymentBranch; 
         <PageRoutesNavbar>
           {[
             {
-              name: OrganisationNavigationEnum.enum.Mint,
+              name: ExploreNavigationEnum.enum.Mint,
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
                 branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
                 branch === AssetDeploymentBranch.PREVIEW && 'preview',
                 branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
-                branch === AssetDeploymentBranch.PREVIEW && OrganisationNavigationEnum.enum.Mint
+                branch === AssetDeploymentBranch.PREVIEW && ExploreNavigationEnum.enum.Mint
               ),
               enabled: true,
               loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,
             },
             {
-              name: OrganisationNavigationEnum.enum.Gallery,
+              name: ExploreNavigationEnum.enum.Gallery,
               href: routeBuilder(
                 current?.deployment.repository.organisation.name,
                 current?.deployment.repository.name,
                 branch === AssetDeploymentBranch.PREVIEW && ZoneNavigationEnum.enum.Explore,
                 branch === AssetDeploymentBranch.PREVIEW && 'preview',
                 branch === AssetDeploymentBranch.PREVIEW && current?.deployment.address,
-                OrganisationNavigationEnum.enum.Gallery
+                ExploreNavigationEnum.enum.Gallery
               ),
               enabled: false,
               loading: !current?.deployment.repository.name || !current?.deployment.repository.organisation.name,

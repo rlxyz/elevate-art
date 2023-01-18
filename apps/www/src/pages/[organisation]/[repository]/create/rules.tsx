@@ -1,5 +1,6 @@
 import { RulesDisplay } from '@components/create/repository/RulesDisplay'
 import { RulesSelector } from '@components/create/repository/RulesSelector'
+import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
@@ -9,6 +10,7 @@ import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
+import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -21,6 +23,7 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { current: organisation } = useQueryOrganisationFindAll()
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
+  const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
 
   useEffect(() => {
     if (!repository) return
@@ -39,7 +42,10 @@ const Page = () => {
               label={repository?.name || ''}
               href={routeBuilder(organisation?.name, repository?.name)}
               loading={!organisation?.name || !repository?.name}
-            />
+              disabled={!hasProductionDeployment}
+            >
+              <FilterWithTextLive />
+            </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Create)}
               href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}
