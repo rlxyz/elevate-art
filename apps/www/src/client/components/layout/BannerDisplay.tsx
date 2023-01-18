@@ -12,7 +12,9 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
   const fetchImage = async () => {
     if (!id) return
     const response = await fetch(createBannerUrl({ id }))
-    if (!response.ok) return
+    if (!response.ok) {
+      return setImgSrc(null)
+    }
     const blob = await response.blob()
     const url = URL.createObjectURL(blob)
     setImgSrc(url)

@@ -8,7 +8,14 @@ export const useQueryContractDeploymentProduction = ({ repositoryName }: { repos
   const o: string = router.query.organisation as string
   const { data, isLoading, isError, refetch } = trpc.contractDeployment.findProductionContract.useQuery(
     { organisationName: o, repositoryName: r },
-    { enabled: !!o || !!r }
+    {
+      enabled: !!o || !!r,
+      onError: (err) => {
+        if (err.message === 'No production contract found') {
+          router.push('/404')
+        }
+      },
+    }
   )
   return {
     current: data,
