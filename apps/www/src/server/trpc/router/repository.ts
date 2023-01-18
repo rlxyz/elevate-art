@@ -5,7 +5,7 @@ import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
 import { ethers } from 'ethers'
-import { capitalize } from 'src/client/utils/format'
+import { toPascalCaseWithSpace } from 'src/client/utils/format'
 import { env } from 'src/env/server.mjs'
 import type * as v from 'src/shared/compiler'
 import { z } from 'zod'
@@ -43,7 +43,7 @@ export const repositoryRouter = router({
         data: {
           organisationId,
           name,
-          tokenName: capitalize(name),
+          tokenName: toPascalCaseWithSpace(name),
           collections: {
             create: {
               name: 'main',
@@ -199,7 +199,7 @@ export const repositoryRouter = router({
 
       try {
         await createIngestInstance().send({
-          name: 'repository-deployment/images.create',
+          name: 'repository-deployment/images.bundle.create',
           data: {
             branch: assetDeployment.branch,
             type: assetDeployment.type,

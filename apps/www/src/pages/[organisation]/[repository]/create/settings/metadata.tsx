@@ -38,7 +38,7 @@ const Page: NextPage = () => {
             <AppRoutesNavbar.Item
               label={repository?.name || ''}
               href={routeBuilder(organisation?.name, repository?.name)}
-              loading={!organisation?.name}
+              loading={!organisation?.name || !repository?.name}
             />
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Create)}
@@ -77,7 +77,7 @@ const Page: NextPage = () => {
                 name: CollectionNavigationEnum.enum.Preview,
                 href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                 enabled: false,
-                loading: false,
+                loading: !organisation?.name || !repository?.name,
               },
               {
                 name: CollectionNavigationEnum.enum.Rarity,
@@ -100,7 +100,7 @@ const Page: NextPage = () => {
                   CollectionNavigationEnum.enum.Rules
                 ),
                 enabled: false,
-                loading: false,
+                loading: !organisation?.name || !repository?.name,
               },
               {
                 name: CollectionNavigationEnum.enum.Settings,
@@ -111,7 +111,7 @@ const Page: NextPage = () => {
                   CollectionNavigationEnum.enum.Settings
                 ),
                 enabled: true,
-                loading: false,
+                loading: !organisation?.name || !repository?.name,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />

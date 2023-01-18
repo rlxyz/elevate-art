@@ -1,7 +1,6 @@
-import SearchComponent from '@components/layout/search/Search'
 import type { Organisation, Repository } from '@prisma/client'
-import { useState } from 'react'
-import { RepositoryDisplayCard } from './RepositoryDisplayCard'
+import { OrganisationDisplayBodyFound } from './OrganisationDisplayBodyFound'
+import { OrganisationDisplayBodyNotFound } from './OrganisationDisplayBodyNotFound'
 
 export const OrganisationDisplayBody = ({
   organisation,
@@ -10,20 +9,17 @@ export const OrganisationDisplayBody = ({
   organisation: Organisation | undefined | null
   repositories: Repository[] | undefined | null
 }) => {
-  const [query, setQuery] = useState('')
-  const filteredRepositories = repositories?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   return (
     <div className='space-y-6'>
-      <span className='font-semibold'>{organisation?.name}&apos;s Collections</span>
-      <SearchComponent
-        onChange={(e) => {
-          setQuery(e.target.value)
-        }}
-      />
-      <div className='grid grid-cols-3 gap-6'>
-        {organisation &&
-          filteredRepositories?.map((r) => <RepositoryDisplayCard key={r.name} repository={r} organisationName={organisation?.name} />)}
-      </div>
+      {organisation && repositories && (
+        <>
+          {repositories.length > 0 ? (
+            <OrganisationDisplayBodyFound organisation={organisation} repositories={repositories} />
+          ) : (
+            <OrganisationDisplayBodyNotFound />
+          )}
+        </>
+      )}
     </div>
   )
 }

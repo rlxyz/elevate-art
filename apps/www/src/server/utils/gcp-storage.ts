@@ -22,7 +22,9 @@ export const storage = new Storage({
 })
 
 export const getAssetDeploymentBucketName = ({ branch }: { branch: AssetDeploymentBranch }) => {
-  return `elevate-asset-deployment-${branch}`.toLowerCase()
+  if (env.NEXT_PUBLIC_NODE_ENV === 'production') return `elevate-asset-deployment-${branch}-main`.toLowerCase()
+  if (env.NEXT_PUBLIC_NODE_ENV === 'staging') return `elevate-asset-deployment-${branch}-staging`.toLowerCase()
+  return `elevate-asset-deployment-${branch}-localhost`.toLowerCase()
 }
 
 export const getAssetDeploymentBucket = ({ branch }: { branch: AssetDeploymentBranch }) => {

@@ -1,7 +1,7 @@
-import { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeploymentBranch } from '@prisma/client'
 import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
 import { Result } from '@server/utils/response-result'
-import * as v from 'src/shared/compiler'
+import type * as v from 'src/shared/compiler'
 import { getTraitElementImage } from './cld-get-image'
 
 export const fetchAndSaveAllTraitElementsToGCP = ({
@@ -50,6 +50,8 @@ export const fetchAndSaveTraitElementToGCP = async ({
   if (response.failed) {
     return Result.fail('Could not get image from Cloudinary')
   }
+
+  console.log('saving', { r, l, t })
 
   /* Get Buffer */
   const buffer = response.getValue()
