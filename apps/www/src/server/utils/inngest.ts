@@ -4,7 +4,7 @@ import { env } from 'src/env/server.mjs'
 
 export type InngestEvents = {
   'repository-deployment/bundle-images': {
-    name: 'repository-deployment/images.create'
+    name: 'repository-deployment/images.bundle.create'
     data: { repositoryId: string; deploymentId: string; layerElements: Prisma.JsonArray; branch: AssetDeploymentBranch }
   }
 }
