@@ -1,4 +1,4 @@
-name: daily-cron
+name: repository-deployment/bundle-images-cancel
 on:
   schedule:
     - cron: "*/5 * * * *"
