@@ -15,7 +15,7 @@ import { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { capitalize, clsx, routeBuilder } from 'src/client/utils/format'
 import {
   AssetDeploymentNavigationEnum,
   ContractSettingsNavigationEnum,
@@ -30,26 +30,42 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { data } = useFetchContractData({
+  const {
+    data: { publicTime, presaleTime, claimTime },
+  } = useFetchContractData({
     contractAddress: contractDeployment?.address || '',
     chainId: contractDeployment?.chainId || 99,
     enabled: !!contractDeployment?.address,
     version: '0.1.0',
   })
 
-  let claimTime = null
-  let presaleTime = null
-  let publicTime = null
+  let valueClaimTime = new Date()
+  let valuePresaleTime = new Date()
+  let valuePublicTime = new Date()
+  let currentClaimTime = new Date()
+  let currentPresaleTime = new Date()
+  let currentPublicTime = new Date()
 
-  if (data.claimTime !== undefined) {
-    claimTime = new Date(BigNumber.from(data.claimTime.toString()).toNumber())
+  if (claimTime !== undefined) {
+    currentClaimTime = new Date(BigNumber.from(claimTime.toString()).toNumber())
+    const unixTimestamp = Math.round(claimTime.toNumber() / 1000)
+    valueClaimTime = new Date(unixTimestamp * 1000)
   }
-  if (data.presaleTime !== undefined) {
-    presaleTime = new Date(BigNumber.from(data.presaleTime.toString()).toNumber())
+  if (presaleTime !== undefined) {
+    currentPresaleTime = new Date(BigNumber.from(presaleTime.toString()).toNumber())
+    const unixTimestamp = Math.round(presaleTime.toNumber() / 1000)
+    valuePresaleTime = new Date(unixTimestamp * 1000)
   }
-  if (data.publicTime !== undefined) {
-    publicTime = new Date(BigNumber.from(data.publicTime.toString()).toNumber())
+
+  if (publicTime !== undefined) {
+    currentPublicTime = new Date(BigNumber.from(publicTime.toString()).toNumber())
+    const unixTimestamp = Math.round(publicTime.toNumber() / 1000)
+    valuePublicTime = new Date(unixTimestamp * 1000)
   }
+
+  const datetimeLocalClaimTime = valueClaimTime.toISOString().slice(0, 16)
+  const datetimeLocalPresaleTime = valuePresaleTime.toISOString().slice(0, 16)
+  const datetimeLocalPublicTime = valuePublicTime.toISOString().slice(0, 16)
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -198,34 +214,42 @@ const Page: NextPage = () => {
                         <div className='space-y-2'>
                           <div className='text-sm text-gray-500'>
                             <>
-                              <div>Claim Mint Time: {claimTime?.toString()}</div>
-                              <div>Presale Mint Time: {presaleTime?.toString()}</div>
-                              <div>Public Mint Time: {publicTime?.toString()}</div>
+                              <div>Claim Mint Time: {currentClaimTime?.toString()}</div>
+                              <div>Presale Mint Time: {currentPresaleTime?.toString()}</div>
+                              <div>Public Mint Time: {currentPublicTime?.toString()}</div>
                             </>
                           </div>
                           <div className='flex items-center space-x-2'>
-                            {/* <input
-                              {...register(`saleConfigs.${index}.startTimestamp`, {
-                                required: true,
-                                valueAsDate: true,
-                                onChange: (e) => {
-                                  if (e.target.value) {
-                                    setValue(`saleConfigs.${index}.startTimestamp`, e.target.value)
-                                  }
-                                },
-                              })}
-                              label={'Start Time'}
-                              className='col-span-3'
-                            /> */}
+                            <div className={clsx('flex flex-col space-y-1 w-full')}>
+                              <label className='text-xs font-semibold'>CLAIM TIME</label>
+                              <input
+                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+                                value={datetimeLocalClaimTime}
+                                type='datetime-local'
+                                min={new Date().toISOString().split('.')[0]}
+                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
+                              />
+                              <label className='text-xs font-semibold'>PRESALE MINT TIME </label>
+                              <input
+                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+                                value={datetimeLocalPresaleTime}
+                                type='datetime-local'
+                                min={new Date().toISOString().split('.')[0]}
+                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
+                              />
+                              <label className='text-xs font-semibold'>PUBLIC MINT TIME</label>
+                              <input
+                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
+                                value={datetimeLocalPublicTime}
+                                type='datetime-local'
+                                min={new Date().toISOString().split('.')[0]}
+                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </SettingLayout.Body>
-                    {/* <SettingLayout.Footer>
-                      <Button variant='primary' size='small' onClick={() => {}}>
-                        Save
-                      </Button>
-                    </SettingLayout.Footer> */}
                   </SettingLayout>
                 </div>
               </div>

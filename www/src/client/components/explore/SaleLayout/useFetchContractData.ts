@@ -64,7 +64,7 @@ export const useFetchContractDataMutatableOnly = ({ contractAddress, chainId, en
       // collectionMintLeft: BigNumber.from(data[2]).sub(BigNumber.from(data[0])) as BigNumber,
       presaleMerkleRoot: data[1] as string,
       claimMerkleRoot: data[2] as string,
-      publicTime: data[3] as number,
+      publicTime: BigNumber.from(data[3]),
       presaleTime: BigNumber.from(data[4]),
       claimTime: BigNumber.from(data[5]),
     }),
