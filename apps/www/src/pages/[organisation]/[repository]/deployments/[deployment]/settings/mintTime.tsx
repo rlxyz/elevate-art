@@ -1,9 +1,9 @@
+import { ContractDeploymentMintSettings } from '@components/deployments/contractDeployment/ContractDeploymentSettings/ContractDeploymentMintSettings'
 import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
-import SettingLayout from '@components/layout/settings'
 import { SettingNavigation } from '@components/layout/settings/SettingNavigation'
 import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
@@ -14,17 +14,16 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { capitalize, clsx, routeBuilder } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import {
   AssetDeploymentNavigationEnum,
   ContractSettingsNavigationEnum,
   DeploymentNavigationEnum,
   OrganisationNavigationEnum,
-  ZoneNavigationEnum
+  ZoneNavigationEnum,
 } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -32,6 +31,7 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
+
   const {
     data: { publicTime, presaleTime, claimTime },
   } = useFetchContractData({
@@ -40,35 +40,8 @@ const Page: NextPage = () => {
     enabled: !!contractDeployment?.address,
     version: '0.1.0',
   })
+
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
-
-  let valueClaimTime = new Date()
-  let valuePresaleTime = new Date()
-  let valuePublicTime = new Date()
-  let currentClaimTime = new Date()
-  let currentPresaleTime = new Date()
-  let currentPublicTime = new Date()
-
-  if (claimTime !== undefined) {
-    currentClaimTime = new Date(BigNumber.from(claimTime.toString()).toNumber())
-    const unixTimestamp = Math.round(claimTime.toNumber() / 1000)
-    valueClaimTime = new Date(unixTimestamp * 1000)
-  }
-  if (presaleTime !== undefined) {
-    currentPresaleTime = new Date(BigNumber.from(presaleTime.toString()).toNumber())
-    const unixTimestamp = Math.round(presaleTime.toNumber() / 1000)
-    valuePresaleTime = new Date(unixTimestamp * 1000)
-  }
-
-  if (publicTime !== undefined) {
-    currentPublicTime = new Date(BigNumber.from(publicTime.toString()).toNumber())
-    const unixTimestamp = Math.round(publicTime.toNumber() / 1000)
-    valuePublicTime = new Date(unixTimestamp * 1000)
-  }
-
-  const datetimeLocalClaimTime = valueClaimTime.toISOString().slice(0, 16)
-  const datetimeLocalPresaleTime = valuePresaleTime.toISOString().slice(0, 16)
-  const datetimeLocalPublicTime = valuePublicTime.toISOString().slice(0, 16)
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>
@@ -203,61 +176,15 @@ const Page: NextPage = () => {
                 />
               </div>
               <div className='col-span-8'>
-                <div className='space-y-6'>
-                  <SettingLayout>
-                    <SettingLayout.Header title='Mint Time' />
-                    <SettingLayout.Body>
-                      <div className='space-y-6'>
-                        <div className='space-y-2'>
-                          <div className='text-sm text-gray-500'>
-                            The mint time is the time that the NFT will be minted at. This is useful for NFTs that have a specific time in
-                            their story.
-                          </div>
-                          <div className='text-sm text-gray-500'>
-                            If you do not set a mint time, the NFT will be minted at the time of the transaction.
-                          </div>
-                        </div>
-                        <div className='space-y-2'>
-                          <div className='text-sm text-gray-500'>
-                            <>
-                              <div>Claim Mint Time: {currentClaimTime?.toString()}</div>
-                              <div>Presale Mint Time: {currentPresaleTime?.toString()}</div>
-                              <div>Public Mint Time: {currentPublicTime?.toString()}</div>
-                            </>
-                          </div>
-                          <div className='flex items-center space-x-2'>
-                            <div className={clsx('flex flex-col space-y-1 w-full')}>
-                              <label className='text-xs font-semibold'>CLAIM TIME</label>
-                              <input
-                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-                                value={datetimeLocalClaimTime}
-                                type='datetime-local'
-                                min={new Date().toISOString().split('.')[0]}
-                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
-                              />
-                              <label className='text-xs font-semibold'>PRESALE MINT TIME </label>
-                              <input
-                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-                                value={datetimeLocalPresaleTime}
-                                type='datetime-local'
-                                min={new Date().toISOString().split('.')[0]}
-                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
-                              />
-                              <label className='text-xs font-semibold'>PUBLIC MINT TIME</label>
-                              <input
-                                className={clsx('border border-mediumGrey block text-xs w-full pl-2 rounded-[5px] py-2')}
-                                value={datetimeLocalPublicTime}
-                                type='datetime-local'
-                                min={new Date().toISOString().split('.')[0]}
-                                max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0]}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SettingLayout.Body>
-                  </SettingLayout>
-                </div>
+                {claimTime && presaleTime && publicTime && contractDeployment && (
+                  <ContractDeploymentMintSettings
+                    isLoading={false}
+                    claimTime={claimTime}
+                    presaleTime={presaleTime}
+                    publicTime={publicTime}
+                    contractDeployment={contractDeployment}
+                  />
+                )}
               </div>
             </div>
           </div>
