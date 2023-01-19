@@ -28,6 +28,11 @@ doppler login
 ## Architecture
 
 1. tRPC
+2. Cloudinary
+3. Google Cloud Storage
+4. Doppler
+5. Inngest
+6. Vercel
 
 ## Routing
 
