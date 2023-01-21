@@ -428,6 +428,52 @@ export const repositoryRouter = router({
         data: { license },
       })
     }),
+  updateWidth: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        width: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, width } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { width },
+      })
+    }),
+  updateHeight: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        height: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, height } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { height },
+      })
+    }),
   promoteAssetDeployment: protectedProcedure
     .input(
       z.object({

@@ -1,7 +1,5 @@
-import { RepositoryArtistForm } from '@components/create/repository-setting/RepositoryArtistForm'
-import { RepositoryExternalUrlForm } from '@components/create/repository-setting/RepositoryExternalUrlForm'
-import { RepositoryLicenseForm } from '@components/create/repository-setting/RepositoryLicenseForm'
-import { RepositoryTokenNameForm } from '@components/create/repository-setting/RepositoryTokenNameForm'
+import { RepositoryImageHeightForm } from '@components/create/repository-setting/RepositoryImageHeightForm'
+import { RepositoryImageWidthForm } from '@components/create/repository-setting/RepositoryImageWidthForm'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -144,7 +142,7 @@ const Page: NextPage = () => {
                         CollectionNavigationEnum.enum.Settings,
                         RepositorySettingsNavigationEnum.enum.Metadata
                       ),
-                      selected: true,
+                      selected: false,
                       disabled: !organisation?.name || !repository?.name,
                     },
                     {
@@ -156,7 +154,7 @@ const Page: NextPage = () => {
                         CollectionNavigationEnum.enum.Settings,
                         RepositorySettingsNavigationEnum.enum.Image
                       ),
-                      selected: false,
+                      selected: true,
                       disabled: !organisation?.name || !repository?.name,
                     },
                   ]}
@@ -164,10 +162,8 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  <RepositoryTokenNameForm />
-                  <RepositoryArtistForm />
-                  <RepositoryExternalUrlForm />
-                  <RepositoryLicenseForm />
+                  <RepositoryImageWidthForm />
+                  <RepositoryImageHeightForm />
                 </div>
               </div>
             </div>
