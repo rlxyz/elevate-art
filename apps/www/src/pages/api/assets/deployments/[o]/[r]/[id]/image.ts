@@ -10,6 +10,7 @@ import type * as v from 'src/shared/compiler'
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
   const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
+  const tokenId = parseInt(id)
   if (!organisationName || !repositoryName || !id) {
     return res.status(400).send('Bad Request')
   }
@@ -24,13 +25,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
 
-  if (deployment.totalSupply <= parseInt(id)) {
+  if (deployment.totalSupply <= tokenId) {
     return res.status(400).send('Bad Request')
   }
 
   const { contractDeployment, repository, layerElements } = deployment
   const { width, height } = repository
-  const tokenId = parseInt(id)
 
   /** Check if already exists in GCP */
   const url = await getImageUrlFromGcp({ deployment, tokenId })
@@ -43,7 +43,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     deployment,
     contractDeployment,
     layerElements: layerElements as Prisma.JsonValue as v.Layer[],
-    tokenId: parseInt(id),
+    tokenId,
   })
   if (!response) {
     return res.status(500).send('Internal Server Error')

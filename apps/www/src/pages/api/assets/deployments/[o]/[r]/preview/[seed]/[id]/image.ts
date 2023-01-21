@@ -18,6 +18,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   /** Inputs */
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
+  const tokenId = parseInt(id)
   if (!organisationName || !repositoryName || !seed || !id) {
     return res.status(400).send('Bad Request')
   }
@@ -38,7 +39,6 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { contractDeployment, repository, layerElements } = deployment
   const { width, height } = repository
-  const tokenId = parseInt(id)
 
   /** Check if already exists in GCP */
   const url = await getImageUrlFromGcp({ deployment, tokenId })
@@ -51,7 +51,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     deployment,
     contractDeployment,
     layerElements: layerElements as Prisma.JsonValue as v.Layer[],
-    tokenId: parseInt(id),
+    tokenId,
   })
   if (!response) {
     return res.status(500).send('Internal Server Error')

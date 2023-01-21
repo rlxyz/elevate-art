@@ -62,10 +62,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!layerElement) return
       const traitElement = layerElement.traits.find((x) => x.id === t)
       if (!traitElement) return
-      return {
-        trait_type: layerElement.name,
-        value: traitElement.name,
-      }
+      return { trait_type: layerElement.name, value: traitElement.name }
     }),
     logoImage: getBannerForRepository({ r: deployment.repository.id }),
     bannerImage: getLogoForRepository({ r: deployment.repository.id }),

@@ -1,9 +1,10 @@
-import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { Repository } from '@prisma/client'
-import { FC, useEffect, useState } from 'react'
+import { useMutateLayerElementUpdateOrder } from '@hooks/trpc/layerElement/useMutateLayerElementUpdateOrder'
+import type { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { Repository } from '@prisma/client'
+import type { FC } from 'react'
+import { useEffect, useState } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateLayerElementUpdateOrder } from '../../../../hooks/trpc/layerElement/useMutateLayerElementUpdateOrder'
-import { FormModalProps } from './LayerElementDeleteModal'
+import type { FormModalProps } from './LayerElementDeleteModal'
 import { LayerElementReorder } from './LayerElementReorder'
 
 export interface LayerElementReorderProps extends FormModalProps {
