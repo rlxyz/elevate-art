@@ -20,6 +20,14 @@ export const getImageTokenFromAssetDeployment = async ({
   }
   const vseed = seedResponse.getValue()
 
+  const tokens = v.one(v.parseLayer(layerElements.filter((x) => x.traits.length > 0).sort((a, b) => a.priority - b.priority)), vseed)
+  if (!tokens) {
+    return null
+  }
+
   // Get Trait Elements
-  return v.one(v.parseLayer(layerElements.filter((x) => x.traits.length > 0).sort((a, b) => a.priority - b.priority)), vseed)
+  return {
+    tokens,
+    vseed,
+  }
 }

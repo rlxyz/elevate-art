@@ -29,15 +29,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Grab tokens */
   const { contractDeployment, repository, layerElements } = deployment
   const { width, height } = repository
-  const tokens = await getImageTokenFromAssetDeployment({
+  const response = await getImageTokenFromAssetDeployment({
     deployment,
     contractDeployment,
     layerElements: layerElements as Prisma.JsonValue as v.Layer[],
     tokenId: parseInt(id),
   })
-  if (!tokens) return res.status(500).send('Internal Server Error')
+  if (!response) return res.status(500).send('Internal Server Error')
 
   /** Create Buffer */
+  const { tokens } = response
   const buf = await createTokenImageBuffer({
     width,
     height,
