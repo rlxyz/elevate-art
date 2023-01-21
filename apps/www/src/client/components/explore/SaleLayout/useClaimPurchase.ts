@@ -42,7 +42,7 @@ export const useClaimPurchase = ({
     functionName: 'claimMint',
     args: [mintCount, proof],
     overrides: {
-      gasLimit: BigNumber.from(200000),
+      gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
     },
   })
 

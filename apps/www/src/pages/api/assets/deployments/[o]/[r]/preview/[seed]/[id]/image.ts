@@ -1,43 +1,27 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
+import { getAssetDeploymentBySeed } from '@server/common/get-asset-deployment'
+import { getImageTokenFromAssetDeployment } from '@server/common/get-compiler-token-from-deployment'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
-import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
-import { getAssetDeploymentBucket, getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
-import type { Image } from 'canvas-constructor/skia'
-import { Canvas, resolveImage } from 'canvas-constructor/skia'
+import { createTokenImageBuffer } from '@server/common/get-token-image-buffer'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as v from 'src/shared/compiler'
+import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
+  /** Authorization */
   const session = await getServerAuthSession({ req, res })
   if (!session || !session.user) {
     return res.status(401).send('Unauthorized')
   }
 
-  // o: organisationName, r: repositoryName, seed, id
+  /** Inputs */
   const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
   if (!organisationName || !repositoryName || !seed || !id) {
     return res.status(400).send('Bad Request')
   }
 
-  // get the repository with repositoryId's layerElement, traitElements & rules with prisma
-  const deployment = await prisma?.assetDeployment.findFirst({
-    where: {
-      branch: AssetDeploymentBranch.PREVIEW,
-      repository: {
-        name: repositoryName,
-        organisation: {
-          name: organisationName,
-          members: {
-            some: { userId: session.user.id },
-          },
-        },
-      },
-      name: seed,
-    },
-    include: { repository: true, contractDeployment: true },
-  })
-
+  /** Validate Deployment */
+  const deployment = await getAssetDeploymentBySeed({ branch: AssetDeploymentBranch.PREVIEW, organisationName, repositoryName, seed })
   if (!deployment) {
     return res.status(404).send('Not Found')
   }
@@ -50,76 +34,28 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  const [exists] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-    .exists()
-
-  if (exists) {
-    const [url] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
-      .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-      .getSignedUrl({
-        version: 'v4',
-        action: 'read',
-        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-      })
-    return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
-  }
-
-  const layerElements = deployment.layerElements as Prisma.JsonArray as v.Layer[]
-
-  const seedResponse = await generateSeedBasedOnAssetDeploymentType(deployment, deployment.contractDeployment, parseInt(id))
-  if (seedResponse.failed) {
-    return res.status(404).send('Not Found')
-  }
-  const vseed = seedResponse.getValue()
-  const tokens = v.one(v.parseLayer(layerElements.sort((a, b) => a.priority - b.priority)), vseed)
-  const width = deployment.repository.width
-  const height = deployment.repository.height
-
-  const canvas = new Canvas(width, height)
-
-  const response = await Promise.all(
-    tokens.map(([l, t]) => {
-      return new Promise<Image>(async (resolve, reject) => {
-        const response = await getTraitElementImageFromGCP({
-          branch: AssetDeploymentBranch.PREVIEW,
-          r: deployment.repositoryId,
-          d: deployment.id,
-          l,
-          t,
-        })
-        if (response.failed) return reject()
-        const buffer = response.getValue()
-        if (!buffer) return reject()
-        return resolve(await resolveImage(buffer))
-      })
-    })
-  )
-
-  response.forEach((image) => {
-    canvas.printImage(image, 0, 0, width, height)
+  /** Grab tokens */
+  const { contractDeployment, repository, layerElements } = deployment
+  const { width, height } = repository
+  const tokens = await getImageTokenFromAssetDeployment({
+    deployment,
+    contractDeployment,
+    layerElements: layerElements as Prisma.JsonValue as v.Layer[],
+    tokenId: parseInt(id),
   })
+  if (!tokens) return res.status(500).send('Internal Server Error')
 
-  // const buf = await sharp(await canvas.toBufferAsync('image/png'))
-  //   .png({ quality: 70 })
-  //   .toBuffer()
+  /** Create Buffer */
+  const buf = await createTokenImageBuffer({
+    width,
+    height,
+    tokens,
+    deployment,
+  })
+  if (!buf) return res.status(500).send('Internal Server Error')
 
-  // only ever runs once...
-  const buf = await canvas.toBufferAsync('image/png')
-
-  await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-    .save(buf)
-
-  const [url] = await getAssetDeploymentBucket({ branch: AssetDeploymentBranch.PREVIEW })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${id}/image.png`)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    })
-
-  return res.setHeader('Cache-Control', 'public, s-maxage=31536000, max-age=31536000, immutable').redirect(307, url)
+  /** Return buffer */
+  return res.setHeader('Content-Type', 'image/png').send(buf)
 }
 
 export default index

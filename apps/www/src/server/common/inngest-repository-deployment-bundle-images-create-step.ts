@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
 import type { InngestEvents } from '@server/utils/inngest'
-import { createFunction } from 'inngest'
+import { createStepFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
 import { prisma } from '../db/client'
 import { fetchAndSaveAllTraitElementsToGCP } from './cld-to-gcp-save-trait-element'
@@ -31,10 +31,10 @@ const repositoryDeploymentDeployedUpdate = async ({ deploymentId }: { deployment
  * @todo save any failed fetches of TraitElements into a buffer to query later
  *! @todo when the bucket is created, auto set it to public... then we can serve content directly from bucket
  */
-export default createFunction<InngestEvents['repository-deployment/bundle-images']>(
+export default createStepFunction<InngestEvents['repository-deployment/bundle-images']>(
   'repository-deployment/bundle-images',
   'repository-deployment/images.bundle.create',
-  async ({ event }) => {
+  async ({ event, tools }) => {
     const layerElements = event.data.layerElements as Prisma.JsonArray as v.Layer[]
     const { repositoryId, deploymentId, branch, type } = event.data
 
@@ -66,6 +66,12 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
       /**
        * Create Promises
        */
+      layerElements.map((item) => {
+        tools.run('repository-deployment/bundle-images-layer', () => {
+          fetchAndSaveAllTraitElementsToGCP({ layerElements: [item], repositoryId, deploymentId, branch })
+        })
+      })
+
       const all = fetchAndSaveAllTraitElementsToGCP({ layerElements, repositoryId, deploymentId, branch })
 
       /** Move all images from Cloudinary to GCP Bucket */

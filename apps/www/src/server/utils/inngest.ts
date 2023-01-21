@@ -15,6 +15,16 @@ export type InngestEvents = {
     name: 'repository-deployment/images.bundle.create'
     data: BundleImagesData
   }
+  'repository-deployment/bundle-images-layer': {
+    name: 'repository-deployment/images.bundle.layer.create'
+    data: {
+      repositoryId: string
+      deploymentId: string
+      layerElementId: string
+      branch: AssetDeploymentBranch
+      type: AssetDeploymentType
+    }
+  }
 }
 
 export const createIngestInstance = () => {

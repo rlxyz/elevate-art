@@ -62,12 +62,12 @@ export const getTraitElementImageFromGCP = ({
   l: string
   t: string
 }): Promise<GetTraitElementImageReturn> => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise<Result<Buffer>>(async (resolve, reject) => {
     getAssetDeploymentBucket({ branch })
       .file(`${r}/deployments/${d}/layers/${l}/${t}.png`)
       .download()
       .then((contents: DownloadResponse) => {
-        if (contents[0]) resolve(Result.ok(contents[0]))
+        if (contents[0]) resolve(Result.ok(Buffer.from(contents[0])))
         reject(Result.fail('No image found'))
       })
       .catch((err) => {

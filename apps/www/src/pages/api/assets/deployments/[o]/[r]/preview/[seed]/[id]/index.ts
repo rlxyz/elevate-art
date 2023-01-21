@@ -4,6 +4,7 @@ import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { generateSeedBasedOnAssetDeploymentType } from '@server/common/v-get-token-seed'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
+import { prisma } from 'src/server/db/client'
 import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,7 +21,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // get the repository with repositoryId's layerElement, traitElements & rules with prisma
   //! only users who are members of the organisation can access the image through stealth mode
-  const deployment = await prisma?.assetDeployment.findFirst({
+  const deployment = await prisma.assetDeployment.findFirst({
     where: {
       branch: AssetDeploymentBranch.PREVIEW,
       repository: {
