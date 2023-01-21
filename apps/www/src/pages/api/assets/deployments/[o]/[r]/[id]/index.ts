@@ -1,21 +1,14 @@
 import type { Prisma } from '@prisma/client'
 import { getAssetDeploymentByProduction } from '@server/common/get-asset-deployment'
 import { getImageTokenFromAssetDeployment } from '@server/common/get-compiler-token-from-deployment'
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
 import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
-  /** Authorization */
-  const session = await getServerAuthSession({ req, res })
-  if (!session || !session.user) {
-    return res.status(401).send('Unauthorized')
-  }
-
   /** Inputs */
-  const { o: organisationName, r: repositoryName, seed, id } = req.query as { o: string; r: string; seed: string; id: string }
-  if (!organisationName || !repositoryName || !seed || !id) {
+  const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
+  if (!organisationName || !repositoryName || !id) {
     return res.status(400).send('Bad Request')
   }
 
