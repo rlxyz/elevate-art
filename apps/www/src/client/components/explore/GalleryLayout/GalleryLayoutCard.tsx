@@ -1,16 +1,19 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import LinkComponent from '@components/layout/link/Link'
 import NextLinkComponent from '@components/layout/link/NextLink'
-import type { ContractDeployment } from '@prisma/client'
+import type { ContractDeployment, Repository } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
+import Image from 'next/image'
 import { getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
 import { useFetchContractTokenData } from '../SaleLayout/useFetchContractData'
 
 export const GalleryLayoutCard = ({
+  repository,
   contractDeployment,
   tokenId,
   tokenName,
 }: {
+  repository: Repository
   contractDeployment: ContractDeployment
   tokenName: string
   tokenId: number
@@ -30,10 +33,10 @@ export const GalleryLayoutCard = ({
       key={`${address}-${tokenId}`}
       className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
     >
-      <img
+      <Image
         src={getTokenURI({ contractDeployment, tokenId })}
-        width={1000}
-        height={1000}
+        width={repository.width || 600}
+        height={repository.height || 600}
         alt={`${address}-#${tokenId}`}
         className='object-cover m-auto'
       />

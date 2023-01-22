@@ -1,6 +1,6 @@
-import { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
+import type { Collection, LayerElement, Rules, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { getImageForTrait } from 'src/client/utils/image'
 import * as v from 'src/shared/compiler'
 

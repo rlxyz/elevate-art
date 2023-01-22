@@ -1,5 +1,8 @@
 import type { Prisma } from '@prisma/client'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
+import { validateUserIsMemberInAssetDeployment } from '@server/common/db-get-asset-deployment-user-session'
+import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getLogoForRepository, getTokenURI } from 'src/client/utils/image'
@@ -18,6 +21,21 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const deployment = await getAssetDeploymentByContractAddressAndChainId({ chainId, address })
   if (!deployment) {
     return res.status(404).send('Not Found')
+  }
+
+  /** Validate User If Preview Branch */
+  if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
+    // check serverside session
+    const session = await getServerAuthSession({ req, res })
+    if (!session) {
+      return res.status(401).send('Unauthorized')
+    }
+
+    const repository = await validateUserIsMemberInAssetDeployment({ chainId, address, session })
+
+    if (!repository) {
+      return res.status(401).send('Unauthorized')
+    }
   }
 
   if (!deployment.contractDeployment) {
