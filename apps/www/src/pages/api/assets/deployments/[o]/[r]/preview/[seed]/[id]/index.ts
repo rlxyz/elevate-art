@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
-import { getAssetDeploymentBySeed } from '@server/common/get-asset-deployment'
+import { getAssetDeploymentBySeed } from '@server/common/db-get-asset-deployment-by-seed'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'

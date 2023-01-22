@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { getAssetDeploymentByProduction } from '@server/common/get-asset-deployment'
+import { getAssetDeploymentByProduction } from '@server/common/db-get-asset-deployment-by-production-branch'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'

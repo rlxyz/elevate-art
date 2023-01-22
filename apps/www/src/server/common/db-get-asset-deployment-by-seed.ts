@@ -1,4 +1,4 @@
-import { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeploymentBranch } from '@prisma/client'
 import { prisma } from 'src/server/db/client'
 
 export const getAssetDeploymentBySeed = async ({
@@ -22,27 +22,6 @@ export const getAssetDeploymentBySeed = async ({
         },
       },
       name: seed,
-    },
-    include: { repository: true, contractDeployment: true },
-  })
-}
-
-export const getAssetDeploymentByProduction = async ({
-  organisationName,
-  repositoryName,
-}: {
-  organisationName: string
-  repositoryName: string
-}) => {
-  return await prisma.assetDeployment.findFirst({
-    where: {
-      branch: AssetDeploymentBranch.PRODUCTION,
-      repository: {
-        name: repositoryName,
-        organisation: {
-          name: organisationName,
-        },
-      },
     },
     include: { repository: true, contractDeployment: true },
   })
