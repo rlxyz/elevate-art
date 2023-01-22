@@ -8,6 +8,8 @@ import type { FC } from 'react'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 
+const createBaseUriHash = () => {}
+
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { deploy } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()
