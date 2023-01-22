@@ -18,7 +18,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { getDeploymentTokenImage } from 'src/client/utils/image'
+import { getTokenURI } from 'src/client/utils/image'
 import { timeAgo } from 'src/client/utils/time'
 import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
@@ -128,14 +128,11 @@ const Page = () => {
             <div className='grid grid-cols-6 gap-9 py-16'>
               <div className='col-span-2'>
                 <div className='border w-full h-52 border-blueHighlight rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'>
-                  {organisation && repository && (
+                  {organisation && repository && contractDeployment && (
                     <img
-                      src={getDeploymentTokenImage({
-                        o: organisation?.name,
-                        r: repository?.name,
+                      src={getTokenURI({
+                        contractDeployment,
                         tokenId: 0,
-                        d: deployment?.name,
-                        branch: deployment?.branch,
                       })}
                       width={1000}
                       alt={`${deployment?.contractDeployment?.address}-#${0}`}

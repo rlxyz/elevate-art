@@ -1,19 +1,21 @@
 import type { Prisma } from '@prisma/client'
-import { getAssetDeploymentByProduction } from '@server/common/db-get-asset-deployment-by-production-branch'
+import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
+import { getBannerForRepository, getLogoForRepository, getTokenURI } from 'src/client/utils/image'
 import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
-  const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
-  if (!organisationName || !repositoryName || !id) {
+  const { chainId: cid, address, id } = req.query as { chainId: string; address: string; id: string }
+  const tokenId = parseInt(id)
+  const chainId = parseInt(cid)
+  if (!chainId || !address || !id) {
     return res.status(400).send('Bad Request')
   }
 
   /** Validate Deployment */
-  const deployment = await getAssetDeploymentByProduction({ organisationName, repositoryName })
+  const deployment = await getAssetDeploymentByContractAddressAndChainId({ chainId, address })
   if (!deployment) {
     return res.status(404).send('Not Found')
   }
@@ -22,7 +24,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
 
-  if (deployment.totalSupply <= parseInt(id)) {
+  if (deployment.totalSupply <= tokenId) {
     return res.status(400).send('Bad Request')
   }
 
@@ -33,22 +35,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     deployment,
     contractDeployment,
     layerElements: elements,
-    tokenId: parseInt(id),
+    tokenId,
   })
   if (!response) return res.status(500).send('Internal Server Error')
 
   const { tokens, vseed } = response
   const metadata = {
-    name: [deployment.repository.tokenName || '', `#${id}`].join(' '),
+    name: [deployment.repository.tokenName || '', `#${tokenId}`].join(' '),
     description: deployment.repository.description,
-    tokenHash: vseed,
-    image: getDeploymentTokenImage({
-      o: organisationName,
-      r: repositoryName,
-      tokenId: id,
-      d: deployment.name,
-      branch: deployment.branch,
-    }),
+    tokenHash: vseed.startsWith('0x') ? vseed : null,
+    image: getTokenURI({ contractDeployment: deployment.contractDeployment, tokenId }),
     attributes: tokens.map(([l, t]) => {
       const layerElement = elements.find((x) => x.id === l)
       if (!layerElement) return

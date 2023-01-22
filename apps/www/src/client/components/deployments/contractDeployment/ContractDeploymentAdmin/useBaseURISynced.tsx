@@ -9,7 +9,6 @@ export const useBaseURISynced = ({ contractDeployment }: { contractDeployment: C
     enabled: true,
     version: '1.0.0',
   })
-
   if (!data) return { synced: false }
   const { baseURI } = data
   return {

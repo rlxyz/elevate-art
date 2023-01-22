@@ -16,33 +16,11 @@ export const getLogoForRepository = ({ r }: { r: string }) => {
 }
 
 export const getSyncedBaseURI = ({ contractDeployment }: { contractDeployment: ContractDeployment }) => {
-  return `${env.NEXT_PUBLIC_API_URL}/assets/${contractDeployment.chainId}/${contractDeployment.address}`
+  return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/` //! remember to add trailing slash
 }
 
-export const getDeploymentTokenImage = ({
-  o,
-  r,
-  d,
-  branch,
-  tokenId,
-}: {
-  r: string
-  o: string
-  branch: AssetDeploymentBranch
-  tokenId: string | number
-  d?: string
-}): string => {
-  return [
-    env.NEXT_PUBLIC_ASSET_URL,
-    ZoneNavigationEnum.enum.Deployments,
-    o,
-    r,
-    branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
-    tokenId,
-    'image',
-  ]
-    .filter((x) => x !== '')
-    .join('/')
+export const getTokenURI = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
+  return `${getSyncedBaseURI({ contractDeployment })}${tokenId}/image`
 }
 
 export const getDeploymentTokenMetadata = ({

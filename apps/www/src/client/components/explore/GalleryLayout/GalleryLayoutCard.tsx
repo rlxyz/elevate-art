@@ -1,30 +1,30 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import LinkComponent from '@components/layout/link/Link'
 import NextLinkComponent from '@components/layout/link/NextLink'
-import type { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeploymentBranch, ContractDeployment } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
-import { getDeploymentTokenImage, getDeploymentTokenMetadata } from 'src/client/utils/image'
+import { getDeploymentTokenMetadata, getTokenURI } from 'src/client/utils/image'
 import { useFetchContractTokenData } from '../SaleLayout/useFetchContractData'
 
 export const GalleryLayoutCard = ({
-  address,
+  contractDeployment,
   deploymentName,
   branch,
   repositoryName,
   organisationName,
   tokenId,
   tokenName,
-  chainId,
 }: {
-  address: string
+  contractDeployment: ContractDeployment
   deploymentName: string
   branch: AssetDeploymentBranch
   organisationName: string
   repositoryName: string
   tokenName: string
   tokenId: number
-  chainId: number
 }) => {
+  const { address, chainId } = contractDeployment
+
   const { data } = useFetchContractTokenData({
     contractAddress: address,
     tokenId,
@@ -39,13 +39,7 @@ export const GalleryLayoutCard = ({
       className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
     >
       <img
-        src={getDeploymentTokenImage({
-          o: organisationName,
-          r: repositoryName,
-          tokenId,
-          d: deploymentName,
-          branch: branch,
-        })}
+        src={getTokenURI({ contractDeployment, tokenId })}
         width={1000}
         height={1000}
         alt={`${address}-#${tokenId}`}

@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { getAssetDeploymentByProduction } from '@server/common/db-get-asset-deployment-by-production-branch'
+import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
 import { createTokenImageBuffer } from '@server/common/gcp-create-token-image-buffer'
 import { getImageUrlFromGcp } from '@server/common/gcp-get-token-image-url'
 import { saveImageToGcp } from '@server/common/gcp-save-token-image-buffer'
@@ -9,14 +9,15 @@ import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
-  const { o: organisationName, r: repositoryName, id } = req.query as { o: string; r: string; id: string }
+  const { chainId: cid, address, id } = req.query as { chainId: string; address: string; id: string }
   const tokenId = parseInt(id)
-  if (!organisationName || !repositoryName || !id) {
+  const chainId = parseInt(cid)
+  if (!chainId || !address || !id) {
     return res.status(400).send('Bad Request')
   }
 
   /** Validate Deployment */
-  const deployment = await getAssetDeploymentByProduction({ organisationName, repositoryName })
+  const deployment = await getAssetDeploymentByContractAddressAndChainId({ chainId, address })
   if (!deployment) {
     return res.status(404).send('Not Found')
   }
@@ -57,13 +58,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     tokens,
     deployment,
   })
-  if (!buf) {
+  if (buf.failed) {
     return res.status(500).send('Internal Server Error')
   }
 
   /** Save Image to GCP */
-  const [saved] = await saveImageToGcp({ deployment, tokenId, buf })
-  if (!saved) {
+  const buffer = buf.getValue()
+  const saved = await saveImageToGcp({ deployment, tokenId, buf: buffer })
+  if (!saved.failed) {
     return res.status(500).send('Internal Server Error')
   }
 
