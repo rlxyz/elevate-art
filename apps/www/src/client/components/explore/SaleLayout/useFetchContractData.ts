@@ -2,16 +2,6 @@ import { useNotification } from '@hooks/utils/useNotification'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import { useContractRead, useContractReads } from 'wagmi'
-import { z } from 'zod'
-
-export const SalePhaseEnum = z.nativeEnum(
-  Object.freeze({
-    Presale: 'presale',
-    Public: 'public',
-  })
-)
-
-export type SalePhase = z.infer<typeof SalePhaseEnum>
 
 interface UseContractReads {
   contractAddress: string
