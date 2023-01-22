@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { getAssetDeploymentByProduction } from '@server/common/get-asset-deployment'
-import { getImageTokenFromAssetDeployment } from '@server/common/get-compiler-token-from-deployment'
+import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getDeploymentTokenImage, getLogoForRepository } from 'src/client/utils/image'
 import type * as v from 'src/shared/compiler'

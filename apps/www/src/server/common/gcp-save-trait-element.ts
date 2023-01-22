@@ -1,7 +1,6 @@
 import type { DownloadResponse } from '@google-cloud/storage'
-import type { AssetDeploymentBranch } from '@prisma/client'
-import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
-import { Result } from '@server/utils/response-result'
+import { getLayerDeploymentBucket } from '../utils/gcp-storage'
+import { Result } from '../utils/response-result'
 
 type GetTraitElementImageReturn = Result<Buffer | null>
 
@@ -10,22 +9,18 @@ export const getTraitElementImageFromGCP = ({
   l,
   d,
   t,
-  branch,
 }: {
   r: string
   d: string
   l: string
   t: string
-  branch: AssetDeploymentBranch
 }): Promise<GetTraitElementImageReturn> => {
-  return new Promise(async (resolve, reject) => {
-    getAssetDeploymentBucket({
-      branch,
-    })
+  return new Promise<Result<Buffer>>(async (resolve, reject) => {
+    getLayerDeploymentBucket()
       .file(`${r}/deployments/${d}/layers/${l}/${t}.png`)
       .download()
       .then((contents: DownloadResponse) => {
-        if (contents[0]) resolve(Result.ok(contents[0]))
+        if (contents[0]) resolve(Result.ok(Buffer.from(contents[0])))
         reject(Result.fail('No image found'))
       })
       .catch((err) => {

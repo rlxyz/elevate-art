@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch, AssetDeploymentStatus, AssetDeploymentType, ContractDeploymentStatus } from '@prisma/client'
-import { getAssetDeploymentBucket } from '@server/utils/gcp-storage'
+import { getLayerDeploymentBucket } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
@@ -268,14 +268,12 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      await getAssetDeploymentBucket({
-        branch: deployment.branch,
-      }).deleteFiles({
-        prefix: `${deploymentId}`,
+      getLayerDeploymentBucket().deleteFiles({
+        prefix: `${deployment.id}`,
       })
 
       await ctx.prisma.assetDeployment.delete({
-        where: { id: deploymentId },
+        where: { id: deployment.id },
       })
 
       return deployment

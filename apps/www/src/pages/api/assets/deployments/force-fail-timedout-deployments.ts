@@ -2,7 +2,7 @@ import { AssetDeploymentStatus } from '@prisma/client'
 import { updateManyByField } from '@server/utils/prisma-utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { env } from 'src/env/server.mjs'
-import { prisma } from '../../../server/db/client'
+import { prisma } from 'src/server/db/client'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

@@ -1,9 +1,9 @@
 import type { Prisma } from '@prisma/client'
+import { createTokenImageBuffer } from '@server/common/gcp-create-token-image-buffer'
+import { getImageUrlFromGcp } from '@server/common/gcp-get-token-image-url'
+import { saveImageToGcp } from '@server/common/gcp-save-token-image-buffer'
 import { getAssetDeploymentByProduction } from '@server/common/get-asset-deployment'
-import { getImageTokenFromAssetDeployment } from '@server/common/get-compiler-token-from-deployment'
-import { getImageUrlFromGcp } from '@server/common/get-image-url-from-gcp'
-import { createTokenImageBuffer } from '@server/common/get-token-image-buffer'
-import { saveImageToGcp } from '@server/common/save-image-to-gcp'
+import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type * as v from 'src/shared/compiler'
 
@@ -34,8 +34,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   /** Check if already exists in GCP */
   const url = await getImageUrlFromGcp({ deployment, tokenId })
-  if (url) {
-    return res.redirect(url)
+  if (url.ok) {
+    return res.redirect(url.getValue())
   }
 
   /** Grab tokens */
@@ -68,12 +68,12 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const url2 = await getImageUrlFromGcp({ deployment, tokenId })
-  if (!url2) {
+  if (url2.failed) {
     return res.status(500).send('Internal Server Error')
   }
 
   /** Return buffer */
-  return res.redirect(url2)
+  return res.redirect(url2.getValue())
 }
 
 export default index

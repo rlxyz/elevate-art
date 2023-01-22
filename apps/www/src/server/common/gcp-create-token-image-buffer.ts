@@ -1,6 +1,5 @@
 import type { AssetDeployment } from '@prisma/client'
-import { AssetDeploymentBranch } from '@prisma/client'
-import { getTraitElementImageFromGCP } from '@server/utils/gcp-storage'
+import { getTraitElementImageFromGCP } from '@server/common/gcp-save-trait-element'
 import type { Image } from '@server/utils/napi-canvas'
 import { createCanvas, loadImage } from '@server/utils/napi-canvas'
 
@@ -20,7 +19,6 @@ export const createTokenImageBuffer = async ({
   const responses = tokens.map(([l, t]) => {
     return new Promise<Image>(async (resolve, reject) => {
       const response = await getTraitElementImageFromGCP({
-        branch: AssetDeploymentBranch.PREVIEW,
         r: deployment.repositoryId,
         d: deployment.id,
         l,

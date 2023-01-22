@@ -2,6 +2,7 @@
 
 This is the core application for [elevate.art](https://elevate.art)
 
-# Docs
+# Table of Contents
 
-See [docs](./docs/README.md)
+- [env](env.md)
+- [gcp-setup](gcp-setup.md)
