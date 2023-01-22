@@ -11,6 +11,8 @@ import { env } from 'src/env/client.mjs'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 
+const createBaseUriHash = () => {}
+
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
   const { deploy, address: contractAddress } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()

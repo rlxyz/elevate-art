@@ -1,9 +1,9 @@
+import { DescriptionWithDisclouser } from '@components/layout/DescriptionWithDisclouser'
 import type { AssetDeployment, ContractDeployment, Organisation, Repository } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { parseChainId } from '@utils/ethers'
-import { ethers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils.js'
 import { capitalize, toPascalCaseWithSpace } from 'src/client/utils/format'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
-import { DescriptionWithDisclouser } from '../../layout/DescriptionWithDisclouser'
 
 interface CollectionContractDeploymentDetailsProps {
   repository: Repository | null | undefined
@@ -21,7 +21,7 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
 }) => (
   <div className='flex flex-col space-y-3 w-full md:w-1/2'>
     <div className='flex'>
-      <h1 className='text-2xl font-bold'>{repository?.name ?? '...'}</h1>
+      <h1 className='text-2xl font-bold'>{repository?.displayName || repository?.name || '...'}</h1>
     </div>
     <div className='flex space-x-1'>
       <h2 className='text-xs'>By</h2>
@@ -35,7 +35,7 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>
         <h2 className='text-xs'>Minted</h2>
-        <h1 className='text-xs font-bold'>{contractData?.totalSupply && ethers.utils.formatUnits(contractData.totalSupply, 0)}</h1>
+        <h1 className='text-xs font-bold'>{contractData?.totalSupply && formatUnits(contractData.totalSupply, 0)}</h1>
       </div>
       <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
       <div className='flex space-x-1'>

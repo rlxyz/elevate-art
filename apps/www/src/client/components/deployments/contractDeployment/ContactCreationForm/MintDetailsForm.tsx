@@ -27,17 +27,17 @@ export const MintDetailsForm: FC<ContractFormProps> = ({ title, description, nex
           {
             startTimestamp: new Date(),
             mintPrice: BigNumber.from(0),
-            maxAllocationPerAddress: BigNumber.from(0),
+            maxMintPerAddress: BigNumber.from(0),
           },
           {
             startTimestamp: new Date(),
             mintPrice: BigNumber.from(0),
-            maxAllocationPerAddress: BigNumber.from(0),
+            maxMintPerAddress: BigNumber.from(0),
           },
           {
             startTimestamp: new Date(),
             mintPrice: BigNumber.from(0),
-            maxAllocationPerAddress: BigNumber.from(0),
+            maxMintPerAddress: BigNumber.from(0),
           },
         ],
       },

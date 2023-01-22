@@ -4,7 +4,7 @@ import type { BigNumber } from 'ethers'
 export type SaleConfig = {
   startTimestamp: Date
   mintPrice: BigNumber
-  maxAllocationPerAddress: BigNumber
+  maxMintPerAddress: BigNumber
 }
 
 export type PayoutData = {

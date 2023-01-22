@@ -40,6 +40,10 @@ enum AssetDeploymentBranch {
     PREVIEW
 }
 
+enum RepositoryCategory {
+    GENERATIVE_PHOTOGRAPHY
+}
+
 model User {
     id            String    @id @default(cuid())
     address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
@@ -102,8 +106,9 @@ model OrganisationPending {
 }
 
 model Repository {
-    id        String   @id @default(cuid())
-    name      String   @db.VarChar(255)
+    id   String @id @default(cuid())
+    name String @db.VarChar(255)
+
     tokenName String   @db.VarChar(255)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -111,12 +116,14 @@ model Repository {
     width  Int @default(600)
     height Int @default(600)
 
-    description    String? @db.Text
-    bannerImageUrl String? @db.VarChar(255)
-    logoImageUrl   String? @db.VarChar(255)
-    artist         String? @db.VarChar(255)
-    license        String? @db.VarChar(255)
-    externalUrl    String? @db.VarChar(255)
+    category       RepositoryCategory?
+    displayName    String?             @db.VarChar(255)
+    description    String?             @db.Text
+    bannerImageUrl String?             @db.VarChar(255)
+    logoImageUrl   String?             @db.VarChar(255)
+    artist         String?             @db.VarChar(255)
+    license        String?             @db.VarChar(255)
+    externalUrl    String?             @db.VarChar(255)
 
     layers      LayerElement[]
     collections Collection[]

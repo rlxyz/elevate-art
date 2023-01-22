@@ -355,7 +355,29 @@ export const repositoryRouter = router({
         data: { tokenName },
       })
     }),
+  updateDisplayName: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        displayName: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, displayName } = input
 
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { displayName },
+      })
+    }),
   updateArtistName: protectedProcedure
     .input(
       z.object({

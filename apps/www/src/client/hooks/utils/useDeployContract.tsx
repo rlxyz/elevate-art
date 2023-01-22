@@ -112,10 +112,10 @@ export const useDeployContract = () => {
     const presaleTime = saleConfig.get('Presale')?.startTimestamp.getTime()
     const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
     const mintPrice = saleConfig.get('Public')?.mintPrice
-    const maxPublicBatchPerAddress = saleConfig.get('Public')?.maxAllocationPerAddress
+    const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
     const amountForPromotion = 0
 
-    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxPublicBatchPerAddress) {
+    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxMintPerAddress) {
       return notifyError('Issue with the contract form. Please check the sale config.')
     }
 
@@ -124,7 +124,7 @@ export const useDeployContract = () => {
       symbol,
       baseURI,
       collectionSize,
-      maxPublicBatchPerAddress,
+      maxMintPerAddress,
       amountForPromotion,
       mintPrice,
       Math.floor(claimTime / 1000),

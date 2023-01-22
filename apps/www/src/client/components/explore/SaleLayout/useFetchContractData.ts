@@ -88,7 +88,7 @@ export const useFetchContractDataReadOnly = ({ contractAddress, chainId, enabled
   return useContractReads({
     scopeKey: `erc721:${version}:${chainId}:${contractAddress}`,
     contracts: [
-      { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'maxPublicBatchPerAddress', chainId },
+      { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'maxMintPerAddress', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'collectionSize', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'name', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'symbol', chainId },
