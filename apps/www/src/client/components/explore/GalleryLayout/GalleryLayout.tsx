@@ -66,13 +66,8 @@ export const GalleryLayout = ({
               .slice(0, displayLength)
               .map((id) => (
                 <GalleryLayoutCard
-                  chainId={contractDeployment.chainId}
                   key={`${contractDeployment.address}-${id}`}
-                  address={contractDeployment.address}
-                  deploymentName={assetDeployment.name}
-                  branch={assetDeployment.branch}
-                  repositoryName={repository.name}
-                  organisationName={organisation.name}
+                  contractDeployment={contractDeployment}
                   tokenName={repository.tokenName}
                   tokenId={id}
                 />

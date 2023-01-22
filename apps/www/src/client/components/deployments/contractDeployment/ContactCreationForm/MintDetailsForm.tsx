@@ -155,14 +155,14 @@ const SaleConfigInput = ({
         />
       </div>
       <ContractForm.Body.Input
-        {...register(`saleConfigs.${index}.maxAllocationPerAddress`, {
+        {...register(`saleConfigs.${index}.maxMintPerAddress`, {
           required: true,
           max: 20,
           min: 1,
           onChange: (e) => {
             if (e.target.value) {
               const maxAllocationPerAddress = Number(e.target.value)
-              setValue(`saleConfigs.${index}.maxAllocationPerAddress`, BigNumber.from(maxAllocationPerAddress))
+              setValue(`saleConfigs.${index}.maxMintPerAddress`, BigNumber.from(maxAllocationPerAddress))
             }
           },
         })}

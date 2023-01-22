@@ -1,25 +1,17 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import LinkComponent from '@components/layout/link/Link'
 import NextLinkComponent from '@components/layout/link/NextLink'
-import type { AssetDeploymentBranch, ContractDeployment } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
-import { getDeploymentTokenMetadata, getTokenURI } from 'src/client/utils/image'
+import { getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
 import { useFetchContractTokenData } from '../SaleLayout/useFetchContractData'
 
 export const GalleryLayoutCard = ({
   contractDeployment,
-  deploymentName,
-  branch,
-  repositoryName,
-  organisationName,
   tokenId,
   tokenName,
 }: {
   contractDeployment: ContractDeployment
-  deploymentName: string
-  branch: AssetDeploymentBranch
-  organisationName: string
-  repositoryName: string
   tokenName: string
   tokenId: number
 }) => {
@@ -50,12 +42,9 @@ export const GalleryLayoutCard = ({
           <LinkComponent
             target='_blank'
             rel='noopener noreferrer'
-            href={getDeploymentTokenMetadata({
-              o: organisationName,
-              r: repositoryName,
-              tokenId: tokenId,
-              d: deploymentName,
-              branch: branch,
+            href={getTokenMetadataURI({
+              contractDeployment,
+              tokenId,
             })}
             underline
           >

@@ -50,7 +50,6 @@ export const useFetchClaimRequirements = ({
 
   const {
     current: currentContractDeploymentWhitelist,
-    all: allContractDeploymentWhitelist,
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress({
@@ -58,24 +57,33 @@ export const useFetchClaimRequirements = ({
   })
 
   const { root, proof } = useUserMerkleProof({ type: WhitelistType.CLAIM })
+  const { collectionSize, maxMintPerAddress, totalSupply } = fetchedContractData
 
   // mint allocation
   const claimMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)
   const claimMintLeft = claimMintMax.sub(fetchedContractUserData?.userMintCount || 0)
 
   // total left in collection
-  const collectionMintMax = BigNumber.from(fetchedContractData?.collectionSize || 0)
-  const collectionMintLeft = collectionMintMax.sub(fetchedContractData?.totalSupply || 0)
+  const collectionMintMax = BigNumber.from(collectionSize || 0)
+  const collectionMintLeft = collectionMintMax.sub(BigNumber.from(totalSupply || 0))
 
   // user left after total left
   const userMintLeft = claimMintLeft.gt(collectionMintLeft) ? collectionMintLeft : claimMintLeft
+  const { claimTime } = fetchedContractData
 
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
       userMintLeft,
-      allowToMint: root && proof && userMintLeft.gt(0) && root === fetchedContractData?.claimMerkleRoot,
+      allowToMint:
+        claimTime &&
+        root &&
+        proof &&
+        userMintLeft.gt(0) &&
+        root === fetchedContractData?.claimMerkleRoot &&
+        userMintLeft.lt(BigNumber.from(maxMintPerAddress)) &&
+        claimTime?.getTime() < new Date().getTime(),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,

@@ -58,6 +58,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     tokens,
     deployment,
   })
+
   if (buf.failed) {
     return res.status(500).send('Internal Server Error')
   }
@@ -66,7 +67,8 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const buffer = buf.getValue()
   const saved = await saveImageToGcp({ deployment, tokenId, buf: buffer })
   if (!saved.failed) {
-    return res.status(500).send('Internal Server Error')
+    //! @todo log this... also, should try to minimize the number of times the saving fails, so just in case, we have this.
+    return res.status(200).setHeader('Content-Type', 'image/png').send(buf.getValue())
   }
 
   const url2 = await getImageUrlFromGcp({ deployment, tokenId })

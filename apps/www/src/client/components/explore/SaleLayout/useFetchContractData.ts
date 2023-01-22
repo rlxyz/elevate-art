@@ -98,7 +98,7 @@ export const useFetchContractDataReadOnly = ({ contractAddress, chainId, enabled
     staleTime: Infinity,
     enabled,
     select: (data) => ({
-      maxPublicBatchPerAddress: BigNumber.from(data[0]),
+      maxMintPerAddress: BigNumber.from(data[0]),
       collectionSize: BigNumber.from(data[1]),
       name: data[2] as string,
       symbol: data[3] as string,

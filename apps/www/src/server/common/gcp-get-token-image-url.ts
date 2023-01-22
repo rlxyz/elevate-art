@@ -10,30 +10,40 @@ export const getImageUrlFromGcp = async ({
   deployment: AssetDeployment
   tokenId: number
 }): Promise<Result<string>> => {
-  const [exists] = await getTokenDeploymentBucket({ branch: deployment.branch })
-    .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`)
-    .exists()
+  return new Promise<Result<string>>(async (resolve) => {
+    try {
+      const [exists] = await getTokenDeploymentBucket({ branch: deployment.branch })
+        .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`)
+        .exists()
 
-  if (!exists) {
-    return Result.fail('Image does not exist')
-  }
+      if (!exists) {
+        return resolve(Result.fail('Image does not exist'))
+      }
 
-  if (deployment.branch !== AssetDeploymentBranch.PREVIEW) {
-    const [signedUrl] = await getTokenDeploymentBucket({ branch: deployment.branch })
-      .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`)
-      .getSignedUrl({
-        action: 'read',
-        expires: Date.now() + 15 * 60 * 1000,
-      })
+      if (deployment.branch !== AssetDeploymentBranch.PREVIEW) {
+        const [signedUrl] = await getTokenDeploymentBucket({ branch: deployment.branch })
+          .file(`${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`)
+          .getSignedUrl({
+            action: 'read',
+            expires: Date.now() + 15 * 60 * 1000,
+          })
 
-    return Result.ok(signedUrl)
-  } else if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
-    const url = `https://storage.googleapis.com/${getTokenDeploymentBucketName({
-      branch: deployment.branch,
-    })}/${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`
+        return resolve(Result.ok(signedUrl))
+      } else if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
+        const url = `https://storage.googleapis.com/${getTokenDeploymentBucketName({
+          branch: deployment.branch,
+        })}/${deployment.repositoryId}/deployments/${deployment.id}/tokens/${tokenId}/image.png`
 
-    return Result.ok(url)
-  }
+        return resolve(Result.ok(url))
+      }
 
-  return Result.fail('Could not get image url')
+      return resolve(Result.fail('Could not get images url'))
+    } catch (error) {
+      if (error instanceof Error) {
+        return resolve(Result.fail(error.message))
+      }
+
+      return resolve(Result.fail('Could not get images url'))
+    }
+  })
 }
