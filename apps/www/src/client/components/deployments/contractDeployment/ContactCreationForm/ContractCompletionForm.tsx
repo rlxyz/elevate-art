@@ -2,25 +2,16 @@ import useContractCreationStore from '@components/deployments/contractDeployment
 import Card from '@components/layout/card/Card'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useDeployContract } from '@hooks/utils/useDeployContract'
-import type { AssetDeploymentType } from '@prisma/client'
-import { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeploymentBranch, AssetDeploymentType } from '@prisma/client'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import type { FC } from 'react'
-import { env } from 'src/env/client.mjs'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
 
-const createBaseUriHash = () => {}
-
 export const ContractCompletionForm: FC<ContractFormProps> = ({ title, description, next, previous }) => {
-  const { deploy, address: contractAddress } = useDeployContract()
+  const { deploy } = useDeployContract()
   const { current: deployment } = useQueryRepositoryDeployments()
   const { currentSegment, contractInformationData, saleConfig, payoutData } = useContractCreationStore()
-
-  const router = useRouter()
-  const organisationName = router.query.organisation as string
-  const repositoryName = router.query.repository as string
 
   const handleClick = async () => {
     if (!deployment) {
@@ -31,16 +22,10 @@ export const ContractCompletionForm: FC<ContractFormProps> = ({ title, descripti
       return
     }
 
-    // @todo clean this up. just adds the /preview if its a preview deployment
-    const baseURI = `${env.NEXT_PUBLIC_API_URL}/api/assets/${organisationName}/${repositoryName}${
-      deployment.branch === AssetDeploymentBranch.PREVIEW ? '/preview' : ''
-    }/${deployment?.name}/`
-
     try {
       await deploy({
         payoutData,
         contractInformationData,
-        baseURI,
         saleConfig,
         branch: deployment.branch as AssetDeploymentBranch,
         type: deployment.type as AssetDeploymentType,

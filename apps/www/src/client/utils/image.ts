@@ -1,3 +1,4 @@
+import type { ContractDeployment } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { env } from 'src/env/client.mjs'
@@ -12,6 +13,10 @@ export const getBannerForRepository = ({ r }: { r: string }) => {
 
 export const getLogoForRepository = ({ r }: { r: string }) => {
   return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Create}/${r}/logo`
+}
+
+export const getSyncedBaseURI = ({ contractDeployment }: { contractDeployment: ContractDeployment }) => {
+  return `${env.NEXT_PUBLIC_API_URL}/assets/${contractDeployment.chainId}/${contractDeployment.address}`
 }
 
 export const getDeploymentTokenImage = ({

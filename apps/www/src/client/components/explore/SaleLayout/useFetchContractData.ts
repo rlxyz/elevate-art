@@ -3,7 +3,7 @@ import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import { useContractRead, useContractReads } from 'wagmi'
 
-interface UseContractReads {
+export interface UseContractReads {
   contractAddress: string
   chainId: number
   version: string
@@ -31,7 +31,7 @@ export const useFetchContractUserData = ({ contractAddress, userAdress, chainId,
   })
 }
 
-type UseContractRead = UseContractReads
+export type UseContractRead = UseContractReads
 
 export const useFetchContractDataMutatableOnly = ({ contractAddress, chainId, enabled = true, version }: UseContractRead) => {
   const { notifyError } = useNotification()

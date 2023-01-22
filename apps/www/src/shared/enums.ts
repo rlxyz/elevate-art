@@ -136,6 +136,14 @@ export const AssetDeploymentNavigationEnum = z.nativeEnum(
 
 export type AssetDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
 
+export const ContractDeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    New: 'new',
+  })
+)
+
+export type ContractDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
+
 export const RepositorySectionEnum = z.nativeEnum(
   Object.freeze({
     Overview: 'overview',

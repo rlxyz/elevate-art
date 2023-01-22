@@ -1,6 +1,6 @@
+import { ContractCreation } from '@components/deployments/contractDeployment'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
-import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import { TextWithStatus } from '@components/layout/TextWithStatus'
 import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
@@ -11,13 +11,12 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
+import { ZoneNavigationEnum } from '@utils/enums'
 import type { GetServerSidePropsContext } from 'next'
 import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { ContractCreation } from '../../../../../../client/components/deployments/contractDeployment'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -80,45 +79,6 @@ const Page = () => {
             />
           </AppRoutesNavbar>
         </Layout.AppHeader>
-        <Layout.PageHeader>
-          <PageRoutesNavbar>
-            {[
-              {
-                name: AssetDeploymentNavigationEnum.enum.Overview,
-                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments, deployment?.name),
-                enabled: false,
-                loading: isLoading,
-              },
-              {
-                name: AssetDeploymentNavigationEnum.enum.Contract,
-                href: routeBuilder(
-                  organisation?.name,
-                  repository?.name,
-                  ZoneNavigationEnum.enum.Deployments,
-                  deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Contract
-                ),
-                enabled: true,
-                loading: isLoading,
-              },
-              {
-                name: AssetDeploymentNavigationEnum.enum.Settings,
-                href: routeBuilder(
-                  organisation?.name,
-                  repository?.name,
-                  ZoneNavigationEnum.enum.Deployments,
-                  deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Settings,
-                  ContractSettingsNavigationEnum.enum.Allowlist
-                ),
-                enabled: false,
-                loading: isLoading,
-              },
-            ].map((item) => (
-              <PageRoutesNavbar.Item key={item.name} opts={item} />
-            ))}
-          </PageRoutesNavbar>
-        </Layout.PageHeader>
         <Layout.Body border={'lower'}>
           <ContractCreation />
         </Layout.Body>
@@ -156,13 +116,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (valid) {
     return {
       redirect: {
-        destination: routeBuilder(
-          organisation,
-          repository,
-          ZoneNavigationEnum.enum.Deployments,
-          deployment,
-          AssetDeploymentNavigationEnum.enum.Contract
-        ),
+        destination: routeBuilder(organisation, repository, ZoneNavigationEnum.enum.Deployments, deployment),
         permanant: false,
       },
     }

@@ -1,49 +1,19 @@
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
-import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { formatEthereumHash } from '@utils/ethers'
-import { BigNumber } from 'ethers'
-import type { Dispatch, SetStateAction } from 'react'
+import { getSyncedBaseURI } from 'src/client/utils/image'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { useSaleMintCountInput } from './useSaleMintCountInput'
-import { useUserMerkleProof } from './useUserMerkleProof'
 
-interface UseClaimMint {
-  isLoading: boolean
-  write: () => void
-  isError: boolean
-  isProcessing: boolean
-  mintCount: BigNumber
-  setMintCount: Dispatch<SetStateAction<BigNumber>>
-}
-
-export const useClaimPurchase = ({
-  contractData,
-  contractDeployment,
-  enabled,
-}: {
-  address: string | undefined | null
-  enabled: boolean
-  contractData: RhapsodyContractData
-  contractDeployment: ContractDeployment
-}): UseClaimMint => {
+export const useUpdateBaseURI = ({ contractDeployment }: { enabled: boolean; contractDeployment: ContractDeployment }) => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
-  const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
-  const { proof } = useUserMerkleProof({
-    type: WhitelistType.CLAIM,
-  })
 
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
-    functionName: 'claimMint',
-    args: [mintCount, proof],
-    overrides: {
-      gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
-    },
+    functionName: 'setBaseURI',
+    args: [getSyncedBaseURI({ contractDeployment })],
   })
 
   const {
@@ -85,8 +55,6 @@ export const useClaimPurchase = ({
   })
 
   return {
-    mintCount,
-    setMintCount,
     write: () => write?.(),
     isLoading,
     isError,

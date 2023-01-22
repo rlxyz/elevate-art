@@ -1,3 +1,5 @@
+import { ContractDeployedView } from '@components/deployments/contractDeployment/ContractDeploymentAdmin/ContractDeployedView'
+import { ContractNotDeployedView } from '@components/deployments/contractDeployment/ContractDeploymentAdmin/ContractNotDeployedView'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -7,6 +9,7 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon } from '@heroicons/react/outline'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
+import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
@@ -25,6 +28,7 @@ const Page = () => {
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
+  const { all: contractDeployment } = useQueryRepositoryContractDeployment()
 
   useEffect(() => {
     if (!repository) return
@@ -85,18 +89,6 @@ const Page = () => {
                 loading: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
-                name: AssetDeploymentNavigationEnum.enum.Contract,
-                href: routeBuilder(
-                  organisation?.name,
-                  repository?.name,
-                  ZoneNavigationEnum.enum.Deployments,
-                  deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Contract
-                ),
-                enabled: false,
-                loading: !organisation?.name || !repository?.name || !deployment?.name,
-              },
-              {
                 name: AssetDeploymentNavigationEnum.enum.Settings,
                 href: routeBuilder(
                   organisation?.name,
@@ -115,6 +107,23 @@ const Page = () => {
           </PageRoutesNavbar>
         </Layout.PageHeader>
         <Layout.Body border={'lower'}>
+          {organisation && repository && deployment ? (
+            <>
+              {contractDeployment ? (
+                <ContractDeployedView
+                  contractDeployment={contractDeployment}
+                  organisation={organisation}
+                  repository={repository}
+                  assetDeployment={deployment}
+                />
+              ) : (
+                <ContractNotDeployedView organisation={organisation} repository={repository} deployment={deployment} />
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+
           {deployment && (
             <div className='grid grid-cols-6 gap-9 py-16'>
               <div className='col-span-2'>
