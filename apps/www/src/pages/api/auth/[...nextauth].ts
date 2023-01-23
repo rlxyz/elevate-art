@@ -4,8 +4,8 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
 import { env } from 'src/env/server.mjs'
+import { prisma } from 'src/server/db/client'
 import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/shared/enums'
-import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
