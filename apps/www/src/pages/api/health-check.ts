@@ -10,7 +10,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
   log.debug(`new health check request`, { user: session?.user?.id || 'anonymous' })
   return res.status(200).send({
-    nextAuthUrl: env.NEXTAUTH_URL,
+    nextAuthUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : env.NEXTAUTH_URL,
     apiUrl: env.NEXT_PUBLIC_API_URL,
     assetUrl: env.NEXT_PUBLIC_ASSET_URL,
     nodeEnv: env.NODE_ENV,
