@@ -54,10 +54,10 @@ export const useFetchPresaleRequirements = ({
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: ContractDeploymentAllowlistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
 
-  const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.ALLOWLIST })
+  const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.PRESALE })
 
   // mint allocation
   const presaleMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)

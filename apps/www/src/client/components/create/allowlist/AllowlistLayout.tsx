@@ -52,7 +52,7 @@ export const AllowlistLayout = ({
             whitelist={[]}
             dbMerkleRoot={dbMerkleRoot}
             contractMerkleRoot={
-              type === ContractDeploymentAllowlistType.ALLOWLIST ? data?.presaleMerkleRoot || '' : data?.claimMerkleRoot || ''
+              type === ContractDeploymentAllowlistType.PRESALE ? data?.presaleMerkleRoot || '' : data?.claimMerkleRoot || ''
             }
             type={type}
           />

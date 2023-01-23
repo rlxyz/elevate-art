@@ -33,7 +33,7 @@ const Page: NextPage = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
   const { current: whitelist } = useQueryContractDeploymentWhitelist({
-    type: ContractDeploymentAllowlistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
   return (
@@ -161,7 +161,7 @@ const Page: NextPage = () => {
                     <AllowlistLayout
                       contractDeployment={contractDeployment}
                       whitelist={whitelist}
-                      type={ContractDeploymentAllowlistType.ALLOWLIST}
+                      type={ContractDeploymentAllowlistType.PRESALE}
                     />
                   )}
                 </div>

@@ -35,7 +35,7 @@ export const usePresalePurchase = ({
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
   const { proof, mint: maxInvocation } = useUserMerkleProof({
-    type: ContractDeploymentAllowlistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
 
   const { config } = usePrepareContractWrite({

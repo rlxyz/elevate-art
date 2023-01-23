@@ -12,7 +12,7 @@ import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQuer
 
 export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
   const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: ContractDeploymentAllowlistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
   const { now } = useMintLayoutCurrentTime()
   const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)

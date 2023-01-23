@@ -30,7 +30,7 @@ export const useSetMerkleRoot = ({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
-    functionName: type === ContractDeploymentAllowlistType.ALLOWLIST ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
+    functionName: type === ContractDeploymentAllowlistType.PRESALE ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
     args: [merkleRoot],
   })
 
