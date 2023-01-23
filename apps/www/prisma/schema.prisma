@@ -12,7 +12,7 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-enum WhitelistType {
+enum ContractDeploymentAllowlistType {
     CLAIM
     ALLOWLIST
 }
@@ -162,7 +162,7 @@ model AssetDeployment {
 
     contractDeployment ContractDeployment?
 
-    @@index([repositoryId])
+    @@index([repositoryId, name], name: "assetDeploymentIdentifier")
     @@index([creatorId])
 }
 
@@ -181,13 +181,13 @@ model ContractDeployment {
     assetDeployment   AssetDeployment? @relation(fields: [assetDeploymentId], references: [id])
     assetDeploymentId String?          @unique
 
-    whitelists Whitelist[]
+    whitelists ContractDeploymentAllowlist[]
 
     @@unique([address, chainId]) // there can be multiple deployments on different chains with same contract address
     @@index([repositoryId])
 }
 
-model Whitelist {
+model ContractDeploymentAllowlist {
     id        String   @id @default(cuid())
     address   String   @db.VarChar(42)
     mint      Int      @default(1)
@@ -197,7 +197,7 @@ model Whitelist {
     contractDeployment   ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
     contractDeploymentId String
 
-    type WhitelistType
+    type ContractDeploymentAllowlistType
 
     @@unique([address, contractDeploymentId, type])
     @@index([contractDeploymentId])

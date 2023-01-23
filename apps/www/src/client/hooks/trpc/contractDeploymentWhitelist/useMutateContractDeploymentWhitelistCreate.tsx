@@ -12,7 +12,7 @@ export const useMutateContractDeploymentWhitelistCreate = () => {
   const deploymentName: string = router.query.deployment as string
   return trpc.contractDeploymentWhitelist.create.useMutation({
     onSuccess: (data, variables) => {
-      ctx.contractDeploymentWhitelist.findAllowlistByDeploymentName.setData(
+      ctx.contractDeploymentWhitelist.findAllowlistByDeployment.setData(
         {
           repositoryId,
           name: deploymentName,

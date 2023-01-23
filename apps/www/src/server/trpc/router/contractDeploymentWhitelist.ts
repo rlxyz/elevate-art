@@ -1,4 +1,4 @@
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { getAddress } from 'ethers/lib/utils.js'
 import { z } from 'zod'
@@ -10,22 +10,22 @@ import { protectedProcedure, publicProcedure, router } from '../trpc'
  * @todo protect this router by checking if the user is the owner of the repository
  */
 export const contractDeploymentWhitelistRouter = router({
-  findWhitelistByAddressAndType: publicProcedure
-    .input(z.object({ address: z.string(), type: z.nativeEnum(WhitelistType) }))
+  findAllowlistByAddress: publicProcedure
+    .input(z.object({ address: z.string(), type: z.nativeEnum(ContractDeploymentAllowlistType) }))
     .query(async ({ ctx, input }) => {
       const { address, type } = input
 
       /**
        * Look for the deployment
        */
-      const whitelists = await ctx.prisma.whitelist.findMany({
+      const allowlist = await ctx.prisma.contractDeploymentAllowlist.findMany({
         where: { type, contractDeployment: { address } },
       })
 
       /**
        * If deployment does not exists, return not found
        */
-      if (!whitelists) {
+      if (!allowlist) {
         // new trpc error
         throw new TRPCError({
           code: 'NOT_FOUND',
@@ -34,7 +34,7 @@ export const contractDeploymentWhitelistRouter = router({
       }
 
       /** Return */
-      return { whitelists }
+      return { allowlist }
     }),
   create: protectedProcedure
     .input(
@@ -46,7 +46,7 @@ export const contractDeploymentWhitelistRouter = router({
             mint: z.number(),
           })
         ),
-        type: z.nativeEnum(WhitelistType),
+        type: z.nativeEnum(ContractDeploymentAllowlistType),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -56,27 +56,27 @@ export const contractDeploymentWhitelistRouter = router({
       for (const chunk of Array.from({ length: Math.ceil(whitelist.length / BATCH_CHUNK_SIZE) }, (_, index) =>
         whitelist.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
       )) {
-        await ctx.prisma.whitelist.createMany({
+        await ctx.prisma.contractDeploymentAllowlist.createMany({
           data: chunk.map(({ address, mint }) => ({
             address: getAddress(address),
             mint,
             contractDeploymentId,
-            type: type as WhitelistType,
+            type: type as ContractDeploymentAllowlistType,
           })),
           skipDuplicates: true,
         })
       }
 
-      return await ctx.prisma.whitelist.findMany({
-        where: { contractDeploymentId, type: type as WhitelistType },
+      return await ctx.prisma.contractDeploymentAllowlist.findMany({
+        where: { contractDeploymentId, type: type as ContractDeploymentAllowlistType },
       })
     }),
-  findAllowlistByDeploymentName: publicProcedure
+  findAllowlistByDeployment: publicProcedure
     .input(
       z.object({
         name: z.string(),
         repositoryId: z.string(),
-        type: z.nativeEnum(WhitelistType),
+        type: z.nativeEnum(ContractDeploymentAllowlistType),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -85,9 +85,9 @@ export const contractDeploymentWhitelistRouter = router({
       /**
        * Look for the deployment
        */
-      const whitelists = await ctx.prisma.whitelist.findMany({
+      const allowlist = await ctx.prisma.contractDeploymentAllowlist.findMany({
         where: {
-          type: type as WhitelistType,
+          type: type as ContractDeploymentAllowlistType,
           contractDeployment: {
             assetDeployment: { name, repositoryId },
           },
@@ -97,7 +97,7 @@ export const contractDeploymentWhitelistRouter = router({
       /**
        * If deployment does not exists, return not found
        */
-      if (!whitelists) {
+      if (!allowlist) {
         // new trpc error
         throw new TRPCError({
           code: 'NOT_FOUND',
@@ -106,6 +106,6 @@ export const contractDeploymentWhitelistRouter = router({
       }
 
       /** Return */
-      return whitelists
+      return allowlist
     }),
 })

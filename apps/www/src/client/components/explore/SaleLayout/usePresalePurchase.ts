@@ -1,6 +1,6 @@
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { formatEthereumHash } from '@utils/ethers'
 import { BigNumber } from 'ethers'
@@ -35,7 +35,7 @@ export const usePresalePurchase = ({
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
   const { proof, mint: maxInvocation } = useUserMerkleProof({
-    type: WhitelistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.ALLOWLIST,
   })
 
   const { config } = usePrepareContractWrite({

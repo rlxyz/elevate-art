@@ -1,6 +1,6 @@
 import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
-import type { ContractDeployment, Whitelist } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
+import type { ContractDeployment, ContractDeploymentAllowlist } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { AllowlistLayoutHeader } from './AllowlistLayoutHeader'
 import { AllowlistLayoutTable } from './AllowlistLayoutTable'
 import { AllowlistLayoutTextarea } from './AllowlistLayoutTextarea'
@@ -19,8 +19,8 @@ export const AllowlistLayout = ({
   type,
 }: {
   contractDeployment: ContractDeployment
-  whitelist: Whitelist[]
-  type: WhitelistType
+  whitelist: ContractDeploymentAllowlist[]
+  type: ContractDeploymentAllowlistType
 }) => {
   const {
     merkleRoot: dbMerkleRoot,
@@ -51,7 +51,9 @@ export const AllowlistLayout = ({
             isLoading={isLoading || isProcessing}
             whitelist={[]}
             dbMerkleRoot={dbMerkleRoot}
-            contractMerkleRoot={type === WhitelistType.ALLOWLIST ? data?.presaleMerkleRoot || '' : data?.claimMerkleRoot || ''}
+            contractMerkleRoot={
+              type === ContractDeploymentAllowlistType.ALLOWLIST ? data?.presaleMerkleRoot || '' : data?.claimMerkleRoot || ''
+            }
             type={type}
           />
           <AllowlistLayoutTextarea contractDeployment={contractDeployment} type={type} />

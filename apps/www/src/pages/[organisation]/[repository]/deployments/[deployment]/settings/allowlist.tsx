@@ -14,7 +14,7 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -33,7 +33,7 @@ const Page: NextPage = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
   const { current: whitelist } = useQueryContractDeploymentWhitelist({
-    type: WhitelistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.ALLOWLIST,
   })
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
   return (
@@ -158,7 +158,11 @@ const Page: NextPage = () => {
               <div className='col-span-8'>
                 <div className='space-y-6'>
                   {contractDeployment && whitelist && (
-                    <AllowlistLayout contractDeployment={contractDeployment} whitelist={whitelist} type={WhitelistType.ALLOWLIST} />
+                    <AllowlistLayout
+                      contractDeployment={contractDeployment}
+                      whitelist={whitelist}
+                      type={ContractDeploymentAllowlistType.ALLOWLIST}
+                    />
                   )}
                 </div>
               </div>

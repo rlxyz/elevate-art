@@ -1,15 +1,15 @@
 import { useGetMerkleTree } from '@components/create/allowlist/useGetMerkleTree'
-import type { WhitelistType } from '@prisma/client'
+import type { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
-export const useUserMerkleProof = ({ type }: { type: WhitelistType }) => {
+export const useUserMerkleProof = ({ type }: { type: ContractDeploymentAllowlistType }) => {
   const { current, all } = useQueryContractDeploymentWhitelistFindClaimByAddress({
     type,
   })
 
   const { merkleTree, getHexProof, root } = useGetMerkleTree({
-    data: all?.whitelists,
+    data: all?.allowlist,
   })
 
   if (!current?.address || current.mint === 0 || !merkleTree) {

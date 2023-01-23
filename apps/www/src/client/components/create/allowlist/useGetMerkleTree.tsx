@@ -1,9 +1,9 @@
-import type { Whitelist } from '@prisma/client'
+import type { ContractDeploymentAllowlist } from '@prisma/client'
 import { createMerkleTree, generateLeaf } from '@utils/merkle-roots'
 import type MerkleTree from 'merkletreejs'
 import { useEffect, useState } from 'react'
 
-export const useGetMerkleTree = ({ data }: { data: Whitelist[] | undefined }) => {
+export const useGetMerkleTree = ({ data }: { data: ContractDeploymentAllowlist[] | undefined }) => {
   const [merkleTree, setMerkleTree] = useState<MerkleTree>()
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export const useGetMerkleTree = ({ data }: { data: Whitelist[] | undefined }) =>
     setMerkleTree(createMerkleTree(data))
   }, [data])
 
-  const getHexProof = ({ current }: { current: Whitelist }) => {
+  const getHexProof = ({ current }: { current: ContractDeploymentAllowlist }) => {
     if (!data) return undefined
     const tree = createMerkleTree(data)
     const leaf: Buffer = generateLeaf(current)

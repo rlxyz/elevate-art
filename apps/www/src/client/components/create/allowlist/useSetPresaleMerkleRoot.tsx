@@ -1,7 +1,7 @@
 import type { InteractWithContract } from '@components/explore/SaleLayout/usePresalePurchase'
 import { useNotification } from '@hooks/utils/useNotification'
-import type { ContractDeployment, Whitelist } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
+import type { ContractDeployment, ContractDeploymentAllowlist } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { formatEthereumHash } from '@utils/ethers'
 import type { Dispatch, SetStateAction } from 'react'
@@ -19,10 +19,10 @@ export const useSetMerkleRoot = ({
   contractDeployment,
   enabled,
 }: {
-  type: WhitelistType
+  type: ContractDeploymentAllowlistType
   enabled: boolean
   contractDeployment: ContractDeployment
-  whitelist: Whitelist[] | undefined
+  whitelist: ContractDeploymentAllowlist[] | undefined
 }): UseSetPresaleMerkleRoot => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { merkleRoot, setMerkleRoot } = useSetMerkleRootData({ enabled, data: whitelist })
@@ -30,7 +30,7 @@ export const useSetMerkleRoot = ({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
-    functionName: type === WhitelistType.ALLOWLIST ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
+    functionName: type === ContractDeploymentAllowlistType.ALLOWLIST ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
     args: [merkleRoot],
   })
 

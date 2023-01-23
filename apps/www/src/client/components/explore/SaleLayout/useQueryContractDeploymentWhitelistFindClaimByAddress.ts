@@ -1,4 +1,4 @@
-import type { WhitelistType } from '@prisma/client'
+import type { ContractDeploymentAllowlistType } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
@@ -24,15 +24,15 @@ const useCurrentContractAddress = () => {
   return { currentAddress }
 }
 
-export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: { type: WhitelistType }) => {
+export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: { type: ContractDeploymentAllowlistType }) => {
   const { data: session } = useSession()
   const { currentAddress } = useCurrentContractAddress()
-  const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findWhitelistByAddressAndType.useQuery(
+  const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findAllowlistByAddress.useQuery(
     { address: currentAddress || '', type },
     { enabled: !!currentAddress }
   )
   return {
-    current: data?.whitelists.find((x) => x.address === session?.user?.address),
+    current: data?.allowlist.find((x) => x.address === session?.user?.address),
     all: data,
     isLoading,
     isError,
