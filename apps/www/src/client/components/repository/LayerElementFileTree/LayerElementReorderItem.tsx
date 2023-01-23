@@ -1,9 +1,9 @@
 import { SelectorIcon } from '@heroicons/react/outline'
-import { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useRaisedShadow } from '@hooks/utils/useRaisedShadow'
 import clsx from 'clsx'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
-import { FC } from 'react'
-import { useRaisedShadow } from '../../../hooks/utils/useRaisedShadow'
+import type { FC } from 'react'
 
 export interface Props {
   repositoryId: string

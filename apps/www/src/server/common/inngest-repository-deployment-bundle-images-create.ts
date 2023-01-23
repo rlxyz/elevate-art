@@ -1,10 +1,10 @@
-import type { AssetDeploymentBranch, Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { AssetDeploymentStatus } from '@prisma/client'
 import type { InngestEvents } from '@server/utils/inngest'
 import { createFunction } from 'inngest'
 import type * as v from 'src/shared/compiler'
 import { prisma } from '../db/client'
-import { fetchAndSaveAllTraitElementsToGCP } from './cld-to-gcp-save-trait-element'
+import { fetchAndSaveAllTraitElementsToGCP } from './gcp-save-cld-trait-element'
 
 const repositoryDeploymentFailedUpdate = async ({ deploymentId }: { deploymentId: string }) => {
   await prisma?.assetDeployment.update({
@@ -36,21 +36,17 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
   'repository-deployment/images.bundle.create',
   async ({ event }) => {
     const layerElements = event.data.layerElements as Prisma.JsonArray as v.Layer[]
-    const { repositoryId, deploymentId, branch } = event.data as {
-      repositoryId: string
-      deploymentId: string
-      branch: AssetDeploymentBranch
-    }
+    const { repositoryId, deploymentId, branch, type } = event.data
 
     if (!layerElements || !repositoryId || !deploymentId || !branch) {
       return { status: 400 }
     }
 
-    /**
-     * Ensure Deployment Exists
-     * @todo better error handling here...
-     */
     try {
+      /**
+       * Ensure Deployment Exists
+       * @todo better error handling here...
+       */
       const deployment = await prisma?.assetDeployment.findFirst({
         where: { id: deploymentId, repositoryId },
         select: { id: true },
@@ -60,17 +56,10 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
         return { status: 400 }
       }
 
-      //! Ensure Bucket Exists; removed due to GCP service account not having permission to list buckets
-      // const [bucket] = await getAssetDeploymentBucket({ branch }).exists()
-      // if (!bucket) {
-      //   await repositoryDeploymentFailedUpdate({ deploymentId })
-      //   return { status: 400 }
-      // }
-
       /**
        * Create Promises
        */
-      const all = fetchAndSaveAllTraitElementsToGCP({ layerElements, repositoryId, deploymentId, branch })
+      const all = fetchAndSaveAllTraitElementsToGCP({ layerElements, repositoryId, deploymentId })
 
       /** Move all images from Cloudinary to GCP Bucket */
       Promise.allSettled(all)

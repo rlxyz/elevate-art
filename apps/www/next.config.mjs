@@ -25,7 +25,11 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['res.cloudinary.com', 'localhost'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'storage.googleapis.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'http', hostname: 'localhost' },
+    ],
   },
   i18n: {
     locales: ['en'],

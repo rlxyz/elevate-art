@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, NextPage } from 'next'
+import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -7,6 +7,7 @@ import { Layout } from 'src/client/components/layout/core/Layout'
 import { ConnectButton } from 'src/client/components/layout/eth/ConnectButton'
 import LinkComponent from 'src/client/components/layout/link/Link'
 import NextLinkComponent from 'src/client/components/layout/link/NextLink'
+import { routeBuilder } from 'src/client/utils/format'
 import { OrganisationNavigationEnum } from 'src/shared/enums'
 
 /**
@@ -17,7 +18,7 @@ import { OrganisationNavigationEnum } from 'src/shared/enums'
 const Connect: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  if (status === 'authenticated') router.push('/dashboard')
+  if (status === 'authenticated') router.push(routeBuilder(OrganisationNavigationEnum.enum.Dashboard))
   return (
     <Layout hasFooter={false}>
       <Layout.Body>
@@ -82,7 +83,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session?.user?.id) {
     return {
       redirect: {
-        destination: `/${OrganisationNavigationEnum.enum.Dashboard}`,
+        destination: routeBuilder(OrganisationNavigationEnum.enum.Dashboard),
         permanant: false,
       },
     }

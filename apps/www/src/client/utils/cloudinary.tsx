@@ -1,6 +1,6 @@
-import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import { TraitElement } from '@prisma/client'
-import { FileWithPath } from 'react-dropzone'
+import type { TraitElementUploadState } from '@components/layout/upload/upload-display'
+import type { TraitElement } from '@prisma/client'
+import type { FileWithPath } from 'react-dropzone'
 import { env } from 'src/env/client.mjs'
 
 export const getRepositoryUploadLayerObjectUrls = (files: FileWithPath[]): { [key: string]: TraitElementUploadState[] } => {
@@ -50,5 +50,27 @@ export const createCloudinaryFormData = (file: FileWithPath, trait: TraitElement
   data.append('upload_preset', 'collection-upload')
   data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
   data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${repositoryId}/${layerElementId}`)
+  return data
+}
+
+export const createCloudinaryFormDataForBanner = (file: FileWithPath, id: string) => {
+  const data = new FormData()
+  data.append('file', file)
+  data.append('public_id', 'banner')
+  data.append('original_filename', 'banner')
+  data.append('upload_preset', 'collection-upload')
+  data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
+  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets`)
+  return data
+}
+
+export const createCloudinaryFormDataForLogo = (file: FileWithPath, id: string) => {
+  const data = new FormData()
+  data.append('file', file)
+  data.append('public_id', 'logo')
+  data.append('original_filename', 'logo')
+  data.append('upload_preset', 'collection-upload')
+  data.append('cloud_name', env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
+  data.append('folder', `${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets`)
   return data
 }

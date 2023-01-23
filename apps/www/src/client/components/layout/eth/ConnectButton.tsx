@@ -1,4 +1,5 @@
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
+import Image from 'next/image'
 import React from 'react'
 import AvatarComponent from '../avatar/Avatar'
 
@@ -21,11 +22,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
           <div
             {...(!ready && {
               'aria-hidden': true,
-              style: {
-                opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
-              },
+              className: 'opacity-0 pointer-events-none user-select-none',
             })}
           >
             {(() => {
@@ -33,9 +30,11 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                 return (
                   <button onClick={openConnectModal} type='button' className='w-full'>
                     {children || (
-                      <img
+                      <Image
                         src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
+                        width={18}
+                        height={18}
+                        className='inline-block rounded-[5px]'
                         alt='Wallet'
                       />
                     )}

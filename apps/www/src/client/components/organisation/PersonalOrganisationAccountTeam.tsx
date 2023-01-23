@@ -1,12 +1,12 @@
+import NextLinkComponent from '@components/layout/link/NextLink'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
-import { Organisation, OrganisationMember, User } from '@prisma/client'
+import type { Organisation, OrganisationMember, User } from '@prisma/client'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
-import { Link } from 'src/client/components/layout/Link'
 import SearchInput from 'src/client/components/layout/search/Search'
-import { capitalize } from 'src/client/utils/format'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum } from 'src/shared/enums'
 
 export const PersonalOrganisationAccountTeam = () => {
@@ -41,26 +41,24 @@ export const PersonalOrganisationAccountTeam = () => {
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
-            {filteredOrganisaitons.map((organisation) => {
-              return (
-                <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
-                  <div className='flex flex-row space-y-1 items-center space-x-3'>
-                    <AvatarComponent src='images/avatar-blank.png' />
-                    <div className='flex flex-col space-y-1'>
-                      <span className='text-xs font-bold'>{organisation.name}</span>
-                      <span className='text-xs text-darkGrey'>
-                        {organisation.type === OrganisationDatabaseEnum.enum.Personal
-                          ? capitalize(OrganisationDatabaseEnum.enum.Personal)
-                          : capitalize(getUserRoleInOrganisation(organisation) || '')}
-                      </span>
-                    </div>
+            {filteredOrganisaitons.map((organisation) => (
+              <div key={organisation.id} className='p-4 flex flex-row items-center justify-between'>
+                <div className='flex flex-row space-y-1 items-center space-x-3'>
+                  <AvatarComponent src='/images/avatar-blank.png' />
+                  <div className='flex flex-col space-y-1'>
+                    <span className='text-xs font-bold'>{organisation.name}</span>
+                    <span className='text-xs text-darkGrey'>
+                      {organisation.type === OrganisationDatabaseEnum.enum.Personal
+                        ? capitalize(OrganisationDatabaseEnum.enum.Personal)
+                        : capitalize(getUserRoleInOrganisation(organisation) || '')}
+                    </span>
                   </div>
-                  <Link href={`/${organisation.name}`} className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs'>
-                    View
-                  </Link>
                 </div>
-              )
-            })}
+                <NextLinkComponent href={routeBuilder(organisation.name)} className='w-fit'>
+                  <span className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs w-fit'>View</span>
+                </NextLinkComponent>
+              </div>
+            ))}
           </div>
         </>
       ) : (

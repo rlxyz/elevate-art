@@ -1,5 +1,5 @@
-import { NextPageContext } from 'next'
-import { FunctionComponent } from 'react'
+import type { NextPageContext } from 'next'
+import type { FunctionComponent } from 'react'
 import { createOrganisationNavigationStore, OrganisationRouterContext } from 'src/client/hooks/store/useOrganisationNavigationStore'
 import { createRepositoryStore, RepositoryContext } from 'src/client/hooks/store/useRepositoryStore'
 

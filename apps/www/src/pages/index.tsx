@@ -2,10 +2,11 @@
 import { Layout } from '@components/layout/core/Layout'
 import NextLink from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { routeBuilder } from 'src/client/utils/format'
 
 const Hero = () => {
   return (
@@ -147,11 +148,11 @@ const Footer = () => {
 const Home: NextPage = () => {
   const { status } = useSession()
   const router = useRouter()
-  if (status === 'authenticated') router.push(`/${OrganisationNavigationEnum.enum.Dashboard}`)
+  if (status === 'authenticated') router.push(routeBuilder(OrganisationNavigationEnum.enum.Dashboard))
   return (
     <>
       <Layout>
-        <Layout.Header authenticated={false} />
+        <Layout.AppHeader border='lower' authenticated={false} />
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='space-y-20 h-full flex flex-col xs:my-10 sm:my-20'>

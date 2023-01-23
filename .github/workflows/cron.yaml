@@ -9,5 +9,5 @@ jobs:
       - name: Call our API route
         run: |
           curl --request POST \
-          --url 'https://staging.elevate.art/api/assets/cancel-deployments' \
+          --url 'https://staging.elevate.art/api/assets/deployments/force-fail-timedout-deployments' \
           --header 'Authorization: Bearer ${{ secrets.GH_API_SECRET_KEY }}'

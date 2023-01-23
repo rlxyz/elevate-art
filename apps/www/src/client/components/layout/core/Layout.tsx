@@ -2,9 +2,8 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import * as React from 'react'
 import { Toaster } from 'react-hot-toast'
-import Header, { HeaderProps } from './Header'
+import Header from '../header/Header'
 
-const DynamicHeader = dynamic(() => import('./Header'))
 const DynamicFooter = dynamic(() => import('./Footer'))
 
 interface LayoutProps {
@@ -16,8 +15,10 @@ export const LayoutContainer = ({
   className,
   children,
   border = 'lower',
+  margin = true,
 }: {
   border?: 'upper' | 'lower' | 'none'
+  margin?: boolean
   className?: string
   children: React.ReactNode
 }) => {
@@ -30,7 +31,7 @@ export const LayoutContainer = ({
         border === 'upper' && 'border-t border-mediumGrey'
       )}
     >
-      <div className='w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full'>{children}</div>
+      <div className={clsx(margin && 'w-[90%] lg:w-[70%] 2xl:w-[75%] 3xl:w-[65%] h-full')}>{children}</div>{' '}
     </div>
   )
 }
@@ -53,28 +54,40 @@ export const Layout = ({ children, hasFooter = true }: LayoutProps) => {
   )
 }
 
-const LayoutHeader = ({ border = 'lower', ...props }: HeaderProps & { border?: 'none' | 'lower' }) => (
-  <LayoutContainer className='header min-h-[3.5rem] max-h-[5.64rem]' border={border}>
-    <div className='-ml-2'>
-      <Header {...props} />
-    </div>
+const LayoutAppHeader = ({
+  authenticated = true,
+  children,
+  border = 'none',
+}: {
+  children?: React.ReactNode[] | React.ReactNode
+  authenticated?: boolean
+  border?: 'lower' | 'none'
+}) => (
+  <LayoutContainer border={border}>
+    <Header authenticated={authenticated}>{children && children}</Header>
   </LayoutContainer>
+)
+
+const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.ReactNode }) => (
+  <LayoutContainer className='header'>{children}</LayoutContainer>
 )
 
 const LayoutBody = ({
   children,
   border = 'none',
+  margin = true,
 }: {
   children: React.ReactNode[] | React.ReactNode
   border?: 'upper' | 'lower' | 'none'
+  margin?: boolean
 }) => {
   const childrens = React.Children.toArray(children)
   return (
-    <div className='min-h-[calc(100vh-9.14rem)]'>
+    <div className='min-h-[calc(100vh-7.14rem)]'>
       <div className='h-full w-screen'>
         {childrens.map((child, index) => {
           return (
-            <LayoutContainer border={border} key={index}>
+            <LayoutContainer margin={margin} border={border} key={index}>
               <div className='-ml-2 h-full w-full space-y-8'>{child}</div>
             </LayoutContainer>
           )
@@ -86,6 +99,7 @@ const LayoutBody = ({
 
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className='title'>{children}</LayoutContainer>
 
-Layout.Header = LayoutHeader
+Layout.AppHeader = LayoutAppHeader
+Layout.PageHeader = LayoutPageHeader
 Layout.Title = LayoutTitle
 Layout.Body = LayoutBody

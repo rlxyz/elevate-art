@@ -149,6 +149,28 @@ export const layerElementRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { layerElementId, repositoryId } = input
 
+      const layerElement = await ctx.prisma.layerElement.findUnique({
+        where: { id: layerElementId },
+      })
+
+      if (!layerElement) {
+        throw new TRPCError({
+          code: `BAD_REQUEST`,
+          message: 'LayerElement not found',
+        })
+      }
+
+      const repository = await ctx.prisma.repository.findUnique({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({
+          code: `BAD_REQUEST`,
+          message: 'Repository not found',
+        })
+      }
+
       /* Delete many TraitElement from Cloudinary */
       /** @todo if any item in DeleteFolderResponse is not boolean true, then what? */
       const response: Result<DeleteTraitElementResponse[]> = await deleteImageFolderFromCloudinary({

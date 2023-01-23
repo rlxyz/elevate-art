@@ -1,17 +1,15 @@
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
-import { Session } from 'next-auth'
+import type { GetSiweMessageOptions } from '@rainbow-me/rainbowkit-siwe-next-auth'
+import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
+import type { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
-import { FC, ReactNode } from 'react'
+import type { FC, ReactNode } from 'react'
 import { env } from 'src/env/client.mjs'
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import { configureChains, createClient, goerli, mainnet, WagmiConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
-const { chains, provider } = configureChains(
-  [chain.mainnet, chain.goerli],
-  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
-)
+const { chains, provider } = configureChains([mainnet, goerli], [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()])
 const { wallets } = getDefaultWallets({ appName: env.NEXT_PUBLIC_APP_NAME, chains })
 export const appInfo = { appName: env.NEXT_PUBLIC_APP_NAME }
 const connectors = connectorsForWallets([...wallets])

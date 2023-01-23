@@ -1,6 +1,6 @@
 import { useMutateLayerElementDelete } from '@hooks/trpc/layerElement/useMutateLayerElementDelete'
-import { LayerElement } from '@prisma/client'
-import { FC } from 'react'
+import type { LayerElement } from '@prisma/client'
+import type { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
 
 export interface FormModalProps {

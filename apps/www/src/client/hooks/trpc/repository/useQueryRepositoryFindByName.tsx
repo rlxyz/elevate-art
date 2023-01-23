@@ -1,4 +1,5 @@
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { trpc } from 'src/client/utils/trpc'
 
 export const useQueryRepositoryFindByName = (

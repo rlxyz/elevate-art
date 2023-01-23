@@ -5,6 +5,16 @@ module.exports = {
   mode: 'jit',
   content: ['./src/**/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    extend: {
+      animation: {
+        'pulse-bg-once': 'pulse-bg-once 2s ease-in forwards',
+      },
+      keyframes: {
+        'pulse-bg-once': {
+          to: { backgroundColor: 'transparent' },
+        },
+      },
+    },
     colors: {
       hue: {
         light: '#ffffff',
