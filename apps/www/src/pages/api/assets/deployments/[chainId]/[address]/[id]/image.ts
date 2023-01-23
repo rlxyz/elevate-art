@@ -2,6 +2,7 @@ import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
 import { validateUserIsMemberInAssetDeployment } from '@server/common/db-get-asset-deployment-user-session'
+import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { createTokenImageBuffer } from '@server/common/gcp-create-token-image-buffer'
 import { getImageUrlFromGcp } from '@server/common/gcp-get-token-image-url'
 import { saveImageToGcp } from '@server/common/gcp-save-token-image-buffer'
@@ -45,6 +46,16 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (deployment.totalSupply <= tokenId) {
+    return res.status(400).send('Bad Request')
+  }
+
+  const totalSupply = await getTotalSupply(address, chainId)
+  if (totalSupply.failed) {
+    return res.status(500).send('Internal Server Error')
+  }
+
+  const supply = totalSupply.getValue().toNumber()
+  if (supply === 0 || supply <= tokenId) {
     return res.status(400).send('Bad Request')
   }
 

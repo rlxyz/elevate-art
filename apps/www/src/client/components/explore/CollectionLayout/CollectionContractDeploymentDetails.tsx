@@ -47,6 +47,13 @@ export const CollectionContractDeploymentDetails: React.FC<CollectionContractDep
         <h2 className='text-xs'>Type</h2>
         <h1 className='text-xs font-bold'>{deployment?.type && toPascalCaseWithSpace(deployment.type)}</h1>
       </div>
+      <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
+      <div className='flex space-x-1'>
+        <h2 className='text-xs'>Max Mint Per Address</h2>
+        <h1 className='text-xs font-bold'>
+          {contractData?.publicPeriod.maxMintPerAddress && <span>{formatUnits(contractData?.publicPeriod.maxMintPerAddress, 0)}</span>}
+        </h1>
+      </div>
     </div>
     {repository?.description && <DescriptionWithDisclouser description={repository.description} />}
   </div>
