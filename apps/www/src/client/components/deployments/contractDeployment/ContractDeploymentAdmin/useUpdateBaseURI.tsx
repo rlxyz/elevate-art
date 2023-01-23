@@ -51,7 +51,7 @@ export const useUpdateBaseURI = ({ contractDeployment }: { enabled: boolean; con
     },
     onSuccess: (data) => {
       if (data) {
-        notifySuccess("You've successfully minted your NFTs!")
+        notifySuccess("You've successfully updated the tokens baseURI!")
       }
     },
   })
