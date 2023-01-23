@@ -28,8 +28,8 @@ export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: 
   const { data: session } = useSession()
   const { currentAddress } = useCurrentContractAddress()
   const { data, isLoading, isError } = trpc.contractDeploymentWhitelist.findAllowlistByAddress.useQuery(
-    { address: currentAddress || '', type },
-    { enabled: !!currentAddress }
+    { address: currentAddress || '', type, user: session?.user?.address || '' },
+    { enabled: !!currentAddress || !!session?.user?.address }
   )
   return {
     current: data?.allowlist.find((x) => x.address === session?.user?.address),

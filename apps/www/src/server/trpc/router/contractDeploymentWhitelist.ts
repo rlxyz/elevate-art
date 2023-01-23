@@ -11,7 +11,7 @@ import { protectedProcedure, publicProcedure, router } from '../trpc'
  */
 export const contractDeploymentWhitelistRouter = router({
   findAllowlistByAddress: publicProcedure
-    .input(z.object({ address: z.string(), type: z.nativeEnum(ContractDeploymentAllowlistType) }))
+    .input(z.object({ address: z.string(), type: z.nativeEnum(ContractDeploymentAllowlistType), user: z.string() }))
     .query(async ({ ctx, input }) => {
       const { address, type } = input
 

@@ -31,7 +31,7 @@ export const useClaimPurchase = ({
 }): UseClaimMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
-  const { proof, mint: maxInvocation } = useUserMerkleProof({
+  const { proof, maxMintForUser } = useUserMerkleProof({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
 
@@ -40,7 +40,7 @@ export const useClaimPurchase = ({
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
     functionName: 'claimMint',
-    args: [mintCount, maxInvocation, proof],
+    args: [mintCount, maxMintForUser, proof],
     overrides: {
       gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
     },
