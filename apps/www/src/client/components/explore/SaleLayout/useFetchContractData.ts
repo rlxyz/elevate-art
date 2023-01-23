@@ -18,7 +18,7 @@ export const useFetchContractUserData = ({ contractAddress, userAdress, chainId,
   const { notifyError } = useNotification()
 
   return useContractReads({
-    scopeKey: `erc721:${version}:${chainId}:${contractAddress}`,
+    scopeKey: `erc721:${version}:${chainId}:${contractAddress}:${userAdress}`,
     contracts: [{ address: contractAddress, abi: RhapsodyContract.abi, functionName: 'mintOf', args: [userAdress], chainId }],
     watch: true,
     cacheTime: 10_000,
