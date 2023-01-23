@@ -29,7 +29,12 @@ export const SaleLayoutClaimPurchase = ({
   const { userMintCount, userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
-  const { write, setMintCount, mintCount } = useClaimPurchase({
+  const {
+    write,
+    setMintCount,
+    mintCount,
+    isLoading: isLoadingPurchase,
+  } = useClaimPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
@@ -76,7 +81,7 @@ export const SaleLayoutClaimPurchase = ({
             )}
           </div>
           <button
-            disabled={!session?.user?.id || isLoading || !allowToMint}
+            disabled={!session?.user?.id || isLoading || isLoadingPurchase || !allowToMint}
             onClick={() => write()}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'
