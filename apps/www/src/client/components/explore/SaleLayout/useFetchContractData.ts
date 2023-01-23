@@ -21,8 +21,6 @@ export const useFetchContractUserData = ({ contractAddress, userAdress, chainId,
     scopeKey: `erc721:${version}:${chainId}:${contractAddress}:${userAdress}`,
     contracts: [{ address: contractAddress, abi: RhapsodyContract.abi, functionName: 'mintOf', args: [userAdress], chainId }],
     watch: true,
-    cacheTime: 10_000,
-    staleTime: 10_000,
     enabled: enabled,
     select: (data) => ({
       userMintCount: BigNumber.from(data[0]),
