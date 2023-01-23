@@ -89,7 +89,8 @@ export const authOptions: NextAuthOptions = {
             name: user.address,
           }
         } catch (err) {
-          console.error(err)
+          log.error(`authorize error`, { err })
+          console.error(`authorize error`, err)
           return null
         }
       },
