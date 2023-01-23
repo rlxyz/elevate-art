@@ -73,7 +73,7 @@ export const useSetMintTime = ({
     },
     onSuccess: (data) => {
       if (data) {
-        notifySuccess("You've successfully minted your NFTs!")
+        notifySuccess("You've successfully changed the contract mint timestamp")
       }
     },
   })
