@@ -46,7 +46,7 @@ export const useFetchPublicRequirements = ({
   })
 
   // mint allocation
-  const publicMintMx = BigNumber.from(fetchedContractData?.maxPublicBatchPerAddress || 0)
+  const publicMintMx = BigNumber.from(fetchedContractData?.maxMintPerAddress || 0)
   const publicMintLeft = publicMintMx.sub(fetchedContractUserData?.userMintCount || 0)
 
   // total left in collection
