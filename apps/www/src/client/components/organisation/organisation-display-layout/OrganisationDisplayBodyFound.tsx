@@ -1,5 +1,5 @@
 import SearchComponent from '@components/layout/search/Search'
-import { Organisation, Repository } from '@prisma/client'
+import type { Organisation, Repository } from '@prisma/client'
 import { useState } from 'react'
 import { RepositoryDisplayCard } from './RepositoryDisplayCard'
 

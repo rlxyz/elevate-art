@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { AssetDeploymentBranch, AssetDeploymentStatus, AssetDeploymentType, ContractDeploymentStatus } from '@prisma/client'
-import { storage } from '@server/utils/gcp-storage'
+import { getLayerDeploymentBucket } from '@server/utils/gcp-storage'
 import { createIngestInstance } from '@server/utils/inngest'
 import { TRPCError } from '@trpc/server'
 import Big from 'big.js'
@@ -268,12 +268,12 @@ export const repositoryRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      await storage.bucket(`elevate-${deployment.repositoryId}-assets`).deleteFiles({
-        prefix: `${deploymentId}`,
+      getLayerDeploymentBucket().deleteFiles({
+        prefix: `${deployment.id}`,
       })
 
       await ctx.prisma.assetDeployment.delete({
-        where: { id: deploymentId },
+        where: { id: deployment.id },
       })
 
       return deployment
@@ -355,7 +355,29 @@ export const repositoryRouter = router({
         data: { tokenName },
       })
     }),
+  updateDisplayName: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        displayName: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, displayName } = input
 
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { displayName },
+      })
+    }),
   updateArtistName: protectedProcedure
     .input(
       z.object({
@@ -424,6 +446,52 @@ export const repositoryRouter = router({
       return await ctx.prisma.repository.update({
         where: { id: repositoryId },
         data: { license },
+      })
+    }),
+  updateWidth: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        width: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, width } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { width },
+      })
+    }),
+  updateHeight: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        height: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { repositoryId, height } = input
+
+      const repository = await ctx.prisma.repository.findFirst({
+        where: { id: repositoryId },
+      })
+
+      if (!repository) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.repository.update({
+        where: { id: repositoryId },
+        data: { height },
       })
     }),
   promoteAssetDeployment: protectedProcedure

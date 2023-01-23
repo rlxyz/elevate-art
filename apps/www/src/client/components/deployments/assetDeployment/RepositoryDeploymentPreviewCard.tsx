@@ -7,10 +7,10 @@ import { useNotification } from '@hooks/utils/useNotification'
 import type { AssetDeployment, ContractDeployment } from '@prisma/client'
 import { AssetDeploymentBranch, AssetDeploymentStatus } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
-import { formatEthereumHash } from '@utils/ethers'
+import { formatEthereumHash, parseChainId } from '@utils/ethers'
 import clsx from 'clsx'
 import { useState } from 'react'
-import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
+import { capitalize, routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 import { env } from 'src/env/client.mjs'
 import RepositoryDeploymentDeleteModal from './RepositoryDeploymentDeleteModal'
@@ -56,7 +56,7 @@ export const RepositoryDeploymentPreviewCard = ({
               <span>{deployment.name}</span>
             )}
           </div>
-          <span>{deployment.slug}</span>
+          <span>{toPascalCaseWithSpace(deployment.branch)}</span>
         </div>
         {deployment.contractDeployment && (
           <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
@@ -88,7 +88,7 @@ export const RepositoryDeploymentPreviewCard = ({
       </div>
       <div className='text-xs flex flex-col'>
         <span>
-          Environment <strong>{toPascalCaseWithSpace(deployment.branch)}</strong>
+          Chain <strong>{capitalize(parseChainId(deployment.contractDeployment?.chainId || 9))}</strong>
         </span>
         <span>
           Mint Type <strong>{toPascalCaseWithSpace(deployment.type)}</strong>

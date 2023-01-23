@@ -14,7 +14,6 @@ import { useNotification } from './useNotification'
 
 interface ERC721ContractInput {
   contractInformationData: ContractInformationData
-  baseURI: string
   saleConfig: SaleConfigMap
   payoutData: PayoutData
   type: AssetDeploymentType
@@ -103,28 +102,26 @@ export const useDeployContract = () => {
   // }
 
   const deploy = async (opts: ERC721ContractInput) => {
-    const { baseURI, saleConfig, contractInformationData } = opts
+    const { saleConfig, contractInformationData } = opts
     const contract = getContractDeploymentType(opts.type)
     const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
-
     const { name, symbol, collectionSize, chainId } = contractInformationData
     const claimTime = saleConfig.get('Claim')?.startTimestamp.getTime()
     const presaleTime = saleConfig.get('Presale')?.startTimestamp.getTime()
     const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
     const mintPrice = saleConfig.get('Public')?.mintPrice
-    const maxPublicBatchPerAddress = saleConfig.get('Public')?.maxAllocationPerAddress
+    const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
     const amountForPromotion = 0
 
-    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxPublicBatchPerAddress) {
+    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxMintPerAddress) {
       return notifyError('Issue with the contract form. Please check the sale config.')
     }
 
     const args = [
       name,
       symbol,
-      baseURI,
       collectionSize,
-      maxPublicBatchPerAddress,
+      maxMintPerAddress,
       amountForPromotion,
       mintPrice,
       Math.floor(claimTime / 1000),

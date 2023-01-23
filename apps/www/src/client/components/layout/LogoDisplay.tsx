@@ -13,7 +13,7 @@ export const LogoDisplay = ({ repositoryId }: { repositoryId?: string | null }) 
     if (!repositoryId) return
     const response = await fetch(createLogoUrl({ id: repositoryId }))
     if (!response.ok) {
-      setImgSrc('/images/avatar-blank.png')
+      setImgSrc(null)
       return
     }
     const blob = await response.blob()

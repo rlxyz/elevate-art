@@ -28,7 +28,7 @@ export const useMutateRepositoryDeploymentPromote = () => {
         return next
       })
       // refetch the production deployment
-      ctx.contractDeployment.findProductionContract.invalidate({
+      ctx.contractDeployment.findProductionContract.refetch({
         organisationName,
         repositoryName,
       })

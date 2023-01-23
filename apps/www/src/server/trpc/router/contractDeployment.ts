@@ -1,7 +1,7 @@
 import { AssetDeploymentBranch } from '@prisma/client'
 import { getClaimTime } from '@server/common/ethers-get-contract-claim-time'
 import { getCollectionSize } from '@server/common/ethers-get-contract-collection-size'
-import { getMaxAllocationPerAddress } from '@server/common/ethers-get-contract-max-allocation-per-address'
+import { getMaxMintPerAddress } from '@server/common/ethers-get-contract-max-allocation-per-address'
 import { getMintPrice } from '@server/common/ethers-get-contract-mint-price'
 import { getContractOwner } from '@server/common/ethers-get-contract-owner'
 import { getPresaleTime } from '@server/common/ethers-get-contract-presale-time'
@@ -53,17 +53,17 @@ export const contractDeploymentRouter = router({
       claimPeriod: {
         startTimestamp: (await getClaimTime(address, chainId)).getValue(),
         mintPrice: BigNumber.from(0),
-        maxAllocationPerAddress: (await getMaxAllocationPerAddress(address, chainId)).getValue(),
+        maxMintPerAddress: (await getMaxMintPerAddress(address, chainId)).getValue(),
       },
       presalePeriod: {
         startTimestamp: (await getPresaleTime(address, chainId)).getValue(),
         mintPrice: (await getMintPrice(address, chainId)).getValue(),
-        maxAllocationPerAddress: (await getMaxAllocationPerAddress(address, chainId)).getValue(),
+        maxMintPerAddress: (await getMaxMintPerAddress(address, chainId)).getValue(),
       },
       publicPeriod: {
         startTimestamp: (await getPublicTime(address, chainId)).getValue(),
         mintPrice: (await getMintPrice(address, chainId)).getValue(),
-        maxAllocationPerAddress: (await getMaxAllocationPerAddress(address, chainId)).getValue(),
+        maxMintPerAddress: (await getMaxMintPerAddress(address, chainId)).getValue(),
       },
     } as RhapsodyContractData
 

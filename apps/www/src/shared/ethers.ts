@@ -10,7 +10,7 @@ export class ElevateContract extends ethers.Contract {
   readonly symbol!: () => Promise<string>
   readonly owner!: () => Promise<string>
   readonly mintPrice!: () => Promise<BigNumber>
-  readonly maxPublicBatchPerAddress!: () => Promise<BigNumber>
+  readonly maxMintPerAddress!: () => Promise<BigNumber>
   readonly totalSupply!: () => Promise<BigNumber>
   readonly collectionSize!: () => Promise<BigNumber>
   readonly presaleTime!: () => Promise<BigNumber>

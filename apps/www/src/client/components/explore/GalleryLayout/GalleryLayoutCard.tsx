@@ -1,30 +1,25 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import LinkComponent from '@components/layout/link/Link'
 import NextLinkComponent from '@components/layout/link/NextLink'
-import type { AssetDeploymentBranch } from '@prisma/client'
+import type { ContractDeployment, Repository } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
-import { getDeploymentTokenImage, getDeploymentTokenMetadata } from 'src/client/utils/image'
+import Image from 'next/image'
+import { getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
 import { useFetchContractTokenData } from '../SaleLayout/useFetchContractData'
 
 export const GalleryLayoutCard = ({
-  address,
-  deploymentName,
-  branch,
-  repositoryName,
-  organisationName,
+  repository,
+  contractDeployment,
   tokenId,
   tokenName,
-  chainId,
 }: {
-  address: string
-  deploymentName: string
-  branch: AssetDeploymentBranch
-  organisationName: string
-  repositoryName: string
+  repository: Repository
+  contractDeployment: ContractDeployment
   tokenName: string
   tokenId: number
-  chainId: number
 }) => {
+  const { address, chainId } = contractDeployment
+
   const { data } = useFetchContractTokenData({
     contractAddress: address,
     tokenId,
@@ -38,16 +33,10 @@ export const GalleryLayoutCard = ({
       key={`${address}-${tokenId}`}
       className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
     >
-      <img
-        src={getDeploymentTokenImage({
-          o: organisationName,
-          r: repositoryName,
-          tokenId,
-          d: deploymentName,
-          branch: branch,
-        })}
-        width={1000}
-        height={1000}
+      <Image
+        src={getTokenURI({ contractDeployment, tokenId })}
+        width={repository.width || 600}
+        height={repository.height || 600}
         alt={`${address}-#${tokenId}`}
         className='object-cover m-auto'
       />
@@ -56,12 +45,9 @@ export const GalleryLayoutCard = ({
           <LinkComponent
             target='_blank'
             rel='noopener noreferrer'
-            href={getDeploymentTokenMetadata({
-              o: organisationName,
-              r: repositoryName,
-              tokenId: tokenId,
-              d: deploymentName,
-              branch: branch,
+            href={getTokenMetadataURI({
+              contractDeployment,
+              tokenId,
             })}
             underline
           >

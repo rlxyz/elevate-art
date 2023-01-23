@@ -103,6 +103,7 @@ export const RepositorySettingsNavigationEnum = z.nativeEnum(
   Object.freeze({
     General: 'general',
     Metadata: 'metadata',
+    Image: 'image',
   })
 )
 export type RepositorySettingsNavigationType = z.infer<typeof RepositorySettingsNavigationEnum>
@@ -134,6 +135,14 @@ export const AssetDeploymentNavigationEnum = z.nativeEnum(
 )
 
 export type AssetDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
+
+export const ContractDeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    New: 'new',
+  })
+)
+
+export type ContractDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
 
 export const RepositorySectionEnum = z.nativeEnum(
   Object.freeze({

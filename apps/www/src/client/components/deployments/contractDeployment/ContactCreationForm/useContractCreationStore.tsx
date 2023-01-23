@@ -50,7 +50,7 @@ const initialState: ContractCreationStoreInterface = {
       {
         startTimestamp: new Date(),
         mintPrice: BigNumber.from(0),
-        maxAllocationPerAddress: BigNumber.from(0),
+        maxMintPerAddress: BigNumber.from(0),
       },
     ],
     [
@@ -58,7 +58,7 @@ const initialState: ContractCreationStoreInterface = {
       {
         startTimestamp: new Date(),
         mintPrice: BigNumber.from(0),
-        maxAllocationPerAddress: BigNumber.from(0),
+        maxMintPerAddress: BigNumber.from(0),
       },
     ],
     [
@@ -66,7 +66,7 @@ const initialState: ContractCreationStoreInterface = {
       {
         startTimestamp: new Date(),
         mintPrice: BigNumber.from(0),
-        maxAllocationPerAddress: BigNumber.from(0),
+        maxMintPerAddress: BigNumber.from(0),
       },
     ],
   ]),

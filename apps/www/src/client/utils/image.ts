@@ -1,4 +1,4 @@
-import { AssetDeploymentBranch } from '@prisma/client'
+import type { ContractDeployment } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { env } from 'src/env/client.mjs'
 
@@ -14,53 +14,20 @@ export const getLogoForRepository = ({ r }: { r: string }) => {
   return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Create}/${r}/logo`
 }
 
-export const getDeploymentTokenImage = ({
-  o,
-  r,
-  d,
-  branch,
-  tokenId,
-}: {
-  r: string
-  o: string
-  branch: AssetDeploymentBranch
-  tokenId: string | number
-  d?: string
-}): string => {
-  return [
-    env.NEXT_PUBLIC_ASSET_URL,
-    ZoneNavigationEnum.enum.Deployments,
-    o,
-    r,
-    branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
-    tokenId,
-    'image',
-  ]
-    .filter((x) => x !== '')
-    .join('/')
+export const getSyncedBaseURI = ({ contractDeployment }: { contractDeployment: ContractDeployment }) => {
+  return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/` //! remember to add trailing slash
 }
 
-export const getDeploymentTokenMetadata = ({
-  o,
-  r,
-  d,
-  branch,
+export const getTokenURI = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
+  return `${getSyncedBaseURI({ contractDeployment })}${tokenId}/image`
+}
+
+export const getTokenMetadataURI = ({
+  contractDeployment,
   tokenId,
 }: {
-  r: string
-  o: string
-  branch: AssetDeploymentBranch
+  contractDeployment: ContractDeployment
   tokenId: string | number
-  d?: string
-}): string => {
-  return [
-    env.NEXT_PUBLIC_ASSET_URL,
-    ZoneNavigationEnum.enum.Deployments,
-    o,
-    r,
-    branch === AssetDeploymentBranch.PREVIEW ? `preview/${d}` : '',
-    tokenId,
-  ]
-    .filter((x) => x !== '')
-    .join('/')
+}) => {
+  return `${getSyncedBaseURI({ contractDeployment })}${tokenId}`
 }

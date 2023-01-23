@@ -2,21 +2,14 @@ import { useQueryContractDeploymentProduction } from '@components/explore/SaleLa
 import Card from '@components/layout/card/Card'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import { createLogoUrl } from '@components/layout/LogoDisplay'
+import { TextWithLiveStatus } from '@components/layout/TextWithStatus'
 import { CollectionIcon, CubeIcon } from '@heroicons/react/outline'
 import type { Repository } from '@prisma/client'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { routeBuilder, toPascalCaseWithSpace } from 'src/client/utils/format'
 
-export const RepositoryDisplayCard = ({
-  organisationName,
-  repository,
-  state,
-}: {
-  organisationName: string
-  repository: Repository
-  state?: 'LIVE'
-}) => {
+export const RepositoryDisplayCard = ({ organisationName, repository }: { organisationName: string; repository: Repository }) => {
   const { current } = useQueryContractDeploymentProduction({ repositoryName: repository.name })
   const [imgSrc, setImgSrc] = useState<string | null>(repository.id ? createLogoUrl({ id: repository.id }) : null)
   const fetchImage = async () => {
@@ -40,14 +33,11 @@ export const RepositoryDisplayCard = ({
       <div className='space-y-0.5'>
         <div className='flex justify-between items-center'>
           <div>
-            <h2 className='text-md font-semibold'>{repository.name}</h2>
+            <h2 className='text-md font-semibold'>{repository.displayName || repository.name}</h2>
+            <span className='text-sm text-darkGrey'>{toPascalCaseWithSpace(repository?.category || 'default')}</span>
           </div>
           <div>
-            {state === 'LIVE' && (
-              <span className='inline-flex items-center rounded-full bg-lightGray bg-opacity-40 border border-mediumGrey py-1 px-2 lg:text-xs text-[0.6rem] font-medium text-black'>
-                Live
-              </span>
-            )}
+            <TextWithLiveStatus />
           </div>
         </div>
       </div>

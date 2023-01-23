@@ -2,18 +2,8 @@ import { useNotification } from '@hooks/utils/useNotification'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { BigNumber } from 'ethers'
 import { useContractRead, useContractReads } from 'wagmi'
-import { z } from 'zod'
 
-export const SalePhaseEnum = z.nativeEnum(
-  Object.freeze({
-    Presale: 'presale',
-    Public: 'public',
-  })
-)
-
-export type SalePhase = z.infer<typeof SalePhaseEnum>
-
-interface UseContractReads {
+export interface UseContractReads {
   contractAddress: string
   chainId: number
   version: string
@@ -41,7 +31,7 @@ export const useFetchContractUserData = ({ contractAddress, userAdress, chainId,
   })
 }
 
-type UseContractRead = UseContractReads
+export type UseContractRead = UseContractReads
 
 export const useFetchContractDataMutatableOnly = ({ contractAddress, chainId, enabled = true, version }: UseContractRead) => {
   const { notifyError } = useNotification()
@@ -61,7 +51,6 @@ export const useFetchContractDataMutatableOnly = ({ contractAddress, chainId, en
     enabled,
     select: (data) => ({
       totalSupply: BigNumber.from(data[0]),
-      // collectionMintLeft: BigNumber.from(data[2]).sub(BigNumber.from(data[0])) as BigNumber,
       presaleMerkleRoot: data[1] as string,
       claimMerkleRoot: data[2] as string,
       publicTime: new Date(Number(BigNumber.from(data[3]).toString()) * 1000),
@@ -88,8 +77,6 @@ export const useFetchContractTokenData = ({
     functionName: 'ownerOf',
     args: [tokenId.toString()],
     watch: false,
-    cacheTime: 10_000,
-    staleTime: 10_000,
     enabled,
     select: (data) => ({
       owner: data as string,
@@ -103,17 +90,17 @@ export const useFetchContractDataReadOnly = ({ contractAddress, chainId, enabled
   return useContractReads({
     scopeKey: `erc721:${version}:${chainId}:${contractAddress}`,
     contracts: [
-      { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'maxPublicBatchPerAddress', chainId },
+      { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'maxMintPerAddress', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'collectionSize', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'name', chainId },
       { address: contractAddress, abi: RhapsodyContract.abi, functionName: 'symbol', chainId },
     ],
-    watch: true,
+    watch: false,
     cacheTime: Infinity,
     staleTime: Infinity,
     enabled,
     select: (data) => ({
-      maxPublicBatchPerAddress: BigNumber.from(data[0]),
+      maxMintPerAddress: BigNumber.from(data[0]),
       collectionSize: BigNumber.from(data[1]),
       name: data[2] as string,
       symbol: data[3] as string,

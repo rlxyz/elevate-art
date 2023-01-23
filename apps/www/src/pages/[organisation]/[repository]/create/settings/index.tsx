@@ -1,5 +1,6 @@
 import { RepositoryBannerImageForm } from '@components/create/repository-setting/RepositoryBannerImageForm'
 import { RepositoryDescriptionForm } from '@components/create/repository-setting/RepositoryDescriptionForm'
+import { RepositoryDisplayNameForm } from '@components/create/repository-setting/RepositoryDisplayNameForm'
 import { RepositoryLogoImageForm } from '@components/create/repository-setting/RepositoryLogoImageForm'
 import { RepositoryNameForm } from '@components/create/repository-setting/RepositoryNameForm'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
@@ -147,12 +148,25 @@ const Page: NextPage = () => {
                       selected: false,
                       disabled: !organisation?.name || !repository?.name,
                     },
+                    {
+                      name: RepositorySettingsNavigationEnum.enum.Image,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Create,
+                        CollectionNavigationEnum.enum.Settings,
+                        RepositorySettingsNavigationEnum.enum.Image
+                      ),
+                      selected: false,
+                      disabled: !organisation?.name || !repository?.name,
+                    },
                   ]}
                 />
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
                   <RepositoryNameForm />
+                  <RepositoryDisplayNameForm />
                   <RepositoryDescriptionForm />
                   <RepositoryLogoImageForm />
                   <RepositoryBannerImageForm />

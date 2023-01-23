@@ -93,19 +93,6 @@ const Page: NextPage = () => {
                 disabled: !organisation?.name || !repository?.name || !deployment?.name,
               },
               {
-                name: AssetDeploymentNavigationEnum.enum.Contract,
-                href: routeBuilder(
-                  organisation?.name,
-                  repository?.name,
-                  ZoneNavigationEnum.enum.Deployments,
-                  deployment?.name,
-                  AssetDeploymentNavigationEnum.enum.Contract
-                ),
-                enabled: false,
-                loading: !organisation?.name || !repository?.name || !deployment?.name,
-                disabled: !organisation?.name || !repository?.name || !deployment?.name,
-              },
-              {
                 name: AssetDeploymentNavigationEnum.enum.Settings,
                 href: routeBuilder(
                   organisation?.name,

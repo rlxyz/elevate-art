@@ -147,6 +147,18 @@ const Page: NextPage = () => {
                       selected: true,
                       disabled: !organisation?.name || !repository?.name,
                     },
+                    {
+                      name: RepositorySettingsNavigationEnum.enum.Image,
+                      href: routeBuilder(
+                        organisation?.name,
+                        repository?.name,
+                        ZoneNavigationEnum.enum.Create,
+                        CollectionNavigationEnum.enum.Settings,
+                        RepositorySettingsNavigationEnum.enum.Image
+                      ),
+                      selected: false,
+                      disabled: !organisation?.name || !repository?.name,
+                    },
                   ]}
                 />
               </div>

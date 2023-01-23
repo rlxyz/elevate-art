@@ -9,8 +9,11 @@ export const getTokenHash = async (address: string, chainId: number, tokenId: nu
       if (response) {
         return resolve(Result.ok(response))
       }
-    } catch (err) {
       return reject(Result.fail("Couldn't get token hash"))
+    } catch (err) {
+      if (err instanceof Error) {
+        return reject(Result.fail("Couldn't get token hash" + err.message))
+      }
     }
   })
 }

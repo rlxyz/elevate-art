@@ -6,7 +6,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getAddressFromEns } from 'src/client/utils/ethers'
 import { capitalize } from 'src/client/utils/format'
-import { OrganisationDatabaseRoleEnum, OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
+import type { OrganisationDatabaseRoleEnumType } from 'src/shared/enums'
+import { OrganisationDatabaseRoleEnum } from 'src/shared/enums'
 import { OrganisationTeamAddUserDialog } from './OrganisationTeamAddUserDialog'
 export const OrganisationTeamAddUser = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
