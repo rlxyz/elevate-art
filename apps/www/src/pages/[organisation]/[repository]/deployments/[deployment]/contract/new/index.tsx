@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { prisma } from 'src/server/db/client'
 
 const Page = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
@@ -99,7 +100,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} }
   }
 
-  const valid = await prisma?.contractDeployment.findFirst({
+  const valid = await prisma.contractDeployment.findFirst({
     where: {
       assetDeployment: {
         name: deployment,
