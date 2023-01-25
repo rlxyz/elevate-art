@@ -1,5 +1,5 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useState } from 'react'
@@ -12,7 +12,7 @@ import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQuer
 
 export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
   const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: WhitelistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
   const { now } = useMintLayoutCurrentTime()
   const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)
@@ -48,7 +48,7 @@ export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: Rhaps
           if (!all) return setError('address', { message: 'Please try again in a minute' })
 
           /** Check if the address has a claim */
-          const presale = all.whitelists.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          const presale = all.allowlist.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
           if (!presale) {
             return setError('address', { message: 'This address is not part of the presale' })
           }

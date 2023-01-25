@@ -1,5 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
@@ -53,10 +53,10 @@ export const useFetchClaimRequirements = ({
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: WhitelistType.CLAIM,
+    type: ContractDeploymentAllowlistType.CLAIM,
   })
 
-  const { root, proof } = useUserMerkleProof({ type: WhitelistType.CLAIM })
+  const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
   const { collectionSize, maxMintPerAddress, totalSupply } = fetchedContractData
 
   // mint allocation

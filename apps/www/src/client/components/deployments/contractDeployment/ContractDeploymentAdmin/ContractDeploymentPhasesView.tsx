@@ -3,7 +3,6 @@ import { CheckCircleIcon, ChevronRightIcon, XCircleIcon } from '@heroicons/react
 import type { ContractDeployment } from '@prisma/client'
 import clsx from 'clsx'
 import type { FC } from 'react'
-import { ContractDeploymentPhasesEnum } from 'src/pages/[organisation]/[repository]/deployments/[deployment]/contract'
 
 const ContractDeploymentPhasesView: FC<{ deployment: ContractDeployment | null | undefined }> = ({ deployment }) => {
   /** Infer status as PENDING. */
@@ -13,7 +12,7 @@ const ContractDeploymentPhasesView: FC<{ deployment: ContractDeployment | null |
       <h1 className='text-xl font-bold'>Deployment Status</h1>
       <div>
         <div>
-          {[ContractDeploymentPhasesEnum.enum.Deploying, ContractDeploymentPhasesEnum.enum.Verification].map((phase, index) => (
+          {['Deploying', 'Verification'].map((phase, index) => (
             <Disclosure key={phase}>
               <Disclosure.Button
                 className={clsx(
@@ -34,9 +33,7 @@ const ContractDeploymentPhasesView: FC<{ deployment: ContractDeployment | null |
                     ) : (
                       <>
                         {status === 'PENDING' && <div className='w-5 h-5 border border-mediumGrey rounded-full' />}
-                        {status === 'VERIFYING' && phase === ContractDeploymentPhasesEnum.enum.Deploying && (
-                          <CheckCircleIcon className='w-5 h-5 text-blueHighlight' />
-                        )}
+                        {status === 'VERIFYING' && phase === 'Verification' && <CheckCircleIcon className='w-5 h-5 text-blueHighlight' />}
                         {status === 'DEPLOYED' && <CheckCircleIcon className='w-5 h-5 text-blueHighlight' />}
                       </>
                     )}

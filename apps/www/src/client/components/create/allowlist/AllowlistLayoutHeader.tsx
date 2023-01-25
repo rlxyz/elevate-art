@@ -1,5 +1,5 @@
 import SettingLayout from '@components/layout/settings'
-import type { ContractDeployment, Whitelist, WhitelistType } from '@prisma/client'
+import type { ContractDeployment, ContractDeploymentAllowlist, ContractDeploymentAllowlistType } from '@prisma/client'
 import { parseChainId } from '@utils/ethers'
 import { capitalize, toPascalCaseWithSpace } from 'src/client/utils/format'
 
@@ -13,10 +13,10 @@ export const AllowlistLayoutHeader = ({
   write,
 }: {
   contractDeployment: ContractDeployment
-  whitelist: Whitelist[]
+  whitelist: ContractDeploymentAllowlist[]
   write: () => void
   dbMerkleRoot: string
-  type: WhitelistType
+  type: ContractDeploymentAllowlistType
   isLoading: boolean
   contractMerkleRoot: string
 }) => {

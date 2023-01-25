@@ -1,20 +1,16 @@
-import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
-import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { PersonalOrganisationAccountNavigation } from 'src/client/components/organisation/PersonalOrganisationAccountNavigation'
-import { capitalize } from 'src/client/utils/format'
-import { DashboardNavigationEnum, OrganisationDatabaseEnum, OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import { DashboardNavigationEnum, OrganisationDatabaseEnum, OrganisationNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
   return (
     <OrganisationAuthLayout type={OrganisationDatabaseEnum.enum.Personal} route={OrganisationNavigationEnum.enum.Account}>
       <Layout>
         <Layout.AppHeader>
-          <AppRoutesNavbar>
+          {/* <AppRoutesNavbar>
             <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Dashboard)} href={`/${ZoneNavigationEnum.enum.Dashboard}`}>
               <ZoneRoutesNavbarPopover
                 title='Apps'
@@ -40,7 +36,7 @@ const Page = () => {
                 ]}
               />
             </AppRoutesNavbar.Item>
-          </AppRoutesNavbar>
+          </AppRoutesNavbar> */}
         </Layout.AppHeader>
         <Layout.PageHeader>
           <PageRoutesNavbar>

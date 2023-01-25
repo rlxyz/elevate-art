@@ -1,18 +1,18 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getAddressFromEns } from 'src/client/utils/ethers'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const SaleLayoutClaimChecker = ({ contractData }: { contractData: RhapsodyContractData }) => {
   const { all } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: WhitelistType.CLAIM,
+    type: ContractDeploymentAllowlistType.CLAIM,
   })
   const { now } = useMintLayoutCurrentTime()
   const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)
@@ -48,7 +48,7 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
           if (!all) return setError('address', { message: 'Please try again in a minute' })
 
           /** Check if the address has a claim */
-          const claim = all.whitelists.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          const claim = all.allowlist.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
           if (!claim) {
             return setError('address', { message: 'This address does not have a claim' })
           }

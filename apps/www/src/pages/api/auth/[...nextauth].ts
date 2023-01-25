@@ -1,10 +1,11 @@
+import { log } from '@utils/logger'
 import type { NextAuthOptions } from 'next-auth'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { SiweMessage } from 'siwe'
 import { env } from 'src/env/server.mjs'
+import { prisma } from 'src/server/db/client'
 import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/shared/enums'
-import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -24,18 +25,18 @@ export const authOptions: NextAuthOptions = {
     updateAge: 24 * 60 * 60, // 24 hours
   },
   secret: env.NEXTAUTH_SECRET,
-  cookies: {
-    sessionToken: {
-      name: 'next-auth.session-token',
-      options: {
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false,
-      },
-    },
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: 'next-auth.session-token',
+  //     options: {
+  //       domain: 'localhost',
+  //       path: '/',
+  //       httpOnly: true,
+  //       sameSite: 'lax',
+  //       secure: false,
+  //     },
+  //   },
+  // },
   providers: [
     CredentialsProvider({
       name: 'Ethereum',
@@ -82,13 +83,14 @@ export const authOptions: NextAuthOptions = {
             },
             select: { id: true, address: true },
           })
-
+          log.debug(`new authorize login`, { user: user.id })
           return {
             id: user.id,
             name: user.address,
           }
         } catch (err) {
-          console.error(err)
+          log.error(`authorize error`, { err })
+          console.error(`authorize error`, err)
           return null
         }
       },

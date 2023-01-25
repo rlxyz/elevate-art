@@ -29,6 +29,7 @@ export default defineNextConfig({
       { protocol: 'https', hostname: 'storage.googleapis.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'staging.elevate.art' },
     ],
   },
   i18n: {

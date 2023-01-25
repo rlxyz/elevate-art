@@ -61,7 +61,7 @@ export const GalleryLayout = ({
           hasMore={hasMore}
           loader={<></>}
         >
-          <div className='grid grid-cols-4 gap-6'>
+          <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6'>
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
               .map((id) => (

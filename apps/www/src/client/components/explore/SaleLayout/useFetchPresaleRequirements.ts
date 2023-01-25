@@ -1,5 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
-import { WhitelistType } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
@@ -54,10 +54,10 @@ export const useFetchPresaleRequirements = ({
     isLoading: isLoadingContractDeploymentWhitelist,
     isError: isErrorContractDeploymentWhitelist,
   } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: WhitelistType.ALLOWLIST,
+    type: ContractDeploymentAllowlistType.PRESALE,
   })
 
-  const { root, proof } = useUserMerkleProof({ type: WhitelistType.ALLOWLIST })
+  const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.PRESALE })
 
   // mint allocation
   const presaleMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)

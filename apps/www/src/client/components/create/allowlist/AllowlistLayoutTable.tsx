@@ -1,5 +1,5 @@
 import { Table } from '@components/layout/core/Table'
-import type { ContractDeployment, Whitelist } from '@prisma/client'
+import type { ContractDeployment, ContractDeploymentAllowlist } from '@prisma/client'
 import { timeAgo } from 'src/client/utils/time'
 
 export const AllowlistLayoutTable = ({
@@ -7,7 +7,7 @@ export const AllowlistLayoutTable = ({
   whitelist,
 }: {
   contractDeployment: ContractDeployment
-  whitelist: Whitelist[]
+  whitelist: ContractDeploymentAllowlist[]
 }) => {
   return (
     <Table>

@@ -2,6 +2,7 @@ import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { formatEthereumHash } from '@utils/ethers'
+import { BigNumber } from 'ethers'
 import { getSyncedBaseURI } from 'src/client/utils/image'
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 
@@ -14,6 +15,7 @@ export const useUpdateBaseURI = ({ contractDeployment }: { enabled: boolean; con
     abi: RhapsodyContract.abi,
     functionName: 'setBaseURI',
     args: [getSyncedBaseURI({ contractDeployment })],
+    overrides: { gasLimit: BigNumber.from(150000) },
   })
 
   const {
@@ -49,7 +51,7 @@ export const useUpdateBaseURI = ({ contractDeployment }: { enabled: boolean; con
     },
     onSuccess: (data) => {
       if (data) {
-        notifySuccess("You've successfully minted your NFTs!")
+        notifySuccess("You've successfully updated the tokens baseURI!")
       }
     },
   })

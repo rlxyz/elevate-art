@@ -1,12 +1,18 @@
 import SettingLayout from '@components/layout/settings'
 import Textarea from '@components/layout/textarea/Textarea'
 import { useMutateContractDeploymentWhitelistCreate } from '@hooks/trpc/contractDeploymentWhitelist/useMutateContractDeploymentWhitelistCreate'
-import type { ContractDeployment, WhitelistType } from '@prisma/client'
+import type { ContractDeployment, ContractDeploymentAllowlistType } from '@prisma/client'
 import { getAddress } from 'ethers/lib/utils.js'
 import { useForm } from 'react-hook-form'
 import type { AllowlistFormInput, AllowlistFormInputV2 } from './AllowlistLayout'
 
-export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contractDeployment: ContractDeployment; type: WhitelistType }) => {
+export const AllowlistLayoutTextarea = ({
+  contractDeployment,
+  type,
+}: {
+  contractDeployment: ContractDeployment
+  type: ContractDeploymentAllowlistType
+}) => {
   const { mutate } = useMutateContractDeploymentWhitelistCreate()
 
   const {
@@ -53,7 +59,10 @@ export const AllowlistLayoutTextarea = ({ contractDeployment, type }: { contract
         })
       })}
     >
-      <SettingLayout.Header title='Whitelist' description='Please pass in your whitelist in csv format; <address>,<mint>' />
+      <SettingLayout.Header
+        title='ContractDeploymentAllowlist'
+        description='Please pass in your whitelist in csv format; <address>,<mint>'
+      />
       <SettingLayout.Body>
         <Textarea
           {...register('whitelist', {

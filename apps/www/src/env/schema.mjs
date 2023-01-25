@@ -63,7 +63,11 @@ export const clientEnv = {
       : 'localhost',
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || '',
   NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED: Number(process.env.NEXT_PUBLIC_IMAGE_MAX_BYTES_ALLOWED) || 9990000,
-  NEXT_PUBLIC_ASSET_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/assets` : 'http://localhost:3000/api/assets',
+  NEXT_PUBLIC_ASSET_URL: process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}/api/assets`
+    : process.env.NEXT_PUBLIC_ASSET_URL
+    ? process.env.NEXT_PUBLIC_ASSET_URL
+    : 'http://localhost:3000/api/assets',
   NEXT_PUBLIC_API_URL: process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}/api`
     : process.env.NEXT_PUBLIC_API_URL

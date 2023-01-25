@@ -1,8 +1,6 @@
 import type { Prisma } from '@prisma/client'
-import { AssetDeploymentBranch } from '@prisma/client'
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
-import { validateUserIsMemberInAssetDeployment } from '@server/common/db-get-asset-deployment-user-session'
-import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getBannerForRepository, getLogoForRepository, getTokenURI } from 'src/client/utils/image'
@@ -13,7 +11,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const { chainId: cid, address, id } = req.query as { chainId: string; address: string; id: string }
   const tokenId = parseInt(id)
   const chainId = parseInt(cid)
-  if (!chainId || !address || !id) {
+  if (!chainId || !address || !id || tokenId < 0 || Number.isNaN(tokenId)) {
     return res.status(400).send('Bad Request')
   }
 
@@ -24,19 +22,19 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   /** Validate User If Preview Branch */
-  if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
-    // check serverside session
-    const session = await getServerAuthSession({ req, res })
-    if (!session) {
-      return res.status(401).send('Unauthorized')
-    }
+  // if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
+  //   // check serverside session
+  //   const session = await getServerAuthSession({ req, res })
+  //   if (!session) {
+  //     return res.status(401).send('Unauthorized')
+  //   }
 
-    const repository = await validateUserIsMemberInAssetDeployment({ chainId, address, session })
+  //   const repository = await validateUserIsMemberInAssetDeployment({ chainId, address, session })
 
-    if (!repository) {
-      return res.status(401).send('Unauthorized')
-    }
-  }
+  //   if (!repository) {
+  //     return res.status(401).send('Unauthorized')
+  //   }
+  // }
 
   if (!deployment.contractDeployment) {
     return res.status(404).send('Not Found')
@@ -46,6 +44,15 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
+  const totalSupply = await getTotalSupply(address, chainId)
+  if (totalSupply.failed) {
+    return res.status(500).send('Internal Server Error')
+  }
+
+  const supply = totalSupply.getValue().toNumber()
+  if (supply === 0 || supply <= tokenId) {
+    return res.status(400).send('Bad Request')
+  }
   /** Grab tokens */
   const { contractDeployment, layerElements } = deployment
   const elements = layerElements as Prisma.JsonValue as v.Layer[]
