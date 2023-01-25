@@ -5,6 +5,7 @@ import type { FieldErrorsImpl, UseFormRegister, UseFormSetValue } from 'react-ho
 import { z } from 'zod'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
+// import { SaleConfigInput } from './SaleConfigInput'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const SaleConfigEnum = z.nativeEnum(

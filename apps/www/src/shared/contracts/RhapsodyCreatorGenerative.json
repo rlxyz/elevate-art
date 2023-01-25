@@ -752,7 +752,6 @@
         }
       ],
       "name": "setClaimTime",
-      "name": "setClaimTime",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -792,32 +791,6 @@
         }
       ],
       "name": "setPresaleMerkleRoot",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_presaleTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "setPresaleTime",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_publicTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "setPublicTime",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
