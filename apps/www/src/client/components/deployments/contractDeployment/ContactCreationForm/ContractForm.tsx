@@ -91,12 +91,13 @@ const ContractFormBodyInput = forwardRef<
   }
 )
 
-const ContractFormBodyCalendar = forwardRef<
+export const ContractFormBodyCalendar = forwardRef<
   HTMLInputElement,
   React.PropsWithChildren<{
-    className: string
+    className?: string
     label: string
     description?: string
+    defaultValue?: Date
   }>
 >(
   (
@@ -106,9 +107,10 @@ const ContractFormBodyCalendar = forwardRef<
       description,
       ...props
     }: React.PropsWithChildren<{
-      className: string
+      className?: string
       label: string
       description?: string
+      defaultValue?: Date
     }>,
     ref
   ) => {
@@ -126,6 +128,7 @@ const ContractFormBodyCalendar = forwardRef<
           {...props}
           min={`${minDate}T${minTime}`}
           max={`${maxDate}T23:59`}
+          defaultValue={props.defaultValue?.toISOString().split('.')[0]}
         />
         {description && <span className='text-[0.6rem] text-darkGrey'>{description}</span>}
       </div>

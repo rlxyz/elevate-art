@@ -24,7 +24,7 @@ import {
   ContractSettingsNavigationEnum,
   DeploymentNavigationEnum,
   OrganisationNavigationEnum,
-  ZoneNavigationEnum,
+  ZoneNavigationEnum
 } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -55,20 +55,21 @@ const Page: NextPage = () => {
 
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
-              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
             >
               <ZoneRoutesNavbarPopover
                 title='Apps'
                 routes={[
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Deployments),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                    // `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
                     selected: true,
                     icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                     selected: false,
                     icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                   },
@@ -165,6 +166,7 @@ const Page: NextPage = () => {
                       type={ContractDeploymentAllowlistType.CLAIM}
                     />
                   )}
+                  {!contractDeployment && <span>You must deploy your Contract before your are able to create a Claimlist</span>}
                 </div>
               </div>
             </div>

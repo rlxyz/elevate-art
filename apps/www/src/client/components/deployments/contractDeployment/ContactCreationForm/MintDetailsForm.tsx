@@ -1,10 +1,10 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
 import { BigNumber } from 'ethers/lib/ethers'
 import type { FC } from 'react'
-import type { FieldErrorsImpl, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 import type { ContractFormProps } from '.'
 import { ContractForm } from './ContractForm'
+import { SaleConfigInput } from './SaleConfigInput'
 import { useContractDataFormHook } from './useContractInformationDataForm'
 
 export const SaleConfigEnum = z.nativeEnum(
