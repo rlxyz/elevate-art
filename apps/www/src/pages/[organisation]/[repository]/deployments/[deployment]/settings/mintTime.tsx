@@ -1,4 +1,5 @@
-import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
+import { ContractDeploymentMintSettings } from '@components/deployments/contractDeployment/ContractDeploymentSettings/ContractDeploymentMintSettings'
+import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -9,7 +10,6 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
-import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
@@ -32,9 +32,16 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { current: whitelist } = useQueryContractDeploymentWhitelist({
-    type: ContractDeploymentAllowlistType.CLAIM,
+
+  const {
+    data: { publicTime, presaleTime, claimTime },
+  } = useFetchContractData({
+    contractAddress: contractDeployment?.address || '',
+    chainId: contractDeployment?.chainId || 99,
+    enabled: !!contractDeployment?.address,
+    version: '0.1.0',
   })
+
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
 
   return (
@@ -55,22 +62,23 @@ const Page: NextPage = () => {
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
               label={capitalize(ZoneNavigationEnum.enum.Deployments)}
-              href={`/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
             >
               <ZoneRoutesNavbarPopover
                 title='Apps'
                 routes={[
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Deployments),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                    // `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Deployments}`,
                     selected: true,
-                    icon: () => <CubeIcon className='w-4 h-4' />,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
-                    href: `/${organisation?.name}/${repository?.name}/${ZoneNavigationEnum.enum.Deployments}/${deployment?.name}/${ZoneNavigationEnum.enum.Create}`,
+                    href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                     selected: false,
-                    icon: () => <TriangleIcon className='w-4 h-4' />,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                   },
                 ]}
               />
@@ -157,15 +165,15 @@ const Page: NextPage = () => {
                 />
               </div>
               <div className='col-span-8'>
-                <div className='space-y-6'>
-                  {contractDeployment && whitelist && (
-                    <AllowlistLayout
-                      contractDeployment={contractDeployment}
-                      whitelist={whitelist}
-                      type={ContractDeploymentAllowlistType.CLAIM}
-                    />
-                  )}
-                </div>
+                {claimTime && presaleTime && publicTime && contractDeployment && (
+                  <ContractDeploymentMintSettings
+                    isLoading={false}
+                    claimTime={claimTime}
+                    presaleTime={presaleTime}
+                    publicTime={publicTime}
+                    contractDeployment={contractDeployment}
+                  />
+                )}
               </div>
             </div>
           </div>

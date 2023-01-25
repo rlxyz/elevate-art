@@ -53,6 +53,15 @@ export const contractDeploymentWhitelistRouter = router({
       const { contractDeploymentId, whitelist, type } = input
 
       const BATCH_CHUNK_SIZE = 1000
+
+      //delete existing whitelist
+      await ctx.prisma.contractDeploymentAllowlist.deleteMany({
+        where: {
+          contractDeploymentId,
+          type: type as ContractDeploymentAllowlistType,
+        },
+      })
+
       for (const chunk of Array.from({ length: Math.ceil(whitelist.length / BATCH_CHUNK_SIZE) }, (_, index) =>
         whitelist.slice(index * BATCH_CHUNK_SIZE, (index + 1) * BATCH_CHUNK_SIZE)
       )) {
@@ -107,5 +116,25 @@ export const contractDeploymentWhitelistRouter = router({
 
       /** Return */
       return allowlist
+    }),
+  // delete existing whitelist
+  delete: protectedProcedure
+    .input(
+      z.object({
+        contractDeploymentId: z.string(),
+        type: z.nativeEnum(ContractDeploymentAllowlistType),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { contractDeploymentId, type } = input
+
+      const deleted = await ctx.prisma.contractDeploymentAllowlist.deleteMany({
+        where: {
+          contractDeploymentId,
+          type: type as ContractDeploymentAllowlistType,
+        },
+      })
+
+      return deleted
     }),
 })
