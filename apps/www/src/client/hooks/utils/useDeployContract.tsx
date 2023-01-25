@@ -4,7 +4,8 @@ import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/contractD
 import type { AssetDeploymentBranch } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
-import type { Signer } from 'ethers'
+import { MINT_RANDOMIZER_CONTRACT } from '@utils/ethers'
+import type { BigNumber, Signer } from 'ethers'
 import { ContractFactory } from 'ethers'
 import { useState } from 'react'
 import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
@@ -36,90 +37,25 @@ export const useDeployContract = () => {
     return basicContract
   }
 
-  // const validate = (opts: ERC721ContractInput): boolean => {
-  //   // validation phase
-  //   if (!opts.name) {
-  //     notifyError('Issue with the contract form. Name is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.symbol) {
-  //     notifyError('Issue with the contract form. Symbol is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.baseURI) {
-  //     notifyError('Issue with the contract form. Base URI is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.collectionSize) {
-  //     notifyError('Issue with the contract form. Collection size is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.maxPublicBatchPerAddress) {
-  //     notifyError('Issue with the contract form. Max public batch per address is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.amountForPromotion) {
-  //     notifyError('Issue with the contract form. Amount for promotion is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.mintPrice) {
-  //     notifyError('Issue with the contract form. Mint price is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.claimTime) {
-  //     notifyError('Issue with the contract form. Claim time is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.presaleTime) {
-  //     notifyError('Issue with the contract form. Presale time is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.publicTime) {
-  //     notifyError('Issue with the contract form. Public time is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.type) {
-  //     notifyError('Issue with the contract form. Type is required.')
-  //     return false
-  //   }
-
-  //   if (!opts.branch) {
-  //     notifyError('Issue with the contract form. Branch is required.')
-  //     return false
-  //   }
-
-  //   return true
-  // }
-
-  const deploy = async (opts: ERC721ContractInput) => {
+  const createArgsForGenerative = (opts: ERC721ContractInput) => {
     const { saleConfig, contractInformationData } = opts
-    const contract = getContractDeploymentType(opts.type)
-    const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
-    const { name, symbol, collectionSize, chainId } = contractInformationData
+    const { name, symbol, collectionSize } = contractInformationData
     const claimTime = saleConfig.get('Claim')?.startTimestamp.getTime()
     const presaleTime = saleConfig.get('Presale')?.startTimestamp.getTime()
     const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
     const mintPrice = saleConfig.get('Public')?.mintPrice
     const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
+    const mintRandomizerContract = MINT_RANDOMIZER_CONTRACT
     const amountForPromotion = 0
 
     if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxMintPerAddress) {
-      return notifyError('Issue with the contract form. Please check the sale config.')
+      return null
     }
 
     const args = [
       name,
       symbol,
+      mintRandomizerContract,
       collectionSize,
       maxMintPerAddress,
       amountForPromotion,
@@ -128,6 +64,57 @@ export const useDeployContract = () => {
       Math.floor(presaleTime / 1000),
       Math.floor(publicTime / 1000),
     ]
+
+    return args
+  }
+
+  const createArgsForBasic = (opts: ERC721ContractInput) => {
+    const { saleConfig, contractInformationData } = opts
+    const { name, symbol, collectionSize } = contractInformationData
+    const claimTime = saleConfig.get('Claim')?.startTimestamp.getTime()
+    const presaleTime = saleConfig.get('Presale')?.startTimestamp.getTime()
+    const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
+    const mintPrice = saleConfig.get('Public')?.mintPrice
+    const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
+    const amountForPromotion = 0
+
+    if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxMintPerAddress) {
+      return null
+    }
+
+    const args = [
+      name,
+      symbol,
+      mintPrice,
+      collectionSize,
+      maxMintPerAddress,
+      amountForPromotion,
+      mintPrice,
+      Math.floor(claimTime / 1000),
+      Math.floor(presaleTime / 1000),
+      Math.floor(publicTime / 1000),
+    ]
+
+    return args
+  }
+
+  const deploy = async (opts: ERC721ContractInput) => {
+    // get chainId
+    const { chainId } = opts.contractInformationData
+
+    let args: (string | number | BigNumber)[] | null = []
+    if (opts.type === AssetDeploymentType.GENERATIVE) {
+      args = createArgsForGenerative(opts)
+    } else {
+      args = createArgsForBasic(opts)
+    }
+
+    if (!args) {
+      return notifyError('Issue with the contract form. Please check the sale config.')
+    }
+
+    const contract = getContractDeploymentType(opts.type)
+    const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
 
     const tx = await factory.deploy(...args)
     mutate({ deploymentId, address: tx.address, chainId }) // set to 5 for goerli, shoudl come from forom
