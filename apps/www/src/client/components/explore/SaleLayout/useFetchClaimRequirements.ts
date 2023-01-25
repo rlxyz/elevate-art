@@ -48,6 +48,65 @@ export const useFetchClaimRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
+  const usersMintLeft = () => {
+    const totalMintLeft = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0).sub(
+      BigNumber.from(fetchedContractUserData?.userMintCount || 0)
+    )
+
+    /**
+     * If the total mint left is less than or equal to 0, the user cannot mint anymore.
+     */
+    if (totalMintLeft.lte(0)) return BigNumber.from(0)
+    if (BigNumber.from(maxMintPerAddress).eq(0)) return BigNumber.from(0)
+    if (BigNumber.from(maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
+
+    /**
+     * Basically, user can only max mint up to the max mint per address.
+     * And this handles the cases where if the total mint left is greater than the max mint per
+     * address, the user will only be able to mint up to the max mint per address.
+     */
+    if (totalMintLeft.gt(BigNumber.from(maxMintPerAddress))) {
+      return BigNumber.from(maxMintPerAddress)
+    } else {
+      return totalMintLeft
+    }
+  }
+
+  const userMintLeftBasedOnCollectionSize = () => {
+    const mintLeft = usersMintLeft()
+
+    /**
+     * The collection also has an upper boundary defined by the collection size.
+     * It also has a variable that tracks the current minted supply, called totalSupply.
+     */
+    const collectionLeft = BigNumber.from(collectionSize || 0).sub(BigNumber.from(fetchedContractData?.totalSupply || 0))
+
+    /**
+     * If the collection left is less than or equal to 0, the user cannot mint anymore.
+     * This is because the collection is already full.
+     * This is also the case where the user has already minted the max mint per address.
+     * This is because the user can only mint up to the max mint per address.
+     */
+    if (collectionLeft.lte(0)) return BigNumber.from(0)
+
+    /**
+     * If the collection left is less than the mint left, the user can only mint up to the collection left.
+     * This is because the collection is already full.
+     */
+    if (collectionLeft.lt(mintLeft)) {
+      return collectionLeft
+    }
+
+    /**
+     * If the collection left is greater than or equal to the mint left, the user can only mint up to the mint left.
+     */
+    if (collectionLeft.gte(mintLeft)) {
+      return mintLeft
+    }
+
+    return BigNumber.from(0)
+  }
+
   const {
     current: currentContractDeploymentWhitelist,
     isLoading: isLoadingContractDeploymentWhitelist,
@@ -58,31 +117,21 @@ export const useFetchClaimRequirements = ({
 
   const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
   const { collectionSize, maxMintPerAddress, totalSupply } = fetchedContractData
-
-  // mint allocation
-  const claimMintMax = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0)
-  const claimMintLeft = claimMintMax.sub(fetchedContractUserData?.userMintCount || 0)
-
-  // total left in collection
-  const collectionMintMax = BigNumber.from(collectionSize || 0)
-  const collectionMintLeft = collectionMintMax.sub(BigNumber.from(totalSupply || 0))
-
-  // user left after total left
-  const userMintLeft = claimMintLeft.gt(collectionMintLeft) ? collectionMintLeft : claimMintLeft
   const { claimTime } = fetchedContractData
+
+  console.log(userMintLeftBasedOnCollectionSize().toString())
 
   return {
     data: {
       ...fetchedContractData,
       ...fetchedContractUserData,
-      userMintLeft,
+      userMintLeft: userMintLeftBasedOnCollectionSize(),
       allowToMint:
         claimTime &&
         root &&
         proof &&
-        userMintLeft.gt(0) &&
         root === fetchedContractData?.claimMerkleRoot &&
-        userMintLeft.lt(BigNumber.from(maxMintPerAddress)) &&
+        userMintLeftBasedOnCollectionSize().gt(0) &&
         claimTime?.getTime() < new Date().getTime(),
       userBalance: userBalance,
     },
