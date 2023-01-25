@@ -53,7 +53,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
             return (
               <article
                 key={`${item}-${index}`}
-                className='flex flex-col rounded-[5px] cursor-pointer h-[40rem] md:h-[30rem] lg:h-[12.5rem] xl:h-[15rem] 2xl:h-[20rem] 3xl:h-[25rem] border border-mediumGrey bg-white shadow-lg'
+                className='flex flex-col rounded-[5px] cursor-pointer h-[40rem] md:h-[30rem] lg:h-[12.5rem] xl:h-[15rem] 2xl:h-[20rem] 3xl:h-[25rem] border border-mediumGrey bg-white shadow-lg overflow-hidden'
                 onClick={() => setSelectedToken(item || null)}
               >
                 <PreviewImageCardWithChildren canHover id={item} collection={collection} layers={layers}>

@@ -25,23 +25,25 @@ export const useQueryCollectionFindAll = () => {
   const mutate = ({ collection }: { collection: Collection }) => {
     if (!layers) return
 
-    const tokens = v.many(
-      v.parseLayer(
-        layers.map((l) => ({
-          ...l,
-          traits: l.traitElements.map((t) => ({
-            ...t,
-            rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
-              ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
-                type: condition as v.RulesType,
-                with: left === t.id ? right : left,
-              })
-            ),
-          })),
-        }))
-      ),
-      Array.from({ length: collection.totalSupply }, (_, i) => v.seed(repositoryId, collection.name, collection.generations, i))
-    )
+    const tokens = Array.from(Array(collection.totalSupply).keys()).map((i) => {
+      return v.one(
+        v.parseLayer(
+          layers.map((l) => ({
+            ...l,
+            traits: l.traitElements.map((t) => ({
+              ...t,
+              rules: [...t.rulesPrimary, ...t.rulesSecondary].map(
+                ({ condition, primaryTraitElementId: left, secondaryTraitElementId: right }) => ({
+                  type: condition as v.RulesType,
+                  with: left === t.id ? right : left,
+                })
+              ),
+            })),
+          }))
+        ),
+        v.seed(repositoryId, collection.name, collection.generations, i)
+      )
+    })
 
     const traitMap = v.occurances.traits(tokens)
     const tokenIdMap = v.occurances.tokens(tokens)

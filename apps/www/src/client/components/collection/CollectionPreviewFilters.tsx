@@ -60,6 +60,7 @@ export const FilterByTrait = () => {
           if (layer && trait) filters.push({ layer, trait })
         })
         setTraitFilters(filters)
+        /** Broken */
         const allTokenIdsArray = Object.values(
           filters
             .map(({ layer: { id: l }, trait: { id: t } }) => {
@@ -73,6 +74,8 @@ export const FilterByTrait = () => {
               return { ...a, ...{ [layer]: [...(a[layer] || []), ...tokens] } }
             }, {})
         )
+        ///
+        console.log(allTokenIdsArray.flatMap((x) => x).findIndex((x) => x === 2499))
         const allFilteredByRank = allTokenIdsArray
           .reduce(
             (results, item) => {
