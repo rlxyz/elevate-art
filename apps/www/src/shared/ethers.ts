@@ -70,3 +70,5 @@ export const buildEtherscanLink = ({ address, chainId }: { address: string; chai
 export const formatEthereumHash = (hash: string) => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`
 }
+
+export const MINT_RANDOMIZER_CONTRACT = '0x41a1F0aEBfCD87E7a6B546F44d5D092d69102F75'
