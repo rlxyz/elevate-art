@@ -30,7 +30,6 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
     setUploadState: (state: UploadState) => void
   }) => {
     try {
-      console.log('files', organisation, repository)
       const layers = getRepositoryUploadLayerObjectUrls(files)
       setUploadedFiles(layers)
       notifySuccess('Upload format is correct. We are creating the project for you.')

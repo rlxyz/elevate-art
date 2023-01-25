@@ -119,8 +119,6 @@ export const useFetchClaimRequirements = ({
   const { collectionSize, maxMintPerAddress, totalSupply } = fetchedContractData
   const { claimTime } = fetchedContractData
 
-  console.log(userMintLeftBasedOnCollectionSize().toString())
-
   return {
     data: {
       ...fetchedContractData,
