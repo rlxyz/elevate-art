@@ -13,7 +13,7 @@ const SettingLayout = forwardRef<HTMLFormElement, React.PropsWithChildren<Settin
   ({ withSaveButton = true, disabled = true, children, className, ...props }) => {
     const childrens = React.Children.toArray(children)
     return (
-      <form {...props} className={'border border-mediumGrey rounded-[5px]'}>
+      <form {...props} className={clsx(className, 'border border-mediumGrey rounded-[5px]')}>
         <div
           className={clsx(
             className,
@@ -28,7 +28,7 @@ const SettingLayout = forwardRef<HTMLFormElement, React.PropsWithChildren<Settin
             )
           })}
         </div>
-        <div className='w-full p-6 flex items-center h-[3rem] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
+        <div className='w-full p-6 flex items-center h-[3rem] rounded-bl-[5px] rounded-br-[5px] bg-lightGray text-xs justify-end border-t border-t-mediumGrey'>
           {withSaveButton && (
             <button
               disabled={disabled}

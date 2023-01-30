@@ -26,6 +26,7 @@ export const AllowlistLayoutHeader = ({
         e.preventDefault()
         write()
       }}
+      className={contractMerkleRoot !== dbMerkleRoot ? ' border-redError' : ''}
       disabled={(contractMerkleRoot === dbMerkleRoot && whitelist.length === 0) || isLoading}
     >
       <SettingLayout.Header title='Information' description="Here's some important information about your whitelist" />
