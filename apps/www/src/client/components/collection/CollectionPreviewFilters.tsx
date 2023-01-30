@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { LayerElement, TraitElement } from '@prisma/client'
+import type { LayerElement, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
@@ -10,10 +10,11 @@ import { truncate } from 'src/client/utils/format'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
-    (state) => {
+  const { traitMapping, traitFilters, rankFilter, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } =
+    useRepositoryStore((state) => {
       return {
         setTraitFilters: state.setTraitFilters,
+        rankFilter: state.rankFilter,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
         tokenRanking: state.tokenRanking,
         traitFilters: state.traitFilters,
@@ -21,8 +22,7 @@ export const FilterByTrait = () => {
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
       }
-    }
-  )
+    })
   const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryCollectionFindAll()
 
@@ -48,11 +48,15 @@ export const FilterByTrait = () => {
               ? tokenRanking.length
               : collection.totalSupply
           )
+          if (rankFilter === 'ID') {
+            filteredRarity.sort((a, b) => a.index - b.index)
+          }
           setTokens(filteredRarity.map((x) => x.index))
           setTraitFilteredTokens([])
           setTraitFilters([])
           return
         }
+
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
         checked.forEach((value: string) => {
           const layer = layers.filter((layer: LayerElement) => layer.id === value.split('/')[0])[0]
@@ -60,6 +64,7 @@ export const FilterByTrait = () => {
           if (layer && trait) filters.push({ layer, trait })
         })
         setTraitFilters(filters)
+
         /** Broken */
         const allTokenIdsArray = Object.values(
           filters
@@ -74,8 +79,8 @@ export const FilterByTrait = () => {
               return { ...a, ...{ [layer]: [...(a[layer] || []), ...tokens] } }
             }, {})
         )
-        ///
-        console.log(allTokenIdsArray.flatMap((x) => x).findIndex((x) => x === 2499))
+
+        /** Create Array of Tokens */
         const allFilteredByRank = allTokenIdsArray
           .reduce(
             (results, item) => {
@@ -95,7 +100,15 @@ export const FilterByTrait = () => {
               rank: tokenRanking.findIndex((token) => token.index === val),
             }
           })
-          .sort((a, b) => a.rank - b.rank)
+
+        /** Sort by Rank or ID */
+        if (rankFilter === 'Rank') {
+          allFilteredByRank.sort((a, b) => a.rank - b.rank)
+        } else {
+          allFilteredByRank.sort((a, b) => a.tokenId - b.tokenId)
+        }
+
+        /** Filter by Rarity Type */
         const filteredRarity = allFilteredByRank.slice(
           rarityFilter === 'Top 10'
             ? 0
@@ -112,6 +125,8 @@ export const FilterByTrait = () => {
             ? allFilteredByRank.length
             : collection.totalSupply
         )
+
+        /** Save */
         setTraitFilteredTokens(allFilteredByRank.map((x) => x.tokenId))
         setTokens(filteredRarity.map((x) => x.tokenId))
       }}
@@ -184,13 +199,14 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, setTokens } = useRepositoryStore((state) => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
     return {
       traitFilteredTokens: state.traitFilteredTokens,
       setRarityFilter: state.setRarityFilter,
       rarityFilter: state.rarityFilter,
       tokenRanking: state.tokenRanking,
       setTokens: state.setTokens,
+      rankFilter: state.rankFilter,
     }
   })
 
@@ -253,6 +269,122 @@ export const FilterByRarity = () => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
+          <div
+            className={clsx(
+              'rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar',
+              rankFilter !== 'Rank' && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {filters.map(({ value }, optionIdx: number) => (
+              <div key={optionIdx} className='flex flex-col text-xs'>
+                <div className={`hover:bg-lightGray text-xs py-3`}>
+                  <div className='px-3 flex justify-between'>
+                    <label>{value}</label>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-xs'>
+                        <Field
+                          disabled={rankFilter !== 'Rank'}
+                          type='radio'
+                          name='checked'
+                          value={value}
+                          className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light disabled:opacity-50 disabled:cursor-not-allowed'
+                          onChange={(e: any) => {
+                            handleChange(e)
+                            submitForm()
+                          }}
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Form>
+      )}
+    </Formik>
+  )
+}
+
+export const FilterByRank = () => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRankFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
+    return {
+      traitFilters: state.traitFilters,
+      traitFilteredTokens: state.traitFilteredTokens,
+      setRarityFilter: state.setRarityFilter,
+      rarityFilter: state.rarityFilter,
+      rankFilter: state.rankFilter,
+      setRankFilter: state.setRankFilter,
+      tokenRanking: state.tokenRanking,
+      setTokens: state.setTokens,
+      traitMapping: state.traitMapping,
+    }
+  })
+
+  const filters: { value: 'Rank' | 'ID' }[] = [{ value: 'Rank' }, { value: 'ID' }]
+
+  return (
+    <Formik
+      initialValues={{ checked: rankFilter ? rankFilter : 'Rank' }}
+      onSubmit={async ({ checked }: { checked: string }) => {
+        const filter = filters.filter((val) => val.value === checked)[0]
+        if (!filter) return
+        setRankFilter(filter.value)
+        if (filter.value === 'Rank') {
+          if (!traitFilteredTokens.length) {
+            setTokens(
+              tokenRanking
+                .map((x) => x.index)
+                .slice(
+                  rarityFilter === 'Top 10'
+                    ? 0
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length - 10
+                    : 0,
+                  rarityFilter === 'Top 10'
+                    ? 10
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length
+                    : tokenRanking.length
+                )
+            )
+          } else {
+            setTokens(
+              traitFilteredTokens.slice(
+                rarityFilter === 'Top 10'
+                  ? 0
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 - 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length - 10
+                  : 0,
+                rarityFilter === 'Top 10'
+                  ? 10
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 + 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length
+                  : traitFilteredTokens.length
+              )
+            )
+          }
+        } else if (filter.value === 'ID') {
+          setTokens(
+            tokenRanking
+              .map((x) => x.index)
+              .sort((a, b) => {
+                return a - b
+              })
+          )
+        }
+      }}
+    >
+      {({ handleChange, submitForm }) => (
+        <Form>
           <div className={clsx('rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}>
             {filters.map(({ value }, optionIdx: number) => (
               <div key={optionIdx} className='flex flex-col text-xs'>
@@ -290,6 +422,16 @@ const Index = () => {
   const isLoading = !layers?.length || !collection
   return (
     <>
+      <div
+        className={clsx(
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          'rounded-[5px] space-y-1'
+        )}
+      >
+        <div className={clsx(isLoading && 'invisible')}>
+          <FilterByRank />
+        </div>
+      </div>
       <div
         className={clsx(
           isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
