@@ -1,6 +1,7 @@
 // import { Header } from '@components/Layout/Header'
+import AvatarComponent from '@components/layout/avatar/Avatar'
 import { Layout } from '@components/layout/core/Layout'
-import NextLink from '@components/layout/link/NextLink'
+import { default as NextLink, default as NextLinkComponent } from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
@@ -48,6 +49,37 @@ const Hero = () => {
               <span className='text-xs'>Start Creating</span>
             </button>
           </NextLink>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Mint = () => {
+  return (
+    <div className='flex justify-center items-center w-full'>
+      <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
+        <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
+          <Image width={629} height={786} priority src='/images/journey.png' alt='journey-by-jacob' />
+        </div>
+        <div className='block md:hidden'>
+          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
+        </div>
+
+        <div className='hidden md:flex flex-col justify-center xs:items-start sm:items-start  w-2/3 space-y-9'>
+          <ProjectName />
+          <Details />
+          <div className='flex space-x-9'>
+            <div>
+              <div className='text-xs text-darkGrey'>Current Minted</div>
+              <div className='text-3xl font-bold'>0/1111</div>
+            </div>
+            <div>
+              <div className='text-xs text-darkGrey'>Phase</div>
+              <div className='text-3xl font-bold'>Free Claim</div>
+            </div>
+          </div>
+          <MintButton />
         </div>
       </div>
     </div>
@@ -152,16 +184,15 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.AppHeader border='lower' authenticated={false} />
+        <Layout.AppHeader border='none' authenticated={false} />
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
-            <div className='space-y-20 h-full flex flex-col xs:my-10 sm:my-20'>
-              <div className='w-full flex flex-col justify-center items-center space-y-10'>
-                <Hero />
-                {/* <Features /> */}
-                {/* <Partners /> */}
-                {/* <Footer /> */}
-              </div>
+            <div className='w-full flex flex-col justify-center items-center space-y-10'>
+              {/* <Hero /> */}
+              <Mint />
+              {/* <Features /> */}
+              {/* <Partners /> */}
+              {/* <Footer /> */}
             </div>
           </div>
         </Layout.Body>
@@ -171,3 +202,37 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+const ProjectName = () => <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-left'>Journey</h1>
+
+const Details = () => {
+  return (
+    <div className='flex space-x-9'>
+      <div className='flex flex-col justify-around w-full space-y-2'>
+        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
+        <button className='drop-shadow-2xl space-x-2 bg-white rounded-[99px] flex p-2'>
+          <AvatarComponent src='/images/avatar-blank.png' />
+          <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>@dreamlab</p>
+        </button>
+      </div>
+      <div className='flex flex-col justify-around  w-full space-y-2'>
+        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
+        <button className='drop-shadow-2xl space-x-2 bg-white rounded-[5px] flex p-2'>
+          <AvatarComponent src='/images/avatar-blank.png' isSquare />
+          <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>journey</p>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const MintButton = () => {
+  return (
+    <NextLinkComponent className='text-white bg-black w-1/2 rounded-[5px] flex items-center justify-center' href={`/dreamlab/journey`}>
+      <div className='flex items-center justify-center'>
+        <Image width={40} height={40} src='/images/logo-white.png' alt='logo-white' />
+        <span className='text-sm'>View Mint</span>
+      </div>
+    </NextLinkComponent>
+  )
+}

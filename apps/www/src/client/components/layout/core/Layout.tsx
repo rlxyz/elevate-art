@@ -68,6 +68,20 @@ const LayoutAppHeader = ({
   </LayoutContainer>
 )
 
+const LayoutAppHeaderWithSearch = ({
+  authenticated = true,
+  children,
+  border = 'none',
+}: {
+  children?: React.ReactNode[] | React.ReactNode
+  authenticated?: boolean
+  border?: 'lower' | 'none'
+}) => (
+  <LayoutContainer border={border}>
+    <Header authenticated={authenticated}>{children && children}</Header>
+  </LayoutContainer>
+)
+
 const LayoutPageHeader = ({ children }: { children: React.ReactNode[] | React.ReactNode }) => (
   <LayoutContainer className='header'>{children}</LayoutContainer>
 )
@@ -100,6 +114,7 @@ const LayoutBody = ({
 const LayoutTitle = ({ children }: { children: React.ReactNode }) => <LayoutContainer className='title'>{children}</LayoutContainer>
 
 Layout.AppHeader = LayoutAppHeader
+Layout.AppHeaderWithSearch = LayoutAppHeaderWithSearch
 Layout.PageHeader = LayoutPageHeader
 Layout.Title = LayoutTitle
 Layout.Body = LayoutBody
