@@ -27,7 +27,7 @@ const socialRoutes = [
   },
   {
     name: 'GitHub',
-    href: 'https://github.com/rlxyz',
+    href: 'https://github.com/elevateart',
     icon: (props: any) => (
       <svg fill='currentColor' viewBox='0 0 24 24' {...props}>
         <path
