@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { LayerElement, TraitElement } from '@prisma/client'
+import type { LayerElement, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
@@ -184,13 +184,14 @@ export const FilterByTrait = () => {
 }
 
 export const FilterByRarity = () => {
-  const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, setTokens } = useRepositoryStore((state) => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRarityFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
     return {
       traitFilteredTokens: state.traitFilteredTokens,
       setRarityFilter: state.setRarityFilter,
       rarityFilter: state.rarityFilter,
       tokenRanking: state.tokenRanking,
       setTokens: state.setTokens,
+      rankFilter: state.rankFilter,
     }
   })
 
@@ -253,6 +254,120 @@ export const FilterByRarity = () => {
     >
       {({ handleChange, submitForm }) => (
         <Form>
+          <div
+            className={clsx(
+              'rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar',
+              rankFilter !== 'Rank' && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {filters.map(({ value }, optionIdx: number) => (
+              <div key={optionIdx} className='flex flex-col text-xs'>
+                <div className={`hover:bg-lightGray text-xs py-3`}>
+                  <div className='px-3 flex justify-between'>
+                    <label>{value}</label>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-xs'>
+                        <Field
+                          disabled={rankFilter !== 'Rank'}
+                          type='radio'
+                          name='checked'
+                          value={value}
+                          className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light disabled:opacity-50 disabled:cursor-not-allowed'
+                          onChange={(e: any) => {
+                            handleChange(e)
+                            submitForm()
+                          }}
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Form>
+      )}
+    </Formik>
+  )
+}
+
+export const FilterByRank = () => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRankFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
+    return {
+      traitFilteredTokens: state.traitFilteredTokens,
+      setRarityFilter: state.setRarityFilter,
+      rarityFilter: state.rarityFilter,
+      rankFilter: state.rankFilter,
+      setRankFilter: state.setRankFilter,
+      tokenRanking: state.tokenRanking,
+      setTokens: state.setTokens,
+    }
+  })
+
+  const filters: { value: 'Rank' | 'ID' }[] = [{ value: 'Rank' }, { value: 'ID' }]
+
+  return (
+    <Formik
+      initialValues={{ checked: rankFilter ? rankFilter : 'Rank' }}
+      onSubmit={async ({ checked }: { checked: string }) => {
+        const filter = filters.filter((val) => val.value === checked)[0]
+        if (!filter) return
+        setRankFilter(filter.value)
+        if (filter.value === 'Rank') {
+          if (!traitFilteredTokens.length) {
+            setTokens(
+              tokenRanking
+                .map((x) => x.index)
+                .slice(
+                  rarityFilter === 'Top 10'
+                    ? 0
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length - 10
+                    : 0,
+                  rarityFilter === 'Top 10'
+                    ? 10
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length
+                    : tokenRanking.length
+                )
+            )
+          } else {
+            setTokens(
+              traitFilteredTokens.slice(
+                rarityFilter === 'Top 10'
+                  ? 0
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 - 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length - 10
+                  : 0,
+                rarityFilter === 'Top 10'
+                  ? 10
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 + 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length
+                  : traitFilteredTokens.length
+              )
+            )
+          }
+        } else if (filter.value === 'ID') {
+          setTokens(
+            tokenRanking
+              .map((x) => x.index)
+              .sort((a, b) => {
+                return a - b
+              })
+          )
+        }
+      }}
+    >
+      {({ handleChange, submitForm }) => (
+        <Form>
           <div className={clsx('rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}>
             {filters.map(({ value }, optionIdx: number) => (
               <div key={optionIdx} className='flex flex-col text-xs'>
@@ -290,6 +405,16 @@ const Index = () => {
   const isLoading = !layers?.length || !collection
   return (
     <>
+      <div
+        className={clsx(
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          'rounded-[5px] space-y-1'
+        )}
+      >
+        <div className={clsx(isLoading && 'invisible')}>
+          <FilterByRank />
+        </div>
+      </div>
       <div
         className={clsx(
           isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
