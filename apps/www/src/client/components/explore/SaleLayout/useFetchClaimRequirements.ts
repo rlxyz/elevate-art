@@ -3,7 +3,10 @@ import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
-import { useFetchContractData, useFetchContractUserData } from './useFetchContractData'
+import { useFetchContractDataReadOnly } from './useFetchContractDataReadOnly'
+import { useFetchContractMerkleRootData } from './useFetchContractMerkleRootData'
+import { useFetchContractTotalSupplyData } from './useFetchContractTotalSupplyData'
+import { useFetchContractUserData } from './useFetchContractUserData'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 import { useUserMerkleProof } from './useUserMerkleProof'
 
@@ -42,7 +45,7 @@ export const useFetchClaimRequirements = ({
     data: fetchedContractData,
     isLoading: isLoadingContractData,
     isError: isErrorContractData,
-  } = useFetchContractData({
+  } = useFetchContractTotalSupplyData({
     version: '0.1.0',
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
@@ -57,16 +60,16 @@ export const useFetchClaimRequirements = ({
      * If the total mint left is less than or equal to 0, the user cannot mint anymore.
      */
     if (totalMintLeft.lte(0)) return BigNumber.from(0)
-    if (BigNumber.from(maxMintPerAddress).eq(0)) return BigNumber.from(0)
-    if (BigNumber.from(maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
+    if (BigNumber.from(data?.maxMintPerAddress).eq(0)) return BigNumber.from(0)
+    if (BigNumber.from(data?.maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
 
     /**
      * Basically, user can only max mint up to the max mint per address.
      * And this handles the cases where if the total mint left is greater than the max mint per
      * address, the user will only be able to mint up to the max mint per address.
      */
-    if (totalMintLeft.gt(BigNumber.from(maxMintPerAddress))) {
-      return BigNumber.from(maxMintPerAddress)
+    if (totalMintLeft.gt(BigNumber.from(data?.maxMintPerAddress))) {
+      return BigNumber.from(data?.maxMintPerAddress)
     } else {
       return totalMintLeft
     }
@@ -79,7 +82,7 @@ export const useFetchClaimRequirements = ({
      * The collection also has an upper boundary defined by the collection size.
      * It also has a variable that tracks the current minted supply, called totalSupply.
      */
-    const collectionLeft = BigNumber.from(collectionSize || 0).sub(BigNumber.from(fetchedContractData?.totalSupply || 0))
+    const collectionLeft = BigNumber.from(data?.collectionSize || 0).sub(BigNumber.from(fetchedContractData?.totalSupply || 0))
 
     /**
      * If the collection left is less than or equal to 0, the user cannot mint anymore.
@@ -115,22 +118,25 @@ export const useFetchClaimRequirements = ({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
 
+  const { data: merkleRootData } = useFetchContractMerkleRootData({
+    version: '0.1.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
+
+  const { data } = useFetchContractDataReadOnly({
+    version: '0.1.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
+
   const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
-  const { collectionSize, maxMintPerAddress, totalSupply } = fetchedContractData
-  const { claimTime } = fetchedContractData
 
   return {
     data: {
-      ...fetchedContractData,
-      ...fetchedContractUserData,
+      userMintCount: fetchedContractUserData?.userMintCount || 0,
       userMintLeft: userMintLeftBasedOnCollectionSize(),
-      allowToMint:
-        claimTime &&
-        root &&
-        proof &&
-        root === fetchedContractData?.claimMerkleRoot &&
-        userMintLeftBasedOnCollectionSize().gt(0) &&
-        claimTime?.getTime() < new Date().getTime(),
+      allowToMint: root && proof && root === merkleRootData?.claimMerkleRoot && userMintLeftBasedOnCollectionSize().gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,

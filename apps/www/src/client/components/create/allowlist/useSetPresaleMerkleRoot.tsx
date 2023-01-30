@@ -17,7 +17,7 @@ export const useSetMerkleRoot = ({
   type,
   whitelist,
   contractDeployment,
-  enabled,
+  enabled = true,
 }: {
   type: ContractDeploymentAllowlistType
   enabled: boolean
@@ -26,12 +26,14 @@ export const useSetMerkleRoot = ({
 }): UseSetPresaleMerkleRoot => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { merkleRoot, setMerkleRoot } = useSetMerkleRootData({ enabled, data: whitelist })
+
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
     abi: RhapsodyContract.abi,
     functionName: type === ContractDeploymentAllowlistType.PRESALE ? 'setPresaleMerkleRoot' : 'setClaimMerkleRoot',
     args: [merkleRoot],
+    enabled: enabled && !!merkleRoot,
   })
 
   const {

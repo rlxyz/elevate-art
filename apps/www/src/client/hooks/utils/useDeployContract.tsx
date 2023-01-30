@@ -11,6 +11,7 @@ import { useState } from 'react'
 import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
 import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.json'
 import { useSigner } from 'wagmi'
+import { useChangeNetwork } from './useChangeNetwork'
 import { useNotification } from './useNotification'
 
 interface ERC721ContractInput {
@@ -27,7 +28,7 @@ export const useDeployContract = () => {
   const { notifySuccess, notifyError } = useNotification()
   const { mutate } = useMutateRepositoryCreateDeploymentCreate()
   const deploymentId = useRepositoryStore((state) => state.deploymentId)
-
+  const { changeNetwork } = useChangeNetwork()
   const getContractDeploymentType = (type: AssetDeploymentType) => {
     if (type === AssetDeploymentType.BASIC) {
       return basicContract
@@ -101,6 +102,8 @@ export const useDeployContract = () => {
   const deploy = async (opts: ERC721ContractInput) => {
     // get chainId
     const { chainId } = opts.contractInformationData
+
+    changeNetwork(chainId)
 
     let args: (string | number | BigNumber)[] | null = []
     if (opts.type === AssetDeploymentType.GENERATIVE) {

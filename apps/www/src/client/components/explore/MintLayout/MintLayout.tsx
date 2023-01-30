@@ -1,4 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { AnalyticsLayoutCollectionInformation } from '../AnalyticsLayout/AnalyticsLayoutCollectionInformation'
@@ -7,6 +8,7 @@ import { SaleLayoutClaimPurchase } from '../SaleLayout/SaleLayoutClaimPurchase'
 import { SaleLayoutPresaleChecker } from '../SaleLayout/SaleLayoutPresaleChecker'
 import { SaleLayoutPresalePurchase } from '../SaleLayout/SaleLayoutPresalePurchase'
 import { SaleLayoutPublicPurchase } from '../SaleLayout/SaleLayoutPublicPurchase'
+import { MintSyncedCard } from './MintSyncedCard'
 import { useMintLayoutCurrentTime } from './useMintLayoutCurrentTime'
 
 export const MintLayout = ({
@@ -22,10 +24,16 @@ export const MintLayout = ({
     <>
       <main className='space-y-6'>
         {now < contractData.presalePeriod.startTimestamp && (
-          <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+          <>
+            <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
+            <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+          </>
         )}
         {now > contractData.presalePeriod.startTimestamp && now < contractData.publicPeriod.startTimestamp && (
-          <SaleLayoutPresalePurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+          <>
+            <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.PRESALE} />
+            <SaleLayoutPresalePurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+          </>
         )}
         {now > contractData.publicPeriod.startTimestamp && (
           <SaleLayoutPublicPurchase session={data} contractDeployment={contractDeployment} contractData={contractData} />

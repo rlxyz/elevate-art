@@ -1,7 +1,7 @@
+import { useChangeNetwork } from '@hooks/utils/useChangeNetwork'
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
 import { ContractDeploymentAllowlistType } from '@prisma/client'
-import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
 import { formatEthereumHash } from '@utils/ethers'
 import { BigNumber } from 'ethers'
@@ -20,13 +20,11 @@ interface UseClaimMint {
 }
 
 export const useClaimPurchase = ({
-  contractData,
   contractDeployment,
   enabled,
 }: {
   address: string | undefined | null
   enabled: boolean
-  contractData: RhapsodyContractData
   contractDeployment: ContractDeployment
 }): UseClaimMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
@@ -34,6 +32,7 @@ export const useClaimPurchase = ({
   const { proof, maxMintForUser } = useUserMerkleProof({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
+  const { changeNetwork } = useChangeNetwork()
 
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
@@ -44,6 +43,7 @@ export const useClaimPurchase = ({
     overrides: {
       gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
     },
+    enabled: enabled && !!proof && !!maxMintForUser,
   })
 
   const {
@@ -87,7 +87,12 @@ export const useClaimPurchase = ({
   return {
     mintCount,
     setMintCount,
-    write: () => write?.(),
+    write: () => {
+      changeNetwork(contractDeployment.chainId)
+      console.log('maxMintForUser', maxMintForUser)
+      if (!maxMintForUser || maxMintForUser.eq(0)) return
+      write?.()
+    },
     isLoading,
     isError,
     isProcessing,

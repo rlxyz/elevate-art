@@ -36,7 +36,6 @@ export const SaleLayoutClaimPurchase = ({
     isLoading: isLoadingPurchase,
   } = useClaimPurchase({
     address: session?.user?.address,
-    contractData,
     contractDeployment,
     enabled: !!session?.user?.id && !isLoading && !isError,
   })

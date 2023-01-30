@@ -5,7 +5,7 @@ import type { ContractDeployment, Repository } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
 import Image from 'next/image'
 import { getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
-import { useFetchContractTokenData } from '../SaleLayout/useFetchContractData'
+import { useFetchContractTokenData } from '../SaleLayout/useFetchContractTokenData'
 
 export const GalleryLayoutCard = ({
   repository,
