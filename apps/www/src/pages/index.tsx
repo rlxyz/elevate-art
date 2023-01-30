@@ -1,4 +1,5 @@
 // import { Header } from '@components/Layout/Header'
+import Card from '@components/layout/card/Card'
 import { Layout } from '@components/layout/core/Layout'
 import NextLink from '@components/layout/link/NextLink'
 import { OrganisationNavigationEnum } from '@utils/enums'
@@ -46,6 +47,63 @@ const Hero = () => {
             <button className='rounded-[5px] bg-black px-4 py-1 flex items-center'>
               <Image width={32} height={32} src='/images/logo-white.png' alt='logo-white' />
               <span className='text-xs'>Start Creating</span>
+            </button>
+          </NextLink>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Mint = () => {
+  return (
+    <div className='flex justify-center items-center'>
+      <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
+        <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
+          <Image width={629} height={786} priority src='/images/journey.png' alt='journey-by-jacob' />
+        </div>
+        <div className='block md:hidden'>
+          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
+        </div>
+
+        <div className='hidden md:flex flex-col justify-center xs:items-start sm:items-start  w-2/3'>
+          <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-left xs:mb-4 sm:mb-8'>Journey</h1>
+          <div className='flex'>
+            <div className='flex flex-col justify-around w-full mr-4'>
+              <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0'>Created by</p>
+              <Card className='drop-shadow-2xl space-x-2 py-0 bg-white rounded-[99px]  hover:-translate-y-1'>
+                <a href='#' className='group block flex-shrink-0'>
+                  <div className='flex items-center'>
+                    <div className=' '>
+                      <img className='inline-block h-9 w-9 rounded-full' src='images/avatar-blank.png' alt='' />
+                    </div>
+                    <div className='ml-3'>
+                      <p className='text-sm font-medium text-semiBold group-hover:text-gray-900'>@jacob</p>
+                    </div>
+                  </div>
+                </a>
+              </Card>
+            </div>
+            <div className='flex flex-col justify-around  w-full'>
+              <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 '>Collection</p>
+              <Card className='drop-shadow-2xl py-0 bg-white  hover:-translate-y-1 my-1'>
+                <a href='#' className='group block flex-shrink-0'>
+                  <div className='flex items-center'>
+                    <div>
+                      <img className='inline-block h-9 w-9 rounded-full' src='images/avatar-blank.png' alt='' />
+                    </div>
+                    <div className='ml-3'>
+                      <p className='text-sm font-medium text-semiBold group-hover:text-gray-900'>@jacob</p>
+                    </div>
+                  </div>
+                </a>
+              </Card>
+            </div>
+          </div>
+          <NextLink className='text-white py-4' href={`/connect`}>
+            <button className='rounded-full w-full bg-black px-8 py-2 flex item-center justify-center'>
+              <Image width={40} height={40} src='/images/logo-white.png' alt='logo-white' />
+              <span className='text-lg'>Mint</span>
             </button>
           </NextLink>
         </div>
@@ -157,7 +215,8 @@ const Home: NextPage = () => {
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='space-y-20 h-full flex flex-col xs:my-10 sm:my-20'>
               <div className='w-full flex flex-col justify-center items-center space-y-10'>
-                <Hero />
+                {/* <Hero /> */}
+                <Mint />
                 {/* <Features /> */}
                 {/* <Partners /> */}
                 {/* <Footer /> */}

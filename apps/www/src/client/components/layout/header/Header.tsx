@@ -98,6 +98,7 @@ const Index = ({ authenticated = true, children }: HeaderProps) => {
           </NextLinkComponent>
           {children}
         </div>
+        <div>{/* <Search /> */}</div>
         <HeaderExternalRoutes authenticated={authenticated} />
       </div>
     </header>
