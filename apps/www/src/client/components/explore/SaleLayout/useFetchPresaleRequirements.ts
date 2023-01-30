@@ -10,7 +10,7 @@ import { useFetchContractUserData } from './useFetchContractUserData'
 import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 import { useUserMerkleProof } from './useUserMerkleProof'
 
-export const useFetchClaimRequirements = ({
+export const useFetchPresaleRequirements = ({
   session,
   contractDeployment,
 }: {
