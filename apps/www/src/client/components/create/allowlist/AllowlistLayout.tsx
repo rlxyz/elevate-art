@@ -1,4 +1,4 @@
-import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
+import { useFetchContractMerkleRootData } from '@components/explore/SaleLayout/useFetchContractMerkleRootData'
 import type { ContractDeployment, ContractDeploymentAllowlist } from '@prisma/client'
 import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { AllowlistLayoutHeader } from './AllowlistLayoutHeader'
@@ -34,7 +34,7 @@ export const AllowlistLayout = ({
     whitelist: whitelist,
   })
 
-  const { data } = useFetchContractData({
+  const { data } = useFetchContractMerkleRootData({
     contractAddress: contractDeployment?.address || '',
     chainId: contractDeployment?.chainId || 99,
     enabled: !!contractDeployment?.address,

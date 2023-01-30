@@ -1,5 +1,5 @@
 import { ContractDeploymentMintSettings } from '@components/deployments/contractDeployment/ContractDeploymentSettings/ContractDeploymentMintSettings'
-import { useFetchContractData } from '@components/explore/SaleLayout/useFetchContractData'
+import { useFetchContractSaleData } from '@components/explore/SaleLayout/useFetchContractSaleData'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -14,7 +14,6 @@ import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOr
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
 import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
-import { ContractDeploymentAllowlistType } from '@prisma/client'
 import type { NextPage } from 'next'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
@@ -33,9 +32,7 @@ const Page: NextPage = () => {
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
 
-  const {
-    data: { publicTime, presaleTime, claimTime },
-  } = useFetchContractData({
+  const { data } = useFetchContractSaleData({
     contractAddress: contractDeployment?.address || '',
     chainId: contractDeployment?.chainId || 99,
     enabled: !!contractDeployment?.address,
@@ -43,6 +40,10 @@ const Page: NextPage = () => {
   })
 
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
+
+  if (!data) return <></>
+
+  const { publicTime, presaleTime, claimTime } = data
 
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Settings}>

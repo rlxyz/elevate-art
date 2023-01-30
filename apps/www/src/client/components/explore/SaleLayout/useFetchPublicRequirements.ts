@@ -1,8 +1,12 @@
 import type { ContractDeployment } from '@prisma/client'
+import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
-import { useFetchContractData, useFetchContractUserData } from './useFetchContractData'
+import { useFetchContractDataReadOnly } from './useFetchContractDataReadOnly'
+import { useFetchContractTotalSupplyData } from './useFetchContractTotalSupplyData'
+import { useFetchContractUserData } from './useFetchContractUserData'
+import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const useFetchPublicRequirements = ({
   session,
@@ -39,32 +43,93 @@ export const useFetchPublicRequirements = ({
     data: fetchedContractData,
     isLoading: isLoadingContractData,
     isError: isErrorContractData,
-  } = useFetchContractData({
+  } = useFetchContractTotalSupplyData({
     version: '0.1.0',
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
   })
 
-  // mint allocation
-  const publicMintMx = BigNumber.from(fetchedContractData?.maxMintPerAddress || 0)
-  const publicMintLeft = publicMintMx.sub(fetchedContractUserData?.userMintCount || 0)
+  const usersMintLeft = () => {
+    const totalMintLeft = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0).sub(
+      BigNumber.from(fetchedContractUserData?.userMintCount || 0)
+    )
 
-  // total left in collection
-  const collectionMintMax = BigNumber.from(fetchedContractData?.collectionSize || 0)
-  const collectionMintLeft = collectionMintMax.sub(fetchedContractData?.totalSupply || 0)
+    /**
+     * If the total mint left is less than or equal to 0, the user cannot mint anymore.
+     */
+    if (totalMintLeft.lte(0)) return BigNumber.from(0)
+    if (BigNumber.from(data?.maxMintPerAddress).eq(0)) return BigNumber.from(0)
+    if (BigNumber.from(data?.maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
 
-  // user left after total left
-  const userMintLeft = publicMintLeft.gt(collectionMintLeft) ? collectionMintLeft : publicMintLeft
+    /**
+     * Basically, user can only max mint up to the max mint per address.
+     * And this handles the cases where if the total mint left is greater than the max mint per
+     * address, the user will only be able to mint up to the max mint per address.
+     */
+    if (totalMintLeft.gt(BigNumber.from(data?.maxMintPerAddress))) {
+      return BigNumber.from(data?.maxMintPerAddress)
+    } else {
+      return totalMintLeft
+    }
+  }
+
+  const userMintLeftBasedOnCollectionSize = () => {
+    const mintLeft = usersMintLeft()
+
+    /**
+     * The collection also has an upper boundary defined by the collection size.
+     * It also has a variable that tracks the current minted supply, called totalSupply.
+     */
+    const collectionLeft = BigNumber.from(data?.collectionSize || 0).sub(BigNumber.from(fetchedContractData?.totalSupply || 0))
+
+    /**
+     * If the collection left is less than or equal to 0, the user cannot mint anymore.
+     * This is because the collection is already full.
+     * This is also the case where the user has already minted the max mint per address.
+     * This is because the user can only mint up to the max mint per address.
+     */
+    if (collectionLeft.lte(0)) return BigNumber.from(0)
+
+    /**
+     * If the collection left is less than the mint left, the user can only mint up to the collection left.
+     * This is because the collection is already full.
+     */
+    if (collectionLeft.lt(mintLeft)) {
+      return collectionLeft
+    }
+
+    /**
+     * If the collection left is greater than or equal to the mint left, the user can only mint up to the mint left.
+     */
+    if (collectionLeft.gte(mintLeft)) {
+      return mintLeft
+    }
+
+    return BigNumber.from(0)
+  }
+
+  const {
+    current: currentContractDeploymentWhitelist,
+    isLoading: isLoadingContractDeploymentWhitelist,
+    isError: isErrorContractDeploymentWhitelist,
+  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+    type: ContractDeploymentAllowlistType.CLAIM,
+  })
+
+  const { data } = useFetchContractDataReadOnly({
+    version: '0.1.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
 
   return {
     data: {
-      ...fetchedContractData,
-      ...fetchedContractUserData,
-      userMintLeft,
-      allowToMint: userMintLeft.gt(0),
+      userMintCount: fetchedContractUserData?.userMintCount || 0,
+      userMintLeft: userMintLeftBasedOnCollectionSize(),
+      allowToMint: userMintLeftBasedOnCollectionSize().gt(0),
       userBalance: userBalance,
     },
-    isError: isErrorContractData || isErrorContractUserData,
-    isLoading: isLoadingContractData || isLoadingContractUserData,
+    isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
+    isLoading: isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist,
   }
 }

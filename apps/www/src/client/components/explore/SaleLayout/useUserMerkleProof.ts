@@ -21,7 +21,9 @@ export const useUserMerkleProof = ({ type }: { type: ContractDeploymentAllowlist
 
   if (!current?.address || current.mint === 0 || !merkleTree) {
     return {
+      root,
       proof: undefined,
+      maxMintForUser,
     }
   }
 
