@@ -10,10 +10,11 @@ import { truncate } from 'src/client/utils/format'
 
 export const FilterByTrait = () => {
   const [layerDropdown, setLayerDropdown] = useState<null | number>(null)
-  const { traitMapping, traitFilters, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } = useRepositoryStore(
-    (state) => {
+  const { traitMapping, traitFilters, rankFilter, setTraitFilters, setTraitFilteredTokens, tokenRanking, rarityFilter, setTokens } =
+    useRepositoryStore((state) => {
       return {
         setTraitFilters: state.setTraitFilters,
+        rankFilter: state.rankFilter,
         setTraitFilteredTokens: state.setTraitFilteredTokens,
         tokenRanking: state.tokenRanking,
         traitFilters: state.traitFilters,
@@ -21,8 +22,7 @@ export const FilterByTrait = () => {
         setTokens: state.setTokens,
         traitMapping: state.traitMapping,
       }
-    }
-  )
+    })
   const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryCollectionFindAll()
 
@@ -48,11 +48,15 @@ export const FilterByTrait = () => {
               ? tokenRanking.length
               : collection.totalSupply
           )
+          if (rankFilter === 'ID') {
+            filteredRarity.sort((a, b) => a.index - b.index)
+          }
           setTokens(filteredRarity.map((x) => x.index))
           setTraitFilteredTokens([])
           setTraitFilters([])
           return
         }
+
         const filters: { layer: LayerElement; trait: TraitElement }[] = []
         checked.forEach((value: string) => {
           const layer = layers.filter((layer: LayerElement) => layer.id === value.split('/')[0])[0]
@@ -60,6 +64,7 @@ export const FilterByTrait = () => {
           if (layer && trait) filters.push({ layer, trait })
         })
         setTraitFilters(filters)
+
         /** Broken */
         const allTokenIdsArray = Object.values(
           filters
@@ -74,8 +79,8 @@ export const FilterByTrait = () => {
               return { ...a, ...{ [layer]: [...(a[layer] || []), ...tokens] } }
             }, {})
         )
-        ///
-        console.log(allTokenIdsArray.flatMap((x) => x).findIndex((x) => x === 2499))
+
+        /** Create Array of Tokens */
         const allFilteredByRank = allTokenIdsArray
           .reduce(
             (results, item) => {
@@ -95,7 +100,15 @@ export const FilterByTrait = () => {
               rank: tokenRanking.findIndex((token) => token.index === val),
             }
           })
-          .sort((a, b) => a.rank - b.rank)
+
+        /** Sort by Rank or ID */
+        if (rankFilter === 'Rank') {
+          allFilteredByRank.sort((a, b) => a.rank - b.rank)
+        } else {
+          allFilteredByRank.sort((a, b) => a.tokenId - b.tokenId)
+        }
+
+        /** Filter by Rarity Type */
         const filteredRarity = allFilteredByRank.slice(
           rarityFilter === 'Top 10'
             ? 0
@@ -112,6 +125,8 @@ export const FilterByTrait = () => {
             ? allFilteredByRank.length
             : collection.totalSupply
         )
+
+        /** Save */
         setTraitFilteredTokens(allFilteredByRank.map((x) => x.tokenId))
         setTokens(filteredRarity.map((x) => x.tokenId))
       }}
@@ -294,6 +309,7 @@ export const FilterByRarity = () => {
 export const FilterByRank = () => {
   const { tokenRanking, traitFilteredTokens, rarityFilter, setRankFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
     return {
+      traitFilters: state.traitFilters,
       traitFilteredTokens: state.traitFilteredTokens,
       setRarityFilter: state.setRarityFilter,
       rarityFilter: state.rarityFilter,
@@ -301,6 +317,7 @@ export const FilterByRank = () => {
       setRankFilter: state.setRankFilter,
       tokenRanking: state.tokenRanking,
       setTokens: state.setTokens,
+      traitMapping: state.traitMapping,
     }
   })
 
