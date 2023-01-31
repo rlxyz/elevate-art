@@ -205,26 +205,28 @@ export default Home
 
 const ProjectName = () => <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-left'>Journey</h1>
 
-const Details = () => {
-  return (
-    <div className='flex space-x-9'>
-      <div className='flex flex-col justify-around w-full space-y-2'>
-        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
+const Details = () => (
+  <div className='flex space-x-9'>
+    <div className='flex flex-col justify-around w-full space-y-2'>
+      <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
+      <NextLinkComponent href={'/artist_page'}>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[99px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>@dreamlab</p>
         </button>
-      </div>
-      <div className='flex flex-col justify-around  w-full space-y-2'>
-        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
+      </NextLinkComponent>
+    </div>
+    <div className='flex flex-col justify-around  w-full space-y-2'>
+      <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
+      <NextLinkComponent href={'/dreamlab/journey'}>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[5px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' isSquare />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>journey</p>
         </button>
-      </div>
+      </NextLinkComponent>
     </div>
-  )
-}
+  </div>
+)
 
 const MintButton = () => {
   return (
