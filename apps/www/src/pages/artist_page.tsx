@@ -4,6 +4,7 @@ import { Layout } from '@components/layout/core/Layout'
 import { default as NextLink, default as NextLinkComponent } from '@components/layout/link/NextLink'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon, DocumentDuplicateIcon } from '@heroicons/react/outline'
+import { BadgeCheckIcon, GlobeAltIcon } from '@heroicons/react/solid'
 import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
@@ -287,8 +288,8 @@ const ArtistDropdown = () => {
                     'group flex items-center px-4 py-2 text-sm'
                   )}
                 >
-                  <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                  Edit
+                  <GlobeAltIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                  dreamlab.eth
                 </a>
               )}
             </Menu.Item>
@@ -302,37 +303,7 @@ const ArtistDropdown = () => {
                   )}
                 >
                   <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                  Duplicate
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-          <div className='py-1'>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href='#'
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'group flex items-center px-4 py-2 text-sm'
-                  )}
-                >
-                  <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                  Archive
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href='#'
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'group flex items-center px-4 py-2 text-sm'
-                  )}
-                >
-                  <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                  Move
+                  0x1234...1234
                 </a>
               )}
             </Menu.Item>
@@ -348,7 +319,39 @@ const ArtistDropdown = () => {
                   )}
                 >
                   <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                  Share
+                  dreamlab: twitter
+                  <BadgeCheckIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  href='#'
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'group flex items-center px-4 py-2 text-sm'
+                  )}
+                >
+                  <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                  dreamlab: insta
+                  <BadgeCheckIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                </a>
+              )}
+            </Menu.Item>
+          </div>
+          <div className='py-1'>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  href='#'
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'group flex items-center px-4 py-2 text-sm'
+                  )}
+                >
+                  <DocumentDuplicateIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                  dreamlab.art
                 </a>
               )}
             </Menu.Item>

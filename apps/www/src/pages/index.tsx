@@ -6,7 +6,6 @@ import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { routeBuilder } from 'src/client/utils/format'
 
@@ -210,21 +209,21 @@ const Details = () => (
   <div className='flex space-x-9'>
     <div className='flex flex-col justify-around w-full space-y-2'>
       <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
-      <Link href={'/artist_page'}>
+      <NextLinkComponent href={'/artist_page'}>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[99px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>@dreamlab</p>
         </button>
-      </Link>
+      </NextLinkComponent>
     </div>
     <div className='flex flex-col justify-around  w-full space-y-2'>
       <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
-      <Link href={'/dreamlab/journey'}>
+      <NextLinkComponent href={'/dreamlab/journey'}>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[5px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' isSquare />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>journey</p>
         </button>
-      </Link>
+      </NextLinkComponent>
     </div>
   </div>
 )
