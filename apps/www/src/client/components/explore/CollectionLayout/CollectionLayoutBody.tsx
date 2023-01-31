@@ -4,7 +4,7 @@ import React from 'react'
 
 export const CollectionLayoutBody: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className='space-y-6 w-full'>
+    <div className='space-y-6 py-6 w-full'>
       <LayoutContainer border='none'>{children}</LayoutContainer>
     </div>
   )

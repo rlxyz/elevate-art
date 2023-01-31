@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import React from 'react'
 import AvatarComponent from './Avatar'
+import { RingOuterWithShadow } from './RingOuterWithShadow'
 
 interface Props {
   className?: string
@@ -17,8 +18,10 @@ const ProfileAvatar: React.FC<React.PropsWithChildren<CardProps>> = ({
   ...props
 }: CardProps & typeof defaultProps) => {
   return (
-    <button className={clsx(className, 'flex')} {...props}>
-      <AvatarComponent className='ring-4 ring-lightGray' src='/images/avatar-blank.png' />
+    <button className={clsx(className)} {...props}>
+      <RingOuterWithShadow>
+        <AvatarComponent src='/images/avatar-blank.png' />
+      </RingOuterWithShadow>
     </button>
   )
 }

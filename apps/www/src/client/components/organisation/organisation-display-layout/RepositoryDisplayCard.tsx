@@ -1,5 +1,4 @@
 import { useQueryContractDeploymentProduction } from '@components/explore/SaleLayout/useQueryContractDeploymentProduction'
-import AvatarComponent from '@components/layout/avatar/Avatar'
 import Card from '@components/layout/card/Card'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import { createLogoUrl } from '@components/layout/LogoDisplay'
@@ -37,8 +36,7 @@ export const RepositoryDisplayCard = ({ organisationName, repository }: { organi
         </div>
         <div className='p-5 space-y-3'>
           <div className='space-x-1 flex items-center'>
-            <AvatarComponent src='/images/avatar-blank.png' />
-            <span className='text-sm text-black'>@jacobriglin</span>
+            <span className='text-2xl font-black'>{repository.displayName || repository.name}</span>
           </div>
           <div className='text-xs text-darkGrey'>Price</div>
           <span className='text-lg font-semibold'>Free Claim</span>

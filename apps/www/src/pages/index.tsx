@@ -55,9 +55,9 @@ const Hero = () => {
 const Mint = () => {
   return (
     <div className='flex justify-center items-center w-full'>
-      <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
+      <div className='grid md:grid-cols-2 place-content-center justify-items-center'>
         <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
-          <Image width={629} height={786} priority src='/images/journey.png' alt='journey-by-jacob' />
+          <Image width={629 * 2} height={786 * 2} priority src='/images/journey.png' alt='journey-by-jacob' />
         </div>
         <div className='block md:hidden'>
           <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
@@ -185,11 +185,7 @@ const Home: NextPage = () => {
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='w-full flex flex-col justify-center items-center space-y-10'>
-              {/* <Hero /> */}
               <Mint />
-              {/* <Features /> */}
-              {/* <Partners /> */}
-              {/* <Footer /> */}
             </div>
           </div>
         </Layout.Body>
@@ -206,7 +202,7 @@ const Details = () => (
   <div className='flex space-x-9'>
     <div className='flex flex-col justify-around w-full space-y-2'>
       <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
-      <NextLinkComponent href={'/artist_page'}>
+      <NextLinkComponent href={'/dreamlab'}>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[99px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>@dreamlab</p>

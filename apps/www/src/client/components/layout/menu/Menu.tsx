@@ -1,10 +1,13 @@
 import { Menu, Transition } from '@headlessui/react'
+import { DotsVerticalIcon } from '@heroicons/react/outline'
+import { DotsHorizontalIcon } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import { Fragment } from 'react'
 import ProfileAvatar from '../avatar/ProfileAvatar'
 
 export interface Props {
   vertical?: boolean
+  profile?: boolean
   position?: 'bottom-left' | 'bottom-right' // add rest
 }
 
@@ -12,7 +15,8 @@ export type MenuProps = Props & Omit<React.HTMLAttributes<any>, keyof Props>
 
 const MenuComponent: React.FC<React.PropsWithChildren<MenuProps>> = ({
   className,
-  vertical,
+  vertical = false,
+  profile = false,
   position = 'bottom-right',
   children,
   ...props
@@ -20,8 +24,8 @@ const MenuComponent: React.FC<React.PropsWithChildren<MenuProps>> = ({
   return (
     <Menu as='div' className={clsx('absolute flex right-0 mr-2 items-center z-[5] top-1/2 -translate-y-1/2')}>
       <Menu.Button
-        as={ProfileAvatar}
-        // className='text-darkGrey rounded-[3px] hover:bg-mediumGrey w-3.5 h-3.5 mx-0.25 cursor-pointer'
+        as={profile ? ProfileAvatar : vertical ? DotsVerticalIcon : DotsHorizontalIcon}
+        className={clsx(!profile && 'text-darkGrey rounded-[3px] hover:bg-mediumGrey w-3.5 h-3.5 mx-0.25 cursor-pointer')}
       />
       <Transition
         as={Fragment}

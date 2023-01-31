@@ -51,9 +51,11 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                 return (
                   <button onClick={openChainModal} type='button' className='w-full'>
                     {children || (
-                      <img
+                      <Image
                         src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
+                        width={18}
+                        height={18}
+                        className='inline-block rounded-[5px]'
                         alt='Wallet'
                       />
                     )}
@@ -63,12 +65,12 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
 
               return (
                 <div className='relative w-9'>
-                  <Menu vertical position='bottom-left'>
+                  <Menu profile position='bottom-left'>
                     <Menu.Items className='p-0'>
                       <Menu.Item as={NextLinkComponent} href={routeBuilder(ZoneNavigationEnum.enum.Dashboard)} type='button'>
                         <div className='w-full flex items-center space-x-2 p-1'>
-                          <AvatarComponent variant='md' src='/images/avatar-blank.png' />
-                          <span className='text-sm font-semibold'>Dashboard</span>
+                          <AvatarComponent variant='sm' src='/images/avatar-blank.png' />
+                          <span className='text-xs font-semibold'>Dashboard</span>
                         </div>
                       </Menu.Item>
                     </Menu.Items>
@@ -76,7 +78,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                       <div className='rounded-[5px] w-full p-2'>
                         <div className='flex flex-col'>
                           <span className='text-xs text-darkGrey'>Balance</span>
-                          <span className='text-md text-black font-bold'>{account.displayBalance}</span>
+                          <span className='text-sm text-black font-bold'>{account.displayBalance}</span>
                         </div>
                       </div>
                     </Menu.Items>
@@ -84,7 +86,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                       <Menu.Item as='button' onClick={openAccountModal} type='button' className='w-full flex items-center'>
                         <div className='w-full flex items-center space-x-3'>
                           <ExternalLinkIcon className='w-4 h-4' />
-                          <span>Disconnect</span>
+                          <span className='text-xs'>Disconnect</span>
                         </div>
                       </Menu.Item>
                     </Menu.Items>

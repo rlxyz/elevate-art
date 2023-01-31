@@ -19,7 +19,7 @@ export const OrganisationDisplayBodyFound = ({
           setQuery(e.target.value)
         }}
       />
-      <div className='grid grid-cols-4 gap-6'>
+      <div className='grid grid-cols-3 3xl:grid-cols-4 gap-6'>
         {filteredRepositories?.map((r) => (
           <RepositoryDisplayCard key={r.name} repository={r} organisationName={organisation?.name} />
         ))}
