@@ -66,13 +66,13 @@ export const ZoneRoutesNavbarPopover: FC<{
                     <NextLinkComponent
                       key={item.label}
                       href={item.href}
-                      className={clsx('hover:bg-mediumGrey', 'flex justify-between p-2 rounded-[3px] items-center')}
+                      className={clsx('hover:bg-mediumGrey', 'flex justify-between p-2 rounded-[3px] items-center space-x-6')}
                     >
                       <div className='flex space-x-3 items-center w-full'>
                         <item.icon className='w-3 h-3' />
                         <span className='text-[0.7rem] font-normal'>{item.label}</span>
                       </div>
-                      {item.selected && <CheckIcon className='w-4 h-4 text-darkGrey' />}
+                      {item.selected && <CheckIcon className='w-4 h-4 text-blueHighlight' />}
                     </NextLinkComponent>
                   ))}
                 </div>
