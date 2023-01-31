@@ -6,57 +6,63 @@ import { OrganisationNavigationEnum } from '@utils/enums'
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { routeBuilder } from 'src/client/utils/format'
 
-const Hero = () => {
+const Profile = () => {
   return (
-    <div className='flex justify-center items-center'>
-      <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
-        <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
-          <Image width={364} height={213} className='w-[60%] absolute top-0 left-[-60px]' src='/images/demo.png' alt='demo-image' />
-          <Image
-            width={423}
-            height={300}
-            className='w-2/4 absolute xs:bottom-[-20px] sm:bottom-[-60px] xs:right-[-40px] sm:right-[-60px]'
-            src='/images/ffc.png'
-            alt='ffc-image'
+    <>
+      <div className='w-full'>
+        <div>
+          <img
+            className='h-32 w-full object-cover lg:h-48'
+            src='https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
+            alt=''
           />
-          <Image
-            width={85}
-            height={126}
-            className='md:w-[15%] w-[1/3] xs:hidden absolute md:bottom-[80px] lg:bottom-[80px] xl:bottom-[120px] lg:right-[-100px] md:right-[-80px]'
-            src='/images/squiggle.png'
-            alt='squiggle-image'
-          />
-          <Image width={629} height={786} priority src='/images/journey.png' alt='journey-by-jacob' />
-          <div className='bg-gradient-to-br from-lightPink via-lightPurple to-lightBlue h-32 w-32 absolute top-[-30px] right-[-20px] -z-10' />
         </div>
-        <div className='block md:hidden'>
-          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
-        </div>
-        <div className='hidden md:flex flex-col justify-center xs:items-start sm:items-end'>
-          <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-right xs:mb-4 sm:mb-8'>
-            elevate your
-            <br /> nft collection
-          </h1>
-          <p className='text-normal sm:text-right xs:mb-4 sm:mb-8'>
-            design & launch <span className='text-blueHighlight'>generative</span> nft collections
-          </p>
-          <NextLink className='text-white w-fit' href={`/connect`}>
-            <button className='rounded-[5px] bg-black px-4 py-1 flex items-center'>
-              <Image width={32} height={32} src='/images/logo-white.png' alt='logo-white' />
-              <span className='text-xs'>Start Creating</span>
-            </button>
-          </NextLink>
+        <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:px-8'>
+          <div className='-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5'>
+            <div className='flex'>
+              <img className='h-24 w-24 rounded-full ring-8 ring-white sm:h-32 sm:w-32' src='/images/avatar-blank.png' alt='' />
+            </div>
+          </div>
+          <div className='mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1'>
+            <div className='mt-6 min-w-0 flex-1 sm:hidden md:block'>
+              <h1 className='truncate text-2xl font-bold text-gray-900'>Dream Lab</h1>
+            </div>
+            <div className='justify-stretch mt-6 flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4'>
+              <div className='grid grid-cols-2 '>
+                <div className='font-semibold text-darkGrey text-xs'>Following</div>
+                <div className='font-semibold text-darkGrey text-xs border-l border-mediumGrey  pl-4'>Followers</div>
+                <div className='text-2xl font-medium '>270</div>
+                <div className='text-2xl font-medium border-l border-mediumGrey pl-4'>690</div>
+              </div>
+            </div>
+          </div>
+          <button
+            type='button'
+            className='inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2'
+          >
+            {/* <EnvelopeIcon className='-ml-1 mr-2 h-5 w-5 text-gray-400' aria-hidden='true' /> */}
+            <span>dreamlab.eth</span>
+          </button>
+          <button
+            type='button'
+            className='inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2'
+          >
+            {/* <PhoneIcon className='-ml-1 mr-2 h-5 w-5 text-gray-400' aria-hidden='true' /> */}
+            <span>Follow</span>
+          </button>
+          <div className='mt-6 hidden min-w-0 flex-1 sm:block md:hidden'>
+            <h1 className='truncate text-2xl font-bold text-gray-900'>NAME</h1>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
-const Mint = () => {
+const Navigation = () => {
   return (
     <div className='flex justify-center items-center w-full'>
       <div className='xs:ml-10 sm:ml-0 grid md:grid-cols-2 place-content-center justify-items-center'>
@@ -87,7 +93,7 @@ const Mint = () => {
   )
 }
 
-const Features = () => {
+const Gallery = () => {
   return (
     <div className='w-full mt-32 relative '>
       <div className='w-full  flex justify-center items-center'>
@@ -185,15 +191,15 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Layout.AppHeader border='none' authenticated={false} />
+        <Layout.AppHeaderWithSearch border='none' authenticated={false} />
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='w-full flex flex-col justify-center items-center space-y-10'>
-              {/* <Hero /> */}
-              <Mint />
-              {/* <Features /> */}
-              {/* <Partners /> */}
-              {/* <Footer /> */}
+              <Profile />
+              <Navigation />
+              <Gallery />
+              <Partners />
+              <Footer />
             </div>
           </div>
         </Layout.Body>
@@ -206,28 +212,26 @@ export default Home
 
 const ProjectName = () => <h1 className='xs:text-3xl sm:text-5xl font-bold tracking-wide sm:text-left'>Journey</h1>
 
-const Details = () => (
-  <div className='flex space-x-9'>
-    <div className='flex flex-col justify-around w-full space-y-2'>
-      <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
-      <Link href={'/artist_page'}>
+const Details = () => {
+  return (
+    <div className='flex space-x-9'>
+      <div className='flex flex-col justify-around w-full space-y-2'>
+        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Created by</p>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[99px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>@dreamlab</p>
         </button>
-      </Link>
-    </div>
-    <div className='flex flex-col justify-around  w-full space-y-2'>
-      <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
-      <Link href={'/dreamlab/journey'}>
+      </div>
+      <div className='flex flex-col justify-around  w-full space-y-2'>
+        <p className='font-medium text-darkGrey xs:mb-4 sm:mb-0 text-xs'>Collection</p>
         <button className='drop-shadow-2xl space-x-2 bg-white rounded-[5px] flex p-2'>
           <AvatarComponent src='/images/avatar-blank.png' isSquare />
           <p className='text-md font-medium text-semiBold group-hover:text-gray-900'>journey</p>
         </button>
-      </Link>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const MintButton = () => {
   return (
