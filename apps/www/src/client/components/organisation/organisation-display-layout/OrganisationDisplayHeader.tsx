@@ -1,5 +1,4 @@
 import { CollectionSocialMediaLinks } from '@components/explore/CollectionLayout/CollectionSocialMediaLinks'
-import { BannerDisplay } from '@components/layout/BannerDisplay'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import type { Organisation } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
@@ -24,7 +23,7 @@ export const OrganisationDisplayHeader = ({ organisation }: { organisation: Orga
           </NextLinkComponent>
         </div>
       </div>
-      <BannerDisplay id={organisation?.id} />
+      {/* <BannerDisplay id={organisation?.id} /> */}
     </div>
   )
 }

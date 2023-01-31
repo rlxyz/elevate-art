@@ -26,7 +26,7 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
 
   return (
     <div className='h-72'>
-      <div className='h-72 w-screen absolute left-0 border border-mediumGrey'>
+      <div className='h-72 w-screen absolute left-0'>
         <div className='flex items-center justify-center absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border h-full w-full'>
           <div className='block overflow-hidden absolute box-border m-0 rounded-[5px] bg-lightGray animate-pulse-gradient-infinite inset-0'>
             {id && imgSrc && (

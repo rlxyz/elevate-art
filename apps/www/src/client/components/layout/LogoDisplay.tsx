@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { env } from 'src/env/client.mjs'
@@ -6,7 +7,7 @@ export const createLogoUrl = ({ id }: { id: string }) => {
   return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets/logo`
 }
 
-export const LogoDisplay = ({ repositoryId }: { repositoryId?: string | null }) => {
+export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?: string | null; isSquare?: boolean }) => {
   const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
 
   const fetchImage = async () => {
@@ -26,15 +27,25 @@ export const LogoDisplay = ({ repositoryId }: { repositoryId?: string | null }) 
   }, [repositoryId])
 
   return (
-    <div className='inline-flex -mt-16 md:-mt-28 mb-4 w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-[5px] basis-44 relative z-[1] border border-mediumGrey bg-white'>
-      <div className='block overflow-hidden absolute box-border m-0 rounded-[5px] bg-mediumGrey/70 animate-pulse-gradient-infinite inset-0'>
+    <div
+      className={clsx(
+        'inline-flex -mt-8 md:-mt-20 w-[100px] h-[100px] md:w-[150px] md:h-[150px] basis-44 relative z-[1] bg-white ring-[1rem] ring-white',
+        isSquare ? 'rounded-[5px]' : 'rounded-[9999px]'
+      )}
+    >
+      <div
+        className={clsx(
+          'block overflow-hidden absolute box-border m-0 bg-mediumGrey/70 animate-pulse-gradient-infinite inset-0',
+          isSquare ? 'rounded-[5px]' : 'rounded-full'
+        )}
+      >
         {repositoryId && imgSrc && (
           <Image
             width={400}
             height={400}
             src={imgSrc}
             alt='logo-image'
-            className='object-cover aspect-auto overflow-hidden rounded-[5px]'
+            className={clsx('object-cover aspect-auto overflow-hidden', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           />
         )}
       </div>
