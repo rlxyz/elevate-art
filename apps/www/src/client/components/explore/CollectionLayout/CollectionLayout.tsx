@@ -8,7 +8,7 @@ interface MintLayoutProps {
 }
 
 export const CollectionLayout = ({ children }: MintLayoutProps) => {
-  return <div className='w-screen pb-6'>{children}</div>
+  return <div className='w-screen'>{children}</div>
 }
 
 CollectionLayout.Header = CollectionLayoutHeader

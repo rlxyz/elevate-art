@@ -21,7 +21,7 @@ export const CollectionLayoutDescription: React.FC<MintLayoutDescriptionProps> =
   contractData,
 }) => {
   return (
-    <LayoutContainer border='none'>
+    <LayoutContainer border='none' className='py-6'>
       <div className='w-full flex justify-between items-start'>
         <CollectionContractDeploymentDetails
           repository={repository}
