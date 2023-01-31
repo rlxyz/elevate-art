@@ -1,11 +1,9 @@
-import { CollectionSocialMediaLinks } from '@components/explore/CollectionLayout/CollectionSocialMediaLinks'
-import { BannerDisplay } from '@components/layout/BannerDisplay'
 import { LayoutContainer } from '@components/layout/core/Layout'
-import { DescriptionWithDisclouser } from '@components/layout/DescriptionWithDisclouser'
-import { LogoDisplay } from '@components/layout/LogoDisplay'
 import { HomeIcon } from '@heroicons/react/solid'
 import type { Organisation, Repository } from '@prisma/client'
 import { OrganisationDisplayBody } from './OrganisationDisplayBody'
+import { OrganisationDisplayDetails } from './OrganisationDisplayDetails'
+import { OrganisationDisplayHeader } from './OrganisationDisplayHeader'
 
 export const OrganisationDisplayLayout = ({
   organisation,
@@ -35,35 +33,5 @@ export const OrganisationDisplayLayout = ({
         </LayoutContainer>
       </div>
     </>
-  )
-}
-
-const OrganisationDisplayHeader = ({ organisation }: { organisation: Organisation | null | undefined }) => {
-  return (
-    <div>
-      <div className='overflow-hidden'>
-        <BannerDisplay id={organisation?.id} />
-      </div>
-      <LayoutContainer border='none'>
-        <LogoDisplay repositoryId={organisation?.id} />
-      </LayoutContainer>
-    </div>
-  )
-}
-
-const OrganisationDisplayDetails = ({ organisation }: { organisation: Organisation | null | undefined }) => {
-  return (
-    <div className='space-y-9'>
-      <LayoutContainer border='none'>
-        <div className='space-y-6 flex justify-between items-start'>
-          <DescriptionWithDisclouser organisation={organisation} />
-          <CollectionSocialMediaLinks
-            discordUrl={'https://discord.gg/dreamlab'}
-            twitterUrl={'https://twitter.com/jacobriglin'}
-            instagramUrl={'https://instagram.com/jacob'}
-          />
-        </div>
-      </LayoutContainer>
-    </div>
   )
 }
