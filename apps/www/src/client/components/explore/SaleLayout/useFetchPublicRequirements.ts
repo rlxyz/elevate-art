@@ -117,7 +117,7 @@ export const useFetchPublicRequirements = ({
   })
 
   const { data } = useFetchContractDataReadOnly({
-    version: '0.1.0',
+    version: '1.0.0',
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
   })
