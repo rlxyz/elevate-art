@@ -2,9 +2,8 @@ import type { GetServerSidePropsContext, NextPage } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import Card from 'src/client/components/layout/card/Card'
 import { Layout } from 'src/client/components/layout/core/Layout'
-import { ConnectButton } from 'src/client/components/layout/eth/ConnectButton'
+import { ConnectButtonNotConnected } from 'src/client/components/layout/eth/ConnectButtonNotConnected'
 import LinkComponent from 'src/client/components/layout/link/Link'
 import NextLinkComponent from 'src/client/components/layout/link/NextLink'
 import { routeBuilder } from 'src/client/utils/format'
@@ -60,14 +59,7 @@ const Connect: NextPage = () => {
                 </LinkComponent>
               </p>
             </div>
-            <ConnectButton>
-              <Card>
-                <div className='flex flex-row items-center space-x-2 cursor-pointer'>
-                  <Image src='/images/rainbow.png' alt='rainbow-wallet' width={35} height={35} className='rounded-primary' />
-                  <span className='font-semibold'>Rainbow</span>
-                </div>
-              </Card>
-            </ConnectButton>
+            <ConnectButtonNotConnected />
           </div>
         </div>
       </Layout.Body>
