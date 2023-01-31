@@ -22,7 +22,7 @@ const Page: NextPage = () => {
           </AppRoutesNavbar.Item>
         </AppRoutesNavbar>
       </Layout.AppHeader>
-      <Layout.Body>
+      <Layout.Body border='none' margin={false}>
         <OrganisationDisplayLayout organisation={organisation} repositories={repositories} />
       </Layout.Body>
     </Layout>

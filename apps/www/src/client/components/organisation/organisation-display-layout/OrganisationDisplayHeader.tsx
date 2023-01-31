@@ -1,30 +1,17 @@
-import { CollectionSocialMediaLinks } from '@components/explore/CollectionLayout/CollectionSocialMediaLinks'
 import { BannerDisplay } from '@components/layout/BannerDisplay'
-import NextLinkComponent from '@components/layout/link/NextLink'
-import type { Organisation } from '@prisma/client'
-import { ZoneNavigationEnum } from '@utils/enums'
-import { routeBuilder } from 'src/client/utils/format'
-import { OrganisationDisplayProfile } from './OrganisationDisplayProfile'
+import { LayoutContainer } from '@components/layout/core/Layout'
+import { LogoDisplay } from '@components/layout/LogoDisplay'
+import { Organisation } from '@prisma/client'
 
-export const OrganisationDisplayHeader = ({ organisation }: { organisation: Organisation | undefined | null }) => {
+export const OrganisationDisplayHeader = ({ organisation }: { organisation: Organisation | null | undefined }) => {
   return (
-    <div className='space-y-16'>
-      <div className='w-full flex justify-between items-center'>
-        <div className='w-1/2'>
-          <OrganisationDisplayProfile organisation={organisation} />
-        </div>
-        <div className='flex flex-col'>
-          <CollectionSocialMediaLinks
-            discordUrl={organisation?.discordUrl}
-            twitterUrl={organisation?.twitterUrl}
-            instagramUrl={organisation?.instagramUrl}
-          />
-          <NextLinkComponent href={routeBuilder(organisation?.name, ZoneNavigationEnum.enum.Create)}>
-            <span className='text-xs border p-2 rounded-[5px] bg-blueHighlight text-white border-mediumGrey'>Admin View</span>
-          </NextLinkComponent>
-        </div>
+    <div>
+      <div className='overflow-hidden'>
+        <BannerDisplay id={organisation?.id} />
       </div>
-      <BannerDisplay id={organisation?.id} />
+      <LayoutContainer border='none'>
+        <LogoDisplay repositoryId={organisation?.id} />
+      </LayoutContainer>
     </div>
   )
 }
