@@ -14,7 +14,7 @@ export const OrganisationDisplayLayout = ({
 }) => {
   return (
     <>
-      <div className='w-screen space-y-6'>
+      <div className='w-screen space-y-6 pb-12'>
         <OrganisationDisplayHeader organisation={organisation} />
         <OrganisationDisplayDetails organisation={organisation} />
 
