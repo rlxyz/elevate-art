@@ -44,14 +44,14 @@ const AvatarComponent: React.FC<AvatarProps> = ({
         stacked && 'ml-2.5',
         isSquare ? 'rounded-[5px]' : 'rounded-full',
         variant === 'sm' && 'w-5 h-5',
-        variant === 'md' && 'w-8 h-8',
+        variant === 'md' && 'w-6 h-6',
         variant === 'lg' && 'w-20 h-20'
       )}
     >
       {!showText && (
         <img
           alt='avatar-img'
-          className={clsx('object-cover w-full select-none h-full w-full', isSquare ? 'rounded-[5px]' : 'rounded-full')}
+          className={clsx('object-cover select-none h-full w-full', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           src={src}
           draggable={false}
           {...props}

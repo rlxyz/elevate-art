@@ -1,7 +1,12 @@
+import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
+import { ZoneNavigationEnum } from '@utils/enums'
 import Image from 'next/image'
 import React from 'react'
+import { routeBuilder } from 'src/client/utils/format'
 import AvatarComponent from '../avatar/Avatar'
+import NextLinkComponent from '../link/NextLink'
+import Menu from '../menu'
 
 interface ConnectButtonProps {
   normalButton?: boolean
@@ -57,9 +62,34 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
               }
 
               return (
-                <button onClick={openAccountModal} type='button' className='w-full flex items-center justify-center'>
-                  {children || <AvatarComponent className='text-darkGrey' src='/images/avatar-blank.png' />}
-                </button>
+                <div className='relative w-9'>
+                  <Menu vertical position='bottom-left'>
+                    <Menu.Items className='p-0'>
+                      <Menu.Item as={NextLinkComponent} href={routeBuilder(ZoneNavigationEnum.enum.Dashboard)} type='button'>
+                        <div className='w-full flex items-center space-x-2 p-1'>
+                          <AvatarComponent variant='md' src='/images/avatar-blank.png' />
+                          <span className='text-sm font-semibold'>Dashboard</span>
+                        </div>
+                      </Menu.Item>
+                    </Menu.Items>
+                    <Menu.Items className='p-1'>
+                      <div className='rounded-[5px] w-full p-2'>
+                        <div className='flex flex-col'>
+                          <span className='text-xs text-darkGrey'>Balance</span>
+                          <span className='text-md text-black font-bold'>{account.displayBalance}</span>
+                        </div>
+                      </div>
+                    </Menu.Items>
+                    <Menu.Items>
+                      <Menu.Item as='button' onClick={openAccountModal} type='button' className='w-full flex items-center'>
+                        <div className='w-full flex items-center space-x-3'>
+                          <ExternalLinkIcon className='w-4 h-4' />
+                          <span>Disconnect</span>
+                        </div>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Menu>
+                </div>
               )
             })()}
           </div>
