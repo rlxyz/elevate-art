@@ -158,7 +158,7 @@ const SaleConfigInput = ({
       <ContractForm.Body.Input
         {...register(`saleConfigs.${index}.maxMintPerAddress`, {
           required: true,
-          max: 20,
+          max: 40,
           min: 1,
           onChange: (e) => {
             if (e.target.value) {
