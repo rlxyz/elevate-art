@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
-import { LayerElement, TraitElement } from '@prisma/client'
+import type { LayerElement, TraitElement } from '@prisma/client'
 import clsx from 'clsx'
 import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
@@ -281,12 +281,132 @@ export const FilterByRarity = () => {
   )
 }
 
+export const FilterByRank = () => {
+  const { tokenRanking, traitFilteredTokens, rarityFilter, setRankFilter, rankFilter, setTokens } = useRepositoryStore((state) => {
+    return {
+      traitFilters: state.traitFilters,
+      traitFilteredTokens: state.traitFilteredTokens,
+      setRarityFilter: state.setRarityFilter,
+      rarityFilter: state.rarityFilter,
+      rankFilter: state.rankFilter,
+      setRankFilter: state.setRankFilter,
+      tokenRanking: state.tokenRanking,
+      setTokens: state.setTokens,
+      traitMapping: state.traitMapping,
+    }
+  })
+
+  const filters: { value: 'Rank' | 'ID' }[] = [{ value: 'Rank' }, { value: 'ID' }]
+
+  return (
+    <Formik
+      initialValues={{ checked: rankFilter ? rankFilter : 'Rank' }}
+      onSubmit={async ({ checked }: { checked: string }) => {
+        const filter = filters.filter((val) => val.value === checked)[0]
+        if (!filter) return
+        setRankFilter(filter.value)
+        if (filter.value === 'Rank') {
+          if (!traitFilteredTokens.length) {
+            setTokens(
+              tokenRanking
+                .map((x) => x.index)
+                .slice(
+                  rarityFilter === 'Top 10'
+                    ? 0
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 - 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length - 10
+                    : 0,
+                  rarityFilter === 'Top 10'
+                    ? 10
+                    : rarityFilter === 'Middle 10'
+                    ? parseInt((tokenRanking.length / 2 + 5).toFixed(0))
+                    : rarityFilter === 'Bottom 10'
+                    ? tokenRanking.length
+                    : tokenRanking.length
+                )
+            )
+          } else {
+            setTokens(
+              traitFilteredTokens.slice(
+                rarityFilter === 'Top 10'
+                  ? 0
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 - 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length - 10
+                  : 0,
+                rarityFilter === 'Top 10'
+                  ? 10
+                  : rarityFilter === 'Middle 10'
+                  ? parseInt((traitFilteredTokens.length / 2 + 5).toFixed(0))
+                  : rarityFilter === 'Bottom 10'
+                  ? traitFilteredTokens.length
+                  : traitFilteredTokens.length
+              )
+            )
+          }
+        } else if (filter.value === 'ID') {
+          setTokens(
+            tokenRanking
+              .map((x) => x.index)
+              .sort((a, b) => {
+                return a - b
+              })
+          )
+        }
+      }}
+    >
+      {({ handleChange, submitForm }) => (
+        <Form>
+          <div className={clsx('rounded-[5px] max-h-[calc(100vh-17.5rem)] overflow-y-scroll no-scrollbar')}>
+            {filters.map(({ value }, optionIdx: number) => (
+              <div key={optionIdx} className='flex flex-col text-xs'>
+                <div className={`hover:bg-lightGray text-xs py-3`}>
+                  <div className='px-3 flex justify-between'>
+                    <label>{value}</label>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-xs'>
+                        <Field
+                          type='radio'
+                          name='checked'
+                          value={value}
+                          className='h-4 w-4 border rounded-[3px] border-mediumGrey bg-hue-light'
+                          onChange={(e: any) => {
+                            handleChange(e)
+                            submitForm()
+                          }}
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Form>
+      )}
+    </Formik>
+  )
+}
+
 const Index = () => {
   const { all: layers } = useQueryLayerElementFindAll()
   const { current: collection } = useQueryCollectionFindAll()
   const isLoading = !layers?.length || !collection
   return (
     <>
+      <div
+        className={clsx(
+          isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-[32rem]' : 'border border-mediumGrey',
+          'rounded-[5px] space-y-1'
+        )}
+      >
+        <div className={clsx(isLoading && 'invisible')}>
+          <FilterByRank />
+        </div>
+      </div>
       <div
         className={clsx(
           isLoading ? 'animate-pulse rounded-[5px] bg-mediumGrey bg-opacity-50 h-full' : 'border border-mediumGrey',
