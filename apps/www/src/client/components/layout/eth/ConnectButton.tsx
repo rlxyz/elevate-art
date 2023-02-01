@@ -58,7 +58,12 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                       <Menu.Items className='p-1'>
                         <div className='rounded-[5px] w-full p-2'>
                           <div className='flex flex-col'>
-                            <span className='text-xs text-darkGrey'>Balance</span>
+                            <div className='flex justify-between'>
+                              <span className='text-xs text-darkGrey'>Balance</span>
+                              <span className='text-xs border px-3 border-blueHighlight rounded-[5px] text-blueHighlight'>
+                                {chain?.name}
+                              </span>
+                            </div>
                             <span className='text-sm text-black font-bold'>{account.displayBalance}</span>
                           </div>
                         </div>
