@@ -1,6 +1,7 @@
 import { connectorsForWallets, getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import type { GetSiweMessageOptions } from '@rainbow-me/rainbowkit-siwe-next-auth'
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth'
+import { ALCHEMY_MAINNET_KEYS, DEFAULT_ALCHEMY_KEY } from '@utils/alchemy'
 import type { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import type { FC, ReactNode } from 'react'
@@ -9,14 +10,6 @@ import { configureChains, createClient, goerli, mainnet, WagmiConfig } from 'wag
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
-const DEFAULT_ALCHEMY_KEY = 'CMSJqNTL85ds3C2VslvAA3H16HSgoChH'
-const ALCHEMY_MAINNET_KEYS = [
-  'CMSJqNTL85ds3C2VslvAA3H16HSgoChH',
-  'wPBDyu09SaqHBOoJTMFLkRSzjBjIUnQQ',
-  'yG_F19_sVzOdyX44q2d6DukrLoQUTlXU',
-  'iO9STXzufmmz1JMfOikXkO6ZYdhWyQtx',
-  'llFyryxwhn-wXm2eILsQ2Awj1OehKE-I',
-]
 const randomKey = () => ALCHEMY_MAINNET_KEYS[Math.floor(Math.random() * ALCHEMY_MAINNET_KEYS.length)] || DEFAULT_ALCHEMY_KEY
 
 const { chains, provider, webSocketProvider } = configureChains(

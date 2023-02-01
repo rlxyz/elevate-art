@@ -17,6 +17,7 @@ export class ElevateContract extends ethers.Contract {
   readonly publicTime!: () => Promise<BigNumber>
   readonly claimTime!: () => Promise<BigNumber>
   readonly tokenHash!: (tokenId: number) => Promise<string>
+  readonly ownerOf!: (tokenId: number) => Promise<string>
 }
 
 export const parseChainId = (chainId: number): 'mainnet' | 'goerli' | 'unknown' => {

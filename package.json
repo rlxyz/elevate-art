@@ -16,8 +16,6 @@
     "url": "https://github.com/rlxyz/rlxyz-compiler-client/issues"
   },
   "homepage": "https://github.com/rlxyz/rlxyz-compiler-client#readme",
-  "dependencies": {
-    "@napi-rs/canvas": "^0.1.34"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
