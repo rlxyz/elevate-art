@@ -62,7 +62,7 @@ export default createFunction<InngestEvents['repository-deployment/bundle-images
       const all = fetchAndSaveAllTraitElementsToGCP({ layerElements, repositoryId, deploymentId })
 
       /** Move all images from Cloudinary to GCP Bucket */
-      Promise.allSettled(all)
+      await Promise.allSettled(all)
         .then(async () => {
           await repositoryDeploymentDeployedUpdate({ deploymentId })
           return { status: 200 }
