@@ -9,11 +9,14 @@ export const OrganisationDisplayDetails = ({ organisation }: { organisation: Org
       <LayoutContainer border='none'>
         <div className='space-y-6 flex justify-between items-start'>
           <OrganisationDescriptionWithDisclouser organisation={organisation} />
-          <CollectionSocialMediaLinks
-            discordUrl={'https://discord.gg/dreamlab'}
-            twitterUrl={'https://twitter.com/jacobriglin'}
-            instagramUrl={'https://instagram.com/jacob'}
-          />
+          <div className='flex space-x-3'>
+            <CollectionSocialMediaLinks
+              discordUrl={'https://discord.gg/dreamlab'}
+              twitterUrl={'https://twitter.com/jacobriglin'}
+              instagramUrl={'https://instagram.com/jacob'}
+            />
+            {/* {organisation && <OrganisationMenuNavigation organisation={organisation} />} */}
+          </div>
         </div>
       </LayoutContainer>
     </div>

@@ -8,6 +8,7 @@ import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import SearchInput from 'src/client/components/layout/search/Search'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum } from 'src/shared/enums'
+import { OrganisationMenuNavigation } from './OrganisationMenuNavigation'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisationFindAll()
@@ -54,9 +55,12 @@ export const PersonalOrganisationAccountTeam = () => {
                     </span>
                   </div>
                 </div>
-                <NextLinkComponent href={routeBuilder(organisation.name)} className='w-fit'>
-                  <span className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs w-fit'>View</span>
-                </NextLinkComponent>
+                <div className='flex flex-row-reverse'>
+                  <OrganisationMenuNavigation organisation={organisation} />
+                  <NextLinkComponent href={routeBuilder(organisation.name)} className='w-fit'>
+                    <span className='text-black border border-mediumGrey px-4 py-1.5 rounded-[5px] text-xs w-fit'>View</span>
+                  </NextLinkComponent>
+                </div>
               </div>
             ))}
           </div>
