@@ -1,13 +1,7 @@
-import { getTraitElementImage } from '@server/common/cld-get-image'
 import { getServerAuthSession } from '@server/common/get-server-auth-session'
+import { v2 } from '@server/utils/cld-storage'
 import type { NextApiRequest, NextApiResponse } from 'next'
-
-export const config = {
-  api: {
-    responseLimit: '20mb',
-    externalResolver: true,
-  },
-}
+import { env } from 'src/env/server.mjs'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res })
@@ -20,17 +14,14 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request')
   }
 
-  getTraitElementImage({ r, l, t })
-    .then(async (response) => {
-      const buffer = response.getValue()
-      if (!buffer) return
-      return res.setHeader('Content-Type', 'image/png').status(200).send(buffer)
-    })
-    .catch((err) => {
-      return res.status(500).send(err)
-    })
+  const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`, {
+    cloud_name: env.CLOUDINARY_CLOUD_NAME,
+    secure: true,
+    // transformation: IMAGE_QUALITY_SETTINGS,
+    // version: version,
+  })
 
-  return res.status(504)
+  return res.redirect(301, url)
 }
 
 export default index
