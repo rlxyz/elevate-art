@@ -4,7 +4,7 @@ import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/contractD
 import type { AssetDeploymentBranch } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
-import { MINT_RANDOMIZER_CONTRACT } from '@utils/ethers'
+import { getMintRandomizerContract } from '@utils/ethers'
 import type { BigNumber, Signer } from 'ethers'
 import { ContractFactory } from 'ethers'
 import { useState } from 'react'
@@ -46,7 +46,21 @@ export const useDeployContract = () => {
     const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
     const mintPrice = saleConfig.get('Public')?.mintPrice
     const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
-    const mintRandomizerContract = MINT_RANDOMIZER_CONTRACT
+
+    let mintRandomizerContract = null
+    try {
+      mintRandomizerContract = getMintRandomizerContract({
+        chainId: opts.contractInformationData.chainId,
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message)
+      }
+      console.log('Something wrong with mint randomizer contract instance', { chainId: opts.contractInformationData.chainId })
+      notifyError('Issue with the creation of the mint randomizer contract. Please submit a support ticket in Discord.')
+      return null
+    }
+
     const amountForPromotion = 0
 
     if (!claimTime || !presaleTime || !publicTime || !mintPrice || !maxMintPerAddress) {

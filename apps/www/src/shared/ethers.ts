@@ -71,4 +71,15 @@ export const formatEthereumHash = (hash: string) => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`
 }
 
-export const MINT_RANDOMIZER_CONTRACT = '0x41a1F0aEBfCD87E7a6B546F44d5D092d69102F75'
+/// contract versioning: v1.0.0
+export const getMintRandomizerContract = ({ chainId }: { chainId: number }) => {
+  if (chainId === 5) {
+    return '0x41a1F0aEBfCD87E7a6B546F44d5D092d69102F75'
+  }
+
+  if (chainId === 1) {
+    return '0x03e77F58EaAa3Aac4e62acD6425b348cfcc10002'
+  }
+
+  throw new Error('Unsupported chainId')
+}
