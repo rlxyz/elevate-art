@@ -1,7 +1,7 @@
+import { useMutateTraitElementUpdateWeight } from '@hooks/trpc/traitElement/useMutateTraitElementUpdateWeight'
 import Big from 'big.js'
-import { FC } from 'react'
+import type { FC } from 'react'
 import ModalComponent from 'src/client/components/layout/modal/Modal'
-import { useMutateTraitElementUpdateWeight } from '../../../../hooks/trpc/traitElement/useMutateTraitElementUpdateWeight'
 
 interface Props {
   onClose: () => void
@@ -37,7 +37,7 @@ const TraitElementUpdateWeightModal: FC<Props> = ({ visible, onClose, onSuccess,
             traitElements: traitElements.slice(1).map(({ id, weight, layerElementId }) => ({
               layerElementId,
               traitElementId: id,
-              weight: weight.toNumber(),
+              weight: new Big(weight).toNumber(),
             })),
           },
           {

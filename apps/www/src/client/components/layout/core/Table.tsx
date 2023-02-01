@@ -1,7 +1,8 @@
 import { Popover, Transition } from '@headlessui/react'
 import { InformationCircleIcon } from '@heroicons/react/outline'
 import clsx from 'clsx'
-import { Children, Fragment, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { Children, Fragment } from 'react'
 
 export const Table = ({ children }: { children: ReactNode | ReactNode[] }) => {
   return (
