@@ -132,11 +132,23 @@ export const useFetchClaimRequirements = ({
 
   const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
 
+  const getUserMintLeft = () => {
+    let userMintLeft = null
+    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist) {
+      userMintLeft = BigNumber.from(0)
+    } else {
+      userMintLeft = userMintLeftBasedOnCollectionSize()
+    }
+    return userMintLeft
+  }
+
+  const userMintLeft = getUserMintLeft()
+
   return {
     data: {
       userMintCount: fetchedContractUserData?.userMintCount || 0,
-      userMintLeft: userMintLeftBasedOnCollectionSize(),
-      allowToMint: root && proof && root === merkleRootData?.claimMerkleRoot && userMintLeftBasedOnCollectionSize().gt(0),
+      userMintLeft: userMintLeft,
+      allowToMint: root && proof && root === merkleRootData?.claimMerkleRoot && userMintLeft.gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,

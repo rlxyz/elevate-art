@@ -11,7 +11,6 @@ yarn setup
 ```
 
 ### Manual Installation
-
 1. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
 
 ```zsh

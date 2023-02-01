@@ -49,10 +49,28 @@ export const useFetchPublicRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
+  const {
+    current: currentContractDeploymentWhitelist,
+    isLoading: isLoadingContractDeploymentWhitelist,
+    isError: isErrorContractDeploymentWhitelist,
+  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+    type: ContractDeploymentAllowlistType.CLAIM,
+  })
+
+  const { data } = useFetchContractDataReadOnly({
+    version: '1.0.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
+
   const usersMintLeft = () => {
     const totalMintLeft = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0).sub(
       BigNumber.from(fetchedContractUserData?.userMintCount || 0)
     )
+
+    if (!data?.maxMintPerAddress) {
+      return BigNumber.from(0)
+    }
 
     /**
      * If the total mint left is less than or equal to 0, the user cannot mint anymore.
@@ -108,25 +126,23 @@ export const useFetchPublicRequirements = ({
     return BigNumber.from(0)
   }
 
-  const {
-    current: currentContractDeploymentWhitelist,
-    isLoading: isLoadingContractDeploymentWhitelist,
-    isError: isErrorContractDeploymentWhitelist,
-  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: ContractDeploymentAllowlistType.CLAIM,
-  })
+  const getUserMintLeft = () => {
+    let userMintLeft = null
+    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist) {
+      userMintLeft = BigNumber.from(0)
+    } else {
+      userMintLeft = userMintLeftBasedOnCollectionSize()
+    }
+    return userMintLeft
+  }
 
-  const { data } = useFetchContractDataReadOnly({
-    version: '0.1.0',
-    contractAddress: contractDeployment.address,
-    chainId: contractDeployment.chainId,
-  })
+  const userMintLeft = getUserMintLeft()
 
   return {
     data: {
       userMintCount: fetchedContractUserData?.userMintCount || 0,
-      userMintLeft: userMintLeftBasedOnCollectionSize(),
-      allowToMint: userMintLeftBasedOnCollectionSize().gt(0),
+      userMintLeft: userMintLeft,
+      allowToMint: userMintLeft.gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
