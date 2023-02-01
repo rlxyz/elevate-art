@@ -1,7 +1,8 @@
 import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import { ZoneNavigationEnum } from '@utils/enums'
-import Image from 'next/image'
+import { formatEthereumHash } from '@utils/ethers'
+import { useSession } from 'next-auth/react'
 import React from 'react'
 import { routeBuilder } from 'src/client/utils/format'
 import AvatarComponent from '../avatar/Avatar'
@@ -15,6 +16,7 @@ interface ConnectButtonProps {
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
+  const { data } = useSession()
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
@@ -31,38 +33,6 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
             })}
           >
             {(() => {
-              if (!connected) {
-                return (
-                  <button onClick={openConnectModal} type='button' className='w-full'>
-                    {children || (
-                      <Image
-                        src='/images/lightGray-wallet.svg'
-                        width={18}
-                        height={18}
-                        className='inline-block rounded-[5px]'
-                        alt='Wallet'
-                      />
-                    )}
-                  </button>
-                )
-              }
-
-              if (chain.unsupported) {
-                return (
-                  <button onClick={openChainModal} type='button' className='w-full'>
-                    {children || (
-                      <Image
-                        src='/images/lightGray-wallet.svg'
-                        width={18}
-                        height={18}
-                        className='inline-block rounded-[5px]'
-                        alt='Wallet'
-                      />
-                    )}
-                  </button>
-                )
-              }
-
               return (
                 <div className='relative w-9'>
                   <Menu profile position='bottom-left'>
@@ -74,21 +44,46 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                         </div>
                       </Menu.Item>
                     </Menu.Items>
-                    <Menu.Items className='p-1'>
-                      <div className='rounded-[5px] w-full p-2'>
-                        <div className='flex flex-col'>
-                          <span className='text-xs text-darkGrey'>Balance</span>
-                          <span className='text-sm text-black font-bold'>{account.displayBalance}</span>
+                    {data?.user?.address && (
+                      <Menu.Items className='p-1'>
+                        <div className='rounded-[5px] w-full p-2'>
+                          <div className='flex flex-col'>
+                            <span className='text-xs text-darkGrey'>Address</span>
+                            <span className='text-sm text-black font-bold'>{formatEthereumHash(data.user.address)}</span>
+                          </div>
                         </div>
-                      </div>
-                    </Menu.Items>
+                      </Menu.Items>
+                    )}
+                    {account?.address && (
+                      <Menu.Items className='p-1'>
+                        <div className='rounded-[5px] w-full p-2'>
+                          <div className='flex flex-col'>
+                            <span className='text-xs text-darkGrey'>Balance</span>
+                            <span className='text-sm text-black font-bold'>{account.displayBalance}</span>
+                          </div>
+                        </div>
+                      </Menu.Items>
+                    )}
                     <Menu.Items>
-                      <Menu.Item as='button' onClick={openAccountModal} type='button' className='w-full flex items-center'>
-                        <div className='w-full flex items-center space-x-3'>
-                          <ExternalLinkIcon className='w-4 h-4' />
-                          <span className='text-xs'>Disconnect</span>
-                        </div>
-                      </Menu.Item>
+                      {!connected ? (
+                        <>
+                          <Menu.Item as='button' onClick={openConnectModal} type='button' className='w-full flex items-center'>
+                            <div className='w-full flex items-center space-x-3'>
+                              <ExternalLinkIcon className='w-4 h-4' />
+                              <span className='text-xs'>Connect Now</span>
+                            </div>
+                          </Menu.Item>
+                        </>
+                      ) : (
+                        <>
+                          <Menu.Item as='button' onClick={openAccountModal} type='button' className='w-full flex items-center'>
+                            <div className='w-full flex items-center space-x-3'>
+                              <ExternalLinkIcon className='w-4 h-4' />
+                              <span className='text-xs'>Disconnect</span>
+                            </div>
+                          </Menu.Item>
+                        </>
+                      )}
                     </Menu.Items>
                   </Menu>
                 </div>
