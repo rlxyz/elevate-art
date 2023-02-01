@@ -3,11 +3,19 @@ on:
   schedule:
     - cron: "*/5 * * * *"
 jobs:
-  cron:
+  remove-bundle-images-staging:
     runs-on: ubuntu-latest
     steps:
       - name: Call our API route
         run: |
           curl --request POST \
-          --url 'https://staging.elevate.art/api/assets/cancel-deployments' \
+          --url 'https://staging.elevate.art/api/assets/deployments/force-fail-timedout-deployments' \
+          --header 'Authorization: Bearer ${{ secrets.GH_API_SECRET_KEY }}'
+  remove-bundle-images-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call our API route
+        run: |
+          curl --request POST \
+          --url 'https://elevate.art/api/assets/deployments/force-fail-timedout-deployments' \
           --header 'Authorization: Bearer ${{ secrets.GH_API_SECRET_KEY }}'
