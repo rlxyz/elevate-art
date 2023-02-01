@@ -19,11 +19,22 @@ const ALCHEMY_MAINNET_KEYS = [
 ]
 const randomKey = () => ALCHEMY_MAINNET_KEYS[Math.floor(Math.random() * ALCHEMY_MAINNET_KEYS.length)] || DEFAULT_ALCHEMY_KEY
 
-const { chains, provider } = configureChains([mainnet, goerli], [alchemyProvider({ apiKey: randomKey() }), publicProvider()])
+const { chains, provider, webSocketProvider } = configureChains(
+  [mainnet, goerli],
+  [alchemyProvider({ apiKey: randomKey() }), publicProvider()]
+)
 const { wallets } = getDefaultWallets({ appName: env.NEXT_PUBLIC_APP_NAME, chains })
 export const appInfo = { appName: env.NEXT_PUBLIC_APP_NAME }
 const connectors = connectorsForWallets([...wallets])
-const wagmiClient = createClient({ autoConnect: true, connectors, provider })
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider,
+})
+
+// const wagmiClient = createClient({ autoConnect: true, connectors, provider })
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({ statement: 'sign in to elevate.art' })
 
 export const EthereumAuthenticationLayout: FC<{ session: Session | null; children: ReactNode }> = ({ children, session }) => {
