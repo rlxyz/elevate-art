@@ -28,7 +28,7 @@ export const BUCKET_TOKEN_DEPLOYMENT_PREVIEW = `elevate-assets-deployment-tokens
  * This is the bucket that stores the layer images with their associated Traits.
  */
 export const getLayerDeploymentBucketName = () => {
-  if (env.NEXT_PUBLIC_NODE_ENV === 'production') return `${BUCKET_LAYER_DEPLOYMENT}-main`.toLowerCase()
+  if (env.NEXT_PUBLIC_NODE_ENV === 'production') return `${BUCKET_LAYER_DEPLOYMENT}-production`.toLowerCase()
   if (env.NEXT_PUBLIC_NODE_ENV === 'staging') return `${BUCKET_LAYER_DEPLOYMENT}-staging`.toLowerCase()
   return `${BUCKET_LAYER_DEPLOYMENT}-localhost`.toLowerCase()
 }
@@ -42,7 +42,7 @@ export const getLayerDeploymentBucket = () => {
  */
 export const getTokenDeploymentBucketName = ({ branch }: { branch: AssetDeploymentBranch }) => {
   const bucket = branch === AssetDeploymentBranch.PREVIEW ? BUCKET_TOKEN_DEPLOYMENT_PREVIEW : BUCKET_TOKEN_DEPLOYMENT_PRODUCTION
-  if (env.NEXT_PUBLIC_NODE_ENV === 'production') return `${bucket}-main`.toLowerCase()
+  if (env.NEXT_PUBLIC_NODE_ENV === 'production') return `${bucket}-production`.toLowerCase()
   if (env.NEXT_PUBLIC_NODE_ENV === 'staging') return `${bucket}-staging`.toLowerCase()
   return `${bucket}-localhost`.toLowerCase()
 }
