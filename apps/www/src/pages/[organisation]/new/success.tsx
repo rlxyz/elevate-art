@@ -1,4 +1,4 @@
-import { PreviewImageCardStandaloneNoNone } from '@components/collection/CollectionPreviewImage'
+import { PreviewImageCardStandaloneNoNone } from '@components/create/collection/CollectionPreviewImage'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import NextLinkComponent from '@components/layout/link/NextLink'
