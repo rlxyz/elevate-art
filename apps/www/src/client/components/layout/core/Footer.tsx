@@ -41,7 +41,7 @@ const socialRoutes = [
 const Footer = () => {
   return (
     <footer className='w-full flex items-center justify-between'>
-      <p className='text-center text-xs text-darkGrey'>&copy; 2022 Elevate Art. All rights reserved.</p>
+      <p className='text-center text-xs text-darkGrey'>&copy; 2023 Elevate Art. All rights reserved.</p>
       <div className='flex space-x-3'>
         {socialRoutes.map((item) => (
           <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>
