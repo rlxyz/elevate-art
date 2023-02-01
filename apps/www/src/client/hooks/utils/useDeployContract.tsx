@@ -1,13 +1,16 @@
 import type { SaleConfigMap } from '@components/deployments/contractDeployment/ContactCreationForm/useContractCreationStore'
 import useRepositoryStore from '@hooks/store/useRepositoryStore'
 import { useMutateRepositoryCreateDeploymentCreate } from '@hooks/trpc/contractDeployment/useMutateRepositoryContractDeploymentCreate'
-import type { AssetDeploymentBranch } from '@prisma/client'
+import type { AssetDeployment, AssetDeploymentBranch, Organisation, Repository } from '@prisma/client'
 import { AssetDeploymentType } from '@prisma/client'
 import type { ContractInformationData, PayoutData } from '@utils/contracts/ContractData'
+import { ZoneNavigationEnum } from '@utils/enums'
 import { getMintRandomizerContract } from '@utils/ethers'
 import type { BigNumber, Signer } from 'ethers'
 import { ContractFactory } from 'ethers'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { routeBuilder } from 'src/client/utils/format'
 import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
 import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.json'
 import { useSigner } from 'wagmi'
@@ -29,6 +32,7 @@ export const useDeployContract = () => {
   const { mutate } = useMutateRepositoryCreateDeploymentCreate()
   const deploymentId = useRepositoryStore((state) => state.deploymentId)
   const { changeNetwork } = useChangeNetwork()
+  const router = useRouter()
   const getContractDeploymentType = (type: AssetDeploymentType) => {
     if (type === AssetDeploymentType.BASIC) {
       return basicContract
@@ -113,7 +117,7 @@ export const useDeployContract = () => {
     return args
   }
 
-  const deploy = async (opts: ERC721ContractInput) => {
+  const deploy = async (opts: ERC721ContractInput, organisation: Organisation, repository: Repository, deployment: AssetDeployment) => {
     // get chainId
     const { chainId } = opts.contractInformationData
 
@@ -138,6 +142,7 @@ export const useDeployContract = () => {
     setAddress(tx.address)
     await tx.deployed()
     notifySuccess(`Contract deployed at ${tx.address}. We will now verify the contract.`)
+    router.push(routeBuilder(organisation.name, repository.name, ZoneNavigationEnum.enum.Deployments, deployment.name))
   }
 
   return { deploy, address }

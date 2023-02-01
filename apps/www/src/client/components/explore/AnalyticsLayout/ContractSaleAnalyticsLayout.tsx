@@ -1,8 +1,18 @@
 import { AnalyticsLayout } from '@components/explore/AnalyticsLayout/AnalyticsLayout'
 import LinkComponent from '@components/layout/link/Link'
-import type { SaleConfig } from '@utils/contracts/ContractData'
+import type { ContractInformationData, SaleConfig } from '@utils/contracts/ContractData'
+import { parseChainIdCurrency } from '@utils/ethers'
+import { formatUnits } from 'ethers/lib/utils.js'
 
-export const ContractSaleAnalyticsLayout = ({ title, saleConfig }: { title: string; saleConfig: SaleConfig | undefined | null }) => {
+export const ContractSaleAnalyticsLayout = ({
+  title,
+  saleConfig,
+  contractInformationData,
+}: {
+  title: string
+  saleConfig: SaleConfig | undefined | null
+  contractInformationData: ContractInformationData | undefined | null
+}) => {
   return (
     <AnalyticsLayout>
       <AnalyticsLayout.Header title={title} />
@@ -10,7 +20,14 @@ export const ContractSaleAnalyticsLayout = ({ title, saleConfig }: { title: stri
         <div className='flex flex-col space-y-3'>
           {[
             { key: 'Start Timestamp', value: saleConfig?.startTimestamp.toLocaleString(), type: 'Basic' },
-            { key: 'Mint Price', value: saleConfig?.mintPrice.toString(), type: 'Basic' },
+            {
+              key: 'Mint Price',
+              value:
+                saleConfig?.mintPrice && contractInformationData
+                  ? `${formatUnits(saleConfig?.mintPrice, 18)} ${parseChainIdCurrency(contractInformationData?.chainId)}`
+                  : '0',
+              type: 'Basic',
+            },
             { key: 'Max Mint Per Address', value: saleConfig?.maxMintPerAddress.toString(), type: 'Basic' },
           ].map(({ key, value, type }) => (
             <article key={key} className='flex justify-between w-full'>

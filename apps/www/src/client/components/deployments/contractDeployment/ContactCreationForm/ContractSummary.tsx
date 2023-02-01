@@ -18,6 +18,7 @@ export const ContractSummary = ({
   onClick,
   current,
   previous,
+  children,
   next,
 }: {
   onClick?: () => void
@@ -27,6 +28,7 @@ export const ContractSummary = ({
   payout?: PayoutData
   saleConfig?: SaleConfigMap
   contractInformationData?: ContractInformationData
+  children?: React.ReactNode
 }) => {
   const { handleClick } = useAnimationMotionValues()
   const contractInformation: ContractInformationData = contractInformationData || {
@@ -48,16 +50,28 @@ export const ContractSummary = ({
     <div className='w-full flex flex-col space-y-3'>
       <h1 className='text-xs font-semibold'>Finalise the Details</h1>
       <ContractInformationAnalyticsLayout contractInformationData={contractInformation} />
-      {saleConfig && current === 'mint-details' && (
+      {saleConfig && (current === 'mint-details' || current === 'contract-completion') && (
         <>
-          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.CLAIM)} title={SaleConfigEnum.enum.CLAIM} />
-          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PRESALE)} title={SaleConfigEnum.enum.PRESALE} />
-          <ContractSaleAnalyticsLayout saleConfig={saleConfig.get(SaleConfigEnum.enum.PUBLIC)} title={SaleConfigEnum.enum.PUBLIC} />
+          <ContractSaleAnalyticsLayout
+            contractInformationData={contractInformation}
+            saleConfig={saleConfig.get(SaleConfigEnum.enum.CLAIM)}
+            title={SaleConfigEnum.enum.CLAIM}
+          />
+          <ContractSaleAnalyticsLayout
+            contractInformationData={contractInformation}
+            saleConfig={saleConfig.get(SaleConfigEnum.enum.PRESALE)}
+            title={SaleConfigEnum.enum.PRESALE}
+          />
+          <ContractSaleAnalyticsLayout
+            contractInformationData={contractInformation}
+            saleConfig={saleConfig.get(SaleConfigEnum.enum.PUBLIC)}
+            title={SaleConfigEnum.enum.PUBLIC}
+          />
         </>
       )}
       {payout && <ContractPayoutAnalyticsLayout title={'Payout Details'} payoutData={payoutData} />}
 
-      <div className='grid grid-cols-8 gap-6'>
+      <div className='grid grid-cols-8 gap-6 w-full'>
         {previous && (
           <button
             className='col-span-1 border rounded-[5px] border-mediumGrey p-2 flex'
@@ -77,6 +91,7 @@ export const ContractSummary = ({
             Continue
           </button>
         )}
+        <div className='col-span-7'>{children && children}</div>
       </div>
     </div>
   )
