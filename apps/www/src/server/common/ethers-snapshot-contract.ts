@@ -6,6 +6,7 @@ import { Result } from '../utils/response-result'
 import { getContractTokenOwner } from './ethers-get-contract-token-owner'
 
 export type ContractSnapshot = {
+  name: string
   address: string
   contract: 'ERC721' | 'ERC1155'
   chainId: number
