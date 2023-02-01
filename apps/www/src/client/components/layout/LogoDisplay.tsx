@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 import { env } from 'src/env/client.mjs'
 
 export const createLogoUrl = ({ id }: { id: string }) => {
@@ -8,23 +7,24 @@ export const createLogoUrl = ({ id }: { id: string }) => {
 }
 
 export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?: string | null; isSquare?: boolean }) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
+  // const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
 
-  const fetchImage = async () => {
-    if (!repositoryId) return
-    const response = await fetch(createLogoUrl({ id: repositoryId }))
-    if (!response.ok) {
-      setImgSrc(null)
-      return
-    }
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-    setImgSrc(url)
-  }
+  // const fetchImage = async () => {
+  //   if (!repositoryId) return
+  //   const response = await fetch(createLogoUrl({ id: repositoryId }))
+  //   console.log('response', response)
+  //   if (!response.ok) {
+  //     setImgSrc(null)
+  //     return
+  //   }
+  //   const blob = await response.blob()
+  //   const url = URL.createObjectURL(blob)
+  //   setImgSrc(url)
+  // }
 
-  useEffect(() => {
-    fetchImage()
-  }, [repositoryId])
+  // useEffect(() => {
+  //   fetchImage()
+  // }, [repositoryId])
 
   return (
     <div
@@ -39,11 +39,11 @@ export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?:
           isSquare ? 'rounded-[5px]' : 'rounded-full'
         )}
       >
-        {repositoryId && imgSrc && (
+        {repositoryId && (
           <Image
             width={400}
             height={400}
-            src={imgSrc}
+            src={createLogoUrl({ id: repositoryId })}
             alt='logo-image'
             className={clsx('object-cover aspect-auto overflow-hidden', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           />
