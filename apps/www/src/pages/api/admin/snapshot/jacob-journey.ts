@@ -117,11 +117,11 @@ const JACOB_RIGLIN_JOURNEY_SNAPSHOT: ContractSnapshot[] = [
   {
     // NiftyGateway
     name: 'NiftyGateway OE',
-    address: '0xf3ae37c78aa1c2c193193107599d675608be75d7',
+    address: '0xa7e63b303d57da09597f7945b243d47edc562d99',
     contract: 'ERC721',
     chainId: 1,
     type: 'BY_CONTRACT_CALL',
-    tokenIds: Array.from({ length: 68 }, (_, i) => i + 30300010001),
+    tokenIds: Array.from({ length: 68 }, (_, i) => String(i + 30300010001)),
   },
 ]
 
@@ -136,7 +136,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
           body: {
             address: result.getValue(),
             analytics: {
-              totalAddress: result.getValue().filter((v, i, a) => a.indexOf(v) === i).length,
+              totalUniqueAddress: result.getValue().filter((v, i, a) => a.indexOf(v) === i).length,
               totalValidAddress: result.getValue().filter((v, i, a) => a.indexOf(v) === i && isAddress(v)).length,
               totalTokens: x.tokenIds.length,
             },
