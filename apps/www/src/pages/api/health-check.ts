@@ -21,6 +21,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     bucketTokenPreview: getTokenDeploymentBucketName({ branch: AssetDeploymentBranch.PREVIEW }),
     bucketTokenProduction: getTokenDeploymentBucketName({ branch: AssetDeploymentBranch.PRODUCTION }),
     networkId: parseChainId(env.NEXT_PUBLIC_NETWORK_ID),
+    commitHash: process.env.VERCEL_GIT_COMMIT_SHA,
   })
 }
 
