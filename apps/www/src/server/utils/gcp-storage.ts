@@ -18,6 +18,10 @@ export const storage = new Storage({
     client_email: env.GCP_CLIENT_EMAIL,
     private_key: env.GCP_PRIVATE_KEY,
   },
+  retryOptions: {
+    autoRetry: true,
+    maxRetries: 3,
+  },
 })
 
 export const BUCKET_LAYER_DEPLOYMENT = 'elevate-assets-deployment-layers-private' // all layers images are in private bucket. benefits: only owners can see layers.

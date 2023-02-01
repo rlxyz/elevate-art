@@ -46,18 +46,29 @@ export const fetchAndSaveTraitElementToGCP = async ({
     return Result.fail('Could not get image from Cloudinary')
   }
 
-  console.log('saving', { r, l, t })
-
   /* Get Buffer */
   const buffer = response.getValue()
   if (!buffer) {
     return Result.fail('Could not get image buffer from Cloudinary image')
   }
 
-  /* Save Image */
-  const _ = await getLayerDeploymentBucket()
-    .file(`${r}/deployments/${deploymentId}/layers/${l}/${t}.png`)
-    .save(Buffer.from(buffer), { contentType: 'image/png' })
+  try {
+    console.log('fetched image', { r, l, t })
+
+    /* Save Image */
+    const _ = await getLayerDeploymentBucket()
+      .file(`${r}/deployments/${deploymentId}/layers/${l}/${t}.png`)
+      .save(Buffer.from(buffer), { contentType: 'image/png' })
+
+    console.log('saved image', { r, l, t })
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    }
+
+    console.log('failed to save image', { r, l, t })
+    return Result.fail('Could not save image to GCP Storage')
+  }
 
   /* Return Success */
   return Result.ok(true)
