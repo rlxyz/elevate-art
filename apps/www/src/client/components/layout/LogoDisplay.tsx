@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { env } from 'src/env/client.mjs'
 
 export const createLogoUrl = ({ id }: { id: string }) => {
@@ -7,24 +8,25 @@ export const createLogoUrl = ({ id }: { id: string }) => {
 }
 
 export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?: string | null; isSquare?: boolean }) => {
-  // const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
+  const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
 
-  // const fetchImage = async () => {
-  //   if (!repositoryId) return
-  //   const response = await fetch(createLogoUrl({ id: repositoryId }))
-  //   console.log('response', response)
-  //   if (!response.ok) {
-  //     setImgSrc(null)
-  //     return
-  //   }
-  //   const blob = await response.blob()
-  //   const url = URL.createObjectURL(blob)
-  //   setImgSrc(url)
-  // }
+  const fetchImage = async () => {
+    if (!repositoryId) return
+    const response = await fetch(createLogoUrl({ id: repositoryId }))
 
-  // useEffect(() => {
-  //   fetchImage()
-  // }, [repositoryId])
+    if (!response.ok) {
+      setImgSrc(null)
+      return
+    }
+
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    setImgSrc(url)
+  }
+
+  useEffect(() => {
+    fetchImage()
+  }, [repositoryId])
 
   return (
     <div
@@ -39,7 +41,7 @@ export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?:
           isSquare ? 'rounded-[5px]' : 'rounded-full'
         )}
       >
-        {repositoryId && (
+        {repositoryId && imgSrc && (
           <Image
             width={400}
             height={400}
