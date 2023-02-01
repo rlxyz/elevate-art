@@ -1,5 +1,6 @@
-import { Organisation, Repository } from '@prisma/client'
-import { FC, useState } from 'react'
+import type { Organisation, Repository } from '@prisma/client'
+import type { FC } from 'react'
+import { useState } from 'react'
 import { TraitElementCreateModal } from './index'
 
 export const TraitElementActionControl: FC<{ repository: Repository | undefined; organisation: Organisation | undefined }> = ({

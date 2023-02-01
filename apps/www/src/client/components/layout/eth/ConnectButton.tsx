@@ -1,6 +1,13 @@
+import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
+import { ZoneNavigationEnum } from '@utils/enums'
+import { formatEthereumHash } from '@utils/ethers'
+import { useSession } from 'next-auth/react'
 import React from 'react'
+import { routeBuilder } from 'src/client/utils/format'
 import AvatarComponent from '../avatar/Avatar'
+import NextLinkComponent from '../link/NextLink'
+import Menu from '../menu'
 
 interface ConnectButtonProps {
   normalButton?: boolean
@@ -9,6 +16,7 @@ interface ConnectButtonProps {
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
+  const { data } = useSession()
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
@@ -21,46 +29,69 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
           <div
             {...(!ready && {
               'aria-hidden': true,
-              style: {
-                opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
-              },
+              className: 'opacity-0 pointer-events-none user-select-none',
             })}
           >
             {(() => {
-              if (!connected) {
-                return (
-                  <button onClick={openConnectModal} type='button' className='w-full'>
-                    {children || (
-                      <img
-                        src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
-                        alt='Wallet'
-                      />
-                    )}
-                  </button>
-                )
-              }
-
-              if (chain.unsupported) {
-                return (
-                  <button onClick={openChainModal} type='button' className='w-full'>
-                    {children || (
-                      <img
-                        src='/images/lightGray-wallet.svg'
-                        className='w-8 h-8 p-2 inline-block border rounded-[5px] border-mediumGrey'
-                        alt='Wallet'
-                      />
-                    )}
-                  </button>
-                )
-              }
-
               return (
-                <button onClick={openAccountModal} type='button' className='w-full flex items-center justify-center'>
-                  {children || <AvatarComponent className='text-darkGrey' src='/images/avatar-blank.png' />}
-                </button>
+                <div className='relative w-9'>
+                  <Menu profile position='bottom-left'>
+                    <Menu.Items className='p-0'>
+                      <Menu.Item as={NextLinkComponent} href={routeBuilder(ZoneNavigationEnum.enum.Dashboard)} type='button'>
+                        <div className='w-full flex items-center space-x-2 p-1'>
+                          <AvatarComponent variant='sm' src='/images/avatar-blank.png' />
+                          <span className='text-xs font-semibold'>Dashboard</span>
+                        </div>
+                      </Menu.Item>
+                    </Menu.Items>
+                    {data?.user?.address && (
+                      <Menu.Items className='p-1'>
+                        <div className='rounded-[5px] w-full p-2'>
+                          <div className='flex flex-col'>
+                            <span className='text-xs text-darkGrey'>Address</span>
+                            <span className='text-sm text-black font-bold'>{formatEthereumHash(data.user.address)}</span>
+                          </div>
+                        </div>
+                      </Menu.Items>
+                    )}
+                    {account?.address && (
+                      <Menu.Items className='p-1'>
+                        <div className='rounded-[5px] w-full p-2'>
+                          <div className='flex flex-col'>
+                            <div className='flex justify-between'>
+                              <span className='text-xs text-darkGrey'>Balance</span>
+                              <span className='text-xs border px-3 border-blueHighlight rounded-[5px] text-blueHighlight'>
+                                {chain?.name}
+                              </span>
+                            </div>
+                            <span className='text-sm text-black font-bold'>{account.displayBalance}</span>
+                          </div>
+                        </div>
+                      </Menu.Items>
+                    )}
+                    <Menu.Items>
+                      {!connected ? (
+                        <>
+                          <Menu.Item as='button' onClick={openConnectModal} type='button' className='w-full flex items-center'>
+                            <div className='w-full flex items-center space-x-3'>
+                              <ExternalLinkIcon className='w-4 h-4' />
+                              <span className='text-xs'>Connect Now</span>
+                            </div>
+                          </Menu.Item>
+                        </>
+                      ) : (
+                        <>
+                          <Menu.Item as='button' onClick={openAccountModal} type='button' className='w-full flex items-center'>
+                            <div className='w-full flex items-center space-x-3'>
+                              <ExternalLinkIcon className='w-4 h-4' />
+                              <span className='text-xs'>Disconnect</span>
+                            </div>
+                          </Menu.Item>
+                        </>
+                      )}
+                    </Menu.Items>
+                  </Menu>
+                </div>
               )
             })()}
           </div>

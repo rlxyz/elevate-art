@@ -1,11 +1,11 @@
-import { UploadState } from '@components/layout/upload/upload'
-import { TraitElementUploadState } from '@components/layout/upload/upload-display'
-import { Organisation, Repository } from '@prisma/client'
+import type { UploadState } from '@components/layout/upload/upload'
+import type { TraitElementUploadState } from '@components/layout/upload/upload-display'
+import type { Organisation, Repository } from '@prisma/client'
 import { OrganisationNavigationEnum } from '@utils/enums'
 import produce from 'immer'
 import { useRouter } from 'next/router'
-import { Dispatch, SetStateAction } from 'react'
-import { FileWithPath } from 'react-dropzone'
+import type { Dispatch, SetStateAction } from 'react'
+import type { FileWithPath } from 'react-dropzone'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { env } from 'src/env/client.mjs'
@@ -30,7 +30,6 @@ export const useMutateRepositoryCreate = ({ setRepository }: { setRepository: Di
     setUploadState: (state: UploadState) => void
   }) => {
     try {
-      console.log('files', organisation, repository)
       const layers = getRepositoryUploadLayerObjectUrls(files)
       setUploadedFiles(layers)
       notifySuccess('Upload format is correct. We are creating the project for you.')

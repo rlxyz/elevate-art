@@ -1,20 +1,24 @@
 import CardComponent from '@components/layout/card/Card'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { TriangleIcon } from '@components/layout/icons/TriangleIcon'
 import NextLinkComponent from '@components/layout/link/NextLink'
 import Upload from '@components/layout/upload'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { ArrowLeftIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
+import { ArrowLeftIcon, CheckCircleIcon, CubeIcon, ExclamationCircleIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
 import { useMutateRepositoryCreate } from '@hooks/trpc/repository/useMutateRepositoryCreate'
-import { Organisation, Repository } from '@prisma/client'
+import type { Organisation, Repository } from '@prisma/client'
 import clsx from 'clsx'
 import type { NextPage } from 'next'
-import { ReactNode, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
-import { OrganisationNavigationEnum } from 'src/shared/enums'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { OrganisationNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 import { z } from 'zod'
 
 // create native zod enums steps
@@ -87,16 +91,38 @@ const Page: NextPage = () => {
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
-        <Layout.Header
-          border='none'
-          internalRoutes={[
-            {
-              current: organisation?.name || '',
-              href: `/${organisation?.name}`,
-              organisations,
-            },
-          ]}
-        />
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
         <Layout.Body border='none'>
           <div className='py-20'>
             {organisation && <GoBackButton organisation={organisation} />}

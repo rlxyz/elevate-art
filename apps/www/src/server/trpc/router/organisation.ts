@@ -1,7 +1,8 @@
+import { AssetDeploymentBranch } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { OrganisationDatabaseRoleEnum } from 'src/shared/enums'
 import { z } from 'zod'
-import { protectedProcedure, router } from '../trpc'
+import { protectedProcedure, publicProcedure, router } from '../trpc'
 
 export const organisationRouter = router({
   findAll: protectedProcedure.query(async ({ ctx }) => {
@@ -141,6 +142,62 @@ export const organisationRouter = router({
           _count: { select: { repositories: true } },
           members: { include: { user: true } },
           pendings: { include: { organisation: true } },
+        },
+      })
+    }),
+  findByName: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { name } = input
+
+      return await ctx.prisma.organisation.findFirst({
+        where: {
+          name,
+        },
+      })
+    }),
+  findAllRepositoryInProduction: publicProcedure
+    .input(
+      z.object({
+        organisationName: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { organisationName } = input
+
+      return await ctx.prisma.repository.findMany({
+        where: {
+          organisation: { name: organisationName },
+          assetDeployments: { some: { branch: AssetDeploymentBranch.PRODUCTION } },
+        },
+      })
+    }),
+  updateDescription: protectedProcedure
+    .input(
+      z.object({
+        organisationId: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { organisationId, description } = input
+
+      const organisation = await ctx.prisma.organisation.findFirst({
+        where: { id: organisationId },
+      })
+
+      if (!organisation) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return await ctx.prisma.organisation.update({
+        where: { id: organisationId },
+        data: {
+          description,
         },
       })
     }),

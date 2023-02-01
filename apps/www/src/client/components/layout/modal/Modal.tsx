@@ -5,7 +5,7 @@ import Loading from '../loading/Loading'
 
 interface Props {
   title: string
-  description?: string
+  description?: string | React.ReactNode
   data?: { label: string; value: string }[]
   isLoading: boolean
   onClose?: () => void
@@ -89,7 +89,7 @@ const ModalComponent: React.FC<React.PropsWithChildren<ModalProps>> = ({
                 >
                   {title}
                 </Dialog.Title>
-                <Dialog.Description>
+                <Dialog.Description as='div'>
                   <form onSubmit={onSubmit}>
                     <div className='bg-lightGray space-y-3 p-8 border-b border-mediumGrey'>
                       <span className='text-sm'>{description}</span>

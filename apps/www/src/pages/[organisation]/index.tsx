@@ -1,54 +1,32 @@
-import withOrganisationStore from '@components/withOrganisationStore'
-import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
+import AppRoutesNavbar from '@components/layout/header/AppRoutesNavbarProps'
+import { OrganisationDisplayLayout } from '@components/organisation/organisation-display-layout/OrganisationDisplayLayout'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
+import { useQueryOrganisationFindAllRepositoryProduction } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepositoryProduction'
+import { useQueryOrganisationFindByName } from '@hooks/trpc/organisation/useQueryOrganisationFindByName'
 import type { NextPage } from 'next'
-import { HeaderInternalPageRoutes } from 'src/client/components/layout/core/Header'
+import { useRouter } from 'next/router'
 import { Layout } from 'src/client/components/layout/core/Layout'
-import ViewAllRepositories from 'src/client/components/organisation/OrganisationViewAllRepository'
-import useOrganisationNavigationStore from 'src/client/hooks/store/useOrganisationNavigationStore'
-import { OrganisationNavigationEnum } from 'src/shared/enums'
-import { OrganisationAuthLayout } from '../../client/components/organisation/OrganisationAuthLayout'
+import { routeBuilder } from 'src/client/utils/format'
 
 const Page: NextPage = () => {
-  const currentRoute = useOrganisationNavigationStore((state) => state.currentRoute)
-  const { all: organisations, current: organisation, isLoading: isLoadingOrganisations } = useQueryOrganisationFindAll()
-
+  const router = useRouter()
+  const { organisation: o } = router.query as { organisation: string }
+  const { current: organisation } = useQueryOrganisationFindByName({ organisationName: o })
+  const { all: repositories } = useQueryOrganisationFindAllRepositoryProduction({ organisationName: o })
   return (
-    <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.Overview}>
-      <Layout>
-        <Layout.Header
-          internalRoutes={[
-            {
-              current: organisation?.name || '',
-              href: `/${organisation?.name}`,
-              organisations,
-            },
-          ]}
-        >
-          <HeaderInternalPageRoutes
-            links={[
-              {
-                name: OrganisationNavigationEnum.enum.Overview,
-                href: `/${organisation?.name}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Overview,
-                loading: isLoadingOrganisations,
-              },
-              {
-                name: OrganisationNavigationEnum.enum.Settings,
-                href: `/${organisation?.name}/${OrganisationNavigationEnum.enum.Settings}`,
-                enabled: currentRoute === OrganisationNavigationEnum.enum.Settings,
-                loading: isLoadingOrganisations,
-              },
-            ]}
-          />
-        </Layout.Header>
-        <Layout.Body>
-          <div className='py-8 space-y-8'>
-            <ViewAllRepositories />
-          </div>
-        </Layout.Body>
-      </Layout>
-    </OrganisationAuthLayout>
+    <Layout>
+      <Layout.AppHeader border='lower'>
+        <AppRoutesNavbar>
+          <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)} loading={!organisation?.name}>
+            <OrganisationRoutesNavbarPopover />
+          </AppRoutesNavbar.Item>
+        </AppRoutesNavbar>
+      </Layout.AppHeader>
+      <Layout.Body border='none' margin={false}>
+        <OrganisationDisplayLayout organisation={organisation} repositories={repositories} />
+      </Layout.Body>
+    </Layout>
   )
 }
 
-export default withOrganisationStore(Page)
+export default Page

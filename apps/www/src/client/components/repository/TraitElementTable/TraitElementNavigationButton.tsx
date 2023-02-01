@@ -1,6 +1,7 @@
 import clsx from 'clsx'
-import { FC } from 'react'
-import { TraitElementView, TraitElementViewType } from './index'
+import type { FC } from 'react'
+import type { TraitElementViewType } from './index'
+import { TraitElementView } from './index'
 
 export const TraitElementNavigationButton: FC<{
   viewFilter: TraitElementViewType

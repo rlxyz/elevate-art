@@ -16,6 +16,66 @@ export const OrganisationDatabaseEnum = z.nativeEnum(
 )
 export type OrganisationDatabaseType = z.infer<typeof OrganisationDatabaseEnum>
 
+////////////////////////////////////////////////////////////////////////////////////
+
+export const ZoneNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard', // @todo tbr
+    Create: 'create',
+    Explore: 'explore',
+    Deployments: 'deployments',
+  })
+)
+export type ZoneNavigationType = z.infer<typeof ZoneNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const DashboardNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Dashboard: 'dashboard',
+    Account: 'account',
+  })
+)
+
+export type DashboardNavigationType = z.infer<typeof DashboardNavigationEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const OrganisationNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    You: 'you', // only for personal accounts //! @todo doesn't exist anymore. remove
+    Dashboard: 'dashboard', // only for personal accounts //! @todo doesn't exist anymore. remove.
+    Account: 'account', // only for personal accounts // !@todo doesn't exist anymore. remove.
+    Activity: 'activity', //! @todo doesn't exist anymore. remove.
+    Overview: 'overview', // only for team accounts
+    Settings: 'settings', // only for team accounts
+    New: 'new',
+  })
+)
+
+export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
+
+/////////////////////
+
+export const DeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+    Settings: 'settings',
+  })
+)
+
+/////////////////////
+
+export const MintNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Mint: 'mint',
+    Preview: 'preview',
+    Gallery: 'gallery',
+  })
+)
+
+export type MintNavigationType = z.infer<typeof MintNavigationEnum>
+
 export const CollectionDatabaseEnum = z.nativeEnum(
   Object.freeze({
     Default: 'default',
@@ -23,19 +83,6 @@ export const CollectionDatabaseEnum = z.nativeEnum(
   })
 )
 export type CollectionDatabaseType = z.infer<typeof CollectionDatabaseEnum>
-
-export const OrganisationNavigationEnum = z.nativeEnum(
-  Object.freeze({
-    You: 'you', // only for personal accounts
-    Dashboard: 'dashboard', // only for personal accounts
-    Account: 'account', // only for personal accounts
-    Overview: 'overview', // only for team accounts
-    Settings: 'settings', // only for team accounts
-    New: 'new',
-    Activity: 'activity',
-  })
-)
-export type OrganisationNavigationType = z.infer<typeof OrganisationNavigationEnum>
 
 export const OrganisationSettingsNavigationEnum = z.nativeEnum(
   Object.freeze({
@@ -52,6 +99,24 @@ export const RepositoryNavigationEnum = z.nativeEnum(
 )
 export type RepositoryNavigationType = z.infer<typeof RepositoryNavigationEnum>
 
+export const RepositorySettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    General: 'general',
+    Metadata: 'metadata',
+    Image: 'image',
+  })
+)
+export type RepositorySettingsNavigationType = z.infer<typeof RepositorySettingsNavigationEnum>
+
+export const ContractSettingsNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    MintTime: 'mintTime',
+    Allowlist: 'allowlist',
+    Claimlist: 'claimlist',
+  })
+)
+export type ContractSettingsNavigationType = z.infer<typeof ContractSettingsNavigationEnum>
+
 export const CollectionNavigationEnum = z.nativeEnum(
   Object.freeze({
     Preview: 'preview',
@@ -60,7 +125,24 @@ export const CollectionNavigationEnum = z.nativeEnum(
     Settings: 'settings',
   })
 )
-export type CollectionNavigationType = z.infer<typeof CollectionNavigationEnum>
+
+export const AssetDeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Overview: 'overview',
+    Contract: 'contract',
+    Settings: 'settings',
+  })
+)
+
+export type AssetDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
+
+export const ContractDeploymentNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    New: 'new',
+  })
+)
+
+export type ContractDeploymentNavigationType = z.infer<typeof CollectionNavigationEnum>
 
 export const RepositorySectionEnum = z.nativeEnum(
   Object.freeze({
@@ -76,3 +158,14 @@ export const RulesEnum = z.nativeEnum(
   })
 )
 export type RulesType = z.infer<typeof RulesEnum>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const ExploreNavigationEnum = z.nativeEnum(
+  Object.freeze({
+    Mint: 'mint', // only for personal accounts
+    Gallery: 'gallery', // only for personal accounts
+  })
+)
+
+export type ExploreNavigationType = z.infer<typeof ExploreNavigationEnum>

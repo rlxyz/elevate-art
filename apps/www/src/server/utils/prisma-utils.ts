@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import type { Prisma, PrismaClient } from '@prisma/client'
 
 const BATCH_CHUNK_SIZE = 100
 

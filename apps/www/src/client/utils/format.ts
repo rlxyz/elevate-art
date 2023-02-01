@@ -23,3 +23,13 @@ export const formatBytes = (a: number, b = 2) => {
 export const truncate = (word: string, variant?: 'sm' | 'lg') => {
   return variant ? (variant === 'sm' ? word.replace(/(.{6})..+/, '$1...') : word.replace(/(.{18})..+/, '$1...')) : word
 }
+
+export const routeBuilder = (...routes: (string | boolean | undefined | null)[]) => {
+  return (
+    `/` +
+    routes
+      .filter((s): s is string => Boolean(s))
+      .map((x) => encodeURIComponent(x.replace('/', '')))
+      .join('/')
+  )
+}

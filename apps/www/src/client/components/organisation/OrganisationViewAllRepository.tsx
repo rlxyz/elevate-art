@@ -2,13 +2,16 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import { ChevronRightIcon, CubeIcon, DocumentDuplicateIcon, UserIcon } from '@heroicons/react/outline'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryOrganisationFindAllRepository } from '@hooks/trpc/organisation/useQueryOrganisationFindAllRepository'
+import { OrganisationNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import clsx from 'clsx'
-import { NextRouter, useRouter } from 'next/router'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import { Link } from 'src/client/components/layout/Link'
 import SearchInput from 'src/client/components/layout/search/Search'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
+import { routeBuilder } from 'src/client/utils/format'
 import { timeAgo } from 'src/client/utils/time'
 
 const NoRepositoryExistPlaceholder = () => {
@@ -25,7 +28,7 @@ const NoRepositoryExistPlaceholder = () => {
           </span>
         </div>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link external className='px-6 space-x-1' href={`${current?.name}/new`}>
+          <Link external className='px-6 space-x-1' href={routeBuilder(current?.name, OrganisationNavigationEnum.enum.New)}>
             <div className='border flex items-center justify-center border-mediumGrey rounded-[5px] p-3 bg-black'>
               <span className='text-sm text-white'>Create a Project</span>
               <ChevronRightIcon className='text-white h-4 w-4' />
@@ -62,17 +65,17 @@ const ViewAllRepositories = () => {
 
   return (
     <>
-      <div className='grid grid-cols-10 space-x-3 items-center'>
-        <div className='col-span-9 h-full w-full'>
+      <div className='grid grid-cols-7 space-x-3 items-center'>
+        <div className='col-span-6 h-full w-full'>
           <SearchInput isLoading={isLoading} onChange={(e) => setQuery(e.target.value)} />
         </div>
         <div className='col-span-1 h-full flex items-center'>
           <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
             <button
-              className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black font-semibold')}
+              className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black')}
               onClick={(e: any) => {
                 e.preventDefault()
-                router.push(`${organisationName}/new`)
+                router.push(routeBuilder(organisationName, 'new'))
               }}
             >
               Add New
@@ -149,10 +152,10 @@ const ViewAllRepositories = () => {
         {filteredRepositories?.map((repository, index) => {
           return (
             <div className='col-span-1 w-full' key={index} onClick={() => setRepositoryId(repository.id)}>
-              <NextLinkComponent href={`/${organisationName}/${encodeURIComponent(repository.name)}`}>
+              <NextLinkComponent href={routeBuilder(organisationName, repository.name, ZoneNavigationEnum.enum.Create)}>
                 <div className='border border-mediumGrey w-full rounded-[5px] px-6 py-5 space-y-4'>
                   <div className='flex items-center space-x-3'>
-                    <AvatarComponent src='images/avatar-blank.png' />
+                    <AvatarComponent src='/images/avatar-blank.png' />
                     <div className='flex flex-col'>
                       <span className='text-sm font-semibold'>{repository.name}</span>
                       <span className='text-xs text-darkGrey'>Last Edited {timeAgo(repository.updatedAt)}</span>
@@ -195,10 +198,7 @@ const ViewAllRepositories = () => {
                               </div>
                               <div className='flex min-w-0 flex-1 justify-between items-center space-x-4'>
                                 <p className='text-xs text-black'>{event.content}</p>
-                                <div className='whitespace-nowrap text-right text-xs text-black'>
-                                  {/* <time dateTime={event.datetime}>{event.date}</time> */}
-                                  {event.target}
-                                </div>
+                                <div className='whitespace-nowrap text-right text-xs text-black'>{event.target}</div>
                               </div>
                             </div>
                           </div>
@@ -206,16 +206,6 @@ const ViewAllRepositories = () => {
                       ))}
                     </ul>
                   </div>
-                  {/* <div className='ml-4 space-y-2'>
-                    <div className='text-sm'>{repository._count.collections} collections</div>
-                    <div className='text-sm'>{repository._count.layers} layers</div>
-                    <div className='text-sm'>
-                      {repository.layers.reduce((a, b) => {
-                        return a + b._count.traitElements
-                      }, 0)}{' '}
-                      traits
-                    </div>
-                  </div> */}
                 </div>
               </NextLinkComponent>
             </div>

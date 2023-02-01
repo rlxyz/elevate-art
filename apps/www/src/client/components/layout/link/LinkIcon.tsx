@@ -4,8 +4,8 @@ export const LinkIconComponent: React.FC<unknown> = () => {
   return (
     <svg
       viewBox='0 0 24 24'
-      width='0.9375em'
-      height='0.9375em'
+      width='0.7em'
+      height='0.7em'
       stroke='currentColor'
       strokeWidth='1.5'
       strokeLinecap='round'

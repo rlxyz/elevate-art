@@ -1,17 +1,22 @@
+import { LayerElementReorder } from '@components/create/repository/LayerElementFileTree/LayerElementReorder'
 import { Layout } from '@components/layout/core/Layout'
+import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
+import { TriangleIcon } from '@components/layout/icons/RectangleGroup'
 import LoadingComponent from '@components/layout/loading/Loading'
 import { OrganisationAuthLayout } from '@components/organisation/OrganisationAuthLayout'
-import { LayerElementReorder } from '@components/repository/LayerElementFileTree/LayerElementReorder'
+import { OrganisationRoutesNavbarPopover } from '@components/organisation/OrganisationRoutesNavbar'
 import withOrganisationStore from '@components/withOrganisationStore'
-import { ArrowCircleRightIcon } from '@heroicons/react/outline'
+import { ArrowCircleRightIcon, CubeIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { useMutateLayerElementUpdateOrder } from '@hooks/trpc/layerElement/useMutateLayerElementUpdateOrder'
-import { LayerElement, useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import type { LayerElement } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
+import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLayerElementFindAll'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
-import { OrganisationNavigationEnum } from '@utils/enums'
-import { NextPage } from 'next'
+import { OrganisationNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
+import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { FormHeader, FormLayout, FormStepEnum, FormSteps } from '.'
 
 const Page: NextPage = () => {
@@ -37,16 +42,38 @@ const Page: NextPage = () => {
   return (
     <OrganisationAuthLayout route={OrganisationNavigationEnum.enum.New}>
       <Layout hasFooter={false}>
-        <Layout.Header
-          border='none'
-          internalRoutes={[
-            {
-              current: organisation?.name || '',
-              href: `/${organisation?.name}`,
-              organisations,
-            },
-          ]}
-        />
+        <Layout.AppHeader>
+          <AppRoutesNavbar>
+            <AppRoutesNavbar.Item label={capitalize(ZoneNavigationEnum.enum.Create)} href={`/${ZoneNavigationEnum.enum.Create}`}>
+              <ZoneRoutesNavbarPopover
+                title='Apps'
+                routes={[
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Dashboard),
+                    href: `/${ZoneNavigationEnum.enum.Dashboard}`,
+                    selected: false,
+                    icon: (props: any) => <CubeIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Create),
+                    href: `/${ZoneNavigationEnum.enum.Create}`,
+                    selected: true,
+                    icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
+                  },
+                  {
+                    label: capitalize(ZoneNavigationEnum.enum.Explore),
+                    href: `/${ZoneNavigationEnum.enum.Explore}`,
+                    selected: false,
+                    icon: (props: any) => <GlobeAltIcon className='w-4 h-4' />,
+                  },
+                ]}
+              />
+            </AppRoutesNavbar.Item>
+            <AppRoutesNavbar.Item label={organisation?.name || ''} href={routeBuilder(organisation?.name)}>
+              <OrganisationRoutesNavbarPopover />
+            </AppRoutesNavbar.Item>
+          </AppRoutesNavbar>
+        </Layout.AppHeader>
         <Layout.Body border='none'>
           <div className='py-20'>
             <>

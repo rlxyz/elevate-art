@@ -2,11 +2,10 @@ import { Result } from '@server/utils/response-result'
 import { v2 } from 'cloudinary'
 import { env } from 'src/env/server.mjs'
 
-export const IMAGE_QUALITY_SETTINGS: string[] = ['c_scale,w_600', 'q_auto']
-// export const IMAGE_QUALITY_SETTINGS: string[] = []
+export const IMAGE_QUALITY_SETTINGS: unknown[] = [{ quality: 'auto' }, { width: 600, crop: 'scale' }]
 export const IMAGE_VERSION = 'v1'
 
-type GetTraitElementImageReturn = Result<Buffer | null>
+export type GetTraitElementImageReturn = Result<Buffer | null>
 
 export const getTraitElementImage = ({
   r,
@@ -23,7 +22,7 @@ export const getTraitElementImage = ({
     const url = v2.url(`${env.NEXT_PUBLIC_NODE_ENV}/${r}/${l}/${t}.png`, {
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
       secure: true,
-      transformation: [{ quality: 'auto' }, { width: 600, crop: 'scale' }],
+      // transformation: IMAGE_QUALITY_SETTINGS,
       // version: version,
     })
     fetch(url)
@@ -52,7 +51,6 @@ export const getTraitElementInfo = ({ r, l, t }: { r: string; l: string; t: stri
         return resolve(Result.ok({ traitElementId: public_id, version: `${version}` }))
       })
       .catch((error) => {
-        console.log('error', error)
         reject(Result.fail(error))
       })
   })

@@ -1,13 +1,13 @@
+import { Layout } from '@components/layout/core/Layout'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Layout } from 'src/client/components/layout/core/Layout'
 
 const Page = () => {
   const { status } = useSession()
   return (
     <Layout>
-      <Layout.Header authenticated={status === 'authenticated'} />
+      <Layout.AppHeader authenticated={status === 'authenticated'} />
       <Layout.Body>
         <div className='w-full min-h-[calc(100vh-7rem)] flex flex-col lg:relative'>
           <div className='flex-grow flex flex-col'>
@@ -23,7 +23,7 @@ const Page = () => {
                   <div className='mt-2'>
                     <Link href='/'>
                       <div className='text-darkGrey text-sm'>
-                        lets go somewhere<span aria-hidden='true'> &rarr;</span>
+                        lets go somewhere else<span aria-hidden='true'> &rarr;</span>
                       </div>
                     </Link>
                   </div>

@@ -12,6 +12,38 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
+enum ContractDeploymentAllowlistType {
+    CLAIM
+    PRESALE
+}
+
+enum ContractDeploymentStatus {
+    PENDING
+    VERIFYING
+    DEPLOYED
+    FAILED
+}
+
+enum AssetDeploymentType {
+    BASIC
+    GENERATIVE
+}
+
+enum AssetDeploymentStatus {
+    PENDING
+    DEPLOYED
+    FAILED
+}
+
+enum AssetDeploymentBranch {
+    PRODUCTION
+    PREVIEW
+}
+
+enum RepositoryCategory {
+    GENERATIVE_PHOTOGRAPHY
+}
+
 model User {
     id            String    @id @default(cuid())
     address       String    @unique @db.VarChar(42) // number of hexademical characters in eth address
@@ -22,7 +54,8 @@ model User {
     updatedAt     DateTime  @default(now())
     image         String?
 
-    members OrganisationMember[]
+    members     OrganisationMember[]
+    deployments AssetDeployment[]
 }
 
 model Organisation {
@@ -35,6 +68,14 @@ model Organisation {
     repositories Repository[]
     members      OrganisationMember[]
     pendings     OrganisationPending[]
+
+    description    String? @db.Text
+    twitterUrl     String? @db.VarChar(255)
+    discordUrl     String? @db.VarChar(255)
+    instagramUrl   String? @db.VarChar(255)
+    websiteUrl     String? @db.VarChar(255)
+    logoImageUrl   String? @db.VarChar(255)
+    bannerImageUrl String? @db.VarChar(255)
 
     @@map(name: "organisations")
 }
@@ -65,11 +106,24 @@ model OrganisationPending {
 }
 
 model Repository {
-    id        String   @id @default(cuid())
-    name      String   @db.VarChar(255)
+    id   String @id @default(cuid())
+    name String @db.VarChar(255)
+
     tokenName String   @db.VarChar(255)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    width  Int @default(600)
+    height Int @default(600)
+
+    category       RepositoryCategory?
+    displayName    String?             @db.VarChar(255)
+    description    String?             @db.Text
+    bannerImageUrl String?             @db.VarChar(255)
+    logoImageUrl   String?             @db.VarChar(255)
+    artist         String?             @db.VarChar(255)
+    license        String?             @db.VarChar(255)
+    externalUrl    String?             @db.VarChar(255)
 
     layers      LayerElement[]
     collections Collection[]
@@ -77,8 +131,76 @@ model Repository {
     organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
     organisationId String
 
+    assetDeployments    AssetDeployment[]
+    contractDeployments ContractDeployment[]
+
     @@unique([organisationId, name], name: "repositoryIdentifier")
     @@map(name: "repositories")
+}
+
+model AssetDeployment {
+    id            String @id @default(cuid())
+    name          String @db.VarChar(255)
+    layerElements Json
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status AssetDeploymentStatus @default(PENDING)
+    branch AssetDeploymentBranch @default(PREVIEW)
+    type   AssetDeploymentType   @default(BASIC)
+
+    totalSupply Int // based on collection.totalSupply
+    generations Int // based on collection.generations
+    slug        String @db.VarChar(255) // based on collection.name
+
+    creator   User?   @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+    creatorId String?
+
+    repositoryId String
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+    contractDeployment ContractDeployment?
+
+    @@index([repositoryId, name], name: "assetDeploymentIdentifier")
+    @@index([creatorId])
+}
+
+model ContractDeployment {
+    id        String   @id @default(cuid())
+    address   String   @db.VarChar(42)
+    chainId   Int      @default(1)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status ContractDeploymentStatus @default(PENDING)
+
+    repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+    repositoryId String
+
+    assetDeployment   AssetDeployment? @relation(fields: [assetDeploymentId], references: [id])
+    assetDeploymentId String?          @unique
+
+    whitelists ContractDeploymentAllowlist[]
+
+    @@unique([address, chainId]) // there can be multiple deployments on different chains with same contract address
+    @@index([repositoryId])
+}
+
+model ContractDeploymentAllowlist {
+    id        String   @id @default(cuid())
+    address   String   @db.VarChar(42)
+    mint      Int      @default(1)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    contractDeployment   ContractDeployment @relation(fields: [contractDeploymentId], references: [id], onDelete: Cascade)
+    contractDeploymentId String
+
+    type ContractDeploymentAllowlistType
+
+    @@unique([address, contractDeploymentId, type])
+    @@index([contractDeploymentId])
 }
 
 model Collection {

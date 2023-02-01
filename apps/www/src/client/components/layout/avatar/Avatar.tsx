@@ -7,6 +7,7 @@ interface Props {
   text?: string
   isSquare?: boolean
   className?: string
+  variant?: 'sm' | 'md' | 'lg'
 }
 
 const defaultProps: Props = {
@@ -14,6 +15,7 @@ const defaultProps: Props = {
   text: '',
   isSquare: false,
   className: '',
+  variant: 'sm',
 }
 
 type NativeAttrs = Omit<Partial<React.ImgHTMLAttributes<any> & React.HTMLAttributes<any>>, keyof Props>
@@ -30,6 +32,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({
   text,
   isSquare,
   className,
+  variant,
   ...props
 }: AvatarProps & typeof defaultProps) => {
   const showText = !src
@@ -37,15 +40,18 @@ const AvatarComponent: React.FC<AvatarProps> = ({
     <span
       className={clsx(
         className,
-        'inline-block relative overflow-hidden border border-mediumGrey align-top bg-background box-border h-5 w-5 p-0',
+        'inline-block relative overflow-hidden border border-mediumGrey align-top bg-background box-border p-0',
         stacked && 'ml-2.5',
-        isSquare ? 'rounded-[5px]' : 'rounded-full'
+        isSquare ? 'rounded-[5px]' : 'rounded-full',
+        variant === 'sm' && 'w-5 h-5',
+        variant === 'md' && 'w-6 h-6',
+        variant === 'lg' && 'w-20 h-20'
       )}
     >
       {!showText && (
         <img
           alt='avatar-img'
-          className={clsx('object-cover w-full select-none', isSquare ? 'rounded-[5px]' : 'rounded-full')}
+          className={clsx('object-cover select-none h-full w-full', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           src={src}
           draggable={false}
           {...props}

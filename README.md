@@ -11,7 +11,6 @@ yarn setup
 ```
 
 ### Manual Installation
-
 1. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
 
 ```zsh
@@ -33,3 +32,19 @@ doppler login
 4. Doppler
 5. Inngest
 6. Vercel
+
+## Routing
+
+http://elevate.art/sekured/roboghost/create/preview
+http://elevate.art/sekured/roboghost/create/rules
+http://elevate.art/sekured/roboghost/create/rarity/Background
+http://elevate.art/sekured/roboghost/create/rarity/Background/Blue
+
+http://elevate.art/sekured/roboghost/create/deployments
+http://elevate.art/sekured/roboghost/create/deployments/8v43gf
+http://elevate.art/sekured/roboghost/create/deployments/8v43gf/contract
+http://elevate.art/sekured/roboghost/create/deployments/8v43gf/contract/new
+
+http://elevate.art/sekured/roboghost
+http://elevate.art/sekured/roboghost/mint
+http://elevate.art/sekured/roboghost/market
