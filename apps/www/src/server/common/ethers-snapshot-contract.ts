@@ -6,10 +6,11 @@ import { Result } from '../utils/response-result'
 import { getContractTokenOwner } from './ethers-get-contract-token-owner'
 
 export type ContractSnapshot = {
+  name: string
   address: string
   contract: 'ERC721' | 'ERC1155'
   chainId: number
-  type: 'BY_OPENSEA_API' | 'BY_CONTRACT_CALL' | 'BY_ALCHMENY_API'
+  type: 'BY_OPENSEA_API' | 'BY_CONTRACT_CALL' | 'BY_ALCHEMY_API'
   tokenIds: BigNumberish[]
 }
 
@@ -60,7 +61,7 @@ const createSnapshot = async (snapshot: ContractSnapshot): Promise<Result<`0x${s
           .catch((err) => {
             return reject(Result.fail(err.message))
           })
-      } else if (type === 'BY_ALCHMENY_API') {
+      } else if (type === 'BY_ALCHEMY_API') {
         const config = {
           apiKey: DEFAULT_ALCHEMY_KEY,
           network: Network.ETH_MAINNET,
