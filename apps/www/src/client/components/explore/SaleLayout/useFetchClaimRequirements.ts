@@ -60,6 +60,7 @@ export const useFetchClaimRequirements = ({
      * If the total mint left is less than or equal to 0, the user cannot mint anymore.
      */
     if (totalMintLeft.lte(0)) return BigNumber.from(0)
+    if (!data?.maxMintPerAddress) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(0)) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
 
@@ -130,7 +131,7 @@ export const useFetchClaimRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
-  const { root, proof } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
+  const { root, proof, enabled: proofEnabled } = useUserMerkleProof({ type: ContractDeploymentAllowlistType.CLAIM })
 
   const getUserMintLeft = () => {
     let userMintLeft = null
@@ -148,7 +149,7 @@ export const useFetchClaimRequirements = ({
     data: {
       userMintCount: fetchedContractUserData?.userMintCount || 0,
       userMintLeft: userMintLeft,
-      allowToMint: root && proof && root === merkleRootData?.claimMerkleRoot && userMintLeft.gt(0),
+      allowToMint: proofEnabled && root && proof && root === merkleRootData?.claimMerkleRoot && userMintLeft.gt(0),
       userBalance: userBalance,
     },
     isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
