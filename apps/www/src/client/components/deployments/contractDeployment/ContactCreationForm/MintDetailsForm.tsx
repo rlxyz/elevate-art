@@ -151,7 +151,7 @@ const SaleConfigInput = ({
                   // const value = e.target.value.split('.')
                   // const decimal = value[1] ? value[1].slice(0, 18) : '0'
                   // const price = BigNumber.from(`${value[0]}${decimal.padEnd(17, '0')}`)
-                  setValue(`saleConfigs.${index}.mintPrice`, ethers.utils.parseEther(e.target.value))
+                  setValue(`saleConfigs.${index}.mintPrice`, BigNumber.from(ethers.utils.parseEther(e.target.value)))
                 }
               } catch (err) {
                 console.log(err)

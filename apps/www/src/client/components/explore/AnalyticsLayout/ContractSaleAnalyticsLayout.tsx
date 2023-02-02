@@ -2,6 +2,7 @@ import { AnalyticsLayout } from '@components/explore/AnalyticsLayout/AnalyticsLa
 import LinkComponent from '@components/layout/link/Link'
 import type { ContractInformationData, SaleConfig } from '@utils/contracts/ContractData'
 import { parseChainIdCurrency } from '@utils/ethers'
+import { formatEther } from 'ethers/lib/utils.js'
 
 export const ContractSaleAnalyticsLayout = ({
   title,
@@ -23,7 +24,7 @@ export const ContractSaleAnalyticsLayout = ({
               key: 'Mint Price',
               value:
                 saleConfig?.mintPrice && contractInformationData
-                  ? `${saleConfig.mintPrice.toString()} ${parseChainIdCurrency(contractInformationData?.chainId)}`
+                  ? `${formatEther(saleConfig.mintPrice.toString())} ${parseChainIdCurrency(contractInformationData?.chainId)}`
                   : '0',
               type: 'Basic',
             },

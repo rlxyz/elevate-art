@@ -30,7 +30,7 @@ export const RepositoryDisplayCard = ({ organisationName, repository }: { organi
       <NextLinkComponent className='flex flex-col w-full' href={routeBuilder(organisationName, repository.name)}>
         <div className='relative h-96 w-full overflow-hidden bg-lightGray border-b border-mediumGrey'>
           <Image
-            className='w-full object-cover aspect-1'
+            className='h-full object-cover aspect-1'
             alt={`logo-${repository.id}`}
             src={createLogoUrl({
               id: repository.id,

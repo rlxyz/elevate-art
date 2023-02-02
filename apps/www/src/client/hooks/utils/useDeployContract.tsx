@@ -77,7 +77,7 @@ export const useDeployContract = () => {
       collectionSize,
       maxMintPerAddress,
       amountForPromotion,
-      mintPrice,
+      mintPrice.toString(),
       Math.floor(claimTime / 1000),
       Math.floor(presaleTime / 1000),
       Math.floor(publicTime / 1000),
