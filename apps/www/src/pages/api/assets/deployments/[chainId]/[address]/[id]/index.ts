@@ -62,6 +62,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     layerElements: elements,
     tokenId,
   })
+
   if (!response) return res.status(500).send('Internal Server Error')
 
   const { tokens, vseed } = response
