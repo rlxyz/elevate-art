@@ -1,14 +1,14 @@
-import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
-import { Collection } from '@prisma/client'
+import type { Collection } from '@prisma/client'
 import produce from 'immer'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { useNotification } from 'src/client/hooks/utils/useNotification'
 import { trpc } from 'src/client/utils/trpc'
 import { CollectionDatabaseEnum } from 'src/shared/enums'
+import { useQueryCollectionFindAll } from './useQueryCollectionFindAll'
 
 export const useMutateCollectionCreate = ({ onMutate }: { onMutate?: () => void }) => {
   const ctx = trpc.useContext()
-  const { mutate } = useQueryCollectionFindAll()
+  const { mutate } = useQueryCollectionFindAll({})
   const { notifySuccess } = useNotification()
   const { repositoryId, setCollectionId } = useRepositoryStore((state) => {
     return {

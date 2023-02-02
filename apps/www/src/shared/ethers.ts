@@ -1,9 +1,9 @@
 import { AssetDeploymentType } from '@prisma/client'
 import type { BigNumber } from 'ethers'
 import { ethers } from 'ethers'
-import { env } from 'src/env/client.mjs'
 import basicContract from 'src/shared/contracts/RhapsodyCreatorBasic.json'
 import generativeContract from 'src/shared/contracts/RhapsodyCreatorGenerative.json'
+import { getRandomAlchemyKey } from './alchemy'
 
 export class ElevateContract extends ethers.Contract {
   readonly name!: () => Promise<string>
@@ -51,7 +51,7 @@ export const getElevateContract = ({
   chainId: number
   type?: AssetDeploymentType
 }): ElevateContract => {
-  const provider = new ethers.providers.AlchemyProvider(parseChainId(Number(chainId)), env.NEXT_PUBLIC_ALCHEMY_ID)
+  const provider = new ethers.providers.AlchemyProvider(parseChainId(Number(chainId)), getRandomAlchemyKey())
   const contract = new ElevateContract(
     address,
     type === AssetDeploymentType.BASIC

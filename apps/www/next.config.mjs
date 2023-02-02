@@ -30,6 +30,7 @@ export default defineNextConfig({
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'http', hostname: 'localhost' },
       { protocol: 'https', hostname: 'staging.elevate.art' },
+      { protocol: 'https', hostname: 'elevate.art' },
     ],
   },
   i18n: {

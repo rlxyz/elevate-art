@@ -50,7 +50,6 @@ export const useDeployContract = () => {
     const publicTime = saleConfig.get('Public')?.startTimestamp.getTime()
     const mintPrice = saleConfig.get('Public')?.mintPrice
     const maxMintPerAddress = saleConfig.get('Public')?.maxMintPerAddress
-
     let mintRandomizerContract = null
     try {
       mintRandomizerContract = getMintRandomizerContract({
@@ -121,7 +120,6 @@ export const useDeployContract = () => {
     // get chainId
     const { chainId } = opts.contractInformationData
     changeNetwork(chainId)
-
     let args: (string | number | BigNumber)[] | null = []
     if (opts.type === AssetDeploymentType.GENERATIVE) {
       args = createArgsForGenerative(opts)
@@ -135,7 +133,6 @@ export const useDeployContract = () => {
 
     const contract = getContractDeploymentType(opts.type)
     const factory = new ContractFactory(contract.abi, contract.bytecode).connect(signer as Signer)
-
     const tx = await factory.deploy(...args)
     mutate({ deploymentId, address: tx.address, chainId }) // set to 5 for goerli, shoudl come from forom
     setAddress(tx.address)
