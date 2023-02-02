@@ -34,6 +34,7 @@ export const SaleLayoutClaimPurchase = ({
     setMintCount,
     mintCount,
     isLoading: isLoadingPurchase,
+    isProcessing: isProcessingPurchase,
   } = useClaimPurchase({
     address: session?.user?.address,
     contractDeployment,
@@ -63,9 +64,9 @@ export const SaleLayoutClaimPurchase = ({
       </SaleLayout.Body>
       <SaleLayout.Footer>
         <div className='flex justify-between items-center'>
-          <div className='flex flex-col items-center w-fit'>
+          <div className='flex flex-col w-fit '>
             {userMintCount && Number(formatUnits(userMintCount, 0)) ? (
-              <span className='text-[0.6rem]'>
+              <span className='text-[0.6rem] '>
                 You minted <strong>{formatUnits(userMintCount, 0)} NFTs</strong> from this collection
               </span>
             ) : (
@@ -80,7 +81,7 @@ export const SaleLayoutClaimPurchase = ({
             )}
           </div>
           <button
-            disabled={!session?.user?.id || isLoading || isLoadingPurchase || !allowToMint}
+            disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}
             onClick={() => write()}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'

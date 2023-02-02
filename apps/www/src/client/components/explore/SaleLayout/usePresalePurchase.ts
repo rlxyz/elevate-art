@@ -34,7 +34,11 @@ export const usePresalePurchase = ({
 }): UsePresaleMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
-  const { proof, maxMintForUser } = useUserMerkleProof({
+  const {
+    proof,
+    maxMintForUser,
+    enabled: proofEnabled,
+  } = useUserMerkleProof({
     type: ContractDeploymentAllowlistType.PRESALE,
   })
 
@@ -44,6 +48,7 @@ export const usePresalePurchase = ({
     abi: RhapsodyContract.abi,
     functionName: 'presaleMint',
     args: [mintCount, maxMintForUser, proof],
+    enabled: enabled && proofEnabled,
     overrides: {
       value: BigNumber.from(contractData.presalePeriod.mintPrice).mul(mintCount),
       gasLimit: BigNumber.from(200000),
