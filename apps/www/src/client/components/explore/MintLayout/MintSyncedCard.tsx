@@ -17,7 +17,6 @@ export const MintSyncedCard = ({
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
   })
-
   if (!merkleRootData || !root || root === merkleRootData.claimMerkleRoot) return null
   return (
     <Card className='text-xs text-redError'>

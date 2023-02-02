@@ -1,4 +1,5 @@
 import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
+import { useQueryContractDeploymentWhitelistFindClaimByAddress } from '@components/explore/SaleLayout/useQueryContractDeploymentWhitelistFindClaimByAddress'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -9,7 +10,6 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
-import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
@@ -24,7 +24,7 @@ import {
   ContractSettingsNavigationEnum,
   DeploymentNavigationEnum,
   OrganisationNavigationEnum,
-  ZoneNavigationEnum
+  ZoneNavigationEnum,
 } from 'src/shared/enums'
 
 const Page: NextPage = () => {
@@ -32,7 +32,7 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { current: whitelist } = useQueryContractDeploymentWhitelist({
+  const { all: allowlists } = useQueryContractDeploymentWhitelistFindClaimByAddress({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
@@ -159,10 +159,10 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  {contractDeployment && whitelist && (
+                  {contractDeployment && allowlists && (
                     <AllowlistLayout
                       contractDeployment={contractDeployment}
-                      whitelist={whitelist}
+                      whitelist={allowlists}
                       type={ContractDeploymentAllowlistType.CLAIM}
                     />
                   )}

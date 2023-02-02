@@ -33,7 +33,7 @@ export const useQueryContractDeploymentWhitelistFindClaimByAddress = ({ type }: 
   )
   return {
     current: data?.allowlist.find((x) => x.address === session?.user?.address),
-    all: data,
+    all: data?.allowlist.sort((a, b) => a.mint - b.mint),
     isLoading,
     isError,
   }

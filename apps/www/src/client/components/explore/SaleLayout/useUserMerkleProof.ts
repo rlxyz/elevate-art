@@ -1,8 +1,7 @@
-import { useDeepCompareEffect } from '@hooks/utils/useDeepCompareEffect'
+import { useSetMerkleRootData } from '@components/create/allowlist/useSetMerkleRoot'
 import type { ContractDeploymentAllowlist, ContractDeploymentAllowlistType } from '@prisma/client'
 import { createMerkleTree, generateLeaf } from '@utils/merkle-roots'
 import { BigNumber } from 'ethers'
-import type MerkleTree from 'merkletreejs'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -11,24 +10,19 @@ import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQuer
 export const useUserMerkleProof = ({ type }: { type: ContractDeploymentAllowlistType }) => {
   // fetch address from wagmi
   const { address } = useAccount()
-  const [merkleTree, setMerkleTree] = useState<MerkleTree>()
   const [hexProof, setHexProof] = useState<string[] | undefined>(undefined)
   const [enabled, setEnabled] = useState<boolean>(false)
   const [maxMintForUser, setMaxMintForUser] = useState<BigNumber | undefined>(undefined)
   const { data: session } = useSession()
   const { current, all } = useQueryContractDeploymentWhitelistFindClaimByAddress({ type })
-
-  useDeepCompareEffect(() => {
-    if (!all?.allowlist) return
-    setMerkleTree(createMerkleTree(all.allowlist))
-  }, [all?.allowlist])
+  const { merkleRoot } = useSetMerkleRootData({ enabled, data: all })
 
   useEffect(() => {
-    if (!current?.id || !current?.address || !session?.user?.address || current.mint === 0 || !merkleTree)
+    if (!current?.id || !current?.address || !session?.user?.address || current.mint === 0 || !merkleRoot)
       return setMaxMintForUser(BigNumber.from(0))
     setHexProof(getHexProof({ current }))
     setMaxMintForUser(BigNumber.from(current.mint))
-  }, [session?.user?.address, current?.address, merkleTree])
+  }, [session?.user?.address, current?.address, merkleRoot])
 
   useEffect(() => {
     // console.log('session?.user?.address', session?.user?.address)
@@ -39,14 +33,12 @@ export const useUserMerkleProof = ({ type }: { type: ContractDeploymentAllowlist
     return setEnabled(false)
   }, [session?.user?.address, current?.address, address])
 
-  console.log(enabled)
-
   const getHexProof = ({ current }: { current: ContractDeploymentAllowlist }) => {
-    if (!all?.allowlist) return undefined
-    const tree = createMerkleTree(all?.allowlist)
+    if (!all) return undefined
+    const tree = createMerkleTree(all)
     const leaf: Buffer = generateLeaf(current)
     return tree.getHexProof(leaf)
   }
 
-  return { merkleTree, root: merkleTree?.getHexRoot(), proof: hexProof, maxMintForUser, enabled }
+  return { root: merkleRoot, proof: hexProof, maxMintForUser, enabled }
 }

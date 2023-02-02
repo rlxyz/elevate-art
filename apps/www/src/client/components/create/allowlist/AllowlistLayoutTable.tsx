@@ -19,17 +19,15 @@ export const AllowlistLayoutTable = ({
         <span>Update At</span>
       </Table.Head>
       <Table.Body>
-        {whitelist
-          .sort((a, b) => b.mint - a.mint)
-          ?.map(({ address, mint, createdAt, updatedAt }, index) => (
-            <Table.Body.Row current={index} key={address} total={whitelist.length}>
-              <span>{index}</span>
-              <span>{mint}</span>
-              <span>{address}</span>
-              <span>{timeAgo(createdAt)}</span>
-              <span>{timeAgo(updatedAt)}</span>
-            </Table.Body.Row>
-          ))}
+        {whitelist?.map(({ address, mint, createdAt, updatedAt }, index) => (
+          <Table.Body.Row current={index} key={address} total={whitelist.length}>
+            <span>{index}</span>
+            <span>{mint}</span>
+            <span>{address}</span>
+            <span>{timeAgo(createdAt)}</span>
+            <span>{timeAgo(updatedAt)}</span>
+          </Table.Body.Row>
+        ))}
       </Table.Body>
     </Table>
   )

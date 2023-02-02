@@ -5,7 +5,6 @@ import type { RhapsodyContractData } from '../../../../shared/contracts/Contract
 import { AnalyticsLayoutCollectionInformation } from '../AnalyticsLayout/AnalyticsLayoutCollectionInformation'
 import { SaleLayoutClaimChecker } from '../SaleLayout/SaleLayoutClaimChecker'
 import { SaleLayoutClaimPurchase } from '../SaleLayout/SaleLayoutClaimPurchase'
-import { SaleLayoutPresaleChecker } from '../SaleLayout/SaleLayoutPresaleChecker'
 import { SaleLayoutPresalePurchase } from '../SaleLayout/SaleLayoutPresalePurchase'
 import { SaleLayoutPublicPurchase } from '../SaleLayout/SaleLayoutPublicPurchase'
 import { MintSyncedCard } from './MintSyncedCard'
@@ -41,7 +40,7 @@ export const MintLayout = ({
       </main>
       <article className='space-y-6'>
         {now < contractData.presalePeriod.startTimestamp && <SaleLayoutClaimChecker contractData={contractData} />}
-        {now < contractData.publicPeriod.startTimestamp && <SaleLayoutPresaleChecker contractData={contractData} />}
+        {/* {now < contractData.publicPeriod.startTimestamp && <SaleLayoutPresaleChecker contractData={contractData} />} */}
         <AnalyticsLayoutCollectionInformation contractDeployment={contractDeployment} />
         {/* <AnalyticsLayoutCollectorData contractDeployment={contractDeployment} /> */}
       </article>
