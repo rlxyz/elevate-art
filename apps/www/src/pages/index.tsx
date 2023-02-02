@@ -185,8 +185,8 @@ const Home: NextPage = () => {
         <Layout.Body>
           <div className='min-h-[calc(100vh-7.14rem)] flex items-center'>
             <div className='w-full flex flex-col justify-center items-center space-y-10'>
-              {/* <Mint /> */}
-              <Hero />
+              <Mint />
+              {/* <Hero /> */}
             </div>
           </div>
         </Layout.Body>
