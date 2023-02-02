@@ -56,7 +56,7 @@ const createCurrentLayerElement = (layerElement: PrismaLayerElementWithTraitElem
   traitElements: [createTraitElementNone(layerElement), ...layerElement.traitElements.map((x) => createTraitElement(x, repositoryId))],
 })
 
-const createAllLayerElement = (layerElements: PrismaLayerElementWithTraitElement[], repositoryId: string): LayerElement[] =>
+export const createAllLayerElement = (layerElements: PrismaLayerElementWithTraitElement[], repositoryId: string): LayerElement[] =>
   layerElements
     .map((x) => ({
       ...x,
