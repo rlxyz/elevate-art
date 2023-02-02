@@ -120,7 +120,6 @@ export const useDeployContract = () => {
   const deploy = async (opts: ERC721ContractInput, organisation: Organisation, repository: Repository, deployment: AssetDeployment) => {
     // get chainId
     const { chainId } = opts.contractInformationData
-
     changeNetwork(chainId)
 
     let args: (string | number | BigNumber)[] | null = []
