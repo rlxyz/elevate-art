@@ -3,7 +3,7 @@ import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getBannerForRepository, getLogoForRepository, getTokenURI } from 'src/client/utils/image'
+import { getBannerForRepository, getLogoForRepository, getTokenURILegacy } from 'src/client/utils/image'
 import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -70,7 +70,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     name: [deployment.repository.tokenName || '', `#${tokenId}`].join(' '),
     description: deployment.repository.description,
     tokenHash: vseed.startsWith('0x') ? vseed : null,
-    image: getTokenURI({ contractDeployment: deployment.contractDeployment, tokenId }),
+    image: getTokenURILegacy({ contractDeployment: deployment.contractDeployment, tokenId }),
     attributes: tokens.map(([l, t]) => {
       const layerElement = elements.find((x) => x.id === l)
       if (!layerElement) return

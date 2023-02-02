@@ -22,6 +22,16 @@ export const getTokenURI = ({ contractDeployment, tokenId }: { contractDeploymen
   return `https://storage.googleapis.com/elevate-assets-deployment-tokens-production-production/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`
 }
 
+export const getTokenURILegacy = ({
+  contractDeployment,
+  tokenId,
+}: {
+  contractDeployment: ContractDeployment
+  tokenId: string | number
+}) => {
+  return `${getSyncedBaseURI({ contractDeployment })}${tokenId}/image`
+}
+
 export const getTokenMetadataURI = ({
   contractDeployment,
   tokenId,
