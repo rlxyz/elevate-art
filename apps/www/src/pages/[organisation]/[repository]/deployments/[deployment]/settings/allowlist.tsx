@@ -32,7 +32,7 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { current: whitelist } = useQueryContractDeploymentWhitelist({
+  const { all: allowlists } = useQueryContractDeploymentWhitelist({
     type: ContractDeploymentAllowlistType.PRESALE,
   })
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
@@ -158,10 +158,10 @@ const Page: NextPage = () => {
               </div>
               <div className='col-span-8'>
                 <div className='space-y-6'>
-                  {contractDeployment && whitelist && (
+                  {contractDeployment && allowlists && (
                     <AllowlistLayout
                       contractDeployment={contractDeployment}
-                      whitelist={whitelist}
+                      whitelist={allowlists}
                       type={ContractDeploymentAllowlistType.PRESALE}
                     />
                   )}
