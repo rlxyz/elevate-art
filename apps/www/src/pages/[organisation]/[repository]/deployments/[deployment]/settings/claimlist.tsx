@@ -1,5 +1,4 @@
 import { AllowlistLayout } from '@components/create/allowlist/AllowlistLayout'
-import { useQueryContractDeploymentWhitelistFindClaimByAddress } from '@components/explore/SaleLayout/useQueryContractDeploymentWhitelistFindClaimByAddress'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -10,6 +9,7 @@ import { OrganisationRoutesNavbarPopover } from '@components/organisation/Organi
 import withOrganisationStore from '@components/withOrganisationStore'
 import { CubeIcon } from '@heroicons/react/outline'
 import { useQueryRepositoryContractDeployment } from '@hooks/trpc/contractDeployment/useQueryRepositoryDeployments'
+import { useQueryContractDeploymentWhitelist } from '@hooks/trpc/contractDeploymentWhitelist/useQueryContractDeploymentWhitelist'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
@@ -32,7 +32,7 @@ const Page: NextPage = () => {
   const { all: contractDeployment } = useQueryRepositoryContractDeployment()
   const { current: deployment, isLoading: isLoading } = useQueryRepositoryDeployments()
   const { current: repository } = useQueryRepositoryFindByName()
-  const { all: allowlists } = useQueryContractDeploymentWhitelistFindClaimByAddress({
+  const { all: allowlists } = useQueryContractDeploymentWhitelist({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()

@@ -19,7 +19,7 @@ export const useQueryContractDeploymentWhitelist = ({ type }: { type: ContractDe
     }
   )
   return {
-    current: data,
+    all: data?.sort((a, b) => b.mint - a.mint),
     isLoading,
     isError,
   }
