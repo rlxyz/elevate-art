@@ -141,11 +141,20 @@ const SaleConfigInput = ({
             required: true,
             valueAsNumber: true,
             onChange: (e) => {
-              if (e.target.value) {
-                const value = e.target.value.split('.')
-                const decimal = value[1] ? value[1].slice(0, 18) : '0'
-                const price = BigNumber.from(`${value[0]}${decimal.padEnd(18, '0')}`)
-                setValue(`saleConfigs.${index}.mintPrice`, price)
+              try {
+                if (isNaN(Number(e.target.value))) {
+                  e.target.value = ''
+                  return
+                }
+                if (e.target.value) {
+                  const value = e.target.value.split('.')
+                  const decimal = value[1] ? value[1].slice(0, 18) : '0'
+                  const price = BigNumber.from(`${value[0]}${decimal.padEnd(18, '0')}`)
+                  setValue(`saleConfigs.${index}.mintPrice`, price)
+                }
+              } catch (err) {
+                console.log(err)
+                e.target.value = ''
               }
             },
           })}
@@ -158,7 +167,7 @@ const SaleConfigInput = ({
       <ContractForm.Body.Input
         {...register(`saleConfigs.${index}.maxMintPerAddress`, {
           required: true,
-          max: 20,
+          max: 40,
           min: 1,
           onChange: (e) => {
             if (e.target.value) {
