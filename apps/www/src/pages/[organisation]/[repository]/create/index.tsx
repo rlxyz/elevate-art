@@ -35,7 +35,7 @@ const Page = () => {
     reset()
   }, [])
 
-  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll()
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll({})
   const { current: organisation } = useQueryOrganisationFindAll()
   const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
   const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()

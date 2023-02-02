@@ -24,7 +24,7 @@ export const FilterByTrait = () => {
     }
   )
   const { all: layers } = useQueryLayerElementFindAll()
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
 
   return (
     <Formik
@@ -393,7 +393,7 @@ export const FilterByRank = () => {
 
 const Index = () => {
   const { all: layers } = useQueryLayerElementFindAll()
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   const isLoading = !layers?.length || !collection
   return (
     <>

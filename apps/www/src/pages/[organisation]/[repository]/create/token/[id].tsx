@@ -1,5 +1,3 @@
-import RepositoryDeploymentCreateModal from '@components/deployments/assetDeployment/RepositoryDeploymentCreateModal'
-import { RepositoryDeploymentPreviewCard } from '@components/deployments/assetDeployment/RepositoryDeploymentPreviewCard'
 import { FilterWithTextLive } from '@components/layout/FilterWithTextLive'
 import AppRoutesNavbar, { ZoneRoutesNavbarPopover } from '@components/layout/header/AppRoutesNavbarProps'
 import { PageRoutesNavbar } from '@components/layout/header/PageRoutesNavbar'
@@ -12,31 +10,48 @@ import { useQueryLayerElementFindAll } from '@hooks/trpc/layerElement/useQueryLa
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import { useQueryRepositoryFindByName } from '@hooks/trpc/repository/useQueryRepositoryFindByName'
 import { useQueryRepositoryHasProductionDeployment } from '@hooks/trpc/repository/useQueryRepositoryHasProductionDeployment'
-import { useQueryRepositoryDeployments } from '@hooks/trpc/repositoryDeployment/useQueryRepositoryDeployments'
 import { useRepositoryRoute } from '@hooks/utils/useRepositoryRoute'
-import { DeploymentNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import useRepositoryStore from 'src/client/hooks/store/useRepositoryStore'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
+import { CollectionNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
 const Page = () => {
-  const setRepositoryId = useRepositoryStore((state) => state.setRepositoryId)
-  const { current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
-  const { all: collections } = useQueryCollectionFindAll({})
-  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
-  const { all: deployments } = useQueryRepositoryDeployments()
+  const { setCollectionId, reset, setRepositoryId } = useRepositoryStore((state) => {
+    return {
+      setRepositoryId: state.setRepositoryId,
+      setCollectionId: state.setCollectionId,
+      reset: state.reset,
+    }
+  })
+
+  useEffect(() => {
+    reset()
+  }, [])
+
+  const { all: collections, isLoading: isLoadingCollection, mutate } = useQueryCollectionFindAll({ runMutations: false })
   const { current: organisation } = useQueryOrganisationFindAll()
-  const { organisationName, repositoryName } = useRepositoryRoute()
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const { current: repository, isLoading: isLoadingRepository } = useQueryRepositoryFindByName()
+  const { all: layers, current: layer, isLoading: isLoadingLayers } = useQueryLayerElementFindAll()
+  const { collectionName } = useRepositoryRoute()
   const { current: hasProductionDeployment } = useQueryRepositoryHasProductionDeployment()
 
   useEffect(() => {
     if (!repository) return
     setRepositoryId(repository.id)
   }, [isLoadingRepository])
+
+  useEffect(() => {
+    if (!collections) return
+    if (!collections.length) return
+    const collection = collections.find((collection) => collection.name === collectionName)
+    if (!collection) return
+    setCollectionId(collection.id)
+    // if (tokens.length === 0) return
+    mutate({ collection })
+  }, [isLoadingCollection])
 
   return (
     <OrganisationAuthLayout>
@@ -55,8 +70,8 @@ const Page = () => {
               <FilterWithTextLive />
             </AppRoutesNavbar.Item>
             <AppRoutesNavbar.Item
-              label={capitalize(ZoneNavigationEnum.enum.Deployments)}
-              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments)}
+              label={capitalize(ZoneNavigationEnum.enum.Create)}
+              href={routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create)}
             >
               <ZoneRoutesNavbarPopover
                 title='Apps'
@@ -64,13 +79,13 @@ const Page = () => {
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Create),
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
-                    selected: false,
+                    selected: true,
                     icon: (props: any) => <TriangleIcon className='w-4 h-4' />,
                   },
                   {
                     label: capitalize(ZoneNavigationEnum.enum.Deployments),
                     href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
-                    selected: true,
+                    selected: false,
                     icon: (props: any) => <CubeIcon className='w-4 h-4' />,
                   },
                 ]}
@@ -82,59 +97,62 @@ const Page = () => {
           <PageRoutesNavbar>
             {[
               {
-                name: DeploymentNavigationEnum.enum.Overview,
-                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Deployments),
+                name: CollectionNavigationEnum.enum.Preview,
+                href: routeBuilder(organisation?.name, repository?.name, ZoneNavigationEnum.enum.Create),
                 enabled: true,
-                loading: false,
+                loading: !organisation?.name || !repository?.name,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rarity,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Create,
+                  CollectionNavigationEnum.enum.Rarity,
+                  layer?.name
+                ),
+                enabled: false,
+                loading: isLoadingLayers,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Rules,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Create,
+                  CollectionNavigationEnum.enum.Rules
+                ),
+                enabled: false,
+                loading: !organisation?.name || !repository?.name,
+              },
+              {
+                name: CollectionNavigationEnum.enum.Settings,
+                href: routeBuilder(
+                  organisation?.name,
+                  repository?.name,
+                  ZoneNavigationEnum.enum.Create,
+                  CollectionNavigationEnum.enum.Settings
+                ),
+                enabled: false,
+                loading: !organisation?.name || !repository?.name,
               },
             ].map((item) => (
               <PageRoutesNavbar.Item key={item.name} opts={item} />
             ))}
           </PageRoutesNavbar>
         </Layout.PageHeader>
-        <Layout.Body border={'lower'}>
-          <div className='w-full h-full'>
-            <div className='h-32 flex items-center justify-between'>
-              <h1 className='text-2xl font-semibold'>Deployments</h1>
-              <div className='space-x-2'>
-                <button
-                  onClick={() => setIsCreateDialogOpen(true)}
-                  className='border p-2 border-mediumGrey rounded-[5px] bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:cursor-not-allowed disabled:text-darkGrey'
-                >
-                  Create Deployment
-                </button>
-              </div>
+        <Layout.Body border='none'>
+          <div className='w-full h-full grid grid-flow-row-dense grid-cols-2'>
+            <div className='w-full col-span-1 h-screen'>
+              {/* {collections && collections?.find((collection) => collection.name === '1333-V1') && (
+                <PreviewImageCardWithChildren
+                  id={87}
+                  collection={collections?.find((collection) => collection.name === '1333-V1')}
+                  layers={layers}
+                />
+              )} */}
             </div>
-            {collections && repository && (
-              <RepositoryDeploymentCreateModal
-                visible={isCreateDialogOpen}
-                onClose={() => setIsCreateDialogOpen(false)}
-                repository={repository}
-                collections={collections}
-              />
-            )}
           </div>
-
-          {deployments && deployments.length > 0 ? (
-            <div className='py-8'>
-              {deployments.map((deployment, index) => (
-                <div
-                  key={deployment.id}
-                  className={clsx(
-                    'border-l border-r border-mediumGrey border-b p-4',
-                    index === 0 && 'rounded-tl-[5px] rounded-tr-[5px] border-t',
-                    index === deployments.length - 1 && 'rounded-bl-[5px] rounded-br-[5px]'
-                  )}
-                >
-                  <RepositoryDeploymentPreviewCard
-                    deployment={deployment}
-                    organisationName={organisationName}
-                    repositoryName={repositoryName}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : null}
         </Layout.Body>
       </Layout>
     </OrganisationAuthLayout>
