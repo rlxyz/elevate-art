@@ -48,7 +48,7 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
           if (!all) return setError('address', { message: 'Please try again in a minute' })
 
           /** Check if the address has a claim */
-          const claim = all.allowlist.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          const claim = all.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
           if (!claim) {
             return setError('address', { message: 'This address does not have a claim' })
           }

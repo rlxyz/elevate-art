@@ -48,7 +48,7 @@ export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: Rhaps
           if (!all) return setError('address', { message: 'Please try again in a minute' })
 
           /** Check if the address has a claim */
-          const presale = all.allowlist.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
+          const presale = all.find((c) => c.address.toLowerCase() === data.address.toLowerCase())
           if (!presale) {
             return setError('address', { message: 'This address is not part of the presale' })
           }
