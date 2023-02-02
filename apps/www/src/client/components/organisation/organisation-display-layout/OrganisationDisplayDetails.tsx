@@ -11,7 +11,7 @@ export const OrganisationDisplayDetails = ({ organisation }: { organisation: Org
           <OrganisationDescriptionWithDisclouser organisation={organisation} />
           <div className='flex space-x-3'>
             <CollectionSocialMediaLinks
-              discordUrl={'https://discord.gg/dreamlab'}
+              discordUrl={'https://discord.gg/XJeAm63cj2'}
               twitterUrl={'https://twitter.com/jacobriglin'}
               instagramUrl={'https://instagram.com/jacob'}
             />
