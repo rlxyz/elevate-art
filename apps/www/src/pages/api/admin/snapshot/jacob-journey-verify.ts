@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import extra from './files/jacob-journey-extra.json'
-import json from './files/jacob-journey.json'
+import extra from './files/inputs/jacob-journey-extra.json'
+import json from './files/inputs/jacob-journey.json'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const superrare = json.data.all[0]
