@@ -1,4 +1,5 @@
 import type { SaleConfig } from '@utils/contracts/ContractData'
+import { ethers } from 'ethers'
 import { BigNumber } from 'ethers/lib/ethers'
 import type { FC } from 'react'
 import type { FieldErrorsImpl, UseFormRegister, UseFormSetValue } from 'react-hook-form'
@@ -147,10 +148,10 @@ const SaleConfigInput = ({
                   return
                 }
                 if (e.target.value) {
-                  const value = e.target.value.split('.')
-                  const decimal = value[1] ? value[1].slice(0, 18) : '0'
-                  const price = BigNumber.from(`${value[0]}${decimal.padEnd(18, '0')}`)
-                  setValue(`saleConfigs.${index}.mintPrice`, price)
+                  // const value = e.target.value.split('.')
+                  // const decimal = value[1] ? value[1].slice(0, 18) : '0'
+                  // const price = BigNumber.from(`${value[0]}${decimal.padEnd(17, '0')}`)
+                  setValue(`saleConfigs.${index}.mintPrice`, ethers.utils.parseEther(e.target.value))
                 }
               } catch (err) {
                 console.log(err)
