@@ -31,7 +31,8 @@ export const SaleMintCountInput: React.FC<SaleMintCountInputProps> = ({ maxValue
         disabled={!maxValue || disabled || BigNumber.from(value).eq(maxValue)}
         className='border-l border-mediumGrey p-2 disabled:cursor-not-allowed'
         onClick={() => {
-          if (maxValue && value < maxValue) {
+          if (!maxValue) return
+          if (maxValue.gt(value)) {
             onChange && onChange(BigNumber.from(value).add(1))
           }
         }}
