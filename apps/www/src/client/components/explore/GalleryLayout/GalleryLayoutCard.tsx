@@ -35,41 +35,63 @@ export const GalleryLayoutCard = ({
     >
       <Image
         src={getTokenURI({ contractDeployment, tokenId })}
+        onErrorCapture={(e) => {
+          e.currentTarget.src = '/images/placeholder.png'
+        }}
         width={repository.width || 600}
         height={repository.height || 600}
         alt={`${address}-#${tokenId}`}
-        className='object-cover m-auto'
+        className='object-cover m-auto bg-lightGray'
       />
-      <div className='space-y-1 pt-2 px-2'>
-        <h1 className='text-xs font-semibold'>
-          <LinkComponent
-            target='_blank'
-            rel='noopener noreferrer'
-            href={getTokenMetadataURI({
-              contractDeployment,
-              tokenId,
-            })}
-            underline
-          >
-            {tokenName} #{tokenId}
-          </LinkComponent>
-        </h1>
-        {data?.owner && (
+      <div className='space-y-1 pt-2 px-2 flex justify-between'>
+        <div className=''>
+          <h1 className='text-xs font-semibold'>
+            <LinkComponent
+              target='_blank'
+              rel='noopener noreferrer'
+              href={getTokenMetadataURI({
+                contractDeployment,
+                tokenId,
+              })}
+              underline
+            >
+              {tokenName} #{tokenId}
+            </LinkComponent>
+          </h1>
+          {data?.owner && (
+            <NextLinkComponent
+              target='_blank'
+              rel='noopener noreferrer'
+              href={buildEtherscanLink({
+                chainId,
+                address: data.owner,
+              })}
+              underline
+            >
+              <div className='flex items-center space-x-2'>
+                <AvatarComponent src='/images/avatar-blank.png' />
+                <span className='text-xs'>{formatEthereumHash(data?.owner)}</span>
+              </div>
+            </NextLinkComponent>
+          )}
+        </div>
+        <div>
           <NextLinkComponent
+            href={`https://${contractDeployment.chainId !== 1 ? 'testnets.' : ''}opensea.io/assets/${
+              contractDeployment.address
+            }/${tokenId}`}
             target='_blank'
             rel='noopener noreferrer'
-            href={buildEtherscanLink({
-              chainId,
-              address: data.owner,
-            })}
-            underline
           >
-            <div className='flex items-center space-x-2'>
-              <AvatarComponent src='/images/avatar-blank.png' />
-              <span className='text-xs'>{formatEthereumHash(data?.owner)}</span>
-            </div>
+            <Image
+              alt={`opensea-link-${tokenId}`}
+              width={40}
+              height={40}
+              src='/images/opensea.svg'
+              className='w-5 h-5 border rounded-full border-mediumGrey'
+            />
           </NextLinkComponent>
-        )}
+        </div>
       </div>
     </div>
   )
