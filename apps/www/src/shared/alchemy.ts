@@ -6,3 +6,6 @@ export const ALCHEMY_MAINNET_KEYS = [
   'iO9STXzufmmz1JMfOikXkO6ZYdhWyQtx',
   'llFyryxwhn-wXm2eILsQ2Awj1OehKE-I',
 ]
+
+export const getRandomAlchemyKey = () =>
+  ALCHEMY_MAINNET_KEYS[Math.floor(Math.random() * ALCHEMY_MAINNET_KEYS.length)] || DEFAULT_ALCHEMY_KEY
