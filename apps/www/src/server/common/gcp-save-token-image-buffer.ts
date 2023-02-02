@@ -17,7 +17,7 @@ export const saveImageToGcp = async ({
     const _ = getTokenDeploymentBucket({
       branch: deployment.branch,
     })
-      .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/image.png`)
+      .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`)
       .save(buf, {
         resumable: false,
         validation: 'crc32c',
