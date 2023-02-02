@@ -2,6 +2,7 @@ import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { formatEthereumHash } from '@utils/ethers'
+import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import React from 'react'
 import { routeBuilder } from 'src/client/utils/format'
@@ -24,7 +25,6 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
         // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading'
         const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated')
-
         return (
           <div
             {...(!ready && {
@@ -33,6 +33,23 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
             })}
           >
             {(() => {
+              if (!connected) {
+                return (
+                  <div className='relative w-9'>
+                    <Menu profile position='bottom-left'>
+                      <Menu.Items className='p-0'>
+                        <Menu.Item as='button' onClick={openConnectModal} type='button'>
+                          <div className='w-full flex items-center space-x-2 p-1'>
+                            <AvatarComponent variant='sm' src='/images/avatar-blank.png' />
+                            <span className='text-xs font-semibold'>Connect Now</span>
+                          </div>
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Menu>
+                  </div>
+                )
+              }
+
               return (
                 <div className='relative w-9'>
                   <Menu profile position='bottom-left'>
@@ -48,7 +65,20 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                       <Menu.Items className='p-1'>
                         <div className='rounded-[5px] w-full p-2'>
                           <div className='flex flex-col'>
-                            <span className='text-xs text-darkGrey'>Address</span>
+                            <div className='flex justify-between'>
+                              <span className='text-xs text-darkGrey'>Address</span>
+                              <button
+                                className={clsx(
+                                  'text-[0.6rem] border px-3 rounded-[5px]',
+                                  data.user.address === account.address
+                                    ? 'border-blueHighlight text-blueHighlight'
+                                    : 'border-redError text-redError'
+                                )}
+                                onClick={openAccountModal}
+                              >
+                                {data.user.address === account.address ? 'Connected' : 'Change Account'}
+                              </button>
+                            </div>
                             <span className='text-sm text-black font-bold'>{formatEthereumHash(data.user.address)}</span>
                           </div>
                         </div>
@@ -60,7 +90,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                           <div className='flex flex-col'>
                             <div className='flex justify-between'>
                               <span className='text-xs text-darkGrey'>Balance</span>
-                              <span className='text-xs border px-3 border-blueHighlight rounded-[5px] text-blueHighlight'>
+                              <span className='text-[0.6rem] border px-3 border-blueHighlight rounded-[5px] text-blueHighlight'>
                                 {chain?.name}
                               </span>
                             </div>

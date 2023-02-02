@@ -29,7 +29,11 @@ export const useClaimPurchase = ({
 }): UseClaimMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
-  const { proof, maxMintForUser } = useUserMerkleProof({
+  const {
+    proof,
+    maxMintForUser,
+    enabled: proofEnabled,
+  } = useUserMerkleProof({
     type: ContractDeploymentAllowlistType.CLAIM,
   })
   const { changeNetwork } = useChangeNetwork()
@@ -43,7 +47,7 @@ export const useClaimPurchase = ({
     overrides: {
       gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
     },
-    enabled: enabled && !!proof && !!maxMintForUser,
+    enabled: proofEnabled && enabled && !!proof && !!maxMintForUser,
   })
 
   const {
@@ -57,6 +61,9 @@ export const useClaimPurchase = ({
       if (data) {
         notifyInfo(`A transaction with hash ${formatEthereumHash(data.hash)} has been submitted. Please wait for confirmation.`)
       }
+    },
+    onSuccess: (data) => {
+      setMintCount(BigNumber.from(1))
     },
     onError: (error) => {
       if (error.message.startsWith('user rejected transaction')) {
@@ -89,7 +96,6 @@ export const useClaimPurchase = ({
     setMintCount,
     write: () => {
       changeNetwork(contractDeployment.chainId)
-      console.log('maxMintForUser', maxMintForUser)
       if (!maxMintForUser || maxMintForUser.eq(0)) return
       write?.()
     },
