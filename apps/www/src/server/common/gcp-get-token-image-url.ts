@@ -15,7 +15,7 @@ export const getImageUrlFromGcp = async ({
   return new Promise<Result<string>>(async (resolve) => {
     try {
       const [exists] = await getTokenDeploymentBucket({ branch: deployment.branch })
-        .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/image.png`)
+        .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`)
         .exists()
 
       if (!exists) {
@@ -24,7 +24,7 @@ export const getImageUrlFromGcp = async ({
 
       if (deployment.branch === AssetDeploymentBranch.PREVIEW) {
         const [signedUrl] = await getTokenDeploymentBucket({ branch: deployment.branch })
-          .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/image.png`)
+          .file(`deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`)
           .getSignedUrl({
             action: 'read',
             expires: Date.now() + 15 * 60 * 1000,
@@ -34,7 +34,7 @@ export const getImageUrlFromGcp = async ({
       } else if (deployment.branch === AssetDeploymentBranch.PRODUCTION) {
         const url = `https://storage.googleapis.com/${getTokenDeploymentBucketName({
           branch: deployment.branch,
-        })}/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/image.png`
+        })}/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`
         return resolve(Result.ok(url))
       }
 
