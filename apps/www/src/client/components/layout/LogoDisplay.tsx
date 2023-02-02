@@ -13,12 +13,6 @@ export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?:
   const fetchImage = async () => {
     if (!repositoryId) return
     const response = await fetch(createLogoUrl({ id: repositoryId }))
-
-    if (!response.ok) {
-      setImgSrc(null)
-      return
-    }
-
     const blob = await response.blob()
     const url = URL.createObjectURL(blob)
     setImgSrc(url)

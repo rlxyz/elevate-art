@@ -12,9 +12,6 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
   const fetchImage = async () => {
     if (!id) return
     const response = await fetch(createBannerUrl({ id }))
-    if (!response.ok) {
-      return setImgSrc(null)
-    }
     const blob = await response.blob()
     const url = URL.createObjectURL(blob)
     setImgSrc(url)
@@ -31,13 +28,11 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
           <div className='block overflow-hidden absolute box-border m-0 rounded-[5px] bg-lightGray animate-pulse-gradient-infinite inset-0'>
             {id && imgSrc && (
               <Image
-                src={createBannerUrl({
-                  id,
-                })}
+                src={createBannerUrl({ id })}
                 alt='banner-image'
-                width={2800}
-                height={800}
-                className='block object-cover m-auto overflow-hidden'
+                width={1400}
+                height={350}
+                className='object-cover w-full aspect-5 m-auto block overflow-hidden'
               />
             )}
           </div>
