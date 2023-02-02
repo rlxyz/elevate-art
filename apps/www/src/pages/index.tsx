@@ -57,7 +57,7 @@ const Mint = () => {
     <div className='flex justify-center items-center w-full'>
       <div className='grid md:grid-cols-2 place-content-center justify-items-center'>
         <div className='hidden md:block relative w-[100%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[80%] 2xl:w-[80%]'>
-          <Image width={629 * 2} height={786 * 2} priority src='/images/journey-2.jpeg' alt='journey-by-jacob' />
+          <Image width={629 * 2} height={786 * 2} priority src='/images/journey-2.jpeg' alt='journey-by-jacob' className='rounded-[5px]' />
         </div>
         <div className='block md:hidden'>
           <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' className='rounded-[5px]' />
