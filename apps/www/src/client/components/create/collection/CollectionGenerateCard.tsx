@@ -1,14 +1,14 @@
-import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Button from 'src/client/components/layout/Button'
 
+import { useQueryCollectionFindAll } from '@hooks/trpc/collection/useQueryCollectionFindAll'
 import { useState } from 'react'
 import CollectionIncrementGenerationDialog from './CollectionIncrementGenerationDialog'
 
 export const GenerateButton = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   return (
     <div
       className={clsx(

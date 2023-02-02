@@ -12,7 +12,7 @@ import CollectionCreateDialog from './CollectionCreateDialog'
 const Index = () => {
   const [query, setQuery] = useState('')
   const { all: layers } = useQueryLayerElementFindAll()
-  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryCollectionFindAll()
+  const { all: collections, current: collection, mutate, isLoading: isLoadingCollections } = useQueryCollectionFindAll({})
   const [selectedCollection, setSelectedPerson] = useState<undefined | Collection>(collection)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const filteredCollections =

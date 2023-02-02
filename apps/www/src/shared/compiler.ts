@@ -59,10 +59,28 @@ const exclude = (elements: [string, string][], traits: Trait[]): Trait[] => {
 }
 
 const combination = (elements: [string, string][], traits: Trait[]): Trait[] => {
-  return traits.reduce((acc: Trait[], { rules, id, weight, name }: Trait) => {
+  // if (elements.length === 2) {
+  //   console.log('3', elements)
+  // }
+
+  const all = traits.reduce((acc: Trait[], { rules, id, weight, name }: Trait) => {
+    // if (elements.length === 2 && id === 'cld95y2480001kv08f30basyn') {
+    //   console.log(
+    //     'found',
+    //     id,
+    //     name,
+    //     rules.filter((rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with))
+    //   )
+    // }
     const combine = rules.filter((rule) => rule.type === RulesEnum.enum['only mixes with'] && elements.map((x) => x[1]).includes(rule.with))
     return [...acc, ...(combine.length > 0 ? [{ id, rules, name, weight }] : [])]
   }, [])
+
+  // if (elements.length === 2) {
+  //   console.log('all', traits, all)
+  // }
+
+  return all
 }
 
 const choose = (traits: Trait[], random: seedrandom.PRNG): string => {
@@ -94,8 +112,26 @@ export const one = (layers: Layer[], seed: string): [string, string][] => {
     // step 1.2: grab exclusion filtered tokens
     const excludes = exclude(elements, combinations.length > 0 ? combinations : traits)
 
-    // step 2: find the next element
-    elements.push([id, choose(excludes, random)])
+    // step 1.3: if no excludes but has combinations, means, edge case where the next elements are not allowed to be mixed with one of the current element
+    if (excludes.length === 0 && combinations.length > 0) {
+      const remove = combinations
+        .map((x) => x)
+        .flatMap((x) => x.rules)
+        .filter((x) => x.type === RulesEnum.enum['only mixes with'])
+        .map((x) => x.with)
+        .filter((x) => elements.map((x) => x[1]).includes(x))
+
+      elements.splice(
+        elements.findIndex((x) => x[1] === remove[0]),
+        1
+      )
+    } else {
+      // step 1.3: choose next element
+      const next = choose(excludes, random)
+
+      // step 2: find the next element
+      elements.push([id, next])
+    }
   })
 
   // ret
