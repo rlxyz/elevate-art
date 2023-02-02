@@ -60,7 +60,7 @@ const Mint = () => {
           <Image width={629 * 2} height={786 * 2} priority src='/images/journey-2.jpeg' alt='journey-by-jacob' />
         </div>
         <div className='block md:hidden'>
-          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' />
+          <Image priority width={3042} height={723} src='/images/logo-banner.png' alt='logo-banner' className='rounded-[5px]' />
         </div>
 
         <div className='hidden md:flex flex-col justify-center xs:items-start sm:items-start  w-2/3 space-y-9'>
