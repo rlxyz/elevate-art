@@ -10,7 +10,7 @@ const CollectionPreviewGridFilterLabels = () => {
       rarityFilter: state.rarityFilter,
     }
   })
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   return (
     <>
       <div

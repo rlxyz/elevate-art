@@ -31,7 +31,7 @@ const InfiniteScrollGridLoading = () => {
 const InfiniteScrollGridItems = ({ length }: { length: number }) => {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
   const { all: layers } = useQueryLayerElementFindAll()
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   const { current } = useQueryRepositoryFindByName()
   const { tokens, tokenRanking, repositoryId } = useRepositoryStore((state) => {
     return {
@@ -114,7 +114,7 @@ const InfiniteScrollGridItems = ({ length }: { length: number }) => {
 }
 
 export const InfiniteScrollGrid = () => {
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   const [displayLength, setDisplayLength] = useState<number>(0)
   const [hasMore, setHasMore] = useState(true)
 
@@ -168,7 +168,7 @@ export const InfiniteScrollGrid = () => {
 }
 
 const Index = () => {
-  const { current: collection } = useQueryCollectionFindAll()
+  const { current: collection } = useQueryCollectionFindAll({})
   return (
     <main className='space-y-1'>
       <div className='flex flex-col'>
