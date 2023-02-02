@@ -1,0 +1,33 @@
+{
+    "success": true,
+    "data": {
+        "body": {
+            "addresses": [
+                "0x9a90b4ca0c5d986A6370c5C0d7985500F47C00fB",
+                "0x06d12a7C173de6b9e7eafaa97Be609d9667AE1D2",
+                "0x9EA5f0BB37c98dcEf203FeC0D228bf7240a7E690",
+                "0xdFd7AB2fE1766536b475728D2da0698760CB595B",
+                "0xAeCb01C80178df1325275A24559c3b90e39a9D2B",
+                "0xa036c61d8be91a02838df996165fb3450cda4fac",
+                "0x12ff831c0428cb7b3bF7a72C0680B052E679acF2",
+                "0x86e8986c8a48648a4788abebe439f92e5e959f57",
+                "0x5C9A807593189Ce44f270d7B773bc19970cf388b",
+                "0xdf84bac2d8e4b25c1246cab5e53e74bf5424a821",
+                "0x1b94e31763e69e10EA428226db5325F717b6E00e",
+                "0x48B94E0C7d882315e6C68718Db2e80E47ed99724",
+                "0xc022cd6d5751914eb756C139Cf9700Db8a4657fc",
+                "0x80b9dcfe95417445fa3fa5e94bd72afc0a6c5630",
+                "0xa8B15Be830ed58Fd9D9D8a275a8A070E9eeA9cd7",
+                "0x5A13367c105deD8734bCaEB513df0B2C14792b65",
+                "0x3204D904f61C3502050cAB4fDd241f0B6295cD8B",
+                "0x5664bcf74F5D4040A49802aE4ca7848BD4838B28",
+                "0x1e6EC0adB8d5B769C7b94Ee74B1011cF60A54008",
+                "0xF8dc7C125E81eC480F58517ba61b897E7f48aaDA",
+                "0xac403214AEd5e56A7ABBFdb34aB43C12e2A9A962",
+                "0x0EA9f5D0C97b430D5426465e2832A504Bd6Dd9F9",
+                "0xbf5dBe8fD00968334E5675C5F0161B2D35a9449B",
+                "0xaA1651Fc2df5B273571Cf9D6D3a335a9BD253690"
+            ]
+        }
+    }
+}
