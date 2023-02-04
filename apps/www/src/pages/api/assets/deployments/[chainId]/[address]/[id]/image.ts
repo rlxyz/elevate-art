@@ -63,7 +63,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = await getImageUrlFromGcp({ contractDeployment, deployment, tokenId })
   if (url.ok) {
     // set cache for 1 hour
-    return res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate').redirect(url.getValue())
+    return res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate').redirect(308, url.getValue())
   }
 
   /** Grab tokens */
@@ -104,7 +104,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   /** Return buffer */
-  return res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate').redirect(url2.getValue())
+  return res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate').redirect(308, url2.getValue())
 }
 
 export default index
