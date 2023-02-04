@@ -87,6 +87,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res
     .setHeader('Content-Type', 'application/json')
+    .setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
     .send(JSON.stringify(Object.fromEntries(Object.entries(metadata).filter(([_, v]) => v != null)), null, 2))
 }
 

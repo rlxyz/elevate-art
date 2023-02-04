@@ -25,7 +25,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res
     .setHeader('Content-Type', 'application/json')
-    .setHeader('Cache-Control', 'public, max-age=3600')
+    .setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
     .status(200)
     .send(
       JSON.stringify({
