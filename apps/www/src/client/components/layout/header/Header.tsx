@@ -46,7 +46,7 @@ export interface HeaderProps {
 
 const Index = ({ authenticated = true, children }: HeaderProps) => {
   return (
-    <header className='pointer-events-auto'>
+    <header className='pointer-events-auto overflow-hidden'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center text-xs font-semibold space-x-1 w-fit'>
           <NextLinkComponent className='w-fit' href='/'>
