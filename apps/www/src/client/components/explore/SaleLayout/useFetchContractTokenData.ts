@@ -19,6 +19,8 @@ export const useFetchContractTokenData = ({
     functionName: 'ownerOf',
     args: [tokenId.toString()],
     watch: false,
+    cacheTime: 200_000,
+    staleTime: 200_000,
     enabled,
     select: (data) => ({
       owner: data as string,
