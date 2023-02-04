@@ -4,8 +4,8 @@ import NextLinkComponent from '@components/layout/link/NextLink'
 import type { ContractDeployment, Repository } from '@prisma/client'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
 import Image from 'next/image'
-import { getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
-import { useFetchContractTokenData } from '../SaleLayout/useFetchContractTokenData'
+import { useEffect, useState } from 'react'
+import { getOwnerOf, getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
 
 export const GalleryLayoutCard = ({
   repository,
@@ -19,14 +19,30 @@ export const GalleryLayoutCard = ({
   tokenId: number
 }) => {
   const { address, chainId } = contractDeployment
+  const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
 
-  const { data } = useFetchContractTokenData({
-    contractAddress: address,
-    tokenId,
-    chainId,
-    enabled: true,
-    version: '1.0.0',
-  })
+  // fetch owner from from api/assets/:chainId/:contractAddress/:tokenId/owner
+  const fetchOwner = async () => {
+    try {
+      const response = await fetch(
+        getOwnerOf({
+          contractDeployment,
+          tokenId,
+        })
+      )
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+  useEffect(() => {
+    fetchOwner().then((x) => {
+      if (x?.address) setOwner(x.address)
+    })
+  }, [])
 
   return (
     <div
@@ -58,19 +74,19 @@ export const GalleryLayoutCard = ({
               {tokenName} #{tokenId}
             </LinkComponent>
           </h1>
-          {data?.owner && (
+          {owner && (
             <NextLinkComponent
               target='_blank'
               rel='noopener noreferrer'
               href={buildEtherscanLink({
                 chainId,
-                address: data.owner,
+                address: owner,
               })}
               underline
             >
               <div className='flex items-center space-x-2'>
                 <AvatarComponent src='/images/avatar-blank.png' />
-                <span className='text-xs'>{formatEthereumHash(data?.owner)}</span>
+                <span className='text-xs'>{formatEthereumHash(owner)}</span>
               </div>
             </NextLinkComponent>
           )}
