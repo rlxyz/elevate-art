@@ -35,8 +35,9 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
             {(() => {
               if (!connected) {
                 return (
-                  <div className='relative w-9'>
-                    <Menu profile position='bottom-left'>
+                  <button onClick={openConnectModal}>
+                    <span className='w-fit cursor-pointer h-fit bg-black rounded-full text-white text-xs p-2'>Connect</span>
+                    {/* <Menu profile position='bottom-left'>
                       <Menu.Items className='p-0'>
                         <Menu.Item as='button' onClick={openConnectModal} type='button'>
                           <div className='w-full flex items-center space-x-2 p-1'>
@@ -45,8 +46,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
                           </div>
                         </Menu.Item>
                       </Menu.Items>
-                    </Menu>
-                  </div>
+                    </Menu> */}
+                  </button>
                 )
               }
 
