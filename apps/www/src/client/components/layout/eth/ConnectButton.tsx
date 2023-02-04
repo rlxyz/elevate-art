@@ -3,9 +3,11 @@ import { ConnectButton as RbConnectButton } from '@rainbow-me/rainbowkit'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { formatEthereumHash } from '@utils/ethers'
 import clsx from 'clsx'
+import { H } from 'highlight.run'
 import { useSession } from 'next-auth/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { routeBuilder } from 'src/client/utils/format'
+import { useAccount } from 'wagmi'
 import AvatarComponent from '../avatar/Avatar'
 import NextLinkComponent from '../link/NextLink'
 import Menu from '../menu'
@@ -13,11 +15,16 @@ import Menu from '../menu'
 interface ConnectButtonProps {
   normalButton?: boolean
   disabled?: boolean
-  children?: React.ReactNode
 }
 
-export const ConnectButton: React.FC<ConnectButtonProps> = ({ children }) => {
+export const ConnectButton: React.FC<ConnectButtonProps> = () => {
   const { data } = useSession()
+  const { address } = useAccount()
+
+  useEffect(() => {
+    H.identify(data?.user?.address, { id: data?.user?.id, address: data?.user?.address, wagmi: address })
+  }, [address, data?.user?.address, data?.user?.id])
+
   return (
     <RbConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
