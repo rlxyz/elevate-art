@@ -30,6 +30,14 @@ export const getOwnerOf = ({ contractDeployment, tokenId }: { contractDeployment
   return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/${tokenId}/owner`
 }
 
+export const getTokenRank = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
+  return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/${tokenId}/analytics/rank`
+}
+
+export const getCollectionRarity = ({ contractDeployment }: { contractDeployment: ContractDeployment }) => {
+  return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/analytics/rarity`
+}
+
 export const getTokenImageURILegacy = ({
   contractDeployment,
   tokenId,

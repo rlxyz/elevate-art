@@ -1,10 +1,6 @@
-import type { Prisma } from '@prisma/client'
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
-import { getTokenHash } from '@server/common/ethers-get-contract-token-hash'
-import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
-import { sumBy } from '@utils/object-utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as v from 'src/shared/compiler'
+import { getCollectionRarity } from 'src/client/utils/image'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
@@ -21,42 +17,28 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
 
-  /** Fetch Total Supply */
-  const totalSupply = await getTotalSupply(address, chainId)
-  if (totalSupply.failed) {
-    return res.status(500).send('Internal Server Error')
+  if (!deployment.contractDeployment) {
+    return res.status(404).send('Not Found')
   }
 
-  /** Fetch All TokenHash's */
-  const tokenHashes = await Promise.all(
-    Array.from({ length: totalSupply.getValue().toNumber() }, (_, i) => getTokenHash(address, chainId, i))
-  ).then((hashes) => hashes.filter((hash) => !hash.failed).map((hash) => hash.getValue()))
+  /** Validate Deployment */
+  const response = await fetch(
+    getCollectionRarity({
+      contractDeployment: deployment.contractDeployment,
+    })
+  )
+  if (!response.ok) {
+    return res.status(404).send('Not Found')
+  }
 
-  const { contractDeployment, layerElements } = deployment
-  const elements = layerElements as Prisma.JsonValue as v.Layer[]
-
-  /** Create Tokens */
-  const tokens = v
-    .rarity(
-      tokenHashes.map((hash) => {
-        return v.one(
-          v.parseLayer(
-            elements
-              .filter((x) => x.traits.length > 0)
-              .map((x) => ({
-                ...x,
-                traits: [
-                  ...x.traits,
-                  { id: `none-${x.id}`, weight: Math.max(0, 100 - sumBy(x.traits || 0, (x) => x.weight)), rules: [] } as v.Trait,
-                ] as v.Trait[],
-              }))
-              .sort((a, b) => a.priority - b.priority)
-          ),
-          hash
-        )
-      })
-    )
-    .sort((a, b) => b.score - a.score)
+  const tokens = (await response.json()) as {
+    rank: number
+    index: number
+    score: number
+  }[]
+  if (!tokens || !tokens.length) {
+    return res.status(404).send('Not Found')
+  }
 
   return res
     .setHeader('Content-Type', 'application/json')
