@@ -19,6 +19,10 @@ export const getSyncedBaseURI = ({ contractDeployment }: { contractDeployment: C
 }
 
 export const getTokenURI = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
+  return `${getSyncedBaseURI({ contractDeployment })}${tokenId}`
+}
+
+export const getTokenImageURI = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
   return `https://storage.googleapis.com/elevate-assets-deployment-tokens-production-production/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`
 }
 
@@ -26,7 +30,7 @@ export const getOwnerOf = ({ contractDeployment, tokenId }: { contractDeployment
   return `${env.NEXT_PUBLIC_ASSET_URL}/${ZoneNavigationEnum.enum.Deployments}/${contractDeployment.chainId}/${contractDeployment.address}/${tokenId}/owner`
 }
 
-export const getTokenURILegacy = ({
+export const getTokenImageURILegacy = ({
   contractDeployment,
   tokenId,
 }: {
