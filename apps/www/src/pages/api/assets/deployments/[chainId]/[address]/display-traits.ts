@@ -20,17 +20,20 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const elements = deployment.layerElements as Prisma.JsonValue as v.Layer[]
 
-  return res.setHeader('Content-Type', 'application/json').send(
-    JSON.stringify(
-      elements
-        .filter((x) => x.traits.length > 0)
-        .map((x) => ({
-          ...x,
-          traits: [...x.traits, { id: `none-${x.id}`, weight: Math.max(0, 100 - sumBy(x.traits || 0, (x) => x.weight)) } as v.Trait],
-        }))
-        .sort((a, b) => a.priority - b.priority)
+  return res
+    .setHeader('Content-Type', 'application/json')
+    .setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
+    .send(
+      JSON.stringify(
+        elements
+          .filter((x) => x.traits.length > 0)
+          .map((x) => ({
+            ...x,
+            traits: [...x.traits, { id: `none-${x.id}`, weight: Math.max(0, 100 - sumBy(x.traits || 0, (x) => x.weight)) } as v.Trait],
+          }))
+          .sort((a, b) => a.priority - b.priority)
+      )
     )
-  )
 }
 
 export default index

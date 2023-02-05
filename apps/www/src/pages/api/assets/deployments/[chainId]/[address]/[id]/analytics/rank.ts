@@ -1,6 +1,7 @@
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getCollectionRarity } from 'src/client/utils/image'
+import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
@@ -31,11 +32,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).send('Not Found')
   }
 
-  const tokens = (await response.json()) as {
-    rank: number
-    index: number
-    score: number
-  }[]
+  const tokens = (await response.json()) as v.Rarity[]
   if (!tokens || !tokens.length) {
     return res.status(404).send('Not Found')
   }
