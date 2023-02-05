@@ -8,10 +8,9 @@ import * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
   /** Inputs */
-  const { chainId: cid, address, id } = req.query as { chainId: string; address: string; id: string }
-  const tokenId = parseInt(id)
+  const { chainId: cid, address } = req.query as { chainId: string; address: string }
   const chainId = parseInt(cid)
-  if (!chainId || !address || !id || tokenId < 0 || Number.isNaN(tokenId)) {
+  if (!chainId || !address) {
     return res.status(400).send('Bad Request')
   }
 
