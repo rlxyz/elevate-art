@@ -36,25 +36,27 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   const elements = layerElements as Prisma.JsonValue as v.Layer[]
 
   /** Create Tokens */
-  const tokens = v.rarity(
-    tokenHashes.map((hash) => {
-      return v.one(
-        v.parseLayer(
-          elements
-            .filter((x) => x.traits.length > 0)
-            .map((x) => ({
-              ...x,
-              traits: [
-                ...x.traits,
-                { id: `none-${x.id}`, weight: Math.max(0, 100 - sumBy(x.traits || 0, (x) => x.weight)), rules: [] } as v.Trait,
-              ] as v.Trait[],
-            }))
-            .sort((a, b) => a.priority - b.priority)
-        ),
-        hash
-      )
-    })
-  )
+  const tokens = v
+    .rarity(
+      tokenHashes.map((hash) => {
+        return v.one(
+          v.parseLayer(
+            elements
+              .filter((x) => x.traits.length > 0)
+              .map((x) => ({
+                ...x,
+                traits: [
+                  ...x.traits,
+                  { id: `none-${x.id}`, weight: Math.max(0, 100 - sumBy(x.traits || 0, (x) => x.weight)), rules: [] } as v.Trait,
+                ] as v.Trait[],
+              }))
+              .sort((a, b) => a.priority - b.priority)
+          ),
+          hash
+        )
+      })
+    )
+    .sort((a, b) => b.score - a.score)
 
   return res
     .setHeader('Content-Type', 'application/json')
