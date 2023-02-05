@@ -58,7 +58,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
     .sort((a, b) => b.score - a.score)
     .map((x, index) => ({
       ...x,
-      rank: index,
+      rank: index + 1,
     }))
 
   return res
