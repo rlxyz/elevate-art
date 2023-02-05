@@ -68,6 +68,7 @@ export const GalleryLayout = ({
               .map((id) => (
                 <RenderIfVisible key={`${contractDeployment.address}-${id}`}>
                   <GalleryLayoutCard
+                    organisation={organisation}
                     repository={repository}
                     contractDeployment={contractDeployment}
                     tokenName={repository.tokenName}

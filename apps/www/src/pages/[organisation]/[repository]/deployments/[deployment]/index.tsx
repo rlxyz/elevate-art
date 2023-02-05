@@ -18,7 +18,7 @@ import { useEffect } from 'react'
 import { Layout } from 'src/client/components/layout/core/Layout'
 import { OrganisationAuthLayout } from 'src/client/components/organisation/OrganisationAuthLayout'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
-import { getTokenURI } from 'src/client/utils/image'
+import { getTokenImageURI } from 'src/client/utils/image'
 import { timeAgo } from 'src/client/utils/time'
 import { AssetDeploymentNavigationEnum, ContractSettingsNavigationEnum, ZoneNavigationEnum } from 'src/shared/enums'
 
@@ -130,7 +130,7 @@ const Page = () => {
                 <div className='border w-full h-52 border-blueHighlight rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap'>
                   {organisation && repository && contractDeployment && (
                     <img
-                      src={getTokenURI({
+                      src={getTokenImageURI({
                         contractDeployment,
                         tokenId: 0,
                       })}

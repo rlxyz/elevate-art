@@ -1,56 +1,43 @@
 import AvatarComponent from '@components/layout/avatar/Avatar'
 import LinkComponent from '@components/layout/link/Link'
 import NextLinkComponent from '@components/layout/link/NextLink'
-import type { ContractDeployment, Repository } from '@prisma/client'
+import type { ContractDeployment, Organisation, Repository } from '@prisma/client'
+import { ExploreNavigationEnum, ZoneNavigationEnum } from '@utils/enums'
 import { buildEtherscanLink, formatEthereumHash } from '@utils/ethers'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { getOwnerOf, getTokenMetadataURI, getTokenURI } from 'src/client/utils/image'
+import { routeBuilder } from 'src/client/utils/format'
+import { getTokenImageURI, getTokenMetadataURI } from 'src/client/utils/image'
+import { useFetchOwner } from './useFetchOwner'
 
 export const GalleryLayoutCard = ({
   repository,
   contractDeployment,
   tokenId,
+  organisation,
   tokenName,
 }: {
+  organisation: Organisation
   repository: Repository
   contractDeployment: ContractDeployment
   tokenName: string
   tokenId: number
 }) => {
   const { address, chainId } = contractDeployment
-  const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
-
-  // fetch owner from from api/assets/:chainId/:contractAddress/:tokenId/owner
-  const fetchOwner = async () => {
-    try {
-      const response = await fetch(
-        getOwnerOf({
-          contractDeployment,
-          tokenId,
-        })
-      )
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error(error)
-      return error
-    }
-  }
-
-  useEffect(() => {
-    fetchOwner().then((x) => {
-      if (x?.address) setOwner(x.address)
-    })
-  }, [])
-
+  const { owner } = useFetchOwner({ contractDeployment, tokenId })
   return (
-    <div
+    <NextLinkComponent
       key={`${address}-${tokenId}`}
-      className='border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
+      className='flex flex-col border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
+      href={routeBuilder(
+        organisation.name,
+        repository.name,
+        ZoneNavigationEnum.enum.Explore,
+        ExploreNavigationEnum.enum.Token,
+        tokenId.toString()
+      )}
     >
       <Image
-        src={getTokenURI({ contractDeployment, tokenId })}
+        src={getTokenImageURI({ contractDeployment, tokenId })}
         onErrorCapture={(e) => {
           e.currentTarget.src = '/images/placeholder.png'
         }}
@@ -109,6 +96,6 @@ export const GalleryLayoutCard = ({
           </NextLinkComponent>
         </div>
       </div>
-    </div>
+    </NextLinkComponent>
   )
 }
