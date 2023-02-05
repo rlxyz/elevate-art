@@ -46,7 +46,7 @@ export const GalleryLayoutCard = ({
         alt={`${address}-#${tokenId}`}
         className='object-cover m-auto bg-lightGray'
       />
-      <div className='space-y-1 pt-2 px-2 flex justify-between'>
+      <div className='space-y-1 pt-2 px-2 flex justify-between w-full'>
         <div className=''>
           <h1 className='text-xs font-semibold'>
             <LinkComponent
