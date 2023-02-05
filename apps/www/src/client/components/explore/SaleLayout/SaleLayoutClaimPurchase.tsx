@@ -1,7 +1,7 @@
 import type { ContractDeployment } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
@@ -82,7 +82,13 @@ export const SaleLayoutClaimPurchase = ({
           </div>
           <button
             disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}
-            onClick={() => write()}
+            onClick={() => {
+              try {
+                write()
+              } catch (e) {
+                console.error(e)
+              }
+            }}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'
           >
