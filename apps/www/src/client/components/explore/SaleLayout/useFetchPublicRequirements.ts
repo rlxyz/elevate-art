@@ -48,13 +48,14 @@ export const useFetchPublicRequirements = ({
   })
 
   const usersMintLeft = () => {
-    const totalMintLeft = BigNumber.from(data?.maxMintPerAddress || 0).sub(BigNumber.from(fetchedContractUserData?.userMintCount || 0))
+    if (!data?.maxMintPerAddress) return BigNumber.from(0)
+
+    const totalMintLeft = BigNumber.from(data.maxMintPerAddress || 0).sub(BigNumber.from(fetchedContractUserData?.userMintCount || 0))
 
     /**
      * If the total mint left is less than or equal to 0, the user cannot mint anymore.
      */
     if (totalMintLeft.lte(0)) return BigNumber.from(0)
-    if (!data?.maxMintPerAddress) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(0)) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
 
