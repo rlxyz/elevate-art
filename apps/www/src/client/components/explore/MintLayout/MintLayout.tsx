@@ -20,6 +20,7 @@ export const MintLayout = ({
   return (
     <>
       <main className='space-y-6'>
+        {data && <MintOwnedCard contractDeployment={contractDeployment} session={data} />}
         <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
         <SaleLayoutPublicPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
         {/* {now < contractData.publicPeriod.startTimestamp && (
@@ -35,7 +36,6 @@ export const MintLayout = ({
       </main>
       <article className='space-y-6'>
         <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
-        {data && <MintOwnedCard contractDeployment={contractDeployment} session={data} />}
         <SaleLayoutClaimChecker contractData={contractData} />
         {/* {now < contractData.publicPeriod.startTimestamp && <SaleLayoutPresaleChecker contractData={contractData} />} */}
         <AnalyticsLayoutCollectionInformation contractDeployment={contractDeployment} />
