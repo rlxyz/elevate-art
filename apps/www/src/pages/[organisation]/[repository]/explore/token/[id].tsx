@@ -20,6 +20,7 @@ import { ZoneNavigationEnum } from '@utils/enums'
 import { buildEtherscanLink, formatEthereumHash, parseChainId } from '@utils/ethers'
 import type { NextPage } from 'next'
 import Image from 'next/image'
+import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { capitalize, routeBuilder, truncate } from 'src/client/utils/format'
@@ -223,11 +224,15 @@ const TokenLayout = ({
 
 const Page: NextPage = () => {
   const { current } = useQueryContractDeploymentProduction({})
-  const router = useRouter()
+  const router: NextRouter = useRouter()
   const { id } = router.query as { id: string }
-  if (isNaN(Number(id))) {
-    router.push('/404')
-  }
+
+  useEffect(() => {
+    if (isNaN(Number(id))) {
+      router.push('/404')
+    }
+  }, [id])
+
   return <TokenLayout tokenId={Number(id)} address={current?.address} branch={AssetDeploymentBranch.PRODUCTION} />
 }
 
