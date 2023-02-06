@@ -25,27 +25,30 @@ export const GalleryLayoutCard = ({
   const { address, chainId } = contractDeployment
   const { owner } = useFetchOwner({ contractDeployment, tokenId })
   return (
-    <NextLinkComponent
+    <div
       key={`${address}-${tokenId}`}
       className='flex flex-col border border-mediumGrey rounded-[5px] overflow-hidden text-ellipsis whitespace-nowrap shadow-sm'
-      href={routeBuilder(
-        organisation.name,
-        repository.name,
-        ZoneNavigationEnum.enum.Explore,
-        ExploreNavigationEnum.enum.Token,
-        tokenId.toString()
-      )}
     >
-      <Image
-        src={getTokenImageURI({ contractDeployment, tokenId })}
-        onErrorCapture={(e) => {
-          e.currentTarget.src = '/images/placeholder.png'
-        }}
-        width={repository.width || 600}
-        height={repository.height || 600}
-        alt={`${address}-#${tokenId}`}
-        className='object-cover m-auto bg-lightGray'
-      />
+      <NextLinkComponent
+        href={routeBuilder(
+          organisation.name,
+          repository.name,
+          ZoneNavigationEnum.enum.Explore,
+          ExploreNavigationEnum.enum.Token,
+          tokenId.toString()
+        )}
+      >
+        <Image
+          src={getTokenImageURI({ contractDeployment, tokenId })}
+          onErrorCapture={(e) => {
+            e.currentTarget.src = '/images/placeholder.png'
+          }}
+          width={repository.width || 600}
+          height={repository.height || 600}
+          alt={`${address}-#${tokenId}`}
+          className='object-cover m-auto bg-lightGray'
+        />
+      </NextLinkComponent>
       <div className='space-y-1 pt-2 px-2 flex justify-between w-full'>
         <div className=''>
           <h1 className='text-xs font-semibold'>
@@ -96,6 +99,6 @@ export const GalleryLayoutCard = ({
           </NextLinkComponent>
         </div>
       </div>
-    </NextLinkComponent>
+    </div>
   )
 }
