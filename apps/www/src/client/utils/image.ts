@@ -1,4 +1,5 @@
 import type { ContractDeployment } from '@prisma/client'
+import { AssetDeploymentBranch } from '@prisma/client'
 import { ZoneNavigationEnum } from '@utils/enums'
 import { env } from 'src/env/client.mjs'
 
@@ -23,7 +24,9 @@ export const getTokenURI = ({ contractDeployment, tokenId }: { contractDeploymen
 }
 
 export const getTokenImageURI = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
-  return `https://storage.googleapis.com/elevate-assets-deployment-tokens-production-production/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`
+  return `https://storage.googleapis.com/elevate-assets-deployment-tokens-${AssetDeploymentBranch.PRODUCTION.toLowerCase()}-${
+    env.NEXT_PUBLIC_NODE_ENV
+  }/deployments/${contractDeployment.chainId}/${contractDeployment.address}/tokens/${tokenId}/1/image.png`
 }
 
 export const getOwnerOf = ({ contractDeployment, tokenId }: { contractDeployment: ContractDeployment; tokenId: string | number }) => {
