@@ -58,7 +58,7 @@ export const SaleLayoutClaimPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !allowToMint}
+            disabled={!session?.user?.id || !allowToMint || isProcessingPurchase || isLoadingPurchase}
           />
         </div>
       </SaleLayout.Body>
@@ -67,10 +67,12 @@ export const SaleLayoutClaimPurchase = ({
           <div className='flex flex-col w-fit '>
             {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
               <span className='text-[0.6rem]'>
-                You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+                You have <strong>{formatUnits(userMintLeft, 0)} claims</strong> left to mint from this collection
               </span>
             ) : (
-              <></>
+              <>
+                <span className='text-[0.6rem]'>Sorry, you dont have any free claims to mint</span>
+              </>
             )}
           </div>
           <button

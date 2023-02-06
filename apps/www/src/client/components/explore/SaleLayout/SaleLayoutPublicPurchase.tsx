@@ -60,7 +60,7 @@ export const SaleLayoutPublicPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !allowToMint}
+            disabled={!session?.user?.id || !allowToMint || isProcessingPurchase || isLoadingPurchase}
           />
         </div>
       </SaleLayout.Body>
@@ -69,7 +69,7 @@ export const SaleLayoutPublicPurchase = ({
           <div className='flex flex-col w-fit '>
             {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
               <span className='text-[0.6rem]'>
-                You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+                You can mint up to <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
               </span>
             ) : (
               <></>

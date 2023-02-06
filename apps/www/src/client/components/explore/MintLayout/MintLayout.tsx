@@ -7,7 +7,6 @@ import { SaleLayoutClaimChecker } from '../SaleLayout/SaleLayoutClaimChecker'
 import { SaleLayoutClaimPurchase } from '../SaleLayout/SaleLayoutClaimPurchase'
 import { SaleLayoutPublicPurchase } from '../SaleLayout/SaleLayoutPublicPurchase'
 import { MintSyncedCard } from './MintSyncedCard'
-import { useMintLayoutCurrentTime } from './useMintLayoutCurrentTime'
 
 export const MintLayout = ({
   contractDeployment,
@@ -17,7 +16,6 @@ export const MintLayout = ({
   contractData: RhapsodyContractData
 }) => {
   const { data } = useSession()
-  const { now } = useMintLayoutCurrentTime()
   return (
     <>
       <main className='space-y-6'>
@@ -36,7 +34,7 @@ export const MintLayout = ({
         )} */}
       </main>
       <article className='space-y-6'>
-        {now < contractData.presalePeriod.startTimestamp && <SaleLayoutClaimChecker contractData={contractData} />}
+        <SaleLayoutClaimChecker contractData={contractData} />
         {/* {now < contractData.publicPeriod.startTimestamp && <SaleLayoutPresaleChecker contractData={contractData} />} */}
         <AnalyticsLayoutCollectionInformation contractDeployment={contractDeployment} />
         {/* <AnalyticsLayoutCollectorData contractDeployment={contractDeployment} /> */}
