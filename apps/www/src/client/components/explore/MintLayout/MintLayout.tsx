@@ -21,21 +21,19 @@ export const MintLayout = ({
   return (
     <>
       <main className='space-y-6'>
-        {now < contractData.publicPeriod.startTimestamp && (
-          <>
-            <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
-            <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
-          </>
+        <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
+        <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+        <SaleLayoutPublicPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
+        {/* {now < contractData.publicPeriod.startTimestamp && (
         )}
+        {now > contractData.publicPeriod.startTimestamp && (
+        )} */}
         {/* {now > contractData.presalePeriod.startTimestamp && now < contractData.publicPeriod.startTimestamp && (
           <>
             <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.PRESALE} />
             <SaleLayoutPresalePurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
           </>
         )} */}
-        {now > contractData.publicPeriod.startTimestamp && (
-          <SaleLayoutPublicPurchase session={data} contractDeployment={contractDeployment} contractData={contractData} />
-        )}
       </main>
       <article className='space-y-6'>
         {now < contractData.presalePeriod.startTimestamp && <SaleLayoutClaimChecker contractData={contractData} />}

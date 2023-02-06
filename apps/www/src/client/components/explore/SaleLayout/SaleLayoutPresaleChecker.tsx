@@ -35,7 +35,7 @@ export const SaleLayoutPresaleChecker = ({ contractData }: { contractData: Rhaps
     <SaleLayout>
       <SaleLayout.Header
         title='Presale Check'
-        endingDate={
+        startingDate={
           now < contractData.claimPeriod.startTimestamp
             ? { label: 'Presale Starts In', value: contractData.presalePeriod.startTimestamp }
             : { label: 'Presale Ends In', value: contractData.publicPeriod.startTimestamp }

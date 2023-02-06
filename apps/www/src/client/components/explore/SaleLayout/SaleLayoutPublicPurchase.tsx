@@ -1,8 +1,8 @@
 import type { ContractDeployment } from '@prisma/client'
 import type { RhapsodyContractData } from '@utils/contracts/ContractData'
-import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
+import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
@@ -24,6 +24,8 @@ export const SaleLayoutPublicPurchase = ({
     contractDeployment,
   })
 
+  const { now } = useMintLayoutCurrentTime()
+
   /** Variables */
   const { userMintCount, userMintLeft, allowToMint } = data
 
@@ -43,7 +45,14 @@ export const SaleLayoutPublicPurchase = ({
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Public Sale' />
+      <SaleLayout.Header
+        title='Public Sale'
+        startingDate={
+          now < contractData.publicPeriod.startTimestamp
+            ? { label: 'Starts In', value: contractData.publicPeriod.startTimestamp }
+            : undefined
+        }
+      />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.publicPeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
@@ -57,13 +66,21 @@ export const SaleLayoutPublicPurchase = ({
       </SaleLayout.Body>
       <SaleLayout.Footer>
         <div className='flex justify-between items-center'>
-          <div className='flex flex-col'>
-            <span className='text-[0.6rem]'>
-              You minted <strong>{formatUnits(userMintCount || BigNumber.from(0), 0)} NFTs</strong> from this collection
-            </span>
-            <span className='text-[0.6rem]'>
-              You have <strong>{formatUnits(userMintLeft, 0)} mints</strong> left
-            </span>
+          <div className='flex flex-col w-fit '>
+            {userMintCount && Number(formatUnits(userMintCount, 0)) ? (
+              <span className='text-[0.6rem] '>
+                You minted <strong>{formatUnits(userMintCount, 0)} NFTs</strong> from this collection
+              </span>
+            ) : (
+              <></>
+            )}
+            {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
+              <span className='text-[0.6rem]'>
+                You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+              </span>
+            ) : (
+              <></>
+            )}
           </div>
           <button
             disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}

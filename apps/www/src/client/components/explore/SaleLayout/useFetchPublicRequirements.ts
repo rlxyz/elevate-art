@@ -2,7 +2,9 @@ import type { ContractDeployment } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
+import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { useFetchContractDataReadOnly } from './useFetchContractDataReadOnly'
+import { useFetchContractSaleData } from './useFetchContractSaleData'
 import { useFetchContractTotalSupplyData } from './useFetchContractTotalSupplyData'
 import { useFetchContractUserData } from './useFetchContractUserData'
 
@@ -13,6 +15,9 @@ export const useFetchPublicRequirements = ({
   session: Session | null
   contractDeployment: ContractDeployment
 }) => {
+  /** Current Time */
+  const { now } = useMintLayoutCurrentTime()
+
   /** Get user balance */
   const {
     data: userBalance,
@@ -42,6 +47,16 @@ export const useFetchPublicRequirements = ({
     isLoading: isLoadingContractData,
     isError: isErrorContractData,
   } = useFetchContractTotalSupplyData({
+    version: '0.1.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
+
+  const {
+    data: fetchSaleData,
+    isLoading: isLoadingSaleData,
+    isError: isErrorSaleData,
+  } = useFetchContractSaleData({
     version: '0.1.0',
     contractAddress: contractDeployment.address,
     chainId: contractDeployment.chainId,
@@ -113,13 +128,10 @@ export const useFetchPublicRequirements = ({
   })
 
   const getUserMintLeft = () => {
-    let userMintLeft = null
-    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData) {
-      userMintLeft = BigNumber.from(0)
-    } else {
-      userMintLeft = userMintLeftBasedOnCollectionSize()
-    }
-    return userMintLeft
+    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData || isLoadingSaleData) return BigNumber.from(0)
+    if (!fetchSaleData?.publicTime) return BigNumber.from(0)
+    if (now < fetchSaleData.publicTime) return BigNumber.from(0)
+    return userMintLeftBasedOnCollectionSize()
   }
 
   const userMintLeft = getUserMintLeft()

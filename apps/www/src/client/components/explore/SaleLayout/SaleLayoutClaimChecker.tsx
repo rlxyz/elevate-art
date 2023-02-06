@@ -35,7 +35,7 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
     <SaleLayout>
       <SaleLayout.Header
         title='Claim Check'
-        endingDate={
+        startingDate={
           now < contractData.claimPeriod.startTimestamp
             ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
             : { label: 'Claim Ends In', value: contractData.presalePeriod.startTimestamp }

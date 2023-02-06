@@ -44,11 +44,11 @@ export const SaleLayoutClaimPurchase = ({
   return (
     <SaleLayout>
       <SaleLayout.Header
-        title='Claim'
-        endingDate={
+        title='Free Claim'
+        startingDate={
           now < contractData.claimPeriod.startTimestamp
             ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
-            : { label: 'Claim Ends In', value: contractData.publicPeriod.startTimestamp }
+            : undefined
         }
       />
       <SaleLayout.Body>

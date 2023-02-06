@@ -3,7 +3,7 @@ import { SaleLayout } from './SaleLayout'
 export const SaleLayoutLoading = () => {
   return (
     <SaleLayout className='bg-mediumGrey/70 animate-pulse-gradient-infinite'>
-      <SaleLayout.Header className='invisible' title='Allowlist Check' endingDate={{ label: 'Presale Starts In', value: new Date() }} />
+      <SaleLayout.Header className='invisible' title='Allowlist Check' startingDate={{ label: 'Presale Starts In', value: new Date() }} />
       <SaleLayout.Body className='invisible'>
         <span className='text-xs'>
           Check if your Wallet Address is on the <strong className='uppercase italic'>allowlist</strong>
