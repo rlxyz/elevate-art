@@ -80,11 +80,11 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
           name: name.getValue(),
           symbol: symbol.getValue(),
           ownerOf: ownerOf.getValue(),
-          totalSupply: totalSupply.getValue(),
-          mintPrice: mintPrice.getValue(),
-          publicTime: publicTime.getValue(),
+          totalSupply: totalSupply.getValue().toString(),
+          mintPrice: mintPrice.getValue().toString(),
           claimTime: claimTime.getValue(),
           presaleTime: presaleTime.getValue(),
+          publicTime: publicTime.getValue(),
         },
       })
     )
