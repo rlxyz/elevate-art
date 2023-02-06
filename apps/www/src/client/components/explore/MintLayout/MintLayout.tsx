@@ -6,6 +6,7 @@ import { AnalyticsLayoutCollectionInformation } from '../AnalyticsLayout/Analyti
 import { SaleLayoutClaimChecker } from '../SaleLayout/SaleLayoutClaimChecker'
 import { SaleLayoutClaimPurchase } from '../SaleLayout/SaleLayoutClaimPurchase'
 import { SaleLayoutPublicPurchase } from '../SaleLayout/SaleLayoutPublicPurchase'
+import { MintOwnedCard } from './MintOwnedCard'
 import { MintSyncedCard } from './MintSyncedCard'
 
 export const MintLayout = ({
@@ -20,6 +21,7 @@ export const MintLayout = ({
     <>
       <main className='space-y-6'>
         <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
+        {data && <MintOwnedCard contractDeployment={contractDeployment} session={data} />}
         <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
         <SaleLayoutPublicPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
         {/* {now < contractData.publicPeriod.startTimestamp && (
