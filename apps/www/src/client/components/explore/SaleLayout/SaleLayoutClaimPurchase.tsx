@@ -48,7 +48,7 @@ export const SaleLayoutClaimPurchase = ({
         endingDate={
           now < contractData.claimPeriod.startTimestamp
             ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
-            : { label: 'Claim Ends In', value: contractData.presalePeriod.startTimestamp }
+            : { label: 'Claim Ends In', value: contractData.publicPeriod.startTimestamp }
         }
       />
       <SaleLayout.Body>
