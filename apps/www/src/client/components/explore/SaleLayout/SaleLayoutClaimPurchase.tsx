@@ -26,7 +26,7 @@ export const SaleLayoutClaimPurchase = ({
   const { now } = useMintLayoutCurrentTime()
 
   /** Variables */
-  const { userMintCount, userMintLeft, allowToMint } = data
+  const { userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
   const {
@@ -65,13 +65,6 @@ export const SaleLayoutClaimPurchase = ({
       <SaleLayout.Footer>
         <div className='flex justify-between items-center'>
           <div className='flex flex-col w-fit '>
-            {userMintCount && Number(formatUnits(userMintCount, 0)) ? (
-              <span className='text-[0.6rem] '>
-                You minted <strong>{formatUnits(userMintCount, 0)} NFTs</strong> from this collection
-              </span>
-            ) : (
-              <></>
-            )}
             {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
               <span className='text-[0.6rem]'>
                 You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
