@@ -21,7 +21,7 @@ export const MintLayout = ({
   return (
     <>
       <main className='space-y-6'>
-        {now < contractData.presalePeriod.startTimestamp && (
+        {now < contractData.publicPeriod.startTimestamp && (
           <>
             <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.CLAIM} />
             <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
