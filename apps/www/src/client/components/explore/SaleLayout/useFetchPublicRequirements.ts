@@ -1,12 +1,10 @@
 import type { ContractDeployment } from '@prisma/client'
-import { ContractDeploymentAllowlistType } from '@prisma/client'
 import { BigNumber } from 'ethers'
 import type { Session } from 'next-auth'
 import { useBalance } from 'wagmi'
 import { useFetchContractDataReadOnly } from './useFetchContractDataReadOnly'
 import { useFetchContractTotalSupplyData } from './useFetchContractTotalSupplyData'
 import { useFetchContractUserData } from './useFetchContractUserData'
-import { useQueryContractDeploymentWhitelistFindClaimByAddress } from './useQueryContractDeploymentWhitelistFindClaimByAddress'
 
 export const useFetchPublicRequirements = ({
   session,
@@ -49,33 +47,14 @@ export const useFetchPublicRequirements = ({
     chainId: contractDeployment.chainId,
   })
 
-  const {
-    current: currentContractDeploymentWhitelist,
-    isLoading: isLoadingContractDeploymentWhitelist,
-    isError: isErrorContractDeploymentWhitelist,
-  } = useQueryContractDeploymentWhitelistFindClaimByAddress({
-    type: ContractDeploymentAllowlistType.CLAIM,
-  })
-
-  const { data } = useFetchContractDataReadOnly({
-    version: '1.0.0',
-    contractAddress: contractDeployment.address,
-    chainId: contractDeployment.chainId,
-  })
-
   const usersMintLeft = () => {
-    const totalMintLeft = BigNumber.from(currentContractDeploymentWhitelist?.mint || 0).sub(
-      BigNumber.from(fetchedContractUserData?.userMintCount || 0)
-    )
-
-    if (!data?.maxMintPerAddress) {
-      return BigNumber.from(0)
-    }
+    const totalMintLeft = BigNumber.from(data?.maxMintPerAddress || 0).sub(BigNumber.from(fetchedContractUserData?.userMintCount || 0))
 
     /**
      * If the total mint left is less than or equal to 0, the user cannot mint anymore.
      */
     if (totalMintLeft.lte(0)) return BigNumber.from(0)
+    if (!data?.maxMintPerAddress) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(0)) return BigNumber.from(0)
     if (BigNumber.from(data?.maxMintPerAddress).eq(BigNumber.from(fetchedContractUserData?.userMintCount || 0))) return BigNumber.from(0)
 
@@ -126,9 +105,15 @@ export const useFetchPublicRequirements = ({
     return BigNumber.from(0)
   }
 
+  const { data } = useFetchContractDataReadOnly({
+    version: '0.1.0',
+    contractAddress: contractDeployment.address,
+    chainId: contractDeployment.chainId,
+  })
+
   const getUserMintLeft = () => {
     let userMintLeft = null
-    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist) {
+    if (isLoadingUserBalance || isLoadingContractData || isLoadingContractUserData) {
       userMintLeft = BigNumber.from(0)
     } else {
       userMintLeft = userMintLeftBasedOnCollectionSize()
@@ -145,7 +130,7 @@ export const useFetchPublicRequirements = ({
       allowToMint: userMintLeft.gt(0),
       userBalance: userBalance,
     },
-    isError: isErrorContractData || isErrorContractUserData || isErrorContractDeploymentWhitelist,
-    isLoading: isLoadingContractData || isLoadingContractUserData || isLoadingContractDeploymentWhitelist,
+    isError: isErrorContractData || isErrorContractUserData,
+    isLoading: isLoadingContractData || isLoadingContractUserData,
   }
 }

@@ -1,3 +1,4 @@
+import { useChangeNetwork } from '@hooks/utils/useChangeNetwork'
 import { useNotification } from '@hooks/utils/useNotification'
 import type { ContractDeployment } from '@prisma/client'
 import RhapsodyContract from '@utils/contracts/RhapsodyCreatorBasic.json'
@@ -29,6 +30,7 @@ export const usePublicPurchase = ({
 }): UsePublicMint => {
   const { notifyError, notifyInfo, notifySuccess } = useNotification()
   const { mintCount, setMintCount } = useSaleMintCountInput({ enabled })
+  const { changeNetwork } = useChangeNetwork()
   const { config } = usePrepareContractWrite({
     address: contractDeployment.address,
     chainId: contractDeployment.chainId,
@@ -37,7 +39,7 @@ export const usePublicPurchase = ({
     args: [mintCount],
     overrides: {
       value: BigNumber.from(contractData.publicPeriod.mintPrice).mul(mintCount),
-      gasLimit: BigNumber.from(200000),
+      gasLimit: BigNumber.from(100000).add(BigNumber.from(mintCount).mul(50000)),
     },
   })
 
@@ -53,6 +55,9 @@ export const usePublicPurchase = ({
         notifyInfo(`A transaction with hash ${formatEthereumHash(data.hash)} has been submitted. Please wait for confirmation.`)
       }
     },
+    onSuccess: (data) => {
+      setMintCount(BigNumber.from(1))
+    },
     onError: (error) => {
       if (error.message.startsWith('user rejected transaction')) {
         return notifyError('You have rejected the transaction.')
@@ -64,7 +69,6 @@ export const usePublicPurchase = ({
     },
   })
 
-  // /** @todo clean this up, also not working... */
   const { isLoading: isProcessing } = useWaitForTransaction({
     hash: transaction?.hash,
     onError: (error) => {
@@ -82,7 +86,10 @@ export const usePublicPurchase = ({
   return {
     mintCount,
     setMintCount,
-    write: () => write?.(),
+    write: () => {
+      changeNetwork(contractDeployment.chainId)
+      write?.()
+    },
     isLoading,
     isError,
     isProcessing,

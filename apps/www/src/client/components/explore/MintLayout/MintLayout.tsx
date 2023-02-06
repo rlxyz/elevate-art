@@ -5,7 +5,6 @@ import type { RhapsodyContractData } from '../../../../shared/contracts/Contract
 import { AnalyticsLayoutCollectionInformation } from '../AnalyticsLayout/AnalyticsLayoutCollectionInformation'
 import { SaleLayoutClaimChecker } from '../SaleLayout/SaleLayoutClaimChecker'
 import { SaleLayoutClaimPurchase } from '../SaleLayout/SaleLayoutClaimPurchase'
-import { SaleLayoutPresalePurchase } from '../SaleLayout/SaleLayoutPresalePurchase'
 import { SaleLayoutPublicPurchase } from '../SaleLayout/SaleLayoutPublicPurchase'
 import { MintSyncedCard } from './MintSyncedCard'
 import { useMintLayoutCurrentTime } from './useMintLayoutCurrentTime'
@@ -28,12 +27,12 @@ export const MintLayout = ({
             <SaleLayoutClaimPurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
           </>
         )}
-        {now > contractData.presalePeriod.startTimestamp && now < contractData.publicPeriod.startTimestamp && (
+        {/* {now > contractData.presalePeriod.startTimestamp && now < contractData.publicPeriod.startTimestamp && (
           <>
             <MintSyncedCard contractDeployment={contractDeployment} allowlistType={ContractDeploymentAllowlistType.PRESALE} />
             <SaleLayoutPresalePurchase session={data} contractData={contractData} contractDeployment={contractDeployment} />
           </>
-        )}
+        )} */}
         {now > contractData.publicPeriod.startTimestamp && (
           <SaleLayoutPublicPurchase session={data} contractDeployment={contractDeployment} contractData={contractData} />
         )}

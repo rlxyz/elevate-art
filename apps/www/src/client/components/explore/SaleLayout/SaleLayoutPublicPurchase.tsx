@@ -1,8 +1,8 @@
 import type { ContractDeployment } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
@@ -28,7 +28,13 @@ export const SaleLayoutPublicPurchase = ({
   const { userMintCount, userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
-  const { write, setMintCount, mintCount } = usePublicPurchase({
+  const {
+    write,
+    setMintCount,
+    mintCount,
+    isLoading: isLoadingPurchase,
+    isProcessing: isProcessingPurchase,
+  } = usePublicPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
@@ -60,7 +66,7 @@ export const SaleLayoutPublicPurchase = ({
             </span>
           </div>
           <button
-            disabled={!session?.user?.id || isLoading || !allowToMint}
+            disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}
             onClick={() => {
               try {
                 write()
