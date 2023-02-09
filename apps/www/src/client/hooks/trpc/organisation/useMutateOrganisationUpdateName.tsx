@@ -1,6 +1,8 @@
+import { OrganisationNavigationEnum } from '@utils/enums'
 import produce from 'immer'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
+import { routeBuilder } from 'src/client/utils/format'
 import { trpc } from 'src/client/utils/trpc'
 import { useMutationContext } from '../useMutationContext'
 
@@ -17,6 +19,7 @@ export const useMutateOrganisationUpdateName = () => {
           org.name = data.name
         })
         notifySuccess(`You have updated the organisation name.`)
+        router.push(routeBuilder(data.name, OrganisationNavigationEnum.enum.Settings))
         return next
       })
     },
