@@ -69,7 +69,7 @@ const Mint = () => {
           <div className='flex space-x-9'>
             <div>
               <div className='text-xs text-darkGrey'>Status</div>
-              <div className='text-3xl font-bold'>Ended</div>
+              <div className='text-3xl font-bold'>Mint Ended</div>
             </div>
             <div>
               <div className='text-xs text-darkGrey'>Phase</div>
