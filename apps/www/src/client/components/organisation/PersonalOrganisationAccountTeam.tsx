@@ -32,13 +32,32 @@ export const PersonalOrganisationAccountTeam = () => {
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
-      <SearchInput
-        isLoading={isLoading}
-        onChange={(e) => {
-          e.preventDefault()
-          setQuery(e.target.value)
-        }}
-      />
+      <div className='grid grid-cols-7 space-x-3 items-center'>
+        <div className='col-span-6 h-full w-full'>
+          <SearchInput
+            isLoading={isLoading}
+            onChange={(e) => {
+              e.preventDefault()
+              setQuery(e.target.value)
+            }}
+          />
+        </div>
+
+        <div className='col-span-1 h-full flex items-center'>
+          <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
+            <button
+              className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black')}
+              onClick={(e: any) => {
+                e.preventDefault()
+                console.log('hi')
+              }}
+            >
+              Create Team
+            </button>
+          </div>
+        </div>
+      </div>
+
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>
