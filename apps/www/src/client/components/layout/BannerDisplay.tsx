@@ -22,17 +22,17 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
   }, [id])
 
   return (
-    <div className='h-72'>
-      <div className='h-72 w-screen absolute left-0'>
+    <div className='h-32 lg:h-72'>
+      <div className='h-32 lg:h-72 w-screen absolute left-0'>
         <div className='flex items-center justify-center absolute top-0 left-0 bottom-0 right-0 m-0 overflow-hidden box-border h-full w-full'>
-          <div className='block overflow-hidden absolute box-border m-0 rounded-[5px] bg-lightGray animate-pulse-gradient-infinite inset-0'>
+          <div className='block overflow-hidden absolute box-border m-0 bg-lightGray animate-pulse-gradient-infinite inset-0'>
             {id && imgSrc && (
               <Image
                 src={createBannerUrl({ id })}
                 alt='banner-image'
                 width={1400}
                 height={350}
-                className='object-cover w-full aspect-5 m-auto block overflow-hidden'
+                className='object-cover h-full w-full m-auto block overflow-hidden'
               />
             )}
           </div>

@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { current } from 'immer'
 import { useEffect, useState } from 'react'
 import InfiniteScrollComponent from 'react-infinite-scroll-component'
+import RenderIfVisible from 'react-render-if-visible'
 import { GalleryLayoutCard } from './GalleryLayoutCard'
 
 export const GalleryLayout = ({
@@ -65,13 +66,15 @@ export const GalleryLayout = ({
             {Array.from(Array(totalSupply).keys())
               .slice(0, displayLength)
               .map((id) => (
-                <GalleryLayoutCard
-                  repository={repository}
-                  key={`${contractDeployment.address}-${id}`}
-                  contractDeployment={contractDeployment}
-                  tokenName={repository.tokenName}
-                  tokenId={id}
-                />
+                <RenderIfVisible key={`${contractDeployment.address}-${id}`}>
+                  <GalleryLayoutCard
+                    organisation={organisation}
+                    repository={repository}
+                    contractDeployment={contractDeployment}
+                    tokenName={repository.tokenName}
+                    tokenId={id}
+                  />
+                </RenderIfVisible>
               ))}
           </div>
         </InfiniteScrollComponent>

@@ -2,8 +2,9 @@ import type { Prisma } from '@prisma/client'
 import { getAssetDeploymentByContractAddressAndChainId } from '@server/common/db-get-asset-deployment-by-production-branch'
 import { getTotalSupply } from '@server/common/ethers-get-contract-total-supply'
 import { getImageTokenFromAssetDeployment } from '@server/common/v-create-token-hash'
+import type { TokenMetadata } from '@utils/contracts/ContractData'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getBannerForRepository, getLogoForRepository, getTokenURILegacy } from 'src/client/utils/image'
+import { getBannerForRepository, getLogoForRepository, getTokenImageURILegacy } from 'src/client/utils/image'
 import type * as v from 'src/shared/compiler'
 
 const index = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -66,18 +67,19 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!response) return res.status(500).send('Internal Server Error')
 
   const { tokens, vseed } = response
-  const metadata = {
+
+  const metadata: TokenMetadata = {
     name: [deployment.repository.tokenName || '', `#${tokenId}`].join(' '),
     description: deployment.repository.description,
     tokenHash: vseed.startsWith('0x') ? vseed : null,
-    image: getTokenURILegacy({ contractDeployment: deployment.contractDeployment, tokenId }),
+    image: getTokenImageURILegacy({ contractDeployment: deployment.contractDeployment, tokenId }),
     attributes: tokens.map(([l, t]) => {
       const layerElement = elements.find((x) => x.id === l)
       if (!layerElement) return
       const traitElement = layerElement.traits.find((x) => x.id === t)
       if (!traitElement) return
-      return { trait_type: layerElement.name, value: traitElement.name }
-    }),
+      return { trait_type: layerElement.name, value: traitElement.name } as { trait_type: string | undefined; value: string | undefined }
+    }) as { trait_type: string | undefined; value: string | undefined }[] | undefined | null,
     logoImage: getBannerForRepository({ r: deployment.repository.id }),
     bannerImage: getLogoForRepository({ r: deployment.repository.id }),
     artist: deployment.repository.artist,
@@ -87,6 +89,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res
     .setHeader('Content-Type', 'application/json')
+    .setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
     .send(JSON.stringify(Object.fromEntries(Object.entries(metadata).filter(([_, v]) => v != null)), null, 2))
 }
 

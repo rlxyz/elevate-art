@@ -16,7 +16,7 @@ export const generateLeaf = (whitelist: ContractDeploymentAllowlist): Buffer => 
 export const createMerkleTree = (whitelist: ContractDeploymentAllowlist[]): MerkleTree => {
   return new MerkleTree(
     // Generate leafs
-    whitelist.map((whitelist) => generateLeaf(whitelist)),
+    whitelist.sort((a, b) => b.mint - a.mint).map((whitelist) => generateLeaf(whitelist)),
     // Hashing function
     keccak256,
     { sortPairs: true }

@@ -36,7 +36,7 @@ export const SaleLayoutPresalePurchase = ({
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Presale' endingDate={{ label: 'Ends in', value: contractData.publicPeriod.startTimestamp }} />
+      <SaleLayout.Header title='Presale' startingDate={{ label: 'Ends in', value: contractData.publicPeriod.startTimestamp }} />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.presalePeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />

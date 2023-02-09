@@ -31,9 +31,16 @@ export const Layer = z.object({
   traits: z.array(Trait),
 })
 
+export const Rarity = z.object({
+  index: z.number(),
+  score: z.number(),
+  rank: z.number(),
+})
+
 export type Layer = z.infer<typeof Layer>
 export type Trait = z.infer<typeof Trait>
 export type Rule = z.infer<typeof Rule>
+export type Rarity = z.infer<typeof Rarity>
 
 export const parseLayer = <T extends Layer>(layers: Array<T>): Layer[] => {
   return layers.map(({ id, traits, priority }) =>
@@ -165,12 +172,7 @@ export const occurances = {
 
 // returns rarity score
 // based on openrarity
-export const rarity = (
-  elements: [string, string][][]
-): {
-  index: number
-  score: number
-}[] => {
+export const rarity = (elements: [string, string][][]): Rarity[] => {
   const occurs = occurances.traits(elements)
   const max = elements.length
   return elements
@@ -179,6 +181,7 @@ export const rarity = (
       score: token.reduce((result, [_, traitElementId]) => result - Math.log((occurs.get(traitElementId) || 1) / max), 0 as number),
     }))
     .sort((a, b) => b.score - a.score)
+    .map((x, i) => ({ ...x, rank: i + 1 }))
 }
 
 export const seed = (...values: (string | number)[]) => {

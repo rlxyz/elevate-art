@@ -19,10 +19,10 @@ export const MintSyncedCard = ({
   })
   if (!merkleRootData || !root || root === merkleRootData.claimMerkleRoot) return null
   return (
-    <Card className='text-xs text-redError'>
+    <Card className='text-xs border-redError text-redError'>
       <div className='flex space-x-2 items-center'>
         <ExclamationCircleIcon className='w-4 h-4 text-redError' />
-        <span>The owner of the contract is updating the mint, please be patient. The mint will resume shortly.</span>
+        <span>The owner of the contract has paused the mint. The mint will resume shortly.</span>
       </div>
     </Card>
   )

@@ -165,6 +165,7 @@ export const ExploreNavigationEnum = z.nativeEnum(
   Object.freeze({
     Mint: 'mint', // only for personal accounts
     Gallery: 'gallery', // only for personal accounts
+    Token: 'token', // only for personal accounts
   })
 )
 

@@ -1,8 +1,8 @@
 import type { ContractDeployment } from '@prisma/client'
-import { BigNumber } from 'ethers'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
+import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
 import { SalePrice } from './SalePrice'
@@ -24,11 +24,19 @@ export const SaleLayoutPublicPurchase = ({
     contractDeployment,
   })
 
+  const { now } = useMintLayoutCurrentTime()
+
   /** Variables */
-  const { userMintCount, userMintLeft, allowToMint } = data
+  const { userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
-  const { write, setMintCount, mintCount } = usePublicPurchase({
+  const {
+    write,
+    setMintCount,
+    mintCount,
+    isLoading: isLoadingPurchase,
+    isProcessing: isProcessingPurchase,
+  } = usePublicPurchase({
     address: session?.user?.address,
     contractData,
     contractDeployment,
@@ -37,7 +45,14 @@ export const SaleLayoutPublicPurchase = ({
 
   return (
     <SaleLayout>
-      <SaleLayout.Header title='Public Sale' />
+      <SaleLayout.Header
+        title='Public Sale'
+        startingDate={
+          now < contractData.publicPeriod.startTimestamp
+            ? { label: 'Starts In', value: contractData.publicPeriod.startTimestamp }
+            : undefined
+        }
+      />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
           <SalePrice mintPrice={contractData.publicPeriod.mintPrice} quantity={mintCount} chainId={contractDeployment.chainId} />
@@ -45,22 +60,23 @@ export const SaleLayoutPublicPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !allowToMint}
+            disabled={!session?.user?.id || !allowToMint || isProcessingPurchase || isLoadingPurchase}
           />
         </div>
       </SaleLayout.Body>
       <SaleLayout.Footer>
         <div className='flex justify-between items-center'>
-          <div className='flex flex-col'>
-            <span className='text-[0.6rem]'>
-              You minted <strong>{formatUnits(userMintCount || BigNumber.from(0), 0)} NFTs</strong> from this collection
-            </span>
-            <span className='text-[0.6rem]'>
-              You have <strong>{formatUnits(userMintLeft, 0)} mints</strong> left
-            </span>
+          <div className='flex flex-col w-fit '>
+            {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
+              <span className='text-[0.6rem]'>
+                You can mint up to <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+              </span>
+            ) : (
+              <></>
+            )}
           </div>
           <button
-            disabled={!session?.user?.id || isLoading || !allowToMint}
+            disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}
             onClick={() => {
               try {
                 write()

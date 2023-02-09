@@ -76,7 +76,6 @@ export const useClaimPurchase = ({
     },
   })
 
-  // /** @todo clean this up */
   const { isLoading: isProcessing } = useWaitForTransaction({
     hash: transaction?.hash,
     onError: (error) => {

@@ -34,3 +34,16 @@ export type RhapsodyContractData = {
   presalePeriod: SaleConfig
   publicPeriod: SaleConfig
 }
+
+export type TokenMetadata = {
+  name?: string | null | undefined
+  description?: string | null | undefined
+  tokenHash?: string | null | undefined
+  attributes?: { trait_type: string | undefined; value: string | undefined }[] | undefined | null
+  image?: string | null | undefined
+  logoImage?: string | null | undefined
+  bannerImage?: string | null | undefined
+  artist?: string | null | undefined
+  license?: string | null | undefined
+  external_url?: string | null | undefined
+}

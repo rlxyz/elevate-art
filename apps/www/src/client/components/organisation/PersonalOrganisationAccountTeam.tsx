@@ -8,11 +8,13 @@ import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import SearchInput from 'src/client/components/layout/search/Search'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import OrganisationCreateTeamModal from './OrganisationCreateTeamModal'
 import { OrganisationMenuNavigation } from './OrganisationMenuNavigation'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisationFindAll()
   const [query, setQuery] = useState('')
+  const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false)
   const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   const session = useSession()
 
@@ -32,13 +34,34 @@ export const PersonalOrganisationAccountTeam = () => {
           <p className={clsx(isLoading && 'invisible')}>View the Teams that youre a part of</p>
         </div>
       </div>
-      <SearchInput
-        isLoading={isLoading}
-        onChange={(e) => {
-          e.preventDefault()
-          setQuery(e.target.value)
-        }}
-      />
+      <div className='grid grid-cols-7 space-x-3 items-center'>
+        <div className='col-span-6 h-full w-full'>
+          <SearchInput
+            isLoading={isLoading}
+            onChange={(e) => {
+              e.preventDefault()
+              setQuery(e.target.value)
+            }}
+          />
+        </div>
+
+        <div className='col-span-1 h-full flex items-center'>
+          <div className={clsx(isLoading && 'bg-mediumGrey bg-opacity-50 animate-pulse rounded-[5px]', 'h-full w-full')}>
+            <button
+              className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black')}
+              onClick={(e: any) => {
+                e.preventDefault()
+
+                setIsCreateTeamOpen(true)
+              }}
+            >
+              Create Team
+            </button>
+          </div>
+        </div>
+      </div>
+      <OrganisationCreateTeamModal visible={isCreateTeamOpen} onClose={() => setIsCreateTeamOpen(false)} />
+
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
           <div className={clsx(organisations && 'border border-mediumGrey', 'rounded-[5px] divide-y divide-mediumGrey')}>

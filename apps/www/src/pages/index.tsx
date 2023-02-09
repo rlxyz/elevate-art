@@ -69,7 +69,8 @@ const Mint = () => {
           <div className='flex space-x-9'>
             <div>
               <div className='text-xs text-darkGrey'>Current Minted</div>
-              <div className='text-3xl font-bold'>238/1333</div>
+              <div className='text-3xl font-bold'>1005/1333</div>
+
             </div>
             <div>
               <div className='text-xs text-darkGrey'>Phase</div>

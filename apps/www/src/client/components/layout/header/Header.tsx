@@ -17,7 +17,7 @@ const externalRoutes = [
 const HeaderExternalRoutes = ({ authenticated }: { authenticated: boolean }) => {
   return (
     <div className='flex flex-row justify-center items-center space-x-3'>
-      <aside className='flex flex-row items-center justify-center space-x-3'>
+      <aside className='flex-row items-center justify-center space-x-3 hidden xl:flex'>
         {externalRoutes.map((item) => {
           return (
             <LinkComponent key={item.name} href={item.href} rel='noreferrer nofollow' target='_blank'>

@@ -1,6 +1,6 @@
 import { AssetDeploymentBranch } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
-import { OrganisationDatabaseRoleEnum } from 'src/shared/enums'
+import { OrganisationDatabaseEnum, OrganisationDatabaseRoleEnum } from 'src/shared/enums'
 import { z } from 'zod'
 import { protectedProcedure, publicProcedure, router } from '../trpc'
 
@@ -198,6 +198,72 @@ export const organisationRouter = router({
         where: { id: organisationId },
         data: {
           description,
+        },
+      })
+    }),
+  // update organisation name with check if name is already taken
+  updateName: protectedProcedure
+
+    .input(
+      z.object({
+        organisationId: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { organisationId, name } = input
+
+      const organisation = await ctx.prisma.organisation.findFirst({
+        where: { id: organisationId },
+      })
+
+      if (!organisation) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const organisationName = await ctx.prisma.organisation.findFirst({
+        where: { name },
+      })
+
+      if (organisationName) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Organisation name already taken',
+        })
+      }
+
+      return await ctx.prisma.organisation.update({
+        where: { id: organisationId },
+        data: {
+          name,
+        },
+      })
+    }),
+  // create a team checking that the team name is not already taken
+  createTeam: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name } = input
+
+      return await ctx.prisma.organisation.create({
+        data: {
+          name,
+          type: OrganisationDatabaseEnum.enum.Team,
+          members: {
+            create: {
+              userId: ctx.session.user.id,
+              type: OrganisationDatabaseRoleEnum.enum.Admin,
+            },
+          },
+        },
+        include: {
+          _count: { select: { repositories: true } },
+          members: { include: { user: true } },
+          pendings: { include: { organisation: true } },
         },
       })
     }),

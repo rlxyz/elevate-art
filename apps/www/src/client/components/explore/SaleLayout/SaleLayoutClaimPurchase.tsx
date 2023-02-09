@@ -1,7 +1,7 @@
 import type { ContractDeployment } from '@prisma/client'
+import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import { formatUnits } from 'ethers/lib/utils.js'
 import type { Session } from 'next-auth'
-import type { RhapsodyContractData } from '../../../../shared/contracts/ContractData'
 import { useMintLayoutCurrentTime } from '../MintLayout/useMintLayoutCurrentTime'
 import { SaleLayout } from './SaleLayout'
 import { SaleMintCountInput } from './SaleMintCountInput'
@@ -26,7 +26,7 @@ export const SaleLayoutClaimPurchase = ({
   const { now } = useMintLayoutCurrentTime()
 
   /** Variables */
-  const { userMintCount, userMintLeft, allowToMint } = data
+  const { userMintLeft, allowToMint } = data
 
   /** Fetch the public-mint functionality */
   const {
@@ -44,11 +44,11 @@ export const SaleLayoutClaimPurchase = ({
   return (
     <SaleLayout>
       <SaleLayout.Header
-        title='Claim'
-        endingDate={
+        title='Free Claim'
+        startingDate={
           now < contractData.claimPeriod.startTimestamp
             ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
-            : { label: 'Claim Ends In', value: contractData.presalePeriod.startTimestamp }
+            : undefined
         }
       />
       <SaleLayout.Body>
@@ -58,31 +58,32 @@ export const SaleLayoutClaimPurchase = ({
             maxValue={userMintLeft}
             onChange={(value) => setMintCount(value)}
             value={mintCount}
-            disabled={!session?.user?.id || !allowToMint}
+            disabled={!session?.user?.id || !allowToMint || isProcessingPurchase || isLoadingPurchase}
           />
         </div>
       </SaleLayout.Body>
       <SaleLayout.Footer>
         <div className='flex justify-between items-center'>
           <div className='flex flex-col w-fit '>
-            {userMintCount && Number(formatUnits(userMintCount, 0)) ? (
-              <span className='text-[0.6rem] '>
-                You minted <strong>{formatUnits(userMintCount, 0)} NFTs</strong> from this collection
-              </span>
-            ) : (
-              <></>
-            )}
             {allowToMint && Number(formatUnits(userMintLeft, 0)) ? (
               <span className='text-[0.6rem]'>
-                You can mint <strong>{formatUnits(userMintLeft, 0)} NFTs</strong> from this collection
+                You have <strong>{formatUnits(userMintLeft, 0)} claims</strong> left to mint from this collection
               </span>
             ) : (
-              <></>
+              <>
+                <span className='text-[0.6rem]'>Sorry, you dont have any free claims to mint</span>
+              </>
             )}
           </div>
           <button
             disabled={!session?.user?.id || isLoading || isLoadingPurchase || isProcessingPurchase || !allowToMint}
-            onClick={() => write()}
+            onClick={() => {
+              try {
+                write()
+              } catch (e) {
+                console.error(e)
+              }
+            }}
             type='submit'
             className='bg-blueHighlight text-white text-xs disabled:bg-lightGray disabled:text-darkGrey disabled:cursor-not-allowed border border-mediumGrey px-3 py-1 rounded-[5px]'
           >
