@@ -45,11 +45,11 @@ export const SaleLayoutClaimPurchase = ({
     <SaleLayout>
       <SaleLayout.Header
         title='Free Claim'
-        startingDate={
-          now < contractData.claimPeriod.startTimestamp
-            ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
-            : undefined
-        }
+        // startingDate={
+        //   now < contractData.claimPeriod.startTimestamp
+        //     ? { label: 'Claim Starts In', value: contractData.claimPeriod.startTimestamp }
+        //     : undefined
+        // }
       />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>

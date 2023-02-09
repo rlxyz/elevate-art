@@ -47,11 +47,11 @@ export const SaleLayoutPublicPurchase = ({
     <SaleLayout>
       <SaleLayout.Header
         title='Public Sale'
-        startingDate={
-          now < contractData.publicPeriod.startTimestamp
-            ? { label: 'Starts In', value: contractData.publicPeriod.startTimestamp }
-            : undefined
-        }
+        // startingDate={
+        //   now < contractData.publicPeriod.startTimestamp
+        //     ? { label: 'Starts In', value: contractData.publicPeriod.startTimestamp }
+        //     : undefined
+        // }
       />
       <SaleLayout.Body>
         <div className='flex justify-between items-center'>
