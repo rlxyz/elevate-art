@@ -1,12 +1,10 @@
 import SettingLayout from '@components/layout/settings'
-import { useMutateOrganisationUpdateName } from '@hooks/trpc/organisation/useMutateOrganisationUpdateName'
 import { useQueryOrganisationFindAll } from '@hooks/trpc/organisation/useQueryOrganisationFindAll'
 import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
 
 export const OrganisationNameForm = () => {
   const { current: organisation } = useQueryOrganisationFindAll()
-  const { mutate, isLoading } = useMutateOrganisationUpdateName()
   const {
     register,
     handleSubmit,
@@ -21,13 +19,8 @@ export const OrganisationNameForm = () => {
     <SettingLayout
       onSubmit={handleSubmit((data) => {
         console.log(data)
-        if (!organisation) return
-        mutate({
-          organisationId: organisation.id,
-          name: data.name,
-        })
       })}
-      disabled={isLoading}
+      disabled={true}
     >
       <SettingLayout.Header title='Team Name' description='Used to identify your Teams name on elevate.art' />
       <SettingLayout.Body>
@@ -45,7 +38,7 @@ export const OrganisationNameForm = () => {
                   'focus:outline-none focus:ring-1 focus:border-blueHighlight focus:ring-blueHighlight',
                   'disabled:cursor-not-allowed disabled:opacity-60 disabled:ring-none disabled:border-none'
                 )}
-                disabled={false}
+                disabled={true}
                 aria-invalid={errors.name ? 'true' : 'false'}
                 defaultValue={organisation?.name}
                 {...register('name', {
@@ -57,20 +50,9 @@ export const OrganisationNameForm = () => {
                     if (value === organisation?.name) {
                       return 'You supplied the same Team name'
                     }
-                    if (value === 'elevate') {
-                      return 'This Team name is reserved'
-                    }
-                    if (value === 'elevate.art') {
-                      return 'This Team name is reserved'
-                    }
-                    if (value === 'elevateart') {
-                      return 'This Team name is reserved'
-                    }
-                    if (value === '') {
-                      return 'Please enter a valid Team name'
-                    }
 
-                    // return 'As of right now, we are not allowing renaming of Teams.'
+                    //! @note right now, this is disabled
+                    return 'As of right now, we are not allowing renaming of Teams.'
                   },
                 })}
               />

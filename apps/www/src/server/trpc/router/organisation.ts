@@ -201,4 +201,42 @@ export const organisationRouter = router({
         },
       })
     }),
+  // update organisation name with check if name is already taken
+  updateName: protectedProcedure
+
+    .input(
+      z.object({
+        organisationId: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { organisationId, name } = input
+
+      const organisation = await ctx.prisma.organisation.findFirst({
+        where: { id: organisationId },
+      })
+
+      if (!organisation) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const organisationName = await ctx.prisma.organisation.findFirst({
+        where: { name },
+      })
+
+      if (organisationName) {
+        throw new TRPCError({
+          code: 'BAD_USER_INPUT',
+          message: 'Organisation name already taken',
+        })
+      }
+
+      return await ctx.prisma.organisation.update({
+        where: { id: organisationId },
+        data: {
+          name,
+        },
+      })
+    }),
 })
