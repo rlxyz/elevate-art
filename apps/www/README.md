@@ -1,6 +1,6 @@
 # apps-www
 
-This is the core application for [elevate.art](https://elevate.art)
+This is the www application for [elevate.art](https://elevate.art)
 
 # Docs
 
