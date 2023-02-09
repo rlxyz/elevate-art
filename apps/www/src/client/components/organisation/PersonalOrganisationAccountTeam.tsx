@@ -8,11 +8,13 @@ import AvatarComponent from 'src/client/components/layout/avatar/Avatar'
 import SearchInput from 'src/client/components/layout/search/Search'
 import { capitalize, routeBuilder } from 'src/client/utils/format'
 import { OrganisationDatabaseEnum, ZoneNavigationEnum } from 'src/shared/enums'
+import OrganisationCreateTeamModal from './OrganisationCreateTeamModal'
 import { OrganisationMenuNavigation } from './OrganisationMenuNavigation'
 
 export const PersonalOrganisationAccountTeam = () => {
   const { all: organisations } = useQueryOrganisationFindAll()
   const [query, setQuery] = useState('')
+  const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false)
   const filteredOrganisaitons = organisations?.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()))
   const session = useSession()
 
@@ -49,7 +51,8 @@ export const PersonalOrganisationAccountTeam = () => {
               className={clsx(isLoading && 'invisible', 'w-full border h-full rounded-[5px] text-xs text-white bg-black')}
               onClick={(e: any) => {
                 e.preventDefault()
-                console.log('hi')
+
+                setIsCreateTeamOpen(true)
               }}
             >
               Create Team
@@ -57,6 +60,7 @@ export const PersonalOrganisationAccountTeam = () => {
           </div>
         </div>
       </div>
+      <OrganisationCreateTeamModal visible={isCreateTeamOpen} onClose={() => setIsCreateTeamOpen(false)} />
 
       {filteredOrganisaitons && filteredOrganisaitons?.length > 0 ? (
         <>
