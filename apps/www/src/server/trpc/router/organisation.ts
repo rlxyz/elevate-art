@@ -227,7 +227,7 @@ export const organisationRouter = router({
 
       if (organisationName) {
         throw new TRPCError({
-          code: 'BAD_USER_INPUT',
+          code: 'FORBIDDEN',
           message: 'Organisation name already taken',
         })
       }
