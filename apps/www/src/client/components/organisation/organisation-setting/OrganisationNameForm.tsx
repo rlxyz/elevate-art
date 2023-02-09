@@ -20,12 +20,13 @@ export const OrganisationNameForm = () => {
   return (
     <SettingLayout
       onSubmit={handleSubmit((data) => {
-        console.log(data)
         if (!organisation) return
-        mutate({
-          organisationId: organisation.id,
-          name: data.name,
-        })
+        if (data.name !== undefined) {
+          mutate({
+            organisationId: organisation.id,
+            name: data.name,
+          })
+        }
       })}
       disabled={isLoading}
     >
