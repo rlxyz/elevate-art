@@ -7,7 +7,7 @@ export const SaleLayoutHeader = ({
   className,
 }: {
   title: string
-  startingDate?: { label: string; value: Date }
+  startingDate?: { label: string; value?: Date }
   className?: string
 }) => {
   const { days, hours, minutes, seconds } = useSaleCountDown({ target: startingDate?.value })
@@ -18,8 +18,15 @@ export const SaleLayoutHeader = ({
       {startingDate && (
         <div className='flex justify-between items-center space-x-2 text-xs'>
           <span>{startingDate.label ?? 'Countdown'}</span>
-          <div className='w-0.5 h-0.5 bg-darkGrey rounded-full' />
-          <p className='font-semibold w-20'>{timer}</p>
+          {startingDate.value ? (
+            <>
+              <div className='w-0.5 h-0.5 bg-darkGrey rounded-full'>
+                <p className='font-semibold w-20'>{timer}</p>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       )}
     </div>
