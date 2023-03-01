@@ -2,7 +2,7 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline
 import { ContractDeploymentAllowlistType } from '@prisma/client'
 import type { RhapsodyContractData } from '@utils/contracts/ContractData'
 import clsx from 'clsx'
-import { ethers } from 'ethers'
+import { ethers, BigNumber } from 'ethers'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getAddressFromEns } from 'src/client/utils/ethers'
@@ -15,6 +15,7 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
     type: ContractDeploymentAllowlistType.CLAIM,
   })
   const { now } = useMintLayoutCurrentTime()
+  const endTime = new Date(Number(BigNumber.from(7988942826).toString()) * 1000) // 200 years in future
   const [addressCheckerDetails, setAddressCheckerDetails] = useState<null | { address: string; mint: number }>(null)
   const {
     register,
@@ -33,7 +34,7 @@ export const SaleLayoutClaimChecker = ({ contractData }: { contractData: Rhapsod
 
   return (
     <SaleLayout>
-      {now > contractData.claimPeriod.startTimestamp ? (
+      {endTime > contractData.claimPeriod.startTimestamp ? (
         <SaleLayout.Header title='Claim Check' startingDate={{ label: 'Claim period has ended' }} />
       ) : (
         <SaleLayout.Header
