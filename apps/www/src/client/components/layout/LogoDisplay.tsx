@@ -7,15 +7,25 @@ export const createLogoUrl = ({ id }: { id: string }) => {
   return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets/logo`
 }
 
+export const defaultLogoUrl = '/images/logo-black.png'
+
 export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?: string | null; isSquare?: boolean }) => {
   const [imgSrc, setImgSrc] = useState<string | null>(repositoryId ? createLogoUrl({ id: repositoryId }) : null)
 
   const fetchImage = async () => {
     if (!repositoryId) return
-    const response = await fetch(createLogoUrl({ id: repositoryId }))
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-    setImgSrc(url)
+    try {
+      const response = await fetch(createLogoUrl({ id: repositoryId }))
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      setImgSrc(url)
+    } catch (error) {
+      console.error(error)
+      setImgSrc(defaultLogoUrl)
+    }
   }
 
   useEffect(() => {
@@ -39,7 +49,7 @@ export const LogoDisplay = ({ repositoryId, isSquare = false }: { repositoryId?:
           <Image
             width={400}
             height={400}
-            src={createLogoUrl({ id: repositoryId })}
+            src={imgSrc}
             alt='logo-image'
             className={clsx('object-cover aspect-auto overflow-hidden', isSquare ? 'rounded-[5px]' : 'rounded-full')}
           />

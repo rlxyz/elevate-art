@@ -6,18 +6,33 @@ export const createBannerUrl = ({ id }: { id: string }) => {
   return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${env.NEXT_PUBLIC_NODE_ENV}/${id}/assets/banner`
 }
 
-export const BannerDisplay = ({ id }: { id?: string | null }) => {
+export const defaultBannerUrl = '/images/EA_Default_Banner.png'
+
+type BannerDisplayProps = {
+  id?: string | null
+}
+
+export const BannerDisplay = ({ id }: BannerDisplayProps) => {
   const [imgSrc, setImgSrc] = useState<string | null>(id ? createBannerUrl({ id }) : null)
 
   const fetchImage = async () => {
     if (!id) return
-    const response = await fetch(createBannerUrl({ id }))
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-    setImgSrc(url)
+    try {
+      const response = await fetch(createBannerUrl({ id }))
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      setImgSrc(url)
+    } catch (error) {
+      console.error(error)
+      setImgSrc(defaultBannerUrl)
+    }
   }
 
   useEffect(() => {
+    console.log('imgSrc: ', imgSrc)
     fetchImage()
   }, [id])
 
@@ -28,7 +43,7 @@ export const BannerDisplay = ({ id }: { id?: string | null }) => {
           <div className='block overflow-hidden absolute box-border m-0 bg-lightGray animate-pulse-gradient-infinite inset-0'>
             {id && imgSrc && (
               <Image
-                src={createBannerUrl({ id })}
+                src={imgSrc}
                 alt='banner-image'
                 width={1400}
                 height={350}
