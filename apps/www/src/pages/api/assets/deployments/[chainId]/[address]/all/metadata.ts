@@ -51,6 +51,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
       const { tokens, vseed } = response
 
       return {
+        totalSupply: totalSupply,
         name: [deployment.repository.tokenName || '', `#${i}`].join(' '),
         tokenHash: vseed.startsWith('0x') ? vseed : null,
         attributes: tokens.map(([l, t]) => {
@@ -70,7 +71,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   return res
     .setHeader('Content-Type', 'application/json')
     .status(200)
-    .send(JSON.stringify({ totalSupply: totalSupply, data: allMetadata }))
+    .send(JSON.stringify({ data: allMetadata }))
 }
 
 export default index
