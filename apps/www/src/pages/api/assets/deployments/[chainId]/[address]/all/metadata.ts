@@ -29,6 +29,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   if (totalSupply.failed) {
     return res.status(500).send('Internal Server Error')
   }
+  console.log('totalSupply', totalSupply)
 
   /** Fetch All TokenHash's */
   const { contractDeployment, layerElements } = deployment
@@ -69,7 +70,7 @@ const index = async (req: NextApiRequest, res: NextApiResponse) => {
   return res
     .setHeader('Content-Type', 'application/json')
     .status(200)
-    .send(JSON.stringify({ data: allMetadata }))
+    .send(JSON.stringify({ totalSupply: totalSupply, data: allMetadata }))
 }
 
 export default index
