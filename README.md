@@ -1,52 +1,84 @@
 # rlxyz-compiler-client
 
+A client for the Elevate.Art platform - the leading art generator for NFT collections.
+
+## Features
+
+- Generate 10k+ NFT collections in milliseconds
+- Adjust rarity and create rules for your traits
+- Preview and regenerate collections instantly
+- Export to IPFS and mint your NFTs
+- No coding required
+
 ## Installation
 
 ### Automatic Installation (recommended)
 
-1. Run the `setup.sh` script which automatically installs Doppler CLI and sets up your environment variables
+Run the setup script which automatically installs Doppler CLI and sets up your environment variables:
 
-```zsh
+```bash
 yarn setup
 ```
 
 ### Manual Installation
-1. Install Doppler CLI - our localhost environment variable manager (see [Doppler CLI](https://docs.doppler.com/docs/install-cli))
 
+1. Install Doppler CLI - our localhost environment variable manager ([Doppler CLI docs](https://docs.doppler.com/docs/install-cli))
 
-```zsh
-# Prerequisite. gnupg is required for binary signature verification
+```bash
+# Prerequisite: gnupg is required for binary signature verification
 brew install gnupg
 
-# Next, install using brew (use `doppler update` for subsequent updates)
+# Install using brew (use `doppler update` for subsequent updates)
 brew install dopplerhq/cli/doppler
 
 # Login to Doppler
 doppler login
 ```
 
+2. Set up your environment variables following the instructions in the `.env.example` file
+
+## Development
+
+```bash
+# Install dependencies
+yarn install
+
+# Start the development server
+yarn dev
+```
 
 ## Architecture
 
-1. tRPC
-2. Cloudinary
-3. Google Cloud Storage
-4. Doppler
-5. Inngest
-6. Vercel
+The application is built with:
 
-## Routing
+1. tRPC - Type-safe API layer
+2. Cloudinary - Image management
+3. Google Cloud Storage - Asset storage
+4. Doppler - Environment variable management
+5. Inngest - Background job processing
+6. Vercel - Deployment platform
 
-http://elevate.art/sekured/roboghost/create/preview
-http://elevate.art/sekured/roboghost/create/rules
-http://elevate.art/sekured/roboghost/create/rarity/Background
-http://elevate.art/sekured/roboghost/create/rarity/Background/Blue
+## Documentation
 
-http://elevate.art/sekured/roboghost/create/deployments
-http://elevate.art/sekured/roboghost/create/deployments/8v43gf
-http://elevate.art/sekured/roboghost/create/deployments/8v43gf/contract
-http://elevate.art/sekured/roboghost/create/deployments/8v43gf/contract/new
+For more detailed documentation, visit our [docs site](https://docs.elevate.art).
 
-http://elevate.art/sekured/roboghost
-http://elevate.art/sekured/roboghost/mint
-http://elevate.art/sekured/roboghost/market
+## Routes
+
+### Creation Flow
+
+- `/sekured/roboghost/create/preview` - Preview your collection
+- `/sekured/roboghost/create/rules` - Set up trait rules
+- `/sekured/roboghost/create/rarity/{traitType}` - Adjust rarity for specific traits
+
+### Deployment Flow
+
+- `/sekured/roboghost/create/deployments` - View all deployments
+- `/sekured/roboghost/create/deployments/{id}` - View specific deployment
+- `/sekured/roboghost/create/deployments/{id}/contract` - View contract details
+- `/sekured/roboghost/create/deployments/{id}/contract/new` - Create new contract
+
+### User Flow
+
+- `/sekured/roboghost` - Dashboard
+- `/sekured/roboghost/mint` - Mint NFTs
+- `/sekured/roboghost/market` - Marketplace
