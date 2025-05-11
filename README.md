@@ -1,4 +1,4 @@
-# rlxyz-compiler-client
+# elevate.art
 
 A client for the Elevate.Art platform - the leading art generator for NFT collections.
 
@@ -10,7 +10,35 @@ A client for the Elevate.Art platform - the leading art generator for NFT collec
 - Export to IPFS and mint your NFTs
 - No coding required
 
-![Elevate.Art](./apps/www/public/landing-page.png)
+## Core Infrastructure
+
+The application is built on a modern TypeScript stack with several key components:
+
+### Frontend
+
+- **Next.js**: React framework for server-rendered applications
+- **TailwindCSS**: Utility-first CSS framework for styling
+- **RainbowKit**: Ethereum wallet connection library
+- **React Hot Toast**: Notification system
+
+### Backend
+
+- **tRPC**: End-to-end typesafe API layer
+- **Prisma**: Type-safe database client
+- **Inngest**: Background job processing for asset generation
+- **NextAuth.js**: Authentication with Ethereum wallet support
+
+### Blockchain Integration
+
+- **Wagmi**: React hooks for Ethereum
+- **Ethers.js**: Ethereum library for contract interaction
+- **SIWE**: Sign-in with Ethereum for authentication
+
+### Storage
+
+- **Google Cloud Storage**: Asset storage for NFT images and metadata
+- **Cloudinary**: Image transformation and optimization
+- **PlanetScale**: Serverless MySQL database
 
 ## Installation
 
