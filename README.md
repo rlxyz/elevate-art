@@ -10,6 +10,8 @@ A client for the Elevate.Art platform - the leading art generator for NFT collec
 - Export to IPFS and mint your NFTs
 - No coding required
 
+![Elevate.Art](./apps/www/public/landing-page.png)
+
 ## Installation
 
 ### Automatic Installation (recommended)
